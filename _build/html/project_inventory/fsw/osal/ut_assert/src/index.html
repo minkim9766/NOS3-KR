@@ -1,0 +1,3682 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../search.html" />
+    <link rel="next" title="psp" href="../../../psp/index.html" />
+    <link rel="prev" title="scripts" href="../scripts/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">osal</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">ut_assert</a></li>
+      <li class="breadcrumb-item active">src</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/project_inventory/fsw/osal/ut_assert/src/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="src">
+<h1>src<a class="headerlink" href="#src" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/ut_assert/src/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="utassert-c">
+<h2><code class="docutils literal notranslate"><span class="pre">utassert.c</span></code><a class="headerlink" href="#utassert-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/ut_assert/src/utassert.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * File: utassert.c
+ *
+ * Purpose: This code implements a standard set of asserts for use in unit tests.
+ */
+
+/*
+ * Includes
+ */
+#include &lt;stdlib.h&gt;
+#include &lt;stdarg.h&gt;
+#include &lt;ctype.h&gt;
+
+#include "common_types.h"
+#include "utassert.h"
+#include "uttools.h"
+#include "utbsp.h"
+
+/*
+ * Local Data
+ */
+
+UtAssert_CaseType_t    DefaultContext     = UTASSERT_CASETYPE_FAILURE;
+UtAssert_TestCounter_t UT_SegmentCounters = {0};
+UtAssert_TestCounter_t UT_TotalCounters   = {0};
+static char            CurrentSegment[64];
+
+typedef union
+{
+    long          s; /**&lt; If value is signed */
+    unsigned long u; /**&lt; If value is unsigned */
+} UtAssert_IntBuf_t;
+
+#define UT_COMPARE_TYPE(t, s) (((t) &lt;&lt; 1) | (s))
+
+/*
+ * Function Definitions
+ */
+
+void UtAssert_DoReport(const char *File, uint32 LineNum, uint32 SegmentNum, uint32 TestSeq, uint8 MessageType,
+                       const char *SubsysName, const char *ShortDesc)
+{
+    uint32      FileLen;
+    const char *BasePtr;
+    char        ReportBuffer[320];
+
+    FileLen = strlen(File);
+    BasePtr = File + FileLen;
+    while (FileLen &gt; 0)
+    {
+        --BasePtr;
+        --FileLen;
+        if (*BasePtr == '/' || *BasePtr == '\\')
+        {
+            ++BasePtr;
+            break;
+        }
+    }
+
+    snprintf(ReportBuffer, sizeof(ReportBuffer), "%02u.%03u %s:%u - %s", (unsigned int)SegmentNum,
+             (unsigned int)TestSeq, BasePtr, (unsigned int)LineNum, ShortDesc);
+
+    UT_BSP_DoText(MessageType, ReportBuffer);
+}
+
+void UtAssert_DoTestSegmentReport(const char *SegmentName, const UtAssert_TestCounter_t *TestCounters)
+{
+    char ReportBuffer[144];
+
+    snprintf(ReportBuffer, sizeof(ReportBuffer),
+             "%-22s ABORT::%-4u  WARN::%-4u  FLOW::%-4u  DEBUG::%-4u  N/A::%-4u",
+             "",
+             (unsigned int)TestCounters-&gt;CaseCount[UTASSERT_CASETYPE_ABORT],
+             (unsigned int)TestCounters-&gt;CaseCount[UTASSERT_CASETYPE_WARN],
+             (unsigned int)TestCounters-&gt;CaseCount[UTASSERT_CASETYPE_FLOW],
+             (unsigned int)TestCounters-&gt;CaseCount[UTASSERT_CASETYPE_DEBUG],
+             (unsigned int)TestCounters-&gt;CaseCount[UTASSERT_CASETYPE_NA]);
+
+    UT_BSP_DoText(UTASSERT_CASETYPE_INFO, ReportBuffer);
+
+    snprintf(ReportBuffer, sizeof(ReportBuffer),
+             "%02u %-20s TOTAL::%-4u  PASS::%-4u  FAIL::%-4u  MIR::%-4u  TSF::%-4u  TTF::%-4u",
+             (unsigned int)TestCounters-&gt;TestSegmentCount, SegmentName, (unsigned int)TestCounters-&gt;TotalTestCases,
+             (unsigned int)TestCounters-&gt;CaseCount[UTASSERT_CASETYPE_PASS],
+             (unsigned int)TestCounters-&gt;CaseCount[UTASSERT_CASETYPE_FAILURE],
+             (unsigned int)TestCounters-&gt;CaseCount[UTASSERT_CASETYPE_MIR],
+             (unsigned int)TestCounters-&gt;CaseCount[UTASSERT_CASETYPE_TSF],
+             (unsigned int)TestCounters-&gt;CaseCount[UTASSERT_CASETYPE_TTF]);
+
+    UT_BSP_DoText(UTASSERT_CASETYPE_END, ReportBuffer);
+}
+
+uint32 UtAssert_GetPassCount(void)
+{
+    return UT_TotalCounters.CaseCount[UTASSERT_CASETYPE_PASS];
+}
+
+uint32 UtAssert_GetFailCount(void)
+{
+    return UT_TotalCounters.CaseCount[UTASSERT_CASETYPE_FAILURE];
+}
+
+const UtAssert_TestCounter_t *UtAssert_GetCounters(void)
+{
+    return &amp;UT_TotalCounters;
+}
+
+void UtAssert_BeginTest(const char *SegmentName)
+{
+    uint32 TestSegmentCount;
+
+    UT_BSP_Lock();
+
+    memset(&amp;UT_SegmentCounters, 0, sizeof(UT_SegmentCounters));
+    strncpy(CurrentSegment, SegmentName, sizeof(CurrentSegment) - 1);
+    CurrentSegment[sizeof(CurrentSegment) - 1] = 0;
+    TestSegmentCount                           = 1 + UT_TotalCounters.TestSegmentCount;
+
+    UT_BSP_Unlock();
+
+    UT_BSP_StartTestSegment(TestSegmentCount, SegmentName);
+}
+
+const char *UtAssert_GetSegmentName(void)
+{
+    return CurrentSegment;
+}
+
+void UtAssert_EndTest(void)
+{
+    uint32                 Ct;
+    bool                   SegmentValid;
+    UtAssert_TestCounter_t Local_SegmentCounters;
+    char                   Local_SegmentName[sizeof(CurrentSegment)];
+
+    UT_BSP_Lock();
+
+    SegmentValid = (UT_SegmentCounters.TotalTestCases &gt; 0);
+    if (SegmentValid)
+    {
+        ++UT_TotalCounters.TestSegmentCount;
+        UT_SegmentCounters.TestSegmentCount = UT_TotalCounters.TestSegmentCount;
+        UT_TotalCounters.TotalTestCases += UT_SegmentCounters.TotalTestCases;
+        for (Ct = 0; Ct &lt; UTASSERT_CASETYPE_MAX; ++Ct)
+        {
+            UT_TotalCounters.CaseCount[Ct] += UT_SegmentCounters.CaseCount[Ct];
+        }
+        memcpy(&amp;Local_SegmentCounters, &amp;UT_SegmentCounters, sizeof(Local_SegmentCounters));
+
+        /*
+         * note, strcpy is OK because both are fixed size buffers of the same size,
+         * and the null termination on CurrentSegment was locally enforced already
+         */
+        strcpy(Local_SegmentName, CurrentSegment);
+    }
+
+    memset(&amp;UT_SegmentCounters, 0, sizeof(UT_SegmentCounters));
+
+    UT_BSP_Unlock();
+
+    if (SegmentValid)
+    {
+        UtAssert_DoTestSegmentReport(Local_SegmentName, &amp;Local_SegmentCounters);
+    }
+    else
+    {
+        UT_BSP_DoText(UTASSERT_CASETYPE_END, "No test cases\n");
+    }
+}
+
+void UtAssert_SetContext(UtAssert_CaseType_t Context)
+{
+    DefaultContext = Context;
+}
+
+UtAssert_CaseType_t UtAssert_GetContext(void)
+{
+    return DefaultContext;
+}
+
+bool UtAssert(bool Expression, const char *Description, const char *File, uint32 Line)
+{
+    return UtAssertEx(Expression, UtAssert_GetContext(), File, Line, "%s", Description);
+}
+
+bool UtAssertEx(bool Expression, UtAssert_CaseType_t CaseType, const char *File, uint32 Line, const char *MessageFormat,
+                ...)
+{
+    va_list va;
+    char    FinalMessage[256];
+    uint32  TestSegmentCount;
+    uint32  TotalTestCases;
+
+    UT_BSP_Lock();
+
+    ++UT_SegmentCounters.TotalTestCases;
+
+    if (Expression)
+    {
+        CaseType = UTASSERT_CASETYPE_PASS;
+    }
+
+    if ((uint32)CaseType &lt; UTASSERT_CASETYPE_MAX)
+    {
+        ++UT_SegmentCounters.CaseCount[(uint32)CaseType];
+    }
+
+    TestSegmentCount = 1 + UT_TotalCounters.TestSegmentCount;
+    TotalTestCases   = UT_SegmentCounters.TotalTestCases;
+
+    UT_BSP_Unlock();
+
+    va_start(va, MessageFormat);
+    vsnprintf(FinalMessage, sizeof(FinalMessage), MessageFormat, va);
+    va_end(va);
+
+    UtAssert_DoReport(File, Line, TestSegmentCount, TotalTestCases, CaseType, CurrentSegment, FinalMessage);
+
+    return Expression;
+}
+
+void UtAssert_Abort(const char *Message)
+{
+    UT_BSP_DoText(UTASSERT_CASETYPE_ABORT, Message);
+}
+
+const char *UtAssert_GetCaseTypeAbbrev(UtAssert_CaseType_t CaseType)
+{
+    const char *AbbrevStr;
+
+    switch (CaseType)
+    {
+        case UTASSERT_CASETYPE_ABORT:
+            AbbrevStr = "ABORT";
+            break;
+        case UTASSERT_CASETYPE_FAILURE:
+            AbbrevStr = "FAIL";
+            break;
+        case UTASSERT_CASETYPE_MIR:
+            AbbrevStr = "MIR";
+            break;
+        case UTASSERT_CASETYPE_TSF:
+            AbbrevStr = "TSF";
+            break;
+        case UTASSERT_CASETYPE_TTF:
+            AbbrevStr = "TTF";
+            break;
+        case UTASSERT_CASETYPE_WARN:
+            AbbrevStr = "WARN";
+            break;
+        case UTASSERT_CASETYPE_NA:
+            AbbrevStr = "N/A";
+            break;
+        case UTASSERT_CASETYPE_BEGIN:
+            AbbrevStr = "BEGIN";
+            break;
+        case UTASSERT_CASETYPE_END:
+            AbbrevStr = "END";
+            break;
+        case UTASSERT_CASETYPE_PASS:
+            AbbrevStr = "PASS";
+            break;
+        case UTASSERT_CASETYPE_INFO:
+            AbbrevStr = "INFO";
+            break;
+        case UTASSERT_CASETYPE_FLOW:
+            AbbrevStr = "FLOW";
+            break;
+        case UTASSERT_CASETYPE_DEBUG:
+            AbbrevStr = "DEBUG";
+            break;
+        default:
+            /* do not return NULL, as the result may be directly passed to C library functions */
+            AbbrevStr = "OTHER";
+            break;
+    }
+
+    return AbbrevStr;
+}
+
+void UtAssert_Message(uint8 MessageType, const char *File, uint32 Line, const char *Spec, ...)
+{
+    va_list     va;
+    char        FinalMessage[256];
+    const char *BaseName;
+    size_t      MsgLen;
+
+    if (File != NULL)
+    {
+        BaseName = strrchr(File, '/');
+        if (BaseName == NULL)
+        {
+            BaseName = File;
+        }
+        else
+        {
+            ++BaseName;
+        }
+        snprintf(FinalMessage, sizeof(FinalMessage), "%s:%u:", BaseName, (unsigned int)Line);
+        MsgLen = strlen(FinalMessage);
+    }
+    else
+    {
+        MsgLen = 0;
+    }
+
+    va_start(va, Spec);
+    vsnprintf(&amp;FinalMessage[MsgLen], sizeof(FinalMessage) - MsgLen, Spec, va);
+    va_end(va);
+
+    UT_BSP_DoText(MessageType, FinalMessage);
+}
+
+const char *UtAssert_GetOpText(UtAssert_Compare_t CompareType)
+{
+    const char *OpText;
+
+    switch (CompareType)
+    {
+        case UtAssert_Compare_EQ: /* actual equals reference value */
+            OpText = "==";
+            break;
+        case UtAssert_Compare_NEQ: /* actual does not non equal reference value */
+            OpText = "!=";
+            break;
+        case UtAssert_Compare_LT: /* actual less than reference (exclusive) */
+            OpText = "&lt;";
+            break;
+        case UtAssert_Compare_GT: /* actual greater than reference (exclusive)  */
+            OpText = "&gt;";
+            break;
+        case UtAssert_Compare_LTEQ: /* actual less than or equal to reference (inclusive) */
+            OpText = "&lt;=";
+            break;
+        case UtAssert_Compare_GTEQ: /* actual greater than reference (inclusive) */
+            OpText = "&gt;=";
+            break;
+        case UtAssert_Compare_BITMASK_SET: /* bit(s) in reference are set in actual */
+            OpText = "&amp;";
+            break;
+        case UtAssert_Compare_BITMASK_UNSET: /* bit(s) in reference are not set in actual */
+            OpText = "&amp;~";
+            break;
+        default: /* should never happen */
+            OpText = "??";
+            break;
+    }
+
+    return OpText;
+}
+
+bool UtAssert_GenericUnsignedCompare(unsigned long ActualValue, UtAssert_Compare_t CompareType,
+                                     unsigned long ReferenceValue, UtAssert_Radix_t RadixType, const char *File,
+                                     uint32 Line, const char *Desc, const char *ActualText, const char *ReferenceText)
+{
+    return UtAssert_GenericIntegerCompare(true, ActualValue, CompareType, ReferenceValue, File, Line, RadixType, Desc,
+                                          ActualText, ReferenceText);
+}
+
+bool UtAssert_GenericSignedCompare(long ActualValue, UtAssert_Compare_t CompareType, long ReferenceValue,
+                                   UtAssert_Radix_t RadixType, const char *File, uint32 Line, const char *Desc,
+                                   const char *ActualText, const char *ReferenceText)
+{
+    return UtAssert_GenericIntegerCompare(false, ActualValue, CompareType, ReferenceValue, File, Line, RadixType, Desc,
+                                          ActualText, ReferenceText);
+}
+
+static const char *UtAssert_GetValueText(char *TempBuf, size_t TempSz, UT_IntCheck_t InValue, bool IsUnsigned,
+                                         UtAssert_Radix_t RadixType)
+{
+    if (RadixType == UtAssert_Radix_BOOLEAN)
+    {
+        if (InValue != 0)
+        {
+            snprintf(TempBuf, TempSz, "true");
+        }
+        else
+        {
+            snprintf(TempBuf, TempSz, "false");
+        }
+    }
+    else if (RadixType == UtAssert_Radix_OCTAL)
+    {
+        snprintf(TempBuf, TempSz, "0%lo", (unsigned long)InValue);
+    }
+    else if (RadixType == UtAssert_Radix_HEX)
+    {
+        snprintf(TempBuf, TempSz, "0x%lx", (unsigned long)InValue);
+    }
+    else if (IsUnsigned)
+    {
+        snprintf(TempBuf, TempSz, "%lu", (unsigned long)InValue);
+    }
+    else
+    {
+        snprintf(TempBuf, TempSz, "%ld", (long)InValue);
+    }
+
+    return TempBuf;
+}
+
+static bool UtAssert_DoCompare(long ActualValueIn, UtAssert_Compare_t CompareType, UT_IntCheck_t ReferenceValueIn,
+                               bool IsUnsigned)
+{
+    bool              Result;
+    UtAssert_IntBuf_t ActualValue;
+    UtAssert_IntBuf_t ReferenceValue;
+
+    if (IsUnsigned)
+    {
+        ActualValue.u    = ActualValueIn;
+        ReferenceValue.u = ReferenceValueIn;
+    }
+    else
+    {
+        ActualValue.s    = ActualValueIn;
+        ReferenceValue.s = ReferenceValueIn;
+    }
+
+    switch (UT_COMPARE_TYPE(CompareType, IsUnsigned))
+    {
+        case UT_COMPARE_TYPE(UtAssert_Compare_EQ, true): /* actual equals reference value */
+            Result = (ActualValue.u == ReferenceValue.u);
+            break;
+        case UT_COMPARE_TYPE(UtAssert_Compare_EQ, false): /* actual equals reference value */
+            Result = (ActualValue.s == ReferenceValue.s);
+            break;
+        case UT_COMPARE_TYPE(UtAssert_Compare_NEQ, true): /* actual does not non equal reference value */
+            Result = (ActualValue.u != ReferenceValue.u);
+            break;
+        case UT_COMPARE_TYPE(UtAssert_Compare_NEQ, false): /* actual does not non equal reference value */
+            Result = (ActualValue.s != ReferenceValue.s);
+            break;
+        case UT_COMPARE_TYPE(UtAssert_Compare_LT, true): /* actual less than reference (exclusive) */
+            Result = (ActualValue.u &lt; ReferenceValue.u);
+            break;
+        case UT_COMPARE_TYPE(UtAssert_Compare_LT, false): /* actual less than reference (exclusive) */
+            Result = (ActualValue.s &lt; ReferenceValue.s);
+            break;
+        case UT_COMPARE_TYPE(UtAssert_Compare_GT, true): /* actual greater than reference (exclusive)  */
+            Result = (ActualValue.u &gt; ReferenceValue.u);
+            break;
+        case UT_COMPARE_TYPE(UtAssert_Compare_GT, false): /* actual greater than reference (exclusive)  */
+            Result = (ActualValue.s &gt; ReferenceValue.s);
+            break;
+        case UT_COMPARE_TYPE(UtAssert_Compare_LTEQ, true): /* actual less than reference (inclusive) */
+            Result = (ActualValue.u &lt;= ReferenceValue.u);
+            break;
+        case UT_COMPARE_TYPE(UtAssert_Compare_LTEQ, false): /* actual less than reference (inclusive) */
+            Result = (ActualValue.s &lt;= ReferenceValue.s);
+            break;
+        case UT_COMPARE_TYPE(UtAssert_Compare_GTEQ, true): /* actual greater than reference (inclusive) */
+            Result = (ActualValue.u &gt;= ReferenceValue.u);
+            break;
+        case UT_COMPARE_TYPE(UtAssert_Compare_GTEQ, false): /* actual greater than reference (inclusive) */
+            Result = (ActualValue.s &gt;= ReferenceValue.s);
+            break;
+        case UT_COMPARE_TYPE(UtAssert_Compare_BITMASK_SET, true): /* bit(s) in reference are set in actual */
+            Result = (ActualValue.u &amp; ReferenceValue.u) == ReferenceValue.u;
+            break;
+        case UT_COMPARE_TYPE(UtAssert_Compare_BITMASK_SET, false): /* bit(s) in reference are set in actual */
+            Result = (ActualValue.s &amp; ReferenceValue.s) == ReferenceValue.s;
+            break;
+        case UT_COMPARE_TYPE(UtAssert_Compare_BITMASK_UNSET, true): /* bit(s) in reference are not set in actual */
+            Result = (ActualValue.u &amp; ReferenceValue.u) == 0;
+            break;
+        case UT_COMPARE_TYPE(UtAssert_Compare_BITMASK_UNSET, false): /* bit(s) in reference are not set in actual */
+            Result = (ActualValue.s &amp; ReferenceValue.s) == 0;
+            break;
+        default: /* should never happen */
+            Result = false;
+            break;
+    }
+
+    return Result;
+}
+
+/*
+ * -------------------------------------------------------------------------------------
+ * Implementation of UtAssert_GenericIntegerCompare()
+ *
+ * See declaration for full API information
+ * -------------------------------------------------------------------------------------
+ */
+bool UtAssert_GenericIntegerCompare(bool IsUnsigned, UT_IntCheck_t ActualValue, UtAssert_Compare_t CompareType,
+                                    UT_IntCheck_t RefValue, const char *File, uint32 Line, UtAssert_Radix_t RadixType,
+                                    const char *Typename, const char *ActualText, const char *RefText)
+{
+    static const char UTASSERT_PREFIX[] = "UTASSERT_";
+
+    char ActualStr[32];
+    char RefStr[32];
+    char TagStr[32];
+    int  TagLen;
+
+    /* If the radix type was not specified, then check if the typename appears to be a pointer -
+     * That is, it contains an asterisk.  This is far from foolproof due to typedefs etc but
+     * it should catch most of them (note that "hiding" a pointer via typedef is discouraged by
+     * GSFC coding standards, so this shouldn't be too likely)
+     */
+    if (Typename != NULL &amp;&amp; *Typename != 0)
+    {
+        TagLen = snprintf(TagStr, sizeof(TagStr), "%s", Typename);
+        if (TagLen &lt; 0)
+        {
+            TagLen = 0;
+        }
+        else if (TagLen &gt; (sizeof(TagStr) - 3))
+        {
+            TagLen = sizeof(TagStr) - 3;
+        }
+
+        while (TagLen &gt; 0 &amp;&amp; (isspace((unsigned char)TagStr[TagLen - 1]) || TagStr[TagLen - 1] == ':'))
+        {
+            --TagLen;
+        }
+
+        if (TagLen &gt; 0)
+        {
+            TagStr[TagLen] = ':';
+            ++TagLen;
+            TagStr[TagLen] = ' ';
+            ++TagLen;
+        }
+
+        TagStr[TagLen] = 0;
+
+        if (RadixType == UtAssert_Radix_DEFAULT &amp;&amp; strchr(Typename, '*') != NULL)
+        {
+            /* looks like a pointer type */
+            RadixType = UtAssert_Radix_HEX;
+        }
+    }
+    else
+    {
+        TagStr[0] = 0;
+    }
+
+    /* If either the actual text or the ref text starts with the "UTASSERT_" prefix, then strip it */
+    if (strncmp(ActualText, UTASSERT_PREFIX, sizeof(UTASSERT_PREFIX) - 1) == 0)
+    {
+        ActualText += sizeof(UTASSERT_PREFIX) - 1;
+    }
+    if (strncmp(RefText, UTASSERT_PREFIX, sizeof(UTASSERT_PREFIX) - 1) == 0)
+    {
+        RefText += sizeof(UTASSERT_PREFIX) - 1;
+    }
+
+    return UtAssertEx(UtAssert_DoCompare(ActualValue, CompareType, RefValue, IsUnsigned), UTASSERT_CASETYPE_FAILURE,
+                      File, Line, "%s%s (%s) %s %s (%s)", TagStr, ActualText,
+                      UtAssert_GetValueText(ActualStr, sizeof(ActualStr), ActualValue, IsUnsigned, RadixType),
+                      UtAssert_GetOpText(CompareType), RefText,
+                      UtAssert_GetValueText(RefStr, sizeof(RefStr), RefValue, IsUnsigned, RadixType));
+}
+
+bool UtAssert_StringBufCompare(const char *String1, size_t String1Max, const char *String2, size_t String2Max,
+                               UtAssert_Compare_t CompareType, const char *File, uint32 Line)
+{
+    char        ScrubbedString1[256];
+    char        ScrubbedString2[256];
+    const char *EndPtr1;
+    const char *EndPtr2;
+    size_t      FormatLen1;
+    size_t      FormatLen2;
+    bool        Result;
+    int         Compare;
+
+    /* Locate the actual end of both strings */
+    if (String1 == NULL)
+    {
+        EndPtr1 = NULL;
+    }
+    else if (String1Max == UTASSERT_STRINGBUF_NULL_TERM)
+    {
+        /*
+         * NOTE: it is technically undefined behavior to pass a size to memchr()
+         * that is larger than the actual buffer, even if it is known/guaranteed
+         * to find a match within the actual buffer.  Therefore the regular strlen()
+         * is used instead.
+         */
+        EndPtr1 = String1 + strlen(String1);
+    }
+    else
+    {
+        EndPtr1 = memchr(String1, 0, String1Max);
+    }
+
+    if (EndPtr1 != NULL)
+    {
+        FormatLen1 = EndPtr1 - String1;
+    }
+    else
+    {
+        FormatLen1 = String1Max;
+    }
+
+    if (String2 == NULL)
+    {
+        EndPtr2 = NULL;
+    }
+    else if (String2Max == UTASSERT_STRINGBUF_NULL_TERM)
+    {
+        EndPtr2 = String2 + strlen(String2);
+    }
+    else
+    {
+        EndPtr2 = memchr(String2, 0, String2Max);
+    }
+
+    if (EndPtr2 != NULL)
+    {
+        FormatLen2 = EndPtr2 - String2;
+    }
+    else
+    {
+        FormatLen2 = String2Max;
+    }
+
+    if (FormatLen1 == 0 &amp;&amp; FormatLen2 == 0)
+    {
+        /* Two empty strings are considered equal */
+        Compare = 0;
+    }
+    else
+    {
+        /* Compare actual content based on the shorter of the two strings */
+        if (FormatLen1 &lt; FormatLen2)
+        {
+            Compare = memcmp(String1, String2, FormatLen1);
+        }
+        else
+        {
+            Compare = memcmp(String1, String2, FormatLen2);
+        }
+
+        /* If initial content was the same, go by whichever is longer */
+        if (Compare == 0)
+        {
+            /*
+             * If String1 is longer, compare should be positive (String1 &gt; String2)
+             * If String2 is longer, compare should be negative (String1 &lt; String2)
+             * If strings are the same length, compare should be 0.
+             */
+            Compare = FormatLen1 - FormatLen2;
+        }
+    }
+
+    switch (CompareType)
+    {
+        case UtAssert_Compare_EQ: /* actual equals reference value */
+            Result = (Compare == 0);
+            break;
+        case UtAssert_Compare_NEQ: /* actual does not non equal reference value */
+            Result = (Compare != 0);
+            break;
+        case UtAssert_Compare_LT: /* actual less than reference (exclusive) */
+            Result = (Compare &lt; 0);
+            break;
+        case UtAssert_Compare_GT: /* actual greater than reference (exclusive)  */
+            Result = (Compare &gt; 0);
+            break;
+        case UtAssert_Compare_LTEQ: /* actual less than or equal to reference (inclusive) */
+            Result = (Compare &lt;= 0);
+            break;
+        case UtAssert_Compare_GTEQ: /* actual greater than reference (inclusive) */
+            Result = (Compare &gt;= 0);
+            break;
+        default: /* should never happen */
+            Result = false;
+            break;
+    }
+
+    /* Now make "safe" copies of the strings */
+    /* Check for a newline within the string, and if present, end the string there instead */
+    if (FormatLen1 &gt; 0)
+    {
+        EndPtr1 = memchr(String1, '\n', FormatLen1);
+        if (EndPtr1 != NULL)
+        {
+            FormatLen1 = EndPtr1 - String1;
+        }
+        memcpy(ScrubbedString1, String1, FormatLen1);
+    }
+    ScrubbedString1[FormatLen1] = 0;
+
+    if (FormatLen2 &gt; 0)
+    {
+        EndPtr2 = memchr(String2, '\n', FormatLen2);
+        if (EndPtr2 != NULL)
+        {
+            FormatLen2 = EndPtr2 - String2;
+        }
+        memcpy(ScrubbedString2, String2, FormatLen2);
+    }
+    ScrubbedString2[FormatLen2] = 0;
+
+    return UtAssertEx(Result, UTASSERT_CASETYPE_FAILURE, File, Line, "String: \'%s\' == \'%s\'", ScrubbedString1,
+                      ScrubbedString2);
+}
+</pre></div>
+</div>
+</section>
+<section id="utbsp-c">
+<h2><code class="docutils literal notranslate"><span class="pre">utbsp.c</span></code><a class="headerlink" href="#utbsp-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/ut_assert/src/utbsp.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * File:  utbsp.c
+ *
+ * Purpose:
+ *   Unit test BSP interface functions.
+ *
+ *   This file provides the bindings between the OSAL BSP and UT assert
+ *   when directly running a test program as a standalone OSAL application.
+ *
+ *   It is not used when loading UT assert into another application (e.g. CFE).
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdbool.h&gt;
+
+#include "utbsp.h"
+#include "uttest.h"
+
+#include "bsp-impl.h"
+
+/*
+**  Local Variables
+*/
+typedef struct
+{
+    uint32 CurrVerbosity;
+} BSP_UT_GlobalData_t;
+
+BSP_UT_GlobalData_t BSP_UT_Global;
+
+void UT_BSP_Lock(void)
+{
+    OS_BSP_Lock_Impl();
+}
+
+void UT_BSP_Unlock(void)
+{
+    OS_BSP_Unlock_Impl();
+}
+
+void UT_BSP_Setup(void)
+{
+    uint8        UserShift;
+    uint32       ArgC;
+    char *const *ArgV;
+
+    memset(&amp;BSP_UT_Global, 0, sizeof(BSP_UT_Global));
+
+    UserShift = UTASSERT_CASETYPE_NONE;
+    ArgC      = OS_BSP_GetArgC();
+    if (ArgC &gt; 0)
+    {
+        ArgV = OS_BSP_GetArgV();
+        while (ArgC &gt; 0)
+        {
+            --ArgC;
+
+            if (strcmp(ArgV[0], "-d") == 0)
+            {
+                UserShift = UTASSERT_CASETYPE_DEBUG;
+            }
+            if (strcmp(ArgV[0], "-q") == 0)
+            {
+                UserShift = UTASSERT_CASETYPE_FAILURE;
+            }
+            if (strcmp(ArgV[0], "-v") == 0 &amp;&amp; ArgC &gt; 0)
+            {
+                --ArgC;
+                UserShift = strtoul(ArgV[1], NULL, 0);
+                ++ArgV;
+            }
+
+            ++ArgV;
+        }
+    }
+
+    if (UserShift == UTASSERT_CASETYPE_NONE || UserShift &gt;= UTASSERT_CASETYPE_MAX)
+    {
+        UserShift = UTASSERT_CASETYPE_PASS;
+    }
+
+    BSP_UT_Global.CurrVerbosity = (2 &lt;&lt; UserShift) - 1;
+
+    UT_BSP_DoText(UTASSERT_CASETYPE_BEGIN, "UNIT TEST");
+}
+
+void UT_BSP_StartTestSegment(uint32 SegmentNumber, const char *SegmentName)
+{
+    char ReportBuffer[128];
+
+    snprintf(ReportBuffer, sizeof(ReportBuffer), "%02u %s", (unsigned int)SegmentNumber, SegmentName);
+    UT_BSP_DoText(UTASSERT_CASETYPE_BEGIN, ReportBuffer);
+}
+
+void UT_BSP_DoText(uint8 MessageType, const char *OutputMessage)
+{
+    char   Buffer[16];
+    size_t MsgLen;
+    uint32 TermModeBits = OS_BSP_CONSOLEMODE_NORMAL;
+    uint32 MsgEnabled   = BSP_UT_Global.CurrVerbosity &gt;&gt; MessageType;
+
+    if (MsgEnabled &amp; 1)
+    {
+        UT_BSP_Lock();
+
+        /* Determine if the message type warrants special treatment (color/highlight/etc). */
+        switch (MessageType)
+        {
+            case UTASSERT_CASETYPE_ABORT:
+            case UTASSERT_CASETYPE_FAILURE:
+                TermModeBits = OS_BSP_CONSOLEMODE_HIGHLIGHT | OS_BSP_CONSOLEMODE_RED;
+                break;
+            case UTASSERT_CASETYPE_MIR:
+            case UTASSERT_CASETYPE_WARN:
+                TermModeBits = OS_BSP_CONSOLEMODE_HIGHLIGHT | OS_BSP_CONSOLEMODE_RED | OS_BSP_CONSOLEMODE_GREEN;
+                break;
+            case UTASSERT_CASETYPE_TSF:
+            case UTASSERT_CASETYPE_TTF:
+                TermModeBits = OS_BSP_CONSOLEMODE_HIGHLIGHT | OS_BSP_CONSOLEMODE_RED | OS_BSP_CONSOLEMODE_BLUE;
+                break;
+            case UTASSERT_CASETYPE_BEGIN:
+                OS_BSP_ConsoleOutput_Impl("\n", 1); /* add a bit of extra whitespace between tests */
+                break;
+            case UTASSERT_CASETYPE_PASS:
+                TermModeBits = OS_BSP_CONSOLEMODE_HIGHLIGHT | OS_BSP_CONSOLEMODE_GREEN;
+                break;
+            default:
+                break;
+        }
+
+        if (MsgEnabled &lt;= 1)
+        {
+            TermModeBits = OS_BSP_CONSOLEMODE_NORMAL;
+        }
+
+        snprintf(Buffer, sizeof(Buffer), "[%5s]", UtAssert_GetCaseTypeAbbrev(MessageType));
+
+        if (TermModeBits != OS_BSP_CONSOLEMODE_NORMAL)
+        {
+            OS_BSP_ConsoleSetMode_Impl(TermModeBits);
+        }
+
+        OS_BSP_ConsoleOutput_Impl(Buffer, strlen(Buffer));
+
+        if (TermModeBits != OS_BSP_CONSOLEMODE_NORMAL)
+        {
+            OS_BSP_ConsoleSetMode_Impl(OS_BSP_CONSOLEMODE_NORMAL);
+        }
+
+        OS_BSP_ConsoleOutput_Impl(" ", 1);
+        MsgLen = strlen(OutputMessage);
+        OS_BSP_ConsoleOutput_Impl(OutputMessage, MsgLen);
+        if (MsgLen == 0 || OutputMessage[MsgLen - 1] != '\n')
+        {
+            OS_BSP_ConsoleOutput_Impl("\n", 1);
+        }
+
+        UT_BSP_Unlock();
+    }
+
+    /*
+     * If any ABORT (major failure) message is thrown,
+     * then call a BSP-provided routine to stop the test and possibly dump a core
+     */
+    if (MessageType == UTASSERT_CASETYPE_ABORT)
+    {
+        OS_BSP_Shutdown_Impl();
+    }
+}
+
+void UT_BSP_EndTest(const UtAssert_TestCounter_t *TestCounters)
+{
+    char Message[128];
+
+    /*
+     * Only output a "summary" if there is more than one test Segment.
+     * Otherwise it is a duplicate of the report already given.
+     */
+    if (TestCounters-&gt;TestSegmentCount &gt; 1)
+    {
+        UtAssert_DoTestSegmentReport("SUMMARY", TestCounters);
+    }
+
+    snprintf(Message, sizeof(Message), "COMPLETE: %u tests Segment(s) executed\n\n",
+             (unsigned int)TestCounters-&gt;TestSegmentCount);
+
+    UT_BSP_Lock();
+    OS_BSP_ConsoleOutput_Impl(Message, strlen(Message));
+    UT_BSP_Unlock();
+
+    if ((TestCounters-&gt;CaseCount[UTASSERT_CASETYPE_FAILURE] &gt; 0) ||
+        (TestCounters-&gt;CaseCount[UTASSERT_CASETYPE_TSF] &gt; 0) || (TestCounters-&gt;CaseCount[UTASSERT_CASETYPE_TTF] &gt; 0))
+    {
+        OS_BSP_SetExitCode(OS_ERROR);
+    }
+    else
+    {
+        OS_BSP_SetExitCode(OS_SUCCESS);
+    }
+}
+
+/*
+ * -------------------------------------------------------
+ * ENTRY POINTS from OSAL BSP
+ * -------------------------------------------------------
+ */
+
+void OS_Application_Run(void)
+{
+    UtTest_Run();
+}
+
+/*
+ * Entry point from the BSP.
+ * When linking with UT-Assert, the test framework (this library) serves
+ * the role of the "application" being executed.
+ *
+ * There is a separate entry point (UT_Test_Setup) to configure the test cases.
+ */
+void OS_Application_Startup(void)
+{
+    UtTest_EarlyInit();
+    UT_BSP_Setup();
+
+    /*
+     * Wrap the UtTest_Setup() function in a UT segment called "SETUP"
+     * This allows any assert calls to be used and recorded during setup
+     */
+    UtAssert_BeginTest("SETUP");
+    UtTest_Setup();
+    UtAssert_EndTest();
+}
+</pre></div>
+</div>
+</section>
+<section id="utglobal-h">
+<h2><code class="docutils literal notranslate"><span class="pre">utglobal.h</span></code><a class="headerlink" href="#utglobal-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/ut_assert/src/utglobal.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Purpose: This file contains functions to implement a standard way to execute unit tests.
+ */
+
+#ifndef UTGLOBAL_H
+#define UTGLOBAL_H
+
+/*
+ * Includes
+ */
+#include "osapi.h"
+#include "utassert.h"
+#include "utlist.h"
+#include "utbsp.h"
+#include "uttest.h"
+#include "utstubs.h"
+
+/*
+ * Type Definitions
+ */
+
+typedef struct
+{
+    void (*Test)(void);
+    void (*Setup)(void);
+    void (*Teardown)(void);
+
+    /* Note - the name entry should be long enough to support a GroupName.TestName pattern,
+     * hence why it uses double the OS_MAX_API_NAME length */
+    char TestName[OS_MAX_API_NAME * 2];
+} UtTestDataBaseEntry_t;
+
+typedef struct
+{
+    UtListHead_t *DataBasePtr;
+    uint32        ExecutedCount;
+} UtAssert_Global_t;
+
+/*
+ * Global Test Data
+ */
+extern UtAssert_Global_t UtAssert_Global;
+
+#endif /* UTGLOBAL_H */
+</pre></div>
+</div>
+</section>
+<section id="utlist-c">
+<h2><code class="docutils literal notranslate"><span class="pre">utlist.c</span></code><a class="headerlink" href="#utlist-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/ut_assert/src/utlist.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * File: utlist.c
+ *
+ * Purpose: This file contains functions to implement a generic linked list data structure.
+ */
+
+/*
+ * Includes
+ */
+
+#include "common_types.h"
+#include "utlist.h"
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+/*
+ * Function Definitions
+ */
+
+UtListHead_t *UtList_Create(uint32 NumTags)
+{
+    struct ListAllocator
+    {
+        UtListHead_t Head;
+        UtListNode_t Tags[];
+    };
+    struct ListAllocator *NewList;
+    UtListNode_t *        TagHead;
+    size_t                ActualSize;
+    uint32                i;
+
+    ActualSize = sizeof(struct ListAllocator) + (sizeof(UtListNode_t) * NumTags);
+    NewList    = (struct ListAllocator *)malloc(ActualSize);
+
+    memset(NewList, 0, ActualSize);
+
+    NewList-&gt;Head.Tags         = NewList-&gt;Tags;
+    NewList-&gt;Head.NumberOfTags = NumTags;
+
+    for (i = 0; i &lt; NumTags; ++i)
+    {
+        TagHead       = &amp;NewList-&gt;Head.Tags[i];
+        TagHead-&gt;Tag  = i;
+        TagHead-&gt;Next = TagHead;
+        TagHead-&gt;Prev = TagHead;
+    }
+
+    return &amp;NewList-&gt;Head;
+}
+
+void UtList_Destroy(UtListHead_t *ListHead)
+{
+    uint32 i;
+
+    for (i = 0; i &lt; ListHead-&gt;NumberOfTags; ++i)
+    {
+        UtList_Reset(&amp;ListHead-&gt;Tags[i]);
+    }
+    free(ListHead);
+}
+
+void UtList_Reset(UtListNode_t *TagHead)
+{
+    while (!UtList_IsEmpty(TagHead))
+    {
+        UtList_DeleteNode(TagHead-&gt;Next);
+    }
+}
+
+void UtList_Merge(UtListNode_t *TagHead1, UtListNode_t *TagHead2)
+{
+    UtListNode_t *Tail1 = TagHead1-&gt;Prev;
+    UtListNode_t *Tail2 = TagHead2-&gt;Prev;
+
+    Tail1-&gt;Next    = TagHead2;
+    Tail2-&gt;Next    = TagHead1;
+    TagHead1-&gt;Prev = Tail2;
+    TagHead2-&gt;Prev = Tail1;
+}
+
+void UtList_Insert_After(UtListNode_t *ExistingNode, UtListNode_t *NewNode)
+{
+    NewNode-&gt;Next       = ExistingNode-&gt;Next;
+    NewNode-&gt;Prev       = ExistingNode;
+    NewNode-&gt;Prev-&gt;Next = NewNode;
+    NewNode-&gt;Next-&gt;Prev = NewNode;
+}
+
+void UtList_Insert_Before(UtListNode_t *ExistingNode, UtListNode_t *NewNode)
+{
+    NewNode-&gt;Next       = ExistingNode;
+    NewNode-&gt;Prev       = ExistingNode-&gt;Prev;
+    NewNode-&gt;Prev-&gt;Next = NewNode;
+    NewNode-&gt;Next-&gt;Prev = NewNode;
+}
+
+void UtList_Extract(UtListNode_t *ExistingNode)
+{
+    ExistingNode-&gt;Next-&gt;Prev = ExistingNode-&gt;Prev;
+    ExistingNode-&gt;Prev-&gt;Next = ExistingNode-&gt;Next;
+    ExistingNode-&gt;Next       = ExistingNode;
+    ExistingNode-&gt;Prev       = ExistingNode;
+}
+
+UtListNode_t *UtList_NewNode(void *Data, uint32 DataSize)
+{
+    union NodeAllocator
+    {
+        UtListNode_t Node;
+        double       AlignDbl;
+        void *       AlignPtr;
+        long         AlignLong;
+    } * AllocNode;
+
+    AllocNode = malloc(sizeof(union NodeAllocator) + DataSize);
+    memset(AllocNode, 0, sizeof(union NodeAllocator));
+    AllocNode-&gt;Node.Data     = &amp;AllocNode[1];
+    AllocNode-&gt;Node.DataSize = DataSize;
+    memcpy(AllocNode-&gt;Node.Data, Data, DataSize);
+
+    AllocNode-&gt;Node.Next = &amp;AllocNode-&gt;Node;
+    AllocNode-&gt;Node.Prev = &amp;AllocNode-&gt;Node;
+
+    return &amp;AllocNode-&gt;Node;
+}
+
+void UtList_Add(UtListHead_t *ListHead, void *Data, uint32 DataSize, uint32 Tag)
+{
+    UtListNode_t *TagHead;
+    UtListNode_t *NewNode;
+
+    TagHead = UtList_GetHead(ListHead, Tag);
+    if (TagHead != NULL)
+    {
+        NewNode      = UtList_NewNode(Data, DataSize);
+        NewNode-&gt;Tag = Tag;
+        UtList_Insert_Before(TagHead, NewNode);
+    }
+}
+
+void UtList_DeleteNode(UtListNode_t *DeleteNode)
+{
+    UtList_Extract(DeleteNode);
+
+    /* non-data/header nodes shouldn't be free()'ed */
+    if (DeleteNode-&gt;Data != NULL)
+    {
+        free(DeleteNode);
+    }
+}
+
+bool UtList_IsEmpty(UtListNode_t *TagHead)
+{
+    return (TagHead-&gt;Next == TagHead);
+}
+
+UtListNode_t *UtList_GetHead(UtListHead_t *ListHead, uint32 Tag)
+{
+    if (Tag &gt;= ListHead-&gt;NumberOfTags)
+    {
+        return NULL;
+    }
+    return &amp;ListHead-&gt;Tags[Tag];
+}
+
+UtListNode_t *UtList_GetNext(UtListNode_t *ListNode)
+{
+    return ListNode-&gt;Next;
+}
+
+void *UtList_GetObject(UtListNode_t *ListNode)
+{
+    return ListNode-&gt;Data;
+}
+
+bool UtList_IsEnd(UtListNode_t *TagHead, UtListNode_t *ListNode)
+{
+    return (TagHead == ListNode);
+}
+</pre></div>
+</div>
+</section>
+<section id="utstubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">utstubs.c</span></code><a class="headerlink" href="#utstubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/ut_assert/src/utstubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *  Created on: Feb 25, 2015
+ *      Author: joseph.p.hickey@nasa.gov
+ *
+ * Types and definitions for the generic Unit Test Stub framework implemented
+ * as part of OSAL.
+ *
+ * Provides a means to implement stub functions WITHOUT needing any specific
+ * headers or knowledge about the real implementations of those functions.
+ *
+ * This is a major key difference between this implementation and the other stub
+ * implementations that have existed before this, as all other hook/stub implementations
+ * ultimately use the prototypes or are somehow tied to the functions they are stubbing out.
+ *
+ */
+
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdarg.h&gt;
+#include &lt;stdbool.h&gt;
+
+#include "utstubs.h"
+#include "utbsp.h"
+
+#define UT_MAX_FUNC_STUBS     200
+#define UT_APPNAME_MAX_LEN    80
+#define UT_SUBSYS_MAX_LEN     5
+#define UT_MODEFLAG_ALLOC_BUF 0x1U
+
+/*
+ * Macro to combine a genre and size into a single integer value that can be
+ * used in a switch/case construct
+ */
+#define UT_GENRE_SIZE(g, s) (((size_t)g &lt;&lt; 8) | s)
+
+typedef enum
+{
+    UT_ENTRYTYPE_UNUSED,                 /**&lt; Unused/available table entries */
+    UT_ENTRYTYPE_COUNTER,                /**&lt; Records a usage count plus most recent return code */
+    UT_ENTRYTYPE_DATA_BUFFER,            /**&lt; Storage for data buffers to simulate read/write or queue ops */
+    UT_ENTRYTYPE_CALLBACK_HOOK,          /**&lt; A custom callback/hook function to be invoked prior to handler */
+    UT_ENTRYTYPE_CALLBACK_CONTEXT,       /**&lt; Context data for callback/hook function */
+    UT_ENTRYTYPE_CALL_ONCE,              /**&lt; Records a "call once" directive */
+    UT_ENTRYTYPE_FINAL_HANDLER,          /**&lt; The final handler for the stub */
+    UT_ENTRYTYPE_RETURN_BUFFER,          /**&lt; Storage for actual return value from stub */
+    UT_ENTRYTYPE_RETVAL_CONFIG_DEFERRED, /**&lt; Configuration for return value from stub */
+    UT_ENTRYTYPE_RETVAL_CONFIG_CONSTANT, /**&lt; Configuration for return value from stub */
+} UT_EntryType_t;
+
+typedef struct
+{
+    uint32 Count;
+    int32  Value;
+} UT_RetcodeEntry_t;
+
+typedef union UT_RetvalBuf
+{
+    uint8          Raw[8];
+    const void *   IndirectPtr;
+    void *         Ptr;
+    UT_IntReturn_t Integer;
+    double         FloatingPt;
+} UT_RetvalBuf_t;
+
+typedef struct
+{
+    UT_ValueGenre_t Genre;
+    int32           Counter;
+    UT_RetvalBuf_t  Buf;
+    size_t          ActualSz;
+    const char *    TypeName;
+} UT_RetvalConfigEntry_t;
+
+typedef struct
+{
+    size_t      Position;
+    size_t      TotalSize;
+    uint8 *     BasePtr;
+    const char *ContentTypeStr;
+} UT_BufferEntry_t;
+
+typedef union
+{
+    void *             Addr;
+    UT_HookFunc_t      SimpleHook;
+    UT_VaHookFunc_t    VaHook;
+    UT_HandlerFunc_t   SimpleHandler;
+    UT_VaHandlerFunc_t VaHandler;
+} UT_HookFuncPtr_t;
+
+typedef struct
+{
+    UT_HookFuncPtr_t Ptr;
+    void *           CallbackArg;
+    bool             IsVarg;
+} UT_CallbackEntry_t;
+
+typedef union
+{
+    UT_RetcodeEntry_t      Rc;
+    UT_RetvalConfigEntry_t Rvc;
+    UT_BufferEntry_t       Buff;
+    UT_CallbackEntry_t     Cb;
+    UT_StubContext_t       Context;
+} UT_EntryData_t;
+
+/*
+ * Definition of internal stub table structure
+ */
+typedef struct
+{
+    UT_EntryType_t EntryType;
+    uint32         ModeFlags;
+    UT_EntryKey_t  FuncKey;
+    UT_EntryData_t Data;
+} UT_StubTableEntry_t;
+
+static UT_StubTableEntry_t UT_StubTable[UT_MAX_FUNC_STUBS] = {{0}};
+static uint32              UT_MaxStubSearchLen             = 0;
+
+/**
+ * Helper function to clear an entry in the stub table.
+ * This will call "free()" on any dynamically allocated buffers within the entry,
+ * then zero out the entire block so it can be re-used.
+ */
+static void UT_ClearStubEntry(UT_StubTableEntry_t *StubPtr)
+{
+    /* Be sure to call free() on any malloc'ed buffers before clearing */
+    if ((StubPtr-&gt;EntryType == UT_ENTRYTYPE_DATA_BUFFER || StubPtr-&gt;EntryType == UT_ENTRYTYPE_RETURN_BUFFER) &amp;&amp;
+        StubPtr-&gt;Data.Buff.BasePtr != NULL &amp;&amp; (StubPtr-&gt;ModeFlags &amp; UT_MODEFLAG_ALLOC_BUF) != 0)
+    {
+        free(StubPtr-&gt;Data.Buff.BasePtr);
+    }
+    memset(StubPtr, 0, sizeof(*StubPtr));
+}
+
+/*
+** Functions
+*/
+
+static UT_StubTableEntry_t *UT_GetStubEntry(UT_EntryKey_t FuncKey, UT_EntryType_t TestMode)
+{
+    UT_StubTableEntry_t *StubPtr   = NULL;
+    uint32               Idx       = FuncKey % (UT_MAX_FUNC_STUBS - 1); /* hash the key to determine the start point */
+    uint32               SearchLen = 0;
+    uint32               SearchLimit;
+    UT_EntryKey_t        SearchKey;
+
+    /* If searching for an unused entry, look through the entire table.
+     * Otherwise bound the search */
+    if (TestMode == UT_ENTRYTYPE_UNUSED)
+    {
+        SearchLimit = UT_MAX_FUNC_STUBS;
+        SearchKey   = 0;
+    }
+    else
+    {
+        SearchLimit = UT_MaxStubSearchLen;
+        SearchKey   = FuncKey;
+    }
+
+    while (1)
+    {
+        if (SearchLen &gt;= SearchLimit)
+        {
+            StubPtr = NULL;
+            break;
+        }
+        ++SearchLen;
+        StubPtr = &amp;UT_StubTable[Idx];
+        if (StubPtr-&gt;EntryType == TestMode &amp;&amp; StubPtr-&gt;FuncKey == SearchKey)
+        {
+            break;
+        }
+        ++Idx;
+        if (Idx &gt;= UT_MAX_FUNC_STUBS)
+        {
+            Idx = 0;
+        }
+    }
+
+    /*
+     * Keep track of the longest search length since the last reset.
+     * This serves as the upper bound for future searches.
+     */
+    if (SearchLen &gt; UT_MaxStubSearchLen)
+    {
+        UT_MaxStubSearchLen = SearchLen;
+    }
+
+    return StubPtr;
+}
+
+void UT_ResetState(UT_EntryKey_t FuncKey)
+{
+    UT_StubTableEntry_t *StubPtr;
+    int32                i;
+
+    StubPtr = UT_StubTable;
+    for (i = 0; i &lt; UT_MAX_FUNC_STUBS; ++i)
+    {
+        if (FuncKey == 0 || StubPtr-&gt;FuncKey == FuncKey)
+        {
+            UT_ClearStubEntry(StubPtr);
+        }
+        ++StubPtr;
+    }
+    if (FuncKey == 0)
+    {
+        UT_MaxStubSearchLen = 0;
+    }
+}
+
+void UT_Stub_CallOnce(void (*Func)(void))
+{
+    UT_StubTableEntry_t *StubPtr;
+    UT_StubTableEntry_t *OnceEnt;
+    UT_EntryKey_t        FuncKey;
+    int32                i;
+
+    if (Func == NULL)
+    {
+        return;
+    }
+
+    FuncKey = (UT_EntryKey_t)Func;
+    OnceEnt = NULL;
+    StubPtr = UT_StubTable;
+    for (i = 0; i &lt; UT_MAX_FUNC_STUBS; ++i)
+    {
+        if (StubPtr-&gt;EntryType == UT_ENTRYTYPE_UNUSED &amp;&amp; OnceEnt == NULL)
+        {
+            OnceEnt = StubPtr;
+        }
+        else if (StubPtr-&gt;EntryType == UT_ENTRYTYPE_CALL_ONCE &amp;&amp; StubPtr-&gt;FuncKey == FuncKey)
+        {
+            OnceEnt = StubPtr;
+            break;
+        }
+        ++StubPtr;
+    }
+
+    if (OnceEnt == NULL)
+    {
+        /* should never happen -- UT_MAX_FUNC_STUBS needs increase if it does */
+        UtAssert_Abort("Cannot do CallOnce - UT_MAX_FUNC_STUBS too low?");
+    }
+    else if (OnceEnt-&gt;EntryType == UT_ENTRYTYPE_UNUSED)
+    {
+        OnceEnt-&gt;EntryType = UT_ENTRYTYPE_CALL_ONCE;
+        OnceEnt-&gt;FuncKey   = FuncKey;
+
+        Func();
+    }
+}
+
+bool UT_StoreRetval(UT_RetvalBuf_t *Buf, const void *ValuePtr, size_t ValueSize, UT_ValueGenre_t ValueGenre)
+{
+    /* Copy the value based on width, so it will be properly extended, if applicable:
+     * - all numeric values need to be aligned per endianness of the host
+     * - signed ints must be sign-extended,
+     * - single-precision floating points will be extended to double-precision
+     *
+     * Pointers must all be the expected size, however.
+     */
+    switch (UT_GENRE_SIZE(ValueGenre, ValueSize))
+    {
+        case UT_GENRE_SIZE(UT_ValueGenre_INTEGER, sizeof(int8)):
+            Buf-&gt;Integer = *((int8 const *)ValuePtr);
+            break;
+        case UT_GENRE_SIZE(UT_ValueGenre_INTEGER, sizeof(int16)):
+            Buf-&gt;Integer = *((int16 const *)ValuePtr);
+            break;
+        case UT_GENRE_SIZE(UT_ValueGenre_INTEGER, sizeof(int32)):
+            Buf-&gt;Integer = *((int32 const *)ValuePtr);
+            break;
+        case UT_GENRE_SIZE(UT_ValueGenre_INTEGER, sizeof(int64)):
+            Buf-&gt;Integer = *((int64 const *)ValuePtr);
+            break;
+
+        case UT_GENRE_SIZE(UT_ValueGenre_FLOAT, sizeof(float)):
+            Buf-&gt;FloatingPt = *((float const *)ValuePtr);
+            break;
+        case UT_GENRE_SIZE(UT_ValueGenre_FLOAT, sizeof(double)):
+            Buf-&gt;FloatingPt = *((double const *)ValuePtr);
+            break;
+
+        case UT_GENRE_SIZE(UT_ValueGenre_POINTER, sizeof(void *)):
+            Buf-&gt;Ptr = *((void *const *)ValuePtr);
+            break;
+
+        default:
+            return UtAssert_Failed("Cannot store return value - ValueSize not valid");
+    }
+
+    return true;
+}
+
+bool UT_LoadRetval(void *ValuePtr, size_t ValueSize, const UT_RetvalBuf_t *Buf, UT_ValueGenre_t ValueGenre)
+{
+    switch (UT_GENRE_SIZE(ValueGenre, ValueSize))
+    {
+        case UT_GENRE_SIZE(UT_ValueGenre_INTEGER, sizeof(int8)):
+            *((int8 *)ValuePtr) = Buf-&gt;Integer;
+            break;
+        case UT_GENRE_SIZE(UT_ValueGenre_INTEGER, sizeof(int16)):
+            *((int16 *)ValuePtr) = Buf-&gt;Integer;
+            break;
+        case UT_GENRE_SIZE(UT_ValueGenre_INTEGER, sizeof(int32)):
+            *((int32 *)ValuePtr) = Buf-&gt;Integer;
+            break;
+        case UT_GENRE_SIZE(UT_ValueGenre_INTEGER, sizeof(int64)):
+            *((int64 *)ValuePtr) = Buf-&gt;Integer;
+            break;
+
+        case UT_GENRE_SIZE(UT_ValueGenre_FLOAT, sizeof(float)):
+            *((float *)ValuePtr) = Buf-&gt;FloatingPt;
+            break;
+        case UT_GENRE_SIZE(UT_ValueGenre_FLOAT, sizeof(double)):
+            *((double *)ValuePtr) = Buf-&gt;FloatingPt;
+            break;
+
+        case UT_GENRE_SIZE(UT_ValueGenre_POINTER, sizeof(void *)):
+            *((void **)ValuePtr) = Buf-&gt;Ptr;
+            break;
+
+        default:
+            return UtAssert_Failed("Cannot load return value - ValueSize not valid");
+    }
+
+    return true;
+}
+
+void UT_ConfigureGenericStubReturnValue(UT_EntryKey_t FuncKey, const void *ValuePtr, size_t ValueSize,
+                                        UT_ValueGenre_t ValueGenre, int32 Counter, const char *TypeName)
+{
+    UT_StubTableEntry_t *StubPtr;
+    UT_EntryType_t       ReqEntryType;
+
+    StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_UNUSED);
+
+    /*
+     * For deferred retval configs, this always adds a new entry.  But
+     * for constant retval configs, it should replace the existing entry if
+     * there is one.
+     */
+    if (Counter &gt; 0)
+    {
+        ReqEntryType = UT_ENTRYTYPE_RETVAL_CONFIG_DEFERRED;
+        StubPtr      = NULL;
+    }
+    else
+    {
+        ReqEntryType = UT_ENTRYTYPE_RETVAL_CONFIG_CONSTANT;
+        StubPtr      = UT_GetStubEntry(FuncKey, ReqEntryType);
+    }
+
+    if (StubPtr == NULL)
+    {
+        StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_UNUSED);
+    }
+
+    if (StubPtr == NULL)
+    {
+        UtAssert_Abort("Cannot configure return value - UT_MAX_FUNC_STUBS too low?");
+    }
+    else
+    {
+        StubPtr-&gt;FuncKey = FuncKey;
+
+        StubPtr-&gt;EntryType         = ReqEntryType;
+        StubPtr-&gt;Data.Rvc.Genre    = ValueGenre;
+        StubPtr-&gt;Data.Rvc.Counter  = Counter;
+        StubPtr-&gt;Data.Rvc.ActualSz = ValueSize;
+        StubPtr-&gt;Data.Rvc.TypeName = TypeName;
+
+        if (ValueGenre == UT_ValueGenre_OPAQUE)
+        {
+            /* For "unknown" types the pointer is stored directly - this allows for ANY return type of ANY size,
+             * but requires that the caller maintain the buffer in scope until the test completes */
+            StubPtr-&gt;Data.Rvc.Buf.IndirectPtr = ValuePtr;
+        }
+        else
+        {
+            /* For any of the recognized typical return types, a copy is made and stored in the state buffer */
+            UT_StoreRetval(&amp;StubPtr-&gt;Data.Rvc.Buf, ValuePtr, ValueSize, ValueGenre);
+        }
+    }
+}
+
+void UT_SetDeferredRetcode(UT_EntryKey_t FuncKey, int32 Count, UT_IntReturn_t Retcode)
+{
+    /* The count should always be a positive integer, if not there is a bug in the test */
+    if (Count &lt;= 0)
+    {
+        UtAssert_Failed("BUG: Invalid Count (%ld) passed to UT_SetDeferredRetcode()", (long)Count);
+    }
+    else
+    {
+        UT_ConfigureGenericStubReturnValue(FuncKey, &amp;Retcode, sizeof(Retcode), UT_ValueGenre_INTEGER, Count, NULL);
+    }
+}
+
+void UT_ClearDeferredRetcode(UT_EntryKey_t FuncKey)
+{
+    UT_StubTableEntry_t *StubPtr;
+
+    while (true)
+    {
+        StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_RETVAL_CONFIG_DEFERRED);
+        if (StubPtr == NULL)
+        {
+            break;
+        }
+        UT_ClearStubEntry(StubPtr);
+    }
+}
+
+void UT_SetDefaultReturnValue(UT_EntryKey_t FuncKey, UT_IntReturn_t Value)
+{
+    UT_ConfigureGenericStubReturnValue(FuncKey, &amp;Value, sizeof(Value), UT_ValueGenre_INTEGER, 0, NULL);
+}
+
+void UT_ClearDefaultReturnValue(UT_EntryKey_t FuncKey)
+{
+    UT_StubTableEntry_t *StubPtr;
+
+    StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_RETVAL_CONFIG_CONSTANT);
+    if (StubPtr != NULL)
+    {
+        UT_ClearStubEntry(StubPtr);
+    }
+}
+
+bool UT_GetStubRetcodeAndCount(UT_EntryKey_t FuncKey, int32 *Retcode, int32 *Count)
+{
+    UT_StubTableEntry_t *StubPtr;
+    bool                 Result;
+
+    StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_COUNTER);
+    if (StubPtr != NULL)
+    {
+        *Count   = StubPtr-&gt;Data.Rc.Count;
+        *Retcode = StubPtr-&gt;Data.Rc.Value;
+        Result   = true;
+    }
+    else
+    {
+        Result = false;
+    }
+
+    return Result;
+}
+
+uint32 UT_GetStubCount(UT_EntryKey_t FuncKey)
+{
+    UT_StubTableEntry_t *StubPtr;
+    uint32               Count;
+
+    StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_COUNTER);
+    if (StubPtr != NULL)
+    {
+        Count = StubPtr-&gt;Data.Rc.Count;
+    }
+    else
+    {
+        Count = 0;
+    }
+
+    return Count;
+}
+
+bool UT_Stub_IsValueCompatible(const UT_RetvalConfigEntry_t *Rvc, const char *WantTypeName, UT_ValueGenre_t WantGenre)
+{
+    bool IsCompatible;
+
+    /* If the type names were specified on both sides, and they match, then the value is compatible */
+    if (Rvc-&gt;TypeName != NULL &amp;&amp; WantTypeName != NULL)
+    {
+        IsCompatible = (strcmp(Rvc-&gt;TypeName, WantTypeName) == 0);
+    }
+    else
+    {
+        /* The types are not _directly_ assignable, but it could possibly be coerced */
+        IsCompatible = false;
+    }
+
+    /*
+     * As an alternative/fallback, if the value genre is known for both sides,
+     * check if coercion is a possibility.  For example, this could apply if the
+     * value was int32 on one side and int16 on the other.
+     */
+    if (!IsCompatible &amp;&amp; Rvc-&gt;Genre != UT_ValueGenre_OPAQUE &amp;&amp; Rvc-&gt;Genre == WantGenre)
+    {
+        /* Genre match - should be compatible, with a potential size adjustment */
+        IsCompatible = true;
+    }
+
+    return IsCompatible;
+}
+
+void UT_Stub_RegisterReturnType(UT_EntryKey_t FuncKey, size_t ReturnSize, const char *TypeName)
+{
+    UT_StubTableEntry_t *StubPtr;
+
+    if (ReturnSize &gt; 0)
+    {
+        /* Check for existing buffer and re-use if same size (should be!) */
+        StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_RETURN_BUFFER);
+        if (StubPtr != NULL &amp;&amp; StubPtr-&gt;Data.Buff.TotalSize != ReturnSize)
+        {
+            UT_ClearStubEntry(StubPtr);
+            StubPtr = NULL;
+        }
+
+        if (StubPtr == NULL)
+        {
+            StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_UNUSED);
+            if (StubPtr == NULL)
+            {
+                UtAssert_Abort("Cannot set return buffer - UT_MAX_FUNC_STUBS too low?");
+            }
+            else
+            {
+                StubPtr-&gt;FuncKey           = FuncKey;
+                StubPtr-&gt;EntryType         = UT_ENTRYTYPE_RETURN_BUFFER;
+                StubPtr-&gt;Data.Buff.BasePtr = malloc(ReturnSize);
+                if (StubPtr-&gt;Data.Buff.BasePtr == NULL)
+                {
+                    UtAssert_Abort("Cannot allocate data buffer - malloc() failed!");
+                }
+                else
+                {
+                    memset(StubPtr-&gt;Data.Buff.BasePtr, 0, ReturnSize);
+                    StubPtr-&gt;ModeFlags |= UT_MODEFLAG_ALLOC_BUF;
+                }
+
+                StubPtr-&gt;Data.Buff.TotalSize = ReturnSize;
+            }
+        }
+
+        if (StubPtr != NULL)
+        {
+            StubPtr-&gt;Data.Buff.Position       = 0;
+            StubPtr-&gt;Data.Buff.ContentTypeStr = TypeName;
+        }
+    }
+}
+
+void *UT_Stub_GetReturnValuePtr(UT_EntryKey_t FuncKey, size_t ReturnSize, const char *TypeName)
+{
+    UT_StubTableEntry_t *StubPtr;
+    void *               ReturnPtr;
+
+    ReturnPtr = NULL;
+    StubPtr   = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_RETURN_BUFFER);
+
+    if (StubPtr == NULL)
+    {
+        /* This shouldn't happen, it means the stub tried to use a
+         * return buffer that does not exist.
+         *
+         * It is most likely caused by a mismatch/incompatibility between
+         * stub and handler.  Aborting now is better than segfaulting later,
+         * as the errored call should still be on the stack trace
+         */
+        UtAssert_Abort("Return buffer invalid");
+    }
+    else
+    {
+        ReturnPtr = StubPtr-&gt;Data.Buff.BasePtr;
+
+        /*
+         * Sanity check on the size and type name.
+         *
+         * In a generated stub these should always match, but if any patches
+         * were done or if a hand-written stub is used, mistakes could be made.
+         */
+        if (StubPtr-&gt;Data.Buff.Position != ReturnSize || strcmp(TypeName, StubPtr-&gt;Data.Buff.ContentTypeStr) != 0)
+        {
+            UtAssert_Failed("Return value mismatch, expected %s(%lu) got %s(%lu)", TypeName, (unsigned long)ReturnSize,
+                            StubPtr-&gt;Data.Buff.ContentTypeStr, (unsigned long)StubPtr-&gt;Data.Buff.Position);
+        }
+    }
+
+    return ReturnPtr;
+}
+
+void UT_SetDataBuffer(UT_EntryKey_t FuncKey, void *DataBuffer, size_t BufferSize, bool AllocateCopy)
+{
+    UT_StubTableEntry_t *StubPtr;
+
+    if (DataBuffer != NULL &amp;&amp; BufferSize &gt; 0)
+    {
+        StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_UNUSED);
+
+        if (StubPtr == NULL)
+        {
+            UtAssert_Abort("Cannot set data buffer - UT_MAX_FUNC_STUBS too low?");
+        }
+        else
+        {
+            StubPtr-&gt;FuncKey   = FuncKey;
+            StubPtr-&gt;EntryType = UT_ENTRYTYPE_DATA_BUFFER;
+            if (AllocateCopy)
+            {
+                StubPtr-&gt;Data.Buff.BasePtr = malloc(BufferSize);
+                if (StubPtr-&gt;Data.Buff.BasePtr == NULL)
+                {
+                    UtAssert_Abort("Cannot allocate data buffer - malloc() failed!");
+                }
+                else
+                {
+                    memcpy(StubPtr-&gt;Data.Buff.BasePtr, DataBuffer, BufferSize);
+                    StubPtr-&gt;ModeFlags |= UT_MODEFLAG_ALLOC_BUF;
+                }
+            }
+            else
+            {
+                /* Use buffer directly */
+                StubPtr-&gt;Data.Buff.BasePtr = DataBuffer;
+            }
+            StubPtr-&gt;Data.Buff.TotalSize = BufferSize;
+            StubPtr-&gt;Data.Buff.Position  = 0;
+        }
+    }
+}
+
+void UT_GetDataBuffer(UT_EntryKey_t FuncKey, void **DataBuffer, size_t *MaxSize, size_t *Position)
+{
+    UT_StubTableEntry_t *StubPtr;
+    void *               ResultDataBuffer;
+    size_t               ResultMaxSize;
+    size_t               ResultPosition;
+
+    StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_DATA_BUFFER);
+
+    if (StubPtr == NULL)
+    {
+        ResultDataBuffer = NULL;
+        ResultMaxSize    = 0;
+        ResultPosition   = 0;
+    }
+    else
+    {
+        ResultDataBuffer = StubPtr-&gt;Data.Buff.BasePtr;
+        ResultMaxSize    = StubPtr-&gt;Data.Buff.TotalSize;
+        ResultPosition   = StubPtr-&gt;Data.Buff.Position;
+    }
+
+    if (DataBuffer != NULL)
+    {
+        *DataBuffer = ResultDataBuffer;
+    }
+    if (MaxSize != NULL)
+    {
+        *MaxSize = ResultMaxSize;
+    }
+    if (Position != NULL)
+    {
+        *Position = ResultPosition;
+    }
+}
+
+size_t UT_Stub_CopyToLocal(UT_EntryKey_t FuncKey, void *LocalBuffer, size_t MaxSize)
+{
+    size_t               ActualCopy;
+    UT_StubTableEntry_t *StubPtr;
+
+    ActualCopy = 0;
+    StubPtr    = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_DATA_BUFFER);
+
+    if (StubPtr != NULL)
+    {
+        ActualCopy = StubPtr-&gt;Data.Buff.TotalSize - StubPtr-&gt;Data.Buff.Position;
+        if (MaxSize &lt; ActualCopy)
+        {
+            ActualCopy = MaxSize;
+        }
+
+        memcpy(LocalBuffer, &amp;StubPtr-&gt;Data.Buff.BasePtr[StubPtr-&gt;Data.Buff.Position], ActualCopy);
+        StubPtr-&gt;Data.Buff.Position += ActualCopy;
+
+        /*
+         * Once the buffer is completely copied then drop this entry.
+         * The test harness will either refill it or there might be
+         * another entry in the table.
+         */
+        if (StubPtr-&gt;Data.Buff.Position &gt;= StubPtr-&gt;Data.Buff.TotalSize)
+        {
+            UT_ClearStubEntry(StubPtr);
+        }
+    }
+
+    return ActualCopy;
+}
+
+size_t UT_Stub_CopyFromLocal(UT_EntryKey_t FuncKey, const void *LocalBuffer, size_t MaxSize)
+{
+    size_t               ActualCopy;
+    UT_StubTableEntry_t *StubPtr;
+
+    ActualCopy = 0;
+    StubPtr    = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_DATA_BUFFER);
+
+    if (StubPtr != NULL)
+    {
+        ActualCopy = StubPtr-&gt;Data.Buff.TotalSize - StubPtr-&gt;Data.Buff.Position;
+        if (MaxSize &lt; ActualCopy)
+        {
+            ActualCopy = MaxSize;
+        }
+
+        memcpy(&amp;StubPtr-&gt;Data.Buff.BasePtr[StubPtr-&gt;Data.Buff.Position], LocalBuffer, ActualCopy);
+        StubPtr-&gt;Data.Buff.Position += ActualCopy;
+
+        /*
+         * Once the buffer is completely copied then drop this entry.
+         * The test harness will either refill it or there might be
+         * another entry in the table.
+         */
+        if (StubPtr-&gt;Data.Buff.Position &gt;= StubPtr-&gt;Data.Buff.TotalSize)
+        {
+            UT_ClearStubEntry(StubPtr);
+        }
+    }
+
+    return ActualCopy;
+}
+
+/*
+ * Helper function used by UT_SetHookFunction() and UT_SetVaHookFunction()
+ */
+static void UT_DoSetHookFunction(UT_EntryKey_t FuncKey, UT_EntryType_t EntryType, UT_HookFuncPtr_t Value, void *UserObj,
+                                 bool IsVarg)
+{
+    UT_StubTableEntry_t *StubPtr;
+
+    /*
+     * First find an existing hook entry for the function.
+     * In case one is already set we do not duplicate
+     */
+    StubPtr = UT_GetStubEntry(FuncKey, EntryType);
+    if (StubPtr == NULL &amp;&amp; Value.Addr != NULL)
+    {
+        /* Creating force fail entry - repeat search and grab any unused slot */
+        StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_UNUSED);
+        if (StubPtr == NULL)
+        {
+            UtAssert_Abort("Cannot set hook function - UT_MAX_FUNC_STUBS too low?");
+        }
+    }
+
+    if (Value.Addr == NULL &amp;&amp; StubPtr != NULL)
+    {
+        /* Caller wants to delete the entry */
+        UT_ClearStubEntry(StubPtr);
+    }
+    else if (StubPtr != NULL &amp;&amp; Value.Addr != NULL)
+    {
+        /* Caller wants to set the entry */
+        StubPtr-&gt;FuncKey             = FuncKey;
+        StubPtr-&gt;EntryType           = EntryType;
+        StubPtr-&gt;Data.Cb.CallbackArg = UserObj;
+        StubPtr-&gt;Data.Cb.Ptr         = Value;
+        StubPtr-&gt;Data.Cb.IsVarg      = IsVarg;
+    }
+}
+
+void UT_SetHookFunction(UT_EntryKey_t FuncKey, UT_HookFunc_t HookFunc, void *UserObj)
+{
+    UT_HookFuncPtr_t Value;
+
+    Value.SimpleHook = HookFunc;
+
+    UT_DoSetHookFunction(FuncKey, UT_ENTRYTYPE_CALLBACK_HOOK, Value, UserObj, false);
+}
+
+void UT_SetVaHookFunction(UT_EntryKey_t FuncKey, UT_VaHookFunc_t HookFunc, void *UserObj)
+{
+    UT_HookFuncPtr_t Value;
+
+    Value.VaHook = HookFunc;
+
+    UT_DoSetHookFunction(FuncKey, UT_ENTRYTYPE_CALLBACK_HOOK, Value, UserObj, true);
+}
+
+void UT_SetHandlerFunction(UT_EntryKey_t FuncKey, UT_HandlerFunc_t HandlerFunc, void *UserObj)
+{
+    UT_HookFuncPtr_t Value;
+
+    Value.SimpleHandler = HandlerFunc;
+
+    UT_DoSetHookFunction(FuncKey, UT_ENTRYTYPE_FINAL_HANDLER, Value, UserObj, false);
+}
+
+void UT_SetVaHandlerFunction(UT_EntryKey_t FuncKey, UT_VaHandlerFunc_t HandlerFunc, void *UserObj)
+{
+    UT_HookFuncPtr_t Value;
+
+    Value.VaHandler = HandlerFunc;
+
+    UT_DoSetHookFunction(FuncKey, UT_ENTRYTYPE_FINAL_HANDLER, Value, UserObj, true);
+}
+
+const void *UT_Hook_GetArgPtr(const UT_StubContext_t *ContextPtr, const char *Name, size_t ExpectedTypeSize)
+{
+    uint32                      i;
+    const void *                Result;
+    const UT_StubArgMetaData_t *MetaPtr;
+
+    static const union
+    {
+        unsigned long AsInt;
+        void *        AsPtr;
+        double        AsFloat;
+    } ARG_DEFAULT_ZERO_VALUE = {0};
+
+    Result = NULL;
+    for (i = 0; i &lt; ContextPtr-&gt;ArgCount; ++i)
+    {
+        MetaPtr = &amp;ContextPtr-&gt;Meta[i];
+        if (MetaPtr-&gt;Name != NULL)
+        {
+            if (strcmp(MetaPtr-&gt;Name, Name) == 0 &amp;&amp; (MetaPtr-&gt;Size == 0 || MetaPtr-&gt;Size == ExpectedTypeSize))
+            {
+                if (MetaPtr-&gt;Type == UT_STUBCONTEXT_ARG_TYPE_DIRECT)
+                {
+                    Result = &amp;ContextPtr-&gt;ArgPtr[i];
+                }
+                else if (MetaPtr-&gt;Type == UT_STUBCONTEXT_ARG_TYPE_INDIRECT)
+                {
+                    Result = ContextPtr-&gt;ArgPtr[i];
+                }
+                break;
+            }
+        }
+    }
+
+    /*
+     * If no suitable result pointer was found, this means a mismatch
+     * between the stub and test case, such as a change in argument/parameter names.
+     * This is an error that should be corrected, so report it as a failure.
+     */
+    if (Result == NULL)
+    {
+        UtAssert_Failed("Requested parameter %s of size %lu which was not provided by the stub", Name,
+                        (unsigned long)ExpectedTypeSize);
+
+        if (ExpectedTypeSize &lt;= sizeof(ARG_DEFAULT_ZERO_VALUE))
+        {
+            Result = &amp;ARG_DEFAULT_ZERO_VALUE;
+        }
+        else
+        {
+            /*
+             * As the caller will likely dereference the returned pointer, should
+             * never return NULL.  Just abort here.
+             */
+            UtAssert_Abort("No value for parameter");
+        }
+    }
+
+    return Result;
+}
+
+void UT_Stub_RegisterContextWithMetaData(UT_EntryKey_t FuncKey, const char *Name, UT_StubContext_Arg_Type_t ParamType,
+                                         const void *ParamPtr, size_t ParamSize)
+{
+    UT_StubTableEntry_t * StubPtr;
+    UT_StubArgMetaData_t *MetaPtr;
+
+    /*
+     * First find an existing context entry for the function.
+     * In case one is already set we do not duplicate
+     */
+    StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_CALLBACK_CONTEXT);
+    if (StubPtr == NULL)
+    {
+        /* Creating force fail entry - repeat search and grab any unused slot */
+        StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_UNUSED);
+    }
+
+    if (StubPtr == NULL)
+    {
+        UtAssert_Abort("Cannot set context - UT_MAX_FUNC_STUBS too low?");
+    }
+    else
+    {
+        StubPtr-&gt;FuncKey   = FuncKey;
+        StubPtr-&gt;EntryType = UT_ENTRYTYPE_CALLBACK_CONTEXT;
+        if (StubPtr-&gt;Data.Context.ArgCount &lt; UT_STUBCONTEXT_MAXSIZE)
+        {
+            StubPtr-&gt;Data.Context.ArgPtr[StubPtr-&gt;Data.Context.ArgCount] = ParamPtr;
+
+            MetaPtr       = &amp;StubPtr-&gt;Data.Context.Meta[StubPtr-&gt;Data.Context.ArgCount];
+            MetaPtr-&gt;Size = ParamSize;
+            MetaPtr-&gt;Type = ParamType;
+
+            /*
+             * If name was specified, then trim any leading address operator (&amp;)
+             * and/or whitespace, keeping only the actual name part.
+             */
+            if (Name != NULL)
+            {
+                /*
+                 * If the _address_ of the stack variable was actually passed in,
+                 * the mark this as indirect (i.e. hook must dereference ArgPtr
+                 * to get actual parameter value).  Otherwise assume it as direct.
+                 */
+                MetaPtr-&gt;Name = Name;
+                while (*MetaPtr-&gt;Name != 0)
+                {
+                    if (*MetaPtr-&gt;Name == '&amp;')
+                    {
+                        /* this means its a pointer to the value, not the value itself */
+                        if (MetaPtr-&gt;Type == UT_STUBCONTEXT_ARG_TYPE_UNSPECIFIED)
+                        {
+                            MetaPtr-&gt;Type = UT_STUBCONTEXT_ARG_TYPE_INDIRECT;
+                        }
+                    }
+                    else if (*MetaPtr-&gt;Name != ' ')
+                    {
+                        /* stop at non-whitespace */
+                        break;
+                    }
+                    ++MetaPtr-&gt;Name;
+                }
+
+                if (MetaPtr-&gt;Type == UT_STUBCONTEXT_ARG_TYPE_UNSPECIFIED)
+                {
+                    MetaPtr-&gt;Type = UT_STUBCONTEXT_ARG_TYPE_DIRECT;
+                }
+            }
+            ++StubPtr-&gt;Data.Context.ArgCount;
+        }
+    }
+}
+
+bool UT_Stub_GetInt32StatusCode(const UT_StubContext_t *Context, int32 *StatusCodeBuffer)
+{
+    if (StatusCodeBuffer != NULL)
+    {
+        *StatusCodeBuffer = Context-&gt;Int32StatusCode;
+    }
+
+    return Context-&gt;Int32StatusIsSet;
+}
+
+void UT_Stub_CopyToReturnValue(UT_EntryKey_t FuncKey, const void *BufferPtr, size_t BufferSize)
+{
+    UT_StubTableEntry_t *StubPtr;
+
+    StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_RETURN_BUFFER);
+    if (StubPtr != NULL)
+    {
+        /* If the size does not match, there is a bug */
+        if (StubPtr-&gt;Data.Buff.TotalSize != BufferSize)
+        {
+            UtAssert_Abort("Size mismatch in setting return value");
+        }
+        else
+        {
+            memcpy(StubPtr-&gt;Data.Buff.BasePtr, BufferPtr, BufferSize);
+            StubPtr-&gt;Data.Buff.Position = BufferSize;
+        }
+    }
+}
+
+UT_StubTableEntry_t *UT_Stub_FindRetvalConfig(UT_EntryKey_t FuncKey)
+{
+    UT_StubTableEntry_t *StubEntryPtr;
+
+    StubEntryPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_RETVAL_CONFIG_DEFERRED);
+    if (StubEntryPtr != NULL)
+    {
+        /*
+         * The counter on a deferred retval config indicates the number of times it should
+         * be skipped/not used.   Decrement the counter now, and if it is not yet 0, do not
+         * return this yet, and go to a fallback - which could either be a constant value
+         * configuration, or the default fallback of 0.
+         *
+         * By definition, deferred retvals are only used once and then deleted.
+         */
+        --StubEntryPtr-&gt;Data.Rvc.Counter;
+
+        if (StubEntryPtr-&gt;Data.Rvc.Counter &gt; 0)
+        {
+            StubEntryPtr = NULL;
+        }
+    }
+
+    if (StubEntryPtr == NULL)
+    {
+        StubEntryPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_RETVAL_CONFIG_CONSTANT);
+        if (StubEntryPtr != NULL)
+        {
+            /*
+             * the counter on a constant retval config will track the number of
+             * times the value was actually used, so it is incremented here.  Unlike
+             * deferred retval configs, these values may be used multiple times during
+             * a test.
+             */
+            ++StubEntryPtr-&gt;Data.Rvc.Counter;
+        }
+    }
+
+    return StubEntryPtr;
+}
+
+/**
+ * Default implementation for a stub function that should be useful for most cases.
+ * Checks first for a deferred retcode, then for a constant retcode, and a default if neither is present.
+ * Prints a debug level status message to show that the function was called.
+ */
+int32 UT_DefaultStubImplWithArgs(const char *FunctionName, UT_EntryKey_t FuncKey, int32 DefaultRc, va_list ArgList)
+{
+    const char *         RetcodeString;
+    UT_StubTableEntry_t *StubPtr;
+    UT_StubTableEntry_t *ContextTblPtr;
+    UT_StubTableEntry_t *RvcPtr;
+    UT_StubContext_t     LocalContext;
+    uint32               Counter;
+    va_list              ArgListCopy;
+    bool                 GotInt32StatusFromHook;
+
+    /*
+     * In this implementation a context is _always_ needed.
+     *
+     * First see if the stub has an already-registered context.  Any non-trivial stub
+     * should already have registered some arguments and/or a return code buffer.
+     *
+     * To handle an old-style/incomplete stub function or simple void/void stubs that
+     * do not have any arguments, a blank entry can be created on the fly.
+     */
+    ContextTblPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_CALLBACK_CONTEXT);
+    if (ContextTblPtr != NULL)
+    {
+        LocalContext = ContextTblPtr-&gt;Data.Context;
+
+        /* Always clear the context entry -- the next call will have a different one */
+        UT_ClearStubEntry(ContextTblPtr);
+    }
+    else
+    {
+        memset(&amp;LocalContext, 0, sizeof(LocalContext));
+    }
+
+    RvcPtr = UT_Stub_FindRetvalConfig(FuncKey);
+
+    /* For legacy compatibility, determine the int32 status code (this may or may not be relevent) */
+    if (RvcPtr != NULL &amp;&amp; UT_Stub_IsValueCompatible(&amp;RvcPtr-&gt;Data.Rvc, "int32", UT_ValueGenre_INTEGER))
+    {
+        LocalContext.Int32StatusIsSet =
+            UT_LoadRetval(&amp;LocalContext.Int32StatusCode, sizeof(LocalContext.Int32StatusCode), &amp;RvcPtr-&gt;Data.Rvc.Buf,
+                          UT_ValueGenre_INTEGER);
+    }
+
+    if (!LocalContext.Int32StatusIsSet)
+    {
+        LocalContext.Int32StatusCode = DefaultRc;
+    }
+
+    if (FunctionName != NULL)
+    {
+        if (!LocalContext.Int32StatusIsSet)
+        {
+            RetcodeString = "DEFAULT";
+        }
+        else
+        {
+            /* Indicate that this invocation got a non-default return code */
+            RetcodeString = "*SPECIAL*";
+        }
+
+        UtDebug("%s called (%s,%ld)", FunctionName, RetcodeString, (long)LocalContext.Int32StatusCode);
+    }
+
+    Counter = 0;
+    StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_COUNTER);
+    if (StubPtr == NULL)
+    {
+        /* Creating counter entry - repeat search and grab any unused slot */
+        StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_UNUSED);
+    }
+
+    if (StubPtr == NULL)
+    {
+        UtAssert_Abort("Cannot set counter - UT_MAX_FUNC_STUBS too low?");
+    }
+    else
+    {
+        StubPtr-&gt;EntryType = UT_ENTRYTYPE_COUNTER;
+        StubPtr-&gt;FuncKey   = FuncKey;
+        Counter            = StubPtr-&gt;Data.Rc.Count;
+        ++StubPtr-&gt;Data.Rc.Count;
+        StubPtr-&gt;Data.Rc.Value = LocalContext.Int32StatusCode;
+    }
+
+    StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_CALLBACK_HOOK);
+    if (StubPtr != NULL)
+    {
+        if (StubPtr-&gt;Data.Cb.IsVarg)
+        {
+            va_copy(ArgListCopy, ArgList);
+            LocalContext.Int32StatusCode = StubPtr-&gt;Data.Cb.Ptr.VaHook(
+                StubPtr-&gt;Data.Cb.CallbackArg, LocalContext.Int32StatusCode, Counter, &amp;LocalContext, ArgListCopy);
+            va_end(ArgListCopy);
+        }
+        else
+        {
+            LocalContext.Int32StatusCode = StubPtr-&gt;Data.Cb.Ptr.SimpleHook(
+                StubPtr-&gt;Data.Cb.CallbackArg, LocalContext.Int32StatusCode, Counter, &amp;LocalContext);
+        }
+
+        GotInt32StatusFromHook        = true;
+        LocalContext.Int32StatusIsSet = true;
+    }
+    else
+    {
+        GotInt32StatusFromHook = false;
+    }
+
+    StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_FINAL_HANDLER);
+    if (StubPtr != NULL)
+    {
+        if (StubPtr-&gt;Data.Cb.IsVarg)
+        {
+            StubPtr-&gt;Data.Cb.Ptr.VaHandler(StubPtr-&gt;Data.Cb.CallbackArg, FuncKey, &amp;LocalContext, ArgList);
+        }
+        else
+        {
+            StubPtr-&gt;Data.Cb.Ptr.SimpleHandler(StubPtr-&gt;Data.Cb.CallbackArg, FuncKey, &amp;LocalContext);
+        }
+    }
+
+    /*
+     * Handle propagation of return code.
+     *
+     *   "old style" stubs will translate the int32 return value from this function.
+     *     - Return Buffer will always be unset with these stubs
+     *     - This should continue to work with no special handling.
+     *
+     *   "new style" stubs will provide a return value buffer via UT_ENTRYTYPE_RETURN_BUFFER in the context.
+     *     - In this pattern the int32 return value of this function is _IGNORED_ by the calling stub.
+     *     - The only way to return a value to the caller is via the buffer.
+     *     - If the handler did _not_ populate the return value, then attempt to translate the local
+     *       Retcode here to the return value buffer.  This eases the transition, as the vast majority
+     *       of functions do return an int32, this can be the automatic case.
+     */
+    StubPtr = UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_RETURN_BUFFER);
+    if (StubPtr != NULL &amp;&amp; StubPtr-&gt;Data.Buff.Position == 0)
+    {
+        /* If a hook function was used, it is expected that this will override any configured retval */
+        if (GotInt32StatusFromHook &amp;&amp; StubPtr-&gt;Data.Buff.TotalSize == sizeof(LocalContext.Int32StatusCode))
+        {
+            memcpy(StubPtr-&gt;Data.Buff.BasePtr, &amp;LocalContext.Int32StatusCode, StubPtr-&gt;Data.Buff.TotalSize);
+            StubPtr-&gt;Data.Buff.Position = StubPtr-&gt;Data.Buff.TotalSize;
+        }
+        else if (RvcPtr != NULL)
+        {
+            /*
+             * Opaque values allow for arbitrarily large return values, but size must match exactly
+             * to what is expected, it cannot be truncated or expanded if there is a mismatch
+             * between the test and the stub.  Conversely, numeric values can be size-adjusted
+             * if the test supplied one size but the stub needs a different size, such as 32-bit
+             * to 16-bit or 64-bit ints.  Note that historically UT assert only supported 32-bit
+             * integer return values to be directly configured, so older test cases are likely to
+             * set a 32-bit value even if the return value is a different size.
+             */
+            if (RvcPtr-&gt;Data.Rvc.Genre == UT_ValueGenre_OPAQUE)
+            {
+                if (StubPtr-&gt;Data.Rvc.ActualSz != StubPtr-&gt;Data.Buff.TotalSize)
+                {
+                    UtAssert_Failed("Stub %s opaque return size mismatch, expected %lu, got %lu, type=%s", FunctionName,
+                                    (unsigned long)StubPtr-&gt;Data.Buff.TotalSize,
+                                    (unsigned long)StubPtr-&gt;Data.Rvc.ActualSz, StubPtr-&gt;Data.Buff.ContentTypeStr);
+                }
+                else
+                {
+                    memcpy(StubPtr-&gt;Data.Buff.BasePtr, StubPtr-&gt;Data.Rvc.Buf.IndirectPtr, StubPtr-&gt;Data.Buff.TotalSize);
+                    StubPtr-&gt;Data.Buff.Position = StubPtr-&gt;Data.Buff.TotalSize;
+                }
+            }
+            else if (UT_LoadRetval(StubPtr-&gt;Data.Buff.BasePtr, StubPtr-&gt;Data.Buff.TotalSize, &amp;RvcPtr-&gt;Data.Rvc.Buf,
+                                   RvcPtr-&gt;Data.Rvc.Genre))
+            {
+                StubPtr-&gt;Data.Buff.Position = StubPtr-&gt;Data.Buff.TotalSize;
+            }
+        }
+
+        if (StubPtr-&gt;Data.Buff.Position == 0)
+        {
+            /*
+             * This means that no suitable return value was configured for this call.
+             * The final fallback in this case is to zero-fill it.
+             *
+             * For logical values this should become "false", for pointers it is "NULL", and for any numeric
+             * value - signed, unsigned, or float - it should become 0.
+             */
+            memset(StubPtr-&gt;Data.Buff.BasePtr, 0, StubPtr-&gt;Data.Buff.TotalSize);
+            StubPtr-&gt;Data.Buff.Position = StubPtr-&gt;Data.Buff.TotalSize;
+        }
+    }
+
+    /*
+     * Deferred retval configs should be expunged after they are used, so the next call will
+     * get the next config (if applicable).  Constant return values are NOT cleared, they may
+     * be re-used if the same stub is invoked again.
+     */
+    if (RvcPtr != NULL &amp;&amp; RvcPtr-&gt;EntryType == UT_ENTRYTYPE_RETVAL_CONFIG_DEFERRED)
+    {
+        UT_ClearStubEntry(RvcPtr);
+    }
+
+    return LocalContext.Int32StatusCode;
+}
+
+/**
+ * Default implementation for a stub function that passes through args.
+ * Calls the UT_DefaultStubImplWithArgs function with the supplied args
+ */
+int32 UT_DefaultStubImpl(const char *FunctionName, UT_EntryKey_t FuncKey, int32 DefaultRc, ...)
+{
+    int32   Retcode;
+    va_list va;
+
+    va_start(va, DefaultRc);
+    Retcode = UT_DefaultStubImplWithArgs(FunctionName, FuncKey, DefaultRc, va);
+    va_end(va);
+
+    return Retcode;
+}
+
+void UT_ExecuteBasicHandler(UT_EntryKey_t FuncKey, const char *FunctionName, UT_HandlerFunc_t DefaultHandler)
+{
+    /* Check if the test case registered a hook, and use the default if not */
+    if (UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_FINAL_HANDLER) == NULL &amp;&amp; DefaultHandler != NULL)
+    {
+        UT_SetHandlerFunction(FuncKey, DefaultHandler, NULL);
+    }
+
+    UT_DefaultStubImpl(FunctionName, FuncKey, 0, NULL);
+}
+
+void UT_ExecuteVaHandler(UT_EntryKey_t FuncKey, const char *FunctionName, UT_VaHandlerFunc_t DefaultHandler,
+                         va_list VaList)
+{
+    /* Check if the test case registered a hook, and use the default if not */
+    if (UT_GetStubEntry(FuncKey, UT_ENTRYTYPE_FINAL_HANDLER) == NULL &amp;&amp; DefaultHandler != NULL)
+    {
+        UT_SetVaHandlerFunction(FuncKey, DefaultHandler, NULL);
+    }
+
+    UT_DefaultStubImplWithArgs(FunctionName, FuncKey, 0, VaList);
+}
+</pre></div>
+</div>
+</section>
+<section id="uttest-c">
+<h2><code class="docutils literal notranslate"><span class="pre">uttest.c</span></code><a class="headerlink" href="#uttest-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/ut_assert/src/uttest.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * File: uttest.c
+ *
+ * Purpose: This file contains functions to implement a standard way to execute unit tests.
+ */
+
+/*
+ * Includes
+ */
+
+#include "utglobal.h"
+
+/*
+ * Global state instance
+ */
+UtAssert_Global_t UtAssert_Global;
+
+enum
+{
+    UTASSERT_GROUP_DEFAULT = 0,
+    UTASSERT_GROUP_SETUP,
+    UTASSERT_GROUP_TEST,
+    UTASSERT_GROUP_TEARDOWN,
+    UTASSERT_GROUP_MAX
+};
+
+/*
+ * Function Definitions
+ */
+
+void UtTest_AddCommon(void (*Test)(void), void (*Setup)(void), void (*Teardown)(void), const char *TestName,
+                      uint32 EntryType)
+{
+    UtTestDataBaseEntry_t UtTestDataBaseEntry;
+
+    memset(&amp;UtTestDataBaseEntry, 0, sizeof(UtTestDataBaseEntry));
+    UtTestDataBaseEntry.Test     = Test;
+    UtTestDataBaseEntry.Setup    = Setup;
+    UtTestDataBaseEntry.Teardown = Teardown;
+    if (TestName != NULL)
+    {
+        strncpy(UtTestDataBaseEntry.TestName, TestName, sizeof(UtTestDataBaseEntry.TestName) - 1);
+    }
+
+    UT_BSP_Lock();
+    UtList_Add(UtAssert_Global.DataBasePtr, &amp;UtTestDataBaseEntry, sizeof(UtTestDataBaseEntry_t), EntryType);
+    UT_BSP_Unlock();
+}
+
+void UtTest_Add(void (*Test)(void), void (*Setup)(void), void (*Teardown)(void), const char *SequenceName)
+{
+    UtTest_AddCommon(Test, Setup, Teardown, SequenceName, UTASSERT_GROUP_TEST);
+}
+
+void UtTest_AddSetup(void (*Setup)(void), const char *SequenceName)
+{
+    UtTest_AddCommon(NULL, Setup, NULL, SequenceName, UTASSERT_GROUP_SETUP);
+}
+
+void UtTest_AddTeardown(void (*Teardown)(void), const char *SequenceName)
+{
+    UtTest_AddCommon(NULL, NULL, Teardown, SequenceName, UTASSERT_GROUP_TEARDOWN);
+}
+
+void UtTest_AddSubTest(void (*Test)(void), void (*Setup)(void), void (*Teardown)(void), const char *GroupName,
+                       const char *TestName)
+{
+    char        CompleteTestName[128];
+    const char *GroupPtr;
+    const char *TestPtr;
+
+    /* Remove any common prefix between the two names.
+     * They are often function names that all start with "Test_XXX"
+     * and this repetitive information just becomes clutter.
+     */
+    GroupPtr = GroupName;
+    TestPtr  = TestName;
+    while (*GroupPtr != 0 &amp;&amp; *GroupPtr == *TestPtr)
+    {
+        ++GroupPtr;
+        ++TestPtr;
+    }
+
+    /*
+     * Only break at an underscore(_) to avoid weird effects
+     */
+    while (TestPtr &gt; TestName &amp;&amp; *TestPtr != '_')
+    {
+        --TestPtr;
+    }
+    if (*TestPtr == '_')
+    {
+        ++TestPtr;
+    }
+
+    /*
+     * Remove a remaining "Test_" prefix on the group name.
+     * Again just to remove common repetitive content
+     */
+    GroupPtr = GroupName;
+    if (strncmp(GroupPtr, "Test_", 5) == 0)
+    {
+        GroupPtr += 5;
+    }
+
+    (void)snprintf(CompleteTestName, sizeof(CompleteTestName), "%s.%s", GroupPtr, TestPtr);
+
+    UtTest_AddCommon(Test, Setup, Teardown, CompleteTestName, UTASSERT_GROUP_TEST);
+}
+
+void UtTest_Run(void)
+{
+    UtListNode_t *         UtListMain;
+    UtListNode_t *         UtListNode;
+    UtTestDataBaseEntry_t *UtTestDataBaseEntry;
+
+    UT_BSP_Lock();
+
+    /*
+     * The overall test sequence goes SETUP-&gt;TEST-&gt;TEARDOWN
+     *
+     * Combine all registered test groups into a merged group for execution.
+     *
+     * This could also (theoretically) randomize the order of the "TEST" group
+     * while assembling this list, if there was a portable source of entropy.
+     */
+    UtListMain = UtList_GetHead(UtAssert_Global.DataBasePtr, UTASSERT_GROUP_DEFAULT);
+    UtList_Merge(UtListMain, UtList_GetHead(UtAssert_Global.DataBasePtr, UTASSERT_GROUP_SETUP));
+    UtList_Merge(UtListMain, UtList_GetHead(UtAssert_Global.DataBasePtr, UTASSERT_GROUP_TEST));
+    UtList_Merge(UtListMain, UtList_GetHead(UtAssert_Global.DataBasePtr, UTASSERT_GROUP_TEARDOWN));
+
+    UT_BSP_Unlock();
+
+    /*
+     * Run through the merged list in order
+     */
+    for (UtListNode = UtList_GetNext(UtListMain); !UtList_IsEnd(UtListMain, UtListNode);
+         UtListNode = UtList_GetNext(UtListNode))
+    {
+        UtTestDataBaseEntry = UtList_GetObject(UtListNode);
+
+        if (UtTestDataBaseEntry != NULL)
+        {
+            UtAssert_BeginTest(UtTestDataBaseEntry-&gt;TestName);
+
+            UtAssert_SetContext(UTASSERT_CASETYPE_TSF);
+            if (UtTestDataBaseEntry-&gt;Setup)
+            {
+                UtTestDataBaseEntry-&gt;Setup();
+            }
+            UtAssert_SetContext(UTASSERT_CASETYPE_FAILURE);
+            if (UtTestDataBaseEntry-&gt;Test)
+            {
+                UtTestDataBaseEntry-&gt;Test();
+                UtAssert_Global.ExecutedCount++;
+            }
+            UtAssert_SetContext(UTASSERT_CASETYPE_TTF);
+            if (UtTestDataBaseEntry-&gt;Teardown)
+            {
+                UtTestDataBaseEntry-&gt;Teardown();
+            }
+
+            UtAssert_EndTest();
+        }
+    }
+
+    UT_BSP_Lock();
+    UtList_Destroy(UtAssert_Global.DataBasePtr);
+    UT_BSP_Unlock();
+
+    UT_BSP_EndTest(UtAssert_GetCounters());
+}
+
+void UtTest_EarlyInit(void)
+{
+    /*
+     * Reset the test global variables, just in case.
+     */
+    memset(&amp;UtAssert_Global, 0, sizeof(UtAssert_Global));
+    UtAssert_Global.DataBasePtr = UtList_Create(UTASSERT_GROUP_MAX);
+}
+</pre></div>
+</div>
+</section>
+<section id="uttools-c">
+<h2><code class="docutils literal notranslate"><span class="pre">uttools.c</span></code><a class="headerlink" href="#uttools-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/ut_assert/src/uttools.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * File: uttools.c
+ *
+ * Purpose: This file contains functions to implement a set of tools for use in unit testing.
+ */
+
+/*
+ * Includes
+ */
+
+#include &lt;stdarg.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;string.h&gt;
+#include &lt;ctype.h&gt;
+
+#include "common_types.h"
+#include "utassert.h"
+#include "utbsp.h"
+
+#define UT_SNPRINTF_BUF_SIZE 256
+#define UT_SNPRINTF_MAX_BUFS 10
+
+/*
+ * Local types/objects
+ */
+typedef struct
+{
+    char Text[UT_SNPRINTF_BUF_SIZE];
+} UT_Snprintf_Buffer_t;
+
+/*
+ * Function Definitions
+ */
+
+bool UtMem2BinFile(const void *Memory, const char *Filename, uint32 Length)
+{
+    FILE *fp;
+
+    if ((fp = fopen(Filename, "w")))
+    {
+        fwrite(Memory, Length, 1, fp);
+        fclose(fp);
+        return true;
+    }
+    else
+    {
+        printf("UtMem2BinFile: Error Opening File: %s, %s\n", Filename, strerror(errno));
+        UtAssert_True(false, "UtMem2BinFile: Error Opening File");
+        return false;
+    }
+}
+
+bool UtBinFile2Mem(void *Memory, const char *Filename, uint32 Length)
+{
+    FILE *fp;
+    bool  Success;
+
+    Success = false;
+    if ((fp = fopen(Filename, "r")))
+    {
+        if (fread(Memory, Length, 1, fp) == 1)
+        {
+            Success = true;
+        }
+        fclose(fp);
+    }
+    else
+    {
+        UtAssert_Failed("UtBinFile2Mem: Error Opening %s: %s", Filename, strerror(errno));
+    }
+
+    return Success;
+}
+
+bool UtMem2HexFile(const void *Memory, const char *Filename, uint32 Length)
+{
+    FILE * fp;
+    uint32 i;
+    uint32 j;
+
+    if ((fp = fopen(Filename, "w")))
+    {
+        for (i = 0; i &lt; Length; i += 16)
+        {
+            fprintf(fp, "   %06lX: ", (unsigned long)i);
+            for (j = 0; j &lt; 16; j++)
+            {
+                if ((i + j) &lt; Length)
+                    fprintf(fp, "%02X ", ((uint8 *)Memory)[i + j]);
+                else
+                    fprintf(fp, "   ");
+            }
+            fprintf(fp, " ");
+            for (j = 0; j &lt; 16; j++)
+            {
+                if ((i + j) &lt; Length)
+                    fprintf(fp, "%c", isprint(((uint8 *)Memory)[i + j]) ? ((uint8 *)Memory)[i + j] : '.');
+            }
+            fprintf(fp, "\n");
+        }
+        fclose(fp);
+        return true;
+    }
+    else
+    {
+        printf("UtMem2HexFile: Error Opening File: %s, %s\n", Filename, strerror(errno));
+        UtAssert_True(false, "UtMem2HexFile: Error Opening File");
+        return false;
+    }
+}
+
+void UtMemFill(void *Memory, uint32 Length)
+{
+    uint32 i;
+    uint8 *Byte_ptr = Memory;
+
+    for (i = 0; i &lt; Length; i++)
+    {
+        Byte_ptr[i] = i;
+    }
+}
+
+void UtMessage(uint8 MessageType, const char *File, uint32 Line, const char *Spec, ...)
+{
+    UT_Snprintf_Buffer_t Buf;
+    va_list              va;
+
+    va_start(va, Spec);
+    vsnprintf(Buf.Text, sizeof(Buf.Text), Spec, va);
+    va_end(va);
+
+    UT_BSP_DoText(MessageType, Buf.Text);
+}
+
+char *UtSprintf(const char *Spec, ...)
+{
+    va_list                     Args;
+    static UT_Snprintf_Buffer_t Buf[UT_SNPRINTF_MAX_BUFS];
+    static uint32               TextIndex = 0;
+
+    ++TextIndex;
+    if (TextIndex &gt;= UT_SNPRINTF_MAX_BUFS)
+        TextIndex = 0;
+
+    va_start(Args, Spec);
+    vsnprintf(Buf[TextIndex].Text, sizeof(Buf[TextIndex].Text), Spec, Args);
+    va_end(Args);
+
+    return Buf[TextIndex].Text;
+}
+
+void UtPrintx(const void *Memory, uint32 Length)
+{
+    uint32       i;
+    uint32       j;
+    const uint8 *Byte_ptr = Memory;
+    char         OutputLine[80];
+    char *       OutPtr;
+
+    i = 0;
+    while (i &lt; Length)
+    {
+        snprintf(OutputLine, sizeof(OutputLine), "%16lx: ", (unsigned long)&amp;Byte_ptr[i]);
+        OutPtr = OutputLine;
+        OutPtr += strlen(OutputLine);
+        for (j = 0; j &lt; 16 &amp;&amp; i &lt; Length; j++, i++)
+        {
+            sprintf(OutPtr, "%02X  ", Byte_ptr[i]);
+            OutPtr += 3;
+        }
+
+        UT_BSP_DoText(UTASSERT_CASETYPE_INFO, OutputLine);
+    }
+}
+
+bool UtMemCmpValue(const void *Memory, uint8 Value, uint32 Length)
+{
+    uint32       i;
+    const uint8 *Byte_ptr = Memory;
+
+    for (i = 0; i &lt; Length; i++)
+    {
+        if (Byte_ptr[i] != Value)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool UtMemCmpCount(const void *Memory, uint32 Length)
+{
+    uint32       i;
+    const uint8 *Byte_ptr = Memory;
+
+    for (i = 0; i &lt; Length; i++)
+    {
+        if (Byte_ptr[i] != (i &amp; 0xFF))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool UtMem2BinFileCmp(const void *Memory, const char *Filename)
+{
+    FILE *       fp;
+    const uint8 *MemByte = Memory;
+    int          FileByte;
+    bool         Success;
+    uint32       i;
+
+    Success = true;
+    if ((fp = fopen(Filename, "r")))
+    {
+        for (i = 0; (FileByte = fgetc(fp)) != EOF; i++)
+        {
+            if (MemByte[i] != FileByte)
+            {
+                Success = false;
+                printf("UtMem2BinFileCmp: Miscompare in file: %s, byte offset: %lu, expected: %u, found: %u\n",
+                       Filename, (unsigned long)i, (unsigned int)MemByte[i], (unsigned int)FileByte);
+                break;
+            }
+        }
+        fclose(fp);
+    }
+    else
+    {
+        Success = false;
+        printf("UtMem2BinFileCmp: Error Opening File: %s, %s\n", Filename, strerror(errno));
+        UtAssert_True(false, "UtMem2BinFileCmp: Error Opening File");
+    }
+
+    return Success;
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../scripts/index.html" class="btn btn-neutral float-left" title="scripts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../../psp/index.html" class="btn btn-neutral float-right" title="psp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

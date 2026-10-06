@@ -1,0 +1,1533 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>detailed_design &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../search.html" />
+    <link rel="next" title="mnem_maps" href="../mnem_maps/index.html" />
+    <link rel="prev" title="dox_src" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">apps</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">sch</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">docs</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">dox_src</a></li>
+      <li class="breadcrumb-item active">detailed_design</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../_sources/project_inventory/fsw/apps/sch/docs/dox_src/detailed_design/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="detailed-design">
+<h1>detailed_design<a class="headerlink" href="#detailed-design" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sch/docs/dox_src/detailed_design/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="cfs-sch-dox">
+<h2><code class="docutils literal notranslate"><span class="pre">cfs_sch.dox</span></code><a class="headerlink" href="#cfs-sch-dox" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sch/docs/dox_src/detailed_design/cfs_sch.dox</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/**
+  \mainpage
+  &lt;UL&gt;
+    &lt;LI&gt; \subpage cfsschrevhist
+    &lt;LI&gt; \subpage cfsschintro
+    &lt;LI&gt; \subpage cfsschovr
+    &lt;LI&gt; \subpage cfsschopr
+    &lt;LI&gt; \subpage cfsschreq
+    &lt;LI&gt; \subpage cfsschdg
+    &lt;LI&gt; \subpage cfsschcmds
+    &lt;LI&gt; \subpage cfsschtlm
+    &lt;LI&gt; \subpage cfsschtbl
+    &lt;LI&gt; \subpage cfsschcfg
+    &lt;LI&gt; \subpage cfsschcons
+    &lt;LI&gt; \subpage cfsschfaqs
+    &lt;LI&gt; \subpage sch_events.h "CFS Scheduler Event Message Reference" &lt;BR&gt;
+  &lt;/UL&gt;
+
+**/
+
+/**
+  \page cfsschrevhist CFS Scheduler User's Guide Revision History
+
+  \verbatim  
+  $Log: cfs_sch.dox  $
+  Revision 1.1 2015/08/04 04:53:38EDT rperera 
+  Initial revision
+  Member added to project /CFS-APPs-PROJECT/sch/docs/dox_src/detailed_design/project.pj
+  Revision 1.3 2011/07/01 18:07:26EDT aschoeni 
+  Added information on schedule disable and enable, and customization, moving table information from deployment to tables section
+  Revision 1.2 2011/07/01 15:01:22EDT aschoeni 
+  Fixed requirements section, and changed FM to SCH in the introduction.
+  Revision 1.1 2009/04/16 21:46:46EDT dkobe 
+  Initial revision
+  Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/sch/docs/dox_src/detailed_design/project.pj
+  Revision 1.2 2009/03/27 00:33:59EDT dkobe 
+  Updated User's Guide
+  Revision 1.1 2009/03/03 14:35:32EST dkobe 
+  Initial revision
+  Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/sch/docs/dox_src/users_guide/project.pj
+  \endverbatim
+  
+  Prev: \ref index "SCH Table of Contents" &lt;BR&gt;
+  Next: \ref cfsschintro
+**/
+
+/**
+  \page cfsschintro CFS Scheduler Introduction
+
+  &lt;H2&gt; Scope &lt;/H2&gt;
+
+  This document provides a complete specification for the commands and telemetry associated
+  with the CFS Scheduler (SCH) application software.  The document is intended primarily 
+  for users of the software (operations personal, test engineers, and maintenance personnel).  
+  The last section of the document, the deployment guide section, is intended for mission 
+  developers when deploying and configuring the SCH application software for a mission 
+  flight software build environment. 
+
+  &lt;H2&gt; Applicable Documents &lt;/H2&gt;
+
+  &lt;TABLE BORDER="1" CELLPADDING="2" WIDTH="60%"&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; &lt;B&gt;Document ID&lt;/B&gt; &lt;/TD&gt; 
+      &lt;TD WIDTH="40%"&gt; &lt;B&gt;Document Title&lt;/B&gt; &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; TBD       &lt;/TD&gt; 
+      &lt;TD WIDTH="40%"&gt; CFS Scheduler Application Requirements Document &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; TBD       &lt;/TD&gt; 
+      &lt;TD WIDTH="40%"&gt; CFS Scheduler Heritage Analysis Document &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; TBD       &lt;/TD&gt; 
+      &lt;TD WIDTH="40%"&gt; CFS Scheduler Design Document &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; TBD       &lt;/TD&gt; 
+      &lt;TD WIDTH="40%"&gt; &lt;I&gt;Need Reference to OSAL Document&lt;/I&gt; &lt;/TD&gt;
+  &lt;/TABLE&gt;
+
+
+  &lt;H2&gt; Acronyms &lt;/H2&gt;
+
+  &lt;TABLE BORDER="1" CELLPADDING="2" WIDTH="60%"&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; &lt;B&gt;Acronym&lt;/B&gt; &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; &lt;B&gt;Description&lt;/B&gt;                       &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; API     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Application Programming Interface               &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; ATP     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Absolute Time Processor                         &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; ATS     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Absolute Time tagged command Sequence           &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; CCSDS   &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Consultative Committee for Space Data Systems   &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; C&amp;DH    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Command and Data Handling                       &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; CFE     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Core Flight Executive                           &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; CFS     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Core Flight System                              &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; CI      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Command Ingest                                  &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; Cmd     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Command                                         &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; CPU     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Central Processing Unit                         &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; EDAC    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Error Detection and Correction                  &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; FDS     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Flight Data System                              &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; FM      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; File Manager                                    &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; FSW     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Flight Software                                 &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; GN&amp;C    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Guidance Navigation &amp; Control                   &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; GSFC    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Goddard Space Flight Center                     &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; HK      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Housekeeping                                    &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; HW, H/W &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Hardware                                        &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; ICD     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Interface Control Document                      &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; ISR     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Interrupt Service Routine                       &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; OS      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Operating System                                &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; OSAL    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Operating System Abstraction Layer              &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; Pkts    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Packets                                         &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; RAM     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Random-Access Memory                            &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; RTOS    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Real Time Operating System                      &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; RTP     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Relative Time Processor                         &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; RTS     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Relative Time tagged command Sequence           &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; SB      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Software Bus Service                            &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; SBC     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Single Board Computer                           &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; SC      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Stored Commands task                            &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; SW, S/W &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Software                                        &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; TBD     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; To Be Determined                                &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; TBL     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Table                                           &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; TDM     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Time Data Multiplex                             &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; TLM     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Telemetry                                       &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; UTC     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Universal time code                             &lt;/TD&gt;
+  &lt;/TABLE&gt;
+
+  Prev: \ref cfsschrevhist &lt;BR&gt;
+  Next: \ref cfsschovr
+**/
+
+/**
+  \page cfsschovr CFS Scheduler Overview
+  
+  The Scheduler (SCH) Application provides an operator with a method of generating messages
+  on board the spacecraft at pre-determined timing intervals.  This provides the operator and/or
+  flight software systems engineer with a mechanism to configure the flight software to operate
+  in a Time Division Multiplexed (TDM) fashion with deterministic behavior.  The TDM major frame is defined
+  by the Major Time Synchronization Signal used by the cFE TIME Services (typically 1 Hz) and the
+  Minor Frame timing is defined using an \link #SCH_TOTAL_SLOTS SCH Configuration Parameter \endlink
+  that identifies the number of Minor Frame Slots that are executed within each Major Frame.
+  
+  In each Minor Frame, SCH creates up to #SCH_ENTRIES_PER_SLOT messages, as they
+  are defined by the operator, and sends them to any Applications that have requested the messages
+  via a subscription with the &lt;A HREF="../cfe/cfesbovr.html"&gt;cFE Software Bus (SB)&lt;/A&gt;.
+  
+  SCH is typically used to drive the generation of CFS Application's Housekeeping packets and the
+  collection/generation of other telemetry data.
+    
+  \section SCH Design Overview 
+  
+  SCH is a time driven, single threaded application. A context diagram for the SCH Application is
+  shown below:
+  
+  \image html CFS_SCH_Context.jpg "SCH Context Diagram" 
+  
+  In the default design, it automatically associates itself with the 
+  &lt;A HREF="../cfe/cfe__time_8h.html#e13a973062a2174417e4a30465a12146"&gt; Major Frame Synchronization Signal&lt;/A&gt; 
+  tied to the &lt;A HREF="../cfe/cfetimeovr.html"&gt;cFE TIME Service (TIME)&lt;/A&gt;.  It also creates an OSAL 
+  timer that it uses for doing Minor Frame Timing.  Once all applications have successfully started or a
+  user defined timeout has expired, SCH will begin to process the Schedule Definition Table (SDT).  Each
+  entry in the table identifies the Major/Minor Frame that a message, as defined in the Message Definition
+  Table (MDT), will be generated and placed on the cFE Software Bus.
+  
+  Prev: \ref cfsschintro &lt;BR&gt;
+  Next: \ref cfsschopr
+**/
+
+/**
+  \page cfsschopr CFS Scheduler Operation
+  
+  The SCH Application has an operational interface consisting of eight commands, two tables and two
+  different telemetry messages.
+  
+  \section cfsschoprtbls SCH Tables
+   
+  The two tables are the Schedule Definition Table (SDT) and the Message Definition Table (MDT).
+  
+  The tables, combined, define the behavior of the SCH Application while it is running.  The
+  SDT contains information identifying which messages are to be sent and when and the MDT contains
+  definitions of the messages that are to be sent.  Since the SDT references the contents of the
+  MDT, it is imperative that the operator update these tables carefully to prevent unexpected
+  and potentially disruptive behavior from the SCH Application.  The simplest method to prevent
+  these problems is to replace the default table images for these tables (the filenames are
+  specified using the SCH platform configuration parameters #SCH_SCHEDULE_FILENAME and
+  #SCH_MESSAGE_FILENAME) and to restart the SCH Application.
+  
+  The contents and structure of the tables can be found at \ref cfsschtbl.
+  
+  \section cfsschoprenadis Enable/Disable SCH Activities
+  
+  The command interface for the SCH Application provides Enable/Disable commands for either
+  Enabling/Disabling individual activities in the SDT or for Enabling/Disabling entire groups
+  of activities.  When the activities are defined in the SDT, they can be assigned both a
+  Group Number and/or a Multi-Group Identifier.  A group number typically identifies a single
+  set of activities that are very closely related, if not identical.  An example of a single
+  group could be the messages used to notify Memory Dwell when to examine and log the contents
+  of the memory addresses.  A Multi-Group Identifier can be used to combine individual activities
+  and groups of activities into a larger group.  For example, one could assign individual groups
+  to activities associated with each experiment and then combine all the experiment groups into
+  a single Multi-Group.  This allows all experiment message traffic to be suspended/restarted
+  with a single command.
+  
+  \section cfsschoprdiag SCH Diagnostic Packet
+  
+  If the operator wishes to know the current configuration of the activities defined by the 
+  SDT and the MDT without dumping the tables and analyzing their contents, they have the 
+  \link #SCH_SEND_DIAG_TLM_CC Send Diagnostic Packet \endlink command at their disposal.  This
+  command forces the generation of an SCH Diagnostic Packet that contains the current state
+  (Enabled/Disabled) of each activity in the SDT and also indicates the Message IDs associated
+  with each activity in the table.
+  
+  \section cfsschoprnoop Command Interface Verification and SCH Application Version Information
+  
+  The command interface also includes a \link #SCH_NOOP_CC SCH No-op command \endlink.  This command
+  is useful for verifying that the command interface to the SCH Application is working.  It also
+  causes an \link #SCH_NOOP_CMD_EID Event Message \endlink to be generated that contains the
+  SCH Application's version information.  It should also be noted that the version information can
+  also be obtained when the Application starts up.  After SCH has successfully initialized itself,
+  an \link #SCH_INITSTATS_INF_EID Event Message \endlink is generated that indicates successful
+  initialization and also includes the Application's version information.  Both of these event
+  messages are 'Informational' and are NOT filtered by default.
+  
+  \section cfsschoprmfsync Major Frame Synchronization
+  
+  The SCH Application requires a stable Major Frame Synchronization signal (typically a 1Hz signal)
+  to maintain a reliable performance of the activities defined in the SDT.  If the Major Frame 
+  Synchronization signal is determined to be too noisy (i.e. - Occurs outside the expected window,
+  see #SCH_SYNC_SLOT_DRIFT_WINDOW, for two consecutive major frames), then the signal is automatically
+  ignored and the SCH Application continues to run off of the Minor Frame Synchronization signal.
+  Once an operator has determined that the Major Frame Synchronization signal is stable, the
+  operator can use the \link #SCH_ENABLE_SYNC_CC Enable Sync Command \endlink to re-enable the
+  SCH Application's alignment to the Major Frame signal.
+  
+  \section cfsschoprhk SCH Housekeeping Telemetry
+  
+  The SCH Application generates a \link #SCH_HkPacket_t Housekeeping Telemetry Message \endlink
+  whenever scheduled to do so by the SDT.  The message contains command counters (both successful
+  and unsuccessful) that indicate whether outside commands have been received.  The operator can
+  use these telemetry points to verify the receipt and processing of commands.  The operator can
+  reset these counters using the \link #SCH_RESET_CC Reset Command \endlink.
+  
+  The SCH Housekeeping telemetry also contains statistics that are useful for monitoring the
+  execution of the SCH Application.  These statistics indicate the number of Activities performed,
+  number of times problems have been encountered, number of times the SCH Application has detected
+  synchronization issues, etc.  Each telemetry point is discussed in detail below:
+  
+  &lt;TABLE&gt;
+  &lt;TR&gt;&lt;TD&gt;
+  Command Counter
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_CmdCounter 
+  The \link #SCH_HkPacket_t.CmdCounter Command Counter \endlink is incremented upon receipt of any
+  valid command message.  A command message is considered valid when it meets the following criteria: &lt;BR&gt;
+  &lt;UL&gt;
+    &lt;LI&gt; The Message ID in the Message Header is #SCH_CMD_MID &lt;BR&gt;
+    &lt;LI&gt; The Length of the Message is the correct length for the command &lt;BR&gt;
+    &lt;LI&gt; Each command has specific criteria for validation relating to the command parameters
+         for that particular command &lt;BR&gt;
+  &lt;/UL&gt;
+  
+  \b NOTE: The \link #SCH_HkPacket_t.CmdCounter Command Counter \endlink is NOT 
+  incremented upon receipt of a \link #SCH_SEND_HK_MID SCH Housekeeping Request \endlink message.
+  
+  \b NOTE: This counter can be reset to zero using the \link #SCH_RESET_CC Reset Counters Command \endlink.
+  &lt;/TD&gt;&lt;/TR&gt;
+  
+  &lt;TR&gt;&lt;TD&gt;
+  Command Error Counter
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_ErrCounter
+  The \link #SCH_HkPacket_t.ErrCounter Command Error Counter \endlink is incremented whenever any
+  of the conditions specified above for the \link #SCH_HkPacket_t.CmdCounter Command Counter \endlink
+  are not met.
+  
+  \b NOTE: This counter can be reset to zero using the \link #SCH_RESET_CC Reset Counters Command \endlink.
+  &lt;/TD&gt;&lt;/TR&gt;
+  
+  &lt;TR&gt;&lt;TD&gt;
+  Activity Success Counter
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_ScheduleActivitySuccessCount 
+  The \link #SCH_HkPacket_t.ScheduleActivitySuccessCount Activity Success Counter \endlink is
+  incremented each time an Activity in the Schedule Definition Table is successfully performed.
+  
+  \b NOTE: This counter can be reset to zero using the \link #SCH_RESET_CC Reset Counters Command \endlink.
+  &lt;/TD&gt;&lt;/TR&gt;
+  
+  &lt;TR&gt;&lt;TD&gt;
+  Activity Failure Counter
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_ScheduleActivityFailureCount 
+  The \link #SCH_HkPacket_t.ScheduleActivityFailureCount Activity Failure Counter \endlink
+  is incremented whenever an error occurs while processing an Activity defined in the
+  Schedule Definition Table.  Currently, the only possible Activity type is sending a
+  message.  Therefore, the only possible causes of errors are those that are reported by
+  the cFE Software Bus when processing an #CFE_SB_SendMsg API call.
+  
+  \b NOTE: This counter can be reset to zero using the \link #SCH_RESET_CC Reset Counters Command \endlink.
+  &lt;/TD&gt;&lt;/TR&gt;
+  
+  &lt;TR&gt;&lt;TD&gt;
+  Processed Counter
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_SlotsProcessedCount Slots 
+  The \link #SCH_HkPacket_t.SlotsProcessedCount Slots Processed Counter \endlink is incremented
+  each time a slot (i.e. Minor Frame) in the Schedule Definition Table is processed.
+  
+  \b NOTE: This counter can be reset to zero using the \link #SCH_RESET_CC Reset Counters Command \endlink.
+  &lt;/TD&gt;&lt;/TR&gt;
+  
+  &lt;TR&gt;&lt;TD&gt;
+  Skipped Slots Counter
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_SkippedSlotsCount 
+  The \link #SCH_HkPacket_t.SkippedSlotsCount Skipped Slots Counter \endlink is incremented by
+  one whenever one or more slots in the Schedule Definition Table are skipped in an attempt by
+  the Scheduler Application to stay synchronized with the Major Frame signal.
+  
+  \b NOTE: The counter does not represent the number of slots skipped, but rather, the number of
+  times one or more slots are skipped.
+  
+  \b NOTE: This counter can be reset to zero using the \link #SCH_RESET_CC Reset Counters Command \endlink.
+  &lt;/TD&gt;&lt;/TR&gt;
+  
+  &lt;TR&gt;&lt;TD&gt;
+  Multiple Slots Executed Counter
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_MultipleSlotsCount 
+  The \link #SCH_HkPacket_t.MultipleSlotsCount Multiple Slots Executed Counter \endlink is
+  incremented by one whenever two or more slots are executed during a single Minor Frame
+  wake-up.  This is an indication that the Scheduler Application has fallen behind a little
+  bit and is attempting to catch up rather than skipping Activities in the Schedule Definition
+  Table.
+  
+  \b NOTE: This counter does not represent the number of slots executed, but rather, the number of
+  times two or more slots have been executed in one Minor Frame wake-up.
+  
+  \b NOTE: This counter can be reset to zero using the \link #SCH_RESET_CC Reset Counters Command \endlink.
+  &lt;/TD&gt;&lt;/TR&gt;
+  
+  &lt;TR&gt;&lt;TD&gt;
+  Same Slot Counter
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_SameSlotCount 
+  The \link #SCH_HkPacket_t.SameSlotCount Same Slot Counter \endlink is incremented whenever
+  the Scheduler Application is woken up by the Minor Frame signal and it finds itself in the
+  same slot as the previous Minor Frame.  This only happens when the Scheduler Application is
+  being run on a platform that does not have an accurate timer for driving the Minor Frame
+  signals.  During initialization, the Scheduler Application attempts to allocate a hardware
+  timer to drive the Minor Frame Signal.  If the board does not have a timer with sufficient
+  accuracy, the Scheduler Application then also uses the subseconds of the Mission Elapsed 
+  Time to help maintain timing as well as it can.  This can lead to the same slot being
+  processed more than once in a row.  The Scheduler Application will try its best to compensate
+  for this situation.
+  
+  \b NOTE: This counter can be reset to zero using the \link #SCH_RESET_CC Reset Counters Command \endlink.
+  &lt;/TD&gt;&lt;/TR&gt;
+  
+  &lt;TR&gt;&lt;TD&gt;
+  Bad Table Data Counter
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_BadTableDataCount 
+  The \link #SCH_HkPacket_t.BadTableDataCount Bad Table Data Counter \endlink is incremented
+  whenever the Scheduler Application detects a malformed Activity definition in the Schedule
+  Definition Table.  This can only happen if the Schedule Definition Table has become
+  corrupted in memory since the same validation checks are performed before the table is
+  accepted on a load.
+  
+  \b NOTE: This counter can be reset to zero using the \link #SCH_RESET_CC Reset Counters Command \endlink.
+  &lt;/TD&gt;&lt;/TR&gt;
+
+  &lt;TR&gt;&lt;TD&gt;
+  Table Verify Success Counter
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_TableVerifySuccessCount 
+  The \link #SCH_HkPacket_t.TableVerifySuccessCount Table Verify Success Counter \endlink
+  is incremented whenever the Scheduler Application is requested to verify the contents of
+  a potential table load (for either the Scheduler Definition Table or the Message Definition
+  Table) and the contents are found to meet all the requirements.
+  
+  \b NOTE: This counter can be reset to zero using the \link #SCH_RESET_CC Reset Counters Command \endlink.
+  &lt;/TD&gt;&lt;/TR&gt;
+
+  &lt;TR&gt;&lt;TD&gt;
+  Table Verify Failure Counter
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_TableVerifyFailureCount 
+  The \link #SCH_HkPacket_t.TableVerifyFailureCount Table Verify Failure Counter \endlink is
+  incremented whenever the Scheduler Application is requested to verify the contents of a
+  potential table load (for either the Schedule Definition Table or the Message Definition
+  Table) and at least one error is detected in the specified table image.
+  
+  \b NOTE: This counter can be reset to zero using the \link #SCH_RESET_CC Reset Counters Command \endlink.
+  &lt;/TD&gt;&lt;/TR&gt;
+
+  &lt;TR&gt;&lt;TD&gt;
+  Table Pass Counter
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_TablePassCount 
+  The \link #SCH_HkPacket_t.TablePassCount Table Pass Counter \endlink is incremented whenever
+  the Scheduler Application has either processed the last slot in the Schedule Definition Table
+  or has skipped the end of the table during a Major Frame Synchronization.  This counter is
+  used, internally, by the Scheduler Application to determine the Major Frame cycle number that
+  is used by Activities that run at a frequency less than 1 Hz.  For example, any Activity that
+  is defined to run every 2 seconds, would only be performed when this counter is an even number.
+  &lt;/TD&gt;&lt;/TR&gt;
+
+  &lt;TR&gt;&lt;TD&gt;
+  Valid Major Frame Counter
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_ValidMajorFrameCount 
+  The \link #SCH_HkPacket_t.ValidMajorFrameCount Valid Major Frame Counter \endlink is incremented
+  whenever the Scheduler Application receives a Major Frame Signal during the window that the
+  Scheduler Application is expecting to receive such a signal.
+  
+  \b NOTE: This counter can be reset to zero using the \link #SCH_RESET_CC Reset Counters Command \endlink.
+  &lt;/TD&gt;&lt;/TR&gt;
+
+  &lt;TR&gt;&lt;TD&gt;
+  Missed Major Frame Counter
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_MissedMajorFrameCount 
+  The \link #SCH_HkPacket_t.MissedMajorFrameCount Missed Major Frame Counter \endlink is incremented
+  whenever the Scheduler Application does not receive a Major Frame Signal during the window that it
+  expects to see the signal.
+  
+  \b NOTE: This counter can be reset to zero using the \link #SCH_RESET_CC Reset Counters Command \endlink.
+  &lt;/TD&gt;&lt;/TR&gt;
+
+  &lt;TR&gt;&lt;TD&gt;
+  Unexpected Major Frame Counter
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_UnexpectedMajorFrameCount 
+  The \link #SCH_HkPacket_t.UnexpectedMajorFrameCount Unexpected Major Frame Counter \endlink is
+  incremented whenever the Scheduler Application receives a Major Frame Signal outside the window
+  when it expects to receive the signal.
+  
+  \b NOTE: This counter can be reset to zero using the \link #SCH_RESET_CC Reset Counters Command \endlink.
+  &lt;/TD&gt;&lt;/TR&gt;
+  
+  &lt;TR&gt;&lt;TD&gt;
+  Minor Frames Since Tone
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_MinorFramesSinceTone 
+  The \link #SCH_HkPacket_t.MinorFramesSinceTone Minor Frames Since Tone \endlink identifies how
+  many Minor Frame signals have been received since the last Major Frame signal.  Typically, this
+  number should remain static in telemetry since the Scheduler Application Housekeeping will always
+  happen during the same Minor Frame.  However, if the Scheduler Application becomes out of sync with
+  the Major Frame and ignores the Major Frame, this value could indicate the amount of drift that
+  has occurred.
+  &lt;/TD&gt;&lt;/TR&gt;
+  
+  &lt;TR&gt;&lt;TD&gt;
+  Next Slot Number
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_NextSlotNumber 
+  The \link #SCH_HkPacket_t.NextSlotNumber Next Slot Number \endlink identifies what Slot (i.e. - 
+  Minor Frame) is to be executed on the next Minor Frame signal.  Typically, this number should
+  remain static in telemetry since the Scheduler Application's housekeeping is generated by a
+  message coming from the schedule.
+  &lt;/TD&gt;&lt;/TR&gt;
+  
+  &lt;TR&gt;&lt;TD&gt;
+  Last Sync MET Slot
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_LastSyncMETSlot 
+  The \link #SCH_HkPacket_t.LastSyncMETSlot Last Sync MET Slot \endlink indicates which MET slot
+  the most recent Major Frame signal occurred.  If the Scheduler Application is synchronized to
+  MET, then this value should always be zero.  Otherwise, it can help identify how much of a
+  shift there is from the MET subseconds to the Major Frame signal.
+  &lt;/TD&gt;&lt;/TR&gt;
+  
+  &lt;TR&gt;&lt;TD&gt;
+  Ignore Major Frame Flag
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_IgnoreMajorFrame 
+  The \link #SCH_HkPacket_t.IgnoreMajorFrame Ignore Major Frame Flag \endlink is set to TRUE
+  whenever the Scheduler Application has determined that the Major Frame signal is noisy and
+  cannot be trusted.  To reset this flag, the operator will need to have a stable Major Frame
+  signal and issue the \link #SCH_ENABLE_SYNC_CC Enable Major Frame Synchronization \endlink
+  command.
+  &lt;/TD&gt;&lt;/TR&gt;
+  
+  &lt;TR&gt;&lt;TD&gt;
+  Unexpected Major Frame Flag
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_UnexpectedMajorFrame 
+  The \link #SCH_HkPacket_t.UnexpectedMajorFrame Unexpected Major Frame Flag \endlink is set
+  to TRUE whenever the Scheduler Application receives a Major Frame signal outside the expected
+  Major Frame signal window.
+  &lt;/TD&gt;&lt;/TR&gt;
+  
+  &lt;TR&gt;&lt;TD&gt;
+  Sync To MET Flag
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_SyncToMET 
+  The \link #SCH_HkPacket_t.SyncToMET Sync To MET Flag \endlink is set to TRUE when the Scheduler
+  Application has determined, during initialization, that the accuracy of the Minor Frame timer
+  is inadequate to maintain an accurate Minor Frame signal.  The Scheduler Application will use
+  the MET to determine which slots in the Schedule Definition Table are to be executed whenever
+  it does receive the Minor Frame signal.
+  &lt;/TD&gt;&lt;/TR&gt;
+  
+  &lt;TR&gt;&lt;TD&gt;
+  Major Frame Source
+  &lt;/TD&gt;&lt;TD&gt;
+  \anchor SCHHK_MajorFrameSource 
+  The \link #SCH_HkPacket_t.MajorFrameSource Major Frame Source \endlink can have one of three
+  possible values.  When equal to #SCH_MF_SOURCE_NONE, the Scheduler Application is still 
+  initializing.  When equal to #SCH_MF_SOURCE_CFE_TIME, then the Major Frame is being obtained 
+  from the cFE TIME service.  When equal to #SCH_MF_SOURCE_MINOR_FRAME_TIMER, the Major Frame
+  signal from cFE TIME service has not been received and the Major Frame is being deduced by
+  counting the number of consecutive Minor Frame signals. 
+  &lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt;
+  
+  
+  Next: \ref cfsschreq &lt;BR&gt;
+  Prev: \ref cfsschovr 
+**/
+
+/**
+  \page cfsschreq CFS Scheduler Requirements
+
+    The following is the main SCH subsystem requirement. Detailed requirements can be found in the Scheduler Application Requirements Document.  
+    
+    CFS-400: The FSW shall support a table driven Time Division Multiplexed (TDM) Input/Output Scheme for scheduling system activities.&lt;BR&gt;
+    
+  Next: \ref cfsschdg &lt;BR&gt;
+  Prev: \ref cfsschopr 
+**/
+
+/**
+  \page cfsschdg  CFS Scheduler Deployment Guide
+  
+  In order to successfully integrate the Scheduler Application into a system, the cFE must
+  first be configured to allow for the following: &lt;BR&gt;
+  
+  &lt;UL&gt;
+    &lt;LI&gt; The &lt;A HREFPre="../cfe/cfesbovr.html"&gt; CFE Software Bus&lt;/A&gt; must be configured
+         to have sufficient Pipe resources to allocate one pipe to SCH (see #CFE_SB_MAX_PIPES)
+         with a pipe depth as specified by #SCH_PIPE_DEPTH &lt;BR&gt;
+    &lt;LI&gt; The &lt;A HREFPre="../cfe/cfetblovr.html"&gt; CFE Table Services&lt;/A&gt; must be configured
+         to allow SCH to have two single buffered tables (see #CFE_TBL_MAX_NUM_TABLES) &lt;BR&gt;
+    &lt;LI&gt; The &lt;A HREFPre="../cfe/cfetblovr.html"&gt; CFE Table Services&lt;/A&gt; must be configured
+         to allow for Single Buffered Tables as large as the largest of the SCH Schedule 
+         Definition Table and the Message Definition Table.  The Schedule Definition Table's
+         size can be determined with the following equation: &lt;BR&gt;&lt;BR&gt;
+           SDT Size (in bytes) = #SCH_TOTAL_SLOTS * #SCH_ENTRIES_PER_SLOT * 12 (sizeof one SDT record)&lt;BR&gt;&lt;BR&gt;
+         The size of the Message Definition Table can be determined with the following equation:&lt;BR&gt;&lt;BR&gt;
+           MDT Size (in bytes) = #SCH_MAX_MSG_WORDS * #SCH_MAX_MESSAGES &lt;BR&gt;&lt;BR&gt;
+    &lt;LI&gt; The \link #SCH_SEND_HK_MID SCH Housekeeping Request Message \endlink needs to be
+         put into the SCH Schedule Definition Table and the SCH Message Definition Table
+         in order to notify SCH when the SCH Housekeeping message should be generated &lt;BR&gt;
+    &lt;LI&gt; The default SCH Schedule Definition Table (location specified by the #SCH_SCHEDULE_FILENAME
+         configuration parameter) must be available before the SCH is started &lt;BR&gt;
+    &lt;LI&gt; The default SCH Message Definition Table (location specified by the #SCH_MESSAGE_FILENAME
+         configuration parameter) must be available before the SCH is started &lt;BR&gt;
+  &lt;/UL&gt;
+
+  &lt;H3&gt;Scheduler Timing Customization&lt;/H3&gt;
+  The Scheduler application contains the file \c sch_custom.c which can be adapted to take advantage of
+  platform specific functionality concerning Major Frame timing, Minor Frame timing, and current slot
+  determiniation. While no changes are required to this file for SCH to be functional, it may be possible
+  to obtain better accuracy or increase processing efficiency by modifying the contents. &lt;BR&gt;
+
+  This customizable section of code includes four required functions for interface purposes:
+  &lt;UL&gt;
+    &lt;LI&gt; #SCH_CustomEarlyInit
+    &lt;LI&gt; #SCH_CustomLateInit
+    &lt;LI&gt; #SCH_CustomGetCurrentSlotNumber
+    &lt;LI&gt; #SCH_CustomCleanup
+  &lt;/UL&gt;
+
+  It also contains two important local functions that act as interrupt handlers:
+  &lt;UL&gt;
+    &lt;LI&gt; #SCH_MajorFrameCallback
+    &lt;LI&gt; #SCH_MinorFrameCallback
+  &lt;/UL&gt;
+  These Callback functions should not require significant modification if just changing the timing source. It is very
+  important to note, however, that SCH_MinorFrameCallback currently assumes that it is using a timing function similar to
+  #OS_TimerSet that allows both a first and a subsequent repeated time setting. If a time setting function that only allows
+  a single time to be set is used, a further case must be added that will allow the #SCH_SHORT_SLOT_PERIOD to be set back
+  to #SCH_NORMAL_SLOT_PERIOD on the next minor frame call if the major frame is no longer being used. &lt;BR&gt;
+
+  &lt;H3&gt;Stopping/Starting Scheduler During Critical Activities&lt;/H3&gt;
+  The Scheduler application has an associated Scheduler Library that can be used to enable and disable schedule processing
+  if #SCH_LIB_PRESENCE is set to 1 (if it is set to 0, the library is not used, and does not even need to exist). The library
+  consists of three APIs:
+  &lt;UL&gt;
+    &lt;LI&gt; #SCH_EnableProcessing 
+    &lt;LI&gt; #SCH_DisableProcessing
+    &lt;LI&gt; #SCH_GetProcessingState
+  &lt;/UL&gt;
+  SCH_EnableProcessing must be called as many times as SCH_DisableProcessing has previously been called to re-enable processing.
+  Note that while processing is disabled, SCH will not respond to ground commands.
+    
+  Next: \ref cfsschcmds &lt;BR&gt;
+  Prev: \ref cfsschreq 
+**/
+
+/**
+  \page cfsschcmds CFS Scheduler Commands
+
+  &lt;TABLE BORDER="1" CELLPADDING="2" WIDTH="60%" ALIGN="CENTER"&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%" ALIGN="CENTER"&gt; &lt;B&gt;\ref cfsschtlm&lt;/B&gt; &lt;/TD&gt; 
+      &lt;TD WIDTH="20%" ALIGN="CENTER"&gt; &lt;B&gt;\ref cfsschtbl&lt;/B&gt;&lt;/TD&gt;
+      &lt;TD WIDTH="20%" ALIGN="CENTER"&gt; &lt;B&gt;\ref cfsschcfg&lt;/B&gt;&lt;/TD&gt;
+  &lt;/TABLE&gt;
+  
+  The following is a list of Commands that are processed by the CFS 
+  Scheduler Application. 
+
+**/
+
+/**
+  \page cfsschtlm  CFS Scheduler Telemetry
+
+  &lt;TABLE BORDER="1" CELLPADDING="2" WIDTH="60%" ALIGN="CENTER"&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%" ALIGN="CENTER"&gt; &lt;B&gt;\ref cfsschcmds&lt;/B&gt; &lt;/TD&gt; 
+      &lt;TD WIDTH="20%" ALIGN="CENTER"&gt; &lt;B&gt;\ref cfsschtbl&lt;/B&gt;&lt;/TD&gt;
+      &lt;TD WIDTH="20%" ALIGN="CENTER"&gt; &lt;B&gt;\ref cfsschcfg&lt;/B&gt;&lt;/TD&gt;
+  &lt;/TABLE&gt;
+  
+  The following are telemetry packets generated by the CFS Scheduler 
+  Application.
+
+**/
+
+/**
+  \page cfsschtbl CFS Scheduler Table Definitions
+
+  &lt;TABLE BORDER="1" CELLPADDING="2" WIDTH="60%" ALIGN="CENTER"&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%" ALIGN="CENTER"&gt; &lt;B&gt;\ref cfsschcmds&lt;/B&gt;&lt;/TD&gt;
+      &lt;TD WIDTH="20%" ALIGN="CENTER"&gt; &lt;B&gt;\ref cfsschtlm&lt;/B&gt; &lt;/TD&gt; 
+      &lt;TD WIDTH="20%" ALIGN="CENTER"&gt; &lt;B&gt;\ref cfsschcfg&lt;/B&gt;&lt;/TD&gt;
+  &lt;/TABLE&gt;
+
+  The following are the tables that are used by the CFS Scheduler Application. 
+
+  &lt;H3&gt;Schedule Definition Table (SDT)&lt;/H3&gt;
+  
+  Each entry in the Schedule Definition Table has the following structure:&lt;BR&gt;
+  
+  \verbatim
+  typedef struct
+  {
+    uint8    EnableState;          /* State may be SCH_UNUSED, SCH_ENABLED, SCH_DISABLED */
+    uint8    Type;                 /* Activity Type may be SCH_ACTIVITY_NONE or SCH_ACTIVITY_SEND_MSG */
+    uint16   Frequency;            /* Number of seconds between Activity execution */
+    uint16   Remainder;            /* Seconds offset to perform Activity */
+    uint16   MessageIndex;         /* Byte index into Message Definition Table */
+    uint32   GroupData;            /* Group and Multi-Group membership definitions */
+  } SCH_ScheduleEntry_t;
+  \endverbatim
+  
+  The first element, \c EnableState, identifies whether the specified Activity is currently 
+  \link #SCH_UNUSED unspecified \endlink (i.e. - unused), \link #SCH_ENABLED Enabled \endlink
+  (i.e. - the Activity will be acted upon once SCH has loaded the table), or 
+  \link #SCH_DISABLED Disabled \endlink (i.e. - the Activity will NOT be acted upon once 
+  SCH has loaded the table).
+  
+  The second element, \c Type, specifies whether the Activity is to \link #SCH_ACTIVITY_SEND_MSG 
+  send a message \endlink or to do \link #SCH_ACTIVITY_NONE nothing \endlink.  This
+  parameter can be used for future expansion of Activity types that may be added at a later date.
+  
+  The third element, \c Frequency, specifies the number of Major Frames that need to occur between
+  Activity processing.  For example, if set equal to one (1), the specified Activity will occur 
+  each time SCH processes the table.  If set equal to two (2), the specified Activity will occur 
+  every other time SCH processes the table, etc.
+  
+  The fourth element, \c Remainder, specifies how many Major Frames need to occur BEFORE the first time
+  the Activity will be processed.  This value must be less than the \c Frequency term specified above.
+  This term allows the user to stagger events that occur on a common frequency to spread the CPU load
+  over time.  For example, if there are two activities whose \c Frequency element is two, one of the
+  activity's \c Remainder is a zero (0) and the other is a one (1), then each Activity would occur on
+  the second the other does not.
+  
+  The fifth element, \c MessageIndex, indicates which message entry in the Message Definition Table (see
+  below) is to be transmitted when this Activity is processed.
+  
+  The last element, \c GroupData, allows the user to assign the Activity a Group identifier and to
+  also designate the item as belonging to one or more groups of groups.  The \c GroupData element
+  has two bit-fields that are of interest.  The bit structure is shown below: &lt;BR&gt;&lt;BR&gt;
+  
+  &lt;table border="1" width="100%"&gt;
+	&lt;tr&gt;
+		&lt;td&gt;
+		&lt;b&gt;MSB&lt;/b&gt;&lt;/td&gt;
+		&lt;td colspan="30"&gt;&amp;nbsp;
+		&lt;td&gt;
+		&lt;b&gt;LSB&lt;/b&gt;&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr&gt;
+		&lt;td width="20"&gt;&lt;b&gt;31&lt;/b&gt;&lt;/td&gt;
+		&lt;td&gt;&lt;b&gt;30&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;29&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;28&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;27&lt;/b&gt;&lt;/td&gt;
+		&lt;td&gt;&lt;b&gt;26&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;25&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;24&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;23&lt;/b&gt;&lt;/td&gt;
+		&lt;td&gt;&lt;b&gt;22&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;21&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;20&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;19&lt;/b&gt;&lt;/td&gt;
+		&lt;td&gt;&lt;b&gt;18&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;17&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;16&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;15&lt;/b&gt;&lt;/td&gt;
+		&lt;td&gt;&lt;b&gt;14&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;13&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;12&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;11&lt;/b&gt;&lt;/td&gt;
+		&lt;td&gt;&lt;b&gt;10&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;09&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;08&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;07&lt;/b&gt;&lt;/td&gt;
+		&lt;td&gt;&lt;b&gt;06&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;05&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;04&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;03&lt;/b&gt;&lt;/td&gt;
+		&lt;td&gt;&lt;b&gt;02&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;01&lt;/b&gt;&lt;/td&gt; &lt;td&gt;&lt;b&gt;00&lt;/b&gt;&lt;/td&gt;
+	&lt;/tr&gt;
+	&lt;tr&gt;
+		&lt;td colspan="8"&gt;
+		&lt;b&gt;Group # (1-255)&lt;/b&gt;&lt;/td&gt;
+		&lt;td colspan="24"&gt;
+		&lt;b&gt;Multi-Group Bit Mask&lt;/b&gt;&lt;/td&gt;
+	&lt;/tr&gt;
+  &lt;/table&gt;
+  
+  A Group Number, ranging from 1-255 (zero if no group ID is wanted), can be assigned to any number
+  of Activities.  When that group number is used in a \link #SCH_ENABLE_GROUP_CC Group Enable/Disable 
+  Command \endlink, all the Activities with that group number will have their enable/disable status 
+  changed simultaneously.
+  
+  Similarly, individual bits in the Multi-Group Bit Mask can be set to one.  A bit mask setting one
+  or more of these bits used in an \link #SCH_ENABLE_GROUP_CC Group Enable/Disable Command \endlink 
+  will cause all Activities with a similar bit set to have their enable/disable status changed 
+  simultaneously.  This essentially allows the user to make a group of groups and to treat them as 
+  a single group in a command.
+  
+  If the user wishes to leave a spot empty in the table, ALL fields must be set to zero.  Any values
+  in any field will cause the table to be rejected as corrupt.
+  
+  A sample Schedule Definition Table can be found in the \c tables sub-directory for the SCH App.
+  This sample Schedule Definition Table defines a default configuration for a complete CFS system.
+  The user will be required to uncomment out those CFS Applications they wish to include in their
+  configuration.
+  
+  &lt;H3&gt;Message Definition Table (MDT)&lt;/H3&gt;
+ 
+  \verbatim
+  typedef struct
+  {
+    uint16   MessageBuffer[SCH_MAX_MSG_WORDS]; /* Packed Messages */
+
+  } SCH_MessageEntry_t;
+  \endverbatim
+  
+  The Message Definition Table is simply an array of fixed length byte arrays (i.e. - a two
+  dimensional byte array).  The number of rows in the array is defined by the configuration
+  parameter #SCH_MAX_MESSAGES.  The size of each row is defined by the configuration parameter
+  #SCH_MAX_MSG_WORDS.  Each row can contain the binary definition of a single message the user
+  wishes SCH to output on the Software Bus.  The first row cannot be used because it would map
+  to the "Unused" parameter of zero in the Schedule Definition Table.  The index for each following
+  row is what needs to be specified in the Schedule Definition Table as the \c MessageIndex to
+  assign the message to the appropriate Activity.
+  
+  A sample Message Definition Table can be found in the \c tables sub-directory for the SCH App.
+  This sample Message Definition Table contains default messages used for a complete CFS system.
+  In order to use the sample Message Definition Table for a full up CFS system, the message
+  definitions must be uncommented out.
+   
+**/
+
+/**
+  \page cfsschcfg CFS Scheduler Configuration Parameters
+
+  &lt;TABLE BORDER="1" CELLPADDING="2" WIDTH="60%" ALIGN="CENTER"&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%" ALIGN="CENTER"&gt; &lt;B&gt;\ref cfsschcmds&lt;/B&gt;&lt;/TD&gt;
+      &lt;TD WIDTH="20%" ALIGN="CENTER"&gt; &lt;B&gt;\ref cfsschtlm&lt;/B&gt; &lt;/TD&gt; 
+      &lt;TD WIDTH="20%" ALIGN="CENTER"&gt; &lt;B&gt;\ref cfsschtbl&lt;/B&gt;&lt;/TD&gt;
+  &lt;/TABLE&gt;
+  
+  The following are configuration parameters used to configure the CFS 
+  Scheduler Application either for each platform or for a mission 
+  as a whole.
+
+**/
+
+/**
+  \page cfsschcons CFS Scheduler Constraints
+
+  The Scheduler Application will fail on startup if the following conditions are not met: &lt;BR&gt;
+  
+  &lt;UL&gt;
+    &lt;LI&gt; Unable to create a Software Bus Pipe  &lt;BR&gt;
+    &lt;LI&gt; Unable to subscribe to the SCH Command Message  &lt;BR&gt;
+    &lt;LI&gt; Unable to subscribe to the SCH Housekeeping Request Message  &lt;BR&gt;
+    &lt;LI&gt; Unable to register for cFE Event Services  &lt;BR&gt;
+    &lt;LI&gt; Unable to register the Schedule Definition Table with cFE Table Services  &lt;BR&gt;
+    &lt;LI&gt; Unable to register the Message Definition Table with cFE Table Services  &lt;BR&gt;
+    &lt;LI&gt; Unable to load the Schedule Definition Table with a defaut table file  &lt;BR&gt;
+    &lt;LI&gt; Unable to load the Message Definition Table with a defaut table file  &lt;BR&gt;
+    &lt;LI&gt; Unable to acquire pointers to the Schedule and Message Definition Tables  &lt;BR&gt;
+    &lt;LI&gt; Unable to create a Minor Frame Timer via OSAL  &lt;BR&gt;
+    &lt;LI&gt; Unable to create a Semaphore via OSAL  &lt;BR&gt;
+    &lt;LI&gt; Unable to register for the Major Frame signal via cFE TIME Services  &lt;BR&gt;
+  &lt;/UL&gt;
+  
+  Each one of these conditions will generate a unique event message and will cause the SCH
+  Application to terminate before processing any of the Schedule Definition Table.
+    
+  Next: \ref cfsschfaqs &lt;BR&gt;
+  Prev: \ref cfsschcfg 
+**/
+
+/**
+  \page cfsschfaqs CFS Scheduler Frequently Asked Questions
+
+    &lt;H1&gt; Timing Concerns &lt;/H1&gt;
+         &lt;B&gt; (Q)
+            What does the 'OS Timer Accuracy (%d &gt; reqd %d usec) requires Minor Frame MET sync'
+            event message mean when I see it on startup?
+         &lt;/B&gt; &lt;BR&gt; &lt;BR&gt; &lt;I&gt;
+            The Scheduler Application determines what kind of accuracy it requires from a Minor
+            Frame timer based on the number of slots in a Major Frame and the length of a Major
+            Frame.  When it attempts to create a Minor Frame timer via the OSAL, it requests a
+            timer with this required accuracy.  If the OSAL is unable to provide a timer with
+            the appropriate accuracy, SCH will generate this event message identifying what
+            accuracy it requested and what accuracy was provided.  SCH will attempt to run as
+            best as it can with the degraded performance of its Minor Frame timer.  SCH will
+            compensate by using the MET timer from TIME services to determine which Minor Frames
+            it needs to process on each wake-up.  It will inevitably be required to process 
+            multiple Minor Frames during a single Minor Frame wake-up due to drift caused by
+            the poor Minor Frame accuracy.  This may produce a certain level of inconsistency
+            to tests run and re-run on the same processor.
+            
+            To solve the problem, the board or board support package must be enhanced to provide
+            a Minor Frame timer with the necessary accuracy.  OR, the user must reduce the number
+            of Minor Frames in a Major Frame so that Minor Frames can be consistently performed
+            on a Minor Frame wake-up.
+         &lt;/I&gt;
+            
+         &lt;B&gt; (Q)
+            Why does it take an inordinate amount of time for SCH to begin processing following
+            a reboot?
+         &lt;/B&gt; &lt;BR&gt; &lt;BR&gt; &lt;I&gt;
+            There are two possible causes for this.  First, the SCH Application does not begin
+            processing the Schedule Definition Table until all Applications specified in the 
+            startup script have been loaded, started and have completed their initialization.
+            By waiting for all other Applications to reach a starting point where they are
+            capable of processing messages, a variety of error messages caused by messages being
+            issued by the SCH Application before the associated Application is ready to receive
+            them.  If there is an Application in the startup script that fails to start correctly,
+            the SCH Application will wait for the configuration specified #SCH_STARTUP_SYNC_TIMEOUT
+            period before it assumes as many startup Applications have started that are going to
+            start.
+            
+            Another possibility is the time spent waiting for the first Major Frame signal from
+            the cFE.  The SCH Application is configured via the #SCH_STARTUP_PERIOD parameter to
+            wait a certain amount of time following the successful startup of the Applications
+            specified in the startup script to wait for the first Major Frame signal.  If the signal
+            does not manage to appear within the specified timeout, the SCH Application will use
+            the Minor Frame timer to generate an appropriate Major Frame signal.
+         &lt;/I&gt;
+
+  Prev: \ref cfsschcons 
+**/
+  
+</pre></div>
+</div>
+</section>
+<section id="cfs-sch-context-jpg">
+<h2><code class="docutils literal notranslate"><span class="pre">CFS_SCH_Context.jpg</span></code><a class="headerlink" href="#cfs-sch-context-jpg" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sch/docs/dox_src/detailed_design/CFS_SCH_Context.jpg</span></code></p>
+<p>바이너리 파일입니다. 본문은 생략했습니다.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="dox_src" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../mnem_maps/index.html" class="btn btn-neutral float-right" title="mnem_maps" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

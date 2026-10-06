@@ -1,0 +1,2791 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eds &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="fsw" href="../fsw/index.html" />
+    <link rel="prev" title="config" href="../config/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">cfe</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">modules</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">es</a></li>
+      <li class="breadcrumb-item active">eds</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/fsw/cfe/modules/es/eds/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="eds">
+<h1>eds<a class="headerlink" href="#eds" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/es/eds/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="cfe-es-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_es.xml</span></code><a class="headerlink" href="#cfe-es-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/es/eds/cfe_es.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!--
+
+   NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+
+   Copyright (c) 2020 United States Government as represented by the
+   Administrator of the National Aeronautics and Space Administration.
+   All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+    This document adheres to the Electronic Data Sheet (EDS) XML schema
+    as prescribed in CCSDS book 876.0.
+
+    Purpose:
+      This describes all interface objects for the Executive Services (CFE_ES)
+      core application
+
+--&gt;
+&lt;PackageFile xmlns="http://www.ccsds.org/schema/sois/seds"&gt;
+  &lt;Package name="CFE_ES" shortDescription="NASA Core Flight System Executive Services"&gt;
+    &lt;DataTypeSet&gt;
+
+      &lt;EnumeratedDataType name="LogMode" shortDescription="Identifies handling of log messages after storage is filled" &gt;
+        &lt;IntegerDataEncoding sizeInBits="32" encoding="unsigned" /&gt;
+        &lt;EnumerationList&gt;
+          &lt;Enumeration label="OVERWRITE" value="0" shortDescription="Overwrite Log Mode" /&gt;
+          &lt;Enumeration label="DISCARD" value="1" shortDescription="Discard Log Mode" /&gt;
+        &lt;/EnumerationList&gt;
+      &lt;/EnumeratedDataType&gt;
+
+      &lt;EnumeratedDataType name="ExceptionAction" shortDescription="Identifies action to take if exception occurs" &gt;
+        &lt;IntegerDataEncoding sizeInBits="16" encoding="unsigned" /&gt;
+        &lt;EnumerationList&gt;
+          &lt;Enumeration label="RESTART_APP" value="0" shortDescription="Restart application if exception occurs" /&gt;
+          &lt;Enumeration label="PROC_RESTART"  value="1" shortDescription="Restart processor if exception occurs" /&gt;
+        &lt;/EnumerationList&gt;
+      &lt;/EnumeratedDataType&gt;
+
+      &lt;EnumeratedDataType name="AppType" shortDescription="Identifies type of CFE application"&gt;
+        &lt;IntegerDataEncoding sizeInBits="32" encoding="unsigned" /&gt;
+        &lt;EnumerationList&gt;
+          &lt;Enumeration label="CORE" value="1" shortDescription="CFE core application" /&gt;
+          &lt;Enumeration label="EXTERNAL"  value="2" shortDescription="CFE external application" /&gt;
+          &lt;Enumeration label="LIBRARY" value="3" shortDescription="CFE library"/&gt;
+        &lt;/EnumerationList&gt;
+      &lt;/EnumeratedDataType&gt;
+
+      &lt;EnumeratedDataType name="RunStatus" shortDescription="Run Status and Exit Status identifiers"&gt;
+        &lt;IntegerDataEncoding sizeInBits="32" encoding="unsigned" /&gt;
+        &lt;EnumerationList&gt;
+          &lt;Enumeration label="UNDEFINED" value="0" shortDescription="Reserved value, should not be used"/&gt;
+          &lt;Enumeration label="APP_RUN" value="1" shortDescription="Indicates that the Application should continue to run" /&gt;
+          &lt;Enumeration label="APP_EXIT" value="2" shortDescription="Indicates that the Application wants to exit normally" /&gt;
+          &lt;Enumeration label="APP_ERROR" value="3" shortDescription="Indicates that the Application is quitting with an error" /&gt;
+          &lt;Enumeration label="SYS_EXCEPTION" value="4" shortDescription="The cFE App caused an exception" /&gt;
+          &lt;Enumeration label="SYS_RESTART" value="5" shortDescription="The system is requesting a restart of the cFE App" /&gt;
+          &lt;Enumeration label="SYS_RELOAD" value="6" shortDescription="The system is requesting a reload of the cFE App" /&gt;
+          &lt;Enumeration label="SYS_DELETE" value="7" shortDescription="The system is requesting that the cFE App is stopped" /&gt;
+          &lt;Enumeration label="CORE_APP_INIT_ERROR" value="8" shortDescription="Indicates that the Core Application could not Init" /&gt;
+          &lt;Enumeration label="CORE_APP_RUNTIME_ERROR" value="9" shortDescription="Indicates that the Core Application had a runtime failure" /&gt;
+          &lt;Enumeration label="MAX" value="10" shortDescription="Reserved, placeholder for maximum value" /&gt;
+        &lt;/EnumerationList&gt;
+      &lt;/EnumeratedDataType&gt;
+
+      &lt;EnumeratedDataType name="LogEntryType" shortDescription="Type of entry in the Error and Reset (ER) Log"&gt;
+        &lt;IntegerDataEncoding sizeInBits="8" encoding="unsigned" /&gt;
+        &lt;EnumerationList&gt;
+          &lt;Enumeration label="CORE" value="1" shortDescription="Log entry from a core subsystem" /&gt;
+          &lt;Enumeration label="APPLICATION" value="2" shortDescription="Log entry from an application" /&gt;
+        &lt;/EnumerationList&gt;
+      &lt;/EnumeratedDataType&gt;
+
+      &lt;EnumeratedDataType name="SystemState" shortDescription="The overall cFE System State"&gt;
+        &lt;LongDescription&gt;
+            These values are used with the CFE_ES_WaitForSystemState() API call to synchronize application startup.
+
+            @note These are defined in order so that relational comparisons e.g. if (STATEA &amp;lt; STATEB) are possible
+        &lt;/LongDescription&gt;
+        &lt;IntegerDataEncoding sizeInBits="32" encoding="unsigned" /&gt;
+        &lt;EnumerationList&gt;
+          &lt;Enumeration label="UNDEFINED"    value="0" shortDescription="reserved" /&gt;
+          &lt;Enumeration label="EARLY_INIT"   value="1" shortDescription="single threaded mode while setting up CFE itself" /&gt;
+          &lt;Enumeration label="CORE_STARTUP" value="2" shortDescription="core apps (CFE_ES_ObjectTable) are starting (multi-threaded)" /&gt;
+          &lt;Enumeration label="CORE_READY"   value="3" shortDescription="core is ready, starting other external apps/libraries (if any)" /&gt;
+          &lt;Enumeration label="APPS_INIT"    value="4" shortDescription="startup apps have all completed their early init, but not necessarily operational yet" /&gt;
+          &lt;Enumeration label="OPERATIONAL"  value="5" shortDescription="normal operation mode; all apps are RUNNING" /&gt;
+          &lt;Enumeration label="SHUTDOWN"     value="6" shortDescription="reserved for future use, all apps would be STOPPED" /&gt;
+        &lt;/EnumerationList&gt;
+      &lt;/EnumeratedDataType&gt;
+
+      &lt;EnumeratedDataType name="AppState" shortDescription="Application Run State"&gt;
+        &lt;LongDescription&gt;
+            The normal progression of APP states:
+            UNDEFINED -&gt; EARLY_INIT -&gt; LATE_INIT -&gt; RUNNING -&gt; WAITING -&gt; STOPPED
+
+            @note These are defined in order so that relational comparisons e.g. if (STATEA &amp;lt; STATEB) are possible
+        &lt;/LongDescription&gt;
+        &lt;IntegerDataEncoding sizeInBits="32" encoding="unsigned" /&gt;
+        &lt;EnumerationList&gt;
+          &lt;Enumeration label="UNDEFINED" value="0" shortDescription="Initial state before app thread is started" /&gt;
+          &lt;Enumeration label="EARLY_INIT" value="1" shortDescription="App thread has started, app performing early initialization of its own data" /&gt;
+          &lt;Enumeration label="LATE_INIT" value="2" shortDescription="Early/Local initialization is complete.  First sync point." /&gt;
+          &lt;Enumeration label="RUNNING" value="3" shortDescription="All initialization is complete.  Second sync point." /&gt;
+          &lt;Enumeration label="WAITING" value="4" shortDescription="Application is waiting on a Restart/Reload/Delete request" /&gt;
+          &lt;Enumeration label="STOPPED" value="5" shortDescription="Application is stopped" /&gt;
+          &lt;Enumeration label="MAX" value="6" shortDescription="Reserved, placeholder for maximum value" /&gt;
+        &lt;/EnumerationList&gt;
+      &lt;/EnumeratedDataType&gt;
+
+      &lt;ContainerDataType name="AppId" baseType="CFE_RESOURCEID/BaseType" shortDescription="A type for Application IDs"&gt;
+        &lt;LongDescription&gt;
+          This is the type that is used for any API accepting or returning an App ID
+        &lt;/LongDescription&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="TaskId" baseType="CFE_RESOURCEID/BaseType" shortDescription="A type for Task IDs"&gt;
+        &lt;LongDescription&gt;
+          This is the type that is used for any API accepting or returning a Task ID
+        &lt;/LongDescription&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="LibId" baseType="CFE_RESOURCEID/BaseType" shortDescription="A type for Library IDs"&gt;
+        &lt;LongDescription&gt;
+          This is the type that is used for any API accepting or returning a Lib ID
+        &lt;/LongDescription&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="CounterId" baseType="CFE_RESOURCEID/BaseType" shortDescription="A type for Counter IDs"&gt;
+        &lt;LongDescription&gt;
+          This is the type that is used for any API accepting or returning an Counter ID
+        &lt;/LongDescription&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="MemHandle" baseType="CFE_RESOURCEID/BaseType" shortDescription="Memory Handle type"&gt;
+        &lt;LongDescription&gt;
+          Data type used to hold Handles of Memory Pools
+          created via CFE_ES_PoolCreate and CFE_ES_PoolCreateNoSem
+        &lt;/LongDescription&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="CDSHandle" baseType="CFE_RESOURCEID/BaseType" shortDescription="CDS Handle type"&gt;
+        &lt;LongDescription&gt;
+          Data type used to hold Handles of Critical Data Stores. See #CFE_ES_RegisterCDS
+        &lt;/LongDescription&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;IntegerDataType name="TaskPriority" shortDescription="Type used for task priority in CFE ES"&gt;
+        &lt;LongDescription&gt;
+          @note the valid range is only 0-255 (same as OSAL) but
+          a wider type is used for backward compatibility
+          in binary formats of messages.
+        &lt;/LongDescription&gt;
+        &lt;IntegerDataEncoding encoding="unsigned" sizeInBits="16"/&gt;
+        &lt;Range&gt;
+          &lt;MinMaxRange rangeType="inclusiveMinInclusiveMax" min="0" max="255"/&gt;
+        &lt;/Range&gt;
+      &lt;/IntegerDataType&gt;
+
+      &lt;IntegerDataType name="MemOffset" shortDescription="Integer type used for CPU memory addresses, sizes and offsets"&gt;
+        &lt;LongDescription&gt;
+          For backward compatibility with existing CFS code this should be uint32,
+          but all telemetry information will be limited to 4GB in size as a result.
+
+          On 64-bit platforms this can be expanded to 64 bits which will allow larger
+          memory objects, but this will break compatibility with existing control
+          systems, and may also change the alignment/padding of some messages.
+
+          In either case this must be an unsigned type, and should be large enough
+          to represent the largest memory address/size in use in the CFS system.
+        &lt;/LongDescription&gt;
+        &lt;IntegerDataEncoding sizeInBits="${CFE_MISSION/MEM_REFERENCE_SIZE_BITS}" encoding="unsigned" /&gt;
+        &lt;Range&gt;
+          &lt;MinMaxRange max="2 ^ ${CFE_MISSION/MEM_REFERENCE_SIZE_BITS}" min="0" rangeType="inclusiveMinExclusiveMax"/&gt;
+        &lt;/Range&gt;
+      &lt;/IntegerDataType&gt;
+
+      &lt;IntegerDataType name="MemAddress" shortDescription="Integer type used for CPU memory addresses, sizes and offsets"&gt;
+        &lt;LongDescription&gt;
+          For backward compatibility with existing CFS code this should be uint32,
+          but all telemetry information will be limited to 4GB in size as a result.
+
+          On 64-bit platforms this can be expanded to 64 bits which will allow larger
+          memory objects, but this will break compatibility with existing control
+          systems, and may also change the alignment/padding of some messages.
+
+          In either case this must be an unsigned type, and should be large enough
+          to represent the largest memory address/size in use in the CFS system.
+        &lt;/LongDescription&gt;
+        &lt;IntegerDataEncoding sizeInBits="${CFE_MISSION/MEM_REFERENCE_SIZE_BITS}" encoding="unsigned" /&gt;
+        &lt;Range&gt;
+          &lt;MinMaxRange max="2 ^ ${CFE_MISSION/MEM_REFERENCE_SIZE_BITS}" min="0" rangeType="inclusiveMinExclusiveMax"/&gt;
+        &lt;/Range&gt;
+      &lt;/IntegerDataType&gt;
+
+      &lt;StringDataType name="char_x_CFE_ES_CDS_MAX_FULL_NAME_LEN" length="${CFE_MISSION/ES_CDS_MAX_FULL_NAME_LEN}" /&gt;
+
+      &lt;ArrayDataType name="boolean_x_CFE_ES_PERF_MAX_IDS" dataTypeRef="BASE_TYPES/StatusBit"&gt;
+        &lt;DimensionList&gt;
+          &lt;Dimension size="${CFE_MISSION/ES_PERF_MAX_IDS}" /&gt;
+        &lt;/DimensionList&gt;
+      &lt;/ArrayDataType&gt;
+
+      &lt;ContainerDataType name="AppInfo"&gt;
+        &lt;LongDescription&gt;
+          CFE_ES_AppInfo_t is a structure that is used to provide
+          information about an app. It is primarily used for the QueryOne and
+          QueryAll Commands.
+        &lt;/LongDescription&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="ResourceId" type="CFE_RESOURCEID/BaseType" shortDescription="Application ID for this Application"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_APP_ID
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="Type" type="AppType" shortDescription="The type of App: CORE or EXTERNAL"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_APPTYPE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="Name" type="BASE_TYPES/ApiName" shortDescription="The Registered Name of the Application"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_APPNAME
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="EntryPoint" type="BASE_TYPES/ApiName" shortDescription="The Entry Point label for the Application"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_APPENTRYPT
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="FileName" type="BASE_TYPES/PathName" shortDescription="The Filename of the file containing the Application"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_APPFILENAME
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="StackSize" type="MemOffset" shortDescription="The Stack Size of the Application"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_STACKSIZE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="AddressesAreValid" type="BASE_TYPES/uint32" shortDescription="Indicates that the Code, Data, and BSS addresses/sizes are valid"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_ADDRVALID
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="CodeAddress" type="MemAddress" shortDescription="The Address of the Application Code Segment"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_CODEADDR
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="CodeSize" type="MemOffset" shortDescription="The Code Size of the Application"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_CODESIZE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="DataAddress" type="MemAddress" shortDescription="The Address of the Application Data Segment"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_DATAADDR
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="DataSize" type="MemOffset" shortDescription="The Data Size of the Application"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_DATASIZE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="BSSAddress" type="MemAddress" shortDescription="The Address of the Application BSS Segment"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_BSSADDR
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="BSSSize" type="MemOffset" shortDescription="The BSS Size of the Application"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_BSSSIZE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="StartAddress" type="MemAddress" shortDescription="The Start Address of the Application"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_STARTADDR
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="ExceptionAction" type="ExceptionAction" shortDescription="What should occur if Application has an exception (Restart Application OR Restart Processor)"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_EXCEPTNACTN
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="Priority" type="TaskPriority" shortDescription="The Priority of the Application"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_PRIORITY
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="MainTaskId" type="TaskId" shortDescription="The Application's Main Task ID"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_MAINTASKID
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="ExecutionCounter" type="BASE_TYPES/uint32" shortDescription="The Application's Main Task Execution Counter"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_MAINTASKEXECNT
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="MainTaskName" type="BASE_TYPES/ApiName" shortDescription="The Application's Main Task Name"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_MAINTASKNAME
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="NumOfChildTasks" type="BASE_TYPES/uint32" shortDescription="Number of Child tasks for an App"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_CHILDTASKS
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="TaskInfo" shortDescription="Task Information"&gt;
+        &lt;LongDescription&gt;
+          Structure that is used to provide information about a task. It is primarily
+          used for the Query All Tasks (#CFE_ES_QUERY_ALL_TASKS_CC) command.
+
+          @note There is not currently a telemetry message directly containing this
+          data structure, but it does define the format of the data file generated
+          by the Query All Tasks command.  Therefore it should be considered
+          part of the overall telemetry interface.
+        &lt;/LongDescription&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="TaskId" type="TaskId" shortDescription="Task Id"/&gt;
+          &lt;Entry name="ExecutionCounter" type="BASE_TYPES/uint32" shortDescription="Task Execution Counter"/&gt;
+          &lt;Entry name="TaskName" type="BASE_TYPES/ApiName" shortDescription="Task Name"/&gt;
+          &lt;Entry name="AppId" type="AppId" shortDescription="Parent Application ID"/&gt;
+          &lt;Entry name="AppName" type="BASE_TYPES/ApiName" shortDescription="Parent Application Name"/&gt;
+          &lt;Entry name="StackSize" type="MemOffset" shortDescription="Size of task stack"/&gt;
+          &lt;Entry name="Priority" type="TaskPriority" shortDescription="Priority of task"/&gt;
+          &lt;PaddingEntry sizeInBits="16" shortDescription="Spare bytes for alignment"/&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="BlockStats" shortDescription="Memory Pool Statistics data type"&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="BlockSize" type="MemOffset" shortDescription="Number of bytes in each of these blocks" /&gt;
+          &lt;Entry name="NumCreated" type="BASE_TYPES/uint32" shortDescription="Number of Memory Blocks of this size created" /&gt;
+          &lt;Entry name="NumFree" type="BASE_TYPES/uint32" shortDescription="Number of Memory Blocks of this size that are free" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ArrayDataType name="BlockStats_x_CFE_MAX_MEMPOOL_BLOCKS" dataTypeRef="BlockStats"&gt;
+        &lt;DimensionList&gt;
+          &lt;Dimension size="${CFE_MISSION/ES_POOL_MAX_BUCKETS}" /&gt;
+        &lt;/DimensionList&gt;
+      &lt;/ArrayDataType&gt;
+
+      &lt;ContainerDataType name="MemPoolStats"&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="PoolSize" type="MemOffset" shortDescription="Size of Memory Pool (in bytes)"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_POOLSIZE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="NumBlocksRequested" type="BASE_TYPES/uint32" shortDescription="Number of times a memory block has been allocated"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_BLKSREQ
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="CheckErrCtr" type="BASE_TYPES/uint32" shortDescription="Number of errors detected when freeing a memory block"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_BLKERRCTR
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="NumFreeBytes" type="MemOffset" shortDescription="Number of bytes never allocated to a block"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_FREEBYTES
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="BlockStats" type="BlockStats_x_CFE_MAX_MEMPOOL_BLOCKS" shortDescription="Contains stats on each block size"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_BLKSTATS
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="RestartCmd_Payload" shortDescription="Reset cFE Command"&gt;
+        &lt;LongDescription&gt;
+          For command details, see #CFE_ES_RESTART_CC
+        &lt;/LongDescription&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="RestartType" type="BASE_TYPES/uint16" shortDescription="#CFE_ES_PROCESSOR_RESET=Processor Reset or #CFE_ES_POWERON_RESET=Power-On Reset" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="FileNameCmd_Payload" shortDescription="Generic message payload for messages that require only a filename"&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="FileName" type="BASE_TYPES/PathName" shortDescription="ASCII text string of full path and filename of file" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="OverWriteSysLogCmd_Payload" shortDescription="Overwrite/Discard System Log Configuration Command"&gt;
+        &lt;LongDescription&gt;
+          For command details, see #CFE_ES_OVERWRITE_SYSLOG_CC
+        &lt;/LongDescription&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="Mode" type="LogMode"&gt;
+            &lt;LongDescription&gt;
+               \brief  #CFE_ES_LogMode_DISCARD=Throw away most recent messages,
+              #CFE_ES_LogMode_OVERWRITE=Overwrite oldest with most recent
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="StartAppCmd_Payload" shortDescription="Start Application Command"&gt;
+        &lt;LongDescription&gt;
+          For command details, see #CFE_ES_START_APP_CC.
+        &lt;/LongDescription&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="Application" type="BASE_TYPES/ApiName" shortDescription="Name of Application to be started" /&gt;
+          &lt;Entry name="AppEntryPoint" type="BASE_TYPES/ApiName" shortDescription="Symbolic name of Application's entry point" /&gt;
+          &lt;Entry name="AppFileName" type="BASE_TYPES/PathName" shortDescription="Full path and filename of Application's executable image" /&gt;
+          &lt;Entry name="StackSize" type="MemOffset" shortDescription="Desired stack size for the new application" /&gt;
+          &lt;Entry name="ExceptionAction" type="ExceptionAction"&gt;
+            &lt;LongDescription&gt;
+               \brief  #CFE_ES_ExceptionAction_RESTART_APP=On exception, restart Application,
+              #CFE_ES_ExceptionAction_PROC_RESTART=On exception, perform a Processor Reset
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="Priority" type="BASE_TYPES/uint16" shortDescription="The new Applications runtime priority." /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="AppNameCmd_Payload" shortDescription="Command Structure for Commands requiring just an Application Name"&gt;
+        &lt;LongDescription&gt;
+          For command details, see #CFE_ES_STOP_APP_CC, #CFE_ES_RESTART_APP_CC, #CFE_ES_QUERY_ONE_CC
+        &lt;/LongDescription&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="Application" type="BASE_TYPES/ApiName" shortDescription="ASCII text string containing Application Name" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="AppReloadCmd_Payload" shortDescription="Reload Application Command"&gt;
+        &lt;LongDescription&gt;
+          For command details, see #CFE_ES_RELOAD_APP_CC
+        &lt;/LongDescription&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="Application" type="BASE_TYPES/ApiName" shortDescription="ASCII text string containing Application Name" /&gt;
+          &lt;Entry name="AppFileName" type="BASE_TYPES/PathName" shortDescription="Full path and filename of Application's executable image" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="SetMaxPRCountCmd_Payload" shortDescription="Set Maximum Processor Reset Count Command"&gt;
+        &lt;LongDescription&gt;
+          For command details, see #CFE_ES_SET_MAX_PR_COUNT_CC
+        &lt;/LongDescription&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="MaxPRCount" type="BASE_TYPES/uint16" shortDescription="New maximum number of Processor Resets before an automatic Power-On Reset is performed" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="DeleteCDSCmd_Payload" shortDescription="Delete Critical Data Store Command"&gt;
+        &lt;LongDescription&gt;
+          For command details, see #CFE_ES_DELETE_CDS_CC
+        &lt;/LongDescription&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="CdsName" type="char_x_CFE_ES_CDS_MAX_FULL_NAME_LEN" shortDescription="ASCII text string containing name of CDS to delete" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="StartPerfCmd_Payload" shortDescription="Start Performance Analyzer Command"&gt;
+        &lt;LongDescription&gt;
+          For command details, see #CFE_ES_PERF_STARTDATA_CC
+        &lt;/LongDescription&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="TriggerMode" type="BASE_TYPES/uint32" shortDescription="Desired trigger position (Start, Center, End)" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="StopPerfCmd_Payload" shortDescription="Stop Performance Analyzer Command"&gt;
+        &lt;LongDescription&gt;
+          For command details, see #CFE_ES_PERF_STOPDATA_CC
+        &lt;/LongDescription&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="DataFileName" type="BASE_TYPES/PathName" shortDescription="ASCII text string of full path and filename of file Performance Analyzer data is to be written" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="SetPerfFilterMaskCmd_Payload" shortDescription="Set Performance Analyzer Filter Mask Command"&gt;
+        &lt;LongDescription&gt;
+          For command details, see #CFE_ES_PERF_SETFILTERMASK_CC
+        &lt;/LongDescription&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="FilterMaskNum" type="BASE_TYPES/uint32" shortDescription="Index into array of Filter Masks" /&gt;
+          &lt;Entry name="FilterMask" type="BASE_TYPES/uint32" shortDescription="New Mask for specified entry in array of Filter Masks" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="SetPerfTrigMaskCmd_Payload" shortDescription="Set Performance Analyzer Trigger Mask Command" &gt;
+        &lt;LongDescription&gt;
+          For command details, see #CFE_ES_PERF_SETTRIGMASK_CC
+        &lt;/LongDescription&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="TriggerMaskNum" type="BASE_TYPES/uint32" shortDescription="Index into array of Trigger Masks" /&gt;
+          &lt;Entry name="TriggerMask" type="BASE_TYPES/uint32" shortDescription="New Mask for specified entry in array of Trigger Masks" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="SendMemPoolStatsCmd_Payload" shortDescription=""&gt;
+        &lt;LongDescription&gt;
+           \brief  Telemeter Memory Pool Statistics Command.
+          For command details, see #CFE_ES_TLM_POOL_STATS_CC
+        &lt;/LongDescription&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="Application" type="BASE_TYPES/ApiName" shortDescription="RESERVED - should be all zeroes" /&gt;
+          &lt;Entry name="PoolHandle" type="MemHandle" shortDescription="Handle of Pool whose statistics are to be telemetered" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="DumpCDSRegistryCmd_Payload" shortDescription="Dump CDS Registry Command"&gt;
+        &lt;LongDescription&gt;
+          For command details, see #CFE_ES_DUMP_CDS_REG_CC
+        &lt;/LongDescription&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="DumpFilename" type="BASE_TYPES/PathName" shortDescription="ASCII text string of full path and filename of file CDS Registry is to be written" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="OneAppTlm_Payload" shortDescription="Single Application Information Packet"&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="AppInfo" type="AppInfo" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="PoolStatsTlm_Payload" shortDescription="Memory Pool Statistics Packet"&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="PoolHandle" type="MemHandle" shortDescription="Handle of memory pool whose stats are being telemetered"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_POOLHANDLE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="PoolStats" type="MemPoolStats" shortDescription="For more info, see #CFE_ES_MemPoolStats_t" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="HousekeepingTlm_Payload"&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="CommandCounter" type="BASE_TYPES/uint8" shortDescription="The ES Application Command Counter"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_CMDPC
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="CommandErrorCounter" type="BASE_TYPES/uint8" shortDescription="The ES Application Command Error Counter"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_CMDEC
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="CFECoreChecksum" type="BASE_TYPES/uint16" shortDescription="Checksum of cFE Core Code"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_CKSUM
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="CFEMajorVersion" type="BASE_TYPES/uint8" shortDescription="Major Version Number of cFE"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_CFEMAJORVER
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="CFEMinorVersion" type="BASE_TYPES/uint8" shortDescription="Minor Version Number of cFE"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_CFEMINORVER
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="CFERevision" type="BASE_TYPES/uint8" shortDescription="Sub-Minor Version Number of cFE"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_CFEREVISION
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="CFEMissionRevision" type="BASE_TYPES/uint8" shortDescription="Mission Version Number of cFE"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_CFEMISSIONREV
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="OSALMajorVersion" type="BASE_TYPES/uint8" shortDescription="OS Abstraction Layer Major Version Number"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_OSMAJORVER
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="OSALMinorVersion" type="BASE_TYPES/uint8" shortDescription="OS Abstraction Layer Minor Version Number"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_OSMINORVER
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="OSALRevision" type="BASE_TYPES/uint8" shortDescription="OS Abstraction Layer Revision Number"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_OSREVISION
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="OSALMissionRevision" type="BASE_TYPES/uint8" shortDescription="OS Abstraction Layer MissionRevision Number"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_OSMISSIONREV
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="PSPMajorVersion" type="BASE_TYPES/uint8" shortDescription="Platform Support Package Major Version Number"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_PSPMAJORVER
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="PSPMinorVersion" type="BASE_TYPES/uint8" shortDescription="Platform Support Package Minor Version Number"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_PSPMINORVER
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="PSPRevision" type="BASE_TYPES/uint8" shortDescription="Platform Support Package Revision Number"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_PSPREVISION
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="PSPMissionRevision" type="BASE_TYPES/uint8" shortDescription="Platform Support Package MissionRevision Number"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_PSPMISSIONREV
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="SysLogBytesUsed" type="MemOffset" shortDescription="Total number of bytes used in system log"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_SYSLOGBYTEUSED
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="SysLogSize" type="MemOffset" shortDescription="Total size of the system log"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_SYSLOGSIZE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="SysLogEntries" type="BASE_TYPES/uint32" shortDescription="Number of entries in the system log"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_SYSLOGENTRIES
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="SysLogMode" type="LogMode" shortDescription="Write/Overwrite Mode"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_SYSLOGMODE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="ERLogIndex" type="BASE_TYPES/uint32" shortDescription="Current index of the ER Log (wraps around)"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_ERLOGINDEX
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="ERLogEntries" type="BASE_TYPES/uint32" shortDescription="Number of entries made in the ER Log since the power on"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_ERLOGENTRIES
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="RegisteredCoreApps" type="BASE_TYPES/uint32" shortDescription="Number of Applications registered with ES"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_REGCOREAPPS
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="RegisteredExternalApps" type="BASE_TYPES/uint32" shortDescription="Number of Applications registered with ES"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_REGEXTAPPS
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="RegisteredTasks" type="BASE_TYPES/uint32" shortDescription="Number of Tasks ( main AND child tasks ) registered with ES"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_REGTASKS
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="RegisteredLibs" type="BASE_TYPES/uint32" shortDescription="Number of Libraries registered with ES"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_REGLIBS
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="ResetType" type="BASE_TYPES/uint32" shortDescription="Reset type ( PROCESSOR or POWERON )"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_RESETTYPE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="ResetSubtype" type="BASE_TYPES/uint32" shortDescription="Reset Sub Type"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_RESETSUBTYPE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="ProcessorResets" type="BASE_TYPES/uint32" shortDescription="Number of processor resets since last power on"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_PROCRESETCNT
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="MaxProcessorResets" type="BASE_TYPES/uint32" shortDescription="Max processor resets before a power on is done"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_MAXPROCRESETS
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="BootSource" type="BASE_TYPES/uint32" shortDescription="Boot source ( as provided from BSP )"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_BOOTSOURCE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="PerfState" type="BASE_TYPES/uint32" shortDescription="Current state of Performance Analyzer"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_PERFSTATE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="PerfMode" type="BASE_TYPES/uint32" shortDescription="Current mode of Performance Analyzer"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_PERFMODE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="PerfTriggerCount" type="BASE_TYPES/uint32" shortDescription="Number of Times Performance Analyzer has Triggered"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_PERFTRIGCNT
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="PerfFilterMask" type="boolean_x_CFE_ES_PERF_MAX_IDS" shortDescription="Current Setting of Performance Analyzer Filter Masks"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_PERFFLTRMASK
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="PerfTriggerMask" type="boolean_x_CFE_ES_PERF_MAX_IDS" shortDescription="Current Setting of Performance Analyzer Trigger Masks"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_PERFTRIGMASK
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="PerfDataStart" type="BASE_TYPES/uint32" shortDescription="Identifies First Stored Entry in Performance Analyzer Log"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_PERFDATASTART
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="PerfDataEnd" type="BASE_TYPES/uint32" shortDescription="Identifies Last Stored Entry in Performance Analyzer Log"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_PERFDATAEND
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="PerfDataCount" type="BASE_TYPES/uint32" shortDescription="Number of Entries Put Into the Performance Analyzer Log"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_PERFDATACNT
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="PerfDataToWrite" type="BASE_TYPES/uint32" shortDescription="Number of Performance Analyzer Log Entries Left to be Written to Log Dump File"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_PERFDATA2WRITE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="HeapBytesFree" type="MemOffset" shortDescription="Number of free bytes remaining in the OS heap"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_HEAPBYTESFREE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="HeapBlocksFree" type="MemOffset" shortDescription="Number of free blocks remaining in the OS heap"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_HEAPBLKSFREE
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+          &lt;Entry name="HeapMaxBlockSize" type="MemOffset" shortDescription="Number of bytes in the largest free block"&gt;
+            &lt;LongDescription&gt;
+               \cfetlmmnemonic  \ES_HEAPMAXBLK
+            &lt;/LongDescription&gt;
+          &lt;/Entry&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="CommandBase" baseType="CFE_HDR/CommandHeader"&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="SendHkCmd" baseType="CFE_HDR/CommandHeader" shortDescription="Send Housekeeping Command" /&gt;
+
+      &lt;ContainerDataType name="HousekeepingTlm" baseType="CFE_HDR/TelemetryHeader"&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="HousekeepingTlm_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="OneAppTlm" baseType="CFE_HDR/TelemetryHeader"&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="OneAppTlm_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="MemStatsTlm" baseType="CFE_HDR/TelemetryHeader"&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="PoolStatsTlm_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+
+      &lt;ContainerDataType name="NoopCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Executive Services No-Op
+
+          \par  Description
+
+          This command performs no other function than to increment the
+          command execution counter. The command may be used to verify
+          general aliveness of the Executive Services task.
+          \cfecmdmnemonic  \ES_NOOP
+
+          \par  Command Structure
+          #CFE_ES_NoArgsCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with the
+          following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - The #CFE_ES_NOOP_INF_EID informational event message will
+          be generated
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - the #CFE_ES_LEN_ERR_EID error event message will be generated
+
+          \par  Criticality
+          None
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="0" /&gt;
+        &lt;/ConstraintSet&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="ResetCountersCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Executive Services Reset Counters
+
+          \par  Description
+
+          This command resets the following counters within the Executive
+          Services housekeeping telemetry:
+          - Command Execution Counter
+          - Command Error Counter
+          \cfecmdmnemonic  \ES_RESETCTRS
+
+          \par  Command Structure
+          #CFE_ES_NoArgsCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - The #CFE_ES_RESET_INF_EID informational event message will be
+          generated
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - the #CFE_ES_LEN_ERR_EID error event message will be generated
+
+          \par  Criticality
+
+          This command is not inherently dangerous.  However, it is
+          possible for ground systems and on-board safing procedures
+          to be designed such that they react to changes in the counter
+          values that are reset by this command.
+
+          \sa  #CFE_ES_RESET_PR_COUNT_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="1" /&gt;
+        &lt;/ConstraintSet&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="RestartCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Executive Services Processor / Power-On Reset
+
+          \par  Description
+
+          This command restarts the cFE in one of two modes.  The Power-On Reset
+          will cause the cFE to restart as though the power were first applied
+          to the processor.  The Processor Reset will attempt to retain the contents
+          of the volatile disk and the contents of the Critical Data Store.
+          NOTE: If a requested Processor Reset should cause the
+          Processor Reset Counter (\b \c \ES_PROCRESETCNT)
+          to exceed OR EQUAL the limit #CFE_ES_MAX_PROCESSOR_RESETS (which is reported in
+          housekeeping telemetry as \b \c \ES_MAXPROCRESETS),
+          the command is \b AUTOMATICALLY upgraded to a Power-On Reset.
+          \cfecmdmnemonic  \ES_RESET
+
+          \par  Command Structure
+          #CFE_ES_RestartCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command (as a Processor Reset)
+          may be verified with the following telemetry:
+          - \b \c \ES_PROCRESETCNT - processor reset counter will increment
+          - New entries in the Exception Reset Log and System Log can be found
+          NOTE: Verification of a Power-On Reset is shown through the loss of
+          data nominally retained through a Processor Reset
+          NOTE: Since the reset of the processor resets the command execution
+          counter (\b \c \ES_CMDPC), this counter \b CANNOT be used to verify
+          command execution.
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - The \link #CFE_ES_RestartCmd_t.RestartType Restart Type \endlink was
+          not a recognized value.
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - the #CFE_ES_BOOT_ERR_EID error event message will be generated
+
+          \par  Criticality
+
+          This command is, by definition, dangerous.  Significant loss of
+          data will occur.  All processes and the cFE itself will be stopped
+          and restarted.  With the Power-On reset option, all data on the
+          volatile disk and the contents of the Critical Data Store will be
+          lost.
+
+          \sa  #CFE_ES_RESET_PR_COUNT_CC, #CFE_ES_SET_MAX_PR_COUNT_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="2" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="RestartCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="StartAppCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Load and Start an Application
+
+          \par  Description
+
+          This command starts the specified application with the
+          specified start address, stack size, etc options.
+          \cfecmdmnemonic  \ES_STARTAPP
+
+          \par  Command Structure
+          #CFE_ES_StartAppCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - The #CFE_ES_START_INF_EID informational event message will be
+          generated
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - The specified application filename string is either a NULL string
+          or less than four characters in length
+          - The specified application entry point is a NULL string
+          - The specified application name is a NULL string
+          - The specified stack size is less than #CFE_ES_DEFAULT_STACK_SIZE
+          - The specified priority is greater than #OS_MAX_PRIORITY
+          - The specified exception action is neither #CFE_ES_ExceptionAction_RESTART_APP (0) or
+          #CFE_ES_ExceptionAction_PROC_RESTART (1)
+          - The Operating System was unable to load the specified application file
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          This command is not inherently dangerous although system resources
+          could be taxed beyond their limits with the starting of erroneous
+          or invalid applications.
+
+          \sa  #CFE_ES_STOP_APP_CC, #CFE_ES_RESTART_APP_CC, #CFE_ES_RELOAD_APP_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="4" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="StartAppCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="StopAppCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Stop and Unload Application
+
+          \par  Description
+
+          This command halts and removes the specified Application
+          from the system. \b NOTE: This command should never be used
+          on the Command Ingest application.  This would prevent further
+          commands from entering the system.  If Command Ingest needs to
+          be stopped and restarted, use #CFE_ES_RESTART_APP_CC or
+          #CFE_ES_RELOAD_APP_CC.
+          \cfecmdmnemonic  \ES_STOPAPP
+
+          \par  Command Structure
+          #CFE_ES_AppNameCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - The #CFE_ES_STOP_DBG_EID debug event message will be
+          generated. NOTE: This event message only identifies that the
+          stop has been started, not that it has completed.
+          - Once the stop has successfully completed, the list of Applications
+          and Tasks created in response to the \b \c \ES_WRITEAPPINFO2FILE,
+          \b \c \ES_WRITETASKINFO2FILE should no longer contain the
+          specified application.
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - The specified application name is not recognized as an active application
+          - The specified application is one of the cFE's Core applications (ES, EVS, SB, TBL, TIME)
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+          - Additional information on the reason for command failure may be found
+          in the System Log
+
+          \par  Criticality
+
+          This command is not inherently dangerous, however the removal of certain
+          applications (e.g. - Spacecraft Attitude and Control) may have a detrimental effect
+          on the spacecraft.
+
+          \sa  #CFE_ES_START_APP_CC, #CFE_ES_RESTART_APP_CC, #CFE_ES_RELOAD_APP_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="5" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="AppNameCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="RestartAppCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Stops and Restarts an Application
+
+          \par  Description
+
+          This command halts and restarts the specified Application.
+          This command does \b NOT reload the application from the onboard
+          filesystem.
+          \cfecmdmnemonic  \ES_RESTARTAPP
+
+          \par  Command Structure
+          #CFE_ES_AppNameCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - The #CFE_ES_RESTART_APP_DBG_EID debug event message will be
+          generated. NOTE: This event message only identifies that the
+          act of stopping the application has begun, not that it has completed.
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - The specified application name is not recognized as an active application
+          - The specified application is one of the cFE's Core applications (ES, EVS, SB, TBL, TIME)
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+          - Additional information on the reason for command failure may be found
+          in the System Log
+
+          \par  Criticality
+
+          This command is not inherently dangerous, however the restarting of certain
+          applications (e.g. - Spacecraft Attitude and Control) may have a detrimental effect
+          on the spacecraft.
+
+          \sa  #CFE_ES_START_APP_CC, #CFE_ES_STOP_APP_CC, #CFE_ES_RELOAD_APP_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="6" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="AppNameCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="ReloadAppCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Stops, Unloads, Loads from a File and Restarts an Application
+
+          \par  Description
+
+          This command halts and removes the specified Application
+          from the system.  Then it immediately loads the Application from
+          the command specified file and restarts it.  This command is
+          especially useful for restarting a Command Ingest Application
+          since once it has been stopped, no further commands can come in
+          to restart it.
+          \cfecmdmnemonic  \ES_RELOADAPP
+
+          \par  Command Structure
+          #CFE_ES_AppReloadCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - The #CFE_ES_RELOAD_APP_DBG_EID debug event message will be
+          generated. NOTE: This event message only identifies that the
+          act of stopping the application has begun, not that it has completed.
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - The specified application name is not recognized as an active application
+          - The specified application is one of the cFE's Core applications (ES, EVS, SB, TBL, TIME)
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+          - Additional information on the reason for command failure may be found
+          in the System Log
+
+          \par  Criticality
+
+          This command is not inherently dangerous, however the restarting of certain
+          applications (e.g. - Spacecraft Attitude and Control) may have a detrimental effect
+          on the spacecraft.
+
+          \sa  #CFE_ES_START_APP_CC, #CFE_ES_STOP_APP_CC, #CFE_ES_RESTART_APP_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="7" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="AppReloadCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="QueryOneCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Request Executive Services Information on a Specified Application
+
+          \par  Description
+
+          This command takes the information kept by Executive Services on the
+          specified application and telemeters it to the ground.
+          \cfecmdmnemonic  \ES_QUERYAPP
+
+          \par  Command Structure
+          #CFE_ES_AppNameCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - The #CFE_ES_ONE_APP_EID debug event message will be
+          generated. NOTE: This event message only identifies that the
+          act of stopping the application has begun, not that it has completed.
+          - Receipt of the #CFE_ES_APP_TLM_t telemetry packet
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - The specified application name is not recognized as an active application
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+          None
+
+          \sa  #CFE_ES_QUERY_ALL_CC, #CFE_ES_QUERY_ALL_TASKS_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="8" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="AppNameCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="QueryAllCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Writes all Executive Services Information on All Applications to a File
+
+          \par  Description
+
+          This command takes the information kept by Executive Services on all of the
+          registered applications and writes it to the specified file.
+          \cfecmdmnemonic  \ES_WRITEAPPINFO2FILE
+
+          \par  Command Structure
+          #CFE_ES_QueryAllCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - The #CFE_ES_ALL_APPS_EID debug event message will be
+          generated.
+          - The file specified in the command (or the default specified
+          by the #CFE_ES_DEFAULT_APP_LOG_FILE configuration parameter) will be
+          updated with the latest information.
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - An Error occurs while trying to write to the file
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          This command is not inherently dangerous.  It will create a new
+          file in the file system (or overwrite an existing one) and could,
+          if performed repeatedly without sufficient file management by the
+          operator, fill the file system.
+
+          \sa  #CFE_ES_QUERY_ONE_CC, #CFE_ES_QUERY_ALL_TASKS_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="9" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="FileNameCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="ClearSysLogCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Clear Executive Services System Log
+
+          \par  Description
+
+          This command clears the contents of the Executive Services System Log.
+          \cfecmdmnemonic  \ES_CLEARSYSLOG
+
+          \par  Command Structure
+          #CFE_ES_NoArgsCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - The #CFE_ES_SYSLOG1_INF_EID informational event message will be
+          generated.
+          - \b \c \ES_SYSLOGBYTEUSED - System Log Bytes Used will go to zero
+          - \b \c \ES_SYSLOGENTRIES - Number of System Log Entries will go to zero
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          This command is not dangerous.  However, any previously logged data
+          will be lost.
+
+          \sa  #CFE_ES_WRITE_SYSLOG_CC, #CFE_ES_CLEAR_ERLOG_CC, #CFE_ES_WRITE_ERLOG_CC,
+          #CFE_ES_OVERWRITE_SYSLOG_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="10" /&gt;
+        &lt;/ConstraintSet&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="WriteSysLogCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Writes contents of Executive Services System Log to a File
+
+          \par  Description
+
+          This command causes the contents of the Executive Services System Log
+          to be written to a log file.
+          \cfecmdmnemonic  \ES_WRITESYSLOG2FILE
+
+          \par  Command Structure
+          #CFE_ES_WriteSysLogCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - The #CFE_ES_SYSLOG2_EID debug event message will be
+          generated.
+          - The file specified in the command (or the default specified
+          by the #CFE_ES_DEFAULT_SYSLOG_FILE configuration parameter) will be
+          updated with the latest information.
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - An Error occurs while trying to write to the file
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          This command is not inherently dangerous.  It will create a new
+          file in the file system (or overwrite an existing one) and could,
+          if performed repeatedly without sufficient file management by the
+          operator, fill the file system.
+
+          \sa  #CFE_ES_CLEAR_SYSLOG_CC, #CFE_ES_CLEAR_ERLOG_CC, #CFE_ES_WRITE_ERLOG_CC,
+          #CFE_ES_OVERWRITE_SYSLOG_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="11" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="FileNameCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="ClearERLogCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Clears the contents of the Exception and Reset Log
+
+          \par  Description
+
+          This command causes the contents of the Executive Services Exception
+          and Reset Log to be cleared.
+          \cfecmdmnemonic  \ES_CLEARERLOG
+
+          \par  Command Structure
+          #CFE_ES_NoArgsCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - The #CFE_ES_ERLOG1_INF_EID informational event message will be
+          generated.
+          - \b \c \ES_ERLOGINDEX - Index into Exception Reset Log goes to zero
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          This command is not dangerous.  However, any previously logged data
+          will be lost.
+
+          \sa  #CFE_ES_CLEAR_SYSLOG_CC, #CFE_ES_WRITE_SYSLOG_CC, #CFE_ES_WRITE_ERLOG_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="12" /&gt;
+        &lt;/ConstraintSet&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="WriteERLogCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Writes Exception and Reset Log to a File
+
+          \par  Description
+
+          This command causes the contents of the Executive Services Exception
+          and Reset Log to be written to the specified file.
+          \cfecmdmnemonic  \ES_WRITEERLOG2FILE
+
+          \par  Command Structure
+          #CFE_ES_WriteERlogCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - The #CFE_ES_ERLOG2_EID debug event message will be
+          generated.
+          - The file specified in the command (or the default specified
+          by the #CFE_ES_DEFAULT_ER_LOG_FILE configuration parameter) will be
+          updated with the latest information.
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - An Error occurs while trying to write to the file
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          This command is not inherently dangerous.  It will create a new
+          file in the file system (or overwrite an existing one) and could,
+          if performed repeatedly without sufficient file management by the
+          operator, fill the file system.
+
+          \sa  #CFE_ES_CLEAR_SYSLOG_CC, #CFE_ES_WRITE_SYSLOG_CC, #CFE_ES_CLEAR_ERLOG_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="13" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="FileNameCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="StartPerfDataCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Start Performance Analyzer
+
+          \par  Description
+
+          This command causes the Performance Analyzer to begin collecting data using the specified trigger mode.
+          \cfecmdmnemonic  \ES_STARTLADATA
+
+          \par  Command Structure
+          #CFE_ES_PerfStartCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - \b \c \ES_PERFSTATE - Current performance analyzer state will change to
+          either WAITING FOR TRIGGER or, if conditions are appropriate fast enough,
+          TRIGGERED.
+          - \b \c \ES_PERFMODE - Performance Analyzer Mode will change to the commanded trigger mode (TRIGGER START,
+          TRIGGER CENTER, or TRIGGER END).
+          - \b \c \ES_PERFTRIGCNT - Performance Trigger Count will go to zero
+          - \b \c \ES_PERFDATASTART - Data Start Index will go to zero
+          - \b \c \ES_PERFDATAEND - Data End Index will go to zero
+          - \b \c \ES_PERFDATACNT - Performance Data Counter will go to zero
+          - The #CFE_ES_PERF_STARTCMD_EID debug event message will be
+          generated.
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - A previous #CFE_ES_PERF_STOPDATA_CC command has not completely finished.
+          - An invalid trigger mode is requested.
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          This command is not inherently dangerous but may cause a small increase in CPU
+          utilization as the performance analyzer data is collected.
+
+          \sa  #CFE_ES_PERF_STOPDATA_CC, #CFE_ES_PERF_SETFILTERMASK_CC, #CFE_ES_PERF_SETTRIGMASK_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="14" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="StartPerfCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="StopPerfDataCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Stop Performance Analyzer
+
+          \par  Description
+
+          This command stops the Performance Analyzer from collecting any more data.
+          \cfecmdmnemonic  \ES_STOPLADATA
+
+          \par  Command Structure
+          #CFE_ES_PerfStopCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - \b \c \ES_PERFSTATE - Current performance analyzer state will change to
+          IDLE.
+          - The #CFE_ES_PERF_STOPCMD_EID debug event message will be
+          generated.
+          - The file specified in the command (or the default specified
+          by the #CFE_ES_DEFAULT_PERF_DUMP_FILENAME configuration parameter) will be
+          updated with the latest information.
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - A previous Stop Performance Analyzer command is still in process
+          - An error occurred while spawning the child task responsible for
+          dumping the Performance Analyzer data to a file
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          This command is not inherently dangerous.  An additional low priority child
+          task will be spawned, however, to dump the performance analyzer data to a file.
+
+          \sa  #CFE_ES_PERF_STARTDATA_CC, #CFE_ES_PERF_SETFILTERMASK_CC, #CFE_ES_PERF_SETTRIGMASK_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="15" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="StopPerfCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="SetPerfFilterMaskCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Set Performance Analyzer's Filter Masks
+
+          \par  Description
+
+          This command sets the Performance Analyzer's Filter Masks.
+          \cfecmdmnemonic  \ES_LAFILTERMASK
+
+          \par  Command Structure
+          #CFE_ES_SetPerfFilterMaskCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - \B \C \ES_PERFFLTRMASK - the current performance filter mask
+          value(s) should reflect the commanded value
+          - The #CFE_ES_PERF_FILTMSKCMD_EID debug event message will be
+          generated.
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - The Filter Mask ID number is out of range
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          Changing the filter masks may cause a small change in the Performance
+          Analyzer's CPU utilization.
+
+          \sa  #CFE_ES_PERF_STARTDATA_CC, #CFE_ES_PERF_STOPDATA_CC, #CFE_ES_PERF_SETTRIGMASK_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="16" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="SetPerfFilterMaskCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="SetPerfTriggerMaskCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Set Performance Analyzer's Trigger Masks
+
+          \par  Description
+          This command sets the Performance Analyzer's Trigger Masks.
+          \cfecmdmnemonic  \ES_LATRIGGERMASK
+
+          \par  Command Structure
+          #CFE_ES_PerfSetTrigMaskCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - \b \c \ES_PERFTRIGMASK - the current performance trigger mask
+          value(s) should reflect the commanded value
+          - The #CFE_ES_PERF_TRIGMSKCMD_EID debug event message will be
+          generated.
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - The Trigger Mask ID number is out of range
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          Changing the trigger masks may cause a small change in the Performance
+          Analyzer's CPU utilization.
+
+          \sa  #CFE_ES_PERF_STARTDATA_CC, #CFE_ES_PERF_STOPDATA_CC, #CFE_ES_PERF_SETFILTERMASK_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="17" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="SetPerfTrigMaskCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="OverWriteSysLogCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Set Executive Services System Log Mode to Discard/Overwrite
+
+          \par  Description
+
+          This command allows the user to configure the Executive Services
+          to either discard new System Log messages when it is full or to
+          overwrite the oldest messages.
+          \cfecmdmnemonic  \ES_OVERWRITESYSLOGMODE
+
+          \par  Command Structure
+          #CFE_ES_OverWriteSysLogCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - \b \c \ES_SYSLOGMODE - Current System Log Mode should reflect
+          the commanded value
+          - The #CFE_ES_SYSLOGMODE_EID debug event message will be
+          generated.
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - The desired mode is neither #CFE_ES_LogMode_OVERWRITE or #CFE_ES_LogMode_DISCARD
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          None. (It should be noted that "Overwrite" mode would allow a message
+          identifying the cause of a problem to be lost by a subsequent flood of
+          additional messages).
+
+          \sa  #CFE_ES_CLEAR_SYSLOG_CC, #CFE_ES_WRITE_SYSLOG_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="18" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="OverWriteSysLogCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="ResetPRCountCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Resets the Processor Reset Counter to Zero
+
+          \par  Description
+
+          This command allows the user to reset the Processor Reset Counter to zero.
+          The Processor Reset Counter counts the number of Processor Resets that
+          have occurred so as to identify when a Processor Reset should automatically
+          be upgraded to a full Power-On Reset.
+          \cfecmdmnemonic  \ES_RESETPRCNT
+
+          \par  Command Structure
+          #CFE_ES_NoArgsCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - \b \c \ES_PROCRESETCNT - Current number of processor resets will go to zero
+          - The #CFE_ES_RESET_PR_COUNT_EID informational event message will be
+          generated.
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          This command is not critical.  The only impact would be that the system
+          would have to have more processor resets before an automatic power-on reset
+          occurred.
+
+          \sa  #CFE_ES_SET_MAX_PR_COUNT_CC, #CFE_ES_RESET_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="19" /&gt;
+        &lt;/ConstraintSet&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="SetMaxPRCountCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Configure the Maximum Number of Processor Resets before a Power-On Reset
+
+          \par  Description
+
+          This command allows the user to specify the number of Processor Resets that
+          are allowed before the next Processor Reset is upgraded to a Power-On Reset.
+          \cfecmdmnemonic  \ES_SETMAXPRCNT
+
+          \par  Command Structure
+          #CFE_ES_SetMaxPRCountCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - \b \c \ES_MAXPROCRESETS - Current maximum number of processor resets
+          before an automatic power-on reset will go to the command specified value.
+          - The #CFE_ES_SET_MAX_PR_COUNT_EID informational event message will be
+          generated.
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          If the operator were to set the Maximum Processor Reset Count to too high a value,
+          the processor would require an inordinate number of consecutive processor resets
+          before an automatic power-on reset would occur.  This could potentially leave the
+          spacecraft without any control for a significant amount of time if a processor reset
+          fails to clear a problem.
+
+          \sa  #CFE_ES_RESET_PR_COUNT_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="20" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="SetMaxPRCountCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="DeleteCDSCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Delete Critical Data Store
+
+          \par  Description
+
+          This command allows the user to delete a Critical Data Store that was created
+          by an Application that is now no longer executing.
+          \cfecmdmnemonic  \ES_DELETECDS
+
+          \par  Command Structure
+          #CFE_ES_DeleteCDSCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - The #CFE_ES_CDS_DELETED_INFO_EID informational event message will be
+          generated.
+          - The specified CDS should no longer appear in a CDS Registry dump generated
+          upon receipt of the #CFE_ES_DUMP_CDS_REG_CC command
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - The specified CDS is the CDS portion of a Critical Table. See #CFE_TBL_DELETE_CDS_CC.
+          - The specified CDS is not found in the CDS Registry
+          - The specified CDS is associated with an Application that is still active
+          - An error occurred while accessing the CDS memory (see the System Log for more details)
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          This command is not critical because it is not possible to delete a CDS that is
+          associated with an active application.  However, deleting a CDS does eliminate
+          any "history" that an application may be wishing to keep.
+
+          \sa  #CFE_ES_DUMP_CDS_REG_CC, #CFE_TBL_DELETE_CDS_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="21" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="DeleteCDSCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="SendMemPoolStatsCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Telemeter Memory Pool Statistics
+
+          \par  Description
+
+          This command allows the user to obtain a snapshot of the statistics maintained
+          for a specified memory pool.
+          \cfecmdmnemonic  \ES_SendMemPoolStats
+
+          \par  Command Structure
+          #CFE_ES_SendMemPoolStatsCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - The #CFE_ES_TLM_POOL_STATS_INFO_EID debug event message will be
+          generated.
+          - The \link #CFE_ES_MEMSTATS_TLM_t Memory Pool Statistics Telemetry Packet \endlink
+          is produced
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - The specified handle is not associated with a known memory pool
+          - The specified handle caused a processor exception because it improperly
+          identified a segment of memory
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          An incorrect Memory Pool Handle value can cause a system crash.
+          Extreme care should be taken to ensure the memory handle value
+          used in the command is correct.
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="22" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="SendMemPoolStatsCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="DumpCDSRegistryCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Dump Critical Data Store Registry to a File
+
+          \par  Description
+
+          This command allows the user to dump the Critical Data Store
+          Registry to an onboard file.
+          \cfecmdmnemonic  \ES_DumpCDSRegistry
+
+          \par  Command Structure
+          #CFE_ES_DumpCDSRegistryCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - The #CFE_ES_CDS_REG_DUMP_INF_EID debug event message will be
+          generated.
+          - The file specified in the command (or the default specified
+          by the #CFE_ES_DEFAULT_CDS_REG_DUMP_FILE configuration parameter) will be
+          updated with the latest information.
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - Error occurred while trying to create the dump file
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          This command is not inherently dangerous.  It will create a new
+          file in the file system (or overwrite an existing one) and could,
+          if performed repeatedly without sufficient file management by the
+          operator, fill the file system.
+
+          \sa  #CFE_ES_DELETE_CDS_CC, #CFE_TBL_DELETE_CDS_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="23" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="DumpCDSRegistryCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="QueryAllTasksCmd" baseType="CommandBase"&gt;
+        &lt;LongDescription&gt;
+          \cfeescmd  Writes a list of All Executive Services Tasks to a File
+
+          \par  Description
+
+          This command takes the information kept by Executive Services on all of the
+          registered tasks and writes it to the specified file.
+          \cfecmdmnemonic  \ES_WRITETASKINFO2FILE
+
+          \par  Command Structure
+          #CFE_ES_QueryAllTasksCmd_t
+
+          \par  Command Verification
+
+          Successful execution of this command may be verified with
+          the following telemetry:
+          - \b \c \ES_CMDPC - command execution counter will
+          increment
+          - The #CFE_ES_TASKINFO_EID debug event message will be
+          generated.
+          - The file specified in the command (or the default specified
+          by the #CFE_ES_DEFAULT_TASK_LOG_FILE configuration parameter) will be
+          updated with the latest information.
+
+          \par  Error Conditions
+
+          This command may fail for the following reason(s):
+          - The command packet length is incorrect
+          - An Error occurs while trying to write to the file
+
+          Evidence of failure may be found in the following telemetry:
+          - \b \c \ES_CMDEC - command error counter will increment
+          - A command specific error event message is issued for all error
+          cases
+
+          \par  Criticality
+
+          This command is not inherently dangerous.  It will create a new
+          file in the file system (or overwrite an existing one) and could,
+          if performed repeatedly without sufficient file management by the
+          operator, fill the file system.
+
+          \sa  #CFE_ES_QUERY_ALL_CC, CFE_ES_QUERY_ONE_CC
+        &lt;/LongDescription&gt;
+        &lt;ConstraintSet&gt;
+          &lt;ValueConstraint entry="Sec.FunctionCode" value="24" /&gt;
+        &lt;/ConstraintSet&gt;
+        &lt;EntryList&gt;
+          &lt;Entry type="FileNameCmd_Payload" name="Payload" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+      &lt;ContainerDataType name="CDSRegDumpRec" shortDescription="CDS Register Dump Record"&gt;
+        &lt;LongDescription&gt;
+          Structure that is used to provide information about a critical data store.
+          It is primarily used for the Dump CDS registry (#CFE_ES_DUMP_CDS_REGISTRY_CC)
+          command.
+
+          @note There is not currently a telemetry message directly containing this
+          data structure, but it does define the format of the data file generated
+          by the Dump CDS registry command.  Therefore it should be considered
+          part of the overall telemetry interface.
+        &lt;/LongDescription&gt;
+        &lt;EntryList&gt;
+          &lt;Entry name="Handle" type="CDSHandle" shortDescription="Handle of CDS"/&gt;
+          &lt;Entry name="Size" type="MemOffset" shortDescription="Size, in bytes, of the CDS memory block"/&gt;
+          &lt;Entry name="Table" type="BASE_TYPES/StatusBit" shortDescription="Flag that indicates whether CDS contains a Critical Table"/&gt;
+          &lt;Entry name="Name" type="char_x_CFE_ES_CDS_MAX_FULL_NAME_LEN" shortDescription="Processor Unique Name of CDS"/&gt;
+        &lt;/EntryList&gt;
+      &lt;/ContainerDataType&gt;
+
+    &lt;/DataTypeSet&gt;
+
+    &lt;ComponentSet&gt;
+      &lt;Component name="Application"&gt;
+        &lt;RequiredInterfaceSet&gt;
+          &lt;Interface name="CMD" shortDescription="Software bus telecommand interface" type="CFE_SB/Telecommand"&gt;
+            &lt;GenericTypeMapSet&gt;
+              &lt;GenericTypeMap name="TelecommandDataType" type="CommandBase" /&gt;
+            &lt;/GenericTypeMapSet&gt;
+          &lt;/Interface&gt;
+          &lt;Interface name="SEND_HK" shortDescription="Send telemetry command interface" type="CFE_SB/Telecommand"&gt;
+            &lt;!-- This uses a bare spacepacket with no payload --&gt;
+            &lt;GenericTypeMapSet&gt;
+              &lt;GenericTypeMap name="TelecommandDataType" type="SendHkCmd" /&gt;
+            &lt;/GenericTypeMapSet&gt;
+          &lt;/Interface&gt;
+          &lt;Interface name="HK_TLM" shortDescription="Software bus housekeeping telemetry interface" type="CFE_SB/Telemetry"&gt;
+            &lt;GenericTypeMapSet&gt;
+              &lt;GenericTypeMap name="TelemetryDataType" type="HousekeepingTlm" /&gt;
+            &lt;/GenericTypeMapSet&gt;
+          &lt;/Interface&gt;
+          &lt;Interface name="APP_TLM" shortDescription="telemetry interface" type="CFE_SB/Telemetry"&gt;
+            &lt;GenericTypeMapSet&gt;
+              &lt;GenericTypeMap name="TelemetryDataType" type="OneAppTlm" /&gt;
+            &lt;/GenericTypeMapSet&gt;
+          &lt;/Interface&gt;
+          &lt;Interface name="MEMSTATS_TLM" shortDescription="telemetry interface" type="CFE_SB/Telemetry"&gt;
+            &lt;GenericTypeMapSet&gt;
+              &lt;GenericTypeMap name="TelemetryDataType" type="MemStatsTlm" /&gt;
+            &lt;/GenericTypeMapSet&gt;
+          &lt;/Interface&gt;
+        &lt;/RequiredInterfaceSet&gt;
+        &lt;Implementation&gt;
+          &lt;VariableSet&gt;
+            &lt;Variable type="BASE_TYPES/uint16" readOnly="true" name="CmdTopicId" initialValue="${CFE_MISSION/ES_CMD_TOPICID}" /&gt;
+            &lt;Variable type="BASE_TYPES/uint16" readOnly="true" name="SendHkTopicId" initialValue="${CFE_MISSION/ES_SEND_HK_TOPICID}" /&gt;
+            &lt;Variable type="BASE_TYPES/uint16" readOnly="true" name="HkTlmTopicId" initialValue="${CFE_MISSION/ES_HK_TLM_TOPICID}" /&gt;
+            &lt;Variable type="BASE_TYPES/uint16" readOnly="true" name="AppTlmTopicId" initialValue="${CFE_MISSION/ES_APP_TLM_TOPICID}" /&gt;
+            &lt;Variable type="BASE_TYPES/uint16" readOnly="true" name="MemStatsTlmTopicId" initialValue="${CFE_MISSION/ES_MEMSTATS_TLM_TOPICID}" /&gt;
+          &lt;/VariableSet&gt;
+          &lt;!-- Assign fixed numbers to the "TopicId" parameter of each interface --&gt;
+          &lt;ParameterMapSet&gt;
+            &lt;ParameterMap interface="CMD" parameter="TopicId" variableRef="CmdTopicId" /&gt;
+            &lt;ParameterMap interface="SEND_HK" parameter="TopicId" variableRef="SendHkTopicId" /&gt;
+            &lt;ParameterMap interface="HK_TLM" parameter="TopicId" variableRef="HkTlmTopicId" /&gt;
+            &lt;ParameterMap interface="APP_TLM" parameter="TopicId" variableRef="AppTlmTopicId" /&gt;
+            &lt;ParameterMap interface="MEMSTATS_TLM" parameter="TopicId" variableRef="MemStatsTlmTopicId" /&gt;
+          &lt;/ParameterMapSet&gt;
+        &lt;/Implementation&gt;
+      &lt;/Component&gt;
+    &lt;/ComponentSet&gt;
+
+  &lt;/Package&gt;
+&lt;/PackageFile&gt;
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../config/index.html" class="btn btn-neutral float-left" title="config" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../fsw/index.html" class="btn btn-neutral float-right" title="fsw" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

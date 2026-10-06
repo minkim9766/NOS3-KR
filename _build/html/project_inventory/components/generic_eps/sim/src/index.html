@@ -1,0 +1,1663 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../search.html" />
+    <link rel="next" title="generic_fss" href="../../../generic_fss/index.html" />
+    <link rel="prev" title="inc" href="../inc/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../index.html">components</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">components</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">generic_eps</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">sim</a></li>
+      <li class="breadcrumb-item active">src</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/project_inventory/components/generic_eps/sim/src/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="src">
+<h1>src<a class="headerlink" href="#src" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/generic_eps/sim/src/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="generic-eps-42-data-provider-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">generic_eps_42_data_provider.cpp</span></code><a class="headerlink" href="#generic-eps-42-data-provider-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/generic_eps/sim/src/generic_eps_42_data_provider.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#include &lt;generic_eps_42_data_provider.hpp&gt;
+
+namespace Nos3
+{
+    REGISTER_DATA_PROVIDER(Generic_eps42DataProvider,"GENERIC_EPS_42_PROVIDER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_eps42DataProvider::Generic_eps42DataProvider(const boost::property_tree::ptree&amp; config) : SimData42SocketProvider(config)
+    {
+        sim_logger-&gt;trace("Generic_eps42DataProvider::Generic_eps42DataProvider:  Constructor executed");
+
+        connect_reader_thread_as_42_socket_client(
+            config.get("simulator.hardware-model.data-provider.hostname", "localhost"),
+            config.get("simulator.hardware-model.data-provider.port", 4242) );
+        
+        _orb = config.get("simulator.hardware-model.data-provider.orbit", 0);
+        _sc  = config.get("simulator.hardware-model.data-provider.spacecraft", 0);
+    }
+
+    boost::shared_ptr&lt;SimIDataPoint&gt; Generic_eps42DataProvider::get_data_point(void) const
+    {
+        sim_logger-&gt;trace("Generic_eps42DataProvider::get_data_point:  Executed");
+
+        /* Get the 42 data */
+        const boost::shared_ptr&lt;Sim42DataPoint&gt; dp42 = boost::dynamic_pointer_cast&lt;Sim42DataPoint&gt;(SimData42SocketProvider::get_data_point());
+
+        /* Prepare the specific data */
+        SimIDataPoint *dp = new Generic_epsDataPoint(_orb, _sc, dp42);
+
+        return boost::shared_ptr&lt;SimIDataPoint&gt;(dp);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="generic-eps-data-point-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">generic_eps_data_point.cpp</span></code><a class="headerlink" href="#generic-eps-data-point-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/generic_eps/sim/src/generic_eps_data_point.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#include &lt;ItcLogger/Logger.hpp&gt;
+#include &lt;generic_eps_data_point.hpp&gt;
+
+#include &lt;sim_coordinate_transformations.hpp&gt;
+
+namespace Nos3
+{
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_epsDataPoint::Generic_epsDataPoint(double count) : _not_parsed(false)
+    {
+        sim_logger-&gt;trace("Generic_epsDataPoint::Generic_epsDataPoint:  Defined Constructor executed");
+
+        /* Do calculations based on provided data */
+        _in_sun = true;
+        _sun_vector[0] = count * 0.001;
+        _sun_vector[1] = count * 0.002;
+        _sun_vector[2] = count * 0.003;
+    }
+
+    Generic_epsDataPoint::Generic_epsDataPoint(int16_t orbit, int16_t spacecraft, bool in_sun, double sun_vector[3]) :
+        _orb(orbit), _sc(spacecraft), _in_sun(in_sun)
+    {
+        _sun_vector[0] = sun_vector[0];
+        _sun_vector[1] = sun_vector[1];
+        _sun_vector[2] = sun_vector[2];
+    }
+
+    Generic_epsDataPoint::Generic_epsDataPoint(int16_t orbit, int16_t spacecraft, const boost::shared_ptr&lt;Sim42DataPoint&gt; dp) : 
+        _dp(*dp), _orb(orbit), _sc(spacecraft), _not_parsed(true)
+    {
+        sim_logger-&gt;trace("Generic_epsDataPoint::Generic_epsDataPoint:  42 Constructor executed");
+
+        /* Initialize data */
+        _in_sun = true;
+        _sun_vector[0] = 0.0;
+        _sun_vector[1] = 0.0;
+        _sun_vector[2] = 0.0;
+    }
+
+    void Generic_epsDataPoint::do_parsing(void) const
+    {
+        try 
+        {   
+            /*
+            ** Declare 42 telemetry string prefix
+            ** 42 variables defined in `42/Include/42types.h`
+            ** 42 data stream defined in `42/Source/IPC/SimWriteToSocket.c`
+            */
+           std::string svb_key, pos_r_key, pos_n_key, qbn_key;
+           svb_key.append("SC[").append(std::to_string(_sc)).append("].svb");
+           pos_r_key.append("SC[").append(std::to_string(_sc)).append("].PosR");
+           pos_n_key.append("Orb[").append(std::to_string(_orb)).append("].PosN");
+           qbn_key.append("SC[").append(std::to_string(_sc)).append("].qn");
+
+           /* Parse 42 telemetry */
+           std::string svb_values = _dp.get_value_for_key(svb_key);
+           std::string pos_r_values = _dp.get_value_for_key(pos_r_key);
+           std::string pos_n_values = _dp.get_value_for_key(pos_n_key);
+           std::string qbn_values = _dp.get_value_for_key(qbn_key);
+
+           std::vector&lt;double&gt; svb_data;
+           std::vector&lt;double&gt; pos_r_data;
+           std::vector&lt;double&gt; pos_n_data;
+           std::vector&lt;double&gt; pos;
+           std::vector&lt;double&gt; qbn_data;
+
+           svb_data.resize(3);
+           pos_r_data.resize(3);
+           pos_n_data.resize(3);
+           pos.resize(3);
+           qbn_data.resize(3);
+
+           parse_double_vector(svb_values, svb_data);
+           parse_double_vector(pos_r_values, pos_r_data);
+           parse_double_vector(pos_n_values, pos_n_data);
+           for( int i = 0; i &lt; 3; i++ )
+           {
+            pos[i] = pos_n_data[i] + pos_r_data[i];
+           }
+           parse_double_vector(qbn_values, qbn_data);
+            
+           if( svb_data.size() == 0 )
+           {
+              sim_logger-&gt;trace("Generic_epsDataPoint::Generic_epsDataPoint: No Data, continue.");
+              return;
+           }
+
+           _sun_vector[0] = svb_data[0];
+           _sun_vector[1] = svb_data[1];
+           _sun_vector[2] = svb_data[2];
+
+           if( pos_r_data.size() == 0 || pos_n_data.size() == 0 || qbn_values.size() == 0 )
+           {
+              sim_logger-&gt;trace("Generic_epsDataPoint::Generic_epsDataPoint: No Pos or QBN Data for Eclipse Calc, continue.");
+              return;
+           }
+
+           std::vector&lt;std::vector&lt;double&gt;&gt; cbn;
+           std::vector&lt;double&gt; svn;
+           double rmag;
+           std::vector&lt;double&gt; r;
+           
+           SimCoordinateTransformations::Q2C( qbn_data, cbn );
+           SimCoordinateTransformations::MTxV( cbn, svb_data, svn );
+           rmag = SimCoordinateTransformations::norm( pos );
+           SimCoordinateTransformations::SxV( (-1.0/rmag), pos, r );
+
+           double theta = acos( SimCoordinateTransformations::dot( r, svn ) );
+
+           _in_sun = true; // is in the sun
+
+           if ( (theta &lt; SimCoordinateTransformations::SIM_CONSTANTS.PI/2) &amp;&amp; (rmag * sin(theta) &lt; SimCoordinateTransformations::SIM_CONSTANTS.R_plus) ) // simple calculation using sun vector and nominal earth radius... does not account for penumbra, etc.
+           {
+               _in_sun = false; // false value means in eclipse
+           }     
+
+           _not_parsed = false;
+
+           /* Debug print */
+           sim_logger-&gt;trace("Generic_epsDataPoint::Generic_epsDataPoint:  Parsed svb = %f %f %f; In_Sun: %d", _sun_vector[0], _sun_vector[1], _sun_vector[2], _in_sun);
+        } 
+        catch(const std::exception&amp; e) 
+        {
+            /* Report error */
+            sim_logger-&gt;error("Generic_epsDataPoint::Generic_epsDataPoint:  Parsing exception %s", e.what());
+        }
+    }
+
+    /* Used for printing a representation of the data point */
+    std::string Generic_epsDataPoint::to_string(void) const
+    {
+        sim_logger-&gt;trace("Generic_epsDataPoint::to_string:  Executed");
+        
+        std::stringstream ss;
+
+        ss &lt;&lt; std::fixed &lt;&lt; std::setfill(' ');
+        ss &lt;&lt; "Generic_eps Data Point:   Valid: ";
+        ss &lt;&lt; (_in_sun ? "Valid" : "INVALID");
+        ss &lt;&lt; std::setprecision(std::numeric_limits&lt;double&gt;::digits10); /* Full double precision */
+        ss &lt;&lt; " Generic_eps Data: "
+           &lt;&lt; _sun_vector[0]
+           &lt;&lt; " "
+           &lt;&lt; _sun_vector[1]
+           &lt;&lt; " "
+           &lt;&lt; _sun_vector[2];
+
+        return ss.str();
+    }
+} /* namespace Nos3 */
+</pre></div>
+</div>
+</section>
+<section id="generic-eps-data-provider-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">generic_eps_data_provider.cpp</span></code><a class="headerlink" href="#generic-eps-data-provider-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/generic_eps/sim/src/generic_eps_data_provider.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#include &lt;generic_eps_data_provider.hpp&gt;
+
+namespace Nos3
+{
+    REGISTER_DATA_PROVIDER(Generic_epsDataProvider,"GENERIC_EPS_PROVIDER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_epsDataProvider::Generic_epsDataProvider(const boost::property_tree::ptree&amp; config) : SimIDataProvider(config)
+    {
+        sim_logger-&gt;trace("Generic_epsDataProvider::Generic_epsDataProvider:  Constructor executed");
+        _request_count = 0;
+    }
+
+    boost::shared_ptr&lt;SimIDataPoint&gt; Generic_epsDataProvider::get_data_point(void) const
+    {
+        sim_logger-&gt;trace("Generic_epsDataProvider::get_data_point:  Executed");
+
+        /* Prepare the provider data */
+        _request_count++;
+
+        /* Request a data point */
+        SimIDataPoint *dp = new Generic_epsDataPoint(_request_count);
+
+        /* Return the data point */
+        return boost::shared_ptr&lt;SimIDataPoint&gt;(dp);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="generic-eps-hardware-model-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">generic_eps_hardware_model.cpp</span></code><a class="headerlink" href="#generic-eps-hardware-model-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/generic_eps/sim/src/generic_eps_hardware_model.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#include &lt;generic_eps_hardware_model.hpp&gt;
+
+namespace Nos3
+{
+    REGISTER_HARDWARE_MODEL(Generic_epsHardwareModel,"GENERIC_EPS");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_epsHardwareModel::Generic_epsHardwareModel(const boost::property_tree::ptree&amp; config) : SimIHardwareModel(config), 
+    _enabled(GENERIC_EPS_SIM_SUCCESS), _initialized_other_sims(GENERIC_EPS_SIM_ERROR)
+    {
+        /* Get the NOS engine connection string */
+        std::string connection_string = config.get("common.nos-connection-string", "tcp://127.0.0.1:12001"); 
+        sim_logger-&gt;info("Generic_epsHardwareModel::Generic_epsHardwareModel:  NOS Engine connection string: %s.", connection_string.c_str());
+
+        // Set up the time node which is **required** for this model
+        std::string time_bus_name = "command";
+        if (config.get_child_optional("hardware-model.connections")) {
+            BOOST_FOREACH(const boost::property_tree::ptree::value_type &amp;v, config.get_child("hardware-model.connections")) {
+                // v.first is the name of the child.
+                // v.second is the child tree.
+                if (v.second.get("type", "").compare("time") == 0) {
+                    time_bus_name = v.second.get("bus-name", "command");
+                    break;
+                }
+            }
+        }
+        _time_bus.reset(new NosEngine::Client::Bus(_hub, connection_string, time_bus_name));
+        sim_logger-&gt;debug("Generic_epsHardwareModel::Generic_epsHardwareModel:  Time bus %s now active.", time_bus_name.c_str());
+
+        /* Get a data provider */
+        std::string dp_name = config.get("simulator.hardware-model.data-provider.type", "GENERIC_EPS_PROVIDER");
+        _generic_eps_dp = SimDataProviderFactory::Instance().Create(dp_name, config);
+        sim_logger-&gt;info("Generic_epsHardwareModel::Generic_epsHardwareModel:  Data provider %s created.", dp_name.c_str());
+
+        /* Get on a protocol bus */
+        /* Note: Initialized defaults in case value not found in config file */
+        std::string bus_name = "i2c_0";
+        int bus_address = 0x2B;
+        if (config.get_child_optional("simulator.hardware-model.connections")) 
+        {
+            /* Loop through the connections for hardware model */
+            BOOST_FOREACH(const boost::property_tree::ptree::value_type &amp;v, config.get_child("simulator.hardware-model.connections"))
+            {
+                /* v.second is the child tree (v.first is the name of the child) */
+                if (v.second.get("type", "").compare("i2c") == 0)
+                {
+                    /* Configuration found */
+                    bus_name = v.second.get("bus-name", bus_name);
+                    bus_address = v.second.get("bus-address", bus_address);
+                    break;
+                }
+            }
+        }
+        _time_bus-&gt;add_time_tick_callback(std::bind(&amp;Generic_epsHardwareModel::update_battery_values, this));
+
+        _i2c_slave_connection = new I2CSlaveConnection(this, bus_address, connection_string, bus_name);
+        sim_logger-&gt;info("Generic_epsHardwareModel::Generic_epsHardwareModel:  Now on I2C bus name %s as address 0x%02x.", bus_name.c_str(), bus_address);
+
+        /* Get on the command bus */
+        _command_bus_name = "command";
+        if (config.get_child_optional("hardware-model.connections")) 
+        {
+            /* Loop through the connections for the hardware model connections */
+            BOOST_FOREACH(const boost::property_tree::ptree::value_type &amp;v, config.get_child("hardware-model.connections"))
+            {
+                /* v.first is the name of the child */
+                /* v.second is the child tree */
+                if (v.second.get("type", "").compare("time") == 0) // 
+                {
+                    _command_bus_name = v.second.get("bus-name", "command");
+                    /* Found it... don't need to go through any more items*/
+                    break; 
+                }
+            }
+        }
+        _command_bus.reset(new NosEngine::Client::Bus(_hub, connection_string, _command_bus_name));
+        sim_logger-&gt;info("Generic_epsHardwareModel::Generic_epsHardwareModel:  Now on time bus named %s.", _command_bus_name.c_str());
+
+        /* Initialize status for battery and solar panels */
+        std::string battv, battv_temp, solararray, solararray_current, solararray_temp, batt_watt_hrs, batt_charge_state, always_on_v, always_on_a;
+
+        // Below, the battery watt-hrs variable arbitrarily selected - it could well 
+        // do to be changed to be more in line with true spacecraft values.
+        // Additionally, the current values (as indicated) are placeholders and should
+        // probably be changed to something more correct.
+
+        _power_per_main_panel = atof(config.get("simulator.hardware-model.physical.bus.solar-array-power-per-main-panel", "4.485").c_str()); //Power generated, in Watts, per main panel; data taken from GTOSat, modified to fit STF1; TODO: Replace with STF1 vals
+        _power_per_small_panel = atof(config.get("simulator.hardware-model.physical.bus.solar-array-power-per-small-panel", "1.281").c_str()); //Power generated, in Watts, for small bottom panel; data taken from GTOSat, modified to fit STF1; TODO: Replace with STF1 vals
+
+        battv = config.get("simulator.hardware-model.physical.bus.battery-voltage", "24.00");
+        battv_temp = config.get("simulator.hardware-model.physical.bus.battery-temperature", "25.0");
+        batt_watt_hrs = config.get("simulator.hardware-model.physical.bus.battery-watt-hrs", "10.0");
+        batt_charge_state = config.get("simulator.hardware-model.physical.bus.battery-charge-state", "1");
+        solararray = config.get("simulator.hardware-model.physical.bus.solar-array-voltage", "32.0");
+        solararray_temp = config.get("simulator.hardware-model.physical.bus.solar-array-temperature", "80.0");
+        solararray_current = config.get("simulator.hardware-model.physical.bus.solar-array-current", "4.0");
+
+
+        /* Initialize status for buses */
+        std::string bus_low_volt, bus_mid_volt, bus_high_volt, bus_low_current, bus_mid_current, bus_high_current;
+
+        bus_low_volt = config.get("simulator.hardware-model.physical.bus.bus-low-voltage", "3.3");
+        bus_mid_volt = config.get("simulator.hardware-model.physical.bus.bus-mid-voltage", "5.0");
+        bus_high_volt = config.get("simulator.hardware-model.physical.bus.bus-high-voltage", "12.0");
+
+        bus_low_current = config.get("simulator.hardware-model.physical.bus.bus-low-current", "0.25");  //Adpated down from 1.0 in previous versions to be balanced with new panel size; TODO: remove comment
+        bus_mid_current = config.get("simulator.hardware-model.physical.bus.bus-mid-current", "0.15");  //Adpated down from 1.0 in previous versions to be balanced with new panel size; TODO: remove comment
+        bus_high_current = config.get("simulator.hardware-model.physical.bus.bus-high-current", "0.1"); //Adpated down from 1.0 in previous versions to be balanced with new panel size; TODO: remove comment
+
+        _nominal_batt_voltage = atoi(battv.c_str());
+        _max_battery = atof(batt_watt_hrs.c_str());
+        
+        _bus[0]._voltage = atoi(battv.c_str()) * 1000;
+        _bus[0]._temperature = (atoi(battv_temp.c_str()) + 60) * 100;
+        _bus[0]._battery_watthrs = atof(batt_watt_hrs.c_str()) * atof(batt_charge_state.c_str());
+        _bus[1]._voltage = atof(bus_low_volt.c_str()) * 1000;
+        _bus[2]._voltage = atof(bus_mid_volt.c_str()) * 1000;
+        _bus[3]._voltage = atof(bus_high_volt.c_str()) * 1000;
+        _bus[4]._voltage = atoi(solararray.c_str()) * 1000;
+        _bus[4]._temperature = (atoi(solararray_temp.c_str()) + 60) * 100;
+        _bus[4]._current = atof(solararray_current.c_str()) * 1000; 
+        _bus[1]._current = atof(bus_low_current.c_str()) * 1000; 
+        _bus[2]._current = atof(bus_mid_current.c_str()) * 1000; 
+        _bus[3]._current = atof(bus_high_current.c_str()) * 1000; 
+
+        /*
+        sim_logger-&gt;info("  Initial _bus[0]._voltage = 0x%04x", _bus[0]._voltage);
+        sim_logger-&gt;info("  Initial _bus[0]._temperature = 0x%04x", _bus[0]._temperature);
+        sim_logger-&gt;info("  Initial _bus[1]._voltage = 0x%04x", _bus[1]._voltage);
+        sim_logger-&gt;info("  Initial _bus[2]._voltage = 0x%04x", _bus[2]._voltage);
+        sim_logger-&gt;info("  Initial _bus[3]._voltage = 0x%04x", _bus[3]._voltage);
+        sim_logger-&gt;info("  Initial _bus[4]._voltage = 0x%04x", _bus[4]._voltage);
+        sim_logger-&gt;info("  Initial _bus[4]._temperature = 0x%04x", _bus[4]._temperature);
+        */
+
+        /* Initialize status for each switch */
+        _init_switch[0]._node_name = config.get("simulator.hardware-model.physical.switch-0.node-name", "switch-0");
+        _init_switch[0]._voltage = config.get("simulator.hardware-model.physical.switch-0.voltage", "3.30");
+        _init_switch[0]._current = config.get("simulator.hardware-model.physical.switch-0.current", "0.75"); //Adapted up from 0.25 in previous versions to assure discharge when in sun and sample active; TODO: remove comment
+        _init_switch[0]._state = config.get("simulator.hardware-model.physical.switch-0.hex-status", "0000");
+
+        _init_switch[1]._node_name = config.get("simulator.hardware-model.physical.switch-1.node-name", "switch-1");
+        _init_switch[1]._voltage = config.get("simulator.hardware-model.physical.switch-1.voltage", "3.30");
+        _init_switch[1]._current = config.get("simulator.hardware-model.physical.switch-1.current", "0.10");
+        _init_switch[1]._state = config.get("simulator.hardware-model.physical.switch-1.hex-status", "0000");
+
+        _init_switch[2]._node_name = config.get("simulator.hardware-model.physical.switch-2.node-name", "switch-2");
+        _init_switch[2]._voltage = config.get("simulator.hardware-model.physical.switch-2.voltage", "5.00");
+        _init_switch[2]._current = config.get("simulator.hardware-model.physical.switch-2.current", "0.20");
+        _init_switch[2]._state = config.get("simulator.hardware-model.physical.switch-2.hex-status", "0000");
+
+        _init_switch[3]._node_name = config.get("simulator.hardware-model.physical.switch-3.node-name", "switch-3");
+        _init_switch[3]._voltage = config.get("simulator.hardware-model.physical.switch-3.voltage", "5.00");
+        _init_switch[3]._current = config.get("simulator.hardware-model.physical.switch-3.current", "0.30");
+        _init_switch[3]._state = config.get("simulator.hardware-model.physical.switch-3.hex-status", "0000");
+
+        _init_switch[4]._node_name = config.get("simulator.hardware-model.physical.switch-4.node-name", "switch-4");
+        _init_switch[4]._voltage = config.get("simulator.hardware-model.physical.switch-4.voltage", "12.00");
+        _init_switch[4]._current = config.get("simulator.hardware-model.physical.switch-4.current", "0.40");
+        _init_switch[4]._state = config.get("simulator.hardware-model.physical.switch-4.hex-status", "0000");
+
+        _init_switch[5]._node_name = config.get("simulator.hardware-model.physical.switch-5.node-name", "switch-5");
+        _init_switch[5]._voltage = config.get("simulator.hardware-model.physical.switch-5.voltage", "12.00");
+        _init_switch[5]._current = config.get("simulator.hardware-model.physical.switch-5.current", "0.50");
+        _init_switch[5]._state = config.get("simulator.hardware-model.physical.switch-5.hex-status", "0000");
+
+        _init_switch[6]._node_name = config.get("simulator.hardware-model.physical.switch-6.node-name", "switch-6");
+        _init_switch[6]._voltage = config.get("simulator.hardware-model.physical.switch-6.voltage", "3.30");
+        _init_switch[6]._current = config.get("simulator.hardware-model.physical.switch-6.current", "0.60");
+        _init_switch[6]._state = config.get("simulator.hardware-model.physical.switch-6.hex-status", "0000");
+
+        _init_switch[7]._node_name = config.get("simulator.hardware-model.physical.switch-7.node-name", "switch-7");
+        _init_switch[7]._voltage = config.get("simulator.hardware-model.physical.switch-7.voltage", "5.00");
+        _init_switch[7]._current = config.get("simulator.hardware-model.physical.switch-7.current", "0.70");
+        _init_switch[7]._state = config.get("simulator.hardware-model.physical.switch-7.hex-status", "0000");
+
+        std::uint8_t i;
+        for (i = 0; i &lt; 8; i++)
+        {
+            _switch[i]._voltage = atof((_init_switch[i]._voltage).c_str()) * 1000;
+            _switch[i]._current = atof((_init_switch[i]._current).c_str()) * 1000;
+            _switch[i]._status = std::stoi((_init_switch[i]._state).c_str(), 0, 16);
+        }
+
+        _charge_rate_modifer = 0;
+        _posX_Panel_Inhibit = 1;
+        _negX_Panel_Inhibit = 1;
+        _posY_Panel_Inhibit = 1;
+        _negY_Panel_Inhibit = 1;
+        _negZ_Panel_Inhibit = 1;
+
+        _solar_array_inhibit = 1;
+
+        sim_logger-&gt;info("    _switch[0]._voltage = %d", _switch[0]._voltage);
+        sim_logger-&gt;info("    _switch[0]._current = %d", _switch[0]._current);
+        sim_logger-&gt;info("    _switch[0]._status = 0x%04x", _switch[0]._status);
+
+        /* Construction complete */
+        sim_logger-&gt;info("Generic_epsHardwareModel::Generic_epsHardwareModel:  Construction complete.");
+    }
+
+
+    Generic_epsHardwareModel::~Generic_epsHardwareModel(void)
+    {        
+        /* Close the protocol bus */
+       delete _i2c_slave_connection;
+        _i2c_slave_connection = nullptr;
+
+        /* Clean up the data provider */
+        delete _generic_eps_dp;
+        _generic_eps_dp = nullptr;
+
+        /* The bus will clean up the time and sim nodes */
+    }
+
+
+    /* Automagically set up by the base class to be called */
+    void Generic_epsHardwareModel::command_callback(NosEngine::Common::Message msg)
+    {
+        /* Get the data out of the message */
+        NosEngine::Common::DataBufferOverlay dbf(const_cast&lt;NosEngine::Utility::Buffer&amp;&gt;(msg.buffer));
+        sim_logger-&gt;info("Generic_epsHardwareModel::command_callback:  Received command: %s.", dbf.data);
+
+        /* Do something with the data */
+        std::string command = dbf.data;
+        std::string response = "Generic_epsHardwareModel::command_callback:  INVALID COMMAND! (Try HELP)";
+        boost::to_upper(command);
+        if (command.compare("HELP") == 0) 
+        {
+            response = "Generic_epsHardwareModel::command_callback: Valid commands are HELP, ENABLE, DISABLE, STATUS=X, or STOP";
+        }
+        else if (command.compare("ENABLE") == 0) 
+        {
+            _enabled = GENERIC_EPS_SIM_SUCCESS;
+            response = "Generic_epsHardwareModel::command_callback:  Enabled";
+        }
+        else if (command.compare("DISABLE") == 0) 
+        {
+            _enabled = GENERIC_EPS_SIM_ERROR;
+            response = "Generic_epsHardwareModel::command_callback:  Disabled";
+        }
+        /* Multiply percentage input here by Voltage to determine new voltage */
+        else if (command.substr(0,16).compare("STATE_OF_CHARGE=") == 0)
+        {
+            try
+            {
+                _bus[0]._battery_watthrs = (std::stod(command.substr(16))/100) * _max_battery;
+
+                // Here is the code to increase or decrease the value of the battery 
+                // voltage. It is linear and +- 5% of the nominal voltage, which is
+                // a value I came across when doing some research.
+
+                double batt_min_voltage = 0.95*_nominal_batt_voltage;
+                double batt_diff = 0.1*_nominal_batt_voltage;
+
+                _bus[0]._voltage = 1000*(batt_min_voltage + batt_diff*(_bus[0]._battery_watthrs / _max_battery));
+
+                response = "SampleHardwareModel::command_callback:  State of Charge set";
+            }
+            catch (...)
+            {
+                response = "SampleHardwareModel::command_callback:  State of Charge invalid";
+            }            
+        }
+        /* Add parameter which is added into the power_out in battery charge determination, to allow rapid charge or discharge*/
+        else if (command.substr(0,15).compare("RATE_OF_CHARGE=") == 0)
+        {
+            try
+            {
+                _charge_rate_modifer = std::stod(command.substr(15));
+                response = "SampleHardwareModel::command_callback:  Rate of Charge set";
+            }
+            catch (...)
+            {
+                response = "SampleHardwareModel::command_callback:  Rate of Charge invalid";
+            }            
+        }
+        /* Set a global for that svb to 0 if disabled, 1 if enabled; Then, add that to calculations like we did IsValid to nullify charge contribution if disabled*/
+        else if (command.substr(0,18).compare("TOGGLE_POSX_PANEL=") == 0)
+        {
+            try
+            {
+                _posX_Panel_Inhibit = std::stod(command.substr(18));
+                response = "SampleHardwareModel::command_callback: PosX Panel toggled";
+            }
+            catch (...)
+            {
+                response = "SampleHardwareModel::command_callback:  PosX Panel state invalid";
+            }            
+        }
+        else if (command.substr(0,18).compare("TOGGLE_NEGX_PANEL=") == 0)
+        {
+            try
+            {
+                _negX_Panel_Inhibit = std::stod(command.substr(18));
+                response = "SampleHardwareModel::command_callback: NegX Panel toggled";
+            }
+            catch (...)
+            {
+                response = "SampleHardwareModel::command_callback: NegX Panel state invalid";
+            }            
+        }
+        else if (command.substr(0,18).compare("TOGGLE_POSY_PANEL=") == 0)
+        {
+            try
+            {
+                _posY_Panel_Inhibit = std::stod(command.substr(18));
+                response = "SampleHardwareModel::command_callback: PosY Panel toggled";
+            }
+            catch (...)
+            {
+                response = "SampleHardwareModel::command_callback: PosY Panel state invalid";
+            }            
+        }
+        else if (command.substr(0,18).compare("TOGGLE_NEGY_PANEL=") == 0)
+        {
+            try
+            {
+                _negY_Panel_Inhibit = std::stod(command.substr(18));
+                response = "SampleHardwareModel::command_callback: NegY Panel toggled";
+            }
+            catch (...)
+            {
+                response = "SampleHardwareModel::command_callback: NegY Panel state invalid";
+            }            
+        }
+        else if (command.substr(0,18).compare("TOGGLE_NEGZ_PANEL=") == 0)
+        {
+            try
+            {
+                _negZ_Panel_Inhibit = std::stod(command.substr(18));
+                response = "SampleHardwareModel::command_callback: NegZ Panel toggled";
+            }
+            catch (...)
+            {
+                response = "SampleHardwareModel::command_callback: NegZ Panel state invalid";
+            }            
+        }
+        else if (command.compare("STOP") == 0) 
+        {
+            _keep_running = false;
+            response = "Generic_epsHardwareModel::command_callback:  Stopping";
+        }
+        else
+        {
+            response = "Generic_epsHardwareModel::command_callback:  Unrecognized Command!";
+        }
+
+        /* Send a reply */
+        sim_logger-&gt;info("Generic_epsHardwareModel::command_callback:  Sending reply: %s.", response.c_str());
+        _command_node-&gt;send_reply_message_async(msg, response.size(), response.c_str());
+    }
+
+    void Generic_epsHardwareModel::eps_switch_update(const std::uint8_t sw_num, uint8_t sw_status)
+    {
+        /* Is the switch valid? */
+        if (sw_num &lt; 8)
+        {
+            /* Is the status valid? */
+            if ((sw_status == 0x00) || (sw_status == 0xAA))
+            {
+                /* Prepare the simulator bus with the switch node */
+                //_sim_bus.reset(new NosEngine::Client::Bus(_hub, _switch[sw_num], _time_bus_name));
+
+                /* Use the simulator bus to set the state in other simulators */
+                if (sw_status == 0x00)
+                {
+                    _command_node-&gt;send_non_confirmed_message_async(_init_switch[sw_num]._node_name, 7, "DISABLE");
+                }
+                else
+                {
+                    _command_node-&gt;send_non_confirmed_message_async(_init_switch[sw_num]._node_name, 6, "ENABLE");
+                }
+                
+                /* Set the values internally */
+                _switch[sw_num]._status = sw_status;
+            }
+            else
+            {
+                sim_logger-&gt;debug("Generic_epsHardwareModel::eps_switch_update:  Set state of 0x%02x invalid! Expected 0x00 or 0xAA", sw_status);
+            }
+        }
+        else
+        {
+            sim_logger-&gt;debug("Generic_epsHardwareModel::eps_switch_update:  Switch number %d is invalid!", sw_num);
+        }
+    }
+
+    std::uint8_t Generic_epsHardwareModel::generic_eps_crc8(const std::vector&lt;uint8_t&gt;&amp; crc_data, std::uint32_t crc_size)
+    {
+        std::uint8_t crc = 0xFF;
+        std::uint32_t i;
+        std::uint32_t j;
+
+        for (i = 0; i &lt; crc_size; i++) 
+        {
+            crc ^= crc_data[i];
+            for (j = 0; j &lt; 8; j++) 
+            {
+                if ((crc &amp; 0x80) != 0)
+                {
+                    crc = (uint8_t)((crc &lt;&lt; 1) ^ 0x31);
+                }
+                else
+                {
+                    crc &lt;&lt;= 1;
+                }
+            }
+        }
+        return crc;
+    }
+
+    /* Custom function to prepare the Generic_eps Data */
+    void Generic_epsHardwareModel::create_generic_eps_data(std::vector&lt;uint8_t&gt;&amp; out_data)
+    {
+        boost::shared_ptr&lt;Generic_epsDataPoint&gt; data_point = boost::dynamic_pointer_cast&lt;Generic_epsDataPoint&gt;(_generic_eps_dp-&gt;get_data_point());
+        
+        /* Iniitalize if not yet done */
+        if(_initialized_other_sims == GENERIC_EPS_SIM_ERROR)
+        {    
+            std::uint8_t i, j;
+            for (i = 0; i &lt; 8; i++)
+            {
+                j = std::uint8_t (_switch[i]._status &amp; 0x00AA);
+                if(j == 0xAA)
+                {
+                    eps_switch_update(i, j);
+                }
+            }
+            _initialized_other_sims = GENERIC_EPS_SIM_SUCCESS;
+        }
+        
+        /* TODO: Update data based on provided SVB and switch statesince last cycle */
+
+        /* Prepare data size */
+        out_data.resize(65, 0x00);
+
+        /* Battery  - Voltage */
+        out_data[0] = (_bus[0]._voltage &gt;&gt; 8) &amp; 0x00FF;
+        out_data[1] = _bus[0]._voltage &amp; 0x00FF;
+        /* Battery  - Temperature */
+        out_data[2] = (_bus[0]._temperature &gt;&gt; 8) &amp; 0x00FF; 
+        out_data[3] = _bus[0]._temperature &amp; 0x00FF;
+        
+        /* EPS      - 3.3 Voltage */
+        out_data[4] = (_bus[1]._voltage &gt;&gt; 8) &amp; 0x00FF; 
+        out_data[5] = _bus[1]._voltage &amp; 0x00FF; 
+        /* EPS      - 5.0 Voltage */
+        out_data[6] = (_bus[2]._voltage &gt;&gt; 8) &amp; 0x00FF;
+        out_data[7] = _bus[2]._voltage &amp; 0x00FF;
+        /* EPS      - 12.0 Voltage */
+        out_data[8] = (_bus[3]._voltage &gt;&gt; 8) &amp; 0x00FF; 
+        out_data[9] = _bus[3]._voltage &amp; 0x00FF; 
+        /* EPS      - Temperature */
+        out_data[10] = (_bus[3]._voltage &gt;&gt; 8) &amp; 0x00FF;
+        out_data[11] = _bus[3]._voltage &amp; 0x00FF;
+
+        /* Solar Array - Voltage */
+        out_data[12] = (_bus[4]._voltage &gt;&gt; 8) &amp; 0x00FF;
+        out_data[13] = _bus[4]._voltage &amp; 0x00FF;
+        /* Solar Array - Temperature */
+        out_data[14] = (_bus[4]._temperature &gt;&gt; 8) &amp; 0x00FF;
+        out_data[15] = _bus[4]._temperature &amp; 0x00FF;
+
+        std::uint16_t i = 0;
+        std::uint16_t offset = 16;
+        for(i = 0; i &lt; 8; i++)
+        {
+            if ((_switch[i]._status &amp; 0x00FF) == 0x00AA)
+            {
+                /* Switch[i], ON - Voltage */
+                out_data[offset] = (_switch[i]._voltage &gt;&gt; 8) &amp; 0x00FF;
+                out_data[offset+1] = _switch[i]._voltage &amp; 0x00FF;
+                /* Switch[i], ON - Current */
+                out_data[offset+2] = (_switch[i]._current &gt;&gt; 8) &amp; 0x00FF;
+                out_data[offset+3] = _switch[i]._current &amp; 0x00FF;
+            }
+            else
+            {
+                /* Switch[i], OFF - Voltage */
+                out_data[offset] = 0x00;
+                out_data[offset+1] = 0x00;
+                /* Switch[i], OFF - Current */
+                out_data[offset+2] = 0x00;
+                out_data[offset+3] = 0x00;
+            }
+            /* Switch[i] - Status */
+            out_data[offset+4] = (_switch[i]._status &gt;&gt; 8) &amp; 0x00FF;
+            out_data[offset+5] = _switch[i]._status &amp; 0x00FF;
+            offset = offset + 6;
+        }
+        
+        /* CRC */
+        out_data[64] = generic_eps_crc8(out_data, 64);
+
+        /*
+        sim_logger-&gt;info("  _bus[0]._voltage = 0x%04x", _bus[0]._voltage);
+        sim_logger-&gt;info("    (_bus[0]._voltage &gt;&gt; 8) &amp; 0x00FF = 0x%02x", out_data[0]);
+        sim_logger-&gt;info("    _bus[0]._voltage &amp; 0x00FF = 0x%02x", out_data[1]);
+        sim_logger-&gt;info("  _bus[0]._temperature = 0x%04x", _bus[0]._temperature);
+        sim_logger-&gt;info("  _bus[1]._voltage = 0x%04x", _bus[1]._voltage);
+        sim_logger-&gt;info("  _bus[2]._voltage = 0x%04x", _bus[2]._voltage);
+        sim_logger-&gt;info("  _bus[3]._voltage = 0x%04x", _bus[3]._voltage);
+        sim_logger-&gt;info("  _bus[4]._voltage = 0x%04x", _bus[4]._voltage);
+        sim_logger-&gt;info("  _bus[4]._temperature = 0x%04x", _bus[4]._temperature);
+        sim_logger-&gt;debug("create_generic_eps_data: %s", SimIHardwareModel::uint8_vector_to_hex_string(out_data).c_str());
+        */
+    }
+
+    /* Protocol callback */
+    std::uint8_t Generic_epsHardwareModel::determine_i2c_response_for_request(const std::vector&lt;uint8_t&gt;&amp; in_data, std::vector&lt;uint8_t&gt;&amp; out_data)
+    {
+        std::uint8_t valid = GENERIC_EPS_SIM_SUCCESS;
+        std::uint8_t calc_crc8;
+        
+        /* Retrieve data and log in man readable format */
+        sim_logger-&gt;debug("Generic_epsHardwareModel::determine_i2c_response_for_request:  REQUEST %s",
+            SimIHardwareModel::uint8_vector_to_hex_string(in_data).c_str());
+
+        /* Check simulator is enabled */
+        if (_enabled != GENERIC_EPS_SIM_SUCCESS)
+        {
+            sim_logger-&gt;debug("Generic_epsHardwareModel::determine_i2c_response_for_request:  Generic_eps sim disabled!");
+            valid = GENERIC_EPS_SIM_ERROR;
+        }
+        else
+        {
+            /* Check if message is incorrect size */
+            if (in_data.size() != 3)
+            {
+                sim_logger-&gt;debug("Generic_epsHardwareModel::determine_i2c_response_for_request:  Invalid command size of %ld received!", in_data.size());
+                valid = GENERIC_EPS_SIM_ERROR;
+            }
+            else
+            {
+                /* Check CRC */
+                calc_crc8 = generic_eps_crc8(in_data, 2);
+                if (in_data[2] != calc_crc8)
+                {
+                    sim_logger-&gt;debug("Generic_epsHardwareModel::determine_i2c_response_for_request:  CRC8  of 0x%02x incorrect, expected 0x%02x!", in_data[2], calc_crc8);
+                    valid = GENERIC_EPS_SIM_ERROR;
+                }
+                else
+                {
+                    if ((in_data[0] &lt; 8) &amp;&amp; (!((in_data[1] == 0x00) || (in_data[1] == 0xAA))))
+                    {
+                        sim_logger-&gt;debug("Generic_epsHardwareModel::determine_i2c_response_for_request:  Set switch %d state of 0x%02x invalid!", in_data[0], in_data[1]);
+                        valid = GENERIC_EPS_SIM_ERROR;
+                    }
+                }
+            }
+
+            if (valid == GENERIC_EPS_SIM_SUCCESS)
+            {   
+                /* Process command */
+                switch (in_data[0])
+                {
+                    case 0x00:
+                    case 0x01:
+                    case 0x02:
+                    case 0x03:
+                    case 0x04:
+                    case 0x05:
+                    case 0x06:
+                    case 0x07:
+                        /* Note intentional fall through to this point */
+                        sim_logger-&gt;debug("Generic_epsHardwareModel::determine_i2c_response_for_request:  Set switch %d state to 0x%02x command received!", in_data[0], in_data[1]);
+                        eps_switch_update(in_data[0], in_data[1]);
+                        break;
+
+                    case 0x70:
+                        /* Telemetry Request */
+                        sim_logger-&gt;debug("Generic_epsHardwareModel::determine_i2c_response_for_request:  Telemetry request command received!");
+                        create_generic_eps_data(out_data);
+                        break;
+
+                    case 0xAA:
+                        /* Reset */
+                        sim_logger-&gt;debug("Generic_epsHardwareModel::determine_i2c_response_for_request:  Reset command received!");
+                        /* TODO */
+                        break;
+                    
+                    default:
+                        /* Unused command code */
+                        sim_logger-&gt;debug("Generic_epsHardwareModel::determine_i2c_response_for_request:  Unused command %d received!", in_data[0]);
+                        valid = GENERIC_EPS_SIM_ERROR;
+                        break;
+                }
+            }
+        }
+        return valid;
+    }
+
+    void Generic_epsHardwareModel::update_battery_values(void)
+    {
+        //sim_logger-&gt;debug("Generic_epsHardwareModel::update_battery_values");
+        boost::shared_ptr&lt;Generic_epsDataPoint&gt; data_point = boost::dynamic_pointer_cast&lt;Generic_epsDataPoint&gt;(_generic_eps_dp-&gt;get_data_point());        
+        int8_t in_sun = (data_point-&gt;get_in_sun()) ? 1 : 0;
+        double svb_X = ((data_point-&gt;get_sun_vector_x() &gt; 0) ? data_point-&gt;get_sun_vector_x() : 0.0) * in_sun;
+        double svb_minusX = ((data_point-&gt;get_sun_vector_x() &lt; 0) ? (-1)*data_point-&gt;get_sun_vector_x() : 0.0) * in_sun;
+        double svb_Y = ((data_point-&gt;get_sun_vector_y() &gt; 0) ? data_point-&gt;get_sun_vector_y() : 0.0) * in_sun;
+        double svb_minusY = ((data_point-&gt;get_sun_vector_y() &lt; 0) ? (-1)*data_point-&gt;get_sun_vector_y() : 0.0) * in_sun;
+        double svb_minusZ = ((data_point-&gt;get_sun_vector_z() &lt; 0) ? (-1)*data_point-&gt;get_sun_vector_z() : 0.0) * in_sun;
+
+        sim_logger-&gt;debug("Generic_epsHardwareModel::update_battery_values:  X = %.3f; negX = %.3f; Y = %.3f; negY = %.3f; negZ = %.3f, In_Sun: %d;", svb_X, svb_minusX, svb_Y, svb_minusY, svb_minusZ, in_sun);
+
+        /* Note: Assuming solar arrays on all +/- X, Y, and Z faces */
+        // The "cosine effect" is the most relevant part, affecting the power 
+        // received. I have no idea if it impacts the voltage or the current,
+        // but theoretically it should not matter - I can just multiply times
+        // the whole thing.
+        // Technically, when the angle to the sun is greater than 45 degrees
+        // there begins to be significant light reflected away, an effect which
+        // is not replicated here.
+
+        double p_out = 0;
+
+        for (int i = 1; i &lt; 4; i++)
+        {
+            p_out = p_out + (_bus[i]._voltage/1000.0)*(_bus[i]._current/1000.0);
+        }
+        for (int i = 0; i &lt; 8; i++)
+        {
+            int switchonoff = (_switch[i]._status != 0) ? 1 : 0;
+            p_out = p_out + (_switch[i]._voltage/1000.0)*(_switch[i]._current/1000.0)*switchonoff;
+
+        }
+
+        // Inhibit Solar Panel charging battery if at or above max suggested charge; reenable charging at 99% charge.
+
+        if ( _bus[0]._battery_watthrs &gt;= _max_battery ) 
+        {
+            _solar_array_inhibit = 0;
+        }
+        if ( _bus[0]._battery_watthrs &lt;= ( 0.99999 * _max_battery ) )
+        {
+            _solar_array_inhibit = 1;
+        }
+        
+        double p_in = (((_power_per_main_panel*svb_X)*_posX_Panel_Inhibit) + ((_power_per_main_panel*svb_minusX)*_negX_Panel_Inhibit) + ((_power_per_main_panel*svb_Y)*_posY_Panel_Inhibit) + ((_power_per_main_panel*svb_minusY)*_negY_Panel_Inhibit) + ((_power_per_small_panel*svb_minusZ)*_negZ_Panel_Inhibit)) * _solar_array_inhibit;
+        
+        double delta_p = (_sim_microseconds_per_tick/1000000.0 * ((p_in - p_out) + _charge_rate_modifer));
+        _bus[0]._battery_watthrs = _bus[0]._battery_watthrs + (delta_p/3600); //The 3600 is for converting Watt-seconds (the units of delta_p) into watt-hours
+
+        // Here is the code to increase or decrease the value of the battery 
+        // voltage. It is linear and +- 5% of the nominal voltage, which is
+        // a value I came across when doing some research.
+
+        double batt_min_voltage = 0.95*_nominal_batt_voltage;
+        double batt_diff = 0.1*_nominal_batt_voltage;
+
+        _bus[0]._voltage = 1000*(batt_min_voltage + batt_diff*(_bus[0]._battery_watthrs / _max_battery));
+
+// DEBUG MESSAGES        
+        // sim_logger-&gt;debug("Panel sun vector is %f\n", svb_X);
+        sim_logger-&gt;debug("Solar Array Connected? %d", _solar_array_inhibit);
+        sim_logger-&gt;debug("Power from the solar panels is %f", p_in);
+        sim_logger-&gt;debug("Total power used is %f", p_out);
+        sim_logger-&gt;debug("Battery Watt Hours are now %f", _bus[0]._battery_watthrs);
+        sim_logger-&gt;debug("Battery Voltage is now %i", _bus[0]._voltage);
+        
+    }
+
+    I2CSlaveConnection::I2CSlaveConnection(Generic_epsHardwareModel* hm,
+        int bus_address, std::string connection_string, std::string bus_name)
+        : NosEngine::I2C::I2CSlave(bus_address, connection_string, bus_name)
+    {
+        _hardware_model = hm;
+    }
+
+    size_t I2CSlaveConnection::i2c_read(uint8_t *rbuf, size_t rlen)
+    {
+        size_t num_read;
+        if(_i2c_read_valid == GENERIC_EPS_SIM_SUCCESS)
+        {
+            for(num_read = 0; num_read &lt; rlen; num_read++)
+            {
+                rbuf[num_read] = _i2c_out_data[num_read];
+            }
+            sim_logger-&gt;debug("i2c_read[%ld]: %s", num_read, SimIHardwareModel::uint8_vector_to_hex_string(_i2c_out_data).c_str());
+        }
+        else
+        {
+            for(num_read = 0; num_read &lt; rlen; num_read++)
+            {
+                rbuf[num_read] = 0x00;
+            }
+            sim_logger-&gt;debug("i2c_read[%ld]: Invalid (0x00)", num_read);
+        }
+
+        return num_read;
+    }
+
+    size_t I2CSlaveConnection::i2c_write(const uint8_t *wbuf, size_t wlen)
+    {
+        std::vector&lt;uint8_t&gt; in_data(wbuf, wbuf + wlen);
+        sim_logger-&gt;debug("i2c_write: %s",
+            SimIHardwareModel::uint8_vector_to_hex_string(in_data).c_str()); // log data
+        _i2c_read_valid = _hardware_model-&gt;determine_i2c_response_for_request(in_data, _i2c_out_data);
+        return wlen;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="generic-eps-shmem-data-provider-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">generic_eps_shmem_data_provider.cpp</span></code><a class="headerlink" href="#generic-eps-shmem-data-provider-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/generic_eps/sim/src/generic_eps_shmem_data_provider.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#include &lt;generic_eps_shmem_data_provider.hpp&gt;
+
+namespace Nos3
+{
+    REGISTER_DATA_PROVIDER(Generic_epsShmemDataProvider,"GENERIC_EPS_SHMEM_PROVIDER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_epsShmemDataProvider::Generic_epsShmemDataProvider(const boost::property_tree::ptree&amp; config) : SimIDataProvider(config)
+    {
+        sim_logger-&gt;trace("Generic_epsShmemDataProvider::Generic_epsShmemDataProvider:  Constructor executed");
+
+        const std::string shm_name = config.get("simulator.hardware-model.data-provider.shared-memory-name", "Blackboard");
+        const size_t shm_size = sizeof(BlackboardData);
+        bip::shared_memory_object shm(bip::open_or_create, shm_name.c_str(), bip::read_write);
+        shm.truncate(shm_size);
+        bip::mapped_region shm_region(shm, bip::read_write);
+        _shm_region = std::move(shm_region); // don't let this go out of scope/get destroyed
+        _blackboard_data = static_cast&lt;BlackboardData*&gt;(_shm_region.get_address());
+
+        _orb = config.get("simulator.hardware-model.data-provider.orbit", 0);
+        _sc  = config.get("simulator.hardware-model.data-provider.spacecraft", 0);
+    }
+
+    boost::shared_ptr&lt;SimIDataPoint&gt; Generic_epsShmemDataProvider::get_data_point(void) const
+    {
+        sim_logger-&gt;trace("Generic_epsShmemDataProvider::get_data_point:  Executed");
+
+        /* Get the 42 data */
+        boost::shared_ptr&lt;Generic_epsDataPoint&gt; dp;
+        {
+            dp = boost::shared_ptr&lt;Generic_epsDataPoint&gt;(
+                new Generic_epsDataPoint(_orb, _sc, 
+                    _blackboard_data-&gt;CSSValid[0] || _blackboard_data-&gt;CSSValid[1] || _blackboard_data-&gt;CSSValid[2] ||
+                    _blackboard_data-&gt;CSSValid[3] || _blackboard_data-&gt;CSSValid[4] || _blackboard_data-&gt;CSSValid[5], 
+                    _blackboard_data-&gt;svb));
+        }
+        return dp;
+    }
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../inc/index.html" class="btn btn-neutral float-left" title="inc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../../generic_fss/index.html" class="btn btn-neutral float-right" title="generic_fss" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

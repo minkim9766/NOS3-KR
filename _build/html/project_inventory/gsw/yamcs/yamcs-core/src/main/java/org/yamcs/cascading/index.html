@@ -1,0 +1,2838 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cascading &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../../search.html" />
+    <link rel="next" title="cfdp" href="../cfdp/index.html" />
+    <link rel="prev" title="buckets" href="../buckets/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../../index.html">gsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">gsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">yamcs-core</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">main</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">java</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">org</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">yamcs</a></li>
+      <li class="breadcrumb-item active">cascading</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../../_sources/project_inventory/gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="cascading">
+<h1>cascading<a class="headerlink" href="#cascading" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="commandmapdata-java">
+<h2><code class="docutils literal notranslate"><span class="pre">CommandMapData.java</span></code><a class="headerlink" href="#commandmapdata-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/CommandMapData.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.cascading;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.YConfiguration;
+
+public class CommandMapData {
+    enum CommandType {
+        DEFAULT, DIRECT, EMBEDDED_BINARY
+    }
+
+    private CommandType type;
+    private String localPath;
+    private String upstreamPath;
+    private String upstreamArgumentName;
+
+    public CommandMapData(String localPath, String upstreamPath) {
+        this.type = CommandType.DIRECT;
+        this.localPath = localPath;
+        this.upstreamPath = upstreamPath;
+    }
+
+    public CommandMapData(String localPath, String upstreamPath, String argumentName) {
+        this.type = CommandType.EMBEDDED_BINARY;
+        this.localPath = localPath;
+        this.upstreamPath = upstreamPath;
+        this.upstreamArgumentName = argumentName;
+    }
+
+    public CommandMapData() {
+        setDefaultConfig();
+    }
+
+    public CommandMapData(YConfiguration config) {
+        parseConfig(config);
+    }
+
+    private void setDefaultConfig() {
+        this.type = CommandType.DEFAULT;
+    }
+
+    private void parseConfig(YConfiguration config) {
+        String t = config.getString("type").toUpperCase();
+        if (t.equals("DIRECT")) {
+            this.type = CommandType.DIRECT;
+        } else if (t.equals("EMBEDDED_BINARY")) {
+            this.type = CommandType.EMBEDDED_BINARY;
+        } else if (t.equals("DEFAULT")) {
+            this.type = CommandType.DEFAULT;
+            return;
+        } else {
+            throw new ConfigurationException("Unknown command mapping type " + config.getString("type"));
+        }
+
+        this.localPath = config.getString("local");
+
+        this.upstreamPath = config.getString("upstream");
+
+        if (this.type == CommandType.EMBEDDED_BINARY)
+            if (this.upstreamPath.endsWith("/")) {
+                throw new ConfigurationException(
+                        "upstream '" + this.upstreamPath
+                                + "' cannot be a path (has to be a command qualified name) in case of EMBEDDED_BINARY");
+            } else if (this.type == CommandType.DIRECT) {
+                if (this.localPath.endsWith("/") &amp;&amp; !this.upstreamPath.endsWith("/")) {
+                    throw new ConfigurationException(
+                            "upstream '" + this.upstreamPath + "' has to be a path if local is a path");
+                }
+            }
+
+        if (config.containsKey("argument")) {
+            if (this.type == CommandType.EMBEDDED_BINARY) {
+                this.upstreamArgumentName = config.getString("argument");
+            } else {
+                throw new ConfigurationException(
+                        "Command mapping configuration specified an argument while not being of the embedded binary type.");
+            }
+        }
+    }
+
+    public static Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("type", Spec.OptionType.STRING).withRequired(true);
+        spec.addOption("local", Spec.OptionType.STRING).withRequired(true);
+        spec.addOption("upstream", Spec.OptionType.STRING).withRequired(true);
+        spec.addOption("argument", Spec.OptionType.STRING);
+        return spec;
+    }
+
+    public CommandType getCommandType() {
+        return this.type;
+    }
+
+    public String getLocalPath() {
+        return this.localPath;
+    }
+
+    public String getUpstreamPath() {
+        return this.upstreamPath;
+    }
+
+    public String getUpstreamArgumentName() {
+        return this.upstreamArgumentName;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="containerfetcher-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ContainerFetcher.java</span></code><a class="headerlink" href="#containerfetcher-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/ContainerFetcher.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.cascading;
+
+import org.yamcs.client.Page;
+import org.yamcs.client.mdb.MissionDatabaseClient;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.Mdb.ContainerInfo;
+
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+
+
+/**
+ * Responsible for retrieving the list of containers from the upstream server
+ */
+public class ContainerFetcher {
+
+    public static CompletableFuture&lt;List&lt;String&gt;&gt; fetch(MissionDatabaseClient mdbClient, Log log) {
+        return getPages(mdbClient.listContainers(), null, log);
+    }
+
+    private static CompletableFuture&lt;List&lt;String&gt;&gt; getPages(CompletableFuture&lt;Page&lt;ContainerInfo&gt;&gt; future, List&lt;String&gt; list, Log log) {
+        List&lt;String&gt; containers = Objects.requireNonNullElse(list, new ArrayList&lt;&gt;());
+        return future.thenCompose(page -&gt; {
+            page.forEach(container -&gt; containers.add(container.getQualifiedName()));
+
+            if(page.hasNextPage()) {
+                return getPages(page.getNextPage(), containers, log);
+            } else {
+                return CompletableFuture.completedFuture(containers);
+            }
+        });
+    }
+
+    public static CompletableFuture&lt;List&lt;String&gt;&gt; fetchAndMatch(MissionDatabaseClient mdbClient, List&lt;String&gt; patterns, Log log) {
+        return fetch(mdbClient, log).thenApply(containers -&gt; {
+            HashSet&lt;String&gt; filtered = new HashSet&lt;&gt;();
+
+            for (String p : patterns) {
+                String pattern = p;
+                if(p.endsWith("/")) {
+                    pattern += "**";
+                }
+
+                PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
+                boolean added = false;
+
+                for (String container : containers) {
+                    if (matcher.matches(Path.of(container))) {
+                        filtered.add(container);
+                        added = true;
+                    }
+                }
+
+                if (!added) {
+                    log.warn("Cannot match containers with {} in remote MDB; ignoring", p);
+                }
+            }
+
+            return new ArrayList&lt;&gt;(filtered);
+        });
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="readme">
+<h2><code class="docutils literal notranslate"><span class="pre">README</span></code><a class="headerlink" href="#readme" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/README</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>This package contains functionality for one Yamcs server to connect to another Yamcs server as client.
+</pre></div>
+</div>
+</section>
+<section id="tmgapfinder-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TmGapFinder.java</span></code><a class="headerlink" href="#tmgapfinder-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/TmGapFinder.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.cascading;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Predicate;
+
+import org.yamcs.archive.IndexRequest;
+import org.yamcs.archive.IndexRequestListener;
+import org.yamcs.archive.IndexRequestProcessor;
+import org.yamcs.cascading.YamcsTmArchiveLink.Gap;
+import org.yamcs.client.archive.ArchiveClient;
+import org.yamcs.client.archive.ArchiveClient.StreamOptions;
+import org.yamcs.events.EventProducer;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.Yamcs.ArchiveRecord;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.Timestamp;
+import com.google.protobuf.util.Timestamps;
+
+public class TmGapFinder {
+    final Log log;
+    final int retrievalDays;
+    final YamcsLink parentLink;
+    final String yamcsInstance;
+    final EventProducer eventProducer;
+    final Predicate&lt;String&gt; requiredPkt;
+
+    TmGapFinder(String yamcsInstance, YamcsLink parentLink, EventProducer eventProducer, int retrievalDays,
+            Predicate&lt;String&gt; requiredPkt) {
+        this.yamcsInstance = yamcsInstance;
+        this.parentLink = parentLink;
+        this.log = new Log(TmGapFinder.class, yamcsInstance);
+        this.retrievalDays = retrievalDays;
+        this.eventProducer = eventProducer;
+        this.requiredPkt = requiredPkt;
+    }
+
+    /**
+     * retrieves the TM index from upstream and compares it with the local
+     *
+     * @return
+     *
+     * @return
+     */
+    List&lt;Gap&gt; identifyGaps(long start, long stop) {
+        int mergeTime = 1000;
+
+        java.time.Instant startj = java.time.Instant.ofEpochMilli(TimeEncoding.toUnixMillisec(start));
+        java.time.Instant stopj = java.time.Instant.ofEpochMilli(TimeEncoding.toUnixMillisec(stop));
+
+        ArchiveClient arcClient = parentLink.getClient().createArchiveClient(parentLink.getUpstreamInstance());
+        List&lt;ArchiveRecord&gt; upstreamRecords = new ArrayList&lt;&gt;();
+        try {
+            arcClient.streamPacketIndex(upstreamRecords::add, startj, stopj, StreamOptions.mergeTime(mergeTime))
+                    .get();
+        } catch (InterruptedException | ExecutionException e) {
+            eventProducer.sendWarning("Exception when receiving archive index: " + e.getMessage());
+        }
+
+        IndexRequest request = new IndexRequest(yamcsInstance);
+        request.setSendAllTm(true);
+        request.setStart(start);
+        request.setStop(stop);
+        request.setMergeTime(mergeTime);
+        List&lt;ArchiveRecord&gt; downstreamRecords = new ArrayList&lt;&gt;();
+        IndexRequestProcessor p = new IndexRequestProcessor(null, request, -1, null,
+                new IndexRequestListener() {
+                    @Override
+                    public void processData(ArchiveRecord record) {
+                        downstreamRecords.add(record);
+                    }
+
+                    @Override
+                    public void finished(String token, boolean success) {
+                    }
+                });
+        p.run();
+
+        return diff(group(upstreamRecords, true), group(downstreamRecords, false));
+
+    }
+
+    List&lt;Gap&gt; diff(Map&lt;String, List&lt;ArchiveRecord&gt;&gt; upstreamRecords,
+            Map&lt;String, List&lt;ArchiveRecord&gt;&gt; downstreamRecords) {
+        GapCollector gapCollector = new GapCollector();
+        for (Map.Entry&lt;String, List&lt;ArchiveRecord&gt;&gt; me : upstreamRecords.entrySet()) {
+            String pname = me.getKey();
+            if (downstreamRecords.containsKey(pname)) {
+                addMissing(log, gapCollector, me.getValue(), downstreamRecords.get(pname));
+            } else {
+                for (ArchiveRecord ar : me.getValue()) {
+                    gapCollector.addGap(ar.getFirst(), ar.getLast());
+                }
+            }
+        }
+
+        return gapCollector.gaps;
+    }
+
+    // For one specific packet, check records that are in upstream and not in downstream and add them to the missing
+    // list. Those partially overlapping are also added in full because we don't know if the overlap part is complete
+    static void addMissing(Log log, GapCollector gapCollector,
+            List&lt;ArchiveRecord&gt; upstream, List&lt;ArchiveRecord&gt; downstream) {
+
+        Iterator&lt;ArchiveRecord&gt; iterator = downstream.iterator();
+
+        ArchiveRecord down = null;
+        boolean keep = false;
+        ArchiveRecord prevUp = null;
+        boolean logLastDown = false;
+
+        upstreamLoop: for (ArchiveRecord up : upstream) {
+
+            while (keep || iterator.hasNext()) {
+                if (!keep) {
+                    down = iterator.next();
+                }
+                if (Timestamps.compare(up.getFirst(), down.getFirst()) &lt;= 0 &amp;&amp;
+                        Timestamps.compare(up.getLast(), down.getLast()) &gt;= 0) {
+                    // Nominal case: downstream times fully included into upstream (1)
+                    if (down.getNum() &lt; up.getNum()) {
+                        gapCollector.addGap(up.getFirst(), up.getLast());
+                    } else if (down.getNum() &gt; up.getNum()) {
+                        log.warn("Downstream record has more data than the related upstream record. DOWN: "
+                                + toString(down) + ", UP: " + toString(up));
+                    }
+                    prevUp = up;
+                    keep = false; // Get next record
+                    continue upstreamLoop;
+                } else if (Timestamps.compare(up.getLast(), down.getFirst()) &lt; 0) {
+                    // Upstream times completely before downstream (2)
+                    // Adding entire upstream and keeping downstream record for the next iteration
+                    gapCollector.addGap(up.getFirst(), up.getLast());
+                    keep = true;
+                    logLastDown = true;
+                    continue upstreamLoop;
+                } else if (Timestamps.compare(up.getFirst(), down.getLast()) &gt; 0) {
+                    // Upstream times completely after downstream (3)
+                    // Warning only if downstream has parts after the previous upstream and does not include it
+                    if (prevUp == null || (Timestamps.compare(prevUp.getFirst(), down.getFirst()) &lt; 0
+                            &amp;&amp; Timestamps.compare(prevUp.getLast(), down.getLast()) &lt; 0)) {
+                        log.warn("Downstream record does not appear in the upstream archive: " + toString(down));
+                    }
+                    // Ignoring current downstream record and continue checking the rest
+                    keep = false;
+                } else if (Timestamps.compare(up.getFirst(), down.getFirst()) &gt;= 0 &amp;&amp;
+                        Timestamps.compare(up.getLast(), down.getLast()) &lt;= 0) {
+                    // upstream included completely in downstream (4)
+                    log.warn("Downstream contains more data than upstream: " + toString(down));
+                    // continue iterating over upstream records
+                    prevUp = up;
+                    keep = true;
+                    logLastDown = false;
+                    continue upstreamLoop;
+                } else { // Unusual overlaps, where part of downstream record lays outside the upstream one (5.1 and
+                         // 5.2)
+                    // Skipping downstream record and adding upstream
+                    log.warn("Downstream contains more data than upstream: " + toString(down));
+                    gapCollector.addGap(up.getFirst(), up.getLast());
+                    prevUp = up;
+                    keep = false;
+                    continue upstreamLoop;
+                }
+            }
+            // Adding records that do not match any existing (exhausted iterator)
+            gapCollector.addGap(up.getFirst(), up.getLast());
+        }
+
+        if (keep &amp;&amp; logLastDown &amp;&amp; down != null) {
+            log.warn("Downstream contains more data than upstream: " + toString(down));
+        }
+
+        while (iterator.hasNext()) {
+            down = iterator.next();
+            if (prevUp == null || Timestamps.compare(down.getLast(), prevUp.getLast()) &gt; 0) {
+                log.warn("Downstream archive has more data than upstream: " + toString(down));
+            }
+        }
+    }
+
+    // group by packet name
+    private Map&lt;String, List&lt;ArchiveRecord&gt;&gt; group(List&lt;ArchiveRecord&gt; records, boolean skipNotRequired) {
+        Set&lt;String&gt; notRequired = new HashSet&lt;&gt;();
+        Set&lt;String&gt; required = new HashSet&lt;&gt;();
+        Map&lt;String, List&lt;ArchiveRecord&gt;&gt; r = new HashMap&lt;&gt;();
+        for (ArchiveRecord ar : records) {
+            String name = ar.getId().getName();
+            if (skipNotRequired) {
+                if (notRequired.contains(name)) {
+                    continue;
+                } else if (!required.contains(name)) {
+                    if (requiredPkt.test(name)) {
+                        required.add(name);
+                    } else {
+                        notRequired.add(name);
+                        continue;
+                    }
+                }
+            }
+
+            List&lt;ArchiveRecord&gt; l = r.computeIfAbsent(name, x -&gt; new ArrayList&lt;&gt;());
+            l.add(ar);
+        }
+        return r;
+    }
+
+    private static String toString(ArchiveRecord ar) {
+        return ar.getId().getName() + "[" + toString(ar.getFirst()) + " - " + toString(ar.getLast()) + "]";
+    }
+
+    private static String toString(Timestamp t) {
+        return TimeEncoding.toString(TimeEncoding.fromProtobufTimestamp(t));
+    }
+
+    static class GapCollector {
+        List&lt;Gap&gt; gaps = new ArrayList&lt;&gt;();
+
+        void addGap(Timestamp start, Timestamp stop) {
+            addGap(TimeEncoding.fromProtobufTimestamp(start), TimeEncoding.fromProtobufTimestamp(stop));
+        }
+
+        void addGap(long start, long stop) {
+            Gap g = new Gap(start, stop);
+            int idx = Collections.binarySearch(gaps, g);
+
+            if (idx &lt; 0) {
+                idx = -idx - 1;
+            }
+
+            if (idx &gt; 0) {
+                Gap g1 = gaps.get(idx - 1);
+                if (g1.stop &gt;= start) {
+                    g1.stop = g.stop;
+                    g = g1;
+                    idx -= 1;
+                } else {
+                    gaps.add(idx, g);
+                }
+            } else {
+                gaps.add(0, g);
+            }
+
+            if (idx &lt; gaps.size() - 1) {
+                Gap g2 = gaps.get(idx + 1);
+                if (g2.start &lt;= g.stop) {
+                    g.stop = Math.max(g2.stop, g.stop);
+                    gaps.remove(idx + 1);
+                }
+            }
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="yamcseventlink-java">
+<h2><code class="docutils literal notranslate"><span class="pre">YamcsEventLink.java</span></code><a class="headerlink" href="#yamcseventlink-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsEventLink.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.cascading;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.archive.EventRecorder;
+import org.yamcs.ConfigurationException;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.EventSubscription;
+import org.yamcs.client.MessageListener;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.client.base.WebSocketClient;
+import org.yamcs.protobuf.Event;
+import org.yamcs.protobuf.SubscribeEventsRequest;
+import org.yamcs.tctm.AbstractLink;
+import org.yamcs.tctm.AggregatedDataLink;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.protobuf.Db;
+
+/**
+ * 
+ * Yamcs TM link - subscribes to realtime telemetry
+ *
+ */
+public class YamcsEventLink extends AbstractLink {
+    YamcsLink parentLink;
+    protected AtomicLong dataCount = new AtomicLong(0);
+
+    EventSubscription subscription;
+    Stream eventStream;
+
+    public YamcsEventLink(YamcsLink parentLink) {
+        this.parentLink = parentLink;
+    }
+
+    public void init(String instance, String name, YConfiguration config) {
+        super.init(instance, name, config);
+        String eventStreamName = config.getString("eventRealtimeStream", EventRecorder.REALTIME_EVENT_STREAM_NAME);
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(instance);
+        this.eventStream = ydb.getStream(eventStreamName);
+        if (this.eventStream == null) {
+            throw new ConfigurationException("Cannto find stream " + eventStreamName);
+        }
+    }
+
+    // a little bit of a hack: because we use only one config for the parent,
+    // we generate a new one for the sublink with the name tmRealtimeStream/tmArchiveStream changed to tmStream
+    // depending on which link it is
+    static YConfiguration swapConfig(YConfiguration config, String oldKey, String newKey, String defaultValue) {
+        Map&lt;String, Object&gt; root = new HashMap&lt;&gt;(config.getRoot());
+        String value = (String) root.remove(oldKey);
+        if (value == null) {
+            value = defaultValue;
+        }
+
+        root.put(newKey, value);
+        return YConfiguration.wrap(root);
+    }
+
+    @Override
+    protected void doStart() {
+        if (!isEffectivelyDisabled()) {
+            doEnable();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void doDisable() {
+        if (subscription != null) {
+            subscription.cancel(true);
+            subscription = null;
+        }
+    }
+
+    @Override
+    public void doEnable() {
+        if (subscription != null &amp;&amp; !subscription.isDone()) {
+            return;
+        }
+        WebSocketClient wsclient = parentLink.getClient().getWebSocketClient();
+        if (wsclient.isConnected()) {
+            subscribeEvents();
+        }
+    }
+
+    private void subscribeEvents() {
+        YamcsClient yclient = parentLink.getClient();
+
+        subscription = yclient.createEventSubscription();
+        subscription.addMessageListener(new MessageListener&lt;Event&gt;() {
+            @Override
+            public void onMessage(Event ev) {
+                processEvent(ev);
+            }
+
+            public void onError(Throwable t) {
+                if (t instanceof ClientException) {
+                    eventProducer.sendWarning("Got error when subscribing to containers: " + t.getMessage());
+                } else {
+                    log.warn("Got error when subscribing to containers: " + t.getMessage());
+                }
+            }
+        });
+
+        subscription.sendMessage(SubscribeEventsRequest.newBuilder()
+                .setInstance(parentLink.getUpstreamInstance())
+                .build());
+    }
+
+    private void processEvent(Event ev) {
+        long rectime = timeService.getMissionTime();
+        long gentime = ev.hasGenerationTime() ? TimeEncoding.fromProtobufTimestamp(ev.getGenerationTime()) : rectime;
+        String source = ev.hasSource() ? ev.getSource() : parentLink.getName();
+        int seqCount = ev.hasSeqNumber() ? ev.getSeqNumber() : 0;
+
+        TupleDefinition tdef = eventStream.getDefinition();
+
+        Db.Event.Builder db_ev = Db.Event.newBuilder().setReceptionTime(rectime).setGenerationTime(gentime)
+                .setSource(source).setSeqNumber(seqCount);
+
+        if (ev.hasCreatedBy()) {
+            db_ev.setCreatedBy(ev.getCreatedBy());
+        }
+        if (ev.hasSeverity()) {
+            db_ev.setSeverity(ev.getSeverity());
+        }
+        if (ev.hasType()) {
+            db_ev.setType(ev.getType());
+        }
+        if (ev.hasMessage()) {
+            db_ev.setMessage(ev.getMessage());
+        }
+
+
+        Tuple t = new Tuple(tdef, new Object[] { gentime, source, seqCount, db_ev.build() });
+        dataCount.incrementAndGet();
+        eventStream.emitTuple(t);
+    }
+
+    @Override
+    protected void doStop() {
+        if (!isDisabled()) {
+            doDisable();
+        }
+        notifyStopped();
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        Status parentStatus = parentLink.connectionStatus();
+        if (parentStatus == Status.OK) {
+            boolean ok = subscription != null &amp;&amp; !subscription.isDone();
+            return ok ? Status.OK : Status.UNAVAIL;
+        } else {
+            return parentStatus;
+        }
+    }
+
+    @Override
+    public AggregatedDataLink getParent() {
+        return parentLink;
+    }
+
+    @Override
+    public long getDataInCount() {
+        return dataCount.get();
+    }
+
+    @Override
+    public long getDataOutCount() {
+        return 0;
+    }
+
+    @Override
+    public void resetCounters() {
+        dataCount.set(0);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="yamcslink-java">
+<h2><code class="docutils literal notranslate"><span class="pre">YamcsLink.java</span></code><a class="headerlink" href="#yamcslink-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsLink.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.cascading;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.ConnectionListener;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.client.base.WebSocketClient;
+import org.yamcs.client.mdb.MissionDatabaseClient;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.tctm.AbstractLink;
+import org.yamcs.tctm.AggregatedDataLink;
+import org.yamcs.tctm.Link;
+
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+public class YamcsLink extends AbstractLink implements AggregatedDataLink, ConnectionListener {
+    YamcsClient yclient;
+    String upstreamInstance;
+    List&lt;Link&gt; subLinks = new ArrayList&lt;&gt;();
+    YamcsTmLink tmLink;
+    YamcsTcLink tcLink;
+    YamcsParameterLink ppLink;
+    YamcsTmArchiveLink tmArchiveLink;
+    YamcsEventLink eventLink;
+
+    String upstreamName;
+    String upstreamProcessor;
+    ScheduledThreadPoolExecutor timer = new ScheduledThreadPoolExecutor(1,
+            new ThreadFactoryBuilder().setNameFormat("YamcsLink").build());
+
+    long reconnectionDelay;
+
+    private String username;
+    private char[] password;
+
+    volatile boolean connected = false;
+
+    @Override
+    public void init(String instance, String name, YConfiguration config) {
+        super.init(instance, name, config);
+        this.reconnectionDelay = config.getLong("reconnectionDelay", 5000);
+
+        yclient = YamcsClient.newBuilder(config.getString("yamcsUrl"))
+                .withConnectionAttempts(config.getInt("connectionAttempts", 20))
+                .withRetryDelay(reconnectionDelay)
+                .withVerifyTls(config.getBoolean("verifyTls", true))
+                .build();
+        yclient.addConnectionListener(this);
+
+        if (config.containsKey("username")) {
+            if (config.containsKey("password")) {
+                username = config.getString("username");
+                password = config.getString("password").toCharArray();
+            } else {
+                throw new ConfigurationException("Username provided with no password");
+            }
+        } else if (config.containsKey("password")) {
+            throw new ConfigurationException("Password provided with no username");
+        }
+
+        if (config.getBoolean("tm", true)) {
+            tmLink = new YamcsTmLink(this);
+            tmLink.init(instance, name + ".tm", config);
+            subLinks.add(tmLink);
+        }
+
+        if (config.getBoolean("tc", true)) {
+            tcLink = new YamcsTcLink(this);
+            tcLink.init(instance, name + ".tc", config);
+            subLinks.add(tcLink);
+        }
+
+        if (config.getBoolean("pp", true)) {
+            ppLink = new YamcsParameterLink(this);
+            ppLink.init(instance, name + ".pp", config);
+            subLinks.add(ppLink);
+        }
+
+        if (config.getBoolean("tmArchive", true)) {
+            tmArchiveLink = new YamcsTmArchiveLink(this);
+            tmArchiveLink.init(instance, name + ".tmArchive", config);
+            subLinks.add(tmArchiveLink);
+        }
+
+        if (config.getBoolean("event", true)) {
+            eventLink = new YamcsEventLink(this);
+            eventLink.init(instance, name + ".event", config);
+            subLinks.add(eventLink);
+        }
+
+        this.upstreamName = config.getString("upstreamName");
+
+        if (upstreamName.contains("&lt;") || upstreamName.contains("&gt;")) {
+            throw new ConfigurationException("Invalid upstream name '" + upstreamName + "'. It cannot contain &lt; or &gt;");
+        }
+        this.upstreamProcessor = config.getString("upstreamProcessor", "realtime");
+        this.upstreamInstance = config.getString("upstreamInstance");
+    }
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = getDefaultSpec();
+        spec.addOption("yamcsUrl", OptionType.STRING).withRequired(true)
+                .withDescription("The URL to connect to the server.");
+
+        spec.addOption("username", OptionType.STRING)
+                .withDescription("Username to connect to the server");
+
+        spec.addOption("password", OptionType.STRING).withSecret(true)
+                .withDescription("Password to connect to the server");
+
+        spec.addOption("upstreamInstance", OptionType.STRING).withRequired(true)
+                .withDescription("The instance to connect to.");
+
+        spec.addOption("upstreamProcessor", OptionType.STRING).withDefault("realtime")
+                .withDescription("The processor to connect to. Default is realtime");
+
+        spec.addOption("upstreamName", OptionType.STRING).withRequired(true)
+                .withDescription(
+                        "The name of the upstream Yamcs server. The name will be used in the command history entries");
+
+        spec.addOption("verifyTls", OptionType.BOOLEAN).withDefault(true)
+                .withDescription("If the connection is over SSL, "
+                        + "this option can enable/disable the verification of the server certificate against local accepted CA list");
+
+        spec.addOption("reconnectionDelay", OptionType.INTEGER).withDefault(5000)
+                .withDescription("If the connection fails or breaks, "
+                        + "the time (in milliseconds) to wait before reconnection.");
+
+        spec.addOption("connectionAttempts", OptionType.INTEGER).withDefault(20)
+                .withDescription(
+                        "How many times to attempt reconnection if the connection fails. "
+                                + "Reconnection will not be reatempted if the authentication fails. "
+                                + "Link disable/enable is required to reattempt the connection");
+
+        /*
+         * TM
+         */
+        spec.addOption("tm", OptionType.BOOLEAN).withDefault(true)
+                .withDescription("Subscribe telemetry containers (packets). "
+                        + "The list of containers (packets) has to be specified using the containers option.");
+        spec.addOption("tmRealtimeStream", OptionType.STRING);
+
+        spec.addOption("tmArchive", OptionType.BOOLEAN)
+                .withAliases("archiveTm") // Legacy typo
+                .withDefault(true);
+        spec.addOption("tmArchiveStream", OptionType.STRING);
+
+        spec.addOption("containers", OptionType.LIST).withAliases("packets")
+                .withElementType(OptionType.STRING)
+                .withDescription("The list of packets to subscribe to.");
+
+        spec.when("tm", true).requireAll("containers");
+
+        spec.addOption("retrievalDays", OptionType.INTEGER);
+        spec.addOption("mergeTime", OptionType.INTEGER);
+        spec.addOption("gapFillingInterval", OptionType.INTEGER);
+
+        /*
+         * PP
+         */
+        spec.addOption("pp", OptionType.BOOLEAN).withDefault(true)
+                .withDescription("Subscribe parameters. "
+                        + "The list of parameters has to be specified using the parameters option.");
+        spec.addOption("ppRealtimeStream", OptionType.STRING);
+        spec.addOption("parameters", OptionType.LIST).withElementType(OptionType.STRING)
+                .withDescription("The list of parameters to subscribe to.");
+
+        /*
+         * TC
+         */
+        spec.addOption("tc", OptionType.BOOLEAN).withDefault(true)
+                .withDescription("Allow to send TC and subscribe to command history.");
+
+        spec.addOption("keepUpstreamAcks", OptionType.LIST)
+                .withElementType(OptionType.STRING)
+                .withDescription("List of command acknowledgements names received "
+                        + "from the upstream server to keep unmodified")
+                .withDefault(List.of(CommandHistoryPublisher.CcsdsSeq_KEY));
+
+        spec.addOption("commandMapping", OptionType.LIST).withElementType(OptionType.MAP)
+                .withSpec(CommandMapData.getSpec())
+                .withDescription("The mapping of commands and arguments between downstream and upstream.");
+        spec.addOption("failCommandIfNoMappingMatches", OptionType.BOOLEAN).withDefault(false)
+                .withDescription("Fail the command if no mapping matches");
+        spec.addOption("commandPostprocessorClassName", OptionType.STRING);
+        spec.addOption("commandPostprocessorArgs", OptionType.MAP).withSpec(Spec.ANY);
+
+        /*
+         * EV
+         */
+        spec.addOption("event", OptionType.BOOLEAN).withDefault(true)
+                .withDescription("Allow to subscribe to realtime events.");
+        spec.addOption("eventRealtimeStream", OptionType.STRING);
+
+        return spec;
+    }
+
+    @Override
+    public Status connectionStatus() {
+        return connected ? Status.OK : Status.UNAVAIL;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    @Override
+    public List&lt;Link&gt; getSubLinks() {
+        return subLinks;
+    }
+
+    @Override
+    public long getDataInCount() {
+        long count = 0;
+        for (Link l : subLinks) {
+            count += l.getDataInCount();
+        }
+        return count;
+    }
+
+    @Override
+    public long getDataOutCount() {
+        return tcLink == null ? 0 : tcLink.getDataOutCount();
+    }
+
+    @Override
+    public void resetCounters() {
+        for (Link l : subLinks) {
+            l.resetCounters();
+        }
+    }
+
+    @Override
+    public void doDisable() {
+        WebSocketClient wsclient = yclient.getWebSocketClient();
+        if (wsclient != null &amp;&amp; wsclient.isConnected()) {
+            wsclient.disconnect();
+        }
+    }
+
+    @Override
+    public void doEnable() {
+        timer.execute(() -&gt; connectToUpstream());
+    }
+
+    private void connectToUpstream() {
+        WebSocketClient wsclient = yclient.getWebSocketClient();
+        if (wsclient != null &amp;&amp; wsclient.isConnected()) {
+            // we have to protect against double connection because there might be a timer and a user action that causes
+            // it to come in here
+            return;
+        }
+
+        try {
+            if (username != null) {
+                yclient.login(username, password);
+            }
+            yclient.connectWebSocket();
+        } catch (ClientException cause) {
+            log.warn("Connection to upstream Yamcs server failed", cause);
+            eventProducer.sendWarning("Connection to upstream Yamcs failed: " + cause);
+            return;
+        }
+
+        if (tmLink != null || tmArchiveLink != null) {
+            retrieveContainers();
+        }
+
+        if (tcLink != null &amp;&amp; !tcLink.isDisabled()) {
+            tcLink.doEnable();
+        }
+
+        if (ppLink != null &amp;&amp; !ppLink.isDisabled()) {
+            ppLink.doEnable();
+        }
+
+        if (eventLink != null &amp;&amp; !eventLink.isDisabled()) {
+            eventLink.doEnable();
+        }
+    }
+
+    private void retrieveContainers() {
+        MissionDatabaseClient mdbClient = getClient().createMissionDatabaseClient(getUpstreamInstance());
+        ContainerFetcher.fetchAndMatch(mdbClient, config.getList("containers"), log)
+                .whenComplete((list, t) -&gt; {
+                    if (t != null) {
+                        log.warn("Failed to fetch containers from remote: {}", t);
+                    }
+
+                    if (tmLink != null) {
+                        tmLink.setContainers(list);
+                        if (!tmLink.isDisabled()) {
+                            tmLink.subscribeContainers();
+                        }
+                    }
+                    if (tmArchiveLink != null) {
+                        tmArchiveLink.setContainers(list);
+                        if (!tmArchiveLink.isDisabled()) {
+                            tmArchiveLink.scheduleDataRetrieval();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    protected void doStart() {
+        if (!isDisabled()) {
+            doEnable();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        yclient.close();
+        notifyStopped();
+    }
+
+    @Override
+    public void connecting() {
+        log.debug("Connecting to upstream Yamcs server");
+    }
+
+    @Override
+    public void connected() {
+        connected = true;
+        log.debug("Connected to upstream Yamcs server");
+    }
+
+    @Override
+    public void connectionFailed(Throwable cause) {
+        eventProducer.sendWarning("Connection to upstream Yamcs failed: " + cause);
+    }
+
+    @Override
+    public void disconnected() {
+        connected = false;
+        if (isRunningAndEnabled()) {
+            log.warn("Disconnected from upstream Yamcs server");
+            timer.schedule(() -&gt; connectToUpstream(), reconnectionDelay, TimeUnit.MILLISECONDS);
+        } else {
+            log.debug("Disconnected from upstream Yamcs server");
+        }
+    }
+
+    YamcsClient getClient() {
+        return yclient;
+    }
+
+    String getUpstreamName() {
+        return upstreamName;
+    }
+
+    String getUpstreamInstance() {
+        return upstreamInstance;
+    }
+
+    String getUpstreamProcessor() {
+        return upstreamProcessor;
+    }
+
+    public ScheduledThreadPoolExecutor getExecutor() {
+        return timer;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="yamcsparameterlink-java">
+<h2><code class="docutils literal notranslate"><span class="pre">YamcsParameterLink.java</span></code><a class="headerlink" href="#yamcsparameterlink-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsParameterLink.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.cascading;
+
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.client.Page;
+import org.yamcs.client.ParameterSubscription;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.client.base.WebSocketClient;
+import org.yamcs.client.mdb.MissionDatabaseClient.ListOptions;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.SystemParametersService;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.protobuf.Pvalue;
+import org.yamcs.protobuf.SubscribeParametersRequest;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.tctm.AbstractLink;
+import org.yamcs.tctm.AggregatedDataLink;
+import org.yamcs.tctm.ParameterDataLink;
+import org.yamcs.tctm.ParameterSink;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.SpaceSystem;
+
+/**
+ * 
+ * Yamcs Parameter link - receives parameters from a Yamcs upstream server.
+ * &lt;p&gt;
+ * The parameters have to be defined in the local MDB and have the same name like in the remote MDB. This restriction
+ * may be lifted in the new versions.
+ *
+ */
+public class YamcsParameterLink extends AbstractLink implements ParameterDataLink {
+    YamcsLink parentLink;
+
+    List&lt;String&gt; parameters;
+    ParameterSubscription subscription;
+    ParameterSink paraSink;
+    AtomicLong paraCount = new AtomicLong();
+    int seqCount;
+    Mdb mdb;
+
+    // when subscribing to remote Yamcs parameters, we rename them to include the upstream name into their name
+    Map&lt;String, String&gt; remoteYamcsParams;
+
+    public YamcsParameterLink(YamcsLink parentLink) {
+        this.parentLink = parentLink;
+    }
+
+    public void init(String instance, String name, YConfiguration config) {
+        config = YamcsTmLink.swapConfig(config, "ppRealtimeStream", "ppStream", "pp_realtime");
+        super.init(instance, name, config);
+        this.parameters = config.getList("parameters");
+        this.mdb = MdbFactory.getInstance(instance);
+    }
+
+    @Override
+    protected void doStart() {
+        if (!isEffectivelyDisabled()) {
+            doEnable();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void doDisable() {
+        if (subscription != null) {
+            subscription.cancel(true);
+            subscription = null;
+        }
+    }
+
+    @Override
+    public void doEnable() {
+        if (subscription != null &amp;&amp; !subscription.isDone()) {
+            return;
+        }
+        WebSocketClient wsclient = parentLink.getClient().getWebSocketClient();
+        if (wsclient.isConnected()) {
+            subscribeParameters();
+        }
+    }
+
+    public void subscribeParameters() {
+        YamcsClient yclient = parentLink.getClient();
+
+        subscription = yclient.createParameterSubscription();
+        subscription.addListener(new ParameterSubscription.Listener() {
+
+            @Override
+            public void onData(List&lt;Pvalue.ParameterValue&gt; values) {
+                processParameters(values);
+            }
+
+            @Override
+            public void onInvalidIdentification(NamedObjectId id) {
+                log.warn("Parameter subscription raised invalid identification(could be lack of permission): {}", id);
+            }
+        });
+        
+        SubscribeParametersRequest.Builder request = SubscribeParametersRequest.newBuilder()
+                .setInstance(parentLink.getUpstreamInstance())
+                .setProcessor(parentLink.getUpstreamProcessor())
+                .setSendFromCache(false);
+
+        HashSet&lt;String&gt; toAdd = new HashSet&lt;&gt;();
+
+        List&lt;String&gt; requestedYamcsParamsFilter = new ArrayList&lt;&gt;();
+        boolean requestAllRemoteYamcsParams = false;
+
+        for(String p: parameters) {
+            if (p.equals("/yamcs/") || p.equals("/yamcs")) {
+                requestAllRemoteYamcsParams = true;
+                requestedYamcsParamsFilter.add(p);
+            } else if (p.startsWith("/yamcs/")) {
+                requestedYamcsParamsFilter.add(p);
+            } else if (p.endsWith("/")) {
+                SpaceSystem sps = mdb.getSpaceSystem(p.substring(0, p.length() - 1));
+
+                if (sps == null) {
+                    log.warn("Cannot find space system {} in local MDB; ignoring", p);
+                    continue;
+                }
+                sps.getParameters().forEach(pdef -&gt; toAdd.add(pdef.getQualifiedName()));
+            } else {
+                PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + p);
+
+                boolean added = false;
+                for (Parameter param : mdb.getParameters()) {
+                    if (matcher.matches(Path.of(param.getQualifiedName()))) {
+                        toAdd.add(param.getQualifiedName());
+                        added = true;
+                    }
+                }
+
+                if (!added) {
+                    log.warn("Cannot find parameter {} in local MDB; ignoring", p);
+                }
+            }
+        }
+
+
+        toAdd.forEach(name -&gt; request.addId(NamedObjectId.newBuilder().setName(name).build()));
+
+        log.debug("Sending parameter subcription {}", request);
+        subscription.sendMessage(request.build());
+
+        if (requestAllRemoteYamcsParams || !requestedYamcsParamsFilter.isEmpty()) {
+            if (requestAllRemoteYamcsParams) {
+                requestedYamcsParamsFilter.clear();
+                requestedYamcsParamsFilter.add("**");
+             }
+
+            remoteYamcsParams = new HashMap&lt;&gt;();
+            var mdbClient = parentLink.getClient().createMissionDatabaseClient(parentLink.getUpstreamInstance());
+
+            collectRemoteYamcsParameters(requestedYamcsParamsFilter,
+                    mdbClient.listParameters(ListOptions.details(false),
+                            ListOptions.system("/yamcs"), ListOptions.q("/")));
+        }
+
+    }
+
+
+    private void collectRemoteYamcsParameters(List&lt;String&gt; requestedYamcsParamsFilter,
+            CompletableFuture&lt;Page&lt;ParameterInfo&gt;&gt; cf) {
+
+        cf.whenComplete((page, t) -&gt; {
+            if (t != null) {
+                log.warn("Failed to retrieve yamcs parameter names");
+            } else {
+                for (String p : requestedYamcsParamsFilter) {
+                    PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + p);
+                    boolean match = false;
+                    for (ParameterInfo pi : page) {
+                        if (!pi.getQualifiedName().startsWith("/yamcs/")) {
+                            log.warn("Remote yamcs parameter that does not start with /yamcs/?? '{}'", pi.getQualifiedName());
+                            continue;
+                        }
+                        if (matcher.matches(Path.of(pi.getQualifiedName()))) {
+                            String name = pi.getQualifiedName().replaceFirst("/yamcs/", "/yamcs/"+parentLink.getUpstreamName()+"_");
+                            remoteYamcsParams.put(pi.getQualifiedName(), name);
+                            match = true;
+                        }
+                    }
+                    if (!match) {
+                        log.info("No Yamcs parameter matching " + p + " found on the upstream server");
+                    }
+                }
+
+                if (page.hasNextPage()) {
+                    collectRemoteYamcsParameters(requestedYamcsParamsFilter, page.getNextPage());
+                } else {
+                    subscribeYamcsParameters();
+                }
+            }
+        });
+    }
+
+    void subscribeYamcsParameters() {
+        log.debug("Subscribing to the following yamcs parameters from upstream: {}", remoteYamcsParams.keySet());
+
+        SubscribeParametersRequest.Builder request = SubscribeParametersRequest.newBuilder()
+                .setInstance(parentLink.getUpstreamInstance())
+                .setProcessor(parentLink.getUpstreamProcessor())
+                .setSendFromCache(false);
+
+        remoteYamcsParams.keySet().forEach(name -&gt; request.addId(NamedObjectId.newBuilder().setName(name).build()));
+        subscription.sendMessage(request.build());
+    }
+
+
+    private void processParameters(List&lt;Pvalue.ParameterValue&gt; values) {
+        // group by time and group (although it's very likely they are already grouped by time)
+        Map&lt;Long, Map&lt;String, List&lt;ParameterValue&gt;&gt;&gt; vmap = new HashMap&lt;&gt;();
+
+        for (Pvalue.ParameterValue gpv : values) {
+            Parameter pdef;
+            if (gpv.getId().getName().startsWith("/yamcs")) {
+                String newName = remoteYamcsParams.get(gpv.getId().getName());
+                if (newName == null) {
+                    log.warn("Received system parameter not subscribed " + gpv);
+                    continue;
+                }
+                pdef = mdb.getParameter(newName);
+                if (pdef == null) {
+                    pdef = SystemParametersService.createSystemParameter(mdb, newName,
+                            ValueUtility.fromGpb(gpv.getEngValue()));
+                }
+            } else {
+                pdef = mdb.getParameter(gpv.getId());
+            }
+            if (pdef == null) {
+                log.warn("Ignoring unknown parameter {}", gpv.getId());
+                continue;
+            }
+
+            String group = pdef.getRecordingGroup();
+            ParameterValue pv = BasicParameterValue.fromGpb(pdef, gpv);
+            List&lt;ParameterValue&gt; l = vmap.computeIfAbsent(pv.getGenerationTime(), x -&gt; new HashMap&lt;&gt;())
+                    .computeIfAbsent(group, x -&gt; new ArrayList&lt;&gt;());
+            l.add(pv);
+        }
+
+        for (Map.Entry&lt;Long, Map&lt;String, List&lt;ParameterValue&gt;&gt;&gt; me : vmap.entrySet()) {
+            long gentime = me.getKey();
+            for (Map.Entry&lt;String, List&lt;ParameterValue&gt;&gt; me1 : me.getValue().entrySet()) {
+                paraSink.updateParameters(gentime, me1.getKey(), seqCount, me1.getValue());
+                paraCount.addAndGet(me1.getValue().size());
+            }
+            seqCount++;
+        }
+    }
+
+    @Override
+    protected void doStop() {
+        if (!isDisabled()) {
+            doDisable();
+        }
+        notifyStopped();
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        Status parentStatus = parentLink.connectionStatus();
+        if (parentStatus == Status.OK) {
+            boolean ok = subscription != null &amp;&amp; !subscription.isDone();
+            return ok ? Status.OK : Status.UNAVAIL;
+        } else {
+            return parentStatus;
+        }
+    }
+
+    @Override
+    public AggregatedDataLink getParent() {
+        return parentLink;
+    }
+
+    @Override
+    public long getDataInCount() {
+        return paraCount.get();
+    }
+
+    @Override
+    public long getDataOutCount() {
+        return 0;
+    }
+
+    @Override
+    public void resetCounters() {
+        paraCount.set(0);
+
+    }
+
+    @Override
+    public void setParameterSink(ParameterSink parameterSink) {
+        this.paraSink = parameterSink;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="yamcstclink-java">
+<h2><code class="docutils literal notranslate"><span class="pre">YamcsTcLink.java</span></code><a class="headerlink" href="#yamcstclink-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsTcLink.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.cascading;
+
+import static org.yamcs.cmdhistory.CommandHistoryPublisher.AcknowledgeSent_KEY;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.client.Command;
+import org.yamcs.client.CommandListener;
+import org.yamcs.client.CommandSubscription;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.client.base.WebSocketClient;
+import org.yamcs.client.mdb.MissionDatabaseClient;
+import org.yamcs.client.processor.ProcessorClient;
+import org.yamcs.client.processor.ProcessorClient.CommandBuilder;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryPublisher.AckStatus;
+import org.yamcs.commanding.ArgumentValue;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.protobuf.Mdb.ArgumentAssignmentInfo;
+import org.yamcs.protobuf.Mdb.ArgumentInfo;
+import org.yamcs.protobuf.Mdb.CommandInfo;
+import org.yamcs.protobuf.SubscribeCommandsRequest;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.tctm.AbstractTcDataLink;
+import org.yamcs.tctm.AggregatedDataLink;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Argument;
+
+public class YamcsTcLink extends AbstractTcDataLink {
+    YamcsLink parentLink;
+    private CommandSubscription cmdSubscription;
+    private ProcessorClient procClient;
+    private MissionDatabaseClient mdbClient;
+    private String cmdOrigin;
+    private boolean failCommandIfNoMappingMatches;
+
+    private Set&lt;String&gt; keepUpstreamAcks = new HashSet&lt;&gt;();
+    private ArrayList&lt;CommandMapData&gt; commandMapDataList = new ArrayList&lt;&gt;();
+    Map&lt;String, PreparedCommand&gt; sentCommands = new ConcurrentHashMap&lt;&gt;();
+    Map&lt;String, CommandInfo&gt; upstreamCmdCache = new ConcurrentHashMap&lt;&gt;();
+    private AtomicInteger tcCount = new AtomicInteger();
+
+    public YamcsTcLink(YamcsLink parentLink) {
+        this.parentLink = parentLink;
+    }
+
+    public void init(String instance, String name, YConfiguration config) {
+        super.init(instance, name, config);
+        this.cmdOrigin = YamcsServer.getServer().getServerId() + "-" + instance + "-" + this.linkName;
+        List&lt;String&gt; l;
+        if (config.containsKey("keepUpstreamAcks")) {
+            l = config.getList("keepUpstreamAcks");
+        } else {
+            l = List.of(CommandHistoryPublisher.CcsdsSeq_KEY);
+        }
+        if (config.containsKey("commandMapping")) {
+            List&lt;YConfiguration&gt; commandMapConfigList = config.getConfigList("commandMapping");
+            commandMapConfigList.forEach(conf -&gt; commandMapDataList.add(new CommandMapData(conf)));
+        } else {
+            // add default direct command mapping.
+            log.info("Using default config for Cascading command mapping");
+            commandMapDataList.add(new CommandMapData());
+        }
+        failCommandIfNoMappingMatches = config.getBoolean("failCommandIfNoMappingMatches");
+
+        keepUpstreamAcks = new HashSet&lt;&gt;(l);
+    }
+
+    @Override
+    public boolean sendCommand(PreparedCommand pc) {
+        for (CommandMapData data : commandMapDataList) {
+            if (data.getCommandType() == CommandMapData.CommandType.DEFAULT) {
+                return sendDirectCommand(pc, data);
+            }
+
+            String pcfqn = pc.getMetaCommand().getQualifiedName();
+            String pcCommandPath;
+            if (data.getLocalPath().endsWith("/")) {
+                pcCommandPath = pcfqn.substring(0, pcfqn.lastIndexOf("/") + 1);
+            } else {
+                pcCommandPath = pcfqn;
+            }
+            if (pcCommandPath.startsWith(data.getLocalPath())) {
+                switch (data.getCommandType()) {
+                case DIRECT:
+                    return sendDirectCommand(pc, data);
+                case EMBEDDED_BINARY:
+                    return sendEmbeddedBinaryCommand(pc, data);
+                default:
+                    throw new IllegalStateException();
+                }
+            }
+        }
+
+        if (failCommandIfNoMappingMatches) {
+            failedCommand(pc.getCommandId(), "No command mapping matched the command");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean sendEmbeddedBinaryCommand(PreparedCommand pc, CommandMapData data) {
+        CommandInfo upstreamCmd = getUpstreamCmd(data.getUpstreamPath());
+        if (upstreamCmd == null) {
+            String msg = "Cannot send the command because upstream command '" + data.getUpstreamPath()
+                    + "' is not available";
+            failedCommand(pc.getCommandId(), msg);
+            log.warn(msg);
+            return true;
+        }
+        byte[] cmdBinary = postprocess(pc);
+        if (cmdBinary == null) {
+            // the post-processor must have failed the command
+            return true;
+        }
+
+        CommandBuilder cb = procClient.prepareCommand(data.getUpstreamPath());
+        cb.withOrigin(cmdOrigin);
+        long count = tcCount.getAndIncrement();
+        cb.withSequenceNumber((int) count);
+
+        sentCommands.put(cmdOrigin + "-" + count, pc);
+
+        if (pc.getComment() != null) {
+            cb.withComment(pc.getComment());
+        }
+        List&lt;ArgumentInfo&gt; args = getUpstreamArguments(upstreamCmd);
+        boolean found = false;
+        for (ArgumentInfo entry : args) {
+            if (entry.getName().equals(data.getUpstreamArgumentName())) {
+                found = true;
+                cb.withArgument(data.getUpstreamArgumentName(), cmdBinary);
+            } else if (!entry.hasInitialValue()) {
+                log.warn("The upstream command requires a value also for argument '{}'", entry.getName());
+            }
+        }
+        if (!found) {
+            String msg = "Cannot send the command because upstream argument '" + data.getUpstreamArgumentName()
+                    + "' was not found";
+            failedCommand(pc.getCommandId(), msg);
+            log.warn(msg);
+            return true;
+        }
+
+        // we take the time now because after the command is issued, the current time will be after the upstream
+        // Queued/Released timestamps
+        long time = getCurrentTime();
+        var cf = cb.issue();
+        var size = cb.getSizeOfTheLastCommandIssued();
+        cf.whenComplete((c, t) -&gt; {
+            if (t != null) {
+                log.warn("Error sending command ", t);
+                failedCommand(pc.getCommandId(), t.getMessage());
+            } else {
+                dataOut(1, size);
+                commandHistoryPublisher.publishAck(pc.getCommandId(), AcknowledgeSent_KEY, time, AckStatus.OK);
+            }
+        });
+        return true;
+    }
+
+    private boolean sendDirectCommand(PreparedCommand pc, CommandMapData data) {
+        String upstreamCmdName;
+        String pcfqn = pc.getMetaCommand().getQualifiedName();
+
+        if (data.getCommandType() == CommandMapData.CommandType.DEFAULT) {
+            upstreamCmdName = pcfqn;
+        } else {
+            String upstreamCmdPath = data.getUpstreamPath();
+            if (upstreamCmdPath.endsWith("/")) {
+                upstreamCmdName = upstreamCmdPath + pcfqn.substring(data.getLocalPath().length());
+            } else {
+                upstreamCmdName = upstreamCmdPath;
+            }
+        }
+
+        CommandInfo upstreamCmd = getUpstreamCmd(upstreamCmdName);
+
+        if (upstreamCmd == null) {
+            String msg = "Cannot send the command because upstream command definition is not available";
+            failedCommand(pc.getCommandId(), msg);
+            log.warn(msg);
+            return true;
+        }
+
+        CommandBuilder cb = procClient.prepareCommand(upstreamCmd.getQualifiedName());
+        cb.withOrigin(cmdOrigin);
+        long count = tcCount.getAndIncrement();
+        cb.withSequenceNumber((int) count);
+
+        sentCommands.put(cmdOrigin + "-" + count, pc);
+
+        if (pc.getComment() != null) {
+            cb.withComment(pc.getComment());
+        }
+        List&lt;ArgumentInfo&gt; reqArgs = getUpstreamArguments(upstreamCmd);
+
+        for (Entry&lt;Argument, ArgumentValue&gt; entry : pc.getArgAssignment().entrySet()) {
+            String argName = entry.getKey().getName();
+
+            if (reqArgs.stream().anyMatch(ai -&gt; argName.equals(ai.getName()))) {
+                // TODO aggregates/arrays
+                cb.withArgument(argName, toClientValue(entry.getValue()));
+            }
+        }
+
+        // we take the time now because after the command is issued, the current time will be after the upstream
+        // Queued/Released timestamps
+        long time = getCurrentTime();
+        cb.issue().whenComplete((c, t) -&gt; {
+            if (t != null) {
+                log.warn("Error sending command ", t);
+                failedCommand(pc.getCommandId(), t.getMessage());
+            } else {
+                commandHistoryPublisher.publishAck(pc.getCommandId(), AcknowledgeSent_KEY, time, AckStatus.OK);
+            }
+        });
+
+        return true;
+    }
+
+    private Object toClientValue(ArgumentValue value) {
+        return ValueUtility.getYarchValue(value.getEngValue());
+    }
+
+    // retrieve the arguments which can be sent in the upstream command
+    private List&lt;ArgumentInfo&gt; getUpstreamArguments(CommandInfo upstreamCmd) {
+        Set&lt;String&gt; assignedArgs = new HashSet&lt;&gt;();
+        CommandInfo ci = upstreamCmd;
+        while (true) {
+            for (ArgumentAssignmentInfo aai : ci.getArgumentAssignmentList()) {
+                assignedArgs.add(aai.getName());
+            }
+            if (ci.hasBaseCommand()) {
+                ci = ci.getBaseCommand();
+            } else {
+                break;
+            }
+        }
+
+        ci = upstreamCmd;
+        List&lt;ArgumentInfo&gt; reqArgs = new ArrayList&lt;&gt;();
+        while (true) {
+            for (ArgumentInfo ai : ci.getArgumentList()) {
+                if (!assignedArgs.contains(ai.getName())) {
+                    reqArgs.add(ai);
+                }
+            }
+            if (ci.hasBaseCommand()) {
+                ci = ci.getBaseCommand();
+            } else {
+                break;
+            }
+        }
+        return reqArgs;
+    }
+
+    private CommandInfo getUpstreamCmd(String upstreamCmdName) {
+        CommandInfo cinfo = upstreamCmdCache.get(upstreamCmdName);
+        if (cinfo == null) {
+            try {
+                log.debug("Retrieving information about command {} from upstream", upstreamCmdName);
+                cinfo = mdbClient.getCommand(upstreamCmdName).get();
+            } catch (InterruptedException | ExecutionException e) {
+                log.warn("Failed to retrieve command definition " + upstreamCmdName + " from upstream: " + e);
+                return null;
+            }
+            upstreamCmdCache.put(upstreamCmdName, cinfo);
+        }
+        return cinfo;
+    }
+
+    @Override
+    protected void doStart() {
+        if (!isEffectivelyDisabled()) {
+            doEnable();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void doDisable() {
+        if (cmdSubscription != null) {
+            cmdSubscription.cancel(true);
+            cmdSubscription = null;
+        }
+    }
+
+    /**
+     * Called when a command history update is received from the upstream server
+     * 
+     * @param command
+     * @param cmdHistEntry
+     */
+    void commandUpdated(Command command, CommandHistoryEntry che) {
+        PreparedCommand pc = sentCommands.get(command.getOrigin() + "-" + command.getSequenceNumber());
+        if (pc != null) {
+            for (CommandHistoryAttribute cha : che.getAttrList()) {
+                String name = transformCommandHistoryAttributeName(cha.getName());
+                publishCmdHistory(pc.getCommandId(), name, cha.getValue());
+            }
+
+        } // else TODO: should we add to command history commands not sent by us?
+    }
+
+    private String transformCommandHistoryAttributeName(String name) {
+        if (keepUpstreamAcks.contains(name)) {
+            return name;
+        } else {
+            return "yamcs&lt;" + parentLink.getUpstreamName() + "&gt;_" + name;
+        }
+    }
+
+    private void publishCmdHistory(CommandId cmdId, String name, Value value) {
+        switch (value.getType()) {
+        case SINT32:
+            commandHistoryPublisher.publish(cmdId, name, value.getSint32Value());
+            break;
+        case UINT32:
+            commandHistoryPublisher.publish(cmdId, name, value.getUint32Value());
+            break;
+        case UINT64:
+            commandHistoryPublisher.publish(cmdId, name, value.getUint64Value());
+            break;
+        case SINT64:
+            commandHistoryPublisher.publish(cmdId, name, value.getSint64Value());
+            break;
+        case STRING:
+            commandHistoryPublisher.publish(cmdId, name, value.getStringValue());
+            break;
+        case TIMESTAMP:
+            commandHistoryPublisher.publish(cmdId, name, value.getTimestampValue());
+            break;
+        case BINARY:
+            commandHistoryPublisher.publish(cmdId, name, value.getBinaryValue().toByteArray());
+            break;
+        default:
+            log.warn("Cannot publish command history attributes of type {}", value.getType());
+        }
+    }
+
+    @Override
+    public void doEnable() {
+        if (cmdSubscription != null &amp;&amp; !cmdSubscription.isDone()) {
+            return;
+        }
+
+        if (parentLink.isConnected()) {
+            subscribeCommanding();
+        }
+    }
+
+    private void subscribeCommanding() {
+        YamcsClient yclient = parentLink.getClient();
+
+        procClient = yclient.createProcessorClient(parentLink.getUpstreamInstance(), parentLink.getUpstreamProcessor());
+        mdbClient = yclient.createMissionDatabaseClient(parentLink.getUpstreamInstance());
+        cmdSubscription = yclient.createCommandSubscription();
+        cmdSubscription.addListener(new CommandListener() {
+
+            @Override
+            public void onUpdate(Command command, CommandHistoryEntry cmdHistEntry) {
+                commandUpdated(command, cmdHistEntry);
+            }
+
+            public void onError(Throwable t) {
+                eventProducer.sendWarning("Got error when subscribign to commanding: " + t);
+            }
+
+            @Override
+            public void onUpdate(Command command) {
+            }
+
+        });
+        cmdSubscription.sendMessage(SubscribeCommandsRequest
+                .newBuilder().setInstance(parentLink.getUpstreamInstance())
+                .setProcessor(parentLink.getUpstreamProcessor())
+                .build());
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        Status parentStatus = parentLink.connectionStatus();
+        if (parentStatus == Status.OK) {
+            boolean ok = cmdSubscription != null &amp;&amp; !cmdSubscription.isDone();
+            return ok ? Status.OK : Status.UNAVAIL;
+        } else {
+            return parentStatus;
+        }
+    }
+
+    @Override
+    protected void doStop() {
+        if (!isDisabled()) {
+            doDisable();
+        }
+        notifyStopped();
+    }
+
+    @Override
+    public AggregatedDataLink getParent() {
+        return parentLink;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="yamcstmarchivelink-java">
+<h2><code class="docutils literal notranslate"><span class="pre">YamcsTmArchiveLink.java</span></code><a class="headerlink" href="#yamcstmarchivelink-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsTmArchiveLink.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.cascading;
+
+import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.client.archive.ArchiveClient;
+import org.yamcs.client.archive.ArchiveClient.StreamOptions;
+import org.yamcs.client.archive.ArchiveClient.StreamOptions.StreamOption;
+import org.yamcs.protobuf.TmPacketData;
+import org.yamcs.tctm.AbstractTmDataLink;
+import org.yamcs.tctm.AggregatedDataLink;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * 
+ * Yamcs TM Archive link - fetches archive data
+ *
+ */
+public class YamcsTmArchiveLink extends AbstractTmDataLink {
+    YamcsLink parentLink;
+
+    private List&lt;String&gt; containers;
+
+    int retrievalDays;
+    int mergeTime;
+    int gapFillingInterval;
+
+    Queue&lt;Gap&gt; queue = new ArrayDeque&lt;&gt;();
+    List&lt;Gap&gt; prevGaps;
+    CompletableFuture&lt;Void&gt; runningTask;
+    private long start;
+    private long stop;
+
+    public YamcsTmArchiveLink(YamcsLink parentLink) {
+        this.parentLink = parentLink;
+    }
+
+    @Override
+    public void init(String instance, String name, YConfiguration config) {
+        config = YamcsTmLink.swapConfig(config, "tmArchiveStream", "tmStream", "tm_dump");
+        super.init(instance, name, config);
+        this.retrievalDays = config.getInt("retrievalDays", 120);
+        // when retrieving archive indexes, merge all the gaps smaller than 300 seconds
+        this.mergeTime = config.getInt("mergeTime", 300) * 1000;
+
+        this.mergeTime = 1000;
+        this.gapFillingInterval = config.getInt("gapFillingInterval", 300);
+
+        log.debug("Archive retrieval for {} days", retrievalDays);
+    }
+
+    @Override
+    protected void doStart() {
+        if (!isEffectivelyDisabled()) {
+            doEnable();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void doDisable() {
+    }
+
+    @Override
+    public void doEnable() {
+        if (containers != null) {
+            scheduleDataRetrieval();
+        }
+    }
+
+    @Override
+    protected void doStop() {
+        if (!isDisabled()) {
+            doDisable();
+        }
+        notifyStopped();
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        return parentLink.connectionStatus();
+    }
+
+    @Override
+    public AggregatedDataLink getParent() {
+        return parentLink;
+    }
+
+    void scheduleDataRetrieval() {
+        parentLink.getExecutor().execute(this::retrieveGaps);
+    }
+
+    void retrieveGaps() {
+        if (connectionStatus() != Status.OK || isEffectivelyDisabled()) {
+            return;
+        }
+
+        if (runningTask != null &amp;&amp; !runningTask.isDone()) {
+            return;
+        }
+
+        if (queue.isEmpty()) {
+            if (runningTask != null) {
+                log.debug("Retrieval finished, looking for new gaps");
+                runningTask = null;
+            }
+            if (prevGaps == null) {
+                identifyGaps();
+            } else {
+                checkRemainingGaps();
+            }
+        }
+        if (queue.isEmpty()) {
+            return;
+        } else {
+            retrieveGap(queue.poll());
+        }
+    }
+
+    private void processPacketData(TmPacketData data) {
+        long rectime = timeService.getMissionTime();
+        byte[] pktData = data.getPacket().toByteArray();
+
+        TmPacket pkt = new TmPacket(rectime, pktData);
+        if (data.hasGenerationTime()) {
+            pkt.setGenerationTime(TimeEncoding.fromProtobufTimestamp(data.getGenerationTime()));
+        }
+        pkt.setSequenceCount(data.getSequenceNumber());
+
+        packetCount.incrementAndGet();
+        processPacket(pkt);
+    }
+
+    /**
+     * retrieves the TM index from upstream and compares it with the local
+     * 
+     * @return
+     */
+    void identifyGaps() {
+        start = timeService.getMissionTime() - 86400_000 * retrievalDays;
+        stop = timeService.getMissionTime();
+
+        TmGapFinder gapFinder = new TmGapFinder(yamcsInstance, parentLink, eventProducer, retrievalDays,
+                p -&gt; isPacketRequired(p));
+
+        var gaps = gapFinder.identifyGaps(start, stop);
+
+        if (gaps.size() == 0) {
+            log.debug("No gap identified.");
+            log.debug("Scheduling next gap filling in {} seconds", gapFillingInterval);
+            parentLink.getExecutor().schedule(this::retrieveGaps, gapFillingInterval, TimeUnit.SECONDS);
+            return;
+        }
+
+        Collections.sort(gaps);
+
+        prevGaps = gaps;
+        log.info("Identified {} gaps for the retrieval", gaps.size());
+        queue.addAll(gaps);
+    }
+
+    void checkRemainingGaps() {
+        TmGapFinder gapFinder = new TmGapFinder(yamcsInstance, parentLink, eventProducer, retrievalDays,
+                p -&gt; isPacketRequired(p));
+
+        var gaps = gapFinder.identifyGaps(start, stop);
+
+        for (Gap gap : gaps) {
+            if (Collections.binarySearch(prevGaps, gap) &gt;= 0) {
+                if (gap.stop &lt; stop) {
+                    log.warn("Gap {} still remains after replay", gap);
+                }
+            }
+        }
+
+        prevGaps = null;
+        log.debug("Scheduling next gap filling in {} seconds", gapFillingInterval);
+        parentLink.getExecutor().schedule(this::retrieveGaps, gapFillingInterval, TimeUnit.SECONDS);
+    }
+
+    void retrieveGap(Gap g) {
+        log.debug("Retrieving gap {}", g);
+        ArchiveClient arcClient = parentLink.getClient().createArchiveClient(parentLink.getUpstreamInstance());
+        java.time.Instant startj = java.time.Instant.ofEpochMilli(TimeEncoding.toUnixMillisec(g.start));
+
+        // the retrieval is exclusive on the right, so we increase the stop by one millisecond
+        java.time.Instant stopj = java.time.Instant.ofEpochMilli(TimeEncoding.toUnixMillisec(g.stop + 1));
+        StreamOption opt = StreamOptions.packets(containers.toArray(new String[0]));
+        runningTask = arcClient.streamPackets(pkt -&gt; processPacketData(pkt), startj, stopj, opt);
+        runningTask.whenComplete((v, t) -&gt; {
+            if (t != null) {
+                log.warn("Error in gap retrieval", t);
+            }
+            scheduleDataRetrieval();
+        });
+    }
+
+    private boolean isPacketRequired(String name) {
+        return containers.contains(name);
+    }
+
+    public void setContainers(List&lt;String&gt; containers) {
+        this.containers = containers;
+    }
+
+    static class Gap implements Comparable&lt;Gap&gt; {
+        long start;
+        long stop;
+
+        public Gap(long start, long stop) {
+            this.start = start;
+            this.stop = stop;
+        }
+
+        @Override
+        public int compareTo(Gap other) {
+            return Long.compare(start, other.start);
+        }
+
+        @Override
+        public String toString() {
+            return "[" + TimeEncoding.toString(start) + " - " + TimeEncoding.toString(stop) + "]";
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="yamcstmlink-java">
+<h2><code class="docutils literal notranslate"><span class="pre">YamcsTmLink.java</span></code><a class="headerlink" href="#yamcstmlink-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsTmLink.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.cascading;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.TmPacket;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.ContainerSubscription;
+import org.yamcs.client.MessageListener;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.protobuf.ContainerData;
+import org.yamcs.protobuf.SubscribeContainersRequest;
+import org.yamcs.tctm.AbstractTmDataLink;
+import org.yamcs.tctm.AggregatedDataLink;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * 
+ * Yamcs TM link - subscribes to realtime telemetry
+ *
+ */
+public class YamcsTmLink extends AbstractTmDataLink {
+    YamcsLink parentLink;
+
+    public void setContainers(List&lt;String&gt; containers) {
+        this.containers = containers;
+    }
+
+    List&lt;String&gt; containers;
+    ContainerSubscription subscription;
+
+    public YamcsTmLink(YamcsLink parentLink) {
+        this.parentLink = parentLink;
+    }
+
+    public void init(String instance, String name, YConfiguration config) {
+        config = swapConfig(config, "tmRealtimeStream", "tmStream", "tm_realtime");
+        super.init(instance, name, config);
+    }
+
+    // a little bit of a hack: because we use only one config for the parent,
+    // we generate a new one for the sublink with the name tmRealtimeStream/tmArchiveStream changed to tmStream
+    // depending on which link it is
+    static YConfiguration swapConfig(YConfiguration config, String oldKey, String newKey, String defaultValue) {
+        Map&lt;String, Object&gt; root = new HashMap&lt;&gt;(config.getRoot());
+        String value = (String) root.remove(oldKey);
+        if (value == null) {
+            value = defaultValue;
+        }
+
+        root.put(newKey, value);
+        return YConfiguration.wrap(root);
+    }
+
+    @Override
+    protected void doStart() {
+        if (!isEffectivelyDisabled()) {
+            doEnable();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void doDisable() {
+        if (subscription != null) {
+            subscription.cancel(true);
+            subscription = null;
+        }
+    }
+
+    @Override
+    public void doEnable() {
+        if (subscription != null &amp;&amp; !subscription.isDone()) {
+            return;
+        }
+
+        if (containers != null) {
+            subscribeContainers();
+        }
+    }
+
+    void subscribeContainers() {
+        YamcsClient yclient = parentLink.getClient();
+
+        subscription = yclient.createContainerSubscription();
+        subscription.addMessageListener(new MessageListener&lt;ContainerData&gt;() {
+            @Override
+            public void onMessage(ContainerData data) {
+                processContainerData(data);
+            }
+
+            public void onError(Throwable t) {
+                if (t instanceof ClientException) {
+                    eventProducer.sendWarning("Got error when subscribing to containers: " + t.getMessage());
+                } else {
+                    log.warn("Got error when subscribing to containers: " + t.getMessage());
+                }
+            }
+        });
+
+        subscription.sendMessage(SubscribeContainersRequest.newBuilder()
+                .setInstance(parentLink.getUpstreamInstance())
+                .setProcessor(parentLink.getUpstreamProcessor())
+                .addAllNames(containers).build());
+
+    }
+
+    private void processContainerData(ContainerData data) {
+        long rectime = timeService.getMissionTime();
+        byte[] pktData = data.getBinary().toByteArray();
+
+        TmPacket pkt = new TmPacket(rectime, pktData);
+        if (data.hasGenerationTime()) {
+            pkt.setGenerationTime(TimeEncoding.fromProtobufTimestamp(data.getGenerationTime()));
+        }
+        pkt.setSequenceCount(data.getSeqCount());
+        packetCount.incrementAndGet();
+        processPacket(pkt);
+    }
+
+    @Override
+    protected void doStop() {
+        if (!isDisabled()) {
+            doDisable();
+        }
+        notifyStopped();
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        Status parentStatus = parentLink.connectionStatus();
+        if (parentStatus == Status.OK) {
+            boolean ok = subscription != null &amp;&amp; !subscription.isDone();
+            return ok ? Status.OK : Status.UNAVAIL;
+        } else {
+            return parentStatus;
+        }
+    }
+
+    @Override
+    public AggregatedDataLink getParent() {
+        return parentLink;
+    }
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../buckets/index.html" class="btn btn-neutral float-left" title="buckets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../cfdp/index.html" class="btn btn-neutral float-right" title="cfdp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

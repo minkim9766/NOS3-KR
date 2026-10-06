@@ -1,0 +1,2895 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mdb &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../search.html" />
+    <link rel="next" title="tests" href="../../../../tests/index.html" />
+    <link rel="prev" title="etc" href="../etc/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../index.html">gsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">gsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">examples</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">pus</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">main</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">yamcs</a></li>
+      <li class="breadcrumb-item active">mdb</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../_sources/project_inventory/gsw/yamcs/examples/pus/src/main/yamcs/mdb/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="mdb">
+<h1>mdb<a class="headerlink" href="#mdb" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/examples/pus/src/main/yamcs/mdb/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="dt-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">dt.xml</span></code><a class="headerlink" href="#dt-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/examples/pus/src/main/yamcs/mdb/dt.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!-- we create these types at the root level so we can refer to them from all the subsystems --&gt;
+&lt;SpaceSystem name="dt" xmlns="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd"&gt;
+	&lt;Header validationStatus="Unknown" version="1.0" date="2020-07-01T16:48:10Z" /&gt;
+	&lt;TelemetryMetaData&gt;
+		&lt;ParameterTypeSet&gt;
+			&lt;IntegerParameterType signed="false" name="uint4"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="4" /&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;IntegerParameterType signed="false" name="uint5"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="5" /&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;IntegerParameterType signed="false" name="uint8"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="8" /&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;IntegerParameterType signed="false" name="uint11"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="11" /&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;IntegerParameterType signed="false" name="uint12"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="12" /&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;IntegerParameterType signed="false" name="uint14"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="14" /&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;IntegerParameterType signed="false" name="uint16"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="16" /&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;IntegerParameterType signed="false" name="uint24"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="24" /&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;IntegerParameterType signed="false" name="uint32"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="32" /&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;IntegerParameterType signed="false" name="uint64" sizeInBits="64"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="64" /&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;FloatParameterType sizeInBits="32" name="float32"&gt;
+				&lt;FloatDataEncoding encoding="IEEE754_1985" sizeInBits="32" /&gt;
+			&lt;/FloatParameterType&gt;
+			&lt;StringParameterType name="prepended_string"&gt;
+				 &lt;StringDataEncoding encoding="UTF-8"&gt;
+        			&lt;Variable maxSizeInBits="16000"&gt;
+            			&lt;DynamicValue&gt;
+                			&lt;ParameterInstanceRef parameterRef="_yamcs_ignore" /&gt;
+            			&lt;/DynamicValue&gt;
+           	 			&lt;LeadingSize sizeInBitsOfSizeTag="16" /&gt;
+        			&lt;/Variable&gt;
+    			&lt;/StringDataEncoding&gt;
+			&lt;/StringParameterType&gt;
+		&lt;/ParameterTypeSet&gt;
+	&lt;/TelemetryMetaData&gt;
+	&lt;CommandMetaData&gt;
+		&lt;ArgumentTypeSet&gt;
+			&lt;IntegerArgumentType name="uint4" signed="false"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="4" /&gt;
+			&lt;/IntegerArgumentType&gt;
+			&lt;IntegerArgumentType name="uint8" signed="false"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="8" /&gt;
+			&lt;/IntegerArgumentType&gt;
+			&lt;IntegerArgumentType name="uint11" signed="false"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="11" /&gt;
+			&lt;/IntegerArgumentType&gt;
+			&lt;IntegerArgumentType name="uint16" signed="false"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="16" /&gt;
+			&lt;/IntegerArgumentType&gt;
+			&lt;IntegerArgumentType name="uint32" signed="false"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="32" /&gt;
+			&lt;/IntegerArgumentType&gt;
+		&lt;/ArgumentTypeSet&gt;
+	&lt;/CommandMetaData&gt;
+&lt;/SpaceSystem&gt;
+</pre></div>
+</div>
+</section>
+<section id="landing-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">landing.xml</span></code><a class="headerlink" href="#landing-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/examples/pus/src/main/yamcs/mdb/landing.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;SpaceSystem name="SIMULATOR"&gt;
+	&lt;Header validationStatus="Unknown" version="1.2" date="2020-11-26T03:11:27Z"&gt;
+	&lt;/Header&gt;
+	&lt;TelemetryMetaData&gt;
+		&lt;ParameterTypeSet&gt;
+			&lt;FloatParameterType sizeInBits="32" name="engfloat32_Tank_avg_press"&gt;
+				&lt;DefaultAlarm&gt;
+					&lt;StaticAlarmRanges&gt;
+						&lt;WarningRange minInclusive="100.0" maxInclusive="300.0" /&gt;
+					&lt;/StaticAlarmRanges&gt;
+				&lt;/DefaultAlarm&gt;
+			&lt;/FloatParameterType&gt;
+			&lt;IntegerParameterType name="uint8A" baseType="/dt/uint8"&gt;
+				&lt;UnitSet&gt;
+					&lt;Unit&gt;A&lt;/Unit&gt;
+				&lt;/UnitSet&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;IntegerParameterType signed="false" name="BatteryVoltage2_BatteryVoltage2_BatteryVoltage2_BatteryVoltage2_BatteryVoltage2_BatteryVoltage2"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="8"&gt;
+					&lt;DefaultCalibrator&gt;
+						&lt;PolynomialCalibrator&gt;
+							&lt;Term exponent="0" coefficient="1.0" /&gt;
+							&lt;Term exponent="1" coefficient="2.0" /&gt;
+						&lt;/PolynomialCalibrator&gt;
+					&lt;/DefaultCalibrator&gt;
+				&lt;/IntegerDataEncoding&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;IntegerParameterType signed="false" name="uint8C"&gt;
+				&lt;UnitSet&gt;
+					&lt;Unit&gt;C&lt;/Unit&gt;
+				&lt;/UnitSet&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="8" /&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;IntegerParameterType signed="false" name="BatteryVoltage2_BatteryVoltage2"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="8"&gt;
+					&lt;DefaultCalibrator&gt;
+						&lt;PolynomialCalibrator&gt;
+							&lt;Term exponent="0" coefficient="1.0" /&gt;
+							&lt;Term exponent="1" coefficient="2.0" /&gt;
+						&lt;/PolynomialCalibrator&gt;
+					&lt;/DefaultCalibrator&gt;
+				&lt;/IntegerDataEncoding&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;FloatParameterType sizeInBits="32" name="engfloat32" /&gt;
+			&lt;FloatParameterType sizeInBits="32" name="uint16P"&gt;
+				&lt;UnitSet&gt;
+					&lt;Unit&gt;%&lt;/Unit&gt;
+				&lt;/UnitSet&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="16"&gt;
+					&lt;DefaultCalibrator&gt;
+						&lt;PolynomialCalibrator&gt;
+							&lt;Term exponent="0" coefficient="0.0" /&gt;
+							&lt;Term exponent="1" coefficient="0.2" /&gt;
+						&lt;/PolynomialCalibrator&gt;
+					&lt;/DefaultCalibrator&gt;
+				&lt;/IntegerDataEncoding&gt;
+			&lt;/FloatParameterType&gt;
+			&lt;IntegerParameterType name="uint8V" baseType="/dt/uint8"&gt;
+				&lt;UnitSet&gt;
+					&lt;Unit&gt;V&lt;/Unit&gt;
+				&lt;/UnitSet&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;FloatParameterType signed="false" name="BatteryVoltage2_BatteryVoltage2_BatteryVoltage2"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="8"&gt;
+					&lt;DefaultCalibrator&gt;
+						&lt;PolynomialCalibrator&gt;
+							&lt;Term exponent="0" coefficient="1.0" /&gt;
+							&lt;Term exponent="1" coefficient="2.0" /&gt;
+						&lt;/PolynomialCalibrator&gt;
+					&lt;/DefaultCalibrator&gt;
+				&lt;/IntegerDataEncoding&gt;
+			&lt;/FloatParameterType&gt;
+			&lt;FloatParameterType sizeInBits="32" name="double"&gt;
+				&lt;FloatDataEncoding encoding="IEEE754_1985" sizeInBits="64" /&gt;
+			&lt;/FloatParameterType&gt;
+			&lt;BooleanParameterType oneStringValue="True" zeroStringValue="False" name="engbool" /&gt;
+			&lt;IntegerParameterType signed="false" name="BatteryVoltage2"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="8"&gt;
+					&lt;DefaultCalibrator&gt;
+						&lt;PolynomialCalibrator&gt;
+							&lt;Term exponent="0" coefficient="1.0" /&gt;
+							&lt;Term exponent="1" coefficient="2.0" /&gt;
+						&lt;/PolynomialCalibrator&gt;
+					&lt;/DefaultCalibrator&gt;
+				&lt;/IntegerDataEncoding&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;StringParameterType name="C_string"&gt;
+				&lt;StringDataEncoding&gt;
+					&lt;SizeInBits&gt;
+						&lt;TerminationChar&gt;0&lt;/TerminationChar&gt;
+					&lt;/SizeInBits&gt;
+				&lt;/StringDataEncoding&gt;
+			&lt;/StringParameterType&gt;
+			&lt;AggregateParameterType name="position"&gt;
+				&lt;MemberList&gt;
+					&lt;Member name="longitude" typeRef="/dt/float32" /&gt;
+					&lt;Member name="latitude" typeRef="/dt/float32" /&gt;
+					&lt;Member name="altitude" typeRef="/dt/float32" /&gt;
+				&lt;/MemberList&gt;
+			&lt;/AggregateParameterType&gt;
+			&lt;IntegerParameterType signed="false" name="BatteryVoltage2_BatteryVoltage2_BatteryVoltage2_BatteryVoltage2"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="8"&gt;
+					&lt;DefaultCalibrator&gt;
+						&lt;PolynomialCalibrator&gt;
+							&lt;Term exponent="0" coefficient="1.0" /&gt;
+							&lt;Term exponent="1" coefficient="2.0" /&gt;
+						&lt;/PolynomialCalibrator&gt;
+					&lt;/DefaultCalibrator&gt;
+				&lt;/IntegerDataEncoding&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;FloatParameterType sizeInBits="32" name="engfloat32_Tank_avg_press_Tank_avg_press_Tank_avg_press"&gt;
+				&lt;DefaultAlarm&gt;
+					&lt;StaticAlarmRanges&gt;
+						&lt;WarningRange minInclusive="100.0" maxInclusive="300.0" /&gt;
+					&lt;/StaticAlarmRanges&gt;
+				&lt;/DefaultAlarm&gt;
+			&lt;/FloatParameterType&gt;
+			&lt;IntegerParameterType signed="false" name="BatteryVoltage2_BatteryVoltage2_BatteryVoltage2_BatteryVoltage2_BatteryVoltage2"&gt;
+				&lt;IntegerDataEncoding encoding="unsigned" sizeInBits="8"&gt;
+					&lt;DefaultCalibrator&gt;
+						&lt;PolynomialCalibrator&gt;
+							&lt;Term exponent="0" coefficient="1.0" /&gt;
+							&lt;Term exponent="1" coefficient="2.0" /&gt;
+						&lt;/PolynomialCalibrator&gt;
+					&lt;/DefaultCalibrator&gt;
+				&lt;/IntegerDataEncoding&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;FloatParameterType sizeInBits="32" name="engfloat32_Tank_avg_press_Tank_avg_press"&gt;
+				&lt;DefaultAlarm&gt;
+					&lt;StaticAlarmRanges&gt;
+						&lt;WarningRange minInclusive="100.0" maxInclusive="300.0" /&gt;
+					&lt;/StaticAlarmRanges&gt;
+				&lt;/DefaultAlarm&gt;
+			&lt;/FloatParameterType&gt;
+		&lt;/ParameterTypeSet&gt;
+		&lt;ParameterSet&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="ElapsedTime" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="Longitude" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="Latitude" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="Altitude" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="Heading" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="Alpha" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="Beta" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="TAS" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="CAS" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="Mach_Number" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="Load_factor" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="SinkRate" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="Phi" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="Theta" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="Psi" /&gt;
+			&lt;Parameter parameterTypeRef="position" name="Position" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="BusStatus" /&gt;
+			&lt;Parameter parameterTypeRef="uint8V" name="BusVoltage" /&gt;
+			&lt;Parameter parameterTypeRef="uint8A" name="BusCurrent" /&gt;
+			&lt;Parameter parameterTypeRef="uint8A" name="TotalSystemCurrent" /&gt;
+			&lt;Parameter parameterTypeRef="uint8V" name="BatteryVoltage1" /&gt;
+			&lt;Parameter parameterTypeRef="uint8C" name="BatteryTemperature1" /&gt;
+			&lt;Parameter parameterTypeRef="uint16P" name="BatteryCapacity1" /&gt;
+			&lt;Parameter parameterTypeRef="BatteryVoltage2_BatteryVoltage2_BatteryVoltage2_BatteryVoltage2_BatteryVoltage2_BatteryVoltage2" name="BatteryVoltage2"&gt;
+				&lt;AliasSet&gt;
+					&lt;Alias nameSpace="MDB:OPS Name" alias="SIMULATOR_BatteryVoltage2" /&gt;
+				&lt;/AliasSet&gt;
+			&lt;/Parameter&gt;
+			&lt;Parameter parameterTypeRef="uint8C" name="BatteryTemperature2" /&gt;
+			&lt;Parameter parameterTypeRef="uint16P" name="BatteryCapacity2" /&gt;
+			&lt;Parameter parameterTypeRef="uint8V" name="BatteryVoltage3" /&gt;
+			&lt;Parameter parameterTypeRef="uint8C" name="BatteryTemperature3" /&gt;
+			&lt;Parameter parameterTypeRef="uint16P" name="BatteryCapacity3" /&gt;
+			&lt;Parameter parameterTypeRef="uint8V" name="PrimBusVoltage1"&gt;
+				&lt;AliasSet&gt;
+					&lt;Alias nameSpace="MDB:OPS Name" alias="SIMULATOR_PrimBusVoltage1" /&gt;
+				&lt;/AliasSet&gt;
+			&lt;/Parameter&gt;
+			&lt;Parameter parameterTypeRef="uint8A" name="PrimBusCurrent1" /&gt;
+			&lt;Parameter parameterTypeRef="uint8V" name="PrimBusVoltage2" /&gt;
+			&lt;Parameter parameterTypeRef="uint8A" name="PrimBusCurrent2" /&gt;
+			&lt;Parameter parameterTypeRef="uint8V" name="SecBusVoltage2" /&gt;
+			&lt;Parameter parameterTypeRef="uint8A" name="SecBusCurrent2" /&gt;
+			&lt;Parameter parameterTypeRef="uint8V" name="SecBusVoltage3" /&gt;
+			&lt;Parameter parameterTypeRef="uint8A" name="SecBusCurrent3" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="MemoryRate" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="H2TankFill" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="O2TankFill" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint16" name="H2TankTemp" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint16" name="O2TankTemp" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="H2TankPressure" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="O2TankPressure" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint16" name="H2ValveTemp" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint16" name="O2ValveTemp" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="H2ValvePressure" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="O2ValvePressure" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint16" name="TurbineTemp" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint16" name="TurbinePressure" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="LVPDUStatus" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="LVPDUVoltage" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="WhichBatteryExecuted" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="WhichBatteryCommanded" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="CommandReceived" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="CommandExecuted" /&gt;
+			&lt;Parameter parameterTypeRef="C_string" name="AvailableRecordingNames" /&gt;
+			&lt;Parameter parameterTypeRef="C_string" name="TransmittedRecordingName" /&gt;
+			&lt;Parameter parameterTypeRef="C_string" name="DeletedRecordingName" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint32" name="avc_command_id" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint32" name="avc_command_seq" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="avc_command_execution_stage" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="avc_command_result" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint16" name="tm2_size" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint64" name="tm2_timestamp" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint32" name="tm2_seq" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint32" name="tm2_uint" /&gt;
+			&lt;Parameter parameterTypeRef="double" name="tm2_double" /&gt;
+			&lt;Parameter parameterTypeRef="engfloat32_Tank_avg_press_Tank_avg_press_Tank_avg_press" name="Tank_avg_press"&gt;
+				&lt;ParameterProperties dataSource="derived" /&gt;
+			&lt;/Parameter&gt;
+			&lt;Parameter parameterTypeRef="engfloat32" name="battery_voltage_avg"&gt;
+				&lt;ParameterProperties dataSource="derived" /&gt;
+			&lt;/Parameter&gt;
+			&lt;Parameter parameterTypeRef="engbool" initialValue="True" name="AllowCriticalTC1"&gt;
+				&lt;ParameterProperties dataSource="local" /&gt;
+			&lt;/Parameter&gt;
+			&lt;Parameter parameterTypeRef="engbool" initialValue="False" name="AllowCriticalTC2"&gt;
+				&lt;ParameterProperties dataSource="local" /&gt;
+			&lt;/Parameter&gt;
+		&lt;/ParameterSet&gt;
+		&lt;ContainerSet&gt;
+			&lt;SequenceContainer name="FlightData"&gt;
+				&lt;AncillaryDataSet&gt;
+					&lt;AncillaryData name="Yamcs" mimeType="text/plain"&gt;UseAsArchivingPartition&lt;/AncillaryData&gt;
+				&lt;/AncillaryDataSet&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="ElapsedTime"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;128&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="Longitude"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;160&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="Latitude"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;192&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="Altitude"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;224&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="Position"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;160&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="Heading"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;256&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="Alpha"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;288&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="Beta"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;320&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="TAS"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;352&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="CAS"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;384&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="Mach_Number"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;416&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="Load_factor"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;448&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="SinkRate"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;480&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="Phi"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;512&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="Theta"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;544&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="Psi"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;576&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="/PUS/hk25"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;ComparisonList&gt;
+							&lt;Comparison parameterRef="/PUS/hkid" value="0" /&gt;
+						&lt;/ComparisonList&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="Power"&gt;
+				&lt;AncillaryDataSet&gt;
+					&lt;AncillaryData name="Yamcs" mimeType="text/plain"&gt;UseAsArchivingPartition&lt;/AncillaryData&gt;
+				&lt;/AncillaryDataSet&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="BusStatus"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;128&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="BusVoltage"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;136&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="BusCurrent"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;144&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="TotalSystemCurrent"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;152&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="BatteryVoltage1"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;160&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="BatteryTemperature1"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;168&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="BatteryCapacity1"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;176&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="BatteryVoltage2"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;192&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="BatteryTemperature2"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;200&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="BatteryCapacity2"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;208&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="BatteryVoltage3"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;224&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="BatteryTemperature3"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;232&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="BatteryCapacity3"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;240&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="../PUS/hk25"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;ComparisonList&gt;
+							&lt;Comparison parameterRef="../PUS/hkid" value="1" /&gt;
+						&lt;/ComparisonList&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="DHS"&gt;
+				&lt;AncillaryDataSet&gt;
+					&lt;AncillaryData name="Yamcs" mimeType="text/plain"&gt;UseAsArchivingPartition&lt;/AncillaryData&gt;
+				&lt;/AncillaryDataSet&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="PrimBusVoltage1"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;128&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="PrimBusCurrent1"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;136&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="PrimBusVoltage2"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;144&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="PrimBusCurrent2"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;152&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="SecBusVoltage2"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;160&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="SecBusCurrent2"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;168&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="SecBusVoltage3"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;176&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="SecBusCurrent3"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;184&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="MemoryRate"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;192&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="../PUS/hk25"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;ComparisonList&gt;
+							&lt;Comparison parameterRef="../PUS/hkid" value="2" /&gt;
+						&lt;/ComparisonList&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="RCS"&gt;
+				&lt;AncillaryDataSet&gt;
+					&lt;AncillaryData name="Yamcs" mimeType="text/plain"&gt;UseAsArchivingPartition&lt;/AncillaryData&gt;
+				&lt;/AncillaryDataSet&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="H2TankFill" /&gt;
+					&lt;ParameterRefEntry parameterRef="O2TankFill" /&gt;
+					&lt;ParameterRefEntry parameterRef="H2TankTemp" /&gt;
+					&lt;ParameterRefEntry parameterRef="O2TankTemp" /&gt;
+					&lt;ParameterRefEntry parameterRef="H2TankPressure" /&gt;
+					&lt;ParameterRefEntry parameterRef="O2TankPressure" /&gt;
+					&lt;ParameterRefEntry parameterRef="H2ValveTemp" /&gt;
+					&lt;ParameterRefEntry parameterRef="O2ValveTemp" /&gt;
+					&lt;ParameterRefEntry parameterRef="H2ValvePressure" /&gt;
+					&lt;ParameterRefEntry parameterRef="O2ValvePressure" /&gt;
+					&lt;ParameterRefEntry parameterRef="TurbineTemp" /&gt;
+					&lt;ParameterRefEntry parameterRef="TurbinePressure" /&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="../PUS/hk25"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;ComparisonList&gt;
+							&lt;Comparison parameterRef="../PUS/hkid" value="3" /&gt;
+						&lt;/ComparisonList&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="EPS"&gt;
+				&lt;AncillaryDataSet&gt;
+					&lt;AncillaryData name="Yamcs" mimeType="text/plain"&gt;UseAsArchivingPartition&lt;/AncillaryData&gt;
+				&lt;/AncillaryDataSet&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="LVPDUStatus"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;128&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="LVPDUVoltage"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;136&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="../PUS/hk25"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;ComparisonList&gt;
+							&lt;Comparison parameterRef="../PUS/hkid" value="4" /&gt;
+						&lt;/ComparisonList&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+		&lt;/ContainerSet&gt;
+	&lt;/TelemetryMetaData&gt;
+	&lt;CommandMetaData&gt;
+		&lt;ArgumentTypeSet&gt;
+			&lt;EnumeratedArgumentType name="voltage_num_enum" baseType="/dt/uint8"&gt;
+				&lt;EnumerationList&gt;
+					&lt;Enumeration label="PRIMARY" value="1" /&gt;
+					&lt;Enumeration label="SECONDARY" value="2" /&gt;
+					&lt;Enumeration label="BACKUP" value="3" /&gt;
+				&lt;/EnumerationList&gt;
+			&lt;/EnumeratedArgumentType&gt;
+			&lt;IntegerArgumentType name="voltage_num_uint8" baseType="/dt/uint8"&gt;
+			&lt;!--  we allow here up to 4 to be able to send a negative start from the simulator --&gt;
+				&lt;ValidRange minInclusive="1" maxInclusive="4" validRangeAppliesToCalibrated="false" /&gt;
+			&lt;/IntegerArgumentType&gt;
+		&lt;/ArgumentTypeSet&gt;
+		&lt;MetaCommandSet&gt;
+			&lt;MetaCommand name="sim-tc" abstract="true"&gt;
+				&lt;BaseMetaCommand metaCommandRef="/PUS/pus-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="apid" argumentValue="1" /&gt;
+						&lt;ArgumentAssignment argumentName="type" argumentValue="25" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;CommandContainer name="sim-tc"&gt;
+					&lt;BaseContainer containerRef="/PUS/pus-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			&lt;MetaCommand name="SWITCH_VOLTAGE_ON_ENUM"&gt;
+				&lt;BaseMetaCommand metaCommandRef="sim-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="1" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="voltage_num_enum" name="voltage_num" shortDescription="voltage number to switch on" /&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="SWITCH_VOLTAGE_ON_ENUM"&gt;
+					&lt;EntryList&gt;
+						&lt;ArgumentRefEntry argumentRef="voltage_num" /&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="sim-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			&lt;MetaCommand name="SWITCH_VOLTAGE_ON"&gt;
+				&lt;BaseMetaCommand metaCommandRef="sim-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="1" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="voltage_num_uint8" name="voltage_num" shortDescription="voltage number to switch on" /&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="SWITCH_VOLTAGE_ON"&gt;
+					&lt;EntryList&gt;
+						&lt;ArgumentRefEntry argumentRef="voltage_num" /&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="sim-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			&lt;MetaCommand name="SWITCH_VOLTAGE_OFF"&gt;
+				&lt;BaseMetaCommand metaCommandRef="sim-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="2" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="voltage_num_uint8" name="voltage_num" shortDescription="voltage number to switch off" /&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="SWITCH_VOLTAGE_OFF"&gt;
+					&lt;EntryList&gt;
+						&lt;ArgumentRefEntry argumentRef="voltage_num" /&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="sim-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+		&lt;/MetaCommandSet&gt;
+	&lt;/CommandMetaData&gt;
+	--&gt;
+&lt;/SpaceSystem&gt;
+</pre></div>
+</div>
+</section>
+<section id="pus-xtce-verif-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">pus-xtce-verif.xml</span></code><a class="headerlink" href="#pus-xtce-verif-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/examples/pus/src/main/yamcs/mdb/pus-xtce-verif.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;SpaceSystem name="PUS" xmlns="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd"&gt;
+	&lt;Header validationStatus="Unknown" version="1.0" date="2020-07-01T16:48:10Z" /&gt;
+	&lt;TelemetryMetaData&gt;
+		&lt;ParameterTypeSet&gt;
+			&lt;EnumeratedParameterType name="start-failure-code"&gt;
+				&lt;IntegerDataEncoding sizeInBits="32" /&gt;
+				&lt;EnumerationList&gt;
+					&lt;Enumeration label="INVALID_VOLTAGE_NUM" value="1" /&gt;
+				&lt;/EnumerationList&gt;
+			&lt;/EnumeratedParameterType&gt;
+			&lt;EnumeratedParameterType name="completion-failure-code"&gt;
+				&lt;IntegerDataEncoding sizeInBits="32" /&gt;
+				&lt;EnumerationList&gt;
+					&lt;Enumeration label="COMPLETION_ERROR_0" value="0" /&gt;
+					&lt;Enumeration label="COMPLETION_ERROR_1" value="1" /&gt;
+					&lt;Enumeration label="COMPLETION_ERROR_2" value="2" /&gt;
+					&lt;Enumeration label="COMPLETION_ERROR_3" value="3" /&gt;
+				&lt;/EnumerationList&gt;
+			&lt;/EnumeratedParameterType&gt;
+
+		&lt;/ParameterTypeSet&gt;
+		&lt;ParameterSet&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint11" name="apid" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint14" name="seqcount" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="type" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="subtype" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint16" name="counter" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint16" name="destination" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="time-rate" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="time-type" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint32" name="obt-coarse" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint24" name="obt-fine" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint32" name="hkid" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint11" name="tc-ack-apid" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint14" name="tc-ack-seq" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint32" name="tc-ack-acceptance-failure-code" /&gt;
+			&lt;Parameter parameterTypeRef="start-failure-code" name="tc-ack-start-failure-code" /&gt;
+			&lt;Parameter parameterTypeRef="completion-failure-code" name="tc-ack-completion-failure-code" /&gt;
+		&lt;/ParameterSet&gt;
+		&lt;ContainerSet&gt;
+			&lt;SequenceContainer name="ccsds"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="apid"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;5&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="seqcount"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;18&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+				&lt;/EntryList&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="pus-time"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="time-rate"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;48&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="time-type" /&gt;
+					&lt;ParameterRefEntry parameterRef="obt-coarse" /&gt;
+					&lt;ParameterRefEntry parameterRef="obt-fine" /&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="ccsds"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;Comparison parameterRef="apid" comparisonOperator="==" value="0" /&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="pus-tm"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="type"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;56&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="subtype" /&gt;
+					&lt;ParameterRefEntry parameterRef="counter" /&gt;
+					&lt;ParameterRefEntry parameterRef="destination" /&gt;
+					&lt;ParameterRefEntry parameterRef="time-type" /&gt;
+					&lt;ParameterRefEntry parameterRef="obt-coarse" /&gt;
+					&lt;ParameterRefEntry parameterRef="obt-fine" /&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="ccsds"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;Comparison parameterRef="apid" comparisonOperator="!=" value="0" /&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+
+			&lt;SequenceContainer name="pus-tc-ack"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="tc-ack-apid"&gt;
+						&lt;LocationInContainerInBits&gt;
+							&lt;FixedValue&gt;5&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="tc-ack-seq"&gt;
+						&lt;LocationInContainerInBits&gt;
+							&lt;FixedValue&gt;2&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="pus-tm"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;ComparisonList&gt;
+							&lt;Comparison parameterRef="type" comparisonOperator="==" value="1" /&gt;
+						&lt;/ComparisonList&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="pus-tc-ack-acceptance-failure"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="tc-ack-acceptance-failure-code" /&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="pus-tc-ack"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;ComparisonList&gt;
+							&lt;Comparison parameterRef="subtype" comparisonOperator="==" value="2" /&gt;
+						&lt;/ComparisonList&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="pus-tc-ack-start-failure"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="tc-ack-start-failure-code" /&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="pus-tc-ack"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;ComparisonList&gt;
+							&lt;Comparison parameterRef="subtype" comparisonOperator="==" value="4" /&gt;
+						&lt;/ComparisonList&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="pus-tc-ack-completion-failure"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="tc-ack-completion-failure-code" /&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="pus-tc-ack"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;ComparisonList&gt;
+							&lt;Comparison parameterRef="subtype" comparisonOperator="==" value="8" /&gt;
+						&lt;/ComparisonList&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="hk"&gt;
+				&lt;EntryList&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="pus-tm"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;Comparison parameterRef="type" comparisonOperator="==" value="3" /&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="hk25"&gt;
+				&lt;AncillaryDataSet&gt;
+					&lt;AncillaryData name="Yamcs" mimeType="text/plain"&gt;UseAsArchivingPartition&lt;/AncillaryData&gt;
+				&lt;/AncillaryDataSet&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="hkid" /&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="hk"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;Comparison parameterRef="subtype" comparisonOperator="==" value="25" /&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+		&lt;/ContainerSet&gt;
+	&lt;/TelemetryMetaData&gt;
+	&lt;CommandMetaData&gt;
+		&lt;MetaCommandSet&gt;
+			&lt;MetaCommand name="pus-tc" abstract="true" shortDescription="Super-container for all PUS telecommand packets"&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="/dt/uint11" name="apid" /&gt;
+					&lt;Argument argumentTypeRef="/dt/uint4" name="ackflags" initialValue="7" /&gt;
+					&lt;Argument argumentTypeRef="/dt/uint8" name="type" /&gt;
+					&lt;Argument argumentTypeRef="/dt/uint8" name="subtype" /&gt;
+					&lt;Argument argumentTypeRef="/dt/uint16" name="source" initialValue="0" /&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="pus-tc"&gt;
+					&lt;EntryList&gt;
+						&lt;FixedValueEntry name="ccsds-vesion" binaryValue="00" sizeInBits="3" /&gt;
+						&lt;FixedValueEntry name="ccsds-tctm" binaryValue="01" sizeInBits="1" /&gt;
+						&lt;FixedValueEntry name="ccsds-2ndheader" binaryValue="01" sizeInBits="1" /&gt;
+						&lt;ArgumentRefEntry argumentRef="apid" /&gt;
+						&lt;FixedValueEntry name="ccsds-seqFlags" binaryValue="03" sizeInBits="2" /&gt;
+						&lt;FixedValueEntry name="ccsds-seq" binaryValue="0000" sizeInBits="14" /&gt;
+						&lt;FixedValueEntry name="ccsds-length" binaryValue="0000" sizeInBits="16" /&gt;
+						&lt;FixedValueEntry name="pus-version" binaryValue="02" sizeInBits="4" /&gt;
+						&lt;ArgumentRefEntry argumentRef="ackflags" /&gt;
+						&lt;ArgumentRefEntry argumentRef="type" /&gt;
+						&lt;ArgumentRefEntry argumentRef="subtype" /&gt;
+						&lt;ArgumentRefEntry argumentRef="source" /&gt;
+					&lt;/EntryList&gt;
+				&lt;/CommandContainer&gt;
+				&lt;VerifierSet&gt;
+					&lt;ReceivedVerifier name="Accepted"&gt;
+						&lt;BooleanExpression&gt;
+							&lt;ANDedConditions&gt;
+								&lt;Condition&gt;
+									&lt;ParameterInstanceRef parameterRef="/yamcs/cmd/arg/apid" /&gt;
+									&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+									&lt;ParameterInstanceRef parameterRef="tc-ack-apid" /&gt;
+								&lt;/Condition&gt;
+								&lt;Condition&gt;
+									&lt;ParameterInstanceRef parameterRef="/yamcs/cmdHist/ccsds-seqcount" /&gt;
+									&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+									&lt;ParameterInstanceRef parameterRef="tc-ack-seq" /&gt;
+								&lt;/Condition&gt;
+								&lt;Condition&gt;
+									&lt;ParameterInstanceRef parameterRef="type" /&gt;
+									&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+									&lt;Value&gt;1&lt;/Value&gt;
+								&lt;/Condition&gt;
+								&lt;Condition&gt;
+									&lt;ParameterInstanceRef parameterRef="subtype" /&gt;
+									&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+									&lt;Value&gt;1&lt;/Value&gt;
+								&lt;/Condition&gt;
+							&lt;/ANDedConditions&gt;
+						&lt;/BooleanExpression&gt;
+						&lt;CheckWindow timeToStopChecking="PT5S" /&gt;
+					&lt;/ReceivedVerifier&gt;
+					&lt;ExecutionVerifier name="Started"&gt;
+						&lt;BooleanExpression&gt;
+							&lt;ANDedConditions&gt;
+								&lt;Condition&gt;
+									&lt;ParameterInstanceRef parameterRef="/yamcs/cmd/arg/apid" /&gt;
+									&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+									&lt;ParameterInstanceRef parameterRef="tc-ack-apid" /&gt;
+								&lt;/Condition&gt;
+								&lt;Condition&gt;
+									&lt;ParameterInstanceRef parameterRef="/yamcs/cmdHist/ccsds-seqcount" /&gt;
+									&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+									&lt;ParameterInstanceRef parameterRef="tc-ack-seq" /&gt;
+								&lt;/Condition&gt;
+								&lt;Condition&gt;
+									&lt;ParameterInstanceRef parameterRef="type" /&gt;
+									&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+									&lt;Value&gt;1&lt;/Value&gt;
+								&lt;/Condition&gt;
+								&lt;Condition&gt;
+									&lt;ParameterInstanceRef parameterRef="subtype" /&gt;
+									&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+									&lt;Value&gt;3&lt;/Value&gt;
+								&lt;/Condition&gt;
+							&lt;/ANDedConditions&gt;
+						&lt;/BooleanExpression&gt;
+						&lt;CheckWindow timeToStopChecking="PT5S" timeWindowIsRelativeTo="commandRelease" /&gt;
+					&lt;/ExecutionVerifier&gt;
+					&lt;CompleteVerifier name="Complete"&gt;
+						&lt;BooleanExpression&gt;
+							&lt;ANDedConditions&gt;
+								&lt;Condition&gt;
+									&lt;ParameterInstanceRef parameterRef="/yamcs/cmd/arg/apid" /&gt;
+									&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+									&lt;ParameterInstanceRef parameterRef="tc-ack-apid" /&gt;
+								&lt;/Condition&gt;
+								&lt;Condition&gt;
+									&lt;ParameterInstanceRef parameterRef="/yamcs/cmdHist/ccsds-seqcount" /&gt;
+									&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+									&lt;ParameterInstanceRef parameterRef="tc-ack-seq" /&gt;
+								&lt;/Condition&gt;
+								&lt;Condition&gt;
+									&lt;ParameterInstanceRef parameterRef="type" /&gt;
+									&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+									&lt;Value&gt;1&lt;/Value&gt;
+								&lt;/Condition&gt;
+								&lt;Condition&gt;
+									&lt;ParameterInstanceRef parameterRef="subtype" /&gt;
+									&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+									&lt;Value&gt;7&lt;/Value&gt;
+								&lt;/Condition&gt;
+							&lt;/ANDedConditions&gt;
+						&lt;/BooleanExpression&gt;
+						&lt;CheckWindow timeToStopChecking="PT15S" timeWindowIsRelativeTo="commandRelease" /&gt;
+					&lt;/CompleteVerifier&gt;
+					&lt;FailedVerifier&gt;
+						&lt;BooleanExpression&gt;
+							&lt;ANDedConditions&gt;
+								&lt;Condition&gt;
+									&lt;ParameterInstanceRef parameterRef="/yamcs/cmd/arg/apid" /&gt;
+									&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+									&lt;ParameterInstanceRef parameterRef="tc-ack-apid" /&gt;
+								&lt;/Condition&gt;
+								&lt;Condition&gt;
+									&lt;ParameterInstanceRef parameterRef="/yamcs/cmdHist/ccsds-seqcount" /&gt;
+									&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+									&lt;ParameterInstanceRef parameterRef="tc-ack-seq" /&gt;
+								&lt;/Condition&gt;
+								&lt;Condition&gt;
+									&lt;ParameterInstanceRef parameterRef="type" /&gt;
+									&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+									&lt;Value&gt;1&lt;/Value&gt;
+								&lt;/Condition&gt;
+								&lt;ORedConditions&gt;
+									&lt;Condition&gt;
+										&lt;ParameterInstanceRef parameterRef="subtype" /&gt;
+										&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+										&lt;Value&gt;2&lt;/Value&gt;
+									&lt;/Condition&gt;
+									&lt;Condition&gt;
+										&lt;ParameterInstanceRef parameterRef="subtype" /&gt;
+										&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+										&lt;Value&gt;4&lt;/Value&gt;
+									&lt;/Condition&gt;
+									&lt;Condition&gt;
+										&lt;ParameterInstanceRef parameterRef="subtype" /&gt;
+										&lt;ComparisonOperator&gt;==&lt;/ComparisonOperator&gt;
+										&lt;Value&gt;8&lt;/Value&gt;
+									&lt;/Condition&gt;
+								&lt;/ORedConditions&gt;
+							&lt;/ANDedConditions&gt;
+						&lt;/BooleanExpression&gt;
+						&lt;CheckWindow timeToStopChecking="PT15S" timeWindowIsRelativeTo="commandRelease" /&gt;
+					&lt;/FailedVerifier&gt;
+				&lt;/VerifierSet&gt;
+			&lt;/MetaCommand&gt;
+		&lt;/MetaCommandSet&gt;
+	&lt;/CommandMetaData&gt;
+&lt;/SpaceSystem&gt;
+</pre></div>
+</div>
+</section>
+<section id="pus-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">pus.xml</span></code><a class="headerlink" href="#pus-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/examples/pus/src/main/yamcs/mdb/pus.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;SpaceSystem name="PUS" xmlns="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd"&gt;
+	&lt;Header validationStatus="Unknown" version="1.0" date="2020-07-01T16:48:10Z" /&gt;
+	&lt;TelemetryMetaData&gt;
+		&lt;ParameterTypeSet&gt;
+			&lt;IntegerParameterType name="PusSourceIdType" baseType="/dt/uint16"/&gt;
+			&lt;EnumeratedParameterType name="start-failure-code"&gt;
+				&lt;IntegerDataEncoding sizeInBits="32" /&gt;
+				&lt;EnumerationList&gt;
+					&lt;Enumeration label="INVALID_PUS_SUBTYPE" value="1" /&gt;
+					&lt;Enumeration label="NOT_IMPLEMENTED" value="2" /&gt;
+					&lt;Enumeration label="INVALID_EVENT_ID" value="3" /&gt;
+					&lt;Enumeration label="INVALID_VOLTAGE_NUM" value="100" /&gt;
+				&lt;/EnumerationList&gt;
+			&lt;/EnumeratedParameterType&gt;
+			&lt;EnumeratedParameterType name="completion-failure-code"&gt;
+				&lt;IntegerDataEncoding sizeInBits="32" /&gt;
+				&lt;EnumerationList&gt;
+					&lt;Enumeration label="COMPLETION_ERROR_0" value="0" /&gt;
+					&lt;Enumeration label="COMPLETION_ERROR_1" value="1" /&gt;
+					&lt;Enumeration label="COMPLETION_ERROR_2" value="2" /&gt;
+					&lt;Enumeration label="INVALID_EVENT_ID" value="3" /&gt;
+					&lt;Enumeration label="SCHEDULE_TIME_IN_THE_PAST" value="4" /&gt;
+				&lt;/EnumerationList&gt;
+			&lt;/EnumeratedParameterType&gt;
+		&lt;AbsoluteTimeParameterType name="PusTimeType"&gt;
+			&lt;Encoding&gt;
+				&lt;BinaryDataEncoding&gt;
+					&lt;SizeInBits&gt;
+						&lt;!-- -1 means the algorithm will find the size --&gt;
+						&lt;FixedValue&gt;-1&lt;/FixedValue&gt;
+					&lt;/SizeInBits&gt;
+					&lt;FromBinaryTransformAlgorithm name="TimeBinaryDecoder"&gt;						
+						&lt;AlgorithmText language="java"&gt;
+							&lt;!-- type = CUC, epoch = NONE, timeCorrelationService = tco0--&gt;
+       	   		    		org.yamcs.algo.TimeBinaryDecoder({type: CUC, epoch: NONE, tcoService: tco0})
+       	   	   			&lt;/AlgorithmText&gt;
+					&lt;/FromBinaryTransformAlgorithm&gt;
+				&lt;/BinaryDataEncoding&gt;
+			&lt;/Encoding&gt;
+		&lt;/AbsoluteTimeParameterType&gt;
+		&lt;/ParameterTypeSet&gt;
+		&lt;ParameterSet&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint11" name="apid" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint14" name="seqcount" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="type" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="subtype" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint16" name="counter" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint16" name="destination" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="time-rate" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint8" name="time-type" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint32" name="obt-coarse" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint24" name="obt-fine" /&gt;
+			&lt;Parameter parameterTypeRef="PusTimeType" name="pus-time" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint32" name="hkid" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint11" name="tc-ack-apid" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint14" name="tc-ack-seq" /&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint32" name="tc-ack-acceptance-failure-code" /&gt;
+			&lt;Parameter parameterTypeRef="start-failure-code" name="tc-ack-start-failure-code" /&gt;
+			&lt;Parameter parameterTypeRef="completion-failure-code" name="tc-ack-completion-failure-code" /&gt;
+		&lt;/ParameterSet&gt;
+		&lt;ContainerSet&gt;
+			&lt;SequenceContainer name="ccsds"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="apid"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;5&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="seqcount"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;18&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+				&lt;/EntryList&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="pus-time"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="time-rate"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;48&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="time-type" /&gt;
+					&lt;ParameterRefEntry parameterRef="obt-coarse" /&gt;
+					&lt;ParameterRefEntry parameterRef="obt-fine" /&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="ccsds"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;Comparison parameterRef="apid" comparisonOperator="==" value="0" /&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="pus-tm"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="type"&gt;
+						&lt;LocationInContainerInBits referenceLocation="containerStart"&gt;
+							&lt;FixedValue&gt;56&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="subtype" /&gt;
+					&lt;ParameterRefEntry parameterRef="counter" /&gt;
+					&lt;ParameterRefEntry parameterRef="destination" /&gt;
+					&lt;ParameterRefEntry parameterRef="time-type" /&gt;
+					&lt;ParameterRefEntry parameterRef="obt-coarse" /&gt;
+					&lt;ParameterRefEntry parameterRef="obt-fine" /&gt;					
+					&lt;ParameterRefEntry parameterRef="pus-time"&gt;
+						&lt;!-- pus-time is the decoded time and overlaps with the previous values which are accessible in raw --&gt;
+						&lt;LocationInContainerInBits referenceLocation="previousEntry"&gt;
+							&lt;FixedValue&gt;-64&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="ccsds"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;Comparison parameterRef="apid" comparisonOperator="!=" value="0" /&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+
+			&lt;SequenceContainer name="pus-tc-ack"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="tc-ack-apid"&gt;
+						&lt;LocationInContainerInBits&gt;
+							&lt;FixedValue&gt;5&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+					&lt;ParameterRefEntry parameterRef="tc-ack-seq"&gt;
+						&lt;LocationInContainerInBits&gt;
+							&lt;FixedValue&gt;2&lt;/FixedValue&gt;
+						&lt;/LocationInContainerInBits&gt;
+					&lt;/ParameterRefEntry&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="pus-tm"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;ComparisonList&gt;
+							&lt;Comparison parameterRef="type" comparisonOperator="==" value="1" /&gt;
+						&lt;/ComparisonList&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="pus-tc-ack-acceptance-failure"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="tc-ack-acceptance-failure-code" /&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="pus-tc-ack"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;ComparisonList&gt;
+							&lt;Comparison parameterRef="subtype" comparisonOperator="==" value="2" /&gt;
+						&lt;/ComparisonList&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="pus-tc-ack-start-failure"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="tc-ack-start-failure-code" /&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="pus-tc-ack"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;ComparisonList&gt;
+							&lt;Comparison parameterRef="subtype" comparisonOperator="==" value="4" /&gt;
+						&lt;/ComparisonList&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="pus-tc-ack-completion-failure"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="tc-ack-completion-failure-code" /&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="pus-tc-ack"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;ComparisonList&gt;
+							&lt;Comparison parameterRef="subtype" comparisonOperator="==" value="8" /&gt;
+						&lt;/ComparisonList&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="hk"&gt;
+				&lt;EntryList&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="pus-tm"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;Comparison parameterRef="type" comparisonOperator="==" value="3" /&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="hk25"&gt;
+				&lt;AncillaryDataSet&gt;
+					&lt;AncillaryData name="Yamcs" mimeType="text/plain"&gt;UseAsArchivingPartition&lt;/AncillaryData&gt;
+				&lt;/AncillaryDataSet&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="hkid" /&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="hk"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;Comparison parameterRef="subtype" comparisonOperator="==" value="25" /&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+		&lt;/ContainerSet&gt;
+	&lt;/TelemetryMetaData&gt;
+	&lt;CommandMetaData&gt;
+		&lt;ArgumentTypeSet&gt;
+			&lt;IntegerArgumentType name="PusSourceIdType" baseType="/dt/uint16"/&gt;
+			&lt;AbsoluteTimeArgumentType name="PusTimeType"&gt;
+				&lt;Encoding&gt;
+					&lt;BinaryDataEncoding&gt;
+						&lt;SizeInBits&gt;
+							&lt;!-- -1 means the algorithm will find the size --&gt;
+							&lt;FixedValue&gt;-1&lt;/FixedValue&gt;
+						&lt;/SizeInBits&gt;
+						&lt;ToBinaryTransformAlgorithm name="TimeBinaryEncoder"&gt;						
+							&lt;AlgorithmText language="java"&gt;
+								&lt;!-- type = CUC, epoch = NONE, timeCorrelationService = tco0--&gt;
+       	   		    			org.yamcs.algo.TimeBinaryEncoder({type: CUC, epoch: NONE, tcoService: tco0, pfield: 0x2f, implicitPfield: false})
+       	   	   				&lt;/AlgorithmText&gt;
+						&lt;/ToBinaryTransformAlgorithm&gt;
+					&lt;/BinaryDataEncoding&gt;
+				&lt;/Encoding&gt;
+			&lt;/AbsoluteTimeArgumentType&gt;
+		&lt;/ArgumentTypeSet&gt;
+		&lt;MetaCommandSet&gt;
+			&lt;MetaCommand name="pus-tc" abstract="true" shortDescription="Super-container for all PUS telecommand packets"&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="/dt/uint11" name="apid" /&gt;
+					&lt;Argument argumentTypeRef="/dt/uint4" name="ackflags" initialValue="7" /&gt;
+					&lt;Argument argumentTypeRef="/dt/uint8" name="type" /&gt;
+					&lt;Argument argumentTypeRef="/dt/uint8" name="subtype" /&gt;
+					&lt;Argument argumentTypeRef="PusSourceIdType" name="source" initialValue="0" /&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="pus-tc"&gt;
+					&lt;EntryList&gt;
+						&lt;FixedValueEntry name="ccsds-vesion" binaryValue="00" sizeInBits="3" /&gt;
+						&lt;FixedValueEntry name="ccsds-tctm" binaryValue="01" sizeInBits="1" /&gt;
+						&lt;FixedValueEntry name="ccsds-2ndheader" binaryValue="01" sizeInBits="1" /&gt;
+						&lt;ArgumentRefEntry argumentRef="apid" /&gt;
+						&lt;FixedValueEntry name="ccsds-seqFlags" binaryValue="03" sizeInBits="2" /&gt;
+						&lt;FixedValueEntry name="ccsds-seq" binaryValue="0000" sizeInBits="14" /&gt;
+						&lt;FixedValueEntry name="ccsds-length" binaryValue="0000" sizeInBits="16" /&gt;
+						&lt;FixedValueEntry name="pus-version" binaryValue="02" sizeInBits="4" /&gt;
+						&lt;ArgumentRefEntry argumentRef="ackflags" /&gt;
+						&lt;ArgumentRefEntry argumentRef="type" /&gt;
+						&lt;ArgumentRefEntry argumentRef="subtype" /&gt;
+						&lt;ArgumentRefEntry argumentRef="source" /&gt;
+					&lt;/EntryList&gt;
+				&lt;/CommandContainer&gt;
+				&lt;VerifierSet&gt;
+                                 &lt;!--
+                                    This verifier set is using algorithms for verification. Check the pus-xtce-verif.xml for an example of doing almost the same without algorithms, only XTCE.
+                                    Using algorithms has the advantage that no Failed verifier is required, any verifier can return false or a value to indicate failure.
+                                  --&gt;
+					&lt;ReceivedVerifier name="Accepted" &gt;
+						&lt;CustomAlgorithm name="alg_verif_accepted" shortDescription="Verify the PUS acceptance"&gt;
+							&lt;AncillaryDataSet&gt;
+								&lt;!--
+								    This is a javascript implementation of the accepted verifier. Note below a Java version that is simpler to use.
+								    
+									This is a Yamcs XTCE extension which says to only run the algorithm if these inputs are present.
+
+									Without this, the algorithm would run on receiving other packet because all packets (except time) have the subtype pus header parameter.
+									To deal with that, the algorithm could check the inputs for null and return no value but this is more efficient.
+
+									Note that the errorCode is not made mandatory because we want this to run also for the response OK packets.
+									If the subtype.value is 2 we know it was an error so the errorCode has to be there.
+
+									The list here could be reduced to rcvdApid and sentSeq because sentApid is a command argument available right at the beginning
+									and the rcvdSeq is available when the rcvdApid is available.
+
+									sentSeq is coming from the post-processor via command history; if another command has just received an ack, we may get called with it
+									before having our sentSeq available. That is why the sentSeq has to be also mentioned in the list.
+								--&gt;
+								&lt;AncillaryData name="Yamcs:AlgorithmMandatoryInput"&gt;sentApid&lt;/AncillaryData&gt;
+								&lt;AncillaryData name="Yamcs:AlgorithmMandatoryInput"&gt;sentSeq&lt;/AncillaryData&gt;
+								&lt;AncillaryData name="Yamcs:AlgorithmMandatoryInput"&gt;rcvdApid&lt;/AncillaryData&gt;
+								&lt;AncillaryData name="Yamcs:AlgorithmMandatoryInput"&gt;rcvdSeq&lt;/AncillaryData&gt;
+							&lt;/AncillaryDataSet&gt;
+
+							&lt;!--
+								the algorithm will be triggered for response packets corresponding to other commands.
+								We only return when the response is for our command, this is why we compare the received apid with the sent apid
+								and the received sequence count with the sent sequence count
+							--&gt;
+							&lt;AlgorithmText language="JavaScript"&gt;
+								if(rcvdApid.value == sentApid.value &amp;#38;&amp;#38; rcvdSeq.value == sentSeq.value) {
+								   if(subtype.value == 1) {
+								       return true;
+								    } else if(subtype.value == 2) {
+								       return errorCode.value;
+								    }
+								}
+							&lt;/AlgorithmText&gt;
+							&lt;InputSet&gt;
+								&lt;!-- the special /yamcs/cmd/arg namespace means that this is the value of an command argument --&gt;
+								&lt;InputParameterInstanceRef parameterRef="/yamcs/cmd/arg/apid" inputName="sentApid" /&gt;
+
+								&lt;!-- the special /yamcs/cmdHist/ namespace means that this is an entry in the command history.
+									In this case the command post-processor will send the sequence count generated before sending the command --&gt;
+								&lt;InputParameterInstanceRef parameterRef="/yamcs/cmdHist/ccsds-seqcount" inputName="sentSeq" /&gt;
+
+								&lt;!-- the other references are normal TM parameters --&gt;
+								&lt;InputParameterInstanceRef parameterRef="subtype" inputName="subtype" /&gt;
+								&lt;InputParameterInstanceRef parameterRef="tc-ack-apid" inputName="rcvdApid" /&gt;
+								&lt;InputParameterInstanceRef parameterRef="tc-ack-seq" inputName="rcvdSeq" /&gt;
+								&lt;InputParameterInstanceRef parameterRef="tc-ack-acceptance-failure-code" inputName="errorCode" /&gt;
+							&lt;/InputSet&gt;
+
+						&lt;/CustomAlgorithm&gt;
+						&lt;!-- This says that the algorithm will run for maximum 5 seconds from when the command is sent --&gt;
+						&lt;CheckWindow timeToStopChecking="PT5S" timeWindowIsRelativeTo="commandRelease" /&gt;
+					&lt;/ReceivedVerifier&gt;
+					&lt;ExecutionVerifier name="Started"&gt;
+						&lt;CustomAlgorithm name="alg_verif_started" shortDescription="Verify the PUS start"&gt;							
+							&lt;AlgorithmText language="Java"&gt;
+								org.yamcs.pus.Pus1Verifier({stage: 3, template: "{errorCode}"})
+							&lt;/AlgorithmText&gt;
+							&lt;InputSet&gt;
+								&lt;InputParameterInstanceRef parameterRef="/yamcs/cmd/arg/apid" inputName="sentApid" /&gt;
+								&lt;InputParameterInstanceRef parameterRef="/yamcs/cmdHist/ccsds-seqcount" inputName="sentSeq" /&gt;
+								&lt;InputParameterInstanceRef parameterRef="tc-ack-apid" inputName="rcvdApid" /&gt;
+								&lt;InputParameterInstanceRef parameterRef="tc-ack-seq" inputName="rcvdSeq" /&gt;
+								&lt;InputParameterInstanceRef parameterRef="subtype" inputName="subtype" /&gt;
+								&lt;InputParameterInstanceRef parameterRef="tc-ack-start-failure-code" inputName="errorCode" /&gt;
+							&lt;/InputSet&gt;
+						&lt;/CustomAlgorithm&gt;
+						&lt;CheckWindow timeToStopChecking="PT5S" timeWindowIsRelativeTo="commandRelease" /&gt;
+					&lt;/ExecutionVerifier&gt;
+					&lt;CompleteVerifier name="Complete"&gt;
+						&lt;CustomAlgorithm name="alg_verif_completed" shortDescription="Verify the PUS completion"&gt;
+							&lt;AlgorithmText language="Java"&gt;
+								org.yamcs.pus.Pus1Verifier({stage: 7, template: "the completion error code is {errorCode}"})
+							&lt;/AlgorithmText&gt;
+							&lt;InputSet&gt;
+								&lt;InputParameterInstanceRef parameterRef="/yamcs/cmd/arg/apid" inputName="sentApid" /&gt;
+								&lt;InputParameterInstanceRef parameterRef="/yamcs/cmdHist/ccsds-seqcount" inputName="sentSeq" /&gt;
+								&lt;InputParameterInstanceRef parameterRef="tc-ack-apid" inputName="rcvdApid" /&gt;
+								&lt;InputParameterInstanceRef parameterRef="tc-ack-seq" inputName="rcvdSeq" /&gt;
+								&lt;InputParameterInstanceRef parameterRef="subtype" inputName="subtype" /&gt;
+								&lt;InputParameterInstanceRef parameterRef="tc-ack-completion-failure-code" inputName="errorCode" /&gt;
+							&lt;/InputSet&gt;
+						&lt;/CustomAlgorithm&gt;
+						&lt;CheckWindow timeToStopChecking="PT15S" timeWindowIsRelativeTo="commandRelease" /&gt;
+					&lt;/CompleteVerifier&gt;
+				&lt;/VerifierSet&gt;
+			&lt;/MetaCommand&gt;
+		&lt;/MetaCommandSet&gt;
+	&lt;/CommandMetaData&gt;
+&lt;/SpaceSystem&gt;
+</pre></div>
+</div>
+</section>
+<section id="pus11-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">pus11.xml</span></code><a class="headerlink" href="#pus11-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/examples/pus/src/main/yamcs/mdb/pus11.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;SpaceSystem name="PUS11" xmlns="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd"&gt;
+	&lt;Header validationStatus="Unknown" version="1.0" date="2020-07-01T16:48:10Z"&gt;
+		&lt;NoteSet&gt;
+			&lt;Note&gt;Sample implementation of PUS11 Time-based scheduling&lt;/Note&gt;
+		&lt;/NoteSet&gt;		
+	&lt;/Header&gt;
+	&lt;TelemetryMetaData&gt;
+		&lt;ParameterTypeSet&gt;
+			&lt;IntegerParameterType name="ScheduleIdType" signed="false"&gt;
+				&lt;IntegerDataEncoding sizeInBits="8"/&gt;
+			&lt;/IntegerParameterType&gt;
+			&lt;EnumeratedParameterType name="ScheduleStatusType"&gt;
+				&lt;IntegerDataEncoding sizeInBits="8"/&gt;
+				&lt;EnumerationList&gt;
+					&lt;Enumeration value="0" label="disabled" /&gt;
+					&lt;Enumeration value="1" label="enabled" /&gt;
+				&lt;/EnumerationList&gt;
+			&lt;/EnumeratedParameterType&gt;
+			&lt;AggregateParameterType name="ScheduleStatusElementType"&gt;
+				&lt;MemberList&gt;
+					&lt;Member typeRef="ScheduleIdType" name="schedule_id"/&gt;
+					&lt;Member typeRef="ScheduleStatusType" name="schedule_status"/&gt;
+				&lt;/MemberList&gt;
+			&lt;/AggregateParameterType&gt;
+			&lt;ArrayParameterType arrayTypeRef="ScheduleStatusElementType" name="StatusReportType"&gt;
+				&lt;DimensionList&gt;
+					&lt;Dimension&gt;
+						&lt;StartingIndex&gt;&lt;FixedValue&gt;0&lt;/FixedValue&gt;&lt;/StartingIndex&gt;
+						&lt;EndingIndex&gt; &lt;DynamicValue&gt;&lt;ParameterInstanceRef parameterRef="status_report_n"/&gt;&lt;LinearAdjustment intercept="-1"/&gt;&lt;/DynamicValue&gt;&lt;/EndingIndex&gt;
+					&lt;/Dimension&gt;
+				&lt;/DimensionList&gt;
+			&lt;/ArrayParameterType&gt;
+						
+			&lt;AggregateParameterType name="RequestIdType"&gt;
+				&lt;MemberList&gt;
+					&lt;Member typeRef="/PUS/PusSourceIdType" name="source_id"/&gt;
+					&lt;Member typeRef="/dt/uint16" name="apid"/&gt;
+					&lt;Member typeRef="/dt/uint16" name="seq"/&gt;
+				&lt;/MemberList&gt;
+			&lt;/AggregateParameterType&gt;
+			
+		&lt;/ParameterTypeSet&gt;
+		&lt;ParameterSet&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint32" name="status_report_n"/&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint32" name="summary_report_n"/&gt;
+			&lt;Parameter parameterTypeRef="StatusReportType" name="status_report" shortDescription="Contains the status (enable/disable) of the sub-schedules."/&gt;
+		&lt;/ParameterSet&gt;
+		&lt;ContainerSet&gt;
+			&lt;SequenceContainer name="pus11-tm"&gt;
+				&lt;EntryList/&gt;
+				&lt;BaseContainer containerRef="/PUS/pus-tm"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;Comparison parameterRef="/PUS/type" comparisonOperator="==" value="11" /&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			
+			
+			&lt;SequenceContainer name="SUBSCHEDULE_STATUS_REPORT" shortDescription="TM[11,19] time-based sub-schedule status report"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="status_report_n"/&gt;
+					&lt;ArrayParameterRefEntry parameterRef="status_report"/&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="pus11-tm"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;Comparison parameterRef="/PUS/subtype" comparisonOperator="==" value="19" /&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			
+		&lt;/ContainerSet&gt;
+	&lt;/TelemetryMetaData&gt;
+	&lt;CommandMetaData&gt;
+		&lt;ArgumentTypeSet&gt;
+			&lt;IntegerArgumentType name="NumRequestsType" baseType="/dt/uint16"/&gt;
+			&lt;IntegerArgumentType name="NumSchedulesType" baseType="/dt/uint8"/&gt;
+			
+			&lt;AggregateArgumentType name="RequestIdType"&gt;
+				&lt;MemberList&gt;
+					&lt;Member typeRef="/dt/uint16" name="source_id"/&gt;
+					&lt;Member typeRef="/dt/uint16" name="apid"/&gt;
+					&lt;Member typeRef="/dt/uint16" name="seqcount"/&gt;
+				&lt;/MemberList&gt;
+			&lt;/AggregateArgumentType&gt;
+			&lt;ArrayArgumentType arrayTypeRef="RequestIdType" name="RequestArrayType"&gt;
+				&lt;DimensionList&gt;
+					&lt;Dimension&gt;
+						&lt;StartingIndex&gt;
+							&lt;FixedValue&gt;0&lt;/FixedValue&gt;
+						&lt;/StartingIndex&gt;
+						&lt;EndingIndex&gt;
+							&lt;DynamicValue&gt;
+								&lt;ArgumentInstanceRef argumentRef="num_requests" /&gt;
+								&lt;LinearAdjustment intercept="-1" /&gt;
+							&lt;/DynamicValue&gt;
+						&lt;/EndingIndex&gt;
+					&lt;/Dimension&gt;
+				&lt;/DimensionList&gt;
+			&lt;/ArrayArgumentType&gt;
+			&lt;IntegerArgumentType name="ScheduleIdType" baseType="/dt/uint8"/&gt;
+			&lt;ArrayArgumentType arrayTypeRef="ScheduleIdType" name="ScheduleIdArrayType"&gt;
+				&lt;DimensionList&gt;
+					&lt;Dimension&gt;
+						&lt;StartingIndex&gt;
+							&lt;FixedValue&gt;0&lt;/FixedValue&gt;
+						&lt;/StartingIndex&gt;
+						&lt;EndingIndex&gt;
+							&lt;DynamicValue&gt;
+								&lt;ArgumentInstanceRef argumentRef="num_schedules" /&gt;
+								&lt;LinearAdjustment intercept="-1" /&gt;
+							&lt;/DynamicValue&gt;
+						&lt;/EndingIndex&gt;
+					&lt;/Dimension&gt;
+				&lt;/DimensionList&gt;
+			&lt;/ArrayArgumentType&gt;
+		&lt;/ArgumentTypeSet&gt;
+		&lt;MetaCommandSet&gt;
+			&lt;MetaCommand name="pus11-tc" abstract="true"&gt;
+				&lt;BaseMetaCommand metaCommandRef="/PUS/pus-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="apid" argumentValue="1" /&gt;
+						&lt;ArgumentAssignment argumentName="type" argumentValue="11" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;CommandContainer name="pus11-tc"&gt;
+					&lt;EntryList/&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			&lt;MetaCommand name="ENABLE_SCHEDULER" shortDescription="TC[11,1] enable the time-based schedule execution function"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="1" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;CommandContainer name="ENABLE_SCHEDULER"&gt;
+					&lt;EntryList/&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			&lt;MetaCommand name="DISABLE_SCHEDULER" shortDescription="TC[11,2] disable the time-based schedule execution function"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="2" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;CommandContainer name="DISABLE_SCHEDULER"&gt;
+					&lt;EntryList/&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			&lt;MetaCommand name="RESET_SCHEDULER" shortDescription="TC[11,3] reset the time-based schedule"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="3" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;CommandContainer name="RESET_SCHEDULER"&gt;
+					&lt;EntryList/&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			
+			&lt;MetaCommand name="DELETE_ACTIVITIES_BY_ID" shortDescription="TC[11,5] delete time-based scheduled activities identified by request identifier"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="5" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="NumRequestsType" name="num_requests"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="RequestArrayType" name="requests"&gt;&lt;/Argument&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="DELETE_ACTIVITIES_BY_ID"&gt;
+					&lt;EntryList&gt;
+						&lt;ArgumentRefEntry argumentRef="num_requests" /&gt;
+						&lt;ArgumentRefEntry argumentRef="requests" /&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			&lt;MetaCommand name="DELETE_ACTIVITIES_BY_FILTER" shortDescription="TC[11,6] delete the time-based scheduled activitiesidentified by a filter"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="6" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="/PUS/PusTimeType" name="start_time"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="/PUS/PusTimeType" name="end_time"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="NumSchedulesType" name="num_schedules"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="ScheduleIdArrayType" name="schedules"&gt;&lt;/Argument&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="DELETE_ACTIVITIES_BY_FILTER"&gt;
+					&lt;EntryList&gt;
+						&lt;FixedValueEntry binaryValue="01" sizeInBits="8" name="filter_type"/&gt;
+						&lt;ArgumentRefEntry argumentRef="start_time" /&gt;
+						&lt;ArgumentRefEntry argumentRef="end_time" /&gt;
+						&lt;ArgumentRefEntry argumentRef="num_schedules" /&gt;
+						&lt;ArgumentRefEntry argumentRef="schedules" /&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+		
+			&lt;MetaCommand name="TIME_SHIFT_ACTIVITIES_BY_ID" shortDescription="TC[11,7] time-shift scheduled activities identified by request identifier"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="7" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="NumRequestsType" name="num_requests"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="RequestArrayType" name="requests"&gt;&lt;/Argument&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="TIME_SHIFT_ACTIVITIES_BY_ID"&gt;
+					&lt;EntryList&gt;
+						&lt;ArgumentRefEntry argumentRef="num_requests" /&gt;
+						&lt;ArgumentRefEntry argumentRef="requests" /&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			&lt;MetaCommand name="TIME_SHIFT_ACTIVITIES_BY_FILTER" shortDescription="TC[11,8] time-shift the scheduled activities identified by a filter"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="8" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="/PUS/PusTimeType" name="start_time"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="/PUS/PusTimeType" name="end_time"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="NumSchedulesType" name="num_schedules"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="ScheduleIdArrayType" name="schedules"&gt;&lt;/Argument&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="TIME_SHIFT_ACTIVITIES_BY_FILTER"&gt;
+					&lt;EntryList&gt;
+						&lt;FixedValueEntry binaryValue="01" sizeInBits="8" name="filter_type"/&gt;
+						&lt;ArgumentRefEntry argumentRef="start_time" /&gt;
+						&lt;ArgumentRefEntry argumentRef="end_time" /&gt;
+						&lt;ArgumentRefEntry argumentRef="num_schedules" /&gt;
+						&lt;ArgumentRefEntry argumentRef="schedules" /&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+				
+			&lt;MetaCommand name="GET_DETAIL_REPORT_BY_ID" shortDescription="TC[11,9] detail-report time-based scheduled activities identified by request identifier"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="9" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="NumRequestsType" name="num_requests"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="RequestArrayType" name="requests"&gt;&lt;/Argument&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="GET_DETAIL_REPORT_BY_ID"&gt;
+					&lt;EntryList&gt;
+						&lt;ArgumentRefEntry argumentRef="num_requests" /&gt;
+						&lt;ArgumentRefEntry argumentRef="requests" /&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			&lt;MetaCommand name="GET_DETAIL_REPORT_BY_FILTER" shortDescription=" TC[11,11] detail-report the time-based scheduledactivities identified by a filter"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="11" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="/PUS/PusTimeType" name="start_time"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="/PUS/PusTimeType" name="end_time"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="NumSchedulesType" name="num_schedules"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="ScheduleIdArrayType" name="schedules"&gt;&lt;/Argument&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="GET_DETAIL_REPORT_BY_FILTER"&gt;
+					&lt;EntryList&gt;
+						&lt;FixedValueEntry binaryValue="01" sizeInBits="8" name="filter_type"/&gt;
+						&lt;ArgumentRefEntry argumentRef="start_time" /&gt;
+						&lt;ArgumentRefEntry argumentRef="end_time" /&gt;
+						&lt;ArgumentRefEntry argumentRef="num_schedules" /&gt;
+						&lt;ArgumentRefEntry argumentRef="schedules" /&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			
+			&lt;MetaCommand name="GET_SUMMARY_REPORT_BY_ID" shortDescription="TC[11,12] summary-report time-based scheduled activities identified by request identifier"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="12" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="NumRequestsType" name="num_requests"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="RequestArrayType" name="requests"&gt;&lt;/Argument&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="GET_SUMMARY_REPORT_BY_ID"&gt;
+					&lt;EntryList&gt;
+						&lt;ArgumentRefEntry argumentRef="num_requests" /&gt;
+						&lt;ArgumentRefEntry argumentRef="requests" /&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			&lt;MetaCommand name="GET_SUMMARY_REPORT_BY_FILTER" shortDescription=" TC[11,14] summary-report the time-basedscheduled activities identified by a filter"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="14" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="/PUS/PusTimeType" name="start_time"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="/PUS/PusTimeType" name="end_time"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="NumSchedulesType" name="num_schedules"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="ScheduleIdArrayType" name="schedules"&gt;&lt;/Argument&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="GET_SUMMARY_REPORT_BY_FILTER"&gt;
+					&lt;EntryList&gt;
+						&lt;FixedValueEntry binaryValue="01" sizeInBits="8" name="filter_type"/&gt;
+						&lt;ArgumentRefEntry argumentRef="start_time" /&gt;
+						&lt;ArgumentRefEntry argumentRef="end_time" /&gt;
+						&lt;ArgumentRefEntry argumentRef="num_schedules" /&gt;
+						&lt;ArgumentRefEntry argumentRef="schedules" /&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			
+			&lt;MetaCommand name="TIME_SHIFT_ACTIVITIES" shortDescription="5 TC[11,15] time-shift all scheduled activities"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="15" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="NumRequestsType" name="num_requests"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="RequestArrayType" name="requests"&gt;&lt;/Argument&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="TIME_SHIFT_ACTIVITIES"&gt;
+					&lt;EntryList&gt;
+						&lt;ArgumentRefEntry argumentRef="num_requests" /&gt;
+						&lt;ArgumentRefEntry argumentRef="requests" /&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			
+			&lt;MetaCommand name="GET_DETAIL_REPORT" shortDescription="TC[11,16] detail-report all time-based scheduled activities"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="16" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;CommandContainer name="GET_DETAIL_REPORT"&gt;
+					&lt;EntryList/&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			
+			&lt;MetaCommand name="GET_SUMMARY_REPORT" shortDescription="TC[11,17] summary-report all time-based scheduled activities"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="17" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;CommandContainer name="GET_SUMMARY_REPORT"&gt;
+					&lt;EntryList/&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			
+			&lt;MetaCommand name="GET_SCHEDULE_STATUS" shortDescription=" TC[11,18] report the status of each time-based sub-schedule"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="18" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;CommandContainer name="GET_SCHEDULE_STATUS"&gt;
+					&lt;EntryList/&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			
+			&lt;MetaCommand name="ENABLE_SCHEDULE" shortDescription=" TC[11,20] enable time-based sub-schedules"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="20" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="NumSchedulesType" name="num_schedules"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="ScheduleIdArrayType" name="schedules"&gt;&lt;/Argument&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="ENABLE_SCHEDULE"&gt;
+					&lt;EntryList&gt;
+						&lt;ArgumentRefEntry argumentRef="num_schedules"/&gt;
+						&lt;ArgumentRefEntry argumentRef="schedules"/&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			
+			&lt;MetaCommand name="DISABLE_SCHEDULE" shortDescription=" TC[11,21] disable time-based sub-schedules"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus11-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="21" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="NumSchedulesType" name="num_schedules"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="ScheduleIdArrayType" name="schedules"&gt;&lt;/Argument&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="DISABLE_SCHEDULE"&gt;
+					&lt;EntryList&gt;
+						&lt;ArgumentRefEntry argumentRef="num_schedules"/&gt;
+						&lt;ArgumentRefEntry argumentRef="schedules"/&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="pus11-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+		&lt;/MetaCommandSet&gt;
+	&lt;/CommandMetaData&gt;
+	&lt;!-- we added the detailed report into its own subsystem to allow nicer names in the parameter list on yamcs-web--&gt;
+	&lt;SpaceSystem name="DETAIL_REPORT"&gt;
+		&lt;TelemetryMetaData&gt;
+			&lt;ParameterTypeSet&gt;
+				&lt;BinaryParameterType name="DetailReportTcPacketDataType"&gt;
+				&lt;BinaryDataEncoding&gt;
+					&lt;SizeInBits&gt;
+						&lt;DynamicValue&gt;
+							&lt;ParameterInstanceRef parameterRef="length" /&gt;
+							&lt;!-- the resulting size should be in bits but the length is the CCSDS packet lenght in bytes 
+							we subtract 7 bytes for the secondary header and crc --&gt;
+							&lt;LinearAdjustment slope="8" intercept="-48"/&gt;
+						&lt;/DynamicValue&gt;
+					&lt;/SizeInBits&gt;
+				&lt;/BinaryDataEncoding&gt;
+			&lt;/BinaryParameterType&gt;
+			&lt;/ParameterTypeSet&gt;
+			&lt;ParameterSet&gt;
+				&lt;Parameter parameterTypeRef="/dt/uint16" name="n"/&gt;
+				&lt;Parameter parameterTypeRef="ScheduleIdType" name="schedule_id"/&gt;
+				&lt;Parameter parameterTypeRef="/PUS/PusTimeType" name="release_time"/&gt;
+				&lt;Parameter parameterTypeRef="/dt/uint11" name="apid"/&gt;
+				&lt;Parameter parameterTypeRef="/dt/uint14" name="seq"/&gt;
+				&lt;Parameter parameterTypeRef="/dt/uint16" name="length"/&gt;
+				&lt;Parameter parameterTypeRef="/dt/uint4" name="ackflags"/&gt;
+				&lt;Parameter parameterTypeRef="/dt/uint8" name="type"/&gt;
+				&lt;Parameter parameterTypeRef="/dt/uint8" name="subtype"/&gt;
+				&lt;Parameter parameterTypeRef="/PUS/PusSourceIdType" name="source"/&gt;
+				&lt;Parameter parameterTypeRef="DetailReportTcPacketDataType" name="tc_data"/&gt;
+				&lt;Parameter parameterTypeRef="/dt/uint16" name="crc"/&gt;
+			&lt;/ParameterSet&gt;
+			&lt;ContainerSet&gt;
+				&lt;SequenceContainer name="DETAIL_REPORT_ELEMENT" shortDescription="One entry in the detail report"&gt;
+					&lt;EntryList&gt;
+						&lt;ParameterRefEntry parameterRef="schedule_id"/&gt;
+						&lt;ParameterRefEntry parameterRef="release_time"/&gt;
+						&lt;ParameterRefEntry parameterRef="apid"&gt;
+							&lt;LocationInContainerInBits&gt;&lt;FixedValue&gt;5&lt;/FixedValue&gt;&lt;/LocationInContainerInBits&gt;
+						&lt;/ParameterRefEntry&gt;					
+						&lt;ParameterRefEntry parameterRef="seq"&gt;
+							&lt;LocationInContainerInBits&gt;&lt;FixedValue&gt;2&lt;/FixedValue&gt;&lt;/LocationInContainerInBits&gt;
+						&lt;/ParameterRefEntry&gt;
+						&lt;ParameterRefEntry parameterRef="length"/&gt;
+						&lt;ParameterRefEntry parameterRef="ackflags"&gt;
+							&lt;LocationInContainerInBits&gt;&lt;FixedValue&gt;4&lt;/FixedValue&gt;&lt;/LocationInContainerInBits&gt;
+						&lt;/ParameterRefEntry&gt;
+						&lt;ParameterRefEntry parameterRef="type"/&gt;
+						&lt;ParameterRefEntry parameterRef="subtype"/&gt;
+						&lt;ParameterRefEntry parameterRef="source"/&gt;
+						&lt;ParameterRefEntry parameterRef="tc_data"/&gt;
+						&lt;ParameterRefEntry parameterRef="crc"/&gt;
+					&lt;/EntryList&gt;
+				&lt;/SequenceContainer&gt;
+				&lt;SequenceContainer name="DETAIL_REPORT" shortDescription=" TM[11,10] time-based schedule detail report"&gt;
+					&lt;EntryList&gt;
+						&lt;ParameterRefEntry parameterRef="n"/&gt;
+						&lt;ContainerRefEntry containerRef="DETAIL_REPORT_ELEMENT"&gt;
+							&lt;RepeatEntry&gt;
+								&lt;Count&gt;
+									&lt;DynamicValue&gt;
+										&lt;ParameterInstanceRef parameterRef="n" /&gt;
+									&lt;/DynamicValue&gt;
+								&lt;/Count&gt;
+							&lt;/RepeatEntry&gt;
+						&lt;/ContainerRefEntry&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="pus11-tm"&gt;
+						&lt;RestrictionCriteria&gt;
+							&lt;Comparison parameterRef="/PUS/subtype" comparisonOperator="==" value="10" /&gt;
+						&lt;/RestrictionCriteria&gt;
+					&lt;/BaseContainer&gt;
+				&lt;/SequenceContainer&gt;
+			&lt;/ContainerSet&gt;
+		&lt;/TelemetryMetaData&gt;
+	&lt;/SpaceSystem&gt;
+	&lt;SpaceSystem name="SUMMARY_REPORT"&gt; 
+		&lt;TelemetryMetaData&gt;
+			&lt;ParameterSet&gt;
+					&lt;Parameter parameterTypeRef="/dt/uint16" name="n"/&gt;
+					&lt;Parameter parameterTypeRef="ScheduleIdType" name="schedule_id"/&gt;
+					&lt;Parameter parameterTypeRef="/PUS/PusTimeType" name="release_time"/&gt;
+					&lt;Parameter parameterTypeRef="/dt/uint16" name="source"/&gt;
+					&lt;Parameter parameterTypeRef="/dt/uint16" name="apid"/&gt;
+					&lt;Parameter parameterTypeRef="/dt/uint16" name="seq"/&gt;
+			&lt;/ParameterSet&gt;
+			&lt;ContainerSet&gt;
+				&lt;SequenceContainer name="SUMMARY_REPORT_ELEMENT"&gt;
+					&lt;EntryList&gt;
+						&lt;ParameterRefEntry parameterRef="schedule_id"/&gt;
+						&lt;ParameterRefEntry parameterRef="release_time"/&gt;
+						&lt;ParameterRefEntry parameterRef="source"/&gt;
+						&lt;ParameterRefEntry parameterRef="apid"/&gt;
+						&lt;ParameterRefEntry parameterRef="seq"/&gt;			
+					&lt;/EntryList&gt;
+				&lt;/SequenceContainer&gt;
+				&lt;SequenceContainer name="SUMMARY_REPORT" shortDescription="TM[11,13] time-based schedule summary report"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="n"/&gt;
+					&lt;ContainerRefEntry containerRef="SUMMARY_REPORT_ELEMENT"&gt;
+						&lt;RepeatEntry&gt;
+							&lt;Count&gt;
+								&lt;DynamicValue&gt;
+									&lt;ParameterInstanceRef parameterRef="n" /&gt;
+								&lt;/DynamicValue&gt;
+							&lt;/Count&gt;
+						&lt;/RepeatEntry&gt;
+					&lt;/ContainerRefEntry&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="pus11-tm"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;Comparison parameterRef="/PUS/subtype" comparisonOperator="==" value="13" /&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;/ContainerSet&gt;
+		&lt;/TelemetryMetaData&gt;
+	&lt;/SpaceSystem&gt;
+&lt;/SpaceSystem&gt;
+</pre></div>
+</div>
+</section>
+<section id="pus17-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">pus17.xml</span></code><a class="headerlink" href="#pus17-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/examples/pus/src/main/yamcs/mdb/pus17.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;SpaceSystem name="PUS17" xmlns="http://www.omg.org/spec/XTCE/20180204"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd"&gt;
+	&lt;Header validationStatus="Unknown" version="1.0" date="2020-07-01T16:48:10Z" /&gt;
+	&lt;TelemetryMetaData&gt;
+		&lt;ContainerSet&gt;
+			&lt;SequenceContainer name="pus17-tm"&gt;
+				&lt;EntryList/&gt;
+				&lt;BaseContainer containerRef="/PUS/pus-tm"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;Comparison parameterRef="/PUS/type" comparisonOperator="==" value="17" /&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="are-you-alive-report"&gt;
+				&lt;EntryList/&gt;
+				&lt;BaseContainer containerRef="pus17-tm"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;Comparison parameterRef="/PUS/subtype" comparisonOperator="==" value="2" /&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+		&lt;/ContainerSet&gt;
+	&lt;/TelemetryMetaData&gt;
+	&lt;CommandMetaData&gt;
+		&lt;MetaCommandSet&gt;
+			&lt;MetaCommand name="pus17-tc" abstract="true"&gt;
+				&lt;BaseMetaCommand metaCommandRef="/PUS/pus-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="apid"	argumentValue="1" /&gt;
+						&lt;ArgumentAssignment argumentName="type"	argumentValue="17" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;CommandContainer name="pus17-tc"&gt;
+					&lt;EntryList /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			&lt;MetaCommand name="ARE_YOU_ALIVE"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus17-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="1" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				
+				&lt;CommandContainer name="ARE_YOU_ALIVE"&gt;
+					&lt;EntryList /&gt;
+				&lt;/CommandContainer&gt;
+				&lt;VerifierSet&gt;
+					&lt;ExecutionVerifier name= "PUS17_Report"&gt;
+						&lt;ContainerRef containerRef="are-you-alive-report" /&gt;
+						&lt;CheckWindow timeToStopChecking="PT15S" timeWindowIsRelativeTo="commandRelease"/&gt;
+					&lt;/ExecutionVerifier&gt;
+				&lt;/VerifierSet&gt;
+			&lt;/MetaCommand&gt;
+		&lt;/MetaCommandSet&gt;
+	&lt;/CommandMetaData&gt;
+&lt;/SpaceSystem&gt;
+</pre></div>
+</div>
+</section>
+<section id="pus19-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">pus19.xml</span></code><a class="headerlink" href="#pus19-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/examples/pus/src/main/yamcs/mdb/pus19.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;SpaceSystem name="PUS19" xmlns="http://www.omg.org/spec/XTCE/20180204"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd"&gt;
+	&lt;Header validationStatus="Unknown" version="1.0" date="2020-07-01T16:48:10Z" /&gt;
+	&lt;CommandMetaData&gt;
+		&lt;MetaCommandSet&gt;
+			&lt;MetaCommand name="pus19-tc" abstract="true"&gt;
+				&lt;BaseMetaCommand metaCommandRef="/PUS/pus-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="apid"	argumentValue="1" /&gt;
+						&lt;ArgumentAssignment argumentName="type"	argumentValue="19" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;CommandContainer name="pus19-tc"&gt;
+					&lt;EntryList /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+		&lt;/MetaCommandSet&gt;
+	&lt;/CommandMetaData&gt;
+&lt;/SpaceSystem&gt;
+</pre></div>
+</div>
+</section>
+<section id="pus20-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">pus20.xml</span></code><a class="headerlink" href="#pus20-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/examples/pus/src/main/yamcs/mdb/pus20.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;SpaceSystem name="PUS20" xmlns="http://www.omg.org/spec/XTCE/20180204"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd"&gt;
+	&lt;Header validationStatus="Unknown" version="1.0" date="2020-07-01T16:48:10Z" /&gt;
+	&lt;TelemetryMetaData&gt;
+		&lt;ParameterSet&gt;
+			&lt;Parameter  parameterTypeRef="sss" name="bbb" &gt;
+				&lt;AliasSet&gt;
+					&lt;Alias nameSpace="PARAMETER_HASH" alias="233232" /&gt;
+				&lt;/AliasSet&gt;
+			&lt;/Parameter&gt;
+		&lt;/ParameterSet&gt;
+		&lt;ContainerSet&gt;
+			&lt;SequenceContainer name="TM(20,2)_parameter_value_report"&gt;
+                &lt;EntryList&gt;
+                    &lt;ParameterRefEntry parameterRef="number_of_parameters" /&gt;
+                    &lt;IndirectParameterRefEntry aliasNameSpace="/parameters-dt"&gt;
+                        &lt;ParameterInstance parameterRef="parameter_hash"  /&gt;
+                    &lt;/IndirectParameterRefEntry&gt;
+                &lt;/EntryList&gt;
+                &lt;BaseContainer containerRef="/PUS/pus-tm"&gt;
+                    &lt;RestrictionCriteria&gt;&lt;ComparisonList&gt;
+                        &lt;Comparison parameterRef="/PUS/type" value="20" /&gt;
+                        &lt;Comparison parameterRef="/PUS/subtype" value="2" /&gt;
+                    &lt;/ComparisonList&gt;&lt;/RestrictionCriteria&gt;
+                &lt;/BaseContainer&gt;
+            &lt;/SequenceContainer&gt;
+		&lt;/ContainerSet&gt;
+	&lt;/TelemetryMetaData&gt;
+	&lt;CommandMetaData&gt;
+		&lt;MetaCommandSet&gt;
+			&lt;MetaCommand name="pus20-tc" abstract="true"&gt;
+				&lt;BaseMetaCommand metaCommandRef="/PUS/pus-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="apid"	argumentValue="1" /&gt;
+						&lt;ArgumentAssignment argumentName="type"	argumentValue="20" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;CommandContainer name="pus19-tc"&gt;
+					&lt;EntryList /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+		&lt;/MetaCommandSet&gt;
+	&lt;/CommandMetaData&gt;
+&lt;/SpaceSystem&gt;
+</pre></div>
+</div>
+</section>
+<section id="pus23-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">pus23.xml</span></code><a class="headerlink" href="#pus23-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/examples/pus/src/main/yamcs/mdb/pus23.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;SpaceSystem name="PUS23" xmlns="http://www.omg.org/spec/XTCE/20180204"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd"&gt;
+	&lt;Header validationStatus="Unknown" version="1.0" date="2020-07-01T16:48:10Z" /&gt;
+	&lt;CommandMetaData&gt;
+		&lt;MetaCommandSet&gt;
+			&lt;MetaCommand name="pus23-tc" abstract="true"&gt;
+				&lt;BaseMetaCommand metaCommandRef="/PUS/pus-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="apid" argumentValue="1" /&gt;
+						&lt;ArgumentAssignment argumentName="type" argumentValue="23" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;CommandContainer name="pus23-tc"&gt;
+					&lt;EntryList/&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+		&lt;/MetaCommandSet&gt;
+	&lt;/CommandMetaData&gt;
+&lt;/SpaceSystem&gt;
+</pre></div>
+</div>
+</section>
+<section id="pus5-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">pus5.xml</span></code><a class="headerlink" href="#pus5-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/examples/pus/src/main/yamcs/mdb/pus5.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;SpaceSystem name="PUS5" xmlns="http://www.omg.org/spec/XTCE/20180204"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd"&gt;
+	&lt;Header validationStatus="Unknown" version="1.0" date="2020-07-01T16:48:10Z" /&gt;
+	&lt;TelemetryMetaData&gt;
+		&lt;ParameterTypeSet&gt;
+			&lt;EnumeratedParameterType name="event_id_type"&gt;
+				&lt;IntegerDataEncoding sizeInBits="8"/&gt;
+				&lt;EnumerationList&gt;
+					&lt;Enumeration value="1" label="EVENT_1" /&gt;
+					&lt;Enumeration value="2" label="EVENT_2" /&gt;
+				&lt;/EnumerationList&gt;
+			&lt;/EnumeratedParameterType&gt;
+		&lt;/ParameterTypeSet&gt;
+		&lt;ParameterSet&gt;
+			&lt;Parameter parameterTypeRef="event_id_type" name="event_id"/&gt;
+			&lt;Parameter parameterTypeRef="/dt/uint16" name="event1_para1"/&gt;
+			&lt;Parameter parameterTypeRef="/dt/float32" name="event1_para2"/&gt;
+			&lt;Parameter parameterTypeRef="/dt/prepended_string" name="event2_msg"/&gt;
+		&lt;/ParameterSet&gt;
+		&lt;ContainerSet&gt;
+			&lt;SequenceContainer name="pus5-tm"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="event_id"&gt;&lt;/ParameterRefEntry&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="/PUS/pus-tm"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;Comparison parameterRef="/PUS/type" comparisonOperator="==" value="5" /&gt;
+					&lt;/RestrictionCriteria&gt;
+				&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="event1"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="event1_para1"/&gt;
+					&lt;ParameterRefEntry parameterRef="event1_para2"/&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="pus5-tm"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;Comparison value="EVENT_1" parameterRef="event_id" /&gt;
+					&lt;/RestrictionCriteria&gt;
+					&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+			&lt;SequenceContainer name="event2"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="event2_msg"/&gt;
+				&lt;/EntryList&gt;
+				&lt;BaseContainer containerRef="pus5-tm"&gt;
+					&lt;RestrictionCriteria&gt;
+						&lt;Comparison value="EVENT_2" parameterRef="event_id" /&gt;
+					&lt;/RestrictionCriteria&gt;
+					&lt;/BaseContainer&gt;
+			&lt;/SequenceContainer&gt;
+		&lt;/ContainerSet&gt;
+	&lt;/TelemetryMetaData&gt;
+	&lt;CommandMetaData&gt;
+		&lt;ArgumentTypeSet&gt;
+			&lt;EnumeratedArgumentType name="event_id_type"&gt;
+				&lt;IntegerDataEncoding sizeInBits="8"/&gt;
+				&lt;EnumerationList&gt;
+					&lt;Enumeration value="1" label="EVENT_1" /&gt;
+					&lt;Enumeration value="2" label="EVENT_2" /&gt;
+				&lt;/EnumerationList&gt;
+			&lt;/EnumeratedArgumentType&gt;
+			&lt;ArrayArgumentType arrayTypeRef="event_id_type" name="event_id_array_type"&gt;
+				&lt;DimensionList&gt;
+					&lt;Dimension&gt;
+						&lt;StartingIndex&gt;
+							&lt;FixedValue&gt;0&lt;/FixedValue&gt;
+						&lt;/StartingIndex&gt;
+						&lt;EndingIndex&gt;
+							&lt;DynamicValue&gt;
+								&lt;ArgumentInstanceRef argumentRef="N" /&gt;
+								&lt;LinearAdjustment intercept="-1" /&gt;
+							&lt;/DynamicValue&gt;
+						&lt;/EndingIndex&gt;
+					&lt;/Dimension&gt;
+				&lt;/DimensionList&gt;
+			&lt;/ArrayArgumentType&gt;
+		&lt;/ArgumentTypeSet&gt;
+		&lt;MetaCommandSet&gt;
+			&lt;MetaCommand name="pus5-tc" abstract="true"&gt;
+				&lt;BaseMetaCommand metaCommandRef="/PUS/pus-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="apid" argumentValue="1" /&gt;
+						&lt;ArgumentAssignment argumentName="type" argumentValue="5" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;CommandContainer name="pus5-tc"&gt;
+					&lt;EntryList/&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			&lt;MetaCommand name="ENABLE_REPORT_GENERATION"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus5-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="5" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="/dt/uint8" name="N"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="event_id_array_type" name="events"&gt;&lt;/Argument&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="ENABLE_REPORT_GENERATION"&gt;
+					&lt;EntryList&gt;
+						&lt;ArgumentRefEntry argumentRef="N" /&gt;
+						&lt;ArgumentRefEntry argumentRef="events" /&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="pus5-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+			&lt;MetaCommand name="DISABLE_REPORT_GENERATION"&gt;
+				&lt;BaseMetaCommand metaCommandRef="pus5-tc"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="subtype" argumentValue="6" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="/dt/uint8" name="N"&gt;&lt;/Argument&gt;
+					&lt;Argument argumentTypeRef="event_id_array_type" name="events"&gt;&lt;/Argument&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="DISABLE_REPORT_GENERATION"&gt;
+					&lt;EntryList&gt;
+						&lt;ArgumentRefEntry argumentRef="N" /&gt;
+						&lt;ArgumentRefEntry argumentRef="events" /&gt;
+					&lt;/EntryList&gt;
+					&lt;BaseContainer containerRef="pus5-tc" /&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+		&lt;/MetaCommandSet&gt;
+	&lt;/CommandMetaData&gt;
+&lt;/SpaceSystem&gt;
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../etc/index.html" class="btn btn-neutral float-left" title="etc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../../../tests/index.html" class="btn btn-neutral float-right" title="tests" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

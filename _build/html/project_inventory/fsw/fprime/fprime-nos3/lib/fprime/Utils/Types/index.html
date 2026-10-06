@@ -1,0 +1,1514 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Types &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../search.html" />
+    <link rel="next" title="test" href="test/index.html" />
+    <link rel="prev" title="ut" href="../test/ut/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fprime-nos3</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">lib</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Utils</a></li>
+      <li class="breadcrumb-item active">Types</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../_sources/project_inventory/fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="types">
+<h1>Types<a class="headerlink" href="#types" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/</span></code></p>
+<section id="id1">
+<h2>하위 폴더<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="test/index.html">test</a></li>
+</ul>
+</div>
+</section>
+<section id="id2">
+<h2>이 폴더의 파일<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+</section>
+<section id="circularbuffer-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">CircularBuffer.cpp</span></code><a class="headerlink" href="#circularbuffer-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/CircularBuffer.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * CircularBuffer.cpp:
+ *
+ * Buffer used to efficiently store data in ring data structure. Uses an externally supplied
+ * data store as the backing for this buffer. Thus it is dependent on receiving sole ownership
+ * of the supplied buffer.
+ *
+ * This implementation file contains the function definitions.
+ *
+ *  Created on: Apr 4, 2019
+ *      Author: lestarch
+ *  Revised March 2022
+ *      Author: bocchino
+ */
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+#include &lt;Fw/Types/Assert.hpp&gt;
+#include &lt;Utils/Types/CircularBuffer.hpp&gt;
+
+namespace Types {
+
+CircularBuffer :: CircularBuffer() :
+    m_store(nullptr),
+    m_store_size(0),
+    m_head_idx(0),
+    m_allocated_size(0),
+    m_high_water_mark(0)
+{
+
+}
+
+CircularBuffer :: CircularBuffer(U8* const buffer, const FwSizeType size) :
+    m_store(nullptr),
+    m_store_size(0),
+    m_head_idx(0),
+    m_allocated_size(0),
+    m_high_water_mark(0)
+{
+    setup(buffer, size);
+}
+
+void CircularBuffer :: setup(U8* const buffer, const FwSizeType size) {
+    FW_ASSERT(size &gt; 0);
+    FW_ASSERT(buffer != nullptr);
+    FW_ASSERT(m_store == nullptr &amp;&amp; m_store_size == 0); // Not already setup
+
+    // Initialize buffer data
+    m_store = buffer;
+    m_store_size = size;
+    m_head_idx = 0;
+    m_allocated_size = 0;
+    m_high_water_mark = 0;
+}
+
+FwSizeType CircularBuffer :: get_allocated_size() const {
+    return m_allocated_size;
+}
+
+FwSizeType CircularBuffer :: get_free_size() const {
+    FW_ASSERT(m_store != nullptr &amp;&amp; m_store_size != 0); // setup method was called
+    FW_ASSERT(m_allocated_size &lt;= m_store_size, static_cast&lt;FwAssertArgType&gt;(m_allocated_size));
+    return m_store_size - m_allocated_size;
+}
+
+FwSizeType CircularBuffer :: advance_idx(FwSizeType idx, FwSizeType amount) const {
+    FW_ASSERT(idx &lt; m_store_size, static_cast&lt;FwAssertArgType&gt;(idx));
+    return (idx + amount) % m_store_size;
+}
+
+Fw::SerializeStatus CircularBuffer :: serialize(const U8* const buffer, const FwSizeType size) {
+    FW_ASSERT(m_store != nullptr &amp;&amp; m_store_size != 0); // setup method was called
+    FW_ASSERT(buffer != nullptr);
+    // Check there is sufficient space
+    if (size &gt; get_free_size()) {
+        return Fw::FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+    // Copy in all the supplied data
+    FwSizeType idx = advance_idx(m_head_idx, m_allocated_size);
+    for (U32 i = 0; i &lt; size; i++) {
+        FW_ASSERT(idx &lt; m_store_size, static_cast&lt;FwAssertArgType&gt;(idx));
+        m_store[idx] = buffer[i];
+        idx = advance_idx(idx);
+    }
+    m_allocated_size += size;
+    FW_ASSERT(m_allocated_size &lt;= this-&gt;get_capacity(), static_cast&lt;FwAssertArgType&gt;(m_allocated_size));
+    m_high_water_mark = (m_high_water_mark &gt; m_allocated_size) ? m_high_water_mark : m_allocated_size;
+    return Fw::FW_SERIALIZE_OK;
+}
+
+Fw::SerializeStatus CircularBuffer :: peek(char&amp; value, FwSizeType offset) const {
+    FW_ASSERT(m_store != nullptr &amp;&amp; m_store_size != 0); // setup method was called
+    return peek(reinterpret_cast&lt;U8&amp;&gt;(value), offset);
+}
+
+Fw::SerializeStatus CircularBuffer :: peek(U8&amp; value, FwSizeType offset) const {
+    FW_ASSERT(m_store != nullptr &amp;&amp; m_store_size != 0); // setup method was called
+    // Check there is sufficient data
+    if ((sizeof(U8) + offset) &gt; m_allocated_size) {
+        return Fw::FW_DESERIALIZE_BUFFER_EMPTY;
+    }
+    const FwSizeType idx = advance_idx(m_head_idx, offset);
+    FW_ASSERT(idx &lt; m_store_size, static_cast&lt;FwAssertArgType&gt;(idx));
+    value = m_store[idx];
+    return Fw::FW_SERIALIZE_OK;
+}
+
+Fw::SerializeStatus CircularBuffer :: peek(U32&amp; value, FwSizeType offset) const {
+    FW_ASSERT(m_store != nullptr &amp;&amp; m_store_size != 0); // setup method was called
+    // Check there is sufficient data
+    if ((sizeof(U32) + offset) &gt; m_allocated_size) {
+        return Fw::FW_DESERIALIZE_BUFFER_EMPTY;
+    }
+    value = 0;
+    FwSizeType idx = advance_idx(m_head_idx, offset);
+
+    // Deserialize all the bytes from network format
+    for (FwSizeType i = 0; i &lt; sizeof(U32); i++) {
+        FW_ASSERT(idx &lt; m_store_size, static_cast&lt;FwAssertArgType&gt;(idx));
+        value = (value &lt;&lt; 8) | static_cast&lt;U32&gt;(m_store[idx]);
+        idx = advance_idx(idx);
+    }
+    return Fw::FW_SERIALIZE_OK;
+}
+
+Fw::SerializeStatus CircularBuffer :: peek(U8* buffer, FwSizeType size, FwSizeType offset) const {
+    FW_ASSERT(m_store != nullptr &amp;&amp; m_store_size != 0); // setup method was called
+    FW_ASSERT(buffer != nullptr);
+    // Check there is sufficient data
+    if ((size + offset) &gt; m_allocated_size) {
+        return Fw::FW_DESERIALIZE_BUFFER_EMPTY;
+    }
+    FwSizeType idx = advance_idx(m_head_idx, offset);
+    // Deserialize all the bytes from network format
+    for (FwSizeType i = 0; i &lt; size; i++) {
+        FW_ASSERT(idx &lt; m_store_size, static_cast&lt;FwAssertArgType&gt;(idx));
+        buffer[i] = m_store[idx];
+        idx = advance_idx(idx);
+    }
+    return Fw::FW_SERIALIZE_OK;
+}
+
+Fw::SerializeStatus CircularBuffer :: rotate(FwSizeType amount) {
+    FW_ASSERT(m_store != nullptr &amp;&amp; m_store_size != 0); // setup method was called
+    // Check there is sufficient data
+    if (amount &gt; m_allocated_size) {
+        return Fw::FW_DESERIALIZE_BUFFER_EMPTY;
+    }
+    m_head_idx = advance_idx(m_head_idx, amount);
+    m_allocated_size -= amount;
+    return Fw::FW_SERIALIZE_OK;
+}
+
+FwSizeType CircularBuffer ::get_capacity() const {
+    FW_ASSERT(m_store != nullptr &amp;&amp; m_store_size != 0); // setup method was called
+    return m_store_size;
+}
+
+FwSizeType CircularBuffer ::get_high_water_mark() const {
+    return m_high_water_mark;
+}
+
+void CircularBuffer ::clear_high_water_mark() {
+    m_high_water_mark = 0;
+}
+
+} //End Namespace Types
+</pre></div>
+</div>
+</section>
+<section id="circularbuffer-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">CircularBuffer.hpp</span></code><a class="headerlink" href="#circularbuffer-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/CircularBuffer.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * CircularBuffer.hpp:
+ *
+ * Buffer used to efficiently store data in ring data structure. Uses an externally supplied
+ * data store as the backing for this buffer. Thus it is dependent on receiving sole ownership
+ * of the supplied buffer.
+ *
+ * Note: this given implementation loses one byte of the data store in order to ensure that a
+ * separate wrap-around tracking variable is not needed.
+ *
+ *  Created on: Apr 4, 2019
+ *      Author: lestarch
+ *  Revised March 2022
+ *      Author: bocchino
+ */
+
+#ifndef TYPES_CIRCULAR_BUFFER_HPP
+#define TYPES_CIRCULAR_BUFFER_HPP
+
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+#include &lt;Fw/Types/Serializable.hpp&gt;
+
+namespace Types {
+
+class CircularBuffer {
+
+    friend class CircularBufferTester;
+
+    public:
+        /**
+         * Circular buffer constructor. Wraps the supplied buffer as the new data store. Buffer
+         * size is supplied in the 'size' argument.
+         *
+         * Note: specification of storage buffer must be done using `setup` before use.
+         */
+        CircularBuffer();
+
+        /**
+         * Circular buffer constructor. Wraps the supplied buffer as the new data store. Buffer
+         * size is supplied in the 'size' argument. This is equivalent to calling the no-argument constructor followed
+         * by setup(buffer, size).
+         *
+         * Note: ownership of the supplied buffer is held until the circular buffer is deallocated
+         *
+         * \param buffer: supplied buffer used as a data store.
+         * \param size: the of the supplied data store.
+         */
+        CircularBuffer(U8* const buffer, const FwSizeType size);
+
+        /**
+         * Wraps the supplied buffer as the new data store. Buffer size is supplied in the 'size' argument. Cannot be
+         * called after successful setup.
+         *
+         * Note: ownership of the supplied buffer is held until the circular buffer is deallocated
+         *
+         * \param buffer: supplied buffer used as a data store.
+         * \param size: the of the supplied data store.
+         */
+        void setup(U8* const buffer, const FwSizeType size);
+
+        /**
+         * Serialize a given buffer into this circular buffer. Will not accept more data than
+         * space available. This means it will not overwrite existing data.
+         * \param buffer: supplied buffer to be serialized.
+         * \param size: size of the supplied buffer.
+         * \return Fw::FW_SERIALIZE_OK on success or something else on error
+         */
+        Fw::SerializeStatus serialize(const U8* const buffer, const FwSizeType size);
+
+        /**
+         * Deserialize data into the given variable without moving the head index
+         * \param value: value to fill
+         * \param offset: offset from head to start peak. Default: 0
+         * \return Fw::FW_SERIALIZE_OK on success or something else on error
+         */
+        Fw::SerializeStatus peek(char&amp; value, FwSizeType offset = 0) const;
+        /**
+         * Deserialize data into the given variable without moving the head index
+         * \param value: value to fill
+         * \param offset: offset from head to start peak. Default: 0
+         * \return Fw::FW_SERIALIZE_OK on success or something else on error
+         */
+        Fw::SerializeStatus peek(U8&amp; value, FwSizeType offset = 0) const;
+        /**
+         * Deserialize data into the given variable without moving the head index
+         * \param value: value to fill
+         * \param offset: offset from head to start peak. Default: 0
+         * \return Fw::FW_SERIALIZE_OK on success or something else on error
+         */
+        Fw::SerializeStatus peek(U32&amp; value, FwSizeType offset = 0) const;
+
+        /**
+         * Deserialize data into the given buffer without moving the head variable.
+         * \param buffer: buffer to fill with data of the peek
+         * \param size: size in bytes to peek at
+         * \param offset: offset from head to start peak. Default: 0
+         * \return Fw::FW_SERIALIZE_OK on success or something else on error
+         */
+        Fw::SerializeStatus peek(U8* buffer, FwSizeType size, FwSizeType offset = 0) const;
+
+        /**
+         * Rotate the head index, deleting data from the circular buffer and making
+         * space. Cannot rotate more than the available space.
+         * \param amount: amount to rotate by (in bytes)
+         * \return Fw::FW_SERIALIZE_OK on success or something else on error
+         */
+        Fw::SerializeStatus rotate(FwSizeType amount);
+
+        /**
+         * Get the number of bytes allocated in the buffer
+         * \return number of bytes
+         */
+        FwSizeType get_allocated_size() const;
+
+        /**
+         * Get the number of free bytes, i.e., the number
+         * of bytes that may be stored in the buffer without
+         * deleting data and without exceeding the buffer capacity
+         */
+        FwSizeType get_free_size() const;
+
+        /**
+         * Get the logical capacity of the buffer, i.e., the number of available
+         * bytes when the buffer is empty
+         */
+        FwSizeType get_capacity() const;
+
+        /**
+         * Return the largest tracked allocated size
+         */
+        FwSizeType get_high_water_mark() const;
+
+        /**
+         * Clear tracking of the largest allocated size
+         */
+        void clear_high_water_mark();
+
+    private:
+        /**
+         * Returns a wrap-advanced index into the store.
+         * \param idx: index to advance and wrap.
+         * \param amount: amount to advance
+         * \return: new index value
+         */
+        FwSizeType advance_idx(FwSizeType idx, FwSizeType amount = 1) const;
+        //! Physical store backing this circular buffer
+        U8* m_store;
+        //! Size of the physical store
+        FwSizeType m_store_size;
+        //! Index into m_store of byte zero in the logical store.
+        //! When memory is deallocated, this index moves forward and wraps around.
+        FwSizeType m_head_idx;
+        //! Allocated size (size of the logical store)
+        FwSizeType m_allocated_size;
+        //! Maximum allocated size
+        FwSizeType m_high_water_mark;
+};
+} //End Namespace Types
+#endif
+</pre></div>
+</div>
+</section>
+<section id="cmakelists-txt">
+<h2><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code><a class="headerlink" href="#cmakelists-txt" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/CMakeLists.txt</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/CircularBuffer.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Queue.cpp"
+)
+set(MOD_DEPS
+  "Fw/Types"
+)
+register_fprime_module()
+
+# Rules based unit testing
+set(UT_MOD_DEPS
+    STest
+    Fw/Types
+)
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/CircularBuffer/CircularState.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/CircularBuffer/CircularRules.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/CircularBuffer/CircularBufferTester.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/CircularBuffer/Main.cpp"
+)
+# STest Includes for this UT
+set (UT_TARGET_NAME "Types_Circular_Buffer_ut_exe")
+register_fprime_ut("${UT_TARGET_NAME}")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+</pre></div>
+</div>
+</section>
+<section id="queue-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Queue.cpp</span></code><a class="headerlink" href="#queue-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/Queue.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * Queue.cpp:
+ *
+ * Implementation of the queue data type.
+ *
+ *  Created on: July 5th, 2022
+ *      Author: lestarch
+ *
+ */
+#include "Queue.hpp"
+#include &lt;Fw/Types/Assert.hpp&gt;
+
+namespace Types {
+
+Queue::Queue() : m_internal(), m_message_size(0) {}
+
+void Queue::setup(U8* const storage, const FwSizeType storage_size, const FwSizeType depth, const FwSizeType message_size) {
+    // Ensure that enough storage was supplied
+    const FwSizeType total_needed_size = depth * message_size;
+    FW_ASSERT(
+        storage_size &gt;= total_needed_size,
+        static_cast&lt;FwAssertArgType&gt;(storage_size),
+        static_cast&lt;FwAssertArgType&gt;(depth),
+        static_cast&lt;FwAssertArgType&gt;(message_size));
+    m_internal.setup(storage, total_needed_size);
+    m_message_size = message_size;
+}
+
+Fw::SerializeStatus Queue::enqueue(const U8* const message, const FwSizeType size) {
+    FW_ASSERT(m_message_size &gt; 0, static_cast&lt;FwAssertArgType&gt;(m_message_size)); // Ensure initialization
+    FW_ASSERT(
+        m_message_size == size,
+        static_cast&lt;FwAssertArgType&gt;(size),
+        static_cast&lt;FwAssertArgType&gt;(m_message_size)); // Message size is as expected
+    return m_internal.serialize(message, m_message_size);
+}
+
+Fw::SerializeStatus Queue::dequeue(U8* const message, const FwSizeType size) {
+    FW_ASSERT(m_message_size &gt; 0); // Ensure initialization
+    FW_ASSERT(
+        m_message_size &lt;= size,
+        static_cast&lt;FwAssertArgType&gt;(size),
+        static_cast&lt;FwAssertArgType&gt;(m_message_size)); // Sufficient storage space for read message
+    Fw::SerializeStatus result = m_internal.peek(message, m_message_size, 0);
+    if (result != Fw::FW_SERIALIZE_OK) {
+        return result;
+    }
+    return m_internal.rotate(m_message_size);
+}
+
+FwSizeType Queue::get_high_water_mark() const {
+    FW_ASSERT(m_message_size &gt; 0, static_cast&lt;FwAssertArgType&gt;(m_message_size));
+    return m_internal.get_high_water_mark() / m_message_size;
+}
+
+void Queue::clear_high_water_mark() {
+    m_internal.clear_high_water_mark();
+}
+
+FwSizeType Queue::getQueueSize() const {
+    FW_ASSERT(m_message_size &gt; 0, static_cast&lt;FwAssertArgType&gt;(m_message_size));
+    return m_internal.get_allocated_size() / m_message_size;
+}
+
+
+}  // namespace Types
+</pre></div>
+</div>
+</section>
+<section id="queue-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Queue.hpp</span></code><a class="headerlink" href="#queue-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/Queue.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * Queue.hpp:
+ *
+ * FIFO queue of fixed size messages. For use generally where non-concurrent, non-OS backed based FIFO queues are
+ * necessary. Message size is defined at construction time and all messages enqueued and dequeued must be of that fixed
+ * size. Wraps circular buffer to perform actual storage of messages. This implementation is not thread safe and the
+ * expectation is that the user will wrap it in concurrency constructs where necessary.
+ *
+ *  Created on: July 5th, 2022
+ *      Author: lestarch
+ *
+ */
+#ifndef _UTILS_TYPES_QUEUE_HPP
+#define _UTILS_TYPES_QUEUE_HPP
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+#include &lt;Fw/Types/BasicTypes.hpp&gt;
+#include &lt;Fw/Types/Serializable.hpp&gt;
+#include &lt;Utils/Types/CircularBuffer.hpp&gt;
+
+namespace Types {
+
+class Queue {
+  public:
+    /**
+     * \brief constructs an uninitialized queue
+     */
+    Queue();
+
+    /**
+     * \brief setup the queue object to setup storage
+     *
+     * The queue must be configured before use to setup storage parameters. This function supplies those parameters
+     * including depth, and message size.  Storage size must be greater than or equal to the depth x message size.
+     *
+     * \param storage: storage memory allocation
+     * \param storage_size: size of the provided allocation
+     * \param depth: depth of the queue
+     * \param message_size: size of individual messages
+     */
+    void setup(U8* const storage, const FwSizeType storage_size, const FwSizeType depth, const FwSizeType message_size);
+
+    /**
+     * \brief pushes a fixed-size message onto the back of the queue
+     *
+     * Pushes a fixed-size message onto the queue. This performs a copy of the data onto the queue so the user is free
+     * to dispose the message data as soon as the call returns. Note: message is required to be of the size message_size
+     * as defined by the construction of the queue. Size is provided as a safety check to ensure the sent size is
+     * consistent with the expected size of the queue.
+     *
+     * This will return a non-Fw::SERIALIZE_OK status when the queue is full.
+     *
+     * \param message: message of size m_message_size to enqueue
+     * \param size: size of the message being sent. Must be equivalent to queue's message size.
+     * \return: Fw::SERIALIZE_OK on success, something else on failure
+     */
+    Fw::SerializeStatus enqueue(const U8* const message, const FwSizeType size);
+
+    /**
+     * \brief pops a fixed-size message off the front of the queue
+     *
+     * Pops a fixed-size message off the front of the queue. This performs a copy of the data into the provided message
+     * buffer. Note: message is required to be of the size message_size as defined by the construction of the queue. The
+     * size must be greater or equal to message size, although only message size bytes will be used.
+     *
+     * This will return a non-Fw::SERIALIZE_OK status when the queue is empty.
+     *
+     * \param message: message of size m_message_size to dequeue
+     * \param size: size of the buffer being supplied.
+     * \return: Fw::SERIALIZE_OK on success, something else on failure
+     */
+    Fw::SerializeStatus dequeue(U8* const message, const FwSizeType size);
+
+    /**
+     * Return the largest tracked allocated size
+     */
+    FwSizeType get_high_water_mark() const;
+
+    /**
+     * Clear tracking of the largest allocated size
+     */
+    void clear_high_water_mark();
+
+    FwSizeType getQueueSize() const;
+
+  private:
+    CircularBuffer m_internal;
+    FwSizeType m_message_size;
+};
+}  // namespace Types
+#endif  // _UTILS_TYPES_QUEUE_HPP
+</pre></div>
+</div>
+</section>
+<section id="readme-md">
+<h2><code class="docutils literal notranslate"><span class="pre">README.md</span></code><a class="headerlink" href="#readme-md" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/README.md</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Utils::Types
+
+This directory contains a library of helper types.
+
+## Circular Buffer
+
+This type uses a circular buffer to implement a bounded FIFO stream,
+i.e., a logical store that can grow to a maximum
+size and can shrink.
+The logical store is byte addressable with addresses
+0 through _n - 1_, where _n_ is the current store size.
+It grows by increasing the top address from _n - 1_
+to _n + m - 1_ and copying _m_ bytes of data into the
+logical memory so allocated.
+It shrinks by deleting the lowest _m_ addresses
+and renumbering the logical addresses of the
+remaining bytes starting at zero.
+
+The implementation uses a fixed-size physical store.
+The logical store is represented as a base or head index into
+the physical store and an allocated size.
+Initially both are zero.
+When data is added to the circular buffer, the allocated size grows.
+When data is removed from the circular buffer, the allocated
+size shrinks, and the head pointer advances.
+
+The allocated store size never exceeds the physical store size.
+However, when the head index is greater than zero, the sum of
+the head index and the allocated size may exceed
+the physical store size.
+In this case, the logical store wraps around to the beginning
+of the physical store.
+Further, deleting data while in this state may cause
+the head index to wrap around.
+
+`CircularBuffer` does not provide concurrency control.
+If multiple threads use the buffer, the uses must
+be guarded by other concurrency control, e.g.,
+a queue or lock.
+
+The `CircularBuffer` type provides the following operations.
+
+### Constructor
+
+```c++
+CircularBuffer(U8* const buffer, const FwSizeType size)
+```
+
+Construct a circular buffer with the given physical store,
+specified as a starting pointer and a size in bytes.
+
+### Adding Data
+
+```c++
+Fw::SerializeStatus serializeTo(const U8* const buffer, const FwSizeType size);
+```
+
+If the current logical store size plus `size` exceeds
+the maximum logical store size, then return an error.
+Otherwise increase the logical store size by
+`size` bytes and copy `size` bytes starting at `buffer`
+into the new logical memory.
+
+The operation is called `serialize` following F Prime practice.
+No data is actually serialized (the data is copied byte for byte).
+
+### Reading Data
+
+```c++
+Fw::SerializeStatus peek(char&amp; value, FwSizeType offset = 0) const;
+```
+
+If `offset` is not a valid address of the logical store,
+then return an error.
+Otherwise read a `char` value at address `offset` of the logical store
+and store the result into `value`.
+
+```c++
+Fw::SerializeStatus peek(U8&amp; value, FwSizeType offset = 0) const;
+```
+
+Same as previous, but read a `U8` value.
+
+```c++
+Fw::SerializeStatus peek(U32&amp; value, FwSizeType offset = 0) const;
+```
+
+If `offset` through `offset` + 3 are not valid addresses
+in the logical store, then return an error.
+Otherwise read four bytes of the logical store starting at `offset`,
+interpret them as an unsigned 32-bit integer in big endian order,
+and store the result into `value`.
+
+```c++
+Fw::SerializeStatus peek(U8* buffer, FwSizeType size, FwSizeType offset = 0) const;
+```
+
+If `offset` through `offset + size - 1` are not all valid
+addresses in the logical store, then return an error.
+Otherwise copy `size` bytes starting at `offset` into
+the memory starting at `buffer`.
+
+### Deleting Data
+
+```c++
+Fw::SerializeStatus rotate(FwSizeType amount);
+```
+
+If the logical store size _s_ is less than `amount`, then
+return an error.
+Otherwise delete `amount` bytes from the bottom of the
+logical store: reassign the bytes at addresses `amount`
+through _s_ - 1 to addresses zero through _s_ - `amount` - 1,
+and set the logical store size to _s_ - `amount`.
+
+### Querying Buffer State
+
+```c++
+FwSizeType get_allocated_size() const;
+```
+
+Return the number of allocated bytes, i.e., the
+current logical store size.
+This is the maximum number of bytes that may be read from
+the logical store without adding data.
+
+```c++
+FwSizeType get_free_size() const;
+```
+
+Return the number of free bytes, i.e., the
+maximum logical store size minus the current logical store size.
+This is the number of bytes that may be added to the logical
+store without deleting data.
+
+```c++
+FwSizeType get_capacity() const;
+```
+
+Return the maximum logical store size (equal to the physical store size).
+This is the total number of bytes that may be added to an empty
+circular buffer.
+</pre></div>
+</div>
+</section>
+<section id="spscqueue-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">SpscQueue.hpp</span></code><a class="headerlink" href="#spscqueue-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/SpscQueue.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  SpscQueue.hpp
+// \brief  Lightweight wait-free non-allocating single producer single consumer queue
+//
+// This algorithm is lock-free, wait-free, thread-safe, and ISR-safe, but
+// it relies on two restrictions to achieve these properties:
+//
+//    1. There may only be one producer thread, which is the thread
+//       that may call produce.
+//    2. There may only be one consumer thread, which is the thread
+//       that may call consume and peek.
+//
+// For the purposes of this algorithm, an ISR can be considered to be a
+// thread. In addition, multiple threads could share the responsibility of
+// being a producer or the responsibility of being a consumer if another
+// higher-level concurrency mechanism (like a Mutex) is used to ensure that
+// there is only a single thread acting as producer or a single thread acting
+// as consumer at any time.
+//
+// Attempting to produce from multiple threads or consume/peek from multiple
+// threads without higher-level synchronization can lead to memory corruption.
+//
+// The isFull() and isEmpty() operations may be used from either the
+// producer or consumer thread, but beware that the answer could potentially
+// get outdated, depending on which thread calls it. Here are the valid
+// uses:
+//
+//    1. If isEmpty() returns false when called by the consumer, then the
+//       next consume or peek operation is guaranteed to succeed.
+//    2. If isFull() returns false when called by the producer, then the
+//       next produce operation is guaranteed to succeed.
+//
+// In addition, this algorithm does not dynamically allocate memory, making
+// it robust for hard-real-time environments.
+//
+// ======================================================================
+
+#ifndef UTILS_TYPES_SPSC_QUEUE_HPP
+#define UTILS_TYPES_SPSC_QUEUE_HPP
+
+#include &lt;atomic&gt;
+
+namespace Types {
+
+// Note: FwSizeType is probably generally larger than we need,
+// but it should still be an efficient size to manipulate,
+// and it's guaranteed to be unsigned, which is crucial.
+template &lt;class E, FwSizeType CAPACITY&gt;
+class SpscQueue {
+  public:
+    static_assert(CAPACITY * 2 &lt;= std::numeric_limits&lt;FwSizeType&gt;::max(),
+                  "This implementation distinguishes full and empty queues by using indices modulo CAPACITY * 2, "
+                  "so CAPACITY * 2 must fit in the index type");
+
+    SpscQueue() : m_elements{}, m_nextProduceIdx(0), m_nextConsumeIdx(0) {
+        FW_ASSERT(this-&gt;m_nextProduceIdx.is_lock_free() &amp;&amp; this-&gt;m_nextConsumeIdx.is_lock_free());
+    }
+
+    bool isFull() const {
+        return countElements(this-&gt;m_nextProduceIdx.load(), this-&gt;m_nextConsumeIdx.load()) == CAPACITY;
+    }
+
+    bool isEmpty() const { return countElements(this-&gt;m_nextProduceIdx.load(), this-&gt;m_nextConsumeIdx.load()) == 0; }
+
+    // May only be called by the single producer thread.
+    bool produce(const E&amp; element) {
+        FwSizeType nextProduceIdx = this-&gt;m_nextProduceIdx.load();
+        FwSizeType nextConsumeIdx = this-&gt;m_nextConsumeIdx.load();
+
+        if (countElements(nextProduceIdx, nextConsumeIdx) == CAPACITY) {
+            return false;
+        }
+
+        this-&gt;m_elements[nextProduceIdx % CAPACITY] = element;
+        this-&gt;m_nextProduceIdx.store((nextProduceIdx + 1) % (CAPACITY * 2));
+        return true;
+    }
+
+    // May only be called by the single consumer thread.
+    bool consume(E&amp; elementOut) {
+        FwSizeType nextProduceIdx = this-&gt;m_nextProduceIdx.load();
+        FwSizeType nextConsumeIdx = this-&gt;m_nextConsumeIdx.load();
+
+        if (countElements(nextProduceIdx, nextConsumeIdx) == 0) {
+            return false;
+        }
+
+        elementOut = this-&gt;m_elements[nextConsumeIdx % CAPACITY];
+        this-&gt;m_nextConsumeIdx.store((nextConsumeIdx + 1) % (CAPACITY * 2));
+        return true;
+    }
+
+    // May only be called by the single consumer thread.
+    bool peek(E&amp; elementOut) const {
+        FwSizeType nextProduceIdx = this-&gt;m_nextProduceIdx.load();
+        FwSizeType nextConsumeIdx = this-&gt;m_nextConsumeIdx.load();
+
+        if (countElements(nextProduceIdx, nextConsumeIdx) == 0) {
+            return false;
+        }
+
+        elementOut = this-&gt;m_elements[nextConsumeIdx % CAPACITY];
+        return true;
+    }
+
+    // May only be called by the single consumer thread.
+    bool consume() {
+        E ignored;
+        return consume(ignored);
+    }
+
+  private:
+    E m_elements[CAPACITY];
+    std::atomic&lt;FwSizeType&gt; m_nextProduceIdx;
+    std::atomic&lt;FwSizeType&gt; m_nextConsumeIdx;
+
+    static FwSizeType countElements(FwSizeType nextProduceIdx, FwSizeType nextConsumeIdx) {
+        FwSizeType count = (nextProduceIdx - nextConsumeIdx + CAPACITY * 2) % (CAPACITY * 2);
+        FW_ASSERT(count &lt;= CAPACITY, nextProduceIdx, nextConsumeIdx, count, CAPACITY);
+        return count;
+    }
+};
+
+}  // namespace Types
+
+#endif
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../test/ut/index.html" class="btn btn-neutral float-left" title="ut" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="test/index.html" class="btn btn-neutral float-right" title="test" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

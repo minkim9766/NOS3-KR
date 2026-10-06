@@ -1,0 +1,1670 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sheet &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../search.html" />
+    <link rel="next" title="_includes" href="_includes/index.html" />
+    <link rel="prev" title="loaders" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../index.html">gsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">gsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">docs</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">server-manual</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">mdb</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">loaders</a></li>
+      <li class="breadcrumb-item active">sheet</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../_sources/project_inventory/gsw/yamcs/docs/server-manual/mdb/loaders/sheet/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="sheet">
+<h1>sheet<a class="headerlink" href="#sheet" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/docs/server-manual/mdb/loaders/sheet/</span></code></p>
+<section id="id1">
+<h2>하위 폴더<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="_includes/index.html">_includes</a></li>
+</ul>
+</div>
+</section>
+<section id="id2">
+<h2>이 폴더의 파일<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+</section>
+<section id="alarms-rst">
+<h2><code class="docutils literal notranslate"><span class="pre">alarms.rst</span></code><a class="headerlink" href="#alarms-rst" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/docs/server-manual/mdb/loaders/sheet/alarms.rst</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Alarms Sheet
+============
+
+This sheet defines how the monitoring results of a parameter should be derived. E.g. if a parameter exceeds some pre-defined value, this parameter's state changes to ``CRITICAL``.
+
+``parameter reference``
+    The reference name of the parameter for which this alarm definition applies
+
+``context``
+    A condition under which the defined triggers apply. This can be used to define multiple different sets of triggers for one and the same parameter, that apply depending on some other condition (typically a state of some kind). When left blank, the defined set of conditions are assumed to be part of the *default* context.
+
+    Contextual alarms are evaluated from top to bottom, until a match is found. If no context conditions apply, the default context applies.
+
+``report``
+    When alarms under the given context should be reported. Should be one of ``OnSeverityChange`` or ``OnValueChange``. With ``OnSeverityChange`` being the default. The condition ``OnValueChange`` will check value changes based on the engineering values. It can also be applied to a parameter without any defined severity levels, in which case an event will be generated with every change in value.
+
+``min violations``
+    Number of successive instances that meet any of the alarm conditions under the given context before the alarm event triggers (defaults to 1). This field affects when an event is generated (i.e. only after X violations). It does not affect the monitoring result associated with each parameter. That would still be out of limits, even after a first violation.
+
+``watch: trigger type``
+    One of ``low`` (or alias ``lowInclusive``), ``high`` (or alias ``highInclusive``), ``lowExclusive``, ``highExlusive`` or ``state``. For each context of a numeric parameter, you can have both a low and a high trigger that lead to the ``WATCH`` state. For each context of an enumerated parameter, you can have multiple state triggers that lead to the ``WATCH`` state.
+
+``watch: trigger value``
+    If the trigger type is ``low``, ``lowInclusive``, ``high`` or ``highInclusive``: a numeric value indicating the low resp. high limit value. The value is considered inclusive with respect to its nominal range. For example, a low limit of 20, will have a ``WATCH`` alarm if and only if its value is smaller than 20.
+
+    If the trigger type is ``lowExclusive`` or ``highExclusive``: a numeric value indicating the low resp. heigh limit value. The value is considered exclusive with respect to its nominal range. For example, a lowExclusive limit of 20, will have a ``WATCH`` alarm if and only if its value is smaller than or equal to 20.
+
+    If the trigger value is ``state``: a state that would bring the given parameter in its ``WATCH`` state.
+
+``warning trigger type``, ``warning trigger value``
+    Analogous to ``watch`` trigger
+
+``distress trigger type``, ``distress trigger value``
+    Analogous to ``watch`` trigger
+
+``critical trigger type``, ``critical trigger value``
+    Analogous to ``watch`` trigger
+
+``severe trigger type``, ``severe trigger value``
+    Analogous to ``watch`` trigger
+</pre></div>
+</div>
+</section>
+<section id="algorithms-rst">
+<h2><code class="docutils literal notranslate"><span class="pre">algorithms.rst</span></code><a class="headerlink" href="#algorithms-rst" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/docs/server-manual/mdb/loaders/sheet/algorithms.rst</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Algorithms Sheet
+================
+
+This sheet contains arbitrarily complex user algorithms that can set (derived) output parameters based on any number of input parameters.
+
+Empty lines are used to separate algorithms and cannot be used inside the specification of one algorithm.
+
+The column names are:
+
+
+``algorithm name``
+    The name of the algorithm within the space system.
+
+``language``
+    The programming language of the algorithm. Currently supported values are JavaScript, python and java.
+
+    ``python`` requires adding the `jython-standalone &lt;https://mvnrepository.com/artifact/org.python/jython-standalone&gt;` jar to the Java classpath (due to its large size, this is by default not included in Yamcs distributions).
+
+``text``
+    The code of the algorithm. See: :doc:`../../algorithm-definitions`.
+
+``trigger``
+    Optionally specify when the algorithm should trigger:
+
+    * ``OnParameterUpdate('/some-param', 'some-other-param')`` Execute the algorithm whenever *any* of the specified parameters are updated
+    * ``OnInputParameterUpdate`` This is the same as above for all input parameters (i.e. execute whenever *any* input parameter is updated).
+    * ``OnPeriodicRate(&lt;fireRate&gt;)`` Execute the algorithm every ``fireRate`` milliseconds
+    * ``none`` The algorithm doesn't trigger automatically but can be called upon from other parts of the system (like the command verifier)
+
+    The default is none.
+
+``in/out``
+    Whether a parameter is inputted to, or outputted from the algorithm. Parameters are defined, one per line, following the line defining the algorithm name.
+
+``parameter reference``
+    Algorithms can be interdependent, meaning that the output parameters of one algorithm could be used as input parameters of another algorithm.
+
+``instance``
+    Allows inputting a specific instance of a parameter. At this stage, only values smaller than or equal to zero are allowed. A negative value, means going back in time. Zero is the default and means the actual value. This functionality allows for time-based window operations over multiple packets. Algorithms with windowed parameters will only trigger as soon as all of those parameters have all instances defined (i.e. when the windows are full).
+
+    Note that this column should be left empty for output parameters.
+
+``variable name``
+    An optional friendlier name for use in the algorithm. By default the parameter name is used, which may lead to runtime errors depending on the naming conventions of the applicable script language.
+
+    Note that a unique name is required in this column, when multiple instances of the same parameter are inputted.
+
+``flags``
+    This column is applicable for each ``in`` parameter and can have the following values:
+ 
+    ``M``
+        Short for mandatory. The algorithm will not trigger unless a value is set for this input parameter.
+
+``description``
+    Textual description of the algorithm. Should be one line.
+
+``long description``
+    Long textual description of the algorithm. In Markdown format.
+
+``namespace:&lt;ALIAS&gt;``
+    Any numbers of namespace columns can be added using the prefix ``namespace:`` followed by the name of a namespace.
+
+    This allows associating alternative names to algorithms.
+</pre></div>
+</div>
+</section>
+<section id="calibration-rst">
+<h2><code class="docutils literal notranslate"><span class="pre">calibration.rst</span></code><a class="headerlink" href="#calibration-rst" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/docs/server-manual/mdb/loaders/sheet/calibration.rst</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Calibration Sheet
+=================
+
+This sheet contains calibration data including enumerations. It has the following columns:
+
+``calibrator name`` (required)
+    Name of the calibration. Used as a reference in the :doc:`Parameters &lt;parameters&gt;` or :doc:`Commands &lt;commands&gt;` sheet.
+
+``type`` (required)
+    One of ``polynomial``, ``spline``, ``enumeration``, ``java-expression`` or ``time``.
+
+    Detailed in sections below.
+
+    * ``time`` for converting a raw integer or float value into a timestamp value.
+
+``calib1``
+    Contents depends on the chosen ``type``. See sections below.
+
+``calib2``
+    Contents depends on the chosen ``type``. See sections below.
+
+
+Polynomials
+^^^^^^^^^^^
+
+If the type is set to ``polynomial``, polynomial calibration is performed.
+
+``calib1`` (required)
+    List the coefficients, one per row starting with the constant and up to the highest grade. There is no limit in the number of coefficients (i.e. order of polynomial).
+
+``calib2``
+    (not used)
+
+Note that the polynomial calibration is performed with double precision floating point numbers even though the input and/or output may be 32 bit.
+
+
+Splines
+^^^^^^^
+
+If the type is set to ``spline``, linear spline (pointpair) interpolation is performed. As with polynomial calibration, the computation is performed with double precision numbers.
+
+``calib1`` (required)
+    Start point: ``x`` from ``(x, y)`` pair.
+
+``calib2`` (required)
+    Stop point: ``y`` from ``(x, y)`` pair.
+
+
+Enumerations
+^^^^^^^^^^^^
+
+If the type is set to ``enumeration``, the calibrator can be used to map enumeration states.
+
+``calib1`` (required)
+    Numeric value
+
+``calib2`` (required)
+    Text state corresponding to ``calib1``.
+
+
+Java Expressions
+^^^^^^^^^^^^^^^^
+
+The type ``java-expression`` serves as a catch-all. They can be used for float or integer calibrations.
+
+``calib1`` (required)
+    The textual formula to be executed. This expression will be enclosed and compiled into a class like this:
+
+    .. code-block:: java
+
+        package org.yamcs.mdb.jecf;
+        public class Expression665372494 implements org.yamcs.mdb.CalibratorProc {
+            public double calibrate(double rv) {
+                    return &lt;expression&gt;;
+            }
+        }
+
+    The expression should return a double, but Java will convert implicitly any other primitive type to a double.
+
+    Java statements cannot be used, however the ternary operator ``? :`` can be used; for example this expression would compile fine:
+
+    .. code-block:: java
+
+        rv &gt; 0 ? rv + 5 : rv - 5
+
+    Static functions can be also referenced. In addition to the usual Java ones (e.g. ``Math.sin``, ``Math.log``, etc) user-own functions (available in the Java classpath) can be referenced by specifying the full class name:
+
+    .. code-block:: java
+
+        my.very.complicated.calibrator.Execute(rv)
+
+``calib2``
+    (not used)
+
+
+Time
+^^^^
+
+If the type is ``time``, this calibrator allows to convert a raw integer or float value into a timestamp value by using the raw value as an offset from a well known epoch or from another parameter. Optionally allow to use an (offset:scale) which can be used to scale the raw value from other units (e.g. millseconds) to seconds.
+
+Known epochs are ``GPS``, ``TAI``, ``UNIX`` and ``J2000``.
+
+The conversion is performed as follows:
+
+* When using a known epoch: ``engValue = &lt;epoch&gt;_yamcs_difference + offset+rawValue*scale``.
+* When using another parameter ``p``: ``engValue = p.engValue + offset+rawValue*scale``.
+
+
+``calib1`` (required)
+    Something of the shape ``epoch:&lt;epoch&gt;`` or ``parameter:&lt;parameter reference&gt;``. The reference has to be to a parameter of type ``time``.
+
+``calib2``
+    Optionally something of the shape ``offset:scale`` where both offset and scale are numbers.
+
+    If unset, this defaults to ``0:1``
+</pre></div>
+</div>
+</section>
+<section id="changelog-rst">
+<h2><code class="docutils literal notranslate"><span class="pre">changelog.rst</span></code><a class="headerlink" href="#changelog-rst" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/docs/server-manual/mdb/loaders/sheet/changelog.rst</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>ChangeLog Sheet
+===============
+
+This optional sheet contains the list revisions made to the described space system.
+
+The sheet should have these columns:
+
+``version`` (required)
+    Version number of this spreadsheet. Defined by the author. Entries in the changelog should have increasing version numbers.
+
+``date`` (required)
+    When the change was made. This should be a date field, however any string value is accepted.
+
+``message``
+    Free-text description of the change.
+
+``author``
+    Author of the change.
+
+Unlike with other sheets, the column names are not currently enforced. Instead the column order must match this description.
+</pre></div>
+</div>
+</section>
+<section id="command-options-rst">
+<h2><code class="docutils literal notranslate"><span class="pre">command-options.rst</span></code><a class="headerlink" href="#command-options-rst" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/docs/server-manual/mdb/loaders/sheet/command-options.rst</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>CommandOptions Sheet
+====================
+
+This sheet defines two types of options for commands:
+
+* Transmission constraints: these are conditions that have to be met in order for the command to be sent.
+* Command significance: this flags commands that are of **significance**. The significance can be used in end-user applications to raise the user's awareness before sending a command.
+
+The column names are:
+
+``command name`` (required)
+    The name of a command. Any entry starting with ``#`` is treated as a comment row
+
+``transmission constraints``
+    Constraints can be specified on multiple lines. All of them have to be met for the command to be allowed for transmission.
+
+``constraint timeout``
+    This refers to the left column. A command stays in the queue for that many milliseconds. If the constraint is not met, the command is rejected. 0 means that the command is rejected even before being added to the queue, if the constraint is not met.
+
+``command significance``
+    Significance level for commands. Depending on the configuration, an extra confirmation or certain privileges may be required to send commands of high significance. One of:
+
+    - ``none``
+    - ``watch``
+    - ``warning``
+    - ``distress``
+    - ``critical``
+    - ``severe``
+
+``significance reason``
+    A message that will be presented to the user explaining why the command is significant.
+
+Unlike with other sheets, the column names are not currently enforced. Instead the column order must match this description.
+</pre></div>
+</div>
+</section>
+<section id="command-verification-rst">
+<h2><code class="docutils literal notranslate"><span class="pre">command-verification.rst</span></code><a class="headerlink" href="#command-verification-rst" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/docs/server-manual/mdb/loaders/sheet/command-verification.rst</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>CommandVerification Sheet
+=========================
+
+This sheet defines how a command shall be verified once it has been sent for execution.
+
+The transmission/execution of a command usual goes through multiple stages and a verifier can be associated to each stage.
+
+Each verifier runs within a defined time window which can be relative to the release of the command or to the completion of the previous verifier. The verifiers have three possible outcomes:
+
+* | **OK**
+  | the stage has been passed successfully.
+* | **NOK**
+  | the stage verification has failed (for example there was an error on-board when executing the command, or the uplink was not activated).
+* | **timeout**
+  | the condition could not be verified within the defined time interval.
+
+For each verifier it has to be defined what happens for each of the three outputs.
+
+``Command name``
+    The command relative name as defined in the Command sheet. Referencing commands from other subsystems is not supported.
+
+``CmdVerifier Stage``
+    Any name for a stage is accepted but XTCE defines the following ones:
+
+    * TransferredToRange
+    * SentFromRange
+    * Received
+    * Accepted
+    * Queued
+    * Execution
+    * Complete
+    * Failed
+
+    Yamcs interprets these as strings without any special semantics. If special actions (like declaring the command as completed) are required for Complete or Failed, they have to be configured in ``OnSuccess``/``OnFail``/``OnTimeout`` columns. By default command history events with the name ``Verification_&lt;stage&gt;`` are generated.
+
+``CmdVerifier Type``
+    Supported types are:
+
+    * ``container``: the command is considered verified when the container is received. Note that this cannot generate a Fail (NOK) condition - it's either OK if the container is received in the timewindow or timeout if the container is not received.
+    * ``algorithm``: the result of the algorithm run is used as the output of the verifier. If the algorithm is not run (because it gets no inputs) or returns null, then the timeout condition applies
+
+``CmdVerifier Text``
+    Depending on the type:
+
+    * ``container``: is the name of the container from the Containers sheet. Reference to containers from other space systems is not supported.
+    * ``algorithm``: is the name of the algorithm from the Algorithms sheet. Reference to algorithms from other space systems is not supported.
+
+``Time Check Window``
+    start,stop in milliseconds defines when the verifier starts checking the command and when it stops.
+
+``checkWindow is relative to``
+    * ``LastVerifier`` (default): the start,stop in the window definition are relative to the end of the previous verifier. If there is no previous verifier, the start,stop are relative to the command release time. If the previous verifier ends with timeout, this verifier will also timeout without checking anything.
+    * ``CommandRelease``: the start,stop in the window definition are relative to the command release.
+
+``OnSuccess``
+    Defines what happens when the verification returns true. It has to be one of:
+
+    * ``SUCCESS``: command considered completed successful (``CommandComplete`` event is generated)
+    * ``FAIL``:  ``CommandFailed`` event is generated
+    * none (default): only a ``Verification_&lt;stage&gt;`` event is generated without an effect on the final execution status of the command.
+
+``OnFail``
+    Same as ``OnSuccess`` but the event is generated in case the verifier returns false.
+
+``OnTimeout``
+    Same as ``OnSuccess`` but the event is generated in case the verifier times out.
+</pre></div>
+</div>
+</section>
+<section id="commands-rst">
+<h2><code class="docutils literal notranslate"><span class="pre">commands.rst</span></code><a class="headerlink" href="#commands-rst" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/docs/server-manual/mdb/loaders/sheet/commands.rst</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Commands Sheet
+==============
+
+This sheet contains commands description, including arguments. General conventions:
+
+* First line with a new 'Command name' starts a new command
+* Second line after a new 'Command name' should contain the first command arguments
+* Empty lines are only allowed between two commands.
+
+The column names are:
+
+``command name``
+    The name of the command. Any entry starting with `#` is treated as a comment row.
+
+``parent``
+    Name of the parent command and position in bits.
+
+    Can be specified starting with ``/`` for an absolute reference or with ``../`` for pointing to parent space system.
+    
+    A suffix ``:x`` means that the arguments in this container start at position ``x`` (in bits) relative to the top-most container.
+    
+    Currently there is a problem for containers that have no argument: the bit position does not apply to children and has to be repeated.
+
+``argument assignment``
+    ``name1=value1;name2=value2`` where ``name1`` and ``name2`` are the names of arguments which are assigned when the inheritance takes place.
+
+``flags``
+    For commands: ``A`` is abstract. For arguments: ``L`` is little endian.
+
+``argument name``
+    From this column on, most of the cells are valid for arguments only. These have to be defined on a new row after the command. The exceptions are: ``description``, ``long description`` and aliases.
+
+``position``
+    Relative position to the previous argument. Default: 0
+
+``data type``
+    Reference to a data type define in the :doc:`DataTypes sheet &lt;data-types&gt;`.
+
+    Or a value of the form ``FixedValue(n)`` where ``n`` is the size in bits. This can be used to fill the packet with a value without requiring an argument.
+
+``default value``
+    Default value. If ``data type`` is a ``FixedValue``, this has to contain the value in hexadecimal.
+    
+    Note that when the size of the argument is not an integer number of bytes (which is how hexadecimal binary strings are specified), the most significant bits are ignored.
+
+``range low``
+    The value of the argument cannot be smaller than this. For strings and binary arguments this means the minimum length in characters, respectively bytes.
+
+``range high``
+    The value of the argument cannot be higher than this. Only applies to numbers. For strings and binary arguments this means the minimum length in characters, respectively bytes.
+
+``description``
+    Optional free text description. Should be one line.
+
+``long description``
+    Long textual description. In Markdown format.
+</pre></div>
+</div>
+</section>
+<section id="containers-rst">
+<h2><code class="docutils literal notranslate"><span class="pre">containers.rst</span></code><a class="headerlink" href="#containers-rst" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/docs/server-manual/mdb/loaders/sheet/containers.rst</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Containers Sheet
+================
+
+The sheet contains description of the content of the container (packet). As per XTCE, a container is a structure describing a binary chunk of data composed of multiple entries.
+
+A container can inherit from other container meaning that it takes all entries from the parent, and add some more. A container can have two types of entries:
+
+* parameters
+* other containers (this is called aggregation)
+
+General conventions:
+
+* first line with a new ``container name`` starts a new container
+* second line after a new ``container name`` should contain the first entry
+* empty lines are only allowed between two containers
+
+These are the column names:
+
+``container name``
+    The name of the container within the space system.
+
+``parent``
+    Parent container and position in bits where the subcontainer starts, for example ``PARENT_CONTAINER:64``. If the position in bits is not specified, the default position is to start from the last parameter in the parent. If parent is not specified, either the container is the root, or it can be used as part of another container in aggregation.
+
+``condition``
+    Inheritance condition. This specifies a switch within the parent which activates this child container, for example ``MID=0x101``. There are currently three condition forms supported:
+
+    * Simple condition: ``Parameter==value``
+    * Condition list: ``Parameter==value;Parameter2==value2``. All conditions must be true.
+    * Boolean condition: ``&amp;(epx1;exp2;...;expn)`` for an AND expression, or ``|(exp1;exp2;...;expn)`` for an OR expression. Nested expressions are either other boolean conditions or a simple condition.
+
+    Currently the only supported conditions are on the parameters of the parent container. This cover the usual case where the parent defines a header and the inheritance condition is based on parameters from the header.
+
+``flags``
+    Optional flags.
+
+    ``a``
+        Use this container as archive partition. In the Archive Browser this will appear as a line, and it will be more efficient to filter the retrieval on this container.
+
+``entry``
+    A reference to a parameter, or a container without parent.
+
+``position``
+    Position of the entry. Could be relative to the previous entry or absolute (relative to the beginning of the packet).
+
+    ``r:&lt;n&gt;``
+        Position is relative to the previous entry separated by ``&lt;n&gt;`` bits.
+    ``a:&lt;n&gt;``
+        Position is absolute. ``&lt;n&gt;`` is the number of bits from the beginning of the packet.
+
+     ``&lt;n&gt;`` is equivalent to ``r:&lt;n&gt;``.
+
+     If unset, the default is ``r:0``, meaning the entry directly follows the preceding entry.
+
+``size in bits``
+    Only for containers (and not for parameter entries). If set, this represents the size of the container. Otherwise, the size is derived from the entries in the container.
+
+    For example if the container contains some fillers at the end, this entry can be used to enforce the size such that it is not needed to add an artificial parameter. Note that the size matters only if the container is used as part of another container. Either inherited from or in aggregation.
+
+``expected interval``
+    Expected interval in milliseconds. If set then all parameters extracted from this container have an expiration time set to this interval multiplied with a configurable constant. See the option :ref:`expirationTolerance &lt;expirationTolerance&gt;` in :file:`etc/processor.yaml`.
+
+``description``
+    Textual description of the container. Should be one line.
+
+``long description``
+    Long textual description of the container. In Markdown format.
+
+``namespace:&lt;ALIAS&gt;``
+    Any numbers of namespace columns can be added using the prefix ``namespace:`` followed by the name of a namespace.
+
+    This allows associating alternative names to containers.
+</pre></div>
+</div>
+</section>
+<section id="data-types-rst">
+<h2><code class="docutils literal notranslate"><span class="pre">data-types.rst</span></code><a class="headerlink" href="#data-types-rst" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/docs/server-manual/mdb/loaders/sheet/data-types.rst</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>DataTypes Sheet
+===============
+
+This sheet describes data types that can then be used in the definition of :doc:`parameters &lt;parameters&gt;` and :doc:`command arguments &lt;commands&gt;`.
+
+``type name`` (required)
+    Name of the type used as a reference in the parameter and command sheets.
+
+``eng type`` (required)
+    Engineering type. One of:
+
+    * ``uint``: unsigned 32 bit integer
+    * ``uint64``: unsigned 64 bit integer
+    * ``int``: signed 32 bit integer
+    * ``int64``: signed 64 bit integer
+    * ``enumerated``: enumeration (integer to string)
+    * ``float``: 32 bit floating point number
+    * ``double``: 64 bit floating point number
+    * ``boolean``: true or false
+    * ``string``: text value
+    * ``binary``: byte array
+    * ``time``: absolute time
+
+    It is also possible to define an aggregate or array type.
+
+    See: :ref:`engineering-types`.
+
+``raw type``
+    See: :ref:`raw-encoding`.
+
+    A parameter when extracted from a binary packet has two forms: a raw value and an engineering value. The extraction from the raw packet is performed according to the encoding, whereas the conversion from raw to engineering value is performed by a calibrator.
+    
+    Raw types are optional for use with parameters that do not require encoding. For example because they are already extracted. Then Yamcs can only do their calibration. Or it can be that a parameter is already calibrated, then it can still be specified here to be able to associate alarms.
+
+``encoding``
+    See: :ref:`raw-encoding`.
+
+``eng unit``
+    Unit of measure. For informational purpose only.
+
+``calibration``
+    Reference to a calibrator defined in the :doc:`Calibration sheet &lt;calibration&gt;`. Leave empty if no calibration is applied.
+
+``initial value``
+    Initial (default) value given to a parameter or command argument.
+
+    Note that this value can be overwritten for specific parameters, or command arguments using a column of the same name in the :doc:`Commands &lt;commands&gt;` and :doc:`Parameters &lt;parameters&gt;` sheets.
+
+    .. include:: _includes/initial-value.rst
+
+``description``
+    A description for the parameter or command argument. Should be one line.
+
+``long description``
+    Long textual description. In Markdown format.
+
+
+.. _raw-encoding:
+
+Encoding and Raw Types
+^^^^^^^^^^^^^^^^^^^^^^
+
+The columns ``raw type`` and ``encoding`` describe how the parameter is encoded in the binary packet. All types are case-insensitive.
+
+
+Unsigned Integers
+"""""""""""""""""
+
+Raw type: ``uint``
+
+Encoding:
+
+.. list-table::
+    :widths: 40 60
+    :header-rows: 1
+
+    * - Encoding
+      - Description
+    * - ``unsigned(&lt;n&gt;,&lt;BE|LE&gt;)``
+      - unsigned integer
+    * - ``&lt;n&gt;``
+      - shortcut for ``unsigned(&lt;n&gt;,BE)``
+
+Where:
+
+* ``n`` is the size in bits
+* ``LE`` = little endian
+* ``BE`` = big endian
+
+
+Signed Integers
+"""""""""""""""
+
+Raw type: ``int``
+
+Encoding:
+
+.. list-table::
+    :widths: 40 60
+    :header-rows: 1
+
+    * - Encoding
+      - Description
+    * - ``twosComplement(&lt;n&gt;,&lt;BE|LE&gt;)``
+      - two's complement encoding
+    * - ``signMagnitude(&lt;n&gt;,&lt;BE|LE&gt;)``
+      - sign magnitude encoding - first (or last for LE) bit is the sign, the remaining bits represent the magnitude (absolute value).
+    * - ``&lt;n&gt;``
+      - shortcut for ``twosComplement(&lt;n&gt;,BE)``
+
+Where:
+
+* ``n`` is the size in bits
+* ``LE`` = little endian
+* ``BE`` = big endian
+
+
+Floats
+""""""
+
+Raw type: ``float``
+
+Encoding:
+
+.. list-table::
+    :widths: 40 60
+    :header-rows: 1
+
+    * - Encoding
+      - Description
+    * - ``ieee754_1985(&lt;n&gt;,&lt;BE|LE&gt;)``
+      - IEE754_1985 encoding
+    * - ``&lt;n&gt;``
+      - shortcut for ``ieee754_1985(&lt;n&gt;,BE)``
+
+Where:
+
+* ``n`` is the size in bits
+* ``LE`` = little endian
+* ``BE`` = big endian
+
+
+Booleans
+""""""""
+
+Raw type: ``boolean``
+
+Encoding: Leave empty. 1 bit is assumed.
+
+
+String
+""""""
+
+Raw type: ``string``
+
+Encoding:
+
+.. list-table::
+    :widths: 40 60
+    :header-rows: 1
+
+    * - Encoding
+      - Description
+    * - ``fixed(&lt;n&gt;, &lt;charset&gt;)``
+      - fixed size string. The string has to start at a byte boundary inside the container.
+    * - ``PrependedSize(&lt;x&gt;, &lt;charset&gt;)``
+      - string whose length in bytes is specified by the first ``x`` bits of the array
+    * - ``&lt;n&gt;``
+      - shortcut for ``fixed(&lt;n&gt;)``
+    * - ``terminated(&lt;0xBB&gt;, &lt;charset&gt;&lt;m&gt;)``
+      - terminated string
+
+Where:
+
+``n`` is the size in bits. Only multiples of 8 are supported.
+
+``x`` is the size in bits of the size tag. Only multiples of 8 are supported. The size must be expressed in bytes.
+
+``charset`` is one of the `charsets supported by java &lt;https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html&gt;`_ (UTF-8, ISO-8859-1, etc). Default: UTF-8.
+
+``0xBB`` specifies a byte that is the string terminator. Pay attention to the parameters following this one; if the terminator is not found the entire buffer will be consumed.
+
+
+Binary
+""""""
+
+Raw type: ``binary``
+
+Encoding:
+
+.. list-table::
+    :widths: 40 60
+    :header-rows: 1
+
+    * - Encoding
+      - Description
+    * - ``fixed(&lt;n&gt;)``
+      - fixed size byte array
+    * - ``PrependedSize(&lt;x&gt;)``
+      - byte array whose size in bytes is specified in the first ``x`` bits of the array
+    * - ``&lt;n&gt;``
+      - shortcut for ``fixed(&lt;n&gt;)``
+
+Where:
+
+``n`` is the size in bits. Only multiples of 8 are supported and it has to start at a byte boundary.
+
+``x`` is the size in bits of the size tag. Note that while ``x`` can be any number &lt;= 32, the byte array has to start at a byte boundary.
+
+
+Custom
+""""""
+
+Raw type: *any*
+
+Encoding: ``custom(&lt;n&gt;,algorithm)``
+
+The decoding will be performed by a user defined algorithm.
+
+* ``&lt;n&gt;`` is optional and may be used to specify the size in bits of the entry in the container (in case the size is fixed) - it is used for optimizing the access to the parameters following this one.
+* ``algorithm`` the name of the algorithm - it has to be defined in the *Algorithms* sheet
+
+
+.. _engineering-types:
+
+Engineering Types
+^^^^^^^^^^^^^^^^^
+
+Engineering types describe a parameter in its processed form (i.e. after any calibrations). All types are case-insensitive.
+
+Depending on the combination of raw and engineering type, automatic conversion is applicable. For more advanced use cases, define and refer to a calibrator in the :doc:`Calibration sheet &lt;calibration&gt;`.
+
+.. list-table::
+    :widths: 20 40 40
+    :header-rows: 1
+
+    * - Type
+      - Description
+      - Automatic Conversion
+    * - ``uint``
+      - Unsigned 32 bit integer - it corresponds to ``int`` in Java.
+      - From ``int``, ``uint`` or ``string``
+    * - ``uint64``
+      - Unsigned 64 bit integer - it corresponds to ``long`` in Java.
+      - From ``int``, ``uint`` or ``string``
+    * - ``int``
+      - Signed 32 bit integer - it corresponds to ``int`` in Java.
+      - From ``int``, ``uint`` or ``string``
+    * - ``int64``
+      - Signed 64 bit integer - it corresponds to ``long`` in Java.
+      - From ``int``, ``uint`` or ``string``
+    * - ``string``
+      - Character string - it corresponds to ``String`` in Java.
+      - From ``string``
+    * - ``float``
+      - 32 bit floating point number - it corresponds to ``float`` in Java.
+      - From ``float``, ``int``, ``uint`` or ``string``
+    * - ``double``
+      - 64 bit floating point number - it corresponds to ``double`` in Java.
+      - From ``float``, ``int``, ``uint`` or ``string``
+    * - ``enumerated``
+      - A kind of string that can only be one out of a fixed set of predefined state values. It corresponds to ``String`` in Java.
+      - From ``int`` or ``uint``. A Calibrator is required.
+    * - ``boolean``
+      - A binary true/false value - it corresponds to 'boolean' in Java.
+      - From any raw type. Values equal to zero, all-zero bytes or an empty string are considered *false*.
+    * - ``binary``
+      - Byte array - it corresponds to ``byte[]`` in Java.
+      - From ``binary`` only.
+</pre></div>
+</div>
+</section>
+<section id="derived-parameters-rst">
+<h2><code class="docutils literal notranslate"><span class="pre">derived-parameters.rst</span></code><a class="headerlink" href="#derived-parameters-rst" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/docs/server-manual/mdb/loaders/sheet/derived-parameters.rst</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Derived Parameters Sheet
+========================
+
+This sheet contains information for parameters that are the results of algorithm computations.
+
+The structure of this sheet is identical to the :doc:`Parameters sheet &lt;parameters&gt;`.
+</pre></div>
+</div>
+</section>
+<section id="general-rst">
+<h2><code class="docutils literal notranslate"><span class="pre">general.rst</span></code><a class="headerlink" href="#general-rst" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/docs/server-manual/mdb/loaders/sheet/general.rst</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>General Sheet
+=============
+
+This sheet is required and allows global properties to be defined. Apart from the column headers, the sheet should contain only a single row.
+
+``format version`` (required)
+    Used by the loader to ensure a compatible spreadsheet structure.
+
+    The latest format version is 7.1.
+
+    The earliest supported format is 5.3.
+
+``name`` (required)
+    Name of the space system. All definitions in this system will be added to this system.
+
+``document version`` (required)
+    Available to the spreadsheet author to track versions in an arbitrary manner.
+
+    If the :doc:`ChangeLog &lt;changelog&gt;` sheet is used, the document version should match the version of the latest changelog entry.
+</pre></div>
+</div>
+</section>
+<section id="index-rst">
+<h2><code class="docutils literal notranslate"><span class="pre">index.rst</span></code><a class="headerlink" href="#index-rst" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/docs/server-manual/mdb/loaders/sheet/index.rst</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Spreadsheet Loader
+==================
+
+The spreadsheet loader loads TM/TC definitions from an Excel spreadsheet. The spreadsheet structure must follow a specific structure. The advantage of this loader is that the Excel files are very convenient to modify with any spreadsheet program. It is recommended to start from an existing example and replace its content as required.
+
+The Excel file must be in Excel 97-2003 Format (``.xls``). ``.xlsx`` is not supported.
+
+The loader is configured in :file:`etc/mdb.yaml` or in the instance configuration by specifying the type as ``sheet``, and providing the location of the XML file.
+
+.. code-block:: yaml
+
+    - type: "sheet"
+      args:
+        file: "mdb/BogusSAT.xls"
+
+The following notation is also accepted for historical reasons:
+
+.. code-block:: yaml
+
+   - type: "sheet"
+     spec: "mdb/BogusSAT.xls"
+
+
+.. rubric:: Configuration Options
+
+file (string)
+   **Required.** The filename to be loaded.
+
+enableXtceNameRestrictions (boolean)
+   If true, names must only use characters, digits, underscores or dashes. Default: ``true``
+
+
+.. rubric:: Sheets
+
+The spreadsheet may contain any sheets, however only the following names are considered, and further detailed in their respective sections.
+
+.. hlist::
+   :columns: 2
+
+   * :doc:`General &lt;general&gt;` (required)
+   * :doc:`ChangeLog &lt;changelog&gt;`
+   * :doc:`DataTypes &lt;data-types&gt;`
+   * :doc:`Parameters &lt;parameters&gt;`
+   * :doc:`DerivedParameters &lt;derived-parameters&gt;`
+   * :doc:`LocalParameters &lt;local-parameters&gt;`
+   * :doc:`Containers &lt;containers&gt;`
+   * :doc:`Algorithms &lt;algorithms&gt;`
+   * :doc:`Alarms &lt;alarms&gt;`
+   * :doc:`Commands &lt;commands&gt;`
+   * :doc:`CommandOptions &lt;command-options&gt;`
+   * :doc:`CommandVerification &lt;command-verification&gt;`
+   * :doc:`Calibration &lt;calibration&gt;`
+
+
+.. rubric:: Multiple Space Systems
+
+A spreadsheet file describes one space system. Multiple spreadsheets can be combined in a space system tree as described in :doc:`../index`.
+
+Alternatively, Yamcs also allows to describe a tree of space systems in a single spreadsheet file with the following rules:
+
+* All sheets that do not have a prefix, contain data for the main space system whose name is defined in the :doc:`general`.
+* To define data in subsystems, a sheet can be named like ``SYSTEM1|SYSTEM2|Containers``. This definition will create a ``SYSTEM1`` as part of the main space system and a child ``SYSTEM2`` of ``SYSTEM1``. Then the containers will be loaded in ``SYSTEM2``.
+
+The spreadsheet loader scans and creates the subsystem hierarchy and then it loads the data inside the systems traversing the hierarchy in a depth-first order.
+
+
+.. rubric:: Number Base
+
+Numeric values can be entered as decimals or as hexadecimals (with prefix ``0x``)
+
+
+.. rubric:: Referencing Parameter and Containers
+
+Name references can be used to refer to items in other space systems. They look like UNIX-like directory access expressions, such as ``../a/b``.
+
+The result of the lookup depends on the exact tree configuration in :file:`etc/mdb.yaml`
+
+
+.. rubric:: Comments
+
+Rows that begin with the symbol '#' in their first cell are ignored.
+
+
+.. toctree::
+    :maxdepth: 1
+    :hidden:
+
+    general
+    changelog
+    data-types
+    parameters
+    derived-parameters
+    local-parameters
+    containers
+    algorithms
+    alarms
+    commands
+    command-options
+    command-verification
+    calibration
+</pre></div>
+</div>
+</section>
+<section id="local-parameters-rst">
+<h2><code class="docutils literal notranslate"><span class="pre">local-parameters.rst</span></code><a class="headerlink" href="#local-parameters-rst" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/docs/server-manual/mdb/loaders/sheet/local-parameters.rst</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Local Parameters Sheet
+======================
+
+This sheet contains information for parameters that are local to Yamcs and that can be set by users.
+
+The structure of this sheet is identical to the :doc:`Parameters sheet &lt;parameters&gt;`.
+</pre></div>
+</div>
+</section>
+<section id="parameters-rst">
+<h2><code class="docutils literal notranslate"><span class="pre">parameters.rst</span></code><a class="headerlink" href="#parameters-rst" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/docs/server-manual/mdb/loaders/sheet/parameters.rst</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Parameters Sheet
+================
+
+This sheet contains parameter information.
+
+Recognised column names are:
+
+``parameter name`` (required)
+    The name of the parameter within the space system.
+
+``data type`` (required)
+    Reference to a data type define in the :doc:`DataTypes sheet &lt;data-types&gt;`.
+
+``description``
+    Textual description of the parameter. Should be one line.
+
+``long description``
+    Long textual description of the parameter. In Markdown format.
+
+``namespace:&lt;ALIAS&gt;``
+    Any numbers of namespace columns can be added using the prefix ``namespace:`` followed by the name of a namespace.
+
+    This allows associating alternative names to parameters.
+
+``initial value``
+    Initial (default) value of this parameter. If present, this overrides any initial value set on the referenced ``data type``.
+
+    .. include:: _includes/initial-value.rst
+
+``flags``
+   The only recognized flag is ``p`` which sets the parameter as persistent - that means its value will be saved and restored when the Yamcs restarts. For this to work, the realtime processor has to be configured (in processor.yaml) with ``persistParameters: true``
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="loaders" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="_includes/index.html" class="btn btn-neutral float-right" title="_includes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,3851 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gui &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../search.html" />
+    <link rel="next" title="resources" href="resources/index.html" />
+    <link rel="prev" title="temp_mission" href="../build/temp_mission/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">cfg</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">cfg</a></li>
+      <li class="breadcrumb-item active">gui</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/project_inventory/cfg/gui/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="gui">
+<h1>gui<a class="headerlink" href="#gui" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">cfg/gui/</span></code></p>
+<section id="id1">
+<h2>하위 폴더<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources/index.html">resources</a></li>
+</ul>
+</div>
+</section>
+<section id="id2">
+<h2>이 폴더의 파일<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+</section>
+<section id="gitignore">
+<h2><code class="docutils literal notranslate"><span class="pre">.gitignore</span></code><a class="headerlink" href="#gitignore" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">cfg/gui/.gitignore</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>*.ui
+*.ui.*
+__pycache__
+</pre></div>
+</div>
+</section>
+<section id="cfg-gui-ui">
+<h2><code class="docutils literal notranslate"><span class="pre">cfg_gui.ui</span></code><a class="headerlink" href="#cfg-gui-ui" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">cfg/gui/cfg_gui.ui</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ui version="4.0"&gt;
+ &lt;class&gt;Form&lt;/class&gt;
+ &lt;widget class="QWidget" name="Form"&gt;
+  &lt;property name="geometry"&gt;
+   &lt;rect&gt;
+    &lt;x&gt;0&lt;/x&gt;
+    &lt;y&gt;0&lt;/y&gt;
+    &lt;width&gt;658&lt;/width&gt;
+    &lt;height&gt;655&lt;/height&gt;
+   &lt;/rect&gt;
+  &lt;/property&gt;
+  &lt;property name="palette"&gt;
+   &lt;palette&gt;
+    &lt;active&gt;
+     &lt;colorrole role="WindowText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Button"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Light"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Midlight"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Dark"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;127&lt;/red&gt;
+        &lt;green&gt;127&lt;/green&gt;
+        &lt;blue&gt;127&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Mid"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;170&lt;/red&gt;
+        &lt;green&gt;170&lt;/green&gt;
+        &lt;blue&gt;170&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Text"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="BrightText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ButtonText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Base"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Window"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Shadow"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="AlternateBase"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ToolTipBase"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;220&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ToolTipText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="PlaceholderText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="127"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Accent"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+    &lt;/active&gt;
+    &lt;inactive&gt;
+     &lt;colorrole role="WindowText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Button"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Light"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Midlight"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Dark"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;127&lt;/red&gt;
+        &lt;green&gt;127&lt;/green&gt;
+        &lt;blue&gt;127&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Mid"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;170&lt;/red&gt;
+        &lt;green&gt;170&lt;/green&gt;
+        &lt;blue&gt;170&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Text"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="BrightText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ButtonText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Base"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Window"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Shadow"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="AlternateBase"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ToolTipBase"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;220&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ToolTipText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="PlaceholderText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="127"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Accent"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+    &lt;/inactive&gt;
+    &lt;disabled&gt;
+     &lt;colorrole role="WindowText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;127&lt;/red&gt;
+        &lt;green&gt;127&lt;/green&gt;
+        &lt;blue&gt;127&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Button"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Light"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Midlight"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Dark"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;127&lt;/red&gt;
+        &lt;green&gt;127&lt;/green&gt;
+        &lt;blue&gt;127&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Mid"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;170&lt;/red&gt;
+        &lt;green&gt;170&lt;/green&gt;
+        &lt;blue&gt;170&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Text"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;127&lt;/red&gt;
+        &lt;green&gt;127&lt;/green&gt;
+        &lt;blue&gt;127&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="BrightText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ButtonText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;127&lt;/red&gt;
+        &lt;green&gt;127&lt;/green&gt;
+        &lt;blue&gt;127&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Base"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Window"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Shadow"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="AlternateBase"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ToolTipBase"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;220&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ToolTipText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="PlaceholderText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="127"&gt;
+        &lt;red&gt;127&lt;/red&gt;
+        &lt;green&gt;127&lt;/green&gt;
+        &lt;blue&gt;127&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Accent"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+    &lt;/disabled&gt;
+   &lt;/palette&gt;
+  &lt;/property&gt;
+  &lt;property name="windowTitle"&gt;
+   &lt;string&gt;Form&lt;/string&gt;
+  &lt;/property&gt;
+  &lt;widget class="QTabWidget" name="tabWidget"&gt;
+   &lt;property name="geometry"&gt;
+    &lt;rect&gt;
+     &lt;x&gt;0&lt;/x&gt;
+     &lt;y&gt;0&lt;/y&gt;
+     &lt;width&gt;661&lt;/width&gt;
+     &lt;height&gt;661&lt;/height&gt;
+    &lt;/rect&gt;
+   &lt;/property&gt;
+   &lt;property name="tabShape"&gt;
+    &lt;enum&gt;QTabWidget::TabShape::Rounded&lt;/enum&gt;
+   &lt;/property&gt;
+   &lt;property name="currentIndex"&gt;
+    &lt;number&gt;0&lt;/number&gt;
+   &lt;/property&gt;
+   &lt;widget class="QWidget" name="tab"&gt;
+    &lt;attribute name="title"&gt;
+     &lt;string&gt;Config&lt;/string&gt;
+    &lt;/attribute&gt;
+    &lt;widget class="QLineEdit" name="lineEdit_curConfig"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;130&lt;/x&gt;
+       &lt;y&gt;20&lt;/y&gt;
+       &lt;width&gt;421&lt;/width&gt;
+       &lt;height&gt;26&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="alignment"&gt;
+      &lt;set&gt;Qt::AlignmentFlag::AlignCenter&lt;/set&gt;
+     &lt;/property&gt;
+     &lt;property name="readOnly"&gt;
+      &lt;bool&gt;true&lt;/bool&gt;
+     &lt;/property&gt;
+     &lt;property name="placeholderText"&gt;
+      &lt;string&gt;None&lt;/string&gt;
+     &lt;/property&gt;
+    &lt;/widget&gt;
+    &lt;widget class="QPushButton" name="pushButton_browse"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;550&lt;/x&gt;
+       &lt;y&gt;20&lt;/y&gt;
+       &lt;width&gt;94&lt;/width&gt;
+       &lt;height&gt;26&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="text"&gt;
+      &lt;string&gt;Browse...&lt;/string&gt;
+     &lt;/property&gt;
+    &lt;/widget&gt;
+    &lt;widget class="QLabel" name="label_curConfig"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;10&lt;/x&gt;
+       &lt;y&gt;20&lt;/y&gt;
+       &lt;width&gt;121&lt;/width&gt;
+       &lt;height&gt;21&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="text"&gt;
+      &lt;string&gt;Current Config:&lt;/string&gt;
+     &lt;/property&gt;
+    &lt;/widget&gt;
+    &lt;widget class="QGroupBox" name="groupBox_scConfig"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;10&lt;/x&gt;
+       &lt;y&gt;260&lt;/y&gt;
+       &lt;width&gt;631&lt;/width&gt;
+       &lt;height&gt;321&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="title"&gt;
+      &lt;string&gt;Spacecraft Config&lt;/string&gt;
+     &lt;/property&gt;
+     &lt;widget class="QWidget" name="horizontalLayoutWidget_6"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;0&lt;/x&gt;
+        &lt;y&gt;20&lt;/y&gt;
+        &lt;width&gt;631&lt;/width&gt;
+        &lt;height&gt;301&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;layout class="QHBoxLayout" name="horizontalLayout_6"&gt;
+       &lt;item alignment="Qt::AlignmentFlag::AlignTop"&gt;
+        &lt;widget class="QScrollArea" name="scrollArea"&gt;
+         &lt;property name="sizePolicy"&gt;
+          &lt;sizepolicy hsizetype="Expanding" vsizetype="Expanding"&gt;
+           &lt;horstretch&gt;0&lt;/horstretch&gt;
+           &lt;verstretch&gt;0&lt;/verstretch&gt;
+          &lt;/sizepolicy&gt;
+         &lt;/property&gt;
+         &lt;property name="autoFillBackground"&gt;
+          &lt;bool&gt;true&lt;/bool&gt;
+         &lt;/property&gt;
+         &lt;property name="verticalScrollBarPolicy"&gt;
+          &lt;enum&gt;Qt::ScrollBarPolicy::ScrollBarAlwaysOn&lt;/enum&gt;
+         &lt;/property&gt;
+         &lt;property name="horizontalScrollBarPolicy"&gt;
+          &lt;enum&gt;Qt::ScrollBarPolicy::ScrollBarAlwaysOff&lt;/enum&gt;
+         &lt;/property&gt;
+         &lt;property name="widgetResizable"&gt;
+          &lt;bool&gt;true&lt;/bool&gt;
+         &lt;/property&gt;
+         &lt;widget class="QWidget" name="scrollAreaWidgetContents"&gt;
+          &lt;property name="geometry"&gt;
+           &lt;rect&gt;
+            &lt;x&gt;0&lt;/x&gt;
+            &lt;y&gt;0&lt;/y&gt;
+            &lt;width&gt;613&lt;/width&gt;
+            &lt;height&gt;68&lt;/height&gt;
+           &lt;/rect&gt;
+          &lt;/property&gt;
+          &lt;property name="sizePolicy"&gt;
+           &lt;sizepolicy hsizetype="Preferred" vsizetype="Preferred"&gt;
+            &lt;horstretch&gt;0&lt;/horstretch&gt;
+            &lt;verstretch&gt;0&lt;/verstretch&gt;
+           &lt;/sizepolicy&gt;
+          &lt;/property&gt;
+          &lt;layout class="QVBoxLayout" name="verticalLayout_3"&gt;
+           &lt;property name="sizeConstraint"&gt;
+            &lt;enum&gt;QLayout::SizeConstraint::SetDefaultConstraint&lt;/enum&gt;
+           &lt;/property&gt;
+          &lt;/layout&gt;
+         &lt;/widget&gt;
+        &lt;/widget&gt;
+       &lt;/item&gt;
+      &lt;/layout&gt;
+     &lt;/widget&gt;
+     &lt;widget class="QSpinBox" name="spinBox_configNumber"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;150&lt;/x&gt;
+        &lt;y&gt;-1&lt;/y&gt;
+        &lt;width&gt;48&lt;/width&gt;
+        &lt;height&gt;21&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;property name="minimum"&gt;
+       &lt;number&gt;1&lt;/number&gt;
+      &lt;/property&gt;
+     &lt;/widget&gt;
+    &lt;/widget&gt;
+    &lt;widget class="QGroupBox" name="groupBox_masterConfig"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;10&lt;/x&gt;
+       &lt;y&gt;60&lt;/y&gt;
+       &lt;width&gt;631&lt;/width&gt;
+       &lt;height&gt;181&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="title"&gt;
+      &lt;string&gt;Master Config&lt;/string&gt;
+     &lt;/property&gt;
+     &lt;widget class="QWidget" name="horizontalLayoutWidget_5"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;0&lt;/x&gt;
+        &lt;y&gt;20&lt;/y&gt;
+        &lt;width&gt;631&lt;/width&gt;
+        &lt;height&gt;161&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;layout class="QHBoxLayout" name="horizontalLayout_5"&gt;
+       &lt;item&gt;
+        &lt;widget class="QTextEdit" name="textEdit_masterConfig"&gt;
+         &lt;property name="readOnly"&gt;
+          &lt;bool&gt;false&lt;/bool&gt;
+         &lt;/property&gt;
+        &lt;/widget&gt;
+       &lt;/item&gt;
+      &lt;/layout&gt;
+     &lt;/widget&gt;
+    &lt;/widget&gt;
+    &lt;widget class="QPushButton" name="pushButton_save"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;220&lt;/x&gt;
+       &lt;y&gt;590&lt;/y&gt;
+       &lt;width&gt;94&lt;/width&gt;
+       &lt;height&gt;26&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="text"&gt;
+      &lt;string&gt;Save&lt;/string&gt;
+     &lt;/property&gt;
+    &lt;/widget&gt;
+    &lt;widget class="QPushButton" name="pushButton_saveAs"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;330&lt;/x&gt;
+       &lt;y&gt;590&lt;/y&gt;
+       &lt;width&gt;94&lt;/width&gt;
+       &lt;height&gt;26&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="text"&gt;
+      &lt;string&gt;Save As...&lt;/string&gt;
+     &lt;/property&gt;
+    &lt;/widget&gt;
+    &lt;widget class="QLabel" name="label_nos3Logo"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;50&lt;/x&gt;
+       &lt;y&gt;585&lt;/y&gt;
+       &lt;width&gt;111&lt;/width&gt;
+       &lt;height&gt;41&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="text"&gt;
+      &lt;string/&gt;
+     &lt;/property&gt;
+     &lt;property name="scaledContents"&gt;
+      &lt;bool&gt;true&lt;/bool&gt;
+     &lt;/property&gt;
+    &lt;/widget&gt;
+    &lt;widget class="QLabel" name="label_jstarLogo"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;480&lt;/x&gt;
+       &lt;y&gt;585&lt;/y&gt;
+       &lt;width&gt;131&lt;/width&gt;
+       &lt;height&gt;41&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="text"&gt;
+      &lt;string/&gt;
+     &lt;/property&gt;
+     &lt;property name="scaledContents"&gt;
+      &lt;bool&gt;true&lt;/bool&gt;
+     &lt;/property&gt;
+     &lt;property name="alignment"&gt;
+      &lt;set&gt;Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter&lt;/set&gt;
+     &lt;/property&gt;
+    &lt;/widget&gt;
+   &lt;/widget&gt;
+   &lt;widget class="QWidget" name="tab_2"&gt;
+    &lt;attribute name="title"&gt;
+     &lt;string&gt;Build&lt;/string&gt;
+    &lt;/attribute&gt;
+    &lt;widget class="QGroupBox" name="groupBox_8"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;10&lt;/x&gt;
+       &lt;y&gt;120&lt;/y&gt;
+       &lt;width&gt;631&lt;/width&gt;
+       &lt;height&gt;491&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="title"&gt;
+      &lt;string&gt;Console Output&lt;/string&gt;
+     &lt;/property&gt;
+     &lt;property name="alignment"&gt;
+      &lt;set&gt;Qt::AlignmentFlag::AlignCenter&lt;/set&gt;
+     &lt;/property&gt;
+     &lt;property name="flat"&gt;
+      &lt;bool&gt;false&lt;/bool&gt;
+     &lt;/property&gt;
+     &lt;property name="checkable"&gt;
+      &lt;bool&gt;false&lt;/bool&gt;
+     &lt;/property&gt;
+     &lt;widget class="QTextEdit" name="textEdit_buildConsole"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;0&lt;/x&gt;
+        &lt;y&gt;20&lt;/y&gt;
+        &lt;width&gt;631&lt;/width&gt;
+        &lt;height&gt;471&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;property name="palette"&gt;
+       &lt;palette&gt;
+        &lt;active&gt;
+         &lt;colorrole role="Text"&gt;
+          &lt;brush brushstyle="SolidPattern"&gt;
+           &lt;color alpha="255"&gt;
+            &lt;red&gt;255&lt;/red&gt;
+            &lt;green&gt;255&lt;/green&gt;
+            &lt;blue&gt;255&lt;/blue&gt;
+           &lt;/color&gt;
+          &lt;/brush&gt;
+         &lt;/colorrole&gt;
+         &lt;colorrole role="Base"&gt;
+          &lt;brush brushstyle="SolidPattern"&gt;
+           &lt;color alpha="255"&gt;
+            &lt;red&gt;0&lt;/red&gt;
+            &lt;green&gt;0&lt;/green&gt;
+            &lt;blue&gt;0&lt;/blue&gt;
+           &lt;/color&gt;
+          &lt;/brush&gt;
+         &lt;/colorrole&gt;
+        &lt;/active&gt;
+        &lt;inactive&gt;
+         &lt;colorrole role="Text"&gt;
+          &lt;brush brushstyle="SolidPattern"&gt;
+           &lt;color alpha="255"&gt;
+            &lt;red&gt;255&lt;/red&gt;
+            &lt;green&gt;255&lt;/green&gt;
+            &lt;blue&gt;255&lt;/blue&gt;
+           &lt;/color&gt;
+          &lt;/brush&gt;
+         &lt;/colorrole&gt;
+         &lt;colorrole role="Base"&gt;
+          &lt;brush brushstyle="SolidPattern"&gt;
+           &lt;color alpha="255"&gt;
+            &lt;red&gt;0&lt;/red&gt;
+            &lt;green&gt;0&lt;/green&gt;
+            &lt;blue&gt;0&lt;/blue&gt;
+           &lt;/color&gt;
+          &lt;/brush&gt;
+         &lt;/colorrole&gt;
+        &lt;/inactive&gt;
+        &lt;disabled/&gt;
+       &lt;/palette&gt;
+      &lt;/property&gt;
+      &lt;property name="readOnly"&gt;
+       &lt;bool&gt;true&lt;/bool&gt;
+      &lt;/property&gt;
+     &lt;/widget&gt;
+    &lt;/widget&gt;
+    &lt;widget class="QFrame" name="frame_2"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;10&lt;/x&gt;
+       &lt;y&gt;20&lt;/y&gt;
+       &lt;width&gt;641&lt;/width&gt;
+       &lt;height&gt;81&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="frameShape"&gt;
+      &lt;enum&gt;QFrame::Shape::StyledPanel&lt;/enum&gt;
+     &lt;/property&gt;
+     &lt;property name="frameShadow"&gt;
+      &lt;enum&gt;QFrame::Shadow::Raised&lt;/enum&gt;
+     &lt;/property&gt;
+     &lt;widget class="QFrame" name="frame"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;79&lt;/x&gt;
+        &lt;y&gt;0&lt;/y&gt;
+        &lt;width&gt;561&lt;/width&gt;
+        &lt;height&gt;80&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;property name="frameShape"&gt;
+       &lt;enum&gt;QFrame::Shape::StyledPanel&lt;/enum&gt;
+      &lt;/property&gt;
+      &lt;property name="frameShadow"&gt;
+       &lt;enum&gt;QFrame::Shadow::Raised&lt;/enum&gt;
+      &lt;/property&gt;
+      &lt;widget class="QWidget" name="gridLayoutWidget_2"&gt;
+       &lt;property name="geometry"&gt;
+        &lt;rect&gt;
+         &lt;x&gt;0&lt;/x&gt;
+         &lt;y&gt;0&lt;/y&gt;
+         &lt;width&gt;561&lt;/width&gt;
+         &lt;height&gt;80&lt;/height&gt;
+        &lt;/rect&gt;
+       &lt;/property&gt;
+       &lt;layout class="QGridLayout" name="gridLayout_buildCleanButtons"&gt;
+        &lt;item row="1" column="0"&gt;
+         &lt;widget class="QPushButton" name="pushButton_cleanAll"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;All&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+        &lt;item row="0" column="0"&gt;
+         &lt;widget class="QPushButton" name="pushButton_buildAll"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;All&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+        &lt;item row="0" column="2"&gt;
+         &lt;widget class="QPushButton" name="pushButton_fswBuild"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;FSW&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+        &lt;item row="0" column="1"&gt;
+         &lt;widget class="QPushButton" name="pushButton_cfgBuild"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;CFG&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+        &lt;item row="1" column="4"&gt;
+         &lt;widget class="QPushButton" name="pushButton_simClean"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;SIM&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+        &lt;item row="0" column="4"&gt;
+         &lt;widget class="QPushButton" name="pushButton_simBuild"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;SIM&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+        &lt;item row="0" column="3"&gt;
+         &lt;widget class="QPushButton" name="pushButton_gswBuild"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;GSW&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+        &lt;item row="1" column="2"&gt;
+         &lt;widget class="QPushButton" name="pushButton_fswClean"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;FSW&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+        &lt;item row="1" column="3"&gt;
+         &lt;widget class="QPushButton" name="pushButton_gswClean"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;GSW&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+       &lt;/layout&gt;
+      &lt;/widget&gt;
+     &lt;/widget&gt;
+     &lt;widget class="QFrame" name="frame_3"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;0&lt;/x&gt;
+        &lt;y&gt;0&lt;/y&gt;
+        &lt;width&gt;81&lt;/width&gt;
+        &lt;height&gt;41&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;property name="frameShape"&gt;
+       &lt;enum&gt;QFrame::Shape::StyledPanel&lt;/enum&gt;
+      &lt;/property&gt;
+      &lt;property name="frameShadow"&gt;
+       &lt;enum&gt;QFrame::Shadow::Raised&lt;/enum&gt;
+      &lt;/property&gt;
+      &lt;widget class="QWidget" name="verticalLayoutWidget"&gt;
+       &lt;property name="geometry"&gt;
+        &lt;rect&gt;
+         &lt;x&gt;0&lt;/x&gt;
+         &lt;y&gt;0&lt;/y&gt;
+         &lt;width&gt;81&lt;/width&gt;
+         &lt;height&gt;41&lt;/height&gt;
+        &lt;/rect&gt;
+       &lt;/property&gt;
+       &lt;layout class="QVBoxLayout" name="verticalLayout"&gt;
+        &lt;item&gt;
+         &lt;widget class="QLabel" name="label_4"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;Build&lt;/string&gt;
+          &lt;/property&gt;
+          &lt;property name="alignment"&gt;
+           &lt;set&gt;Qt::AlignmentFlag::AlignCenter&lt;/set&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+       &lt;/layout&gt;
+      &lt;/widget&gt;
+     &lt;/widget&gt;
+     &lt;widget class="QFrame" name="frame_4"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;0&lt;/x&gt;
+        &lt;y&gt;40&lt;/y&gt;
+        &lt;width&gt;81&lt;/width&gt;
+        &lt;height&gt;41&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;property name="frameShape"&gt;
+       &lt;enum&gt;QFrame::Shape::StyledPanel&lt;/enum&gt;
+      &lt;/property&gt;
+      &lt;property name="frameShadow"&gt;
+       &lt;enum&gt;QFrame::Shadow::Raised&lt;/enum&gt;
+      &lt;/property&gt;
+      &lt;widget class="QWidget" name="verticalLayoutWidget_2"&gt;
+       &lt;property name="geometry"&gt;
+        &lt;rect&gt;
+         &lt;x&gt;0&lt;/x&gt;
+         &lt;y&gt;0&lt;/y&gt;
+         &lt;width&gt;81&lt;/width&gt;
+         &lt;height&gt;41&lt;/height&gt;
+        &lt;/rect&gt;
+       &lt;/property&gt;
+       &lt;layout class="QVBoxLayout" name="verticalLayout_2"&gt;
+        &lt;item&gt;
+         &lt;widget class="QLabel" name="label_5"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;Clean&lt;/string&gt;
+          &lt;/property&gt;
+          &lt;property name="alignment"&gt;
+           &lt;set&gt;Qt::AlignmentFlag::AlignCenter&lt;/set&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+       &lt;/layout&gt;
+      &lt;/widget&gt;
+     &lt;/widget&gt;
+    &lt;/widget&gt;
+   &lt;/widget&gt;
+   &lt;widget class="QWidget" name="tab_3"&gt;
+    &lt;attribute name="title"&gt;
+     &lt;string&gt;Launch&lt;/string&gt;
+    &lt;/attribute&gt;
+    &lt;widget class="QGroupBox" name="groupBox_control"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;10&lt;/x&gt;
+       &lt;y&gt;10&lt;/y&gt;
+       &lt;width&gt;631&lt;/width&gt;
+       &lt;height&gt;611&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="title"&gt;
+      &lt;string/&gt;
+     &lt;/property&gt;
+     &lt;widget class="QWidget" name="horizontalLayoutWidget"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;10&lt;/x&gt;
+        &lt;y&gt;570&lt;/y&gt;
+        &lt;width&gt;611&lt;/width&gt;
+        &lt;height&gt;31&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;layout class="QHBoxLayout" name="horizontalLayout"&gt;
+       &lt;property name="spacing"&gt;
+        &lt;number&gt;45&lt;/number&gt;
+       &lt;/property&gt;
+       &lt;item&gt;
+        &lt;widget class="QPushButton" name="pushButton_play"&gt;
+         &lt;property name="text"&gt;
+          &lt;string&gt;Play&lt;/string&gt;
+         &lt;/property&gt;
+         &lt;property name="icon"&gt;
+          &lt;iconset&gt;
+           &lt;normaloff&gt;../../../../../../../../usr/share/icons/Humanity/actions/24/gtk-media-play-ltr.svg&lt;/normaloff&gt;../../../../../../../../usr/share/icons/Humanity/actions/24/gtk-media-play-ltr.svg&lt;/iconset&gt;
+         &lt;/property&gt;
+        &lt;/widget&gt;
+       &lt;/item&gt;
+       &lt;item&gt;
+        &lt;widget class="QPushButton" name="pushButton_pause"&gt;
+         &lt;property name="text"&gt;
+          &lt;string&gt;Pause&lt;/string&gt;
+         &lt;/property&gt;
+         &lt;property name="icon"&gt;
+          &lt;iconset&gt;
+           &lt;normaloff&gt;../../../../../../../../usr/share/icons/Humanity/actions/24/media-playback-pause.svg&lt;/normaloff&gt;../../../../../../../../usr/share/icons/Humanity/actions/24/media-playback-pause.svg&lt;/iconset&gt;
+         &lt;/property&gt;
+        &lt;/widget&gt;
+       &lt;/item&gt;
+      &lt;/layout&gt;
+     &lt;/widget&gt;
+     &lt;widget class="QWidget" name="horizontalLayoutWidget_2"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;10&lt;/x&gt;
+        &lt;y&gt;10&lt;/y&gt;
+        &lt;width&gt;611&lt;/width&gt;
+        &lt;height&gt;41&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;layout class="QHBoxLayout" name="horizontalLayout_2"&gt;
+       &lt;item&gt;
+        &lt;widget class="QPushButton" name="pushButton_launch"&gt;
+         &lt;property name="text"&gt;
+          &lt;string&gt;Launch&lt;/string&gt;
+         &lt;/property&gt;
+        &lt;/widget&gt;
+       &lt;/item&gt;
+       &lt;item&gt;
+        &lt;widget class="QPushButton" name="pushButton_stop"&gt;
+         &lt;property name="text"&gt;
+          &lt;string&gt;Stop&lt;/string&gt;
+         &lt;/property&gt;
+        &lt;/widget&gt;
+       &lt;/item&gt;
+      &lt;/layout&gt;
+     &lt;/widget&gt;
+     &lt;widget class="QGroupBox" name="groupBox_9"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;10&lt;/x&gt;
+        &lt;y&gt;60&lt;/y&gt;
+        &lt;width&gt;611&lt;/width&gt;
+        &lt;height&gt;451&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;property name="title"&gt;
+       &lt;string&gt;NOS3 Time Driver&lt;/string&gt;
+      &lt;/property&gt;
+      &lt;property name="alignment"&gt;
+       &lt;set&gt;Qt::AlignmentFlag::AlignCenter&lt;/set&gt;
+      &lt;/property&gt;
+      &lt;property name="flat"&gt;
+       &lt;bool&gt;false&lt;/bool&gt;
+      &lt;/property&gt;
+      &lt;property name="checkable"&gt;
+       &lt;bool&gt;false&lt;/bool&gt;
+      &lt;/property&gt;
+      &lt;widget class="QTextEdit" name="textEdit_launchConsole"&gt;
+       &lt;property name="geometry"&gt;
+        &lt;rect&gt;
+         &lt;x&gt;0&lt;/x&gt;
+         &lt;y&gt;20&lt;/y&gt;
+         &lt;width&gt;611&lt;/width&gt;
+         &lt;height&gt;431&lt;/height&gt;
+        &lt;/rect&gt;
+       &lt;/property&gt;
+       &lt;property name="palette"&gt;
+        &lt;palette&gt;
+         &lt;active&gt;
+          &lt;colorrole role="Text"&gt;
+           &lt;brush brushstyle="SolidPattern"&gt;
+            &lt;color alpha="255"&gt;
+             &lt;red&gt;255&lt;/red&gt;
+             &lt;green&gt;255&lt;/green&gt;
+             &lt;blue&gt;255&lt;/blue&gt;
+            &lt;/color&gt;
+           &lt;/brush&gt;
+          &lt;/colorrole&gt;
+          &lt;colorrole role="Base"&gt;
+           &lt;brush brushstyle="SolidPattern"&gt;
+            &lt;color alpha="255"&gt;
+             &lt;red&gt;0&lt;/red&gt;
+             &lt;green&gt;0&lt;/green&gt;
+             &lt;blue&gt;0&lt;/blue&gt;
+            &lt;/color&gt;
+           &lt;/brush&gt;
+          &lt;/colorrole&gt;
+         &lt;/active&gt;
+         &lt;inactive&gt;
+          &lt;colorrole role="Text"&gt;
+           &lt;brush brushstyle="SolidPattern"&gt;
+            &lt;color alpha="255"&gt;
+             &lt;red&gt;255&lt;/red&gt;
+             &lt;green&gt;255&lt;/green&gt;
+             &lt;blue&gt;255&lt;/blue&gt;
+            &lt;/color&gt;
+           &lt;/brush&gt;
+          &lt;/colorrole&gt;
+          &lt;colorrole role="Base"&gt;
+           &lt;brush brushstyle="SolidPattern"&gt;
+            &lt;color alpha="255"&gt;
+             &lt;red&gt;0&lt;/red&gt;
+             &lt;green&gt;0&lt;/green&gt;
+             &lt;blue&gt;0&lt;/blue&gt;
+            &lt;/color&gt;
+           &lt;/brush&gt;
+          &lt;/colorrole&gt;
+         &lt;/inactive&gt;
+         &lt;disabled/&gt;
+        &lt;/palette&gt;
+       &lt;/property&gt;
+       &lt;property name="readOnly"&gt;
+        &lt;bool&gt;true&lt;/bool&gt;
+       &lt;/property&gt;
+      &lt;/widget&gt;
+     &lt;/widget&gt;
+     &lt;widget class="QWidget" name="horizontalLayoutWidget_3"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;190&lt;/x&gt;
+        &lt;y&gt;520&lt;/y&gt;
+        &lt;width&gt;261&lt;/width&gt;
+        &lt;height&gt;41&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;layout class="QHBoxLayout" name="horizontalLayout_runForUntil"&gt;
+       &lt;item&gt;
+        &lt;widget class="QComboBox" name="comboBox_run"&gt;
+         &lt;item&gt;
+          &lt;property name="text"&gt;
+           &lt;string/&gt;
+          &lt;/property&gt;
+         &lt;/item&gt;
+         &lt;item&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;Run For&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/item&gt;
+         &lt;item&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;Run Until&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/item&gt;
+        &lt;/widget&gt;
+       &lt;/item&gt;
+       &lt;item&gt;
+        &lt;widget class="QLineEdit" name="lineEdit_secondsEntry"&gt;
+         &lt;property name="text"&gt;
+          &lt;string/&gt;
+         &lt;/property&gt;
+         &lt;property name="alignment"&gt;
+          &lt;set&gt;Qt::AlignmentFlag::AlignCenter&lt;/set&gt;
+         &lt;/property&gt;
+        &lt;/widget&gt;
+       &lt;/item&gt;
+      &lt;/layout&gt;
+     &lt;/widget&gt;
+    &lt;/widget&gt;
+   &lt;/widget&gt;
+  &lt;/widget&gt;
+ &lt;/widget&gt;
+ &lt;resources/&gt;
+ &lt;connections/&gt;
+&lt;/ui&gt;
+</pre></div>
+</div>
+</section>
+<section id="cfg-gui-ui-niftuj">
+<h2><code class="docutils literal notranslate"><span class="pre">cfg_gui.ui.nIFTUJ</span></code><a class="headerlink" href="#cfg-gui-ui-niftuj" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">cfg/gui/cfg_gui.ui.nIFTUJ</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ui version="4.0"&gt;
+ &lt;class&gt;Form&lt;/class&gt;
+ &lt;widget class="QWidget" name="Form"&gt;
+  &lt;property name="geometry"&gt;
+   &lt;rect&gt;
+    &lt;x&gt;0&lt;/x&gt;
+    &lt;y&gt;0&lt;/y&gt;
+    &lt;width&gt;655&lt;/width&gt;
+    &lt;height&gt;655&lt;/height&gt;
+   &lt;/rect&gt;
+  &lt;/property&gt;
+  &lt;property name="palette"&gt;
+   &lt;palette&gt;
+    &lt;active&gt;
+     &lt;colorrole role="WindowText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Button"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Light"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Midlight"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Dark"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;127&lt;/red&gt;
+        &lt;green&gt;127&lt;/green&gt;
+        &lt;blue&gt;127&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Mid"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;170&lt;/red&gt;
+        &lt;green&gt;170&lt;/green&gt;
+        &lt;blue&gt;170&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Text"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="BrightText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ButtonText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Base"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Window"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Shadow"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="AlternateBase"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ToolTipBase"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;220&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ToolTipText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="PlaceholderText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="127"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Accent"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+    &lt;/active&gt;
+    &lt;inactive&gt;
+     &lt;colorrole role="WindowText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Button"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Light"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Midlight"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Dark"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;127&lt;/red&gt;
+        &lt;green&gt;127&lt;/green&gt;
+        &lt;blue&gt;127&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Mid"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;170&lt;/red&gt;
+        &lt;green&gt;170&lt;/green&gt;
+        &lt;blue&gt;170&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Text"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="BrightText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ButtonText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Base"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Window"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Shadow"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="AlternateBase"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ToolTipBase"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;220&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ToolTipText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="PlaceholderText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="127"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Accent"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+    &lt;/inactive&gt;
+    &lt;disabled&gt;
+     &lt;colorrole role="WindowText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;127&lt;/red&gt;
+        &lt;green&gt;127&lt;/green&gt;
+        &lt;blue&gt;127&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Button"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Light"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Midlight"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Dark"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;127&lt;/red&gt;
+        &lt;green&gt;127&lt;/green&gt;
+        &lt;blue&gt;127&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Mid"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;170&lt;/red&gt;
+        &lt;green&gt;170&lt;/green&gt;
+        &lt;blue&gt;170&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Text"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;127&lt;/red&gt;
+        &lt;green&gt;127&lt;/green&gt;
+        &lt;blue&gt;127&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="BrightText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ButtonText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;127&lt;/red&gt;
+        &lt;green&gt;127&lt;/green&gt;
+        &lt;blue&gt;127&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Base"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Window"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Shadow"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="AlternateBase"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ToolTipBase"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;220&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="ToolTipText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;0&lt;/red&gt;
+        &lt;green&gt;0&lt;/green&gt;
+        &lt;blue&gt;0&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="PlaceholderText"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="127"&gt;
+        &lt;red&gt;127&lt;/red&gt;
+        &lt;green&gt;127&lt;/green&gt;
+        &lt;blue&gt;127&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+     &lt;colorrole role="Accent"&gt;
+      &lt;brush brushstyle="SolidPattern"&gt;
+       &lt;color alpha="255"&gt;
+        &lt;red&gt;255&lt;/red&gt;
+        &lt;green&gt;255&lt;/green&gt;
+        &lt;blue&gt;255&lt;/blue&gt;
+       &lt;/color&gt;
+      &lt;/brush&gt;
+     &lt;/colorrole&gt;
+    &lt;/disabled&gt;
+   &lt;/palette&gt;
+  &lt;/property&gt;
+  &lt;property name="windowTitle"&gt;
+   &lt;string&gt;Form&lt;/string&gt;
+  &lt;/property&gt;
+  &lt;widget class="QTabWidget" name="tabWidget"&gt;
+   &lt;property name="geometry"&gt;
+    &lt;rect&gt;
+     &lt;x&gt;0&lt;/x&gt;
+     &lt;y&gt;0&lt;/y&gt;
+     &lt;width&gt;661&lt;/width&gt;
+     &lt;height&gt;661&lt;/height&gt;
+    &lt;/rect&gt;
+   &lt;/property&gt;
+   &lt;property name="tabShape"&gt;
+    &lt;enum&gt;QTabWidget::Rounded&lt;/enum&gt;
+   &lt;/property&gt;
+   &lt;property name="currentIndex"&gt;
+    &lt;number&gt;0&lt;/number&gt;
+   &lt;/property&gt;
+   &lt;widget class="QWidget" name="tab"&gt;
+    &lt;attribute name="title"&gt;
+     &lt;string&gt;Config&lt;/string&gt;
+    &lt;/attribute&gt;
+    &lt;widget class="QLineEdit" name="lineEdit_curConfig"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;130&lt;/x&gt;
+       &lt;y&gt;20&lt;/y&gt;
+       &lt;width&gt;421&lt;/width&gt;
+       &lt;height&gt;26&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="alignment"&gt;
+      &lt;set&gt;Qt::AlignCenter&lt;/set&gt;
+     &lt;/property&gt;
+     &lt;property name="readOnly"&gt;
+      &lt;bool&gt;true&lt;/bool&gt;
+     &lt;/property&gt;
+     &lt;property name="placeholderText"&gt;
+      &lt;string&gt;None&lt;/string&gt;
+     &lt;/property&gt;
+    &lt;/widget&gt;
+    &lt;widget class="QPushButton" name="pushButton_browse"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;550&lt;/x&gt;
+       &lt;y&gt;20&lt;/y&gt;
+       &lt;width&gt;94&lt;/width&gt;
+       &lt;height&gt;26&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="text"&gt;
+      &lt;string&gt;Browse...&lt;/string&gt;
+     &lt;/property&gt;
+    &lt;/widget&gt;
+    &lt;widget class="QLabel" name="label_curConfig"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;10&lt;/x&gt;
+       &lt;y&gt;20&lt;/y&gt;
+       &lt;width&gt;121&lt;/width&gt;
+       &lt;height&gt;21&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="text"&gt;
+      &lt;string&gt;Current Config:&lt;/string&gt;
+     &lt;/property&gt;
+    &lt;/widget&gt;
+    &lt;widget class="QGroupBox" name="groupBox_scConfig"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;10&lt;/x&gt;
+       &lt;y&gt;300&lt;/y&gt;
+       &lt;width&gt;631&lt;/width&gt;
+       &lt;height&gt;281&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="title"&gt;
+      &lt;string&gt;Spacecraft Config&lt;/string&gt;
+     &lt;/property&gt;
+     &lt;widget class="QWidget" name="horizontalLayoutWidget_6"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;0&lt;/x&gt;
+        &lt;y&gt;20&lt;/y&gt;
+        &lt;width&gt;631&lt;/width&gt;
+        &lt;height&gt;261&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;layout class="QHBoxLayout" name="horizontalLayout_6"&gt;
+       &lt;item&gt;
+        &lt;widget class="QTextEdit" name="textEdit_scConfig"&gt;
+         &lt;property name="lineWrapMode"&gt;
+          &lt;enum&gt;QTextEdit::NoWrap&lt;/enum&gt;
+         &lt;/property&gt;
+         &lt;property name="readOnly"&gt;
+          &lt;bool&gt;false&lt;/bool&gt;
+         &lt;/property&gt;
+        &lt;/widget&gt;
+       &lt;/item&gt;
+      &lt;/layout&gt;
+     &lt;/widget&gt;
+     &lt;widget class="QSpinBox" name="spinBox_configNumber"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;150&lt;/x&gt;
+        &lt;y&gt;-1&lt;/y&gt;
+        &lt;width&gt;48&lt;/width&gt;
+        &lt;height&gt;21&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;property name="minimum"&gt;
+       &lt;number&gt;1&lt;/number&gt;
+      &lt;/property&gt;
+     &lt;/widget&gt;
+    &lt;/widget&gt;
+    &lt;widget class="QGroupBox" name="groupBox_masterConfig"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;10&lt;/x&gt;
+       &lt;y&gt;60&lt;/y&gt;
+       &lt;width&gt;631&lt;/width&gt;
+       &lt;height&gt;231&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="title"&gt;
+      &lt;string&gt;Master Config&lt;/string&gt;
+     &lt;/property&gt;
+     &lt;widget class="QWidget" name="horizontalLayoutWidget_5"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;0&lt;/x&gt;
+        &lt;y&gt;20&lt;/y&gt;
+        &lt;width&gt;631&lt;/width&gt;
+        &lt;height&gt;211&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;layout class="QHBoxLayout" name="horizontalLayout_5"&gt;
+       &lt;item&gt;
+        &lt;widget class="QTextEdit" name="textEdit_masterConfig"&gt;
+         &lt;property name="readOnly"&gt;
+          &lt;bool&gt;false&lt;/bool&gt;
+         &lt;/property&gt;
+        &lt;/widget&gt;
+       &lt;/item&gt;
+      &lt;/layout&gt;
+     &lt;/widget&gt;
+    &lt;/widget&gt;
+    &lt;widget class="QPushButton" name="pushButton_save"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;220&lt;/x&gt;
+       &lt;y&gt;590&lt;/y&gt;
+       &lt;width&gt;94&lt;/width&gt;
+       &lt;height&gt;26&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="text"&gt;
+      &lt;string&gt;Save&lt;/string&gt;
+     &lt;/property&gt;
+    &lt;/widget&gt;
+    &lt;widget class="QPushButton" name="pushButton_saveAs"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;330&lt;/x&gt;
+       &lt;y&gt;590&lt;/y&gt;
+       &lt;width&gt;94&lt;/width&gt;
+       &lt;height&gt;26&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="text"&gt;
+      &lt;string&gt;Save As...&lt;/string&gt;
+     &lt;/property&gt;
+    &lt;/widget&gt;
+   &lt;/widget&gt;
+   &lt;widget class="QWidget" name="tab_2"&gt;
+    &lt;attribute name="title"&gt;
+     &lt;string&gt;Build&lt;/string&gt;
+    &lt;/attribute&gt;
+    &lt;widget class="QGroupBox" name="groupBox_8"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;10&lt;/x&gt;
+       &lt;y&gt;120&lt;/y&gt;
+       &lt;width&gt;631&lt;/width&gt;
+       &lt;height&gt;491&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="title"&gt;
+      &lt;string&gt;Console Output&lt;/string&gt;
+     &lt;/property&gt;
+     &lt;property name="flat"&gt;
+      &lt;bool&gt;false&lt;/bool&gt;
+     &lt;/property&gt;
+     &lt;property name="checkable"&gt;
+      &lt;bool&gt;false&lt;/bool&gt;
+     &lt;/property&gt;
+     &lt;widget class="QTextEdit" name="textEdit_buildConsole"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;0&lt;/x&gt;
+        &lt;y&gt;20&lt;/y&gt;
+        &lt;width&gt;631&lt;/width&gt;
+        &lt;height&gt;471&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;property name="palette"&gt;
+       &lt;palette&gt;
+        &lt;active&gt;
+         &lt;colorrole role="Text"&gt;
+          &lt;brush brushstyle="SolidPattern"&gt;
+           &lt;color alpha="255"&gt;
+            &lt;red&gt;255&lt;/red&gt;
+            &lt;green&gt;255&lt;/green&gt;
+            &lt;blue&gt;255&lt;/blue&gt;
+           &lt;/color&gt;
+          &lt;/brush&gt;
+         &lt;/colorrole&gt;
+         &lt;colorrole role="Base"&gt;
+          &lt;brush brushstyle="SolidPattern"&gt;
+           &lt;color alpha="255"&gt;
+            &lt;red&gt;0&lt;/red&gt;
+            &lt;green&gt;0&lt;/green&gt;
+            &lt;blue&gt;0&lt;/blue&gt;
+           &lt;/color&gt;
+          &lt;/brush&gt;
+         &lt;/colorrole&gt;
+        &lt;/active&gt;
+        &lt;inactive&gt;
+         &lt;colorrole role="Text"&gt;
+          &lt;brush brushstyle="SolidPattern"&gt;
+           &lt;color alpha="255"&gt;
+            &lt;red&gt;255&lt;/red&gt;
+            &lt;green&gt;255&lt;/green&gt;
+            &lt;blue&gt;255&lt;/blue&gt;
+           &lt;/color&gt;
+          &lt;/brush&gt;
+         &lt;/colorrole&gt;
+         &lt;colorrole role="Base"&gt;
+          &lt;brush brushstyle="SolidPattern"&gt;
+           &lt;color alpha="255"&gt;
+            &lt;red&gt;0&lt;/red&gt;
+            &lt;green&gt;0&lt;/green&gt;
+            &lt;blue&gt;0&lt;/blue&gt;
+           &lt;/color&gt;
+          &lt;/brush&gt;
+         &lt;/colorrole&gt;
+        &lt;/inactive&gt;
+        &lt;disabled/&gt;
+       &lt;/palette&gt;
+      &lt;/property&gt;
+      &lt;property name="readOnly"&gt;
+       &lt;bool&gt;true&lt;/bool&gt;
+      &lt;/property&gt;
+     &lt;/widget&gt;
+    &lt;/widget&gt;
+    &lt;widget class="QFrame" name="frame_2"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;110&lt;/x&gt;
+       &lt;y&gt;20&lt;/y&gt;
+       &lt;width&gt;421&lt;/width&gt;
+       &lt;height&gt;81&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="frameShape"&gt;
+      &lt;enum&gt;QFrame::StyledPanel&lt;/enum&gt;
+     &lt;/property&gt;
+     &lt;property name="frameShadow"&gt;
+      &lt;enum&gt;QFrame::Raised&lt;/enum&gt;
+     &lt;/property&gt;
+     &lt;widget class="QFrame" name="frame"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;79&lt;/x&gt;
+        &lt;y&gt;0&lt;/y&gt;
+        &lt;width&gt;341&lt;/width&gt;
+        &lt;height&gt;80&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;property name="frameShape"&gt;
+       &lt;enum&gt;QFrame::StyledPanel&lt;/enum&gt;
+      &lt;/property&gt;
+      &lt;property name="frameShadow"&gt;
+       &lt;enum&gt;QFrame::Raised&lt;/enum&gt;
+      &lt;/property&gt;
+      &lt;widget class="QWidget" name="gridLayoutWidget_2"&gt;
+       &lt;property name="geometry"&gt;
+        &lt;rect&gt;
+         &lt;x&gt;0&lt;/x&gt;
+         &lt;y&gt;0&lt;/y&gt;
+         &lt;width&gt;340&lt;/width&gt;
+         &lt;height&gt;80&lt;/height&gt;
+        &lt;/rect&gt;
+       &lt;/property&gt;
+       &lt;layout class="QGridLayout" name="gridLayout_2"&gt;
+        &lt;item row="1" column="1"&gt;
+         &lt;widget class="QPushButton" name="pushButton_fswClean"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;FSW&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+        &lt;item row="0" column="1"&gt;
+         &lt;widget class="QPushButton" name="pushButton_fswBuild"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;FSW&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+        &lt;item row="1" column="2"&gt;
+         &lt;widget class="QPushButton" name="pushButton_gswClean"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;GSW&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+        &lt;item row="1" column="0"&gt;
+         &lt;widget class="QPushButton" name="pushButton_simClean"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;SIM&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+        &lt;item row="0" column="0"&gt;
+         &lt;widget class="QPushButton" name="pushButton_simBuild"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;SIM&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+        &lt;item row="0" column="2"&gt;
+         &lt;widget class="QPushButton" name="pushButton_gswBuild"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;GSW&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+        &lt;item row="0" column="3"&gt;
+         &lt;widget class="QPushButton" name="pushButton_buildAll"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;All&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+        &lt;item row="1" column="3"&gt;
+         &lt;widget class="QPushButton" name="pushButton_cleanAll"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;All&lt;/string&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+       &lt;/layout&gt;
+      &lt;/widget&gt;
+     &lt;/widget&gt;
+     &lt;widget class="QFrame" name="frame_3"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;0&lt;/x&gt;
+        &lt;y&gt;0&lt;/y&gt;
+        &lt;width&gt;81&lt;/width&gt;
+        &lt;height&gt;41&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;property name="frameShape"&gt;
+       &lt;enum&gt;QFrame::StyledPanel&lt;/enum&gt;
+      &lt;/property&gt;
+      &lt;property name="frameShadow"&gt;
+       &lt;enum&gt;QFrame::Raised&lt;/enum&gt;
+      &lt;/property&gt;
+      &lt;widget class="QWidget" name="verticalLayoutWidget"&gt;
+       &lt;property name="geometry"&gt;
+        &lt;rect&gt;
+         &lt;x&gt;0&lt;/x&gt;
+         &lt;y&gt;0&lt;/y&gt;
+         &lt;width&gt;81&lt;/width&gt;
+         &lt;height&gt;41&lt;/height&gt;
+        &lt;/rect&gt;
+       &lt;/property&gt;
+       &lt;layout class="QVBoxLayout" name="verticalLayout"&gt;
+        &lt;item&gt;
+         &lt;widget class="QLabel" name="label_4"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;Build&lt;/string&gt;
+          &lt;/property&gt;
+          &lt;property name="alignment"&gt;
+           &lt;set&gt;Qt::AlignCenter&lt;/set&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+       &lt;/layout&gt;
+      &lt;/widget&gt;
+     &lt;/widget&gt;
+     &lt;widget class="QFrame" name="frame_4"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;0&lt;/x&gt;
+        &lt;y&gt;40&lt;/y&gt;
+        &lt;width&gt;81&lt;/width&gt;
+        &lt;height&gt;41&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;property name="frameShape"&gt;
+       &lt;enum&gt;QFrame::StyledPanel&lt;/enum&gt;
+      &lt;/property&gt;
+      &lt;property name="frameShadow"&gt;
+       &lt;enum&gt;QFrame::Raised&lt;/enum&gt;
+      &lt;/property&gt;
+      &lt;widget class="QWidget" name="verticalLayoutWidget_2"&gt;
+       &lt;property name="geometry"&gt;
+        &lt;rect&gt;
+         &lt;x&gt;0&lt;/x&gt;
+         &lt;y&gt;0&lt;/y&gt;
+         &lt;width&gt;81&lt;/width&gt;
+         &lt;height&gt;41&lt;/height&gt;
+        &lt;/rect&gt;
+       &lt;/property&gt;
+       &lt;layout class="QVBoxLayout" name="verticalLayout_2"&gt;
+        &lt;item&gt;
+         &lt;widget class="QLabel" name="label_5"&gt;
+          &lt;property name="text"&gt;
+           &lt;string&gt;Clean&lt;/string&gt;
+          &lt;/property&gt;
+          &lt;property name="alignment"&gt;
+           &lt;set&gt;Qt::AlignCenter&lt;/set&gt;
+          &lt;/property&gt;
+         &lt;/widget&gt;
+        &lt;/item&gt;
+       &lt;/layout&gt;
+      &lt;/widget&gt;
+     &lt;/widget&gt;
+    &lt;/widget&gt;
+   &lt;/widget&gt;
+   &lt;widget class="QWidget" name="tab_3"&gt;
+    &lt;attribute name="title"&gt;
+     &lt;string&gt;Launch&lt;/string&gt;
+    &lt;/attribute&gt;
+    &lt;widget class="QGroupBox" name="groupBox_control"&gt;
+     &lt;property name="geometry"&gt;
+      &lt;rect&gt;
+       &lt;x&gt;10&lt;/x&gt;
+       &lt;y&gt;10&lt;/y&gt;
+       &lt;width&gt;631&lt;/width&gt;
+       &lt;height&gt;611&lt;/height&gt;
+      &lt;/rect&gt;
+     &lt;/property&gt;
+     &lt;property name="title"&gt;
+      &lt;string/&gt;
+     &lt;/property&gt;
+     &lt;widget class="QWidget" name="horizontalLayoutWidget"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;10&lt;/x&gt;
+        &lt;y&gt;570&lt;/y&gt;
+        &lt;width&gt;611&lt;/width&gt;
+        &lt;height&gt;31&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;layout class="QHBoxLayout" name="horizontalLayout"&gt;
+       &lt;property name="spacing"&gt;
+        &lt;number&gt;45&lt;/number&gt;
+       &lt;/property&gt;
+       &lt;item&gt;
+        &lt;widget class="QPushButton" name="pushButton_play"&gt;
+         &lt;property name="text"&gt;
+          &lt;string&gt;Play&lt;/string&gt;
+         &lt;/property&gt;
+         &lt;property name="icon"&gt;
+          &lt;iconset&gt;
+           &lt;normaloff&gt;../../../../../../../../usr/share/icons/Humanity/actions/24/gtk-media-play-ltr.svg&lt;/normaloff&gt;../../../../../../../../usr/share/icons/Humanity/actions/24/gtk-media-play-ltr.svg&lt;/iconset&gt;
+         &lt;/property&gt;
+        &lt;/widget&gt;
+       &lt;/item&gt;
+       &lt;item&gt;
+        &lt;widget class="QPushButton" name="pushButton_pause"&gt;
+         &lt;property name="text"&gt;
+          &lt;string&gt;Pause&lt;/string&gt;
+         &lt;/property&gt;
+         &lt;property name="icon"&gt;
+          &lt;iconset&gt;
+           &lt;normaloff&gt;../../../../../../../../usr/share/icons/Humanity/actions/24/media-playback-pause.svg&lt;/normaloff&gt;../../../../../../../../usr/share/icons/Humanity/actions/24/media-playback-pause.svg&lt;/iconset&gt;
+         &lt;/property&gt;
+        &lt;/widget&gt;
+       &lt;/item&gt;
+      &lt;/layout&gt;
+     &lt;/widget&gt;
+     &lt;widget class="QWidget" name="horizontalLayoutWidget_2"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;10&lt;/x&gt;
+        &lt;y&gt;10&lt;/y&gt;
+        &lt;width&gt;611&lt;/width&gt;
+        &lt;height&gt;41&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;layout class="QHBoxLayout" name="horizontalLayout_2"&gt;
+       &lt;item&gt;
+        &lt;widget class="QPushButton" name="pushButton_launch"&gt;
+         &lt;property name="text"&gt;
+          &lt;string&gt;Launch&lt;/string&gt;
+         &lt;/property&gt;
+        &lt;/widget&gt;
+       &lt;/item&gt;
+       &lt;item&gt;
+        &lt;widget class="QPushButton" name="pushButton_stop"&gt;
+         &lt;property name="text"&gt;
+          &lt;string&gt;Stop&lt;/string&gt;
+         &lt;/property&gt;
+        &lt;/widget&gt;
+       &lt;/item&gt;
+      &lt;/layout&gt;
+     &lt;/widget&gt;
+     &lt;widget class="QGroupBox" name="groupBox_9"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;10&lt;/x&gt;
+        &lt;y&gt;60&lt;/y&gt;
+        &lt;width&gt;611&lt;/width&gt;
+        &lt;height&gt;451&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;property name="title"&gt;
+       &lt;string&gt;Console Output&lt;/string&gt;
+      &lt;/property&gt;
+      &lt;property name="flat"&gt;
+       &lt;bool&gt;false&lt;/bool&gt;
+      &lt;/property&gt;
+      &lt;property name="checkable"&gt;
+       &lt;bool&gt;false&lt;/bool&gt;
+      &lt;/property&gt;
+      &lt;widget class="QTextEdit" name="textEdit_launchConsole"&gt;
+       &lt;property name="geometry"&gt;
+        &lt;rect&gt;
+         &lt;x&gt;0&lt;/x&gt;
+         &lt;y&gt;20&lt;/y&gt;
+         &lt;width&gt;611&lt;/width&gt;
+         &lt;height&gt;431&lt;/height&gt;
+        &lt;/rect&gt;
+       &lt;/property&gt;
+       &lt;property name="palette"&gt;
+        &lt;palette&gt;
+         &lt;active&gt;
+          &lt;colorrole role="Text"&gt;
+           &lt;brush brushstyle="SolidPattern"&gt;
+            &lt;color alpha="255"&gt;
+             &lt;red&gt;255&lt;/red&gt;
+             &lt;green&gt;255&lt;/green&gt;
+             &lt;blue&gt;255&lt;/blue&gt;
+            &lt;/color&gt;
+           &lt;/brush&gt;
+          &lt;/colorrole&gt;
+          &lt;colorrole role="Base"&gt;
+           &lt;brush brushstyle="SolidPattern"&gt;
+            &lt;color alpha="255"&gt;
+             &lt;red&gt;0&lt;/red&gt;
+             &lt;green&gt;0&lt;/green&gt;
+             &lt;blue&gt;0&lt;/blue&gt;
+            &lt;/color&gt;
+           &lt;/brush&gt;
+          &lt;/colorrole&gt;
+         &lt;/active&gt;
+         &lt;inactive&gt;
+          &lt;colorrole role="Text"&gt;
+           &lt;brush brushstyle="SolidPattern"&gt;
+            &lt;color alpha="255"&gt;
+             &lt;red&gt;255&lt;/red&gt;
+             &lt;green&gt;255&lt;/green&gt;
+             &lt;blue&gt;255&lt;/blue&gt;
+            &lt;/color&gt;
+           &lt;/brush&gt;
+          &lt;/colorrole&gt;
+          &lt;colorrole role="Base"&gt;
+           &lt;brush brushstyle="SolidPattern"&gt;
+            &lt;color alpha="255"&gt;
+             &lt;red&gt;0&lt;/red&gt;
+             &lt;green&gt;0&lt;/green&gt;
+             &lt;blue&gt;0&lt;/blue&gt;
+            &lt;/color&gt;
+           &lt;/brush&gt;
+          &lt;/colorrole&gt;
+         &lt;/inactive&gt;
+         &lt;disabled/&gt;
+        &lt;/palette&gt;
+       &lt;/property&gt;
+       &lt;property name="readOnly"&gt;
+        &lt;bool&gt;true&lt;/bool&gt;
+       &lt;/property&gt;
+      &lt;/widget&gt;
+     &lt;/widget&gt;
+     &lt;widget class="QComboBox" name="comboBox"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;200&lt;/x&gt;
+        &lt;y&gt;530&lt;/y&gt;
+        &lt;width&gt;93&lt;/width&gt;
+        &lt;height&gt;26&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;item&gt;
+       &lt;property name="text"&gt;
+        &lt;string&gt;Run For&lt;/string&gt;
+       &lt;/property&gt;
+      &lt;/item&gt;
+      &lt;item&gt;
+       &lt;property name="text"&gt;
+        &lt;string&gt;Run Until&lt;/string&gt;
+       &lt;/property&gt;
+      &lt;/item&gt;
+     &lt;/widget&gt;
+     &lt;widget class="QLineEdit" name="lineEdit"&gt;
+      &lt;property name="geometry"&gt;
+       &lt;rect&gt;
+        &lt;x&gt;290&lt;/x&gt;
+        &lt;y&gt;530&lt;/y&gt;
+        &lt;width&gt;181&lt;/width&gt;
+        &lt;height&gt;26&lt;/height&gt;
+       &lt;/rect&gt;
+      &lt;/property&gt;
+      &lt;property name="text"&gt;
+       &lt;string/&gt;
+      &lt;/property&gt;
+      &lt;property name="alignment"&gt;
+       &lt;set&gt;Qt::AlignCenter&lt;/set&gt;
+      &lt;/property&gt;
+     &lt;/widget&gt;
+    &lt;/widget&gt;
+   &lt;/widget&gt;
+  &lt;/widget&gt;
+ &lt;/widget&gt;
+ &lt;resources/&gt;
+ &lt;connections/&gt;
+&lt;/ui&gt;
+</pre></div>
+</div>
+</section>
+<section id="cfg-gui-main-py">
+<h2><code class="docutils literal notranslate"><span class="pre">cfg_gui_main.py</span></code><a class="headerlink" href="#cfg-gui-main-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">cfg/gui/cfg_gui_main.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>from pathlib import Path
+from PySide6.QtWidgets import QWidget, QApplication, QFileDialog, QTextEdit, QPushButton, QDateTimeEdit, QLabel, QCheckBox, QVBoxLayout, QSizePolicy, QDoubleSpinBox, QLayout, QMessageBox
+from PySide6.QtCore import QProcess, QDateTime
+from PySide6.QtGui import QTextCharFormat, QPixmap
+from cfg_gui_ui import Ui_Form
+import sys, re, xmltodict, datetime, threading
+import xml.etree.ElementTree as ET
+import os
+
+# TODO: Update master xml sc-x-cfg filename if modified in sc config (in progress)
+# TODO: disableButtons(), enableButtons() not working as intended due to the gnome-terminal thread handling the commands externally
+
+class cfg_gui(QWidget):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.ui = Ui_Form()
+        self.ui.setupUi(self)
+        self.setFixedSize(655, 655)
+        self.setWindowTitle("NOS3 Igniter - Version 0.0.1")
+        self.setWindowIcon(QPixmap(f'{os.path.dirname(os.path.abspath(__file__))}/resources/nos3_original.png'))
+
+        # globals
+        self.dateTimeEdit = QDateTimeEdit()
+        self.scConfigs = {}                                                     # Stores child configs {'index' : "filetext"}
+        self.prevButtonPressed = None                                           # Tracks the last button pressed, used in buttonColor()
+        self.defaultStyleSheet = self.ui.pushButton_buildAll.styleSheet()       # Saves default stylesheet to return button color to normal, buttonColor()
+        self.setup = 0                                                          # Allows for switchConfig() to initially be called without calling saveText()
+        self.configNumTrack = 0                                                 # Tracks the index of the previous SC config when switching to another index
+        self.defaultConfig = f'{os.path.dirname(os.path.abspath(__file__))}/../nos3-mission.xml'
+        self.config_path = self.defaultConfig
+
+        # Config Tab
+        self.ui.pushButton_browse.clicked.connect(self.browseConfig)
+        self.ui.pushButton_save.clicked.connect(lambda: self.saveXML("save"))
+        self.ui.pushButton_saveAs.clicked.connect(lambda: self.saveXML("saveAs"))
+        self.ui.spinBox_configNumber.valueChanged.connect(lambda: self.switchConfig(self.ui.spinBox_configNumber.value()))
+        pixmap = QPixmap(f'{os.path.dirname(os.path.abspath(__file__))}/resources/JSTAR-transparent_original.png')
+        self.ui.label_jstarLogo.setPixmap(pixmap)
+        pixmap = QPixmap(f'{os.path.dirname(os.path.abspath(__file__))}/resources/nos3_original.png')
+        self.ui.label_nos3Logo.setPixmap(pixmap)
+        
+        # Build Tab
+        self.ui.pushButton_buildAll.clicked.connect(lambda: self.build("all", self.ui.pushButton_buildAll))
+        self.ui.pushButton_cfgBuild.clicked.connect(lambda: self.build("config", self.ui.pushButton_cfgBuild))
+        self.ui.pushButton_fswBuild.clicked.connect(lambda: self.build("fsw", self.ui.pushButton_fswBuild))
+        self.ui.pushButton_gswBuild.clicked.connect(lambda: self.build("gsw", self.ui.pushButton_gswBuild))
+        self.ui.pushButton_simBuild.clicked.connect(lambda: self.build("sim", self.ui.pushButton_simBuild))
+        self.ui.pushButton_cleanAll.clicked.connect(lambda: self.clean("all", self.ui.pushButton_cleanAll))
+        self.ui.pushButton_fswClean.clicked.connect(lambda: self.clean("fsw", self.ui.pushButton_fswClean))
+        self.ui.pushButton_gswClean.clicked.connect(lambda: self.clean("gsw", self.ui.pushButton_gswClean))
+        self.ui.pushButton_simClean.clicked.connect(lambda: self.clean("sim", self.ui.pushButton_simClean))
+
+        # Launch Tab (Time Driver controls disabled)
+        #self.ui.pushButton_play.clicked.connect(lambda: self.startBashProcess(self.ui.textEdit_launchConsole, ["-lc", "echo '&gt;&gt; Starting NOS3 Time Driver'"]))
+        self.ui.pushButton_play.setDisabled(1)
+        self.ui.pushButton_stop.clicked.connect(lambda: self.gnome_terminal(self.ui.textEdit_launchConsole, "make stop"))
+        #self.ui.pushButton_pause.clicked.connect(lambda: self.startBashProcess(self.ui.textEdit_launchConsole, ["-lc", "echo '&gt;&gt; Pausing NOS3 Time Driver'"]))
+        self.ui.pushButton_pause.setDisabled(1)
+        self.ui.pushButton_launch.clicked.connect(lambda: self.gnome_terminal(self.ui.textEdit_launchConsole, "make launch"))
+        #self.ui.comboBox_run.currentIndexChanged.connect(self.run_ForUntil)
+        self.ui.comboBox_run.setDisabled(1)
+        self.ui.lineEdit_secondsEntry.setDisabled(1)
+
+        # Load Default Config
+        self.reloadConfig(self.defaultConfig)
+
+    # Replaces the textbox on launch tab with a date/time box and vice versa
+    def run_ForUntil(self):
+        index = self.ui.comboBox_run.currentIndex()
+        if index == 0:
+            self.ui.horizontalLayout_runForUntil.itemAt(1).widget().setParent(None)
+            self.ui.horizontalLayout_runForUntil.insertWidget(1, self.ui.lineEdit_secondsEntry)
+            self.ui.lineEdit_secondsEntry.setPlaceholderText("")
+        elif index == 1:
+            self.ui.horizontalLayout_runForUntil.itemAt(1).widget().setParent(None)
+            self.ui.horizontalLayout_runForUntil.insertWidget(1, self.ui.lineEdit_secondsEntry)
+            self.ui.lineEdit_secondsEntry.setPlaceholderText("Seconds")
+        elif index == 2:
+            self.ui.horizontalLayout_runForUntil.itemAt(1).widget().setParent(None)
+            self.currentTime = datetime.datetime.now()
+            self.dateTimeEdit.setMinimumDateTime(QDateTime(self.currentTime.year, self.currentTime.month, self.currentTime.day, self.currentTime.hour, self.currentTime.minute, self.currentTime.second, 0, 0))
+            self.ui.horizontalLayout_runForUntil.insertWidget(1, self.dateTimeEdit)
+            
+    # Updates the currently saved xml dictionary (not actual xml file) for the currently selected spacecraft config when edited. TODO: change name of function
+    def saveText(self, layout:QLayout, config_value:int):
+        text = self.scConfigs[config_value]
+        filename = text.split('\n')[0]
+        childXml = xmltodict.parse(text.split('\n', 2)[2])
+
+        # TODO: change to dynamically pull apps/components from xml file or directory, but how?
+        applications = ['cf', 'ds', 'fm', 'lc', 'sc']
+        components = ['adcs', 'cam', 'css', 'eps', 'fss', 'gps', 'imu', 'mag', 'radio', 'rw', 'sample', 'st', 'syn', 'torquer', 'thruster']
+
+        i = 0
+        while layout.itemAt(i) != None:
+            widget = layout.itemAt(i).widget()
+
+            # Handle filename
+            if isinstance(widget, QTextEdit):
+                widget:QTextEdit
+                filename = widget.toPlainText()
+                if "Filename:" not in filename:
+                    filename = f'Filename: {filename}'
+                if "Filename: " not in filename:
+                    filename = f'Filename: {filename.split(":")[1]}'
+
+            # Handle checkboxes
+            elif isinstance(widget, QCheckBox):
+                widget:QCheckBox
+                text = widget.text().split(' ')[0]
+                if text in applications:
+                    childXml['sc-1-config']['applications'][text]['enable'] = str(widget.isChecked()).lower()
+                elif text in components:
+                    childXml['sc-1-config']['components'][text]['enable'] = str(widget.isChecked()).lower()
+                elif text == 'gui':
+                    childXml['sc-1-config'][text]['enable'] = str(widget.isChecked()).lower()
+
+            # Handle orbits
+            elif isinstance(widget, QDoubleSpinBox):
+                widget:QDoubleSpinBox
+                prefix = widget.prefix().split(' ')[0]
+                childXml['sc-1-config']['orbit'][prefix] = str(widget.value())
+
+            # Increment index
+            i += 1
+            
+        combined = filename + '\n\n' + xmltodict.unparse(childXml)
+        self.scConfigs[config_value] = combined
+        
+    # Saves the master/child XML's edited in the GUI
+    def saveXML(self, saveType:str):
+        # saveType = "save" (overwrite) or "saveAs" (new)
+
+        if saveType == "saveAs":
+            savePath, _ = QFileDialog.getSaveFileName(None, 'Directory', './cfg')
+        elif saveType == "save":
+            savePath = self.config_path
+
+        # Grab master and save to xml
+        masterXml = xmltodict.parse(self.ui.textEdit_masterConfig.toPlainText())
+        self.convert2xml(masterXml, savePath)
+
+        # Now handle children
+        self.saveText(self.layout_, self.ui.spinBox_configNumber.value()-1)
+
+        for child in self.scConfigs:
+            text = str(self.scConfigs[child])
+            filename = text.split('\n')[0].split(' ')[1]
+            childXml = text.split('\n', 2)[2]
+            childXml = xmltodict.parse(childXml)
+            
+            # save under same directory as masterXml using filename parsed from textEdit
+            self.convert2xml(childXml, savePath.rsplit('/', 1)[0]+f'/{filename}')
+
+        self.reloadConfig(self.config_path)
+
+    # Loads the child config into the Spacecraft Config textbox
+    def switchConfig(self, value:int):
+        # value : index of spacecraft config in the order listed in the master XML
+        #         Note: Parameter indexing starts at 1
+
+        # save edits made to config before viewing next one
+        if self.setup == 1:
+            self.saveText(self.layout_, self.configNumTrack)
+            self.configNumTrack = value-1
+        else:
+            self.setup = 1
+
+        # setup layout to add item to
+        self.ui.scrollArea.setWidgetResizable(True)
+        self.ui.scrollAreaWidgetContents.setLayout(QVBoxLayout().layout())
+        self.layout_ = self.ui.scrollAreaWidgetContents.layout()
+        self.layout_.setSpacing(12)
+
+        # remove all items from SC Config window when switching index
+        while self.layout_.itemAt(0) != None:
+            child = self.layout_.itemAt(0).widget().setParent(None)
+
+        # Now parse the xml and convert to widgets
+        value = value-1
+        if value in self.scConfigs:
+            fileName = self.scConfigs[value].split('\n')[0]
+            childXML = self.scConfigs[value].split('\n')[2::]
+            childXML = ''.join(childXML)
+            childDict = xmltodict.parse(childXML)
+
+            # child = sc-xxx-cfg
+            for child in childDict:
+                configTag = QTextEdit()
+                configTag.setText((fileName))
+                configTag.setMinimumHeight(30)
+                self.layout_.addWidget(configTag)
+
+                # child2 = applications | components | gui | orbit
+                for child2 in childDict[child]:
+                    tag = QLabel()
+                    tag.setText(child2.upper()+": ")
+                    format = QTextCharFormat()
+                    format.setFontUnderline(True)
+                    tag.setFont(format.font())
+                    tag.setMinimumHeight(18)
+                    self.layout_.addWidget(tag)
+
+                    if child2 in ['applications', 'components']:
+
+                        # child 3 = cf | ds | ... | adcs | cam | ...
+                        for child3 in childDict[child][child2]:
+                            enableTag = QCheckBox()
+                            enableTag.setText(child3 + " enable ")
+                            enableTag.setChecked(childDict[child][child2][child3]['enable'] == 'true')
+                            enableTag.setMinimumHeight(18)
+                            enableTag.sizePolicy().setVerticalPolicy(QSizePolicy.Expanding)
+                            self.layout_.addWidget(enableTag)
+
+                    elif child2 == 'gui':
+                        enableTag = QCheckBox()
+                        enableTag.setText(child2 + " enable ")
+                        enableTag.setChecked(childDict[child][child2]['enable'] == 'true')
+                        self.layout_.addWidget(enableTag)
+
+                    elif child2 == 'orbit':
+
+                        # child3 = tipoff_x/y/z
+                        for child3 in childDict[child][child2]:
+                            orbitSpinBox = QDoubleSpinBox()
+                            orbitSpinBox.setMinimum(-99.00)
+                            orbitSpinBox.setMaximum(99.00)
+                            orbitSpinBox.setValue(float(childDict[child][child2][child3]))
+                            orbitSpinBox.setPrefix(f'{child3} = ')
+                            self.layout_.addWidget(orbitSpinBox)
+        else:
+            # No SC configs in master XML file, or selected a SC XML as master
+            tag = QLabel()
+            tag.setText("*ERROR*\n\nMake sure you chose a master configuration file\n\n*ERROR*")
+            self.layout_.addWidget(tag)
+
+    # Converts a dictionary to XML file, saved under the given filename/path
+    def convert2xml(self, attrDict:dict, fileName:str):
+        # ensure file is saved as xml
+        if fileName[-4::] != ".xml":
+            fileName += ".xml"
+
+        # unparse dictionary to xml
+        with open(fileName, "w") as f:
+            xmltodict.unparse(attrDict, f, pretty=True)
+            f.close()
+
+    # Opens file selection menu and calls parseXML() on the selected file
+    def browseConfig(self):
+
+        # Clear SC Config window when selecting a new master config
+        if "layout_" in self.__dict__:
+            while self.layout_.itemAt(0) != None:
+                self.layout_.itemAt(0).widget().setParent(None)
+
+        self.config_path, _ = QFileDialog.getOpenFileName(None, 'File', './cfg', "XML Files [ *.xml ]")
+        if self.config_path != "":
+            self.config_name = self.config_path.split("/")[-1]
+            self.ui.lineEdit_curConfig.setText(self.config_name)
+            self.parseXml(self.config_path)
+
+    # Reloads the whole config after clicking save, allows you to change "sc-x-cfg" xml file
+    def reloadConfig(self, config_path):
+        if "layout_" in self.__dict__:
+            while self.layout_.itemAt(0) != None:
+                self.layout_.itemAt(0).widget().setParent(None)
+        
+        if config_path != "":
+            config_name = config_path.split("/")[-1]
+            self.ui.lineEdit_curConfig.setText(config_name)
+            self.parseXml(config_path)
+
+        self.ui.spinBox_configNumber.setValue(1)
+
+    # Parses Master and child XML files from the given file, updates text boxes accordingly
+    def parseXml(self, config_path):
+        
+        # Read Master
+        with open(config_path, 'r') as f:
+            self.ui.textEdit_masterConfig.setText(f.read())
+            f.close()
+
+        # Parse number of SC and SC filenames from master
+        i = 1
+        self.sc_cfg_files = []
+        childDict = {}
+        self.master_root = ET.parse(config_path).getroot()
+        for child in self.master_root:
+            if child.tag == "number-spacecraft":
+                 self.ui.spinBox_configNumber.setMaximum(int(child.text))
+            if re.match("sc-[0-9]+-cfg", child.tag):
+                 childDict[child.tag] = child.text
+
+                 # Check for duplicate xml's
+                 if child.text in self.sc_cfg_files:
+                     QMessageBox.critical(self, "Error", "Using duplicate Spacecraft Config Files, Changes will not be saved correctly")
+                     print("Duplicate SC Config file")
+
+                 self.sc_cfg_files.append(child.text)
+                 i+=1
+
+        # Read Children
+        config_dir = str(config_path.rsplit('/', 1)[0])
+        for i, child in enumerate(childDict):
+            if Path(f'{config_dir}/{childDict[child]}').is_file():
+                filePath = f'{config_dir}/{childDict[child]}'
+            else:
+                raise FileNotFoundError(childDict[child])
+
+            with open(filePath, 'r') as f:
+                self.scConfigs[i] = f'Filename: {childDict[child]}\n\n{f.read()}'
+                f.close()
+                
+        # Update Spacecraft Config Text to first SC config listed in master config
+        self.switchConfig(1)
+
+    # Test for gnome-terminal instead of bash, also uses startCommand() instead of start()
+    def gnome_terminal(self, textbox:QTextEdit, command:str):
+        process = QProcess()
+
+        # `read line` is to hold the terminal open after execution, allows errors to be seen
+        process.startCommand(f'gnome-terminal --tab -- bash -c "{command}; echo Done. Press ENTER to close.; read line" ')
+
+        process.readyReadStandardOutput.connect(lambda: textbox.append(process.readAllStandardOutput().data().decode()))
+        process.readyReadStandardError.connect(lambda: textbox.append(process.readAllStandardError().data().decode()))
+
+        process.waitForFinished(msecs=-1)
+        textbox.append(f'&gt;&gt; {command}...')
+
+    # Placeholder clean command
+    def clean(self, software:str, button:QPushButton):
+        textbox = self.ui.textEdit_buildConsole
+        if software == 'all':
+            command = f'make clean'
+        else:
+            command = f'make clean-{software}'
+        
+        self.buttonColor(button)
+        t1 = threading.Thread(target=self.thread_gnome(textbox, button, command), name='t1')
+        t1.start()
+        
+    # Placeholder build command, assumes make prep already ran, same with clean commands
+    def build(self, software:str, button:QPushButton):
+        textbox = self.ui.textEdit_buildConsole
+        if software == 'all':
+            command = f'make'
+        else:
+            command = f'make {software}'
+
+        self.buttonColor(button)
+        t1 = threading.Thread(target=self.thread_gnome(textbox, button, command), name='t1')
+        t1.start()
+    
+    # Button/Bash function wrapper for threads
+    def thread_gnome(self, textbox:QTextEdit, button:QPushButton, command:str):
+        self.disableButtons(button)
+        self.gnome_terminal(textbox, command)
+        self.enableButtons(button)
+
+    # Changes the color of the most recently pressed button to green and the last pressed button to default
+    def buttonColor(self, button:QPushButton):
+        if self.prevButtonPressed is not None:
+            self.prevButtonPressed.setStyleSheet(self.defaultStyleSheet)
+        button.setStyleSheet('QPushButton {background-color: green;}')
+        self.prevButtonPressed = button
+
+    # Disable build/clean buttons while another is being ran (not working)
+    def disableButtons(self, button:QPushButton):
+        index = self.ui.gridLayout_buildCleanButtons.count()-1
+        while index &gt;= 0:
+            widget = self.ui.gridLayout_buildCleanButtons.itemAt(index).widget()
+            if widget != button:
+                widget.setDisabled(1)
+            index -= 1
+
+    # Enable build/clean buttons after process is done running (not working)
+    def enableButtons(self, button:QPushButton):
+        index = self.ui.gridLayout_buildCleanButtons.count()-1
+        while index &gt;= 0:
+            widget = self.ui.gridLayout_buildCleanButtons.itemAt(index).widget()
+            if widget != button:
+                widget.setEnabled(1)
+            index -= 1
+
+
+def main():
+    app = QApplication(sys.argv)
+    win = cfg_gui()
+    win.show()
+    sys.exit(app.exec())
+
+main()
+</pre></div>
+</div>
+</section>
+<section id="cfg-gui-ui-py">
+<h2><code class="docutils literal notranslate"><span class="pre">cfg_gui_ui.py</span></code><a class="headerlink" href="#cfg-gui-ui-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">cfg/gui/cfg_gui_ui.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># -*- coding: utf-8 -*-
+
+################################################################################
+## Form generated from reading UI file 'cfg_gui.ui'
+##
+## Created by: Qt User Interface Compiler version 6.7.0
+##
+## WARNING! All changes made in this file will be lost when recompiling UI file!
+################################################################################
+
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
+    QGroupBox, QHBoxLayout, QLabel, QLayout,
+    QLineEdit, QPushButton, QScrollArea, QSizePolicy,
+    QSpinBox, QTabWidget, QTextEdit, QVBoxLayout,
+    QWidget)
+
+class Ui_Form(object):
+    def setupUi(self, Form):
+        if not Form.objectName():
+            Form.setObjectName(u"Form")
+        Form.resize(658, 655)
+        palette = QPalette()
+        brush = QBrush(QColor(0, 0, 0, 255))
+        brush.setStyle(Qt.SolidPattern)
+        palette.setBrush(QPalette.Active, QPalette.WindowText, brush)
+        brush1 = QBrush(QColor(255, 255, 255, 255))
+        brush1.setStyle(Qt.SolidPattern)
+        palette.setBrush(QPalette.Active, QPalette.Button, brush1)
+        palette.setBrush(QPalette.Active, QPalette.Light, brush1)
+        palette.setBrush(QPalette.Active, QPalette.Midlight, brush1)
+        brush2 = QBrush(QColor(127, 127, 127, 255))
+        brush2.setStyle(Qt.SolidPattern)
+        palette.setBrush(QPalette.Active, QPalette.Dark, brush2)
+        brush3 = QBrush(QColor(170, 170, 170, 255))
+        brush3.setStyle(Qt.SolidPattern)
+        palette.setBrush(QPalette.Active, QPalette.Mid, brush3)
+        palette.setBrush(QPalette.Active, QPalette.Text, brush)
+        palette.setBrush(QPalette.Active, QPalette.BrightText, brush1)
+        palette.setBrush(QPalette.Active, QPalette.ButtonText, brush)
+        palette.setBrush(QPalette.Active, QPalette.Base, brush1)
+        palette.setBrush(QPalette.Active, QPalette.Window, brush1)
+        palette.setBrush(QPalette.Active, QPalette.Shadow, brush)
+        palette.setBrush(QPalette.Active, QPalette.AlternateBase, brush1)
+        brush4 = QBrush(QColor(255, 255, 220, 255))
+        brush4.setStyle(Qt.SolidPattern)
+        palette.setBrush(QPalette.Active, QPalette.ToolTipBase, brush4)
+        palette.setBrush(QPalette.Active, QPalette.ToolTipText, brush)
+        brush5 = QBrush(QColor(0, 0, 0, 127))
+        brush5.setStyle(Qt.SolidPattern)
+#if QT_VERSION &gt;= QT_VERSION_CHECK(5, 12, 0)
+        palette.setBrush(QPalette.Active, QPalette.PlaceholderText, brush5)
+#endif
+        palette.setBrush(QPalette.Active, QPalette.Accent, brush1)
+        palette.setBrush(QPalette.Inactive, QPalette.WindowText, brush)
+        palette.setBrush(QPalette.Inactive, QPalette.Button, brush1)
+        palette.setBrush(QPalette.Inactive, QPalette.Light, brush1)
+        palette.setBrush(QPalette.Inactive, QPalette.Midlight, brush1)
+        palette.setBrush(QPalette.Inactive, QPalette.Dark, brush2)
+        palette.setBrush(QPalette.Inactive, QPalette.Mid, brush3)
+        palette.setBrush(QPalette.Inactive, QPalette.Text, brush)
+        palette.setBrush(QPalette.Inactive, QPalette.BrightText, brush1)
+        palette.setBrush(QPalette.Inactive, QPalette.ButtonText, brush)
+        palette.setBrush(QPalette.Inactive, QPalette.Base, brush1)
+        palette.setBrush(QPalette.Inactive, QPalette.Window, brush1)
+        palette.setBrush(QPalette.Inactive, QPalette.Shadow, brush)
+        palette.setBrush(QPalette.Inactive, QPalette.AlternateBase, brush1)
+        palette.setBrush(QPalette.Inactive, QPalette.ToolTipBase, brush4)
+        palette.setBrush(QPalette.Inactive, QPalette.ToolTipText, brush)
+#if QT_VERSION &gt;= QT_VERSION_CHECK(5, 12, 0)
+        palette.setBrush(QPalette.Inactive, QPalette.PlaceholderText, brush5)
+#endif
+        palette.setBrush(QPalette.Inactive, QPalette.Accent, brush1)
+        palette.setBrush(QPalette.Disabled, QPalette.WindowText, brush2)
+        palette.setBrush(QPalette.Disabled, QPalette.Button, brush1)
+        palette.setBrush(QPalette.Disabled, QPalette.Light, brush1)
+        palette.setBrush(QPalette.Disabled, QPalette.Midlight, brush1)
+        palette.setBrush(QPalette.Disabled, QPalette.Dark, brush2)
+        palette.setBrush(QPalette.Disabled, QPalette.Mid, brush3)
+        palette.setBrush(QPalette.Disabled, QPalette.Text, brush2)
+        palette.setBrush(QPalette.Disabled, QPalette.BrightText, brush1)
+        palette.setBrush(QPalette.Disabled, QPalette.ButtonText, brush2)
+        palette.setBrush(QPalette.Disabled, QPalette.Base, brush1)
+        palette.setBrush(QPalette.Disabled, QPalette.Window, brush1)
+        palette.setBrush(QPalette.Disabled, QPalette.Shadow, brush)
+        palette.setBrush(QPalette.Disabled, QPalette.AlternateBase, brush1)
+        palette.setBrush(QPalette.Disabled, QPalette.ToolTipBase, brush4)
+        palette.setBrush(QPalette.Disabled, QPalette.ToolTipText, brush)
+        brush6 = QBrush(QColor(127, 127, 127, 127))
+        brush6.setStyle(Qt.SolidPattern)
+#if QT_VERSION &gt;= QT_VERSION_CHECK(5, 12, 0)
+        palette.setBrush(QPalette.Disabled, QPalette.PlaceholderText, brush6)
+#endif
+        palette.setBrush(QPalette.Disabled, QPalette.Accent, brush1)
+        Form.setPalette(palette)
+        self.tabWidget = QTabWidget(Form)
+        self.tabWidget.setObjectName(u"tabWidget")
+        self.tabWidget.setGeometry(QRect(0, 0, 661, 661))
+        self.tabWidget.setTabShape(QTabWidget.TabShape.Rounded)
+        self.tab = QWidget()
+        self.tab.setObjectName(u"tab")
+        self.lineEdit_curConfig = QLineEdit(self.tab)
+        self.lineEdit_curConfig.setObjectName(u"lineEdit_curConfig")
+        self.lineEdit_curConfig.setGeometry(QRect(130, 20, 421, 26))
+        self.lineEdit_curConfig.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lineEdit_curConfig.setReadOnly(True)
+        self.pushButton_browse = QPushButton(self.tab)
+        self.pushButton_browse.setObjectName(u"pushButton_browse")
+        self.pushButton_browse.setGeometry(QRect(550, 20, 94, 26))
+        self.label_curConfig = QLabel(self.tab)
+        self.label_curConfig.setObjectName(u"label_curConfig")
+        self.label_curConfig.setGeometry(QRect(10, 20, 121, 21))
+        self.groupBox_scConfig = QGroupBox(self.tab)
+        self.groupBox_scConfig.setObjectName(u"groupBox_scConfig")
+        self.groupBox_scConfig.setGeometry(QRect(10, 260, 631, 321))
+        self.horizontalLayoutWidget_6 = QWidget(self.groupBox_scConfig)
+        self.horizontalLayoutWidget_6.setObjectName(u"horizontalLayoutWidget_6")
+        self.horizontalLayoutWidget_6.setGeometry(QRect(0, 20, 631, 301))
+        self.horizontalLayout_6 = QHBoxLayout(self.horizontalLayoutWidget_6)
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
+        self.scrollArea = QScrollArea(self.horizontalLayoutWidget_6)
+        self.scrollArea.setObjectName(u"scrollArea")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.scrollArea.sizePolicy().hasHeightForWidth())
+        self.scrollArea.setSizePolicy(sizePolicy)
+        self.scrollArea.setAutoFillBackground(True)
+        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents = QWidget()
+        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 613, 68))
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.scrollAreaWidgetContents.sizePolicy().hasHeightForWidth())
+        self.scrollAreaWidgetContents.setSizePolicy(sizePolicy1)
+        self.verticalLayout_3 = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.verticalLayout_3.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+
+        self.horizontalLayout_6.addWidget(self.scrollArea, 0, Qt.AlignmentFlag.AlignTop)
+
+        self.spinBox_configNumber = QSpinBox(self.groupBox_scConfig)
+        self.spinBox_configNumber.setObjectName(u"spinBox_configNumber")
+        self.spinBox_configNumber.setGeometry(QRect(150, -1, 48, 21))
+        self.spinBox_configNumber.setMinimum(1)
+        self.groupBox_masterConfig = QGroupBox(self.tab)
+        self.groupBox_masterConfig.setObjectName(u"groupBox_masterConfig")
+        self.groupBox_masterConfig.setGeometry(QRect(10, 60, 631, 181))
+        self.horizontalLayoutWidget_5 = QWidget(self.groupBox_masterConfig)
+        self.horizontalLayoutWidget_5.setObjectName(u"horizontalLayoutWidget_5")
+        self.horizontalLayoutWidget_5.setGeometry(QRect(0, 20, 631, 161))
+        self.horizontalLayout_5 = QHBoxLayout(self.horizontalLayoutWidget_5)
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.textEdit_masterConfig = QTextEdit(self.horizontalLayoutWidget_5)
+        self.textEdit_masterConfig.setObjectName(u"textEdit_masterConfig")
+        self.textEdit_masterConfig.setReadOnly(False)
+
+        self.horizontalLayout_5.addWidget(self.textEdit_masterConfig)
+
+        self.pushButton_save = QPushButton(self.tab)
+        self.pushButton_save.setObjectName(u"pushButton_save")
+        self.pushButton_save.setGeometry(QRect(220, 590, 94, 26))
+        self.pushButton_saveAs = QPushButton(self.tab)
+        self.pushButton_saveAs.setObjectName(u"pushButton_saveAs")
+        self.pushButton_saveAs.setGeometry(QRect(330, 590, 94, 26))
+        self.label_nos3Logo = QLabel(self.tab)
+        self.label_nos3Logo.setObjectName(u"label_nos3Logo")
+        self.label_nos3Logo.setGeometry(QRect(50, 585, 111, 41))
+        self.label_nos3Logo.setScaledContents(True)
+        self.label_jstarLogo = QLabel(self.tab)
+        self.label_jstarLogo.setObjectName(u"label_jstarLogo")
+        self.label_jstarLogo.setGeometry(QRect(480, 585, 131, 41))
+        self.label_jstarLogo.setScaledContents(True)
+        self.label_jstarLogo.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.tabWidget.addTab(self.tab, "")
+        self.tab_2 = QWidget()
+        self.tab_2.setObjectName(u"tab_2")
+        self.groupBox_8 = QGroupBox(self.tab_2)
+        self.groupBox_8.setObjectName(u"groupBox_8")
+        self.groupBox_8.setGeometry(QRect(10, 120, 631, 491))
+        self.groupBox_8.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.groupBox_8.setFlat(False)
+        self.groupBox_8.setCheckable(False)
+        self.textEdit_buildConsole = QTextEdit(self.groupBox_8)
+        self.textEdit_buildConsole.setObjectName(u"textEdit_buildConsole")
+        self.textEdit_buildConsole.setGeometry(QRect(0, 20, 631, 471))
+        palette1 = QPalette()
+        palette1.setBrush(QPalette.Active, QPalette.Text, brush1)
+        palette1.setBrush(QPalette.Active, QPalette.Base, brush)
+        palette1.setBrush(QPalette.Inactive, QPalette.Text, brush1)
+        palette1.setBrush(QPalette.Inactive, QPalette.Base, brush)
+        self.textEdit_buildConsole.setPalette(palette1)
+        self.textEdit_buildConsole.setReadOnly(True)
+        self.frame_2 = QFrame(self.tab_2)
+        self.frame_2.setObjectName(u"frame_2")
+        self.frame_2.setGeometry(QRect(10, 20, 641, 81))
+        self.frame_2.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_2.setFrameShadow(QFrame.Shadow.Raised)
+        self.frame = QFrame(self.frame_2)
+        self.frame.setObjectName(u"frame")
+        self.frame.setGeometry(QRect(79, 0, 561, 80))
+        self.frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.gridLayoutWidget_2 = QWidget(self.frame)
+        self.gridLayoutWidget_2.setObjectName(u"gridLayoutWidget_2")
+        self.gridLayoutWidget_2.setGeometry(QRect(0, 0, 561, 80))
+        self.gridLayout_buildCleanButtons = QGridLayout(self.gridLayoutWidget_2)
+        self.gridLayout_buildCleanButtons.setObjectName(u"gridLayout_buildCleanButtons")
+        self.gridLayout_buildCleanButtons.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_cleanAll = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_cleanAll.setObjectName(u"pushButton_cleanAll")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_cleanAll, 1, 0, 1, 1)
+
+        self.pushButton_buildAll = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_buildAll.setObjectName(u"pushButton_buildAll")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_buildAll, 0, 0, 1, 1)
+
+        self.pushButton_fswBuild = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_fswBuild.setObjectName(u"pushButton_fswBuild")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_fswBuild, 0, 2, 1, 1)
+
+        self.pushButton_cfgBuild = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_cfgBuild.setObjectName(u"pushButton_cfgBuild")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_cfgBuild, 0, 1, 1, 1)
+
+        self.pushButton_simClean = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_simClean.setObjectName(u"pushButton_simClean")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_simClean, 1, 4, 1, 1)
+
+        self.pushButton_simBuild = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_simBuild.setObjectName(u"pushButton_simBuild")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_simBuild, 0, 4, 1, 1)
+
+        self.pushButton_gswBuild = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_gswBuild.setObjectName(u"pushButton_gswBuild")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_gswBuild, 0, 3, 1, 1)
+
+        self.pushButton_fswClean = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_fswClean.setObjectName(u"pushButton_fswClean")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_fswClean, 1, 2, 1, 1)
+
+        self.pushButton_gswClean = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_gswClean.setObjectName(u"pushButton_gswClean")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_gswClean, 1, 3, 1, 1)
+
+        self.frame_3 = QFrame(self.frame_2)
+        self.frame_3.setObjectName(u"frame_3")
+        self.frame_3.setGeometry(QRect(0, 0, 81, 41))
+        self.frame_3.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_3.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayoutWidget = QWidget(self.frame_3)
+        self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
+        self.verticalLayoutWidget.setGeometry(QRect(0, 0, 81, 41))
+        self.verticalLayout = QVBoxLayout(self.verticalLayoutWidget)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.label_4 = QLabel(self.verticalLayoutWidget)
+        self.label_4.setObjectName(u"label_4")
+        self.label_4.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout.addWidget(self.label_4)
+
+        self.frame_4 = QFrame(self.frame_2)
+        self.frame_4.setObjectName(u"frame_4")
+        self.frame_4.setGeometry(QRect(0, 40, 81, 41))
+        self.frame_4.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_4.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayoutWidget_2 = QWidget(self.frame_4)
+        self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
+        self.verticalLayoutWidget_2.setGeometry(QRect(0, 0, 81, 41))
+        self.verticalLayout_2 = QVBoxLayout(self.verticalLayoutWidget_2)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.label_5 = QLabel(self.verticalLayoutWidget_2)
+        self.label_5.setObjectName(u"label_5")
+        self.label_5.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_2.addWidget(self.label_5)
+
+        self.tabWidget.addTab(self.tab_2, "")
+        self.tab_3 = QWidget()
+        self.tab_3.setObjectName(u"tab_3")
+        self.groupBox_control = QGroupBox(self.tab_3)
+        self.groupBox_control.setObjectName(u"groupBox_control")
+        self.groupBox_control.setGeometry(QRect(10, 10, 631, 611))
+        self.horizontalLayoutWidget = QWidget(self.groupBox_control)
+        self.horizontalLayoutWidget.setObjectName(u"horizontalLayoutWidget")
+        self.horizontalLayoutWidget.setGeometry(QRect(10, 570, 611, 31))
+        self.horizontalLayout = QHBoxLayout(self.horizontalLayoutWidget)
+        self.horizontalLayout.setSpacing(45)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_play = QPushButton(self.horizontalLayoutWidget)
+        self.pushButton_play.setObjectName(u"pushButton_play")
+        icon = QIcon()
+        icon.addFile(u"../../../../../../../../usr/share/icons/Humanity/actions/24/gtk-media-play-ltr.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.pushButton_play.setIcon(icon)
+
+        self.horizontalLayout.addWidget(self.pushButton_play)
+
+        self.pushButton_pause = QPushButton(self.horizontalLayoutWidget)
+        self.pushButton_pause.setObjectName(u"pushButton_pause")
+        icon1 = QIcon()
+        icon1.addFile(u"../../../../../../../../usr/share/icons/Humanity/actions/24/media-playback-pause.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.pushButton_pause.setIcon(icon1)
+
+        self.horizontalLayout.addWidget(self.pushButton_pause)
+
+        self.horizontalLayoutWidget_2 = QWidget(self.groupBox_control)
+        self.horizontalLayoutWidget_2.setObjectName(u"horizontalLayoutWidget_2")
+        self.horizontalLayoutWidget_2.setGeometry(QRect(10, 10, 611, 41))
+        self.horizontalLayout_2 = QHBoxLayout(self.horizontalLayoutWidget_2)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_launch = QPushButton(self.horizontalLayoutWidget_2)
+        self.pushButton_launch.setObjectName(u"pushButton_launch")
+
+        self.horizontalLayout_2.addWidget(self.pushButton_launch)
+
+        self.pushButton_stop = QPushButton(self.horizontalLayoutWidget_2)
+        self.pushButton_stop.setObjectName(u"pushButton_stop")
+
+        self.horizontalLayout_2.addWidget(self.pushButton_stop)
+
+        self.groupBox_9 = QGroupBox(self.groupBox_control)
+        self.groupBox_9.setObjectName(u"groupBox_9")
+        self.groupBox_9.setGeometry(QRect(10, 60, 611, 451))
+        self.groupBox_9.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.groupBox_9.setFlat(False)
+        self.groupBox_9.setCheckable(False)
+        self.textEdit_launchConsole = QTextEdit(self.groupBox_9)
+        self.textEdit_launchConsole.setObjectName(u"textEdit_launchConsole")
+        self.textEdit_launchConsole.setGeometry(QRect(0, 20, 611, 431))
+        palette2 = QPalette()
+        palette2.setBrush(QPalette.Active, QPalette.Text, brush1)
+        palette2.setBrush(QPalette.Active, QPalette.Base, brush)
+        palette2.setBrush(QPalette.Inactive, QPalette.Text, brush1)
+        palette2.setBrush(QPalette.Inactive, QPalette.Base, brush)
+        self.textEdit_launchConsole.setPalette(palette2)
+        self.textEdit_launchConsole.setReadOnly(True)
+        self.horizontalLayoutWidget_3 = QWidget(self.groupBox_control)
+        self.horizontalLayoutWidget_3.setObjectName(u"horizontalLayoutWidget_3")
+        self.horizontalLayoutWidget_3.setGeometry(QRect(190, 520, 261, 41))
+        self.horizontalLayout_runForUntil = QHBoxLayout(self.horizontalLayoutWidget_3)
+        self.horizontalLayout_runForUntil.setObjectName(u"horizontalLayout_runForUntil")
+        self.horizontalLayout_runForUntil.setContentsMargins(0, 0, 0, 0)
+        self.comboBox_run = QComboBox(self.horizontalLayoutWidget_3)
+        self.comboBox_run.addItem("")
+        self.comboBox_run.addItem("")
+        self.comboBox_run.addItem("")
+        self.comboBox_run.setObjectName(u"comboBox_run")
+
+        self.horizontalLayout_runForUntil.addWidget(self.comboBox_run)
+
+        self.lineEdit_secondsEntry = QLineEdit(self.horizontalLayoutWidget_3)
+        self.lineEdit_secondsEntry.setObjectName(u"lineEdit_secondsEntry")
+        self.lineEdit_secondsEntry.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.horizontalLayout_runForUntil.addWidget(self.lineEdit_secondsEntry)
+
+        self.tabWidget.addTab(self.tab_3, "")
+
+        self.retranslateUi(Form)
+
+        self.tabWidget.setCurrentIndex(0)
+
+
+        QMetaObject.connectSlotsByName(Form)
+    # setupUi
+
+    def retranslateUi(self, Form):
+        Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
+        self.lineEdit_curConfig.setPlaceholderText(QCoreApplication.translate("Form", u"None", None))
+        self.pushButton_browse.setText(QCoreApplication.translate("Form", u"Browse...", None))
+        self.label_curConfig.setText(QCoreApplication.translate("Form", u"Current Config:", None))
+        self.groupBox_scConfig.setTitle(QCoreApplication.translate("Form", u"Spacecraft Config", None))
+        self.groupBox_masterConfig.setTitle(QCoreApplication.translate("Form", u"Master Config", None))
+        self.pushButton_save.setText(QCoreApplication.translate("Form", u"Save", None))
+        self.pushButton_saveAs.setText(QCoreApplication.translate("Form", u"Save As...", None))
+        self.label_nos3Logo.setText("")
+        self.label_jstarLogo.setText("")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("Form", u"Config", None))
+        self.groupBox_8.setTitle(QCoreApplication.translate("Form", u"Console Output", None))
+        self.pushButton_cleanAll.setText(QCoreApplication.translate("Form", u"All", None))
+        self.pushButton_buildAll.setText(QCoreApplication.translate("Form", u"All", None))
+        self.pushButton_fswBuild.setText(QCoreApplication.translate("Form", u"FSW", None))
+        self.pushButton_cfgBuild.setText(QCoreApplication.translate("Form", u"CFG", None))
+        self.pushButton_simClean.setText(QCoreApplication.translate("Form", u"SIM", None))
+        self.pushButton_simBuild.setText(QCoreApplication.translate("Form", u"SIM", None))
+        self.pushButton_gswBuild.setText(QCoreApplication.translate("Form", u"GSW", None))
+        self.pushButton_fswClean.setText(QCoreApplication.translate("Form", u"FSW", None))
+        self.pushButton_gswClean.setText(QCoreApplication.translate("Form", u"GSW", None))
+        self.label_4.setText(QCoreApplication.translate("Form", u"Build", None))
+        self.label_5.setText(QCoreApplication.translate("Form", u"Clean", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("Form", u"Build", None))
+        self.groupBox_control.setTitle("")
+        self.pushButton_play.setText(QCoreApplication.translate("Form", u"Play", None))
+        self.pushButton_pause.setText(QCoreApplication.translate("Form", u"Pause", None))
+        self.pushButton_launch.setText(QCoreApplication.translate("Form", u"Launch", None))
+        self.pushButton_stop.setText(QCoreApplication.translate("Form", u"Stop", None))
+        self.groupBox_9.setTitle(QCoreApplication.translate("Form", u"NOS3 Time Driver", None))
+        self.comboBox_run.setItemText(0, "")
+        self.comboBox_run.setItemText(1, QCoreApplication.translate("Form", u"Run For", None))
+        self.comboBox_run.setItemText(2, QCoreApplication.translate("Form", u"Run Until", None))
+
+        self.lineEdit_secondsEntry.setText("")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("Form", u"Launch", None))
+    # retranslateUi
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../build/temp_mission/index.html" class="btn btn-neutral float-left" title="temp_mission" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="resources/index.html" class="btn btn-neutral float-right" title="resources" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

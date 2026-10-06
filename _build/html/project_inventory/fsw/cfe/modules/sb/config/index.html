@@ -1,0 +1,2300 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>config &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="eds" href="../eds/index.html" />
+    <link rel="prev" title="sb" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">cfe</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">modules</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">sb</a></li>
+      <li class="breadcrumb-item active">config</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/fsw/cfe/modules/sb/config/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="config">
+<h1>config<a class="headerlink" href="#config" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/sb/config/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="default-cfe-sb-extern-typedefs-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_sb_extern_typedefs.h</span></code><a class="headerlink" href="#default-cfe-sb-extern-typedefs-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/sb/config/default_cfe_sb_extern_typedefs.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Declarations and prototypes for cfe_sb_extern_typedefs module
+ */
+
+#ifndef CFE_SB_EXTERN_TYPEDEFS_H
+#define CFE_SB_EXTERN_TYPEDEFS_H
+
+#include "common_types.h"
+#include "cfe_mission_cfg.h"
+#include "cfe_resourceid_typedef.h"
+
+#define CFE_SB_SUB_ENTRIES_PER_PKT 20 /**&lt; \brief Configuration parameter used by SBN App */
+
+/**
+ * @brief Label definitions associated with CFE_SB_QosPriority_Enum_t
+ */
+enum CFE_SB_QosPriority
+{
+    /**
+     * @brief Normal priority level
+     */
+    CFE_SB_QosPriority_LOW = 0,
+
+    /**
+     * @brief High priority
+     */
+    CFE_SB_QosPriority_HIGH = 1
+};
+
+/**
+ * @brief Selects the priority level for message routing
+ *
+ * @sa enum CFE_SB_QosPriority
+ */
+typedef uint8 CFE_SB_QosPriority_Enum_t;
+
+/**
+ * @brief Label definitions associated with CFE_SB_QosReliability_Enum_t
+ */
+enum CFE_SB_QosReliability
+{
+    /**
+     * @brief Normal (best-effort) reliability
+     */
+    CFE_SB_QosReliability_LOW = 0,
+
+    /**
+     * @brief High reliability
+     */
+    CFE_SB_QosReliability_HIGH = 1
+};
+
+/**
+ * @brief Selects the reliability level for message routing
+ *
+ * @sa enum CFE_SB_QosReliability
+ */
+typedef uint8 CFE_SB_QosReliability_Enum_t;
+
+/**
+ * @brief An integer type that should be used for indexing into the Routing Table
+ */
+typedef uint16 CFE_SB_RouteId_Atom_t;
+
+/**
+ * @brief  CFE_SB_MsgId_Atom_t primitive type definition
+ *
+ * This is an integer type capable of holding any Message ID value
+ * Note: This value is limited via #CFE_PLATFORM_SB_HIGHEST_VALID_MSGID
+ */
+typedef uint32 CFE_SB_MsgId_Atom_t;
+
+/**
+ * @brief  CFE_SB_MsgId_t type definition
+ *
+ * Software Bus message identifier used in many SB APIs
+ *
+ * Currently this is directly mapped to the underlying holding type (not wrapped) for
+ * compatibility with existing usage semantics in apps (mainly switch/case statements)
+ *
+ * @note In a future version it could become a type-safe wrapper similar to the route index,
+ * to avoid message IDs getting mixed between other integer values.
+ */
+typedef struct
+{
+    CFE_SB_MsgId_Atom_t Value;
+} CFE_SB_MsgId_t;
+
+/** \brief  CFE_SB_PipeId_t to primitive type definition
+ *
+ * Software Bus pipe identifier used in many SB APIs, as well as SB Telemetry messages
+ * and data files.
+ */
+typedef CFE_RESOURCEID_BASE_TYPE CFE_SB_PipeId_t;
+
+/** \brief Quality Of Service Type Definition
+**
+** Currently an unused parameter in #CFE_SB_SubscribeEx
+** Intended to be used for interprocessor communication only
+**/
+typedef struct
+{
+    uint8 Priority; /**&lt; \brief  Specify high(1) or low(0) message priority for off-board routing, currently unused */
+    uint8 Reliability; /**&lt; \brief  Specify high(1) or low(0) message transfer reliability for off-board routing,
+                          currently unused */
+} CFE_SB_Qos_t;
+
+#endif /* CFE_SB_EXTERN_TYPEDEFS_H */
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-sb-fcncodes-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_sb_fcncodes.h</span></code><a class="headerlink" href="#default-cfe-sb-fcncodes-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/sb/config/default_cfe_sb_fcncodes.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTISB OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFE Event Services (CFE_SB) command function codes
+ *
+ * @note
+ *   This file should be strictly limited to the command/function code (CC)
+ *   macro definitions.  Other definitions such as enums, typedefs, or other
+ *   macros should be placed in the msgdefs.h or msg.h files.
+ */
+#ifndef CFE_SB_FCNCODES_H
+#define CFE_SB_FCNCODES_H
+
+/****************************************
+** SB task command packet command codes
+****************************************/
+
+/** \cfesbcmd Software Bus No-Op
+**
+**  \par Description
+**       This command performs no other function than to increment the
+**       command execution counter. The command may be used to verify
+**       general aliveness of the Software Bus task.
+**
+**  \cfecmdmnemonic \SB_NOOP
+**
+**  \par Command Structure
+**       #CFE_SB_NoopCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \SB_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_SB_CMD0_RCVD_EID informational event message will
+**         be generated
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Software
+**       Bus receives the command, the event is sent (although it
+**       may be filtered by EVS) and the counter is incremented
+**       unconditionally.
+**
+**  \par Criticality
+**       None
+**
+**  \sa
+*/
+#define CFE_SB_NOOP_CC 0
+
+/** \cfesbcmd Software Bus Reset Counters
+**
+**  \par Description
+**       This command resets the following counters within the Software
+**       Bus housekeeping telemetry:
+**       - Command Execution Counter (\SB_CMDPC)
+**       - Command Error Counter (\SB_CMDEC)
+**       - No Subscribers Counter (\SB_NOSUBEC)
+**       - Duplicate Subscriptions Counter (\SB_DUPSUBCNT)
+**       - Msg Send Error Counter (\SB_MSGSNDEC)
+**       - Msg Receive Error Counter (\SB_MSGRECEC)
+**       - Internal Error Counter (\SB_INTERNALEC)
+**       - Create Pipe Error Counter (\SB_NEWPIPEEC)
+**       - Subscribe Error Counter (\SB_SUBSCREC)
+**       - Pipe Overflow Error Counter (\SB_PIPEOVREC)
+**       - Msg Limit Error Counter (\SB_MSGLIMEC)
+**
+**  \cfecmdmnemonic \SB_RESETCTRS
+**
+**  \par Command Structure
+**       #CFE_SB_ResetCountersCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \SB_CMDPC - command execution counter will
+**         be reset to 0
+**       - All other counters listed in description will be reset to 0
+**       - The #CFE_SB_CMD1_RCVD_EID informational event message will
+**         be generated
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Software
+**       Bus receives the command, the event is sent (although it
+**       may be filtered by EVS) and the counter is incremented
+**       unconditionally.
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  However, it is
+**       possible for ground systems and on-board safing procedures
+**       to be designed such that they react to changes in the counter
+**       values that are reset by this command.
+**
+**  \sa
+*/
+#define CFE_SB_RESET_COUNTERS_CC 1
+
+/** \cfesbcmd Send Software Bus Statistics
+**
+**  \par Description
+**       This command will cause the SB task to send a statistics packet
+**       containing current utilization figures and high water marks which
+**       may be useful for checking the margin of the SB platform configuration
+**       settings.
+**
+**  \cfecmdmnemonic \SB_DUMPSTATS
+**
+**  \par Command Structure
+**       #CFE_SB_SendSbStatsCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \SB_CMDPC - command execution counter will increment
+**       - Receipt of statistics packet with MsgId #CFE_SB_STATS_TLM_MID
+**       - The #CFE_SB_SND_STATS_EID debug event message will be generated
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Software
+**       Bus receives the command, the debug event is sent and the counter
+**       is incremented unconditionally.
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It will create and send
+**       a message on the software bus. If performed repeatedly, it is
+**       possible that receiver pipes may overflow.
+**
+**  \sa
+*/
+#define CFE_SB_SEND_SB_STATS_CC 2
+
+/** \cfesbcmd Write Software Bus Routing Info to a File
+**
+**  \par Description
+**       This command will create a file containing the software bus routing
+**       information. The routing information contains information about every
+**       subscription that has been received through the SB subscription APIs.
+**       An absolute path and filename may be specified in the command.
+**       If this command field contains an empty string (NULL terminator as
+**       the first character) the default file path and name is used.
+**       The default file path and name is defined in the platform
+**       configuration file as #CFE_PLATFORM_SB_DEFAULT_ROUTING_FILENAME.
+**
+**  \cfecmdmnemonic \SB_WRITEROUTING2FILE
+**
+**  \par Command Structure
+**       #CFE_SB_WriteRoutingInfoCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \SB_CMDPC - command execution counter will increment.
+**         NOTE: the command counter is incremented when the request is accepted,
+**         before writing the file, which is performed as a background task.
+**       - The file specified in the command (or the default specified
+**         by the #CFE_PLATFORM_SB_DEFAULT_ROUTING_FILENAME configuration parameter) will be
+**         updated with the latest information.
+**       - The #CFE_SB_SND_RTG_EID debug event message will be generated
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - A previous request to write a software bus information file has not yet completed
+**       - The specified FileName cannot be parsed
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \SB_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases. See #CFE_SB_SND_RTG_ERR1_EID and #CFE_SB_FILEWRITE_ERR_EID
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It will create a new
+**       file in the file system and could, if performed repeatedly without
+**       sufficient file management by the operator, fill the file system.
+*/
+#define CFE_SB_WRITE_ROUTING_INFO_CC 3
+
+/** \cfesbcmd Enable Software Bus Route
+**
+**  \par Description
+**       This command will enable a particular destination. The destination
+**       is specified in terms of MsgID and PipeID. The MsgId and PipeID are
+**       parameters in the command. All destinations are enabled by default.
+**       This command is needed only after a #CFE_SB_DISABLE_ROUTE_CC command
+**       is used.
+**
+**  \cfecmdmnemonic \SB_ENAROUTE
+**
+**  \par Command Structure
+**       #CFE_SB_EnableRouteCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \SB_CMDPC - command execution counter will increment
+**       - View routing information #CFE_SB_WRITE_ROUTING_INFO_CC to verify
+**         enable/disable state change
+**       - The #CFE_SB_ENBL_RTE2_EID debug event message will be generated
+**       - Destination will begin receiving messages
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - the MsgId or PipeId parameters do not pass validation
+**       - the destination does not exist.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \SB_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases. See #CFE_SB_ENBL_RTE1_EID or #CFE_SB_ENBL_RTE3_EID
+**
+**  \par Criticality
+**       This command is not inherently dangerous.
+*/
+#define CFE_SB_ENABLE_ROUTE_CC 4
+
+/** \cfesbcmd Disable Software Bus Route
+**
+**  \par Description
+**       This command will disable a particular destination. The destination
+**       is specified in terms of MsgID and PipeID. The MsgId and PipeID are
+**       parameters in the command. All destinations are enabled by default.
+**
+**  \cfecmdmnemonic \SB_DISROUTE
+**
+**  \par Command Structure
+**       #CFE_SB_DisableRouteCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \SB_CMDPC - command execution counter will increment
+**       - View routing information #CFE_SB_WRITE_ROUTING_INFO_CC to verify
+**         enable/disable state change
+**       - The #CFE_SB_DSBL_RTE2_EID debug event message will be generated
+**       - Destination will stop receiving messages
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - the MsgId or PipeId parameters do not pass validation
+**       - the destination does not exist.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \SB_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases. See #CFE_SB_DSBL_RTE1_EID or #CFE_SB_DSBL_RTE3_EID
+**
+**  \par Criticality
+**       This command is not intended to be used in nominal conditions. It is
+**       possible to get into a state where a destination cannot be re-enabled
+**       without resetting the processor. For instance, sending this command
+**       with #CFE_SB_CMD_MID and the SB_Cmd_Pipe would inhibit any ground
+**       commanding to the software bus until the processor was reset. There
+**       are similar problems that may occur when using this command.
+*/
+#define CFE_SB_DISABLE_ROUTE_CC 5
+
+/** \cfesbcmd Write Pipe Info to a File
+**
+**  \par Description
+**       This command will create a file containing the software bus pipe
+**       information. The pipe information contains information about every
+**       pipe that has been created through the #CFE_SB_CreatePipe API. An
+**       absolute path and filename may be specified in the command.
+**       If this command field contains an empty string (NULL terminator as
+**       the first character) the default file path and name is used.
+**       The default file path and name is defined in the platform
+**       configuration file as #CFE_PLATFORM_SB_DEFAULT_PIPE_FILENAME.
+**
+**  \cfecmdmnemonic \SB_WRITEPIPE2FILE
+**
+**  \par Command Structure
+**       #CFE_SB_WritePipeInfoCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \SB_CMDPC - command execution counter will increment.
+**         NOTE: the command counter is incremented when the request is accepted,
+**         before writing the file, which is performed as a background task.
+**       - The file specified in the command (or the default specified
+**         by the #CFE_PLATFORM_SB_DEFAULT_PIPE_FILENAME configuration parameter) will be
+**         updated with the latest information.
+**       - The #CFE_SB_SND_RTG_EID debug event message will be generated
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - A previous request to write a software bus information file has not yet completed
+**       - The specified FileName cannot be parsed
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \SB_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases. See #CFE_SB_SND_RTG_ERR1_EID and #CFE_SB_FILEWRITE_ERR_EID
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It will create a new
+**       file in the file system and could, if performed repeatedly without
+**       sufficient file management by the operator, fill the file system.
+*/
+#define CFE_SB_WRITE_PIPE_INFO_CC 7
+
+/** \cfesbcmd Write Map Info to a File
+**
+**  \par This command will create a file containing the software bus message
+**       map information. The message map is a lookup table (an array of
+**       uint16s)that allows fast access to the correct routing table element
+**       during a software bus send operation. This is diagnostic
+**       information that may be needed due to the dynamic nature of the
+**       cFE software bus. An absolute path and filename may be specified
+**       in the command. If this command field contains an empty string
+**       (NULL terminator as the first character) the default file path and
+**       name is used. The default file path and name is defined in the
+**       platform configuration file as #CFE_PLATFORM_SB_DEFAULT_MAP_FILENAME.
+**
+**  \cfecmdmnemonic \SB_WRITEMAP2FILE
+**
+**  \par Command Structure
+**       #CFE_SB_WriteMapInfoCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \SB_CMDPC - command execution counter will increment.
+**         NOTE: the command counter is incremented when the request is accepted,
+**         before writing the file, which is performed as a background task.
+**       - The file specified in the command (or the default specified
+**         by the #CFE_PLATFORM_SB_DEFAULT_MAP_FILENAME configuration parameter) will be
+**         updated with the latest information.
+**       - The #CFE_SB_SND_RTG_EID debug event message will be generated
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - A previous request to write a software bus information file has not yet completed
+**       - The specified FileName cannot be parsed
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \SB_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases. See #CFE_SB_SND_RTG_ERR1_EID and #CFE_SB_FILEWRITE_ERR_EID
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It will create a new
+**       file in the file system and could, if performed repeatedly without
+**       sufficient file management by the operator, fill the file system.
+*/
+#define CFE_SB_WRITE_MAP_INFO_CC 8
+
+/** \cfesbcmd Enable Subscription Reporting Command
+**
+**  \par Description
+**       This command will enable subscription reporting and is intended to
+**       be used only by the CFS SBN (Software Bus Networking) Application.
+**       It is not intended to be sent from the ground or used by operations.
+**       When subscription reporting is enabled, SB will generate
+**       and send a software bus packet for each subscription received.
+**       The software bus packet that is sent contains the information
+**       received in the subscription API. This subscription report is
+**       needed by SBN if offboard routing is required.
+*
+**  \cfecmdmnemonic \SB_ENASUBRPTG
+**
+**  \par Command Structure
+**       #CFE_SB_EnableSubReportingCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command will result in the sending
+**       of a packet (with the #CFE_SB_ONESUB_TLM_MID MsgId) for each
+**       subscription received by SB through the subscription APIs.
+**
+**  \par Error Conditions
+**       None
+**
+**  \par Criticality
+**       None
+**
+**  \sa #CFE_SB_SingleSubscriptionTlm_t, #CFE_SB_DISABLE_SUB_REPORTING_CC,
+**      #CFE_SB_SEND_PREV_SUBS_CC
+*/
+#define CFE_SB_ENABLE_SUB_REPORTING_CC 9
+
+/** \cfesbcmd Disable Subscription Reporting Command
+**
+**  \par Description
+**       This command will disable subscription reporting and is intended to
+**       be used only by the CFS SBN (Software Bus Networking) Application.
+**       It is not intended to be sent from the ground or used by operations.
+**       When subscription reporting is enabled, SB will generate
+**       and send a software bus packet for each subscription received.
+**       The software bus packet that is sent contains the information
+**       received in the subscription API. This subscription report is
+**       needed by SBN if offboard routing is required.
+**
+**  \cfecmdmnemonic \SB_DISSUBRPTG
+**
+**  \par Command Structure
+**       #CFE_SB_DisableSubReportingCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command will result in the suppression
+**       of packets (with the #CFE_SB_ONESUB_TLM_MID MsgId) for each
+**       subscription received by SB through the subscription APIs.
+**
+**  \par Error Conditions
+**       None
+**
+**  \par Criticality
+**       None
+**
+**  \sa #CFE_SB_SingleSubscriptionTlm_t, #CFE_SB_ENABLE_SUB_REPORTING_CC,
+**      #CFE_SB_SEND_PREV_SUBS_CC
+*/
+#define CFE_SB_DISABLE_SUB_REPORTING_CC 10
+
+/** \cfesbcmd Send Previous Subscriptions Command
+**
+**  \par This command generates a series of packets that contain information
+**       regarding all subscriptions previously received by SB.
+**       This command is intended to be used only by the CFS SBN(Software Bus
+**       Networking) Application.
+**       It is not intended to be sent from the ground or used by operations.
+**       When this command is received the software bus will generate and
+**       send a series of packets containing information about all subscription
+**       previously received.
+**
+**  \cfecmdmnemonic \SB_SENDPREVSUBS
+**
+**  \par Command Structure
+**       #CFE_SB_SendPrevSubsCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command will result in a series
+**       of packets (with the #CFE_SB_ALLSUBS_TLM_MID MsgId) being sent
+**       on the software bus.
+**
+**  \par Error Conditions
+**       None
+**
+**  \par Criticality
+**       None
+**
+**  \sa #CFE_SB_AllSubscriptionsTlm_t, #CFE_SB_ENABLE_SUB_REPORTING_CC,
+**      #CFE_SB_DISABLE_SUB_REPORTING_CC
+*/
+#define CFE_SB_SEND_PREV_SUBS_CC 11
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-sb-interface-cfg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_sb_interface_cfg.h</span></code><a class="headerlink" href="#default-cfe-sb-interface-cfg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/sb/config/default_cfe_sb_interface_cfg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTISB OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Software Bus (CFE_SB) Application Public Definitions
+ *
+ * This provides default values for configurable items that affect
+ * the interface(s) of this module.  This includes the CMD/TLM message
+ * interface, tables definitions, and any other data products that
+ * serve to exchange information with other entities.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_SB_INTERFACE_CFG_H
+#define CFE_SB_INTERFACE_CFG_H
+
+/**
+**  \cfesbcfg Maximum SB Message Size
+**
+**  \par Description:
+**      The following definition dictates the maximum message size allowed on
+**      the software bus. SB checks the pkt length field in the header of all
+**      messages sent. If the pkt length field indicates the message is larger
+**      than this define, SB sends an event and rejects the send.
+**
+**  \par Limits
+**      This parameter has a lower limit of 6 (CCSDS primary header size).  There
+**      are no restrictions on the upper limit however, the maximum message size is
+**      system dependent and should be verified.  Total message size values that are
+**      checked against this configuration are defined by a 16 bit data word.
+*/
+#define CFE_MISSION_SB_MAX_SB_MSG_SIZE 32768
+
+/**
+**  \cfesbcfg Maximum Number of pipes that SB command/telemetry messages may hold
+**
+**  \par Description:
+**       Dictates the maximum number of unique Pipes the SB message definitions will hold.
+**
+**       This affects the layout of command/telemetry messages but does not affect run
+**       time behavior or internal allocation.
+**
+**  \par Limits
+**       All CPUs within the same SB domain (mission) must share the same definition
+**       Note this affects the size of messages, so it must not cause any message
+**       to exceed the max length.
+**
+*/
+#define CFE_MISSION_SB_MAX_PIPES 64
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-sb-internal-cfg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_sb_internal_cfg.h</span></code><a class="headerlink" href="#default-cfe-sb-internal-cfg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/sb/config/default_cfe_sb_internal_cfg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTISB OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Software Bus (CFE_SB) Application Private Config Definitions
+ *
+ * This provides default values for configurable items that are internal
+ * to this module and do NOT affect the interface(s) of this module.  Changes
+ * to items in this file only affect the local module and will be transparent
+ * to external entities that are using the public interface(s).
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_SB_INTERNAL_CFG_H
+#define CFE_SB_INTERNAL_CFG_H
+
+/**
+**  \cfesbcfg Maximum Number of Unique Message IDs SB Routing Table can hold
+**
+**  \par Description:
+**       Dictates the maximum number of unique MsgIds the SB routing table will hold.
+**       This constant has a direct effect on the size of SB's tables and arrays.
+**       Keeping this count as low as possible will save memory.
+**       To see the run-time, high-water mark and the current utilization figures
+**       regarding this parameter, send an SB command to 'Send Statistics Pkt'.
+**
+**  \par Limits
+**       This must be a power of two if software bus message routing hash implementation
+**       is being used.  Lower than 64 will cause unit test failures, and
+**       telemetry reporting is impacted below 32.  There is no hard
+**       upper limit, but impacts memory footprint.  For software bus message routing
+**       search implementation the number of msg ids subscribed to impacts performance.
+**
+*/
+#define CFE_PLATFORM_SB_MAX_MSG_IDS 256
+
+/**
+**  \cfesbcfg Maximum Number of Unique Pipes SB Routing Table can hold
+**
+**  \par Description:
+**       Dictates the maximum number of unique Pipes the SB routing table will hold.
+**       This constant has a direct effect on the size of SB's tables and arrays.
+**       Keeping this count as low as possible will save memory.
+**       To see the run-time, high-water mark and the current utilization figures
+**       regarding this parameter, send an SB command to 'Send Statistics Pkt'.
+**
+**  \par Limits
+**       This parameter has a lower limit of 1.  This parameter must also be less than
+**       or equal to OS_MAX_QUEUES.
+**
+*/
+#define CFE_PLATFORM_SB_MAX_PIPES 64
+
+/**
+**  \cfesbcfg Maximum Number of unique local destinations a single MsgId can have
+**
+**  \par Description:
+**       Dictates the maximum number of unique local destinations a single MsgId can
+**       have.
+**
+**  \par Limits
+**       This parameter has a lower limit of 1.  There are no restrictions on the upper
+**       limit however, the maximum number of destinations per packet is system dependent
+**       and should be verified.  Destination number values that are checked against this
+**       configuration are defined by a 16 bit data word.
+**
+*/
+#define CFE_PLATFORM_SB_MAX_DEST_PER_PKT 16
+
+/**
+**  \cfesbcfg Default Subscription Message Limit
+**
+**  \par Description:
+**       Dictates the default Message Limit when using the #CFE_SB_Subscribe API. This will
+**       limit the number of messages with a specific message ID that can be received through
+**       a subscription. This only changes the default; other message limits can be set on a per
+**       subscription basis using #CFE_SB_SubscribeEx .
+**
+**  \par Limits
+**       This parameter has a lower limit of 4 and an upper limit of 65535.
+**
+*/
+#define CFE_PLATFORM_SB_DEFAULT_MSG_LIMIT 4
+
+/**
+**  \cfesbcfg Size of the SB buffer memory pool
+**
+**  \par Description:
+**       Dictates the size of the SB memory pool. For each message the SB
+**       sends, the SB dynamically allocates from this memory pool, the memory needed
+**       to process the message. The memory needed to process each message is msg
+**       size + msg descriptor(CFE_SB_BufferD_t). This memory pool is also used
+**       to allocate destination descriptors (CFE_SB_DestinationD_t) during the
+**       subscription process.
+**       To see the run-time, high-water mark and the current utilization figures
+**       regarding this parameter, send an SB command to 'Send Statistics Pkt'.
+**       Some memory statistics have been added to the SB housekeeping packet.
+**       NOTE: It is important to monitor these statistics to ensure the desired
+**       memory margin is met.
+**
+**  \par Limits
+**       This parameter has a lower limit of 512 and an upper limit of UINT_MAX (4 Gigabytes).
+**
+*/
+#define CFE_PLATFORM_SB_BUF_MEMORY_BYTES 524288
+
+/**
+**  \cfesbcfg Highest Valid Message Id
+**
+**  \par Description:
+**       The value of this constant dictates the range of valid message ID's, from 0
+**       to CFE_PLATFORM_SB_HIGHEST_VALID_MSGID (inclusive).
+**
+**       Although this can be defined differently across platforms, each platform can
+**       only publish/subscribe to message ids within their allowable range. Typically
+**       this value is set the same across all mission platforms to avoid this complexity.
+**
+**  \par Limits
+**       CFE_SB_INVALID_MSG is set to the maximum representable number of type CFE_SB_MsgId_t.
+**       CFE_PLATFORM_SB_HIGHEST_VALID_MSGID lower limit is 1, up to CFE_SB_INVALID_MSG_ID - 1.
+**
+**       When using the direct message map implementation for software bus routing, this
+**       value is used to size the map where a value of 0x1FFF results in a 16 KBytes map
+**       and 0xFFFF is 128 KBytes.
+**
+**       When using the hash implementation for software bus routing, a multiple of the
+**       CFE_PLATFORM_SB_MAX_MSG_IDS is used to size the message map.  In that case
+**       the range selected here does not impact message map memory use, so it's
+**       reasonable to use up to the full range supported by the message ID implementation.
+*/
+#define CFE_PLATFORM_SB_HIGHEST_VALID_MSGID 0x1FFF
+
+/**
+**  \cfesbcfg Default Routing Information Filename
+**
+**  \par Description:
+**       The value of this constant defines the filename used to store the software
+**       bus routing information.  This filename is used only when no filename is
+**       specified in the command.
+**
+**  \par Limits
+**       The length of each string, including the NULL terminator cannot exceed the
+**       #OS_MAX_PATH_LEN value.
+*/
+#define CFE_PLATFORM_SB_DEFAULT_ROUTING_FILENAME "/ram/cfe_sb_route.dat"
+
+/**
+**  \cfesbcfg Default Pipe Information Filename
+**
+**  \par Description:
+**       The value of this constant defines the filename used to store the software
+**       bus pipe information. This filename is used only when no filename is
+**       specified in the command.
+**
+**  \par Limits
+**       The length of each string, including the NULL terminator cannot exceed the
+**       #OS_MAX_PATH_LEN value.
+*/
+#define CFE_PLATFORM_SB_DEFAULT_PIPE_FILENAME "/ram/cfe_sb_pipe.dat"
+
+/**
+**  \cfesbcfg Default Message Map Filename
+**
+**  \par Description:
+**       The value of this constant defines the filename used to store the software
+**       bus message map information. This filename is used only when no filename is
+**       specified in the command. The message map is a lookup table (array of 16bit
+**       words) that has an element for each possible MsgId value and holds the
+**       routing table index for that MsgId. The Msg Map provides fast access to the
+**       destinations of a message.
+**
+**  \par Limits
+**       The length of each string, including the NULL terminator cannot exceed the
+**       #OS_MAX_PATH_LEN value.
+*/
+#define CFE_PLATFORM_SB_DEFAULT_MAP_FILENAME "/ram/cfe_sb_msgmap.dat"
+
+/**
+**  \cfesbcfg SB Event Filtering
+**
+**  \par Description:
+**       This group of configuration parameters dictates what SB events will be
+**       filtered through SB. The filtering will begin after the SB task initializes
+**       and stay in effect until a cmd to SB changes it.
+**       This allows the operator to set limits on the number of event messages that
+**       are sent during system initialization.
+**       NOTE: Set all unused event values and mask values to zero
+**
+**  \par Limits
+**       This filtering applies only to SB events.
+**       These parameters have a lower limit of 0 and an upper limit of 65535.
+*/
+#define CFE_PLATFORM_SB_FILTERED_EVENT1 CFE_SB_SEND_NO_SUBS_EID
+#define CFE_PLATFORM_SB_FILTER_MASK1    CFE_EVS_FIRST_4_STOP
+
+#define CFE_PLATFORM_SB_FILTERED_EVENT2 CFE_SB_DUP_SUBSCRIP_EID
+#define CFE_PLATFORM_SB_FILTER_MASK2    CFE_EVS_FIRST_4_STOP
+
+#define CFE_PLATFORM_SB_FILTERED_EVENT3 CFE_SB_MSGID_LIM_ERR_EID
+#define CFE_PLATFORM_SB_FILTER_MASK3    CFE_EVS_FIRST_16_STOP
+
+#define CFE_PLATFORM_SB_FILTERED_EVENT4 CFE_SB_Q_FULL_ERR_EID
+#define CFE_PLATFORM_SB_FILTER_MASK4    CFE_EVS_FIRST_16_STOP
+
+#define CFE_PLATFORM_SB_FILTERED_EVENT5 0
+#define CFE_PLATFORM_SB_FILTER_MASK5    CFE_EVS_NO_FILTER
+
+#define CFE_PLATFORM_SB_FILTERED_EVENT6 0
+#define CFE_PLATFORM_SB_FILTER_MASK6    CFE_EVS_NO_FILTER
+
+#define CFE_PLATFORM_SB_FILTERED_EVENT7 0
+#define CFE_PLATFORM_SB_FILTER_MASK7    CFE_EVS_NO_FILTER
+
+#define CFE_PLATFORM_SB_FILTERED_EVENT8 0
+#define CFE_PLATFORM_SB_FILTER_MASK8    CFE_EVS_NO_FILTER
+
+/**
+**  \cfeescfg Define SB Memory Pool Block Sizes
+**
+**  \par Description:
+**       Software Bus Memory Pool Block Sizes
+**
+**  \par Limits
+**       These sizes MUST be increasing and MUST be an integral multiple of 4.
+**       The number of block sizes defined cannot exceed
+**       #CFE_PLATFORM_ES_POOL_MAX_BUCKETS
+*/
+#define CFE_PLATFORM_SB_MEM_BLOCK_SIZE_01 8
+#define CFE_PLATFORM_SB_MEM_BLOCK_SIZE_02 16
+#define CFE_PLATFORM_SB_MEM_BLOCK_SIZE_03 20
+#define CFE_PLATFORM_SB_MEM_BLOCK_SIZE_04 36
+#define CFE_PLATFORM_SB_MEM_BLOCK_SIZE_05 64
+#define CFE_PLATFORM_SB_MEM_BLOCK_SIZE_06 96
+#define CFE_PLATFORM_SB_MEM_BLOCK_SIZE_07 128
+#define CFE_PLATFORM_SB_MEM_BLOCK_SIZE_08 160
+#define CFE_PLATFORM_SB_MEM_BLOCK_SIZE_09 256
+#define CFE_PLATFORM_SB_MEM_BLOCK_SIZE_10 512
+#define CFE_PLATFORM_SB_MEM_BLOCK_SIZE_11 1024
+#define CFE_PLATFORM_SB_MEM_BLOCK_SIZE_12 2048
+#define CFE_PLATFORM_SB_MEM_BLOCK_SIZE_13 4096
+#define CFE_PLATFORM_SB_MEM_BLOCK_SIZE_14 8192
+#define CFE_PLATFORM_SB_MEM_BLOCK_SIZE_15 16384
+#define CFE_PLATFORM_SB_MEM_BLOCK_SIZE_16 32768
+#define CFE_PLATFORM_SB_MAX_BLOCK_SIZE    (CFE_MISSION_SB_MAX_SB_MSG_SIZE + 128)
+
+/**
+**  \cfeescfg Define SB Task Priority
+**
+**  \par Description:
+**       Defines the cFE_SB Task priority.
+**
+**  \par Limits
+**       Not Applicable
+*/
+#define CFE_PLATFORM_SB_START_TASK_PRIORITY 64
+
+/**
+**  \cfeescfg Define SB Task Stack Size
+**
+**  \par Description:
+**       Defines the cFE_SB Task Stack Size
+**
+**  \par Limits
+**       There is a lower limit of 2048 on this configuration parameter.  There
+**       are no restrictions on the upper limit however, the maximum stack size
+**       is system dependent and should be verified.  Most operating systems provide
+**       tools for measuring the amount of stack used by a task during operation. It
+**       is always a good idea to verify that no more than 1/2 of the stack is used.
+*/
+#define CFE_PLATFORM_SB_START_TASK_STACK_SIZE CFE_PLATFORM_ES_DEFAULT_STACK_SIZE
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-sb-mission-cfg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_sb_mission_cfg.h</span></code><a class="headerlink" href="#default-cfe-sb-mission-cfg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/sb/config/default_cfe_sb_mission_cfg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTISB OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * CFE Event Services (CFE_SB) Application Mission Configuration Header File
+ *
+ * This is a compatibility header for the "mission_cfg.h" file that has
+ * traditionally provided public config definitions for each CFS app.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_SB_MISSION_CFG_H
+#define CFE_SB_MISSION_CFG_H
+
+#include "cfe_sb_interface_cfg.h"
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-sb-msg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_sb_msg.h</span></code><a class="headerlink" href="#default-cfe-sb-msg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/sb/config/default_cfe_sb_msg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTISB OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFE Event Services (CFE_SB) command and telemetry
+ *   message data types.
+ *
+ * This is a compatibility header for the "cfe_sb_msg.h" file that has
+ * traditionally provided the message definitions for cFS apps.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_SB_MSG_H
+#define CFE_SB_MSG_H
+
+#include "cfe_mission_cfg.h"
+#include "cfe_sb_msgdefs.h"
+#include "cfe_sb_msgstruct.h"
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-sb-msgdefs-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_sb_msgdefs.h</span></code><a class="headerlink" href="#default-cfe-sb-msgdefs-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/sb/config/default_cfe_sb_msgdefs.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTISB OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFE Event Services (CFE_SB) command and telemetry
+ *   message constant definitions.
+ *
+ *  For CFE_SB this is only the function/command code definitions
+ */
+#ifndef CFE_SB_MSGDEFS_H
+#define CFE_SB_MSGDEFS_H
+
+#include "cfe_sb_fcncodes.h"
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-sb-msgids-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_sb_msgids.h</span></code><a class="headerlink" href="#default-cfe-sb-msgids-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/sb/config/default_cfe_sb_msgids.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTISB OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Event Services (CFE_SB) Application Message IDs
+ */
+#ifndef CFE_SB_MSGIDS_H
+#define CFE_SB_MSGIDS_H
+
+#include "cfe_core_api_base_msgids.h"
+#include "cfe_sb_topicids.h"
+
+/*
+** cFE Command Message Id's
+*/
+#define CFE_SB_CMD_MID          CFE_PLATFORM_CMD_MID_BASE + CFE_MISSION_SB_CMD_MSG          /* 0x1803 */
+#define CFE_SB_SEND_HK_MID      CFE_PLATFORM_CMD_MID_BASE + CFE_MISSION_SB_SEND_HK_MSG      /* 0x180B */
+#define CFE_SB_SUB_RPT_CTRL_MID CFE_PLATFORM_CMD_MID_BASE + CFE_MISSION_SB_SUB_RPT_CTRL_MSG /* 0x180E */
+
+/*
+** CFE Telemetry Message Id's
+*/
+#define CFE_SB_HK_TLM_MID      CFE_PLATFORM_TLM_MID_BASE + CFE_MISSION_SB_HK_TLM_MSG      /* 0x0803 */
+#define CFE_SB_STATS_TLM_MID   CFE_PLATFORM_TLM_MID_BASE + CFE_MISSION_SB_STATS_TLM_MSG   /* 0x080A */
+#define CFE_SB_ALLSUBS_TLM_MID CFE_PLATFORM_TLM_MID_BASE + CFE_MISSION_SB_ALLSUBS_TLM_MSG /* 0x080D */
+#define CFE_SB_ONESUB_TLM_MID  CFE_PLATFORM_TLM_MID_BASE + CFE_MISSION_SB_ONESUB_TLM_MSG  /* 0x080E */
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-sb-msgstruct-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_sb_msgstruct.h</span></code><a class="headerlink" href="#default-cfe-sb-msgstruct-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/sb/config/default_cfe_sb_msgstruct.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTISB OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Purpose:
+ *  cFE Executive Services (SB) Command and Telemetry packet definition file.
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *     cFE Flight Software Application Developers Guide
+ *
+ *  Notes:
+ *
+ */
+#ifndef CFE_SB_MSGSTRUCT_H
+#define CFE_SB_MSGSTRUCT_H
+
+/************************************************************************
+ * Includes
+ ************************************************************************/
+#include "cfe_sb_interface_cfg.h"
+#include "cfe_msg_hdr.h"
+
+/****************************
+**  SB Command Formats     **
+*****************************/
+
+/*
+ * SB Messages which have no payload are each
+ * given unique typedefs to follow the command handler convention
+ *
+ * For the SB application these are mapped to the CFE_MSG_CommandHeader_t type,
+ * as they contain only a primary + command header.
+ */
+typedef CFE_MSG_CommandHeader_t CFE_SB_NoopCmd_t;
+typedef CFE_MSG_CommandHeader_t CFE_SB_ResetCountersCmd_t;
+typedef CFE_MSG_CommandHeader_t CFE_SB_EnableSubReportingCmd_t;
+typedef CFE_MSG_CommandHeader_t CFE_SB_DisableSubReportingCmd_t;
+typedef CFE_MSG_CommandHeader_t CFE_SB_SendSbStatsCmd_t;
+typedef CFE_MSG_CommandHeader_t CFE_SB_SendPrevSubsCmd_t;
+typedef CFE_MSG_CommandHeader_t CFE_SB_SendHkCmd_t;
+
+/**
+**  \brief Write File Info Command Payload
+**
+**  This structure contains a generic definition used by SB commands that write to a file
+*/
+typedef struct CFE_SB_WriteFileInfoCmd_Payload
+{
+    char Filename[CFE_MISSION_MAX_PATH_LEN]; /**&lt; \brief Path and Filename of data to be loaded */
+} CFE_SB_WriteFileInfoCmd_Payload_t;
+
+/**
+ * \brief Write File Info Command
+ */
+typedef struct CFE_SB_WriteFileInfoCmd
+{
+    CFE_MSG_CommandHeader_t           CommandHeader; /**&lt; \brief Command header */
+    CFE_SB_WriteFileInfoCmd_Payload_t Payload;       /**&lt; \brief Command payload */
+} CFE_SB_WriteFileInfoCmd_t;
+
+/*
+ * Create a unique typedef for each of the commands that share this format.
+ */
+typedef CFE_SB_WriteFileInfoCmd_t CFE_SB_WriteRoutingInfoCmd_t;
+typedef CFE_SB_WriteFileInfoCmd_t CFE_SB_WritePipeInfoCmd_t;
+typedef CFE_SB_WriteFileInfoCmd_t CFE_SB_WriteMapInfoCmd_t;
+
+/**
+**  \brief Enable/Disable Route Command Payload
+**
+**  This structure contains a definition used by two SB commands,
+**  'Enable Route' #CFE_SB_ENABLE_ROUTE_CC and 'Disable Route' #CFE_SB_DISABLE_ROUTE_CC.
+**  A route is the destination pipe for a  particular message and is therefore defined
+**  as a MsgId and PipeId combination.
+*/
+typedef struct CFE_SB_RouteCmd_Payload
+{
+    CFE_SB_MsgId_t  MsgId; /**&lt; \brief Message ID of route to be enabled or disabled #CFE_SB_MsgId_t */
+    CFE_SB_PipeId_t Pipe;  /**&lt; \brief Pipe ID of route to be enabled or disabled #CFE_SB_PipeId_t */
+    uint8           Spare; /**&lt;\brief Spare byte to make command even number of bytes */
+} CFE_SB_RouteCmd_Payload_t;
+
+/**
+ * \brief Enable/Disable Route Command
+ */
+typedef struct CFE_SB_RouteCmd
+{
+    CFE_MSG_CommandHeader_t   CommandHeader; /**&lt; \brief Command header */
+    CFE_SB_RouteCmd_Payload_t Payload;       /**&lt; \brief Command payload */
+} CFE_SB_RouteCmd_t;
+
+/*
+ * Create a unique typedef for each of the commands that share this format.
+ */
+typedef CFE_SB_RouteCmd_t CFE_SB_EnableRouteCmd_t;
+typedef CFE_SB_RouteCmd_t CFE_SB_DisableRouteCmd_t;
+
+/****************************
+**  SB Telemetry Formats   **
+*****************************/
+
+/**
+**  \cfesbtlm Software Bus task housekeeping Packet
+*/
+typedef struct CFE_SB_HousekeepingTlm_Payload
+{
+    uint8 CommandCounter;       /**&lt; \cfetlmmnemonic \SB_CMDPC
+                                 \brief Count of valid commands received */
+    uint8 CommandErrorCounter;  /**&lt; \cfetlmmnemonic \SB_CMDEC
+                           \brief Count of invalid commands received */
+    uint8 NoSubscribersCounter; /**&lt; \cfetlmmnemonic \SB_NOSUBEC
+                                 \brief Count pkts sent with no subscribers */
+    uint8 MsgSendErrorCounter;  /**&lt; \cfetlmmnemonic \SB_MSGSNDEC
+                               \brief Count of message send errors */
+
+    uint8 MsgReceiveErrorCounter;        /**&lt; \cfetlmmnemonic \SB_MSGRECEC
+                                        \brief Count of message receive errors */
+    uint8 InternalErrorCounter;          /**&lt; \cfetlmmnemonic \SB_INTERNALEC
+                                        \brief Count of queue read or write errors */
+    uint8 CreatePipeErrorCounter;        /**&lt; \cfetlmmnemonic \SB_NEWPIPEEC
+                                        \brief Count of errors in create pipe API */
+    uint8 SubscribeErrorCounter;         /**&lt; \cfetlmmnemonic \SB_SUBSCREC
+                                        \brief Count of errors in subscribe API */
+    uint8 PipeOptsErrorCounter;          /**&lt; \cfetlmmnemonic \SB_PIPEOPTSEC
+                                       \brief Count of errors in set/get pipe options API */
+    uint8 DuplicateSubscriptionsCounter; /**&lt; \cfetlmmnemonic \SB_DUPSUBCNT
+                                    \brief Count of duplicate subscriptions */
+    uint8 GetPipeIdByNameErrorCounter;   /**&lt; \cfetlmmnemonic \SB_GETPIPEIDBYNAMEEC
+                                \brief Count of errors in get pipe id by name API */
+    uint8 Spare2Align[1];                /**&lt; \cfetlmmnemonic \SB_SPARE2ALIGN
+                                              \brief Spare bytes to ensure alignment */
+
+    uint16 PipeOverflowErrorCounter; /**&lt; \cfetlmmnemonic \SB_PIPEOVREC
+                                    \brief Count of pipe overflow errors */
+    uint16 MsgLimitErrorCounter;     /**&lt; \cfetlmmnemonic \SB_MSGLIMEC
+                                       \brief Count of msg id to pipe errors */
+
+    CFE_ES_MemHandle_t MemPoolHandle; /**&lt; \cfetlmmnemonic \SB_MEMPOOLHANDLE
+                                           \brief Handle to SB's Memory Pool */
+
+    uint32 MemInUse; /**&lt; \cfetlmmnemonic \SB_MEMINUSE
+                                    \brief Memory in use */
+
+    uint32 UnmarkedMem; /**&lt; \cfetlmmnemonic \SB_UNMARKEDMEM
+                             \brief cfg param CFE_PLATFORM_SB_BUF_MEMORY_BYTES minus Peak Memory in use */
+} CFE_SB_HousekeepingTlm_Payload_t;
+
+typedef struct CFE_SB_HousekeepingTlm
+{
+    CFE_MSG_TelemetryHeader_t        TelemetryHeader; /**&lt; \brief Telemetry header */
+    CFE_SB_HousekeepingTlm_Payload_t Payload;         /**&lt; \brief Telemetry payload */
+} CFE_SB_HousekeepingTlm_t;
+
+/**
+** \brief SB Pipe Depth Statistics
+**
+** Used in SB Statistics Telemetry Packet #CFE_SB_StatsTlm_t
+*/
+typedef struct CFE_SB_PipeDepthStats
+{
+    CFE_SB_PipeId_t PipeId;   /**&lt; \cfetlmmnemonic \SB_PDPIPEID
+                                   \brief Pipe Id associated with the stats below */
+    uint16 MaxQueueDepth;     /**&lt; \cfetlmmnemonic \SB_PDDEPTH
+                           \brief Number of messages the pipe can hold */
+    uint16 CurrentQueueDepth; /**&lt; \cfetlmmnemonic \SB_PDINUSE
+                       \brief Number of messages currently on the pipe */
+    uint16 PeakQueueDepth;    /**&lt; \cfetlmmnemonic \SB_PDPKINUSE
+                              \brief Peak number of messages that have been on the pipe */
+    uint16 Spare;             /**&lt; \cfetlmmnemonic \SB_PDSPARE
+                                   \brief Spare word to ensure alignment */
+} CFE_SB_PipeDepthStats_t;
+
+/**
+** \brief SB Pipe Information File Entry
+**
+** This statistics structure is output as part of the CFE SB
+** "Send Pipe Info" command (CFE_SB_SEND_PIPE_INFO_CC).
+**
+** Previous versions of CFE simply wrote the internal CFE_SB_PipeD_t object
+** to the file, but this also contains information such as pointers which are
+** not relevant outside the running CFE process.
+**
+** By defining the pipe info structure separately, it also provides some
+** independence, such that the internal CFE_SB_PipeD_t definition
+** can evolve without changing the binary format of the information
+** file.
+*/
+typedef struct CFE_SB_PipeInfoEntry
+{
+    CFE_SB_PipeId_t PipeId;                            /**&lt; The runtime ID of the pipe */
+    CFE_ES_AppId_t  AppId;                             /**&lt; The runtime ID of the application that owns the pipe */
+    char            PipeName[CFE_MISSION_MAX_API_LEN]; /**&lt; The Name of the pipe */
+    char            AppName[CFE_MISSION_MAX_API_LEN];  /**&lt; The Name of the application that owns the pipe */
+    uint16          MaxQueueDepth;                     /**&lt; The allocated depth of the pipe (max capacity) */
+    uint16          CurrentQueueDepth;                 /**&lt; The current depth of the pipe */
+    uint16          PeakQueueDepth;                    /**&lt; The peak depth of the pipe (high watermark) */
+    uint16          SendErrors;                        /**&lt; Number of errors when writing to this pipe */
+    uint8           Opts;                              /**&lt; Pipe options set (bitmask) */
+    uint8           Spare[3];                          /**&lt; Padding to make this structure a multiple of 4 bytes */
+} CFE_SB_PipeInfoEntry_t;
+
+/**
+** \cfesbtlm SB Statistics Telemetry Packet
+**
+** SB Statistics packet sent in response to #CFE_SB_SEND_SB_STATS_CC
+*/
+typedef struct CFE_SB_StatsTlm_Payload
+{
+    uint32 MsgIdsInUse;      /**&lt; \cfetlmmnemonic \SB_SMMIDIU
+                                  \brief Current number of MsgIds with a destination */
+    uint32 PeakMsgIdsInUse;  /**&lt; \cfetlmmnemonic \SB_SMPMIDIU
+                                  \brief Peak number of MsgIds with a destination */
+    uint32 MaxMsgIdsAllowed; /**&lt; \cfetlmmnemonic \SB_SMMMIDALW
+                                  \brief cFE Cfg Param \link #CFE_PLATFORM_SB_MAX_MSG_IDS \endlink */
+
+    uint32 PipesInUse;      /**&lt; \cfetlmmnemonic \SB_SMPIU
+                                 \brief Number of pipes currently in use */
+    uint32 PeakPipesInUse;  /**&lt; \cfetlmmnemonic \SB_SMPPIU
+                                 \brief Peak number of pipes since last reboot */
+    uint32 MaxPipesAllowed; /**&lt; \cfetlmmnemonic \SB_SMMPALW
+                                 \brief cFE Cfg Param \link #CFE_PLATFORM_SB_MAX_PIPES \endlink */
+
+    uint32 MemInUse;      /**&lt; \cfetlmmnemonic \SB_SMBMIU
+                                  \brief Memory bytes currently in use for SB msg transfers */
+    uint32 PeakMemInUse;  /**&lt; \cfetlmmnemonic \SB_SMPBMIU
+                                  \brief Peak memory bytes in use for SB msg transfers */
+    uint32 MaxMemAllowed; /**&lt; \cfetlmmnemonic \SB_SMMBMALW
+                                  \brief cFE Cfg Param \link #CFE_PLATFORM_SB_BUF_MEMORY_BYTES \endlink */
+
+    uint32 SubscriptionsInUse;      /**&lt; \cfetlmmnemonic \SB_SMSIU
+                                         \brief Number of current subscriptions */
+    uint32 PeakSubscriptionsInUse;  /**&lt; \cfetlmmnemonic \SB_SMPSIU
+                                         \brief Peak number of subscriptions */
+    uint32 MaxSubscriptionsAllowed; /**&lt; \cfetlmmnemonic \SB_SMMSALW
+                                         \brief product of \link #CFE_PLATFORM_SB_MAX_MSG_IDS \endlink
+                                         and \link #CFE_PLATFORM_SB_MAX_DEST_PER_PKT \endlink */
+
+    uint32 SBBuffersInUse;     /**&lt; \cfetlmmnemonic \SB_SMSBBIU
+                                    \brief Number of SB message buffers currently in use */
+    uint32 PeakSBBuffersInUse; /**&lt; \cfetlmmnemonic \SB_SMPSBBIU
+                                    \brief Max number of SB message buffers in use */
+
+    uint32 MaxPipeDepthAllowed; /**&lt; \cfetlmmnemonic \SB_SMMPDALW
+                                     \brief Maximum allowed pipe depth */
+    CFE_SB_PipeDepthStats_t
+        PipeDepthStats[CFE_MISSION_SB_MAX_PIPES]; /**&lt; \cfetlmmnemonic \SB_SMPDS
+                                               \brief Pipe Depth Statistics #CFE_SB_PipeDepthStats_t*/
+} CFE_SB_StatsTlm_Payload_t;
+
+typedef struct CFE_SB_StatsTlm
+{
+    CFE_MSG_TelemetryHeader_t TelemetryHeader; /**&lt; \brief Telemetry header */
+    CFE_SB_StatsTlm_Payload_t Payload;         /**&lt; \brief Telemetry payload */
+} CFE_SB_StatsTlm_t;
+
+/**
+** \brief SB Routing File Entry
+**
+** Structure of one element of the routing information in response to #CFE_SB_WRITE_ROUTING_INFO_CC
+*/
+typedef struct CFE_SB_RoutingFileEntry
+{
+    CFE_SB_MsgId_t  MsgId;                             /**&lt; \brief Message Id portion of the route */
+    CFE_SB_PipeId_t PipeId;                            /**&lt; \brief Pipe Id portion of the route */
+    uint8           State;                             /**&lt; \brief Route Enabled or Disabled */
+    uint16          MsgCnt;                            /**&lt; \brief Number of msgs with this MsgId sent to this PipeId */
+    char            AppName[CFE_MISSION_MAX_API_LEN];  /**&lt; \brief Pipe Depth Statistics */
+    char            PipeName[CFE_MISSION_MAX_API_LEN]; /**&lt; \brief Pipe Depth Statistics */
+} CFE_SB_RoutingFileEntry_t;
+
+/**
+** \brief SB Map File Entry
+**
+** Structure of one element of the map information in response to #CFE_SB_WRITE_MAP_INFO_CC
+*/
+typedef struct CFE_SB_MsgMapFileEntry
+{
+    CFE_SB_MsgId_t        MsgId; /**&lt; \brief Message Id which has been subscribed to */
+    CFE_SB_RouteId_Atom_t Index; /**&lt; \brief Routing raw index value (0 based, not Route ID) */
+} CFE_SB_MsgMapFileEntry_t;
+
+/**
+** \cfesbtlm SB Subscription Report Packet
+**
+** This structure defines the pkt sent by SB when a subscription or
+** a request to unsubscribe is received while subscription reporting is enabled.
+** By default subscription reporting is disabled. This feature is intended to be
+** used primarily by Software Bus Networking Application (SBN)
+**
+** \sa #CFE_SB_ENABLE_SUB_REPORTING_CC, #CFE_SB_DISABLE_SUB_REPORTING_CC
+*/
+typedef struct CFE_SB_SingleSubscriptionTlm_Payload
+{
+    uint8           SubType; /**&lt; \brief Subscription or Unsubscription */
+    CFE_SB_MsgId_t  MsgId;   /**&lt; \brief MsgId subscribed or unsubscribe to */
+    CFE_SB_Qos_t    Qos;     /**&lt; \brief Quality of Service, used only for interprocessor communication */
+    CFE_SB_PipeId_t Pipe;    /**&lt; \brief Destination pipe id to send above msg id  */
+} CFE_SB_SingleSubscriptionTlm_Payload_t;
+
+typedef struct CFE_SB_SingleSubscriptionTlm
+{
+    CFE_MSG_TelemetryHeader_t              TelemetryHeader; /**&lt; \brief Telemetry header */
+    CFE_SB_SingleSubscriptionTlm_Payload_t Payload;         /**&lt; \brief Telemetry payload */
+} CFE_SB_SingleSubscriptionTlm_t;
+
+/**
+** \brief SB Previous Subscriptions Entry
+**
+** This structure defines an entry used in the CFE_SB_PrevSubsPkt_t
+** Intended to be used primarily by Software Bus Networking Application (SBN)
+**
+** Used in structure definition #CFE_SB_AllSubscriptionsTlm_t
+*/
+typedef struct CFE_SB_SubEntries
+{
+    CFE_SB_MsgId_t  MsgId; /**&lt; \brief MsgId portion of the subscription */
+    CFE_SB_Qos_t    Qos;   /**&lt; \brief Qos portion of the subscription */
+    CFE_SB_PipeId_t Pipe;  /**&lt; \brief PipeId portion of the subscription */
+} CFE_SB_SubEntries_t;
+
+/**
+** \cfesbtlm SB Previous Subscriptions Packet
+**
+** This structure defines the pkt(s) sent by SB that contains a list of all current
+** subscriptions. This pkt is generated on cmd and intended to be used primarily by
+** the Software Bus Networking Application (SBN). Typically, when the cmd is received
+** there are more subscriptions than can fit in one pkt. The complete list of
+** subscriptions is sent via a series of segmented pkts.
+*/
+typedef struct CFE_SB_AllSubscriptionsTlm_Payload
+{
+    uint32              PktSegment;    /**&lt; \brief Pkt number(starts at 1) in the series */
+    uint32              TotalSegments; /**&lt; \brief Total number of pkts needed to complete the request */
+    uint32              Entries;       /**&lt; \brief Number of entries in the pkt */
+    CFE_SB_SubEntries_t Entry[CFE_SB_SUB_ENTRIES_PER_PKT]; /**&lt; \brief Array of #CFE_SB_SubEntries_t entries */
+} CFE_SB_AllSubscriptionsTlm_Payload_t;
+
+typedef struct CFE_SB_AllSubscriptionsTlm
+{
+    CFE_MSG_TelemetryHeader_t            TelemetryHeader; /**&lt; \brief Telemetry header */
+    CFE_SB_AllSubscriptionsTlm_Payload_t Payload;         /**&lt; \brief Telemetry payload */
+} CFE_SB_AllSubscriptionsTlm_t;
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-sb-platform-cfg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_sb_platform_cfg.h</span></code><a class="headerlink" href="#default-cfe-sb-platform-cfg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/sb/config/default_cfe_sb_platform_cfg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTISB OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * CFE Software Bus (CFE_SB) Application Platform Configuration Header File
+ *
+ * This is a compatibility header for the "platform_cfg.h" file that has
+ * traditionally provided both public and private config definitions
+ * for each CFS app.
+ *
+ * These definitions are now provided in two separate files, one for
+ * the public/mission scope and one for internal scope.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_SB_PLATFORM_CFG_H
+#define CFE_SB_PLATFORM_CFG_H
+
+#include "cfe_sb_mission_cfg.h"
+#include "cfe_sb_internal_cfg.h"
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-sb-topicids-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_sb_topicids.h</span></code><a class="headerlink" href="#default-cfe-sb-topicids-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/sb/config/default_cfe_sb_topicids.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTISB OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Software Bus (CFE_SB) Application Topic IDs
+ */
+#ifndef CFE_SB_TOPICIDS_H
+#define CFE_SB_TOPICIDS_H
+
+/**
+**  \cfemissioncfg cFE Portable Message Numbers for Commands
+**
+**  \par Description:
+**      Portable message numbers for the cFE command messages
+**
+**  \par Limits
+**      Not Applicable
+*/
+#define CFE_MISSION_SB_CMD_MSG          3
+#define CFE_MISSION_SB_SEND_HK_MSG      11
+#define CFE_MISSION_SB_SUB_RPT_CTRL_MSG 14
+
+/**
+**  \cfemissioncfg cFE Portable Message Numbers for Telemetry
+**
+**  \par Description:
+**      Portable message numbers for the cFE telemetry messages
+**
+**  \par Limits
+**      Not Applicable
+*/
+#define CFE_MISSION_SB_HK_TLM_MSG      3
+#define CFE_MISSION_SB_STATS_TLM_MSG   10
+#define CFE_MISSION_SB_ALLSUBS_TLM_MSG 13
+#define CFE_MISSION_SB_ONESUB_TLM_MSG  14
+
+#endif
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="sb" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../eds/index.html" class="btn btn-neutral float-right" title="eds" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

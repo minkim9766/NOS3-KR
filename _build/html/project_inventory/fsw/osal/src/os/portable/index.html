@@ -1,0 +1,4006 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>portable &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="posix" href="../posix/index.html" />
+    <link rel="prev" title="src" href="../nos/src/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">osal</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">os</a></li>
+      <li class="breadcrumb-item active">portable</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/fsw/osal/src/os/portable/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="portable">
+<h1>portable<a class="headerlink" href="#portable" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="os-impl-bsd-select-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-bsd-select.c</span></code><a class="headerlink" href="#os-impl-bsd-select-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-bsd-select.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * Purpose: This file contains wrappers around the select() system call
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * This must include whatever is required to get the prototypes of these functions:
+ *
+ *   FD_SET/FD_CLR/FD_ISSET macros and fd_set typedef
+ *   select()
+ *   clock_gettime() - for computing select timeouts
+ */
+#include &lt;string.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;time.h&gt;
+
+#include "os-impl-select.h"
+#include "os-shared-select.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/***************************************************************************************
+                                 FUNCTION PROTOTYPES
+ **************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+/****************************************************************************************
+                                LOCAL FUNCTIONS
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *          Convert an OS_FdSet (OSAL) structure into an fd_set (POSIX)
+ *          which can then be passed to the POSIX select function.
+ *
+ * returns: Highest numbered file descriptor in the output fd_set
+ *-----------------------------------------------------------------*/
+static int32 OS_FdSet_ConvertIn_Impl(int *os_maxfd, fd_set *os_set, const OS_FdSet *OSAL_set)
+{
+    size_t       offset;
+    size_t       bit;
+    osal_index_t id;
+    uint8        objids;
+    int          osfd;
+    int32        status;
+
+    status = OS_SUCCESS;
+    for (offset = 0; offset &lt; sizeof(OSAL_set-&gt;object_ids); ++offset)
+    {
+        objids = OSAL_set-&gt;object_ids[offset];
+        bit    = 0;
+        while (objids != 0)
+        {
+            id = OSAL_INDEX_C((offset * 8) + bit);
+            if ((objids &amp; 0x01) != 0 &amp;&amp; id &lt; OS_MAX_NUM_OPEN_FILES)
+            {
+                osfd = OS_impl_filehandle_table[id].fd;
+                if (osfd &gt;= 0)
+                {
+                    if (osfd &gt;= FD_SETSIZE || !OS_impl_filehandle_table[id].selectable)
+                    {
+                        /* out of range of select() implementation */
+                        status = OS_ERR_OPERATION_NOT_SUPPORTED;
+                    }
+                    else
+                    {
+                        FD_SET(osfd, os_set);
+                        if (osfd &gt; *os_maxfd)
+                        {
+                            *os_maxfd = osfd;
+                        }
+                    }
+                }
+            }
+            ++bit;
+            objids &gt;&gt;= 1;
+        }
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------*/
+/**
+ * \brief Convert a POSIX fd_set structure into an OSAL OS_FdSet
+ *        which can then be returned back to the application.
+ *
+ * Local helper routine, not part of OSAL API.
+ *
+ * This un-sets bits in OSAL_set that are set in the OS_set
+ *
+ * \param[in]     OS_set   The fd_set from select
+ * \param[in,out] OSAL_set The OS_FdSet updated by this helper
+ */
+/*-----------------------------------------------------------------*/
+static void OS_FdSet_ConvertOut_Impl(fd_set *OS_set, OS_FdSet *OSAL_set)
+{
+    size_t       offset;
+    size_t       bit;
+    osal_index_t id;
+    uint8        objids;
+    int          osfd;
+
+    for (offset = 0; offset &lt; sizeof(OSAL_set-&gt;object_ids); ++offset)
+    {
+        objids = OSAL_set-&gt;object_ids[offset];
+        bit    = 0;
+        while (objids != 0)
+        {
+            id = OSAL_INDEX_C((offset * 8) + bit);
+            if ((objids &amp; 0x01) != 0 &amp;&amp; id &lt; OS_MAX_NUM_OPEN_FILES)
+            {
+                osfd = OS_impl_filehandle_table[id].fd;
+                if (osfd &lt; 0 || !FD_ISSET(osfd, OS_set))
+                {
+                    OSAL_set-&gt;object_ids[offset] &amp;= ~(1 &lt;&lt; bit);
+                }
+            }
+            ++bit;
+            objids &gt;&gt;= 1;
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *          Actual implementation of select() call
+ *          Used by SelectSingle and SelectMultiple implementations (below)
+ *-----------------------------------------------------------------*/
+static int32 OS_DoSelect(int maxfd, fd_set *rd_set, fd_set *wr_set, int32 msecs)
+{
+    int             os_status;
+    int32           return_code;
+    struct timeval  tv;
+    struct timeval *tvptr;
+    struct timespec ts_now;
+    struct timespec ts_end;
+
+    if (msecs &gt; 0)
+    {
+        clock_gettime(CLOCK_MONOTONIC, &amp;ts_now);
+        ts_end.tv_sec  = ts_now.tv_sec + (msecs / 1000);
+        ts_end.tv_nsec = ts_now.tv_nsec + (1000000 * (msecs % 1000));
+        if (ts_end.tv_nsec &gt;= 1000000000)
+        {
+            ++ts_end.tv_sec;
+            ts_end.tv_nsec -= 1000000000;
+        }
+    }
+    else
+    {
+        /* Zero for consistency and to avoid possible confusion if not cleared */
+        memset(&amp;ts_end, 0, sizeof(ts_end));
+    }
+
+    do
+    {
+        if (msecs &lt; 0)
+        {
+            tvptr = NULL;
+        }
+        else if (msecs == 0)
+        {
+            tvptr      = &amp;tv;
+            tv.tv_sec  = 0;
+            tv.tv_usec = 0;
+        }
+        else
+        {
+            tvptr = &amp;tv;
+
+            clock_gettime(CLOCK_MONOTONIC, &amp;ts_now);
+
+            /* note that the tv_sec and tv_usec/tv_nsec values are all signed longs, so OK to subtract */
+            tv.tv_sec  = ts_end.tv_sec - ts_now.tv_sec;
+            tv.tv_usec = (ts_end.tv_nsec - ts_now.tv_nsec) / 1000;
+
+            if (tv.tv_sec &lt; 0 || (tv.tv_sec == 0 &amp;&amp; tv.tv_usec &lt; 0))
+            {
+                os_status = 0;
+                break;
+            }
+
+            if (tv.tv_usec &lt; 0)
+            {
+                tv.tv_usec += 1000000;
+                --tv.tv_sec;
+            }
+        }
+
+        os_status = select(maxfd + 1, rd_set, wr_set, NULL, tvptr);
+    } while (os_status &lt; 0 &amp;&amp; (errno == EINTR || errno == EAGAIN));
+
+    if (os_status &lt; 0)
+    {
+        return_code = OS_ERROR;
+    }
+    else if (os_status == 0)
+    {
+        return_code = OS_ERROR_TIMEOUT;
+    }
+    else
+    {
+        return_code = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/****************************************************************************************
+                                SELECT API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SelectSingle_Impl(const OS_object_token_t *token, uint32 *SelectFlags, int32 msecs)
+{
+    int32                           return_code;
+    fd_set                          wr_set;
+    fd_set                          rd_set;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    /*
+     * If called on a stream_id which does not support this
+     * operation, return immediately and do not invoke the system call
+     */
+    if (!impl-&gt;selectable)
+    {
+        return OS_ERR_OPERATION_NOT_SUPPORTED;
+    }
+
+    if (impl-&gt;fd &gt;= FD_SETSIZE)
+    {
+        /* out of range of select() implementation */
+        return OS_ERR_OPERATION_NOT_SUPPORTED;
+    }
+
+    if (*SelectFlags != 0)
+    {
+        FD_ZERO(&amp;wr_set);
+        FD_ZERO(&amp;rd_set);
+        if (*SelectFlags &amp; OS_STREAM_STATE_READABLE)
+        {
+            FD_SET(impl-&gt;fd, &amp;rd_set);
+        }
+        if (*SelectFlags &amp; OS_STREAM_STATE_WRITABLE)
+        {
+            FD_SET(impl-&gt;fd, &amp;wr_set);
+        }
+
+        return_code = OS_DoSelect(impl-&gt;fd, &amp;rd_set, &amp;wr_set, msecs);
+
+        if (return_code == OS_SUCCESS)
+        {
+            if (!FD_ISSET(impl-&gt;fd, &amp;rd_set))
+            {
+                *SelectFlags &amp;= ~OS_STREAM_STATE_READABLE;
+            }
+            if (!FD_ISSET(impl-&gt;fd, &amp;wr_set))
+            {
+                *SelectFlags &amp;= ~OS_STREAM_STATE_WRITABLE;
+            }
+        }
+        else
+        {
+            *SelectFlags = 0;
+        }
+    }
+    else
+    {
+        /* Nothing to check for, return immediately. */
+        return_code = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SelectMultiple_Impl(OS_FdSet *ReadSet, OS_FdSet *WriteSet, int32 msecs)
+{
+    fd_set wr_set;
+    fd_set rd_set;
+    int    maxfd;
+    int32  return_code;
+
+    FD_ZERO(&amp;rd_set);
+    FD_ZERO(&amp;wr_set);
+    maxfd = -1;
+    if (ReadSet != NULL)
+    {
+        return_code = OS_FdSet_ConvertIn_Impl(&amp;maxfd, &amp;rd_set, ReadSet);
+        if (return_code != OS_SUCCESS)
+        {
+            return return_code;
+        }
+    }
+    if (WriteSet != NULL)
+    {
+        return_code = OS_FdSet_ConvertIn_Impl(&amp;maxfd, &amp;wr_set, WriteSet);
+        if (return_code != OS_SUCCESS)
+        {
+            return return_code;
+        }
+    }
+
+    if (maxfd &gt;= 0)
+    {
+        return_code = OS_DoSelect(maxfd, &amp;rd_set, &amp;wr_set, msecs);
+    }
+    else
+    {
+        /*
+         * This return code will be used if the set(s) were
+         * both empty/NULL or otherwise did not contain valid filehandles.
+         */
+        return_code = OS_ERR_INVALID_ID;
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        if (ReadSet != NULL)
+        {
+            OS_FdSet_ConvertOut_Impl(&amp;rd_set, ReadSet);
+        }
+        if (WriteSet != NULL)
+        {
+            OS_FdSet_ConvertOut_Impl(&amp;wr_set, WriteSet);
+        }
+    }
+
+    return return_code;
+}
+</pre></div>
+</div>
+</section>
+<section id="os-impl-bsd-sockets-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-bsd-sockets.c</span></code><a class="headerlink" href="#os-impl-bsd-sockets-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-bsd-sockets.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * Purpose: This file contains the network functionality for
+ *      systems which implement the BSD-style socket API.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * This must include whatever is required to get the prototypes of these functions:
+ *
+ *  socket()
+ *  getsockopt()
+ *  setsockopt()
+ *  fcntl()
+ *  bind()
+ *  listen()
+ *  accept()
+ *  connect()
+ *  recvfrom()
+ *  sendto()
+ *  inet_pton()
+ *  ntohl()/ntohs()
+ *
+ * As well as any headers for the struct sockaddr type and any address families in use
+ */
+#include &lt;string.h&gt;
+#include &lt;errno.h&gt;
+
+#include "os-impl-sockets.h"
+#include "os-shared-file.h"
+#include "os-shared-select.h"
+#include "os-shared-sockets.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                     DEFINES
+****************************************************************************************/
+
+/*
+ * The OS layer may define a macro to set the proper flags on newly-opened sockets.
+ * If not set, then a default implementation is used, which uses fcntl() to set O_NONBLOCK
+ */
+#ifndef OS_IMPL_SOCKET_FLAGS
+#ifdef O_NONBLOCK
+#define OS_IMPL_SOCKET_FLAGS O_NONBLOCK
+#else
+#define OS_IMPL_SOCKET_FLAGS 0 /* do not set any flags */
+#endif
+#endif
+
+#ifndef OS_IMPL_SET_SOCKET_FLAGS
+#define OS_IMPL_SET_SOCKET_FLAGS(tok) OS_SetSocketDefaultFlags_Impl(tok)
+#endif
+
+typedef union
+{
+    char               data[OS_SOCKADDR_MAX_LEN];
+    struct sockaddr    sa;
+    struct sockaddr_in sa_in;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+    struct sockaddr_in6 sa_in6;
+#endif
+} OS_SockAddr_Accessor_t;
+
+/*
+ * Confirm that the abstract socket address buffer size (OS_SOCKADDR_MAX_LEN) is
+ * large enough to store any of the enabled address types.  If this is true, the
+ * size of the above union will match OS_SOCKADDR_MAX_LEN.  However, if any
+ * implementation-provided struct types are larger than this, the union will be
+ * larger, and this indicates a configuration error.
+ */
+CompileTimeAssert(sizeof(OS_SockAddr_Accessor_t) == OS_SOCKADDR_MAX_LEN, SockAddrSize);
+
+/*
+ * Default flags implementation: Set the O_NONBLOCK flag via fcntl().
+ * An implementation can also elect custom configuration by setting
+ * the OS_IMPL_SET_SOCKET_FLAGS macro to point to an alternate function.
+ */
+void OS_SetSocketDefaultFlags_Impl(const OS_object_token_t *token)
+{
+    OS_impl_file_internal_record_t *impl;
+    int                             os_flags;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    os_flags = fcntl(impl-&gt;fd, F_GETFL);
+    if (os_flags == -1)
+    {
+        /* No recourse if F_GETFL fails - just report the error and move on. */
+        OS_DEBUG("fcntl(F_GETFL): %s\n", strerror(errno));
+    }
+    else
+    {
+        os_flags |= OS_IMPL_SOCKET_FLAGS;
+        if (fcntl(impl-&gt;fd, F_SETFL, os_flags) == -1)
+        {
+            /* No recourse if F_SETFL fails - just report the error and move on. */
+            OS_DEBUG("fcntl(F_SETFL): %s\n", strerror(errno));
+        }
+    }
+
+    impl-&gt;selectable = true;
+}
+
+/****************************************************************************************
+                                    Sockets API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketOpen_Impl(const OS_object_token_t *token)
+{
+    int                             os_domain;
+    int                             os_type;
+    int                             os_proto;
+    int                             os_flags;
+    OS_impl_file_internal_record_t *impl;
+    OS_stream_internal_record_t *   stream;
+
+    impl   = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+    stream = OS_OBJECT_TABLE_GET(OS_stream_table, *token);
+
+    os_proto = 0;
+
+    switch (stream-&gt;socket_type)
+    {
+        case OS_SocketType_DATAGRAM:
+            os_type  = SOCK_DGRAM;
+            os_proto = IPPROTO_UDP;
+            break;
+
+        case OS_SocketType_STREAM:
+            os_type  = SOCK_STREAM;
+            os_proto = IPPROTO_TCP;
+            break;
+
+        default:
+            return OS_ERR_NOT_IMPLEMENTED;
+    }
+
+    switch (stream-&gt;socket_domain)
+    {
+        case OS_SocketDomain_INET:
+            os_domain = AF_INET;
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case OS_SocketDomain_INET6:
+            os_domain = AF_INET6;
+            break;
+#endif
+        default:
+            return OS_ERR_NOT_IMPLEMENTED;
+    }
+
+    impl-&gt;fd = socket(os_domain, os_type, os_proto);
+    if (impl-&gt;fd &lt; 0)
+    {
+        return OS_ERROR;
+    }
+
+    /*
+     * Setting the REUSEADDR flag helps during debugging when there might be frequent
+     * code restarts.  However if setting the option fails then it is not worth bailing out over.
+     */
+    os_flags = 1;
+    setsockopt(impl-&gt;fd, SOL_SOCKET, SO_REUSEADDR, &amp;os_flags, sizeof(os_flags));
+
+    /*
+     * Set the standard options on the filehandle by default --
+     * this may set it to non-blocking mode if the implementation supports it.
+     * any blocking would be done explicitly via the select() wrappers
+     *
+     * NOTE: The implementation still generally works without this flag set, but
+     * nonblock mode does improve robustness in the event that multiple tasks
+     * attempt to accept new connections from the same server socket at the same time.
+     */
+    OS_IMPL_SET_SOCKET_FLAGS(token);
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketBindAddress_Impl(const OS_object_token_t *token, const OS_SockAddr_t *Addr)
+{
+    int                             os_result;
+    socklen_t                       addrlen;
+    const struct sockaddr *         sa;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    sa = (const struct sockaddr *)&amp;Addr-&gt;AddrData;
+
+    switch (sa-&gt;sa_family)
+    {
+        case AF_INET:
+            addrlen = sizeof(struct sockaddr_in);
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case AF_INET6:
+            addrlen = sizeof(struct sockaddr_in6);
+            break;
+#endif
+        default:
+            addrlen = 0;
+            break;
+    }
+
+    if (addrlen == 0)
+    {
+        return OS_ERR_BAD_ADDRESS;
+    }
+
+    os_result = bind(impl-&gt;fd, sa, addrlen);
+    if (os_result &lt; 0)
+    {
+        OS_DEBUG("bind: %s\n", strerror(errno));
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketListen_Impl(const OS_object_token_t *token)
+{
+    int                             os_result;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    os_result = listen(impl-&gt;fd, 10);
+    if (os_result &lt; 0)
+    {
+        OS_DEBUG("listen: %s\n", strerror(errno));
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketConnect_Impl(const OS_object_token_t *token, const OS_SockAddr_t *Addr, int32 timeout)
+{
+    int32                           return_code;
+    int                             os_status;
+    int                             sockopt;
+    socklen_t                       slen;
+    uint32                          operation;
+    const struct sockaddr *         sa;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    sa = (const struct sockaddr *)&amp;Addr-&gt;AddrData;
+    switch (sa-&gt;sa_family)
+    {
+        case AF_INET:
+            slen = sizeof(struct sockaddr_in);
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case AF_INET6:
+            slen = sizeof(struct sockaddr_in6);
+            break;
+#endif
+        default:
+            slen = 0;
+            break;
+    }
+
+    if (slen != Addr-&gt;ActualLength)
+    {
+        return_code = OS_ERR_BAD_ADDRESS;
+    }
+    else
+    {
+        return_code = OS_SUCCESS;
+        os_status   = connect(impl-&gt;fd, sa, slen);
+        if (os_status &lt; 0)
+        {
+            if (errno != EINPROGRESS)
+            {
+                OS_DEBUG("connect: %s\n", strerror(errno));
+                return_code = OS_ERROR;
+            }
+            else
+            {
+                /*
+                 * If the socket was created in nonblocking mode (O_NONBLOCK flag) then the connect
+                 * runs in the background and connect() returns EINPROGRESS.  In this case we still
+                 * want to provide the "normal" (blocking) semantics to the calling app, such that
+                 * when OS_SocketConnect() returns, the socket is ready for use.
+                 *
+                 * To provide consistent behavior to calling apps, this does a select() to wait
+                 * for the socket to become writable, meaning that the remote side is connected.
+                 *
+                 * An important point here is that the calling app can control the timeout.  If the
+                 * normal/blocking connect() was used, the OS/IP stack controls the timeout, and it
+                 * can be quite long.
+                 */
+                operation = OS_STREAM_STATE_WRITABLE;
+                if (impl-&gt;selectable)
+                {
+                    return_code = OS_SelectSingle_Impl(token, &amp;operation, timeout);
+                }
+                if (return_code == OS_SUCCESS)
+                {
+                    if ((operation &amp; OS_STREAM_STATE_WRITABLE) == 0)
+                    {
+                        return_code = OS_ERROR_TIMEOUT;
+                    }
+                    else
+                    {
+                        /*
+                         * The SO_ERROR socket flag should also read back zero.
+                         * If not zero, something went wrong during connect
+                         */
+                        sockopt   = 0;
+                        slen      = sizeof(sockopt);
+                        os_status = getsockopt(impl-&gt;fd, SOL_SOCKET, SO_ERROR, &amp;sockopt, &amp;slen);
+                        if (os_status &lt; 0 || sockopt != 0)
+                        {
+                            return_code = OS_ERROR;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Graceful shutdown of a stream socket
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SocketShutdown_Impl(const OS_object_token_t *token, OS_SocketShutdownMode_t Mode)
+{
+    OS_impl_file_internal_record_t *conn_impl;
+    int32                           return_code;
+    int                             how;
+
+    conn_impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    /* Note that when called via the shared layer,
+     * the "Mode" arg has already been checked/validated. */
+    if (Mode == OS_SocketShutdownMode_SHUT_READ)
+    {
+        how = SHUT_RD;
+    }
+    else if (Mode == OS_SocketShutdownMode_SHUT_WRITE)
+    {
+        how = SHUT_WR;
+    }
+    else
+    {
+        how = SHUT_RDWR;
+    }
+
+    if (shutdown(conn_impl-&gt;fd, how) == 0)
+    {
+        return_code = OS_SUCCESS;
+    }
+    else
+    {
+        return_code = OS_ERROR;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAccept_Impl(const OS_object_token_t *sock_token, const OS_object_token_t *conn_token,
+                           OS_SockAddr_t *Addr, int32 timeout)
+{
+    int32                           return_code;
+    uint32                          operation;
+    socklen_t                       addrlen;
+    OS_impl_file_internal_record_t *sock_impl;
+    OS_impl_file_internal_record_t *conn_impl;
+
+    sock_impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *sock_token);
+    conn_impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *conn_token);
+
+    operation = OS_STREAM_STATE_READABLE;
+    if (sock_impl-&gt;selectable)
+    {
+        return_code = OS_SelectSingle_Impl(sock_token, &amp;operation, timeout);
+    }
+    else
+    {
+        return_code = OS_SUCCESS;
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        if ((operation &amp; OS_STREAM_STATE_READABLE) == 0)
+        {
+            return_code = OS_ERROR_TIMEOUT;
+        }
+        else
+        {
+            addrlen       = Addr-&gt;ActualLength;
+            conn_impl-&gt;fd = accept(sock_impl-&gt;fd, (struct sockaddr *)&amp;Addr-&gt;AddrData, &amp;addrlen);
+            if (conn_impl-&gt;fd &lt; 0)
+            {
+                return_code = OS_ERROR;
+            }
+            else
+            {
+                Addr-&gt;ActualLength = addrlen;
+
+                OS_IMPL_SET_SOCKET_FLAGS(conn_token);
+            }
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketRecvFrom_Impl(const OS_object_token_t *token, void *buffer, size_t buflen, OS_SockAddr_t *RemoteAddr,
+                             int32 timeout)
+{
+    int32                           return_code;
+    int                             os_result;
+    int                             waitflags;
+    uint32                          operation;
+    struct sockaddr *               sa;
+    socklen_t                       addrlen;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    if (RemoteAddr == NULL)
+    {
+        sa      = NULL;
+        addrlen = 0;
+    }
+    else
+    {
+        addrlen = OS_SOCKADDR_MAX_LEN;
+        sa      = (struct sockaddr *)&amp;RemoteAddr-&gt;AddrData;
+    }
+
+    operation = OS_STREAM_STATE_READABLE;
+    /*
+     * If "O_NONBLOCK" flag is set then use select()
+     * Note this is the only way to get a correct timeout
+     */
+    if (impl-&gt;selectable)
+    {
+        waitflags   = MSG_DONTWAIT;
+        return_code = OS_SelectSingle_Impl(token, &amp;operation, timeout);
+    }
+    else
+    {
+        if (timeout == 0)
+        {
+            waitflags = MSG_DONTWAIT;
+        }
+        else
+        {
+            /* note timeout will not be honored if &gt;0 */
+            waitflags = 0;
+        }
+        return_code = OS_SUCCESS;
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        if ((operation &amp; OS_STREAM_STATE_READABLE) == 0)
+        {
+            return_code = OS_ERROR_TIMEOUT;
+        }
+        else
+        {
+            os_result = recvfrom(impl-&gt;fd, buffer, buflen, waitflags, sa, &amp;addrlen);
+            if (os_result &lt; 0)
+            {
+                if (errno == EAGAIN || errno == EWOULDBLOCK)
+                {
+                    return_code = OS_QUEUE_EMPTY;
+                }
+                else
+                {
+                    OS_DEBUG("recvfrom: %s\n", strerror(errno));
+                    return_code = OS_ERROR;
+                }
+            }
+            else
+            {
+                return_code = os_result;
+
+                if (RemoteAddr != NULL)
+                {
+                    RemoteAddr-&gt;ActualLength = addrlen;
+                }
+            }
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketSendTo_Impl(const OS_object_token_t *token, const void *buffer, size_t buflen,
+                           const OS_SockAddr_t *RemoteAddr)
+{
+    int                             os_result;
+    socklen_t                       addrlen;
+    const struct sockaddr *         sa;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    sa = (const struct sockaddr *)&amp;RemoteAddr-&gt;AddrData;
+    switch (sa-&gt;sa_family)
+    {
+        case AF_INET:
+            addrlen = sizeof(struct sockaddr_in);
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case AF_INET6:
+            addrlen = sizeof(struct sockaddr_in6);
+            break;
+#endif
+        default:
+            addrlen = 0;
+            break;
+    }
+
+    if (addrlen != RemoteAddr-&gt;ActualLength)
+    {
+        return OS_ERR_BAD_ADDRESS;
+    }
+
+    os_result = sendto(impl-&gt;fd, buffer, buflen, MSG_DONTWAIT, sa, addrlen);
+    if (os_result &lt; 0)
+    {
+        OS_DEBUG("sendto: %s\n", strerror(errno));
+        return OS_ERROR;
+    }
+
+    return os_result;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketGetInfo_Impl(const OS_object_token_t *token, OS_socket_prop_t *sock_prop)
+{
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrInit_Impl(OS_SockAddr_t *Addr, OS_SocketDomain_t Domain)
+{
+    sa_family_t             sa_family;
+    socklen_t               addrlen;
+    OS_SockAddr_Accessor_t *Accessor;
+
+    memset(Addr, 0, sizeof(OS_SockAddr_t));
+    Accessor = (OS_SockAddr_Accessor_t *)&amp;Addr-&gt;AddrData;
+
+    switch (Domain)
+    {
+        case OS_SocketDomain_INET:
+            sa_family = AF_INET;
+            addrlen   = sizeof(struct sockaddr_in);
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case OS_SocketDomain_INET6:
+            sa_family = AF_INET6;
+            addrlen   = sizeof(struct sockaddr_in6);
+            break;
+#endif
+        default:
+            sa_family = 0;
+            addrlen   = 0;
+            break;
+    }
+
+    if (addrlen == 0)
+    {
+        return OS_ERR_NOT_IMPLEMENTED;
+    }
+
+    Addr-&gt;ActualLength     = OSAL_SIZE_C(addrlen);
+    Accessor-&gt;sa.sa_family = sa_family;
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrToString_Impl(char *buffer, size_t buflen, const OS_SockAddr_t *Addr)
+{
+    const void *                  addrbuffer;
+    const OS_SockAddr_Accessor_t *Accessor;
+
+    Accessor = (const OS_SockAddr_Accessor_t *)&amp;Addr-&gt;AddrData;
+
+    switch (Accessor-&gt;sa.sa_family)
+    {
+        case AF_INET:
+            addrbuffer = &amp;Accessor-&gt;sa_in.sin_addr;
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case AF_INET6:
+            addrbuffer = &amp;Accessor-&gt;sa_in6.sin6_addr;
+            break;
+#endif
+        default:
+            return OS_ERR_BAD_ADDRESS;
+            break;
+    }
+
+    if (inet_ntop(Accessor-&gt;sa.sa_family, addrbuffer, buffer, buflen) == NULL)
+    {
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrFromString_Impl(OS_SockAddr_t *Addr, const char *string)
+{
+    void *                  addrbuffer;
+    OS_SockAddr_Accessor_t *Accessor;
+
+    Accessor = (OS_SockAddr_Accessor_t *)&amp;Addr-&gt;AddrData;
+
+    switch (Accessor-&gt;sa.sa_family)
+    {
+        case AF_INET:
+            addrbuffer = &amp;Accessor-&gt;sa_in.sin_addr;
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case AF_INET6:
+            addrbuffer = &amp;Accessor-&gt;sa_in6.sin6_addr;
+            break;
+#endif
+        default:
+            return OS_ERR_BAD_ADDRESS;
+            break;
+    }
+
+    /* This function is defined as returning 1 on success, not 0 */
+    if (inet_pton(Accessor-&gt;sa.sa_family, string, addrbuffer) != 1)
+    {
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrGetPort_Impl(uint16 *PortNum, const OS_SockAddr_t *Addr)
+{
+    in_port_t                     sa_port;
+    const OS_SockAddr_Accessor_t *Accessor;
+
+    Accessor = (const OS_SockAddr_Accessor_t *)&amp;Addr-&gt;AddrData;
+
+    switch (Accessor-&gt;sa.sa_family)
+    {
+        case AF_INET:
+            sa_port = Accessor-&gt;sa_in.sin_port;
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case AF_INET6:
+            sa_port = Accessor-&gt;sa_in6.sin6_port;
+            break;
+#endif
+        default:
+            return OS_ERR_BAD_ADDRESS;
+            break;
+    }
+
+    *PortNum = ntohs(sa_port);
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrSetPort_Impl(OS_SockAddr_t *Addr, uint16 PortNum)
+{
+    in_port_t               sa_port;
+    OS_SockAddr_Accessor_t *Accessor;
+
+    sa_port  = htons(PortNum);
+    Accessor = (OS_SockAddr_Accessor_t *)&amp;Addr-&gt;AddrData;
+
+    switch (Accessor-&gt;sa.sa_family)
+    {
+        case AF_INET:
+            Accessor-&gt;sa_in.sin_port = sa_port;
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case AF_INET6:
+            Accessor-&gt;sa_in6.sin6_port = sa_port;
+            break;
+#endif
+        default:
+            return OS_ERR_BAD_ADDRESS;
+    }
+
+    return OS_SUCCESS;
+}
+</pre></div>
+</div>
+</section>
+<section id="os-impl-console-bsp-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-console-bsp.c</span></code><a class="headerlink" href="#os-impl-console-bsp-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-console-bsp.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * Purpose:
+ *      Uses the BSP-provided "console write" function
+ *      Note this only supports a single console
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include &lt;string.h&gt;
+#include &lt;errno.h&gt;
+
+#include "osapi-printf.h"
+
+#include "bsp-impl.h"
+
+#include "os-impl-console.h"
+#include "os-shared-printf.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                CONSOLE OUTPUT
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_ConsoleOutput_Impl(const OS_object_token_t *token)
+{
+    size_t                        StartPos;
+    size_t                        EndPos;
+    size_t                        WriteSize;
+    OS_console_internal_record_t *console;
+
+    console  = OS_OBJECT_TABLE_GET(OS_console_table, *token);
+    StartPos = console-&gt;ReadPos;
+    EndPos   = console-&gt;WritePos;
+
+    OS_BSP_Lock_Impl();
+
+    while (StartPos != EndPos)
+    {
+        if (StartPos &gt; EndPos)
+        {
+            /* handle wrap */
+            WriteSize = console-&gt;BufSize - StartPos;
+        }
+        else
+        {
+            WriteSize = EndPos - StartPos;
+        }
+
+        OS_BSP_ConsoleOutput_Impl(&amp;console-&gt;BufBase[StartPos], WriteSize);
+
+        StartPos += WriteSize;
+        if (StartPos &gt;= console-&gt;BufSize)
+        {
+            /* handle wrap */
+            StartPos = 0;
+        }
+    }
+
+    OS_BSP_Unlock_Impl();
+
+    /* Update the global with the new read location */
+    console-&gt;ReadPos = StartPos;
+}
+</pre></div>
+</div>
+</section>
+<section id="os-impl-no-condvar-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-no-condvar.c</span></code><a class="headerlink" href="#os-impl-no-condvar-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-no-condvar.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file   os-impl-no-condvar.c
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * Purpose: All functions return OS_ERR_NOT_IMPLEMENTED.
+ * This is used when network functionality is disabled by config.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include &lt;osapi.h&gt;
+#include "os-shared-condvar.h"
+
+int32 OS_CondVarCreate_Impl(const OS_object_token_t *token, uint32 options)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+int32 OS_CondVarLock_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+int32 OS_CondVarUnlock_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+int32 OS_CondVarSignal_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+int32 OS_CondVarBroadcast_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+int32 OS_CondVarWait_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+int32 OS_CondVarTimedWait_Impl(const OS_object_token_t *token, const OS_time_t *abs_wakeup_time)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+int32 OS_CondVarDelete_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+int32 OS_CondVarGetInfo_Impl(const OS_object_token_t *token, OS_condvar_prop_t *condvar_prop)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+</pre></div>
+</div>
+</section>
+<section id="os-impl-no-loader-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-no-loader.c</span></code><a class="headerlink" href="#os-impl-no-loader-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-no-loader.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * This file contains a module loader implementation for systems
+ * that do not use dynamic modules. It returns OS_ERR_NOT_IMPLEMENTED
+ * for all calls.
+ */
+
+#include "os-shared-module.h"
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleLoad_Impl(const OS_object_token_t *token, const char *translated_path)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleUnload_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleGetInfo_Impl(const OS_object_token_t *token, OS_module_prop_t *module_prop)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+</pre></div>
+</div>
+</section>
+<section id="os-impl-no-network-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-no-network.c</span></code><a class="headerlink" href="#os-impl-no-network-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-no-network.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * This file contains the network implementation for
+ * systems where OSAL_CONFIG_INCLUDE_NETWORK is false or otherwise
+ * do not provide any network functions.
+ *
+ */
+
+#include "os-shared-network.h"
+
+/****************************************************************************************
+                                    Network API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_NetworkGetID_Impl(int32 *IdBuf)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_NetworkGetHostName_Impl(char *host_name, size_t name_len)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+</pre></div>
+</div>
+</section>
+<section id="os-impl-no-select-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-no-select.c</span></code><a class="headerlink" href="#os-impl-no-select-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-no-select.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file   os-impl-no-select.c
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * Purpose: All functions return OS_ERR_NOT_IMPLEMENTED.
+ * This is used when network functionality is disabled by config.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include &lt;osapi.h&gt;
+#include "os-shared-select.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/***************************************************************************************
+                                 FUNCTION PROTOTYPES
+ **************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+/****************************************************************************************
+                                LOCAL FUNCTIONS
+ ***************************************************************************************/
+
+/****************************************************************************************
+                                SELECT API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SelectSingle_Impl(const OS_object_token_t *token, uint32 *SelectFlags, int32 msecs)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SelectMultiple_Impl(OS_FdSet *ReadSet, OS_FdSet *WriteSet, int32 msecs)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+</pre></div>
+</div>
+</section>
+<section id="os-impl-no-shell-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-no-shell.c</span></code><a class="headerlink" href="#os-impl-no-shell-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-no-shell.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * No shell implementation, returns OS_ERR_NOT_IMPLEMENTED for calls
+ */
+
+#include "os-shared-shell.h"
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ShellOutputToFile_Impl(const OS_object_token_t *token, const char *Cmd)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+</pre></div>
+</div>
+</section>
+<section id="os-impl-no-sockets-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-no-sockets.c</span></code><a class="headerlink" href="#os-impl-no-sockets-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-no-sockets.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * Purpose: All functions return OS_ERR_NOT_IMPLEMENTED.
+ * This is used when network functionality is disabled by config.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "osapi-sockets.h"
+#include "os-shared-sockets.h"
+
+/****************************************************************************************
+                                     DEFINES
+****************************************************************************************/
+
+/****************************************************************************************
+                                    Socket API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketOpen_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketBindAddress_Impl(const OS_object_token_t *token, const OS_SockAddr_t *Addr)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketListen_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketConnect_Impl(const OS_object_token_t *token, const OS_SockAddr_t *Addr, int32 timeout)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketShutdown_Impl(const OS_object_token_t *token, OS_SocketShutdownMode_t Mode)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAccept_Impl(const OS_object_token_t *sock_token, const OS_object_token_t *conn_token,
+                           OS_SockAddr_t *Addr, int32 timeout)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketRecvFrom_Impl(const OS_object_token_t *token, void *buffer, size_t buflen, OS_SockAddr_t *RemoteAddr,
+                             int32 timeout)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketSendTo_Impl(const OS_object_token_t *token, const void *buffer, size_t buflen,
+                           const OS_SockAddr_t *RemoteAddr)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketGetInfo_Impl(const OS_object_token_t *token, OS_socket_prop_t *sock_prop)
+{
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrInit_Impl(OS_SockAddr_t *Addr, OS_SocketDomain_t Domain)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrToString_Impl(char *buffer, size_t buflen, const OS_SockAddr_t *Addr)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrFromString_Impl(OS_SockAddr_t *Addr, const char *string)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrGetPort_Impl(uint16 *PortNum, const OS_SockAddr_t *Addr)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrSetPort_Impl(OS_SockAddr_t *Addr, uint16 PortNum)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+</pre></div>
+</div>
+</section>
+<section id="os-impl-no-symtab-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-no-symtab.c</span></code><a class="headerlink" href="#os-impl-no-symtab-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-no-symtab.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * This file contains a symbol table implementation for systems
+ * that do not use dynamic symbol lookups. It returns OS_ERR_NOT_IMPLEMENTED
+ * for all calls.
+ */
+
+#include "osapi-module.h"
+#include "os-shared-module.h"
+
+/*----------------------------------------------------------------
+ * Implementation for no dynamic loader configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SymbolLookup_Impl(cpuaddr *SymbolAddress, const char *SymbolName)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no dynamic loader configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleSymbolLookup_Impl(const OS_object_token_t *token, cpuaddr *SymbolAddress, const char *SymbolName)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no dynamic loader configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SymbolTableDump_Impl(const char *filename, size_t SizeLimit)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+</pre></div>
+</div>
+</section>
+<section id="os-impl-posix-dirs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-posix-dirs.c</span></code><a class="headerlink" href="#os-impl-posix-dirs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-posix-dirs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * This file Contains all of the api calls for manipulating files
+ * in a file system / C library that implements the UNIX-style file API
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * This must include whatever is required to get the prototypes of these functions:
+ *
+ *   stat()
+ *   mkdir()
+ *   rmdir()
+ *   opendir()
+ *   readdir()
+ *   closedir()
+ *   rewinddir()
+ */
+#include &lt;string.h&gt;
+#include &lt;errno.h&gt;
+
+#include "os-impl-dirs.h"
+#include "os-shared-dir.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/***************************************************************************************
+                                 FUNCTION PROTOTYPES
+ **************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirCreate_Impl(const char *local_path, uint32 access)
+{
+    struct stat st;
+    int32       return_code;
+
+    if (mkdir(local_path, S_IFDIR | S_IRWXU | S_IRWXG | S_IRWXO) &lt; 0)
+    {
+        return_code = OS_ERROR;
+
+        if (errno == EEXIST)
+        {
+            /* Success if already exists and is a directory */
+            if (stat(local_path, &amp;st) == 0 &amp;&amp; S_ISDIR(st.st_mode))
+            {
+                return_code = OS_SUCCESS;
+            }
+        }
+    }
+    else
+    {
+        return_code = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirOpen_Impl(const OS_object_token_t *token, const char *local_path)
+{
+    DIR *                          dp = opendir(local_path);
+    OS_impl_dir_internal_record_t *impl;
+
+    if (dp == NULL)
+    {
+        return OS_ERROR;
+    }
+
+    impl     = OS_OBJECT_TABLE_GET(OS_impl_dir_table, *token);
+    impl-&gt;dp = dp;
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirClose_Impl(const OS_object_token_t *token)
+{
+    OS_impl_dir_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_dir_table, *token);
+
+    closedir(impl-&gt;dp);
+    impl-&gt;dp = NULL;
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirRead_Impl(const OS_object_token_t *token, os_dirent_t *dirent)
+{
+    struct dirent *                de;
+    OS_impl_dir_internal_record_t *impl;
+    impl = OS_OBJECT_TABLE_GET(OS_impl_dir_table, *token);
+
+    /* NOTE - the readdir() call is non-reentrant ....
+     * However, this is performed while the global dir table lock is taken.
+     * Therefore this ensures that only one such call can occur at any given time.
+     *
+     * Static analysis tools may warn about this because they do not know
+     * this function is externally serialized via the global lock.
+     */
+    /* cppcheck-suppress readdirCalled */
+    /* cppcheck-suppress nonreentrantFunctionsreaddir */
+    de = readdir(impl-&gt;dp);
+    if (de == NULL)
+    {
+        return OS_ERROR;
+    }
+
+    strncpy(dirent-&gt;FileName, de-&gt;d_name, sizeof(dirent-&gt;FileName) - 1);
+    dirent-&gt;FileName[sizeof(dirent-&gt;FileName) - 1] = 0;
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirRewind_Impl(const OS_object_token_t *token)
+{
+    OS_impl_dir_internal_record_t *impl;
+    impl = OS_OBJECT_TABLE_GET(OS_impl_dir_table, *token);
+    rewinddir(impl-&gt;dp);
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirRemove_Impl(const char *local_path)
+{
+    if (rmdir(local_path) &lt; 0)
+    {
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+</pre></div>
+</div>
+</section>
+<section id="os-impl-posix-dl-loader-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-posix-dl-loader.c</span></code><a class="headerlink" href="#os-impl-posix-dl-loader-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-posix-dl-loader.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * This file contains a module loader implementation for systems
+ * that implement a POSIX-style dynamic module loader.  This includes
+ * RTEMS even if built without its native POSIX API.
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * typically this must include dlfcn.h and whatever else is required
+ * to get the prototypes of these functions:
+ *
+ *   dlopen()
+ *   dlclose()
+ *   dlsym()
+ *   dlerror()
+ */
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+#include "os-impl-loader.h"
+#include "os-shared-module.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                    Module Loader API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleLoad_Impl(const OS_object_token_t *token, const char *translated_path)
+{
+    int32                             status = OS_ERROR;
+    int                               dl_mode;
+    OS_impl_module_internal_record_t *impl;
+    OS_module_internal_record_t *     module;
+
+    impl   = OS_OBJECT_TABLE_GET(OS_impl_module_table, *token);
+    module = OS_OBJECT_TABLE_GET(OS_module_table, *token);
+
+    /*
+     * RTLD_NOW should instruct dlopen() to resolve all the symbols in the
+     * module immediately, as opposed to waiting until they are used.
+     * The latter (lazy mode) is non-deterministic - a resolution error on
+     * a rarely-used symbol could cause a random failure far in the future.
+     */
+    dl_mode = RTLD_NOW;
+
+    if ((module-&gt;flags &amp; OS_MODULE_FLAG_LOCAL_SYMBOLS) != 0)
+    {
+        /*
+         * Do not add the symbols in this module to the global symbol table.
+         * This mode helps prevent any unanticipated references into this
+         * module, which can in turn prevent unloading via dlclose().
+         */
+        dl_mode |= RTLD_LOCAL;
+    }
+    else
+    {
+        /*
+         * Default mode - add symbols to the global symbol table, so they
+         * will be available to resolve symbols in future module loads.
+         * However, any such references will prevent unloading of this
+         * module via dlclose().
+         */
+        dl_mode |= RTLD_GLOBAL;
+    }
+
+    dlerror();
+    impl-&gt;dl_handle = dlopen(translated_path, dl_mode);
+    if (impl-&gt;dl_handle != NULL)
+    {
+        status = OS_SUCCESS;
+    }
+    else
+    {
+        OS_DEBUG("Error loading shared library: %s\n", dlerror());
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleUnload_Impl(const OS_object_token_t *token)
+{
+    int32                             status = OS_ERROR;
+    OS_impl_module_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_module_table, *token);
+
+    /*
+    ** Attempt to close/unload the module
+    */
+    dlerror();
+    if (dlclose(impl-&gt;dl_handle) == 0)
+    {
+        impl-&gt;dl_handle = NULL;
+        status          = OS_SUCCESS;
+    }
+    else
+    {
+        OS_DEBUG("Error unloading shared library: %s\n", dlerror());
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleGetInfo_Impl(const OS_object_token_t *token, OS_module_prop_t *module_prop)
+{
+    /*
+     * Limiting strictly to POSIX-defined API means there is no defined
+     * method to get information about a module contents.
+     *
+     * The "dlinfo()" function might return some interesting information
+     * but this is actually a non-posix extension / platform-defined API.
+     *
+     * This returns success - although there is no information to add here,
+     * the parent/shared layer information is still valid.
+     */
+    return OS_SUCCESS;
+}
+</pre></div>
+</div>
+</section>
+<section id="os-impl-posix-dl-symtab-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-posix-dl-symtab.c</span></code><a class="headerlink" href="#os-impl-posix-dl-symtab-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-posix-dl-symtab.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * This file contains a module loader implementation for systems
+ * that implement a POSIX-style dynamic module loader.  This includes
+ * RTEMS even if built without its native POSIX API.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * typically this must include dlfcn.h and whatever else is required
+ * to get the prototypes of these functions:
+ *
+ *   dlsym()
+ *   dlerror()
+ *
+ * In POSIX these functions are grouped with the loader (dl) library
+ */
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+#include "os-impl-loader.h"
+#include "os-shared-module.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/*
+ * Determine what to pass in for the first parameter of dlsym()
+ *
+ * If the "os-impl-loader.h" header already defined this, then use that.
+ *
+ * Otherwise, check if the C library provides an "RTLD_DEFAULT" symbol -
+ * This symbol is not POSIX standard but many implementations do provide it.
+ *
+ * Lastly, if nothing else works, use NULL.  This is technically undefined
+ * behavior per POSIX, but most implementations do seem to interpret this
+ * as referring to the complete process (base executable + all loaded modules).
+ */
+#ifndef OSAL_DLSYM_DEFAULT_HANDLE
+#ifdef RTLD_DEFAULT
+#define OSAL_DLSYM_DEFAULT_HANDLE RTLD_DEFAULT
+#else
+#define OSAL_DLSYM_DEFAULT_HANDLE NULL
+#endif
+#endif
+
+/****************************************************************************************
+                                    Symbol table API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GenericSymbolLookup_Impl(void *dl_handle, cpuaddr *SymbolAddress, const char *SymbolName)
+{
+    const char *dlError; /*  Pointer to error string   */
+    void *      Function;
+    int32       status;
+
+    status = OS_ERROR;
+
+    /*
+     * call dlerror() to clear any prior error that might have occurred.
+     */
+    dlerror();
+    Function = dlsym(dl_handle, SymbolName);
+    dlError  = dlerror();
+
+    /*
+     * For the POSIX DL implementation, if the symbol does not exist
+     * then dlerror() is supposed to return non-null.  This is intended
+     * to differentiate between valid symbols which are actually 0/NULL
+     * and invalid symbols that do not exist.
+     *
+     * Some implementations do _not_ implement this detail, and dlerror()
+     * still returns NULL after looking up an invalid symbol name.
+     *
+     * In practice, this is expected to be used for looking up functions
+     * and as such all valid symbols should be non-NULL, so NULL is considered
+     * an error even if the C library doesn't consider this an error.
+     */
+    if (dlError != NULL)
+    {
+        OS_DEBUG("Error: %s: %s\n", SymbolName, dlError);
+    }
+    else if (Function == NULL)
+    {
+        /* technically not an error per POSIX, but in practice should not happen */
+        OS_DEBUG("Error: %s: dlsym() returned NULL\n", SymbolName);
+    }
+    else
+    {
+        status = OS_SUCCESS;
+    }
+
+    *SymbolAddress = (cpuaddr)Function;
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SymbolLookup_Impl(cpuaddr *SymbolAddress, const char *SymbolName)
+{
+    int32            status;
+    int32            local_status;
+    OS_object_iter_t iter;
+
+    /* First search global table */
+    status = OS_GenericSymbolLookup_Impl(OSAL_DLSYM_DEFAULT_HANDLE, SymbolAddress, SymbolName);
+
+    /* If not found iterate through module local symbols and break if found */
+    if (status != OS_SUCCESS)
+    {
+        OS_ObjectIdIterateActive(OS_OBJECT_TYPE_OS_MODULE, &amp;iter);
+        while (OS_ObjectIdIteratorGetNext(&amp;iter))
+        {
+            local_status = OS_ModuleSymbolLookup_Impl(&amp;iter.token, SymbolAddress, SymbolName);
+            if (local_status == OS_SUCCESS)
+            {
+                status = local_status;
+                break;
+            }
+        }
+        OS_ObjectIdIteratorDestroy(&amp;iter);
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleSymbolLookup_Impl(const OS_object_token_t *token, cpuaddr *SymbolAddress, const char *SymbolName)
+{
+    int32                             status;
+    OS_impl_module_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_module_table, *token);
+
+    status = OS_GenericSymbolLookup_Impl(impl-&gt;dl_handle, SymbolAddress, SymbolName);
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *  POSIX DL does not provide
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SymbolTableDump_Impl(const char *filename, size_t SizeLimit)
+{
+    /*
+     * Limiting strictly to POSIX-defined API means there is no defined
+     * method to get iterate over the symbol table.
+     *
+     * Some C libraries do offer an extension to provide this function, so
+     * if this becomes a requirement on those platforms, this function
+     * might need to move.
+     *
+     * Currently this is not a widely used/needed feature so it will report
+     * unimplemented here.
+     */
+
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+</pre></div>
+</div>
+</section>
+<section id="os-impl-posix-files-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-posix-files.c</span></code><a class="headerlink" href="#os-impl-posix-files-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-posix-files.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * This file Contains all of the api calls for manipulating files
+ * in a file system / C library that implements the POSIX-style file API
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * This must include whatever is required to get the prototypes of these functions:
+ *
+ *   open()
+ *   stat()
+ *   chmod()
+ *   remove()
+ *   rename()
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;time.h&gt;
+
+#include "os-impl-files.h"
+#include "os-shared-file.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/****************************************************************************************
+                                 Named File API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileOpen_Impl(const OS_object_token_t *token, const char *local_path, int32 flags, int32 access_mode)
+{
+    int                             os_perm;
+    int                             os_mode;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    /*
+    ** Check for a valid access mode
+    ** For creating a file, OS_READ_ONLY does not make sense
+    */
+    switch (access_mode)
+    {
+        case OS_WRITE_ONLY:
+            os_perm = O_WRONLY;
+            break;
+        case OS_READ_ONLY:
+            os_perm = O_RDONLY;
+            break;
+        case OS_READ_WRITE:
+            os_perm = O_RDWR;
+            break;
+        default:
+            return OS_ERROR;
+    }
+
+    if (flags &amp; OS_FILE_FLAG_CREATE)
+    {
+        os_perm |= O_CREAT;
+    }
+    if (flags &amp; OS_FILE_FLAG_TRUNCATE)
+    {
+        os_perm |= O_TRUNC;
+    }
+
+    os_perm |= OS_IMPL_REGULAR_FILE_FLAGS;
+
+    os_mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+
+    impl-&gt;fd = open(local_path, os_perm, os_mode);
+
+    if (impl-&gt;fd &lt; 0)
+    {
+        OS_DEBUG("open(%s): %s\n", local_path, strerror(errno));
+        return OS_ERROR;
+    }
+
+    /*
+     * If the flags included O_NONBLOCK, then
+     * enable the "select" call on this handle.
+     */
+    impl-&gt;selectable = ((os_perm &amp; O_NONBLOCK) != 0);
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileStat_Impl(const char *local_path, os_fstat_t *FileStats)
+{
+    struct stat     st;
+    mode_t          readbits;
+    mode_t          writebits;
+    mode_t          execbits;
+    struct timespec filetime;
+
+    if (stat(local_path, &amp;st) &lt; 0)
+    {
+        return OS_ERROR;
+    }
+
+    FileStats-&gt;FileSize = st.st_size;
+
+    /*
+     * NOTE: Traditional timestamps are only a whole number of seconds (time_t)
+     * POSIX.1-2008 expands this to have a full "struct timespec" with nanosecond
+     * resolution.
+     *
+     * GLIBC (and likely other C libraries that use similar feature selection)
+     * will expose this value based on _POSIX_C_SOURCE or _XOPEN_SOURCE minimum
+     * values.  Otherwise this just falls back to standard 1-second resolution
+     * available via the "st_mtime" member.
+     */
+#if (_POSIX_C_SOURCE &gt;= 200809L) || (_XOPEN_SOURCE &gt;= 700)
+    /*
+     * Better - use the full resolution (seconds + nanoseconds) as specified in POSIX.1-2008
+     */
+    filetime = st.st_mtim;
+#else
+    /*
+     * Fallback - every POSIX-compliant implementation must expose "st_mtime" field.
+     */
+    filetime.tv_sec  = st.st_mtime;
+    filetime.tv_nsec = 0;
+#endif
+
+    FileStats-&gt;FileTime = OS_TimeAssembleFromNanoseconds(filetime.tv_sec, filetime.tv_nsec);
+
+    /* note that the "fst_mode" member is already zeroed by the caller */
+    if (S_ISDIR(st.st_mode))
+    {
+        FileStats-&gt;FileModeBits |= OS_FILESTAT_MODE_DIR;
+    }
+
+    /* always check world bits */
+    readbits  = S_IROTH;
+    writebits = S_IWOTH;
+    execbits  = S_IXOTH;
+
+    if (OS_IMPL_SELF_EUID == st.st_uid)
+    {
+        /* we own the file so use user bits for simplified perms */
+        readbits |= S_IRUSR;
+        writebits |= S_IWUSR;
+        execbits |= S_IXUSR;
+    }
+
+    if (OS_IMPL_SELF_EGID == st.st_gid)
+    {
+        /* our group owns the file so use group bits for simplified perms */
+        readbits |= S_IRGRP;
+        writebits |= S_IWGRP;
+        execbits |= S_IXGRP;
+    }
+
+    if (st.st_mode &amp; readbits)
+    {
+        FileStats-&gt;FileModeBits |= OS_FILESTAT_MODE_READ;
+    }
+    if (st.st_mode &amp; writebits)
+    {
+        FileStats-&gt;FileModeBits |= OS_FILESTAT_MODE_WRITE;
+    }
+    if (st.st_mode &amp; execbits)
+    {
+        FileStats-&gt;FileModeBits |= OS_FILESTAT_MODE_EXEC;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileChmod_Impl(const char *local_path, uint32 access_mode)
+{
+    mode_t      readbits;
+    mode_t      writebits;
+    struct stat st;
+    int         fd;
+    int32       status;
+
+    /* Open file to avoid filename race potential */
+    fd = open(local_path, O_RDONLY, 0);
+    if (fd &lt; 0)
+    {
+        fd = open(local_path, O_WRONLY, 0);
+        if (fd &lt; 0)
+        {
+            OS_DEBUG("open(%s): %s (%d)\n", local_path, strerror(errno), errno);
+            return OS_ERROR;
+        }
+    }
+
+    /*
+     * NOTE: After this point, execution must proceed to the end of this routine
+     * so that the "fd" opened above can be properly closed.
+     */
+
+    /*
+     * In order to preserve any OTHER mode bits,
+     * first stat() the file and then modify the st_mode
+     * to match the desired access level.
+     *
+     * In particular, this should preserve the execute bit,
+     * which is generally not part of the OSAL API, but
+     * is important for the underlying OS.
+     */
+    if (fstat(fd, &amp;st) &lt; 0)
+    {
+        OS_DEBUG("fstat(%s): %s (%d)\n", local_path, strerror(errno), errno);
+        status = OS_ERROR;
+    }
+    else
+    {
+        /* always check world bits */
+        readbits  = S_IROTH;
+        writebits = S_IWOTH;
+
+        if (OS_IMPL_SELF_EUID == st.st_uid)
+        {
+            /* we own the file so use user bits */
+            readbits |= S_IRUSR;
+            writebits |= S_IWUSR;
+        }
+
+        if (OS_IMPL_SELF_EGID == st.st_gid)
+        {
+            /* our group owns the file so use group bits */
+            readbits |= S_IRGRP;
+            writebits |= S_IWGRP;
+        }
+
+        if (access_mode == OS_WRITE_ONLY || access_mode == OS_READ_WRITE)
+        {
+            /* set all "write" mode bits */
+            st.st_mode |= writebits;
+        }
+        else
+        {
+            /* clear all "write" mode bits */
+            st.st_mode &amp;= ~writebits;
+        }
+
+        if (access_mode == OS_READ_ONLY || access_mode == OS_READ_WRITE)
+        {
+            /* set all "read" mode bits */
+            st.st_mode |= readbits;
+        }
+        else
+        {
+            /* clear all "read" mode bits */
+            st.st_mode &amp;= ~readbits;
+        }
+
+        /* finally, write the modified mode back to the file */
+        if (fchmod(fd, st.st_mode) &lt; 0)
+        {
+            /*
+             * These particular errnos generally indicate that the
+             * underlying filesystem does not support chmod()
+             *
+             * This is often the case for FAT / DOSFS filesystems
+             * which do not have UNIX-style permissions, or (in the
+             * case of EROFS) if the filesystem is mounted read-only.
+             */
+            if (errno == ENOTSUP || errno == ENOSYS || errno == EROFS)
+            {
+                status = OS_ERR_NOT_IMPLEMENTED;
+            }
+            else
+            {
+                OS_DEBUG("fchmod(%s): %s (%d)\n", local_path, strerror(errno), errno);
+                status = OS_ERROR;
+            }
+        }
+        else
+        {
+            status = OS_SUCCESS;
+        }
+    }
+
+    close(fd);
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileRemove_Impl(const char *local_path)
+{
+    if (remove(local_path) &lt; 0)
+    {
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileRename_Impl(const char *old_path, const char *new_path)
+{
+    if (rename(old_path, new_path) &lt; 0)
+    {
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+</pre></div>
+</div>
+</section>
+<section id="os-impl-posix-gettime-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-posix-gettime.c</span></code><a class="headerlink" href="#os-impl-posix-gettime-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-posix-gettime.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * This file contains implementation for OS_GetLocalTime() and OS_SetLocalTime()
+ * that map to the C library clock_gettime() and clock_settime() calls.
+ * This should be usable on any OS that supports those standard calls.
+ * The OS-specific code must \#include the correct headers that define the
+ * prototypes for these functions before including this implementation file.
+ *
+ * NOTE: The OS-specific header must also define which POSIX clock ID to use -
+ * this specifies the clockid_t parameter to use with clock_gettime().  In
+ * most cases this should be CLOCK_REALTIME to allow the clock to be set, and
+ * so the application will also see any manual/administrative clock changes.
+ *
+ * The clock ID is selected by defining the #OSAL_GETTIME_SOURCE_CLOCK macro.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * This must provide the prototypes of these functions:
+ *
+ *   clock_gettime()
+ *   clock_settime()
+ *
+ * and the "struct timespec" definition
+ */
+#include &lt;string.h&gt;
+#include &lt;errno.h&gt;
+
+#include "osapi-clock.h"
+#include "os-impl-gettime.h"
+#include "os-shared-clock.h"
+
+/****************************************************************************************
+                                FUNCTIONS
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GetLocalTime_Impl(OS_time_t *time_struct)
+{
+    int             Status;
+    int32           ReturnCode;
+    struct timespec TimeSp;
+
+    Status = clock_gettime(OSAL_GETTIME_SOURCE_CLOCK, &amp;TimeSp);
+
+    if (Status == 0)
+    {
+        *time_struct = OS_TimeAssembleFromNanoseconds(TimeSp.tv_sec, TimeSp.tv_nsec);
+        ReturnCode   = OS_SUCCESS;
+    }
+    else
+    {
+        OS_DEBUG("Error calling clock_gettime: %s\n", strerror(errno));
+        ReturnCode = OS_ERROR;
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SetLocalTime_Impl(const OS_time_t *time_struct)
+{
+    int             Status;
+    int32           ReturnCode;
+    struct timespec TimeSp;
+
+    TimeSp.tv_sec  = OS_TimeGetTotalSeconds(*time_struct);
+    TimeSp.tv_nsec = OS_TimeGetNanosecondsPart(*time_struct);
+
+    Status = clock_settime(OSAL_GETTIME_SOURCE_CLOCK, &amp;TimeSp);
+
+    if (Status == 0)
+    {
+        ReturnCode = OS_SUCCESS;
+    }
+    else
+    {
+        ReturnCode = OS_ERROR;
+    }
+
+    return ReturnCode;
+}
+</pre></div>
+</div>
+</section>
+<section id="os-impl-posix-io-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-posix-io.c</span></code><a class="headerlink" href="#os-impl-posix-io-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-posix-io.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * This file contains generic calls for manipulating filehandles
+ * in a file system / C library that implements the UNIX-style file API
+ *
+ * These generic ops may apply to regular files, sockets, pipes, or
+ * special devices, depending on the OS in use.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * This must include whatever is required to get the prototypes of these functions:
+ *
+ *   read()
+ *   write()
+ *   close()
+ */
+#include &lt;string.h&gt;
+#include &lt;errno.h&gt;
+
+#include "os-impl-io.h"
+#include "os-shared-file.h"
+#include "os-shared-select.h"
+#include "os-shared-idmap.h"
+
+/* some OS libraries (e.g. VxWorks) do not declare the API to be const-correct
+ * It can still use this generic implementation but the call to write() must be
+ * cast to a void* to avoid a warning.  The includer can define this if needed.
+ * If not defined, assume no cast is needed (fine for anything POSIX-compliant).
+ */
+#ifndef GENERIC_IO_CONST_DATA_CAST
+#define GENERIC_IO_CONST_DATA_CAST
+#endif
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GenericClose_Impl(const OS_object_token_t *token)
+{
+    int                             result;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    result = close(impl-&gt;fd);
+    if (result &lt; 0)
+    {
+        /*
+         * close() can technically fail for various reasons, but
+         * there isn't much recourse if this call fails.  Just log
+         * the failure for debugging.
+         *
+         * POSIX also does not specify the state of the filehandle
+         * after a close() with an error.
+         *
+         * At least in  Linux/glibc the filehandle is always closed
+         * in the kernel and should not be used again or re-closed.
+         */
+        OS_DEBUG("close: %s\n", strerror(errno));
+    }
+    impl-&gt;fd = -1;
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GenericSeek_Impl(const OS_object_token_t *token, int32 offset, uint32 whence)
+{
+    int                             where;
+    off_t                           os_result;
+    int32                           retval;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    switch (whence)
+    {
+        case OS_SEEK_SET:
+            where = SEEK_SET;
+            break;
+        case OS_SEEK_CUR:
+            where = SEEK_CUR;
+            break;
+        case OS_SEEK_END:
+            where = SEEK_END;
+            break;
+        default:
+            return OS_ERROR;
+    }
+
+    os_result = lseek(impl-&gt;fd, (off_t)offset, where);
+    if (os_result == (off_t)-1)
+    {
+        if (errno == ESPIPE)
+        {
+            /*
+             * this means the user tried to seek on a pipe, socket,
+             * or other fifo-like handle that doesn't support seeking.
+             *
+             * Use a different error code to differentiate from an
+             * error involving a bad whence/offset
+             */
+            retval = OS_ERR_OPERATION_NOT_SUPPORTED;
+        }
+        else
+        {
+            /*
+             * Most likely the "whence" and/or "offset" combo was not valid.
+             */
+            OS_DEBUG("lseek: %s\n", strerror(errno));
+            retval = OS_ERROR;
+        }
+    }
+    else
+    {
+        /*
+         * convert value to int32 type for returning to caller.
+         * Note that this could potentially overflow an int32
+         * for a large file seek.
+         */
+        retval = (int32)os_result;
+    }
+
+    return retval;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GenericRead_Impl(const OS_object_token_t *token, void *buffer, size_t nbytes, int32 timeout)
+{
+    int32                           return_code;
+    ssize_t                         os_result;
+    uint32                          operation;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    return_code = OS_SUCCESS;
+
+    if (nbytes &gt; 0)
+    {
+        operation = OS_STREAM_STATE_READABLE;
+
+        /*
+         * If filehandle is set with O_NONBLOCK, then must call select() here.
+         *
+         * The "selectable" field should be set false for those file handles
+         * which the underlying OS does not support select() on.
+         *
+         * Note that a timeout will not work unless selectable is true.
+         */
+        if (impl-&gt;selectable)
+        {
+            return_code = OS_SelectSingle_Impl(token, &amp;operation, timeout);
+        }
+
+        if (return_code == OS_SUCCESS &amp;&amp; (operation &amp; OS_STREAM_STATE_READABLE) != 0)
+        {
+            os_result = read(impl-&gt;fd, buffer, nbytes);
+            if (os_result &lt; 0)
+            {
+                OS_DEBUG("read: %s\n", strerror(errno));
+                return_code = OS_ERROR;
+            }
+            else
+            {
+                /* type conversion from ssize_t to int32 for return */
+                return_code = (int32)os_result;
+            }
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GenericWrite_Impl(const OS_object_token_t *token, const void *buffer, size_t nbytes, int32 timeout)
+{
+    int32                           return_code;
+    ssize_t                         os_result;
+    uint32                          operation;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    return_code = OS_SUCCESS;
+
+    if (nbytes &gt; 0)
+    {
+        operation = OS_STREAM_STATE_WRITABLE;
+
+        /*
+         * If filehandle is set with O_NONBLOCK, then must call select() here.
+         *
+         * The "selectable" field should be set false for those file handles
+         * which the underlying OS does not support select() on.
+         *
+         * Note that a timeout will not work unless selectable is true.
+         */
+        if (impl-&gt;selectable)
+        {
+            return_code = OS_SelectSingle_Impl(token, &amp;operation, timeout);
+        }
+
+        if (return_code == OS_SUCCESS &amp;&amp; (operation &amp; OS_STREAM_STATE_WRITABLE) != 0)
+        {
+            /* on some system libraries for which the write() argument is not
+             * qualified correctly, it needs to be case to a void* here */
+            os_result = write(impl-&gt;fd, GENERIC_IO_CONST_DATA_CAST buffer, nbytes);
+            if (os_result &lt; 0)
+            {
+                OS_DEBUG("write: %s\n", strerror(errno));
+                return_code = OS_ERROR;
+            }
+            else
+            {
+                /* type conversion from ssize_t to int32 for return */
+                return_code = (int32)os_result;
+            }
+        }
+    }
+
+    return return_code;
+}
+</pre></div>
+</div>
+</section>
+<section id="os-impl-posix-network-c">
+<h2><code class="docutils literal notranslate"><span class="pre">os-impl-posix-network.c</span></code><a class="headerlink" href="#os-impl-posix-network-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/os-impl-posix-network.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * This file contains the network functionality for
+ * systems which implement the POSIX-defined network hostname/id functions.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * This must include whatever is required to get the prototypes of these functions:
+ *
+ *  gethostname()
+ *  gethostid()
+ *
+ * Both of these routines should conform to X/Open 5 definition.
+ */
+#include &lt;string.h&gt;
+#include &lt;errno.h&gt;
+
+#include "os-impl-network.h"
+#include "os-shared-network.h"
+
+/****************************************************************************************
+                                    Network API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_NetworkGetHostName_Impl(char *host_name, size_t name_len)
+{
+    int32 return_code;
+
+    if (gethostname(host_name, name_len) &lt; 0)
+    {
+        return_code = OS_ERROR;
+    }
+    else
+    {
+        /*
+         * posix does not say that the name is always
+         * null terminated, so its worthwhile to ensure it
+         */
+        host_name[name_len - 1] = 0;
+        return_code             = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_NetworkGetID_Impl(int32 *IdBuf)
+{
+    /* gethostid() has no failure modes */
+    *IdBuf = gethostid();
+    return OS_SUCCESS;
+}
+</pre></div>
+</div>
+</section>
+<section id="readme-txt">
+<h2><code class="docutils literal notranslate"><span class="pre">README.txt</span></code><a class="headerlink" href="#readme-txt" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/os/portable/README.txt</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Files in this directory contain an implementation that adheres to a defined API
+that is applicable to more than one of the supported OS's, but not all.  For
+example, the BSD-style sockets API is implemented in VxWorks, RTEMS, and Linux.
+Therefore it is beneficial to put the code in here and let each implementation
+selectively include this rather than reinventing the wheel.
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../nos/src/index.html" class="btn btn-neutral float-left" title="src" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../posix/index.html" class="btn btn-neutral float-right" title="posix" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

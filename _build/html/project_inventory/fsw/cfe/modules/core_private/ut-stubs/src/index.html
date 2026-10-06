@@ -1,0 +1,2182 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../search.html" />
+    <link rel="next" title="es" href="../../../es/index.html" />
+    <link rel="prev" title="inc" href="../inc/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">cfe</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">modules</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">core_private</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">ut-stubs</a></li>
+      <li class="breadcrumb-item active">src</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../_sources/project_inventory/fsw/cfe/modules/core_private/ut-stubs/src/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="src">
+<h1>src<a class="headerlink" href="#src" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/core_private/ut-stubs/src/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="cfe-config-core-internal-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_config_core_internal_stubs.c</span></code><a class="headerlink" href="#cfe-config-core-internal-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/core_private/ut-stubs/src/cfe_config_core_internal_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_config_core_internal header
+ */
+
+#include "cfe_config_core_internal.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_Config_Init()
+ * ----------------------------------------------------
+ */
+int32 CFE_Config_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_Config_Init, int32);
+
+    UT_GenStub_Execute(CFE_Config_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_Config_Init, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_Config_SetValue()
+ * ----------------------------------------------------
+ */
+void CFE_Config_SetValue(CFE_ConfigId_t ConfigId, uint32 Value)
+{
+    UT_GenStub_AddParam(CFE_Config_SetValue, CFE_ConfigId_t, ConfigId);
+    UT_GenStub_AddParam(CFE_Config_SetValue, uint32, Value);
+
+    UT_GenStub_Execute(CFE_Config_SetValue, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_Config_SetPointer()
+ * ----------------------------------------------------
+ */
+void CFE_Config_SetPointer(CFE_ConfigId_t ConfigId, const void *Ptr)
+{
+    UT_GenStub_AddParam(CFE_Config_SetPointer, CFE_ConfigId_t, ConfigId);
+    UT_GenStub_AddParam(CFE_Config_SetPointer, const void *, Ptr);
+
+    UT_GenStub_Execute(CFE_Config_SetPointer, Basic, NULL);
+}
+</pre></div>
+</div>
+</section>
+<section id="cfe-es-core-internal-handlers-c">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_es_core_internal_handlers.c</span></code><a class="headerlink" href="#cfe-es-core-internal-handlers-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/core_private/ut-stubs/src/cfe_es_core_internal_handlers.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: cfe_es_core_internal_handlers.c
+**
+** Purpose:
+** Unit test stubs for Executive Service routines
+**
+** Notes:
+** Minimal work is done, only what is required for unit testing
+**
+*/
+
+/*
+** Includes
+*/
+#include &lt;string.h&gt;
+#include "cfe_es_core_internal.h"
+#include "cfe_resourceid.h"
+#include "cfe_resourceid_basevalue.h"
+
+#include "utstubs.h"
+#include "utassert.h"
+
+/*
+ * Assign ID base values for UT
+ */
+enum
+{
+    UT_CFE_ES_CDSBLOCKID_BASE = CFE_RESOURCEID_MAKE_BASE(0x26)
+};
+
+/*
+** Functions
+*/
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_RegisterCDSEx coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_RegisterCDSEx(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_ES_CDSHandle_t *HandlePtr = UT_Hook_GetArgValueByName(Context, "HandlePtr", CFE_ES_CDSHandle_t *);
+    int32               status;
+
+    UT_Stub_GetInt32StatusCode(Context, &amp;status);
+
+    if (status &gt;= 0)
+    {
+        if (UT_Stub_CopyToLocal(UT_KEY(CFE_ES_RegisterCDSEx), HandlePtr, sizeof(*HandlePtr)) &lt; sizeof(*HandlePtr))
+        {
+            *HandlePtr =
+                (CFE_ES_CDSHandle_t)CFE_RESOURCEID_WRAP(CFE_ResourceId_FromInteger(UT_CFE_ES_CDSBLOCKID_BASE + 1));
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="cfe-es-core-internal-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_es_core_internal_stubs.c</span></code><a class="headerlink" href="#cfe-es-core-internal-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/core_private/ut-stubs/src/cfe_es_core_internal_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_es_core_internal header
+ */
+
+#include "cfe_es_core_internal.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CFE_ES_RegisterCDSEx(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_CDS_EarlyInit()
+ * ----------------------------------------------------
+ */
+int32 CFE_ES_CDS_EarlyInit(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_CDS_EarlyInit, int32);
+
+    UT_GenStub_Execute(CFE_ES_CDS_EarlyInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_CDS_EarlyInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_DeleteCDS()
+ * ----------------------------------------------------
+ */
+int32 CFE_ES_DeleteCDS(const char *CDSName, bool CalledByTblServices)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_DeleteCDS, int32);
+
+    UT_GenStub_AddParam(CFE_ES_DeleteCDS, const char *, CDSName);
+    UT_GenStub_AddParam(CFE_ES_DeleteCDS, bool, CalledByTblServices);
+
+    UT_GenStub_Execute(CFE_ES_DeleteCDS, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_DeleteCDS, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_RegisterCDSEx()
+ * ----------------------------------------------------
+ */
+int32 CFE_ES_RegisterCDSEx(CFE_ES_CDSHandle_t *HandlePtr, size_t UserBlockSize, const char *Name, bool CriticalTbl)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_RegisterCDSEx, int32);
+
+    UT_GenStub_AddParam(CFE_ES_RegisterCDSEx, CFE_ES_CDSHandle_t *, HandlePtr);
+    UT_GenStub_AddParam(CFE_ES_RegisterCDSEx, size_t, UserBlockSize);
+    UT_GenStub_AddParam(CFE_ES_RegisterCDSEx, const char *, Name);
+    UT_GenStub_AddParam(CFE_ES_RegisterCDSEx, bool, CriticalTbl);
+
+    UT_GenStub_Execute(CFE_ES_RegisterCDSEx, Basic, UT_DefaultHandler_CFE_ES_RegisterCDSEx);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_RegisterCDSEx, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_TaskMain()
+ * ----------------------------------------------------
+ */
+void CFE_ES_TaskMain(void)
+{
+    UT_GenStub_Execute(CFE_ES_TaskMain, Basic, NULL);
+}
+</pre></div>
+</div>
+</section>
+<section id="cfe-evs-core-internal-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_evs_core_internal_stubs.c</span></code><a class="headerlink" href="#cfe-evs-core-internal-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/core_private/ut-stubs/src/cfe_evs_core_internal_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_evs_core_internal header
+ */
+
+#include "cfe_evs_core_internal.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_EVS_CleanUpApp()
+ * ----------------------------------------------------
+ */
+int32 CFE_EVS_CleanUpApp(CFE_ES_AppId_t AppId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_EVS_CleanUpApp, int32);
+
+    UT_GenStub_AddParam(CFE_EVS_CleanUpApp, CFE_ES_AppId_t, AppId);
+
+    UT_GenStub_Execute(CFE_EVS_CleanUpApp, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_EVS_CleanUpApp, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_EVS_EarlyInit()
+ * ----------------------------------------------------
+ */
+int32 CFE_EVS_EarlyInit(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_EVS_EarlyInit, int32);
+
+    UT_GenStub_Execute(CFE_EVS_EarlyInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_EVS_EarlyInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_EVS_TaskMain()
+ * ----------------------------------------------------
+ */
+void CFE_EVS_TaskMain(void)
+{
+    UT_GenStub_Execute(CFE_EVS_TaskMain, Basic, NULL);
+}
+</pre></div>
+</div>
+</section>
+<section id="cfe-fs-core-internal-handlers-c">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_fs_core_internal_handlers.c</span></code><a class="headerlink" href="#cfe-fs-core-internal-handlers-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/core_private/ut-stubs/src/cfe_fs_core_internal_handlers.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: cfe_fs_core_internal_handlers.c
+**
+** Purpose:
+** Unit test stubs for Executive Service routines
+**
+** Notes:
+** Minimal work is done, only what is required for unit testing
+**
+*/
+
+/*
+** Includes
+*/
+#include &lt;string.h&gt;
+#include "cfe_fs_core_internal.h"
+
+#include "utstubs.h"
+#include "utassert.h"
+
+/*
+** Functions
+*/
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_FS_RunBackgroundFileDump coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_FS_RunBackgroundFileDump(void *UserObj, UT_EntryKey_t FuncKey,
+                                                    const UT_StubContext_t *Context)
+{
+    int32 status;
+    bool  return_value;
+
+    UT_Stub_GetInt32StatusCode(Context, &amp;status);
+
+    return_value = status;
+
+    UT_Stub_SetReturnValue(FuncKey, return_value);
+}
+</pre></div>
+</div>
+</section>
+<section id="cfe-fs-core-internal-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_fs_core_internal_stubs.c</span></code><a class="headerlink" href="#cfe-fs-core-internal-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/core_private/ut-stubs/src/cfe_fs_core_internal_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_fs_core_internal header
+ */
+
+#include "cfe_fs_core_internal.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CFE_FS_RunBackgroundFileDump(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_FS_EarlyInit()
+ * ----------------------------------------------------
+ */
+int32 CFE_FS_EarlyInit(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_FS_EarlyInit, int32);
+
+    UT_GenStub_Execute(CFE_FS_EarlyInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_FS_EarlyInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_FS_RunBackgroundFileDump()
+ * ----------------------------------------------------
+ */
+bool CFE_FS_RunBackgroundFileDump(uint32 ElapsedTime, void *Arg)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_FS_RunBackgroundFileDump, bool);
+
+    UT_GenStub_AddParam(CFE_FS_RunBackgroundFileDump, uint32, ElapsedTime);
+    UT_GenStub_AddParam(CFE_FS_RunBackgroundFileDump, void *, Arg);
+
+    UT_GenStub_Execute(CFE_FS_RunBackgroundFileDump, Basic, UT_DefaultHandler_CFE_FS_RunBackgroundFileDump);
+
+    return UT_GenStub_GetReturnValue(CFE_FS_RunBackgroundFileDump, bool);
+}
+</pre></div>
+</div>
+</section>
+<section id="cfe-sb-core-internal-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_sb_core_internal_stubs.c</span></code><a class="headerlink" href="#cfe-sb-core-internal-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/core_private/ut-stubs/src/cfe_sb_core_internal_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_sb_core_internal header
+ */
+
+#include "cfe_sb_core_internal.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_CleanUpApp()
+ * ----------------------------------------------------
+ */
+int32 CFE_SB_CleanUpApp(CFE_ES_AppId_t AppId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_CleanUpApp, int32);
+
+    UT_GenStub_AddParam(CFE_SB_CleanUpApp, CFE_ES_AppId_t, AppId);
+
+    UT_GenStub_Execute(CFE_SB_CleanUpApp, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_CleanUpApp, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_EarlyInit()
+ * ----------------------------------------------------
+ */
+int32 CFE_SB_EarlyInit(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_EarlyInit, int32);
+
+    UT_GenStub_Execute(CFE_SB_EarlyInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_EarlyInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_TaskMain()
+ * ----------------------------------------------------
+ */
+void CFE_SB_TaskMain(void)
+{
+    UT_GenStub_Execute(CFE_SB_TaskMain, Basic, NULL);
+}
+</pre></div>
+</div>
+</section>
+<section id="cfe-tbl-core-internal-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_tbl_core_internal_stubs.c</span></code><a class="headerlink" href="#cfe-tbl-core-internal-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/core_private/ut-stubs/src/cfe_tbl_core_internal_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_tbl_core_internal header
+ */
+
+#include "cfe_tbl_core_internal.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_CleanUpApp()
+ * ----------------------------------------------------
+ */
+int32 CFE_TBL_CleanUpApp(CFE_ES_AppId_t AppId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_CleanUpApp, int32);
+
+    UT_GenStub_AddParam(CFE_TBL_CleanUpApp, CFE_ES_AppId_t, AppId);
+
+    UT_GenStub_Execute(CFE_TBL_CleanUpApp, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_CleanUpApp, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_EarlyInit()
+ * ----------------------------------------------------
+ */
+int32 CFE_TBL_EarlyInit(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_EarlyInit, int32);
+
+    UT_GenStub_Execute(CFE_TBL_EarlyInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_EarlyInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_TaskMain()
+ * ----------------------------------------------------
+ */
+void CFE_TBL_TaskMain(void)
+{
+    UT_GenStub_Execute(CFE_TBL_TaskMain, Basic, NULL);
+}
+</pre></div>
+</div>
+</section>
+<section id="cfe-time-core-internal-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_time_core_internal_stubs.c</span></code><a class="headerlink" href="#cfe-time-core-internal-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/core_private/ut-stubs/src/cfe_time_core_internal_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_time_core_internal header
+ */
+
+#include "cfe_time_core_internal.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_CleanUpApp()
+ * ----------------------------------------------------
+ */
+int32 CFE_TIME_CleanUpApp(CFE_ES_AppId_t AppId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_CleanUpApp, int32);
+
+    UT_GenStub_AddParam(CFE_TIME_CleanUpApp, CFE_ES_AppId_t, AppId);
+
+    UT_GenStub_Execute(CFE_TIME_CleanUpApp, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_CleanUpApp, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_EarlyInit()
+ * ----------------------------------------------------
+ */
+int32 CFE_TIME_EarlyInit(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_EarlyInit, int32);
+
+    UT_GenStub_Execute(CFE_TIME_EarlyInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_EarlyInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_TaskMain()
+ * ----------------------------------------------------
+ */
+void CFE_TIME_TaskMain(void)
+{
+    UT_GenStub_Execute(CFE_TIME_TaskMain, Basic, NULL);
+}
+</pre></div>
+</div>
+</section>
+<section id="ut-osprintf-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ut_osprintf_stubs.c</span></code><a class="headerlink" href="#ut-osprintf-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/core_private/ut-stubs/src/ut_osprintf_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: ut_osprintf_stubs.c
+**
+** Purpose:
+** Unit test stubs for Operating System routines
+**
+** Notes:
+** Minimal work is done, only what is required for unit testing
+**
+*/
+
+/*
+** Includes
+*/
+
+#include "ut_support.h"
+#include "ut_osprintf_stubs.h"
+
+/*
+** Global variables
+*/
+
+const char *UT_OSP_MESSAGES[] = {
+    [0]                                 = NULL, /* Message 0 is reserved */
+    [UT_OSP_MOUNT_VOLATILE]             = "%s: Error Mounting Volatile(RAM) Volume. EC = %ld\n",
+    [UT_OSP_CORE_RUNTIME]               = "%s: CORE Application %s Had a Runtime Error.\n",
+    [UT_OSP_CORE_APP_CREATE]            = "%s: OS_TaskCreate error creating core App: %s: EC = %ld\n",
+    [UT_OSP_EARLYINIT]                  = "%s: Error returned when calling function: %s: EC = 0x%08X\n",
+    [UT_OSP_FIND_LIBRARY]               = "%s: Could not find Library Init symbol:%s. EC = %d\n",
+    [UT_OSP_POR_MAX_HW_SPECIAL]         = "%s: POWER ON RESET due to max proc resets (HW Spec Cmd).\n",
+    [UT_OSP_CANNOT_CALL_APP_MAIN]       = "%s: Error: Cannot Call from a cFE App Main Task. ID = %d\n",
+    [UT_OSP_FUNCTION_POINTER]           = "%s: bad function pointer ( table entry = %d).\n",
+    [UT_OSP_STARTUP_READ]               = "%s: Error Reading Startup file. EC = %ld\n",
+    [UT_OSP_PROC_RESET_COMMANDED]       = "%s: PROCESSOR RESET called from CFE_ES_ResetCFE (Commanded).\n",
+    [UT_OSP_MUTEX_TAKE]                 = "%s: SharedData Mutex Take Err Stat=%ld,Func=%s,Line=%d\n",
+    [UT_OSP_STARTUP_SYNC_FAIL_1]        = "%s: Startup Sync failed - Applications may not have all started\n",
+    [UT_OSP_SYSTEM_LOG_FULL]            = "Warning: System Log full, log entry discarded.\n",
+    [UT_OSP_FILE_LINE_TOO_LONG]         = "%s: **WARNING** File Line %u is malformed: %u bytes, %u tokens.\n",
+    [UT_OSP_SHARED_LIBRARY_INIT]        = "%s: Load Shared Library Init Error = %ld\n",
+    [UT_OSP_REMOVE_VOLATILE]            = "%s: Error Removing Volatile(RAM) Volume. EC = %ld\n",
+    [UT_OSP_POR_OTHER]                  = "%s: POWER ON RESET due to other cause (See Subtype).\n",
+    [UT_OSP_DETERMINE_BLOCKS]           = "%s: Error Determining Blocks Free on Volume. EC = %ld\n",
+    [UT_OSP_STARTUP_SYNC_FAIL_2]        = "%s: Startup Sync failed - Applications may not have all initialized\n",
+    [UT_OSP_LIBRARY_SLOTS]              = "%s: No free library slots available\n",
+    [UT_OSP_EXTRACT_FILENAME_UT]        = "%s: Unable to extract filename from path: %s.\n",
+    [UT_OSP_APP_PATH_FILE_TOO_LONG]     = "%s: Application path plus file name length (%d) exceeds max allowed (%d)\n",
+    [UT_OSP_REFORMAT_VOLATILE]          = "%s: Error Re-Formatting Volatile(RAM) Volume. EC = %ld\n",
+    [UT_OSP_EXTRACT_FILENAME_UT55]      = "%s: Could not load file:%s. EC = %ld\n",
+    [UT_OSP_EXTRACT_FILENAME_UT46]      = "%s: Unable to extract filename from path: %s.\n",
+    [UT_OSP_NO_FREE_APP_SLOTS]          = "%s: No free application slots available\n",
+    [UT_OSP_EXTRACT_FILENAME_UT57]      = "%s: Unable to extract filename from path: %s.\n",
+    [UT_OSP_MUTEX_GIVE]                 = "%s: SharedData Mutex Give Err Stat=%ld,Func=%s,Line=%d\n",
+    [UT_OSP_CANNOT_FIND_SYMBOL]         = "%s: Could not find symbol:%s. EC = %ld\n",
+    [UT_OSP_INIT_VOLATILE]              = "%s: Error Initializing Volatile(RAM) Volume. EC = %ld\n",
+    [UT_OSP_APP_INIT]                   = "%s: Application Init Failed,RC=0x%08X\n",
+    [UT_OSP_POR_MAX_PROC_RESETS]        = "%s: POWER ON RESET due to max proc resets (Commanded).\n",
+    [UT_OSP_CANNOT_RESTART_APP]         = "%s: Cannot Restart Application %s, It is not running.\n",
+    [UT_OSP_INSUFF_FREE_SPACE]          = "%s: Insufficient Free Space on Volatile Disk, Reformatting.\n",
+    [UT_OSP_LOAD_SHARED_LIBRARY]        = "%s: Could not load cFE Shared Library\n",
+    [UT_OSP_POR_HW_SPECIAL]             = "%s: POWER ON RESET due to HW Special Cmd (Hw Spec Cmd).\n",
+    [UT_OSP_APP_CREATE]                 = "%s: AppCreate Error: TaskCreate %s Failed. EC = %ld!\n",
+    [UT_OSP_CREATE_VOLATILE]            = "%s: Error Creating Volatile(RAM) Volume. EC = %ld\n",
+    [UT_OSP_MODULE_UNLOAD_FAILED]       = "%s: Failed to unload: %s. EC = %ld\n",
+    [UT_OSP_POR_COMMANDED]              = "%s: POWERON RESET called from CFE_ES_ResetCFE (Commanded).\n",
+    [UT_OSP_REMOUNT_VOLATILE]           = "%s: Error Re-Mounting Volatile(RAM) Volume. EC = %ld\n",
+    [UT_OSP_CORE_APP_EXIT]              = "%s: Cannot Exit CORE Application %s\n",
+    [UT_OSP_ES_APP_STARTUP_OPEN]        = "%s: Opened ES App Startup file: %s\n",
+    [UT_OSP_CORE_INIT]                  = "%s: CORE Application %s Had an Init Error.\n",
+    [UT_OSP_PROC_RESET_MAX_HW_SPECIAL]  = "%s: PROCESSOR RESET due to Hardware Special Command (HW Spec Cmd).\n",
+    [UT_OSP_COMMAND_PIPE]               = "%s: Error reading cmd pipe,RC=%ld\n",
+    [UT_OSP_UNMOUNT_VOLATILE]           = "%s: Error Un-Mounting Volatile(RAM) Volume. EC = %ld\n",
+    [UT_OSP_TABLE_SLOT_IN_USE]          = "%s: Error: ES_TaskTable slot in use at task creation!\n",
+    [UT_OSP_CANNOT_OPEN_ES_APP_STARTUP] = "%s: Error, Can't Open ES App Startup file: %s, EC = %ld\n",
+    [UT_OSP_EXTRACT_FILENAME_CF]        = "%s: Unable to extract filename from path: %s.\n",
+    [UT_OSP_INVALID_LOG_MODE]           = "Warning: Invalid System Log mode, log entry discarded.\n",
+    [UT_OSP_LIB_PATH_FILE_TOO_LONG]     = "%s: Library path plus file name length (%d) exceeds max allowed (%d)\n",
+    [UT_OSP_DECOMPRESS_APP]             = "%s: Unable to decompress Application File: %s\n",
+    [UT_OSP_DECOMPRESS_LIBRARY]         = "%s: Unable to decompress library file: %s\n",
+    [UT_OSP_GET_APP_ID]                 = "%s: Error Calling CFE_ES_GetAppID. Task ID = %d, RC = 0x%08X\n",
+    [UT_OSP_NO_FREE_CORE_APP_SLOTS]     = "%s: Error, No free application slots available for CORE App!\n",
+    [UT_OSP_RECORD_USED]                = "%s: Error: ES_TaskTable slot for ID %lx in use at task creation!\n",
+    [UT_OSP_TASKEXIT_BAD_CONTEXT]       = "%s: Called from invalid task context\n",
+    [UT_OSP_BACKGROUND_TAKE]            = "%s: Failed to take background sem: %08lx\n",
+    [UT_OSP_INVALID_ID]                 = "%s: Invalid Application ID received, AppID = %lu\n",
+    [UT_OSP_RESTART_NO_FILE]            = "%s: Cannot Restart Application %s, File %s does not exist.\n",
+    [UT_OSP_CREATECHILD_FROM_CHILD]     = "%s: Error: Cannot call from a Child Task (for Task '%s').\n",
+    [UT_OSP_DELETECHID_MAIN_TASK]       = "%s: Error: Task %lu is a cFE Main Task.\n",
+    [UT_OSP_POOLCREATE_TOO_SMALL]       = "%s: Pool size(%lu) too small, need &gt;=%lu bytes\n",
+    [UT_OSP_GETPOOL_BAD_HANDLE]         = "%s: Err:Bad handle(0x%08lX) AppId=%lu\n",
+    [UT_OSP_PUTPOOL_BAD_HANDLE]         = "%s: Err:Invalid Memory Handle (0x%08lX).\n",
+    [UT_OSP_FORMAT_VOLATILE]            = "%s: Formatting Volatile(RAM) Volume.\n",
+    [UT_OSP_RELOAD_NO_FILE]             = "%s: Cannot Reload Application %s, File %s does not exist.\n",
+    [UT_OSP_EXTERNAL_APP_EXIT]          = "%s: Application %s called CFE_ES_ExitApp\n",
+};
+</pre></div>
+</div>
+</section>
+<section id="ut-support-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ut_support.c</span></code><a class="headerlink" href="#ut-support-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/core_private/ut-stubs/src/ut_support.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: ut_support.c
+**
+** Purpose:
+** Unit test stubs
+**
+** Notes:
+** Minimal work is done, only what is required for unit testing
+**
+*/
+
+/*
+** Includes
+*/
+#include "ut_support.h"
+#include "cfe_core_resourceid_basevalues.h"
+
+#include &lt;string.h&gt;
+
+/*
+** Global variables
+*/
+uint8 UT_Endianess;
+
+static char           UT_appname[80];
+static char           UT_subsys[5];
+static CFE_ES_AppId_t UT_AppID;
+static uint32         UT_LastCDSSize = 0;
+
+typedef union
+{
+    long long int AlignLong;
+    long double   AlignDbl;
+    void *        AlignPtr;
+    char          Content[2 * CFE_PLATFORM_ES_MAX_BLOCK_SIZE];
+} UT_Buffer_t;
+
+static UT_Buffer_t UT_CFE_ES_MemoryPool;
+static UT_Buffer_t UT_CDS_Data;
+static UT_Buffer_t UT_SyslogBuffer;
+static UT_Buffer_t UT_PrintfBuffer;
+static union
+{
+    UT_Buffer_t        Buff;
+    CFE_ES_ResetData_t ResetData;
+} UT_CFE_ES_ResetData;
+
+static uint16 UT_SendEventHistory[UT_EVENT_HISTORY_SIZE];
+static uint16 UT_SendTimedEventHistory[UT_EVENT_HISTORY_SIZE];
+static uint16 UT_SendEventAppIDHistory[UT_EVENT_HISTORY_SIZE * 10];
+
+int32 dummy_function(void);
+
+/*
+** Functions
+*/
+/*
+** Initialize unit test
+*/
+void UT_Init(const char *subsys)
+{
+    size_t i;
+
+    /* Copy the application name for later use */
+    strncpy(UT_subsys, subsys, sizeof(UT_subsys) - 1);
+    UT_subsys[sizeof(UT_subsys) - 1] = 0;
+    snprintf(UT_appname, 80, "ut_cfe_%s", subsys);
+
+    /* Convert to upper case */
+    for (i = 0; i &lt; strlen(UT_subsys); ++i)
+    {
+        if (UT_subsys[i] &gt;= 'a' &amp;&amp; UT_subsys[i] &lt;= 'z')
+        {
+            UT_subsys[i] = (UT_subsys[i] - 'a') + 'A';
+        }
+    }
+
+    UT_InitData();
+
+    /*
+     * NOTE: There are some UT cases in TBL that are dependent on
+     * the endianness of the local CPU.  This "endian check" exists
+     * to provide hints to the test code.
+     *
+     * All endian-specific code should be replaced with endian-neutral
+     * code in future versions.  This check will be removed in a future
+     * version once that is complete.  No new test code should use this.
+     */
+    int32 EndianCheck = 0x01020304;
+
+    if ((*(char *)&amp;EndianCheck) == 0x04)
+    {
+        UT_Endianess = UT_LITTLE_ENDIAN;
+    }
+    else
+    {
+        UT_Endianess = UT_BIG_ENDIAN;
+    }
+}
+
+/*
+** Initialize unit test variables
+*/
+void UT_InitData(void)
+{
+    /*
+     * Purge all entries in the entire stub table
+     */
+    UT_ResetState(0);
+
+    /*
+     * Set up entries to capture Events and Syslog writes
+     * These are frequently needed by many tests
+     */
+    UT_SyslogBuffer.AlignLong = 0;
+    UT_SetDataBuffer(UT_KEY(CFE_ES_WriteToSysLog), &amp;UT_SyslogBuffer, sizeof(UT_SyslogBuffer), false);
+
+    UT_PrintfBuffer.AlignLong = 0;
+    UT_SetDataBuffer(UT_KEY(OS_printf), &amp;UT_PrintfBuffer, sizeof(UT_PrintfBuffer), false);
+
+    /*
+     * Set up the CFE_ES reset area
+     */
+    UT_SetDataBuffer(UT_KEY(CFE_PSP_GetResetArea), &amp;UT_CFE_ES_ResetData, sizeof(UT_CFE_ES_ResetData), false);
+
+    /*
+     * Set up the CDS area
+     */
+    UT_SetCDSSize(UT_LastCDSSize);
+
+    /*
+     * Set up for the CFE_SB_ReceiveBuffer() call.
+     *
+     * The existing test cases assume that this will return success once,
+     * followed by a timeout response.
+     *
+     * Specific test cases may provide an actual message buffer to return for
+     * the first call, or they may override this default behavior entirely.
+     */
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_ReceiveBuffer), 2, CFE_SB_TIME_OUT);
+
+    /*
+     * Set up CFE_ES_GetAppName() and friends
+     * This should return the UT_appname
+     */
+    UT_SetDataBuffer(UT_KEY(CFE_ES_GetAppName), (uint8 *)UT_appname, sizeof(UT_appname), false);
+
+    /*
+     * Set up CFE_ES_GetAppID() to return the equivalent of AppID 1 by default
+     */
+    UT_SetAppID(CFE_ES_APPID_C(CFE_ResourceId_FromInteger(CFE_ES_APPID_BASE + 1)));
+
+    /*
+     * Reset the OSAL stubs to the default state
+     */
+    OS_API_Init();
+
+    UT_ClearEventHistory();
+    UT_ResetPoolBufferIndex();
+}
+
+void UT_ResetCDS(void)
+{
+    memset(&amp;UT_CDS_Data, 0, sizeof(UT_CDS_Data));
+}
+
+/*
+** Reset pool buffer index
+*/
+void UT_ResetPoolBufferIndex(void)
+{
+    /*
+     * Initialize the buffer which ES mempool will allocate from
+     * Set the whole memory space to a pattern.
+     */
+    UT_ResetState(UT_KEY(CFE_ES_GetPoolBuf));
+    UT_SetDataBuffer(UT_KEY(CFE_ES_GetPoolBuf), &amp;UT_CFE_ES_MemoryPool, sizeof(UT_CFE_ES_MemoryPool), false);
+}
+
+/*
+** Sets up the MSG stubs in preparation to invoke a "TaskPipe" dispatch function
+**
+** This is part of the general UT_CallTaskPipe process, but split off to support use cases
+** where the task pipe is reached through other means.
+*/
+void UT_SetupBasicMsgDispatch(const UT_TaskPipeDispatchId_t *DispatchReq, CFE_MSG_Size_t MsgSize,
+                              bool ExpectFailureEvent)
+{
+    if (DispatchReq != NULL)
+    {
+        /* Set up for the typical task pipe related calls */
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), (void *)&amp;DispatchReq-&gt;MsgId, sizeof(DispatchReq-&gt;MsgId), true);
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &amp;MsgSize, sizeof(MsgSize), true);
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), (void *)&amp;DispatchReq-&gt;CommandCode,
+                         sizeof(DispatchReq-&gt;CommandCode), true);
+
+        /* If a failure event is being set up, also set for MsgId/FcnCode retrieval as part of failure event reporting
+         */
+        if (ExpectFailureEvent)
+        {
+            UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), (void *)&amp;DispatchReq-&gt;MsgId, sizeof(DispatchReq-&gt;MsgId), true);
+            UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), (void *)&amp;DispatchReq-&gt;CommandCode,
+                             sizeof(DispatchReq-&gt;CommandCode), true);
+        }
+    }
+    else
+    {
+        /* Clear any stub config that may have been already set */
+        UT_ResetState(UT_KEY(CFE_MSG_GetMsgId));
+        UT_ResetState(UT_KEY(CFE_MSG_GetSize));
+        UT_ResetState(UT_KEY(CFE_MSG_GetFcnCode));
+    }
+}
+
+/*
+** Calls the specified "task pipe" function
+**
+** This first sets up the various stubs according to the test case,
+** then invokes the pipe function.
+*/
+void UT_CallTaskPipe(void (*TaskPipeFunc)(const CFE_SB_Buffer_t *), const CFE_MSG_Message_t *MsgPtr, size_t MsgSize,
+                     UT_TaskPipeDispatchId_t DispatchId)
+{
+    union
+    {
+        CFE_SB_Buffer_t Buf;
+        uint8           Bytes[CFE_MISSION_SB_MAX_SB_MSG_SIZE];
+    } SBBuf;
+
+    /* Copy message into aligned SB buffer */
+    memcpy(SBBuf.Bytes, MsgPtr, MsgSize);
+
+    /* Passing MsgSize == 0 indicates intent to perform a size validation failure */
+    UT_SetupBasicMsgDispatch(&amp;DispatchId, MsgSize, (MsgSize == 0));
+
+    /*
+     * Finally, call the actual task pipe requested.
+     */
+    TaskPipeFunc(&amp;SBBuf.Buf);
+
+    /*
+     * UN-set the stub config, as some values may point to values on stack.
+     * This removes any pointers to stack values that may not have been consumed during the call
+     */
+    UT_SetupBasicMsgDispatch(NULL, 0, false);
+}
+
+int32 UT_SoftwareBusSnapshotHook(void *UserObj, int32 StubRetcode, uint32 CallCount, const UT_StubContext_t *Context)
+{
+    UT_SoftwareBusSnapshot_Entry_t *Snapshot = UserObj;
+    const CFE_MSG_Message_t *       MsgPtr   = UT_Hook_GetArgValueByName(Context, "MsgPtr", CFE_MSG_Message_t *);
+
+    if (MsgPtr != NULL &amp;&amp; Snapshot != NULL)
+    {
+        ++Snapshot-&gt;Count;
+        if (Snapshot-&gt;SnapshotSize &gt; 0 &amp;&amp; Snapshot-&gt;SnapshotBuffer != NULL)
+        {
+            memcpy(Snapshot-&gt;SnapshotBuffer, &amp;MsgPtr-&gt;Byte[Snapshot-&gt;SnapshotOffset], Snapshot-&gt;SnapshotSize);
+        }
+    }
+
+    return StubRetcode;
+}
+
+/*
+** Set the application ID returned by unit test stubs
+*/
+void UT_SetAppID(CFE_ES_AppId_t AppID_in)
+{
+    UT_AppID = AppID_in;
+    UT_SetDataBuffer(UT_KEY(CFE_ES_GetAppID), (uint8 *)&amp;UT_AppID, sizeof(UT_AppID), false);
+}
+
+/*
+** Set the return code of CFE_PSP_GetResetArea and the data validation
+** signature
+*/
+void UT_SetStatusBSPResetArea(int32 status, uint32 Signature, uint32 ClockSignal)
+{
+    UT_CFE_ES_ResetData.ResetData.TimeResetVars.Signature   = Signature;
+    UT_CFE_ES_ResetData.ResetData.TimeResetVars.ClockSignal = ClockSignal;
+    if (status != 0)
+    {
+        UT_SetDefaultReturnValue(UT_KEY(CFE_PSP_GetResetArea), status);
+    }
+    else
+    {
+        UT_ClearDefaultReturnValue(UT_KEY(CFE_PSP_GetResetArea));
+    }
+}
+
+/*
+** Set the contents of the buffer to read
+*/
+void UT_SetReadBuffer(void *Buff, int NumBytes)
+{
+    UT_SetDataBuffer(UT_KEY(OS_read), Buff, NumBytes, true);
+}
+
+/*
+** Set the contents of the header to read
+*/
+void UT_SetReadHeader(void *Hdr, int NumBytes)
+{
+    UT_SetDataBuffer(UT_KEY(CFE_FS_ReadHeader), Hdr, NumBytes, true);
+}
+
+/*
+** Set the dummy function return code
+*/
+void UT_SetDummyFuncRtn(int Return)
+{
+    UT_SetDefaultReturnValue(UT_KEY(dummy_function), Return);
+}
+
+/*
+** Set the size of the ES reset area
+*/
+void UT_SetSizeofESResetArea(int32 Size)
+{
+    UT_ResetState(UT_KEY(CFE_PSP_GetResetArea));
+    if (Size &gt; 0)
+    {
+        if (Size &gt; sizeof(UT_CFE_ES_ResetData))
+        {
+            UtAssert_Abort("Reset area size too large");
+            Size = sizeof(UT_CFE_ES_ResetData);
+        }
+        UT_SetDataBuffer(UT_KEY(CFE_PSP_GetResetArea), &amp;UT_CFE_ES_ResetData, Size, false);
+    }
+}
+
+/*
+** Set the CDS size returned by the BSP
+*/
+uint8 *UT_SetCDSSize(int32 Size)
+{
+    UT_ResetState(UT_KEY(CFE_PSP_GetCDSSize));
+    UT_ResetState(UT_KEY(CFE_PSP_ReadFromCDS));
+    UT_ResetState(UT_KEY(CFE_PSP_WriteToCDS));
+    if (Size &lt;= 0)
+    {
+        UT_LastCDSSize = 0;
+        return NULL;
+    }
+
+    if (Size &gt; sizeof(UT_CDS_Data))
+    {
+        UtAssert_Abort("Size of CDS too large");
+        Size = sizeof(UT_CDS_Data);
+    }
+    UT_SetDataBuffer(UT_KEY(CFE_PSP_GetCDSSize), &amp;UT_CDS_Data, Size, false);
+    UT_SetDataBuffer(UT_KEY(CFE_PSP_ReadFromCDS), &amp;UT_CDS_Data, Size, false);
+    UT_SetDataBuffer(UT_KEY(CFE_PSP_WriteToCDS), &amp;UT_CDS_Data, Size, false);
+    UT_LastCDSSize = Size;
+    return (uint8 *)UT_CDS_Data.Content;
+}
+
+/*
+** Set BSP time
+*/
+void UT_SetBSP_Time(uint32 seconds, uint32 microsecs)
+{
+    OS_time_t BSP_Time;
+
+    BSP_Time = OS_TimeAssembleFromNanoseconds(seconds, microsecs * 1000);
+
+    UT_SetDataBuffer(UT_KEY(CFE_PSP_GetTime), &amp;BSP_Time, sizeof(BSP_Time), true);
+}
+
+void UT_ClearEventHistory(void)
+{
+    UT_ResetState(UT_KEY(CFE_EVS_SendEvent));
+    UT_ResetState(UT_KEY(CFE_EVS_SendEventWithAppID));
+    UT_ResetState(UT_KEY(CFE_EVS_SendTimedEvent));
+    UT_SetDataBuffer(UT_KEY(CFE_EVS_SendEvent), UT_SendEventHistory, sizeof(UT_SendEventHistory), false);
+    UT_SetDataBuffer(UT_KEY(CFE_EVS_SendTimedEvent), UT_SendTimedEventHistory, sizeof(UT_SendTimedEventHistory), false);
+    UT_SetDataBuffer(UT_KEY(CFE_EVS_SendEventWithAppID), UT_SendEventAppIDHistory, sizeof(UT_SendEventAppIDHistory),
+                     false);
+}
+
+static bool UT_CheckEventHistoryFromFunc(UT_EntryKey_t Func, uint16 EventIDToSearchFor)
+{
+    bool    Result = false;
+    size_t  Position;
+    size_t  MaxSize;
+    void *  TempBuff;
+    uint16 *EvBuf;
+
+    UT_GetDataBuffer(Func, &amp;TempBuff, &amp;MaxSize, &amp;Position);
+    if (TempBuff != NULL &amp;&amp; MaxSize &gt; 0)
+    {
+        EvBuf = TempBuff;
+        Position /= sizeof(*EvBuf);
+        while (Position &gt; 0)
+        {
+            if (*EvBuf == EventIDToSearchFor)
+            {
+                Result = true;
+                break;
+            }
+            ++EvBuf;
+            --Position;
+        }
+    }
+
+    return Result;
+}
+
+/*
+** Search the event history for a specified event ID
+*/
+bool UT_EventIsInHistory(uint16 EventIDToSearchFor)
+{
+    return (UT_CheckEventHistoryFromFunc(UT_KEY(CFE_EVS_SendEvent), EventIDToSearchFor) ||
+            UT_CheckEventHistoryFromFunc(UT_KEY(CFE_EVS_SendEventWithAppID), EventIDToSearchFor) ||
+            UT_CheckEventHistoryFromFunc(UT_KEY(CFE_EVS_SendTimedEvent), EventIDToSearchFor));
+}
+
+/*
+** Return number of events issued
+*/
+uint16 UT_GetNumEventsSent(void)
+{
+    uint16 Total = 0;
+    size_t Position;
+    size_t MaxSize;
+    void * EvBuf;
+
+    UT_GetDataBuffer(UT_KEY(CFE_EVS_SendEvent), &amp;EvBuf, &amp;MaxSize, &amp;Position);
+    Total += Position / sizeof(uint16);
+    UT_GetDataBuffer(UT_KEY(CFE_EVS_SendEventWithAppID), &amp;EvBuf, &amp;MaxSize, &amp;Position);
+    Total += Position / sizeof(uint16);
+    UT_GetDataBuffer(UT_KEY(CFE_EVS_SendTimedEvent), &amp;EvBuf, &amp;MaxSize, &amp;Position);
+    Total += Position / sizeof(uint16);
+
+    return Total;
+}
+
+/*
+** Display the contents of a packet
+*/
+void UT_DisplayPkt(CFE_MSG_Message_t *MsgPtr, size_t size)
+{
+    uint8 *BytePtr = MsgPtr-&gt;Byte;
+    size_t i;
+    size_t BufSize = UT_MAX_MESSAGE_LENGTH;
+    char   DisplayMsg[UT_MAX_MESSAGE_LENGTH];
+    char * msgPtr = DisplayMsg;
+
+    DisplayMsg[0] = '\0';
+
+    for (i = 0; i &lt; size &amp;&amp; BufSize &gt; 3; i++)
+    {
+        snprintf(msgPtr, BufSize, "%02x ", *BytePtr);
+        msgPtr += 3;
+        BufSize -= 3;
+        ++BytePtr;
+    }
+
+    UtPrintf("%s", DisplayMsg);
+}
+
+CFE_ES_ResetData_t *UT_GetResetDataPtr(void)
+{
+    return &amp;UT_CFE_ES_ResetData.ResetData;
+}
+
+/*
+** Compare two strings using printf-style conversion specifiers.
+**
+** Determines if the TestStr could have been an output from a printf-style call
+** using FormatStr.  Common conversions specifiers in FormatStr are recognized:
+** %c, %d, %f, %F, %g, %G, %i, %u, %s, %p, %x, %X, and %%
+**
+** To keep it simple this just skips over the conversion specifier entirely,
+** it does not validate whether the content of the string could have come from
+** that conversion specifier or not.  In essence any conversion specifier is
+** treated as a wildcard that matches any string.
+**
+** HOWEVER - this could be enhanced in the future, if necessary, to actually
+** perform that validation by e.g. passing the string to "sscanf()" or similar
+** and checking if the reverse conversion was successful.
+**
+** NOTE this logic is not foolproof - particularly where %s is in use, as the
+** content of the string could alias the next part of the format string.
+** This does not seem to be an issue for the strings generated by CFE.
+**
+** But on the upside this concession avoids a far more complicated issue of
+** needing a fully-fledged implementation of printf in the OS_printf stub.
+*/
+static int UT_StrCmpFormatStr(const char *FormatStr, const char *TestStr, uint32 FormatLength, uint32 TestLength)
+{
+    const char *ChunkStart;
+    const char *ChunkEnd;
+    const char *TestStart;
+    int         WildCard;
+    int         MatchGood;
+    size_t      ChunkLen;
+
+    /* Step through each character in both strings */
+    ChunkStart = FormatStr;
+    TestStart  = TestStr;
+    WildCard   = 1;
+    MatchGood  = 1;
+    while (FormatLength &gt; 0)
+    {
+        if (*ChunkStart == '%')
+        {
+            /* At a Conversion specifier - Find the END of it */
+            do
+            {
+                --FormatLength;
+                ++ChunkStart;
+            } while (FormatLength &gt; 0 &amp;&amp; strchr("%cdfFgGiuspxX ", *ChunkStart) == NULL);
+
+            if (FormatLength == 0)
+            {
+                /* Invalid format string */
+                MatchGood = 0;
+                break;
+            }
+
+            if (*ChunkStart != '%')
+            {
+                WildCard = 1;
+                ++ChunkStart;
+                --FormatLength;
+            }
+            else if (TestLength &gt; 0 &amp;&amp; *TestStart == '%')
+            {
+                MatchGood = 1;
+                ++TestStart;
+                --TestLength;
+            }
+            else
+            {
+                /* Insufficient length on TestString */
+                MatchGood = 0;
+                break;
+            }
+        }
+        else
+        {
+            /* Matchable content - Find the NEXT conversion specifier in the format string */
+            MatchGood = 0;
+            ChunkEnd  = memchr(ChunkStart, '%', FormatLength);
+            if (ChunkEnd != NULL)
+            {
+                ChunkLen = ChunkEnd - ChunkStart;
+            }
+            else
+            {
+                ChunkLen = FormatLength;
+            }
+
+            while (TestLength &gt;= ChunkLen)
+            {
+                if (memcmp(ChunkStart, TestStart, ChunkLen) == 0)
+                {
+                    MatchGood = 1;
+                    break;
+                }
+                if (!WildCard)
+                {
+                    break;
+                }
+                ++TestStart;
+                --TestLength;
+            }
+
+            if (!MatchGood)
+            {
+                break;
+            }
+
+            WildCard = 0;
+            ChunkStart += ChunkLen;
+            TestStart += ChunkLen;
+            TestLength -= ChunkLen;
+            FormatLength -= ChunkLen;
+        }
+    }
+
+    return MatchGood;
+}
+
+/*
+ * A string comparison function that will match exact strings only
+ * (Printf style conversion strings are compared literally)
+ */
+static int UT_StrCmpExact(const char *RefStr, const char *TestStr, uint32 RefLength, uint32 TestLength)
+{
+    return (RefLength == TestLength &amp;&amp; memcmp(RefStr, TestStr, RefLength) == 0);
+}
+
+static uint32 UT_GetMessageCount(const char *Msg, UT_Buffer_t *Buf,
+                                 int (*Comparator)(const char *, const char *, uint32, uint32))
+{
+    uint32 Count  = 0;
+    uint32 MsgLen = strlen(Msg);
+    char * Start  = Buf-&gt;Content;
+    char * End;
+
+    while (MsgLen &gt; 0 &amp;&amp; Msg[MsgLen - 1] == '\n')
+    {
+        --MsgLen;
+    }
+
+    while (1)
+    {
+        End = strchr(Start, '\n');
+        if (End == NULL)
+        {
+            End = Start + strlen(Start);
+        }
+
+        if (Start == End)
+        {
+            break;
+        }
+
+        if (Comparator(Msg, Start, MsgLen, End - Start))
+        {
+            ++Count;
+        }
+
+        if (*End == 0)
+        {
+            break;
+        }
+
+        Start = End + 1;
+    }
+
+    return Count;
+}
+
+uint32 UT_SyslogIsInHistory(const char *LogMsgToSearchFor)
+{
+    return UT_GetMessageCount(LogMsgToSearchFor, &amp;UT_SyslogBuffer, UT_StrCmpExact);
+}
+
+uint32 UT_PrintfIsInHistory(const char *MsgToSearchFor)
+{
+    return UT_GetMessageCount(MsgToSearchFor, &amp;UT_PrintfBuffer, UT_StrCmpFormatStr);
+}
+
+bool CFE_UtAssert_SuccessCheck_Impl(CFE_Status_t Status, UtAssert_CaseType_t CaseType, const char *File, uint32 Line,
+                                    const char *Text)
+{
+    bool Result = (Status &gt;= CFE_SUCCESS);
+
+    if (!Result || (CaseType != UTASSERT_CASETYPE_TSF &amp;&amp; CaseType != UTASSERT_CASETYPE_TTF))
+    {
+        UtAssertEx(Result, CaseType, File, Line, "%s (0x%lx) == CFE_SUCCESS", Text, (unsigned long)Status);
+    }
+
+    return Result;
+}
+
+bool CFE_UtAssert_MessageCheck_Impl(bool Status, const char *File, uint32 Line, const char *Desc,
+                                    const char *FormatString)
+{
+    char        ScrubbedFormat[256];
+    const char *EndPtr;
+    size_t      FormatLen;
+
+    /* Locate the actual end of the string, but limited to length of local buffer */
+    /* Reserve two extra chars for quotes */
+    EndPtr = memchr(FormatString, 0, sizeof(ScrubbedFormat) - 3);
+    if (EndPtr != NULL)
+    {
+        FormatLen = EndPtr - FormatString;
+    }
+    else
+    {
+        FormatLen = sizeof(ScrubbedFormat) - 3;
+    }
+
+    /* Check for a newline within that range, and if present, end the string there instead */
+    EndPtr = memchr(FormatString, '\n', FormatLen);
+    if (EndPtr != NULL)
+    {
+        FormatLen = EndPtr - FormatString;
+    }
+
+    /* Need to make a copy, as the input string is "const" */
+    ScrubbedFormat[0] = '\'';
+    memcpy(&amp;ScrubbedFormat[1], FormatString, FormatLen);
+    ScrubbedFormat[FormatLen + 1] = '\'';
+    ScrubbedFormat[FormatLen + 2] = 0;
+
+    return UtAssert_GenericSignedCompare(Status, UtAssert_Compare_GT, 0, UtAssert_Radix_DECIMAL, File, Line, Desc,
+                                         ScrubbedFormat, "");
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../inc/index.html" class="btn btn-neutral float-left" title="inc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../../es/index.html" class="btn btn-neutral float-right" title="es" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

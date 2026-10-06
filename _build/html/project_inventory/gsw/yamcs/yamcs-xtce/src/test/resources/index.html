@@ -1,0 +1,2548 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>resources &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../search.html" />
+    <link rel="next" title="yamcs-studio" href="../../../../../yamcs-studio/index.html" />
+    <link rel="prev" title="xtce" href="../java/org/yamcs/xtce/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../index.html">gsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">gsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">yamcs-xtce</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">test</a></li>
+      <li class="breadcrumb-item active">resources</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../_sources/project_inventory/gsw/yamcs/yamcs-xtce/src/test/resources/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="resources">
+<h1>resources<a class="headerlink" href="#resources" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-xtce/src/test/resources/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="basetype-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">basetype.xml</span></code><a class="headerlink" href="#basetype-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-xtce/src/test/resources/basetype.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;SpaceSystem name="Example"
+	xmlns="http://www.omg.org/spec/XTCE/20180204"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	shortDescription="Example XTCE to illustrate using the baseType attribute"&gt;
+
+	&lt;TelemetryMetaData&gt;
+		&lt;ParameterTypeSet&gt;
+			&lt;FloatParameterType name="latitude_t"
+				baseType="Common/float64_msb_t"
+				shortDescription="A type to represent a latitude value"&gt;
+				&lt;UnitSet&gt;
+					&lt;Unit description="Degrees of Mercator projection latitude"&gt;degrees&lt;/Unit&gt;
+				&lt;/UnitSet&gt;
+				&lt;ValidRange minInclusive="-90.0" maxInclusive="90.0" /&gt;
+			&lt;/FloatParameterType&gt;
+			&lt;FloatParameterType name="latitude_rad_t"
+				baseType="Common/float64_msb_t"
+				shortDescription="A type to represent a latitude value"&gt;
+				&lt;UnitSet&gt;
+					&lt;Unit description="Degrees of Mercator projection latitude"&gt;degrees&lt;/Unit&gt;
+				&lt;/UnitSet&gt;
+				&lt;FloatDataEncoding&gt;
+					&lt;DefaultCalibrator name="deg_to_rad"&gt;
+						&lt;PolynomialCalibrator&gt;
+							&lt;Term coefficient="0" exponent="0" /&gt;
+							&lt;Term coefficient=".01745329251994329576" exponent="1" /&gt;
+						&lt;/PolynomialCalibrator&gt;
+					&lt;/DefaultCalibrator&gt;
+				&lt;/FloatDataEncoding&gt;
+			&lt;/FloatParameterType&gt;
+			&lt;FloatParameterType name="test_lsb"
+				baseType="Common/float64_lsb_t"&gt;
+				&lt;UnitSet&gt;
+					&lt;Unit description="Degrees of Mercator projection latitude"&gt;degrees&lt;/Unit&gt;
+				&lt;/UnitSet&gt;
+				&lt;FloatDataEncoding&gt;
+					&lt;DefaultCalibrator name="deg_to_rad"&gt;
+						&lt;PolynomialCalibrator&gt;
+							&lt;Term coefficient="0" exponent="0" /&gt;
+							&lt;Term coefficient=".01745329251994329576" exponent="1" /&gt;
+						&lt;/PolynomialCalibrator&gt;
+					&lt;/DefaultCalibrator&gt;
+				&lt;/FloatDataEncoding&gt;
+			&lt;/FloatParameterType&gt;
+		&lt;/ParameterTypeSet&gt;
+		&lt;ParameterSet&gt;
+			&lt;Parameter parameterTypeRef="latitude_t" name="latitude" /&gt;
+		&lt;/ParameterSet&gt;
+		&lt;ContainerSet&gt;
+			&lt;SequenceContainer name="telemetry"&gt;
+				&lt;EntryList&gt;
+					&lt;ParameterRefEntry parameterRef="latitude" /&gt;
+				&lt;/EntryList&gt;
+			&lt;/SequenceContainer&gt;
+		&lt;/ContainerSet&gt;
+	&lt;/TelemetryMetaData&gt;
+
+
+	&lt;CommandMetaData&gt;
+		&lt;ArgumentTypeSet&gt;
+			&lt;EnumeratedArgumentType name="opcode_t"&gt;
+				&lt;IntegerDataEncoding sizeInBits="8"
+					encoding="unsigned" /&gt;
+				&lt;EnumerationList&gt;
+					&lt;Enumeration value="1" label="SetTemperature" /&gt;
+				&lt;/EnumerationList&gt;
+			&lt;/EnumeratedArgumentType&gt;
+			&lt;FloatArgumentType name="temperature_t"
+				baseType="Common/float64_msb_t"&gt;
+				&lt;UnitSet&gt;
+					&lt;Unit description="Desired temperature in degrees Celcius"&gt;degC&lt;/Unit&gt;
+				&lt;/UnitSet&gt;
+				&lt;ValidRangeSet&gt;
+					&lt;ValidRange minInclusive="10.0" maxExclusive="40.0" /&gt;
+				&lt;/ValidRangeSet&gt;
+			&lt;/FloatArgumentType&gt;
+		&lt;/ArgumentTypeSet&gt;
+		&lt;MetaCommandSet&gt;
+
+			&lt;MetaCommand name="BaseCommand"&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="opcode_t" name="opcode" /&gt;
+				&lt;/ArgumentList&gt;
+			&lt;/MetaCommand&gt;
+
+			&lt;MetaCommand name="SetTemperature"&gt;
+				&lt;BaseMetaCommand metaCommandRef="BaseCommand"&gt;
+					&lt;ArgumentAssignmentList&gt;
+						&lt;ArgumentAssignment argumentName="opcode"
+							argumentValue="SetTemperature" /&gt;
+					&lt;/ArgumentAssignmentList&gt;
+				&lt;/BaseMetaCommand&gt;
+				&lt;ArgumentList&gt;
+					&lt;Argument argumentTypeRef="temperature_t"
+						name="temperature" /&gt;
+				&lt;/ArgumentList&gt;
+				&lt;CommandContainer name="SetTemperature"&gt;
+					&lt;EntryList&gt;
+						&lt;ArgumentRefEntry argumentRef="temperature" /&gt;
+					&lt;/EntryList&gt;
+				&lt;/CommandContainer&gt;
+			&lt;/MetaCommand&gt;
+		&lt;/MetaCommandSet&gt;
+	&lt;/CommandMetaData&gt;
+
+
+	&lt;SpaceSystem name="Common"
+		shortDescription="Common definitions for all space systems"&gt;
+
+		&lt;TelemetryMetaData&gt;
+			&lt;ParameterTypeSet&gt;
+				&lt;FloatParameterType name="float64_msb_t"
+					sizeInBits="64"&gt;
+					&lt;FloatDataEncoding sizeInBits="64"
+						byteOrder="mostSignificantByteFirst" encoding="IEEE754_1985" /&gt;
+				&lt;/FloatParameterType&gt;
+			&lt;/ParameterTypeSet&gt;
+			&lt;ParameterTypeSet&gt;
+				&lt;FloatParameterType name="float64_lsb_t"
+					sizeInBits="64"&gt;
+					&lt;FloatDataEncoding sizeInBits="64"
+						byteOrder="leastSignificantByteFirst" encoding="IEEE754_1985" /&gt;
+				&lt;/FloatParameterType&gt;
+			&lt;/ParameterTypeSet&gt;
+		&lt;/TelemetryMetaData&gt;
+
+		&lt;CommandMetaData&gt;
+			&lt;ArgumentTypeSet&gt;
+				&lt;FloatArgumentType name="float64_msb_t"
+					sizeInBits="64"&gt;
+					&lt;FloatDataEncoding sizeInBits="64"
+						byteOrder="mostSignificantByteFirst" encoding="IEEE754_1985" /&gt;
+				&lt;/FloatArgumentType&gt;
+			&lt;/ArgumentTypeSet&gt;
+		&lt;/CommandMetaData&gt;
+
+	&lt;/SpaceSystem&gt;
+
+&lt;/SpaceSystem&gt;
+</pre></div>
+</div>
+</section>
+<section id="bogussat-1-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">BogusSAT-1.xml</span></code><a class="headerlink" href="#bogussat-1-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-xtce/src/test/resources/BogusSAT-1.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;!--
+Copyright 2015 David Overeem (dovereem@cox.net)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+--&gt;
+&lt;xtce:SpaceSystem name="BogusSAT" xmlns:xtce="http://www.omg.org/space/xtce" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/space/xtce SpaceSystemV1.2-27Feb2014-mods.xsd"&gt;
+	&lt;xtce:LongDescription&gt;This is a bogus satellite telemetry and telecommand database.  The purpose of BogusSAT is to exercise the capabilities of XTCE and the XTCE View tool.&lt;/xtce:LongDescription&gt;
+	&lt;xtce:Header validationStatus="Working" classification="NotClassified" version="1.0" date="27-10-2012"&gt;
+		&lt;xtce:AuthorSet&gt;
+			&lt;xtce:Author&gt;David Overeem, Member of the OMG SDTF and XTCE RTF&lt;/xtce:Author&gt;
+		&lt;/xtce:AuthorSet&gt;
+		&lt;xtce:NoteSet&gt;
+			&lt;xtce:Note&gt;The root SpaceSystem for BogusSAT contains the parameters needed to define the transport of data for any of the BogusSAT satellites in the fleet or constellation.&lt;/xtce:Note&gt;
+                        &lt;xtce:Note&gt;This document is used for unit tests and has deliberate errors.  Do not trust this for examples.&lt;/xtce:Note&gt;
+		&lt;/xtce:NoteSet&gt;
+	&lt;/xtce:Header&gt;
+	&lt;xtce:TelemetryMetaData&gt;
+		&lt;xtce:ParameterTypeSet&gt;
+			&lt;xtce:AbsoluteTimeParameterType name="POSIXTimeType" shortDescription="POSIX UNIX Time 'timeval' which is 2 unsigned 32 bit integers"&gt;
+				&lt;xtce:Encoding&gt;
+					&lt;xtce:IntegerDataEncoding sizeInBits="64"/&gt;
+				&lt;/xtce:Encoding&gt;
+				&lt;xtce:ReferenceTime&gt;
+					&lt;xtce:Epoch&gt;1970-01-01&lt;/xtce:Epoch&gt;
+				&lt;/xtce:ReferenceTime&gt;
+			&lt;/xtce:AbsoluteTimeParameterType&gt;
+			&lt;xtce:EnumeratedParameterType name="TM_CHECKSUMType" initialValue="NotUsed"&gt;
+				&lt;xtce:UnitSet/&gt;
+				&lt;xtce:EnumerationList&gt;
+					&lt;xtce:Enumeration label="NotUsed" value="0"/&gt;
+					&lt;xtce:Enumeration label="CRC" value="1"/&gt;
+					&lt;xtce:Enumeration label="Checksum" value="2"/&gt;
+				&lt;/xtce:EnumerationList&gt;
+			&lt;/xtce:EnumeratedParameterType&gt;
+			&lt;xtce:IntegerParameterType signed="false" name="uint3"&gt;
+				&lt;xtce:UnitSet/&gt;
+				&lt;xtce:IntegerDataEncoding sizeInBits="3"/&gt;
+			&lt;/xtce:IntegerParameterType&gt;
+			&lt;xtce:EnumeratedParameterType name="MissionType" shortDescription="Reserved Mission Phase and Operating Modes"&gt;
+				&lt;xtce:UnitSet/&gt;
+				&lt;xtce:EnumerationList&gt;
+					&lt;xtce:Enumeration value="0" label="TestBed"/&gt;
+					&lt;xtce:Enumeration value="1" label="IntegrationTest"/&gt;
+					&lt;xtce:Enumeration value="2" label="Vibration"/&gt;
+					&lt;xtce:Enumeration value="3" label="ThermalVac"/&gt;
+					&lt;xtce:Enumeration value="4" label="EMC"/&gt;
+					&lt;xtce:Enumeration value="5" label="Platform"/&gt;
+					&lt;xtce:Enumeration value="6" label="Launch"/&gt;
+					&lt;xtce:Enumeration value="7" label="Orbit"/&gt;
+					&lt;xtce:Enumeration value="8" label="Checkout"/&gt;
+					&lt;xtce:Enumeration value="9" label="Mission"/&gt;
+					&lt;xtce:Enumeration value="10" label="Safe"/&gt;
+				&lt;/xtce:EnumerationList&gt;
+			&lt;/xtce:EnumeratedParameterType&gt;
+			&lt;xtce:IntegerParameterType signed="false" name="CCSDSSCIDType"&gt;
+				&lt;xtce:UnitSet/&gt;
+			&lt;/xtce:IntegerParameterType&gt;
+			&lt;xtce:IntegerParameterType signed="false" name="CCSDSVCIDType"&gt;
+				&lt;xtce:UnitSet/&gt;
+			&lt;/xtce:IntegerParameterType&gt;
+			&lt;xtce:IntegerParameterType signed="false" name="CCSDSVersionType"&gt;
+				&lt;xtce:UnitSet/&gt;
+				&lt;xtce:IntegerDataEncoding sizeInBits="3"/&gt;
+			&lt;/xtce:IntegerParameterType&gt;
+			&lt;xtce:IntegerParameterType signed="false" name="CCSDSTypeType"&gt;
+				&lt;xtce:UnitSet/&gt;
+				&lt;xtce:IntegerDataEncoding sizeInBits="1"/&gt;
+			&lt;/xtce:IntegerParameterType&gt;
+			&lt;xtce:IntegerParameterType signed="false" name="CCSDSSecHType"&gt;
+				&lt;xtce:UnitSet/&gt;
+				&lt;xtce:IntegerDataEncoding sizeInBits="1"/&gt;
+			&lt;/xtce:IntegerParameterType&gt;
+			&lt;xtce:IntegerParameterType signed="false" name="CCSDSAPIDType"&gt;
+				&lt;xtce:UnitSet/&gt;
+				&lt;xtce:IntegerDataEncoding sizeInBits="11"/&gt;
+			&lt;/xtce:IntegerParameterType&gt;
+			&lt;xtce:IntegerParameterType signed="false" name="CCSDSGroupFlagsType"&gt;
+				&lt;xtce:UnitSet/&gt;
+				&lt;xtce:IntegerDataEncoding sizeInBits="2"/&gt;
+			&lt;/xtce:IntegerParameterType&gt;
+			&lt;xtce:IntegerParameterType signed="false" name="CCSDSSourceSequenceCountType"&gt;
+				&lt;xtce:UnitSet/&gt;
+				&lt;xtce:IntegerDataEncoding sizeInBits="14"/&gt;
+			&lt;/xtce:IntegerParameterType&gt;
+			&lt;xtce:IntegerParameterType signed="false" name="CCSDSPacketLengthType"&gt;
+				&lt;xtce:UnitSet&gt;
+					&lt;xtce:Unit description="Size"&gt;Octets&lt;/xtce:Unit&gt;
+				&lt;/xtce:UnitSet&gt;
+				&lt;xtce:IntegerDataEncoding sizeInBits="16" bitOrder="mostSignificantBitFirst" encoding="unsigned"/&gt;
+				&lt;xtce:ValidRange minInclusive="13" maxInclusive="65536"/&gt;
+			&lt;/xtce:IntegerParameterType&gt;
+			&lt;xtce:ArrayParameterType name="Array_with_numberOfDimensions" arrayTypeRef="uint3" numberOfDimensions="3"&gt;
+           		&lt;xtce:LongDescription&gt;Array with number of dimensions without dimension list&lt;/xtce:LongDescription&gt;
+            &lt;/xtce:ArrayParameterType&gt;
+            &lt;xtce:ArrayParameterType name="Array_with_dimensionList" arrayTypeRef="uint3"&gt;
+           		&lt;xtce:LongDescription&gt;Array with number of dimensions without dimension list&lt;/xtce:LongDescription&gt;
+           	     &lt;xtce:DimensionList&gt;
+		             &lt;xtce:Size&gt;
+        				 &lt;xtce:FixedValue&gt;9&lt;/xtce:FixedValue&gt;
+                     &lt;/xtce:Size&gt;
+	              &lt;/xtce:DimensionList&gt;
+            &lt;/xtce:ArrayParameterType&gt;
+             &lt;xtce:ArrayParameterType name="Array_with_type_defined_later" arrayTypeRef="SC001/BusElectronics/type_defined_later"&gt;
+           		&lt;xtce:LongDescription&gt;Array with number of dimensions without dimension list&lt;/xtce:LongDescription&gt;
+           	     &lt;xtce:DimensionList&gt;
+		             &lt;xtce:Size&gt;
+        				 &lt;xtce:FixedValue&gt;9&lt;/xtce:FixedValue&gt;
+                     &lt;/xtce:Size&gt;
+	              &lt;/xtce:DimensionList&gt;
+            &lt;/xtce:ArrayParameterType&gt;
+		&lt;/xtce:ParameterTypeSet&gt;
+		&lt;xtce:ParameterSet&gt;
+			&lt;xtce:Parameter parameterTypeRef="TM_CHECKSUMType" name="TM_CHECKSUM"&gt;
+				&lt;xtce:ParameterProperties dataSource="constant" readOnly="true"/&gt;
+			&lt;/xtce:Parameter&gt;
+			&lt;xtce:Parameter parameterTypeRef="CCSDSSCIDType" name="CCSDSSCID"&gt;
+				&lt;xtce:ParameterProperties dataSource="local"/&gt;
+			&lt;/xtce:Parameter&gt;
+			&lt;xtce:Parameter parameterTypeRef="CCSDSVCIDType" name="CCSDSVCID"&gt;
+				&lt;xtce:ParameterProperties dataSource="local"/&gt;
+			&lt;/xtce:Parameter&gt;
+			&lt;xtce:Parameter parameterTypeRef="CCSDSVersionType" name="CCSDSVersion"/&gt;
+			&lt;xtce:Parameter parameterTypeRef="CCSDSTypeType" name="CCSDSType"/&gt;
+			&lt;xtce:Parameter parameterTypeRef="CCSDSSecHType" name="CCSDSSecH"/&gt;
+			&lt;xtce:Parameter parameterTypeRef="CCSDSAPIDType" name="CCSDSAPID"/&gt;
+			&lt;xtce:Parameter parameterTypeRef="CCSDSGroupFlagsType" name="CCSDSGroupFlags"/&gt;
+			&lt;xtce:Parameter parameterTypeRef="CCSDSSourceSequenceCountType" name="CCSDSSourceSequenceCount"/&gt;
+			&lt;xtce:Parameter parameterTypeRef="CCSDSPacketLengthType" name="CCSDSPacketLength"/&gt;
+			&lt;xtce:Parameter parameterTypeRef="MissionType" name="Mission"&gt;
+				&lt;xtce:ParameterProperties dataSource="local"/&gt;
+			&lt;/xtce:Parameter&gt;
+			&lt;xtce:Parameter parameterTypeRef="Array_with_dimensionList" name="Array_with_dimensionList"/&gt;
+			
+		&lt;/xtce:ParameterSet&gt;
+		&lt;xtce:ContainerSet&gt;
+			&lt;xtce:SequenceContainer abstract="true" name="CCSDSPacket"&gt;
+				&lt;xtce:LongDescription&gt;Super-container for all CCSDS telemetry and command packets&lt;/xtce:LongDescription&gt;
+				&lt;xtce:EntryList&gt;
+					&lt;xtce:ParameterRefEntry parameterRef="CCSDSVersion"/&gt;
+					&lt;xtce:ParameterRefEntry parameterRef="CCSDSType"/&gt;
+					&lt;xtce:ParameterRefEntry parameterRef="CCSDSSecH"/&gt;
+					&lt;xtce:ParameterRefEntry parameterRef="CCSDSAPID"/&gt;
+					&lt;xtce:ParameterRefEntry parameterRef="CCSDSGroupFlags"/&gt;
+					&lt;xtce:ParameterRefEntry parameterRef="CCSDSSourceSequenceCount"/&gt;
+					&lt;xtce:ParameterRefEntry parameterRef="CCSDSPacketLength"/&gt;
+				&lt;/xtce:EntryList&gt;
+			&lt;/xtce:SequenceContainer&gt;
+			&lt;xtce:SequenceContainer abstract="true" name="test_array"&gt;
+				&lt;xtce:EntryList&gt;
+					&lt;xtce:ArrayParameterRefEntry parameterRef="Array_with_dimensionList"/&gt;
+				&lt;/xtce:EntryList&gt;
+			&lt;/xtce:SequenceContainer&gt;
+			
+			&lt;xtce:SequenceContainer abstract="true" name="CCSDSTelemetryPacket"&gt;
+				&lt;xtce:LongDescription&gt;Super-container for all CCSDS telemetry packets.&lt;/xtce:LongDescription&gt;
+				&lt;xtce:EntryList/&gt;
+				&lt;xtce:BaseContainer containerRef="CCSDSPacket"&gt;
+					&lt;xtce:RestrictionCriteria&gt;
+						&lt;xtce:ComparisonList&gt;
+							&lt;xtce:Comparison value="0" parameterRef="CCSDSVersion"/&gt;
+							&lt;xtce:Comparison value="0" parameterRef="CCSDSType"/&gt;
+						&lt;/xtce:ComparisonList&gt;
+					&lt;/xtce:RestrictionCriteria&gt;
+				&lt;/xtce:BaseContainer&gt;
+			&lt;/xtce:SequenceContainer&gt;
+				&lt;!-- skipped - it makes references to nonexistent parameters
+			&lt;xtce:SequenceContainer abstract="true" name="CCSDSPUSTelemetryPacket"&gt;
+				&lt;xtce:LongDescription&gt;Super-container for all CCSDS/ECSS PUS telemetry packets.&lt;/xtce:LongDescription&gt;
+				&lt;xtce:EntryList&gt;
+					&lt;xtce:ParameterRefEntry parameterRef="CCSDSPUSspare1"/&gt;
+					&lt;xtce:ParameterRefEntry parameterRef="CCSDSPUSVersion"/&gt;
+					&lt;xtce:ParameterRefEntry parameterRef="CCSDSPUSspare4"/&gt;
+					&lt;xtce:ParameterRefEntry parameterRef="CCSDSPUSService"/&gt;
+					&lt;xtce:ParameterRefEntry parameterRef="CCSDSPUSSubService"/&gt;
+				 this is where the PUS data field goes  
+					
+					
+					in Yamcs we don't support referenceLocation = containerEnd
+					&lt;xtce:ParameterRefEntry parameterRef="CCSDSPUSErrorControlField"&gt;
+						&lt;xtce:LocationInContainerInBits referenceLocation="containerEnd"&gt;
+							&lt;xtce:FixedValue&gt;16&lt;/xtce:FixedValue&gt;
+						&lt;/xtce:LocationInContainerInBits&gt;
+						&lt;xtce:IncludeCondition&gt;
+							&lt;xtce:Comparison parameterRef="TM_CHECKSUM" value="NotUsed" useCalibratedValue="true" comparisonOperator="!="/&gt;
+						&lt;/xtce:IncludeCondition&gt;
+					&lt;/xtce:ParameterRefEntry&gt;
+				&lt;/xtce:EntryList&gt;
+				&lt;xtce:BaseContainer containerRef="CCSDSTelemetryPacket"&gt;
+					&lt;xtce:RestrictionCriteria&gt;
+						&lt;xtce:Comparison parameterRef="CCSDSSecH" value="1"/&gt;
+					&lt;/xtce:RestrictionCriteria&gt;
+				&lt;/xtce:BaseContainer&gt;
+			&lt;/xtce:SequenceContainer&gt;--&gt;
+		&lt;/xtce:ContainerSet&gt;
+	&lt;/xtce:TelemetryMetaData&gt;
+	&lt;xtce:CommandMetaData&gt;
+		&lt;xtce:ParameterTypeSet&gt;
+			&lt;xtce:EnumeratedParameterType name="TC_CHECKSUMType" initialValue="NotUsed"&gt;
+				&lt;xtce:UnitSet/&gt;
+				&lt;xtce:EnumerationList&gt;
+					&lt;xtce:Enumeration label="NotUsed" value="0"/&gt;
+					&lt;xtce:Enumeration label="CRC" value="1"/&gt;
+					&lt;xtce:Enumeration label="Checksum" value="2"/&gt;
+				&lt;/xtce:EnumerationList&gt;
+			&lt;/xtce:EnumeratedParameterType&gt;
+		&lt;/xtce:ParameterTypeSet&gt;
+		&lt;xtce:ParameterSet&gt;
+			&lt;xtce:Parameter parameterTypeRef="TC_CHECKSUMType" name="TC_CHECKSUM"&gt;
+				&lt;xtce:ParameterProperties dataSource="constant" readOnly="true"/&gt;
+			&lt;/xtce:Parameter&gt;
+		&lt;/xtce:ParameterSet&gt;
+		&lt;xtce:MetaCommandSet&gt;
+			&lt;xtce:MetaCommand abstract="true" name="CCSDSCommand"&gt;
+				&lt;xtce:LongDescription&gt;Super-Command for all CCSDS commands.&lt;/xtce:LongDescription&gt;
+				&lt;xtce:CommandContainer name="CCSDSCommandPacket"&gt;
+					&lt;xtce:LongDescription&gt;Super-container for all CCSDS command packets.&lt;/xtce:LongDescription&gt;
+					&lt;xtce:EntryList/&gt;
+					&lt;xtce:BaseContainer containerRef="CCSDSPacket"&gt;
+						&lt;xtce:RestrictionCriteria&gt;
+							&lt;xtce:ComparisonList&gt;
+								&lt;xtce:Comparison value="0" parameterRef="CCSDSVersion"/&gt;
+								&lt;xtce:Comparison value="1" parameterRef="CCSDSType"/&gt;
+							&lt;/xtce:ComparisonList&gt;
+						&lt;/xtce:RestrictionCriteria&gt;
+					&lt;/xtce:BaseContainer&gt;
+				&lt;/xtce:CommandContainer&gt;
+			&lt;/xtce:MetaCommand&gt;
+			&lt;xtce:MetaCommand abstract="true" name="CCSDSPUSTelecommand"&gt;
+				&lt;xtce:LongDescription&gt;Super-Command for all CCSDS/ECSS PUS command packets.&lt;/xtce:LongDescription&gt;
+				&lt;xtce:CommandContainer name="CCSDSPUSCommandPacket"&gt;
+					&lt;xtce:EntryList/&gt;
+					&lt;xtce:BaseContainer containerRef="CCSDSCommandPacket"&gt;
+						&lt;xtce:RestrictionCriteria&gt;
+							&lt;xtce:Comparison parameterRef="CCSDSSecH" value="1"/&gt;
+						&lt;/xtce:RestrictionCriteria&gt;
+					&lt;/xtce:BaseContainer&gt;
+				&lt;/xtce:CommandContainer&gt;
+			&lt;/xtce:MetaCommand&gt;
+		&lt;/xtce:MetaCommandSet&gt;
+	&lt;/xtce:CommandMetaData&gt;
+	&lt;xtce:SpaceSystem name="SC001" shortDescription="This is the first spacecraft in the BogusSAT system"&gt;
+		&lt;xtce:SpaceSystem name="BusElectronics"&gt;
+			&lt;xtce:Header validationStatus="Test" classification="NotClassified" version="Build0" date="27-10-2012"/&gt;
+			&lt;xtce:TelemetryMetaData&gt;
+				&lt;xtce:ParameterTypeSet&gt;
+					&lt;xtce:StringParameterType name="Bus_Fault_Message_Type" shortDescription="Bus Error Message"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:StringDataEncoding bitOrder="mostSignificantBitFirst" encoding="UTF-8"&gt;
+							&lt;xtce:SizeInBits&gt;
+								&lt;xtce:Fixed&gt;
+									&lt;xtce:FixedValue&gt;128&lt;/xtce:FixedValue&gt;
+								&lt;/xtce:Fixed&gt;
+							&lt;/xtce:SizeInBits&gt;
+						&lt;/xtce:StringDataEncoding&gt;
+					&lt;/xtce:StringParameterType&gt;
+					&lt;xtce:BooleanParameterType name="Battery_Charge_Mode_Type" zeroStringValue="DISCHARGE" oneStringValue="CHARGE" shortDescription="This parameter indicates whether the charger is charging the battery"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="1" changeThreshold="1"/&gt;
+					&lt;/xtce:BooleanParameterType&gt;
+					&lt;xtce:FloatParameterType name="Battery_Voltage_Type" sizeInBits="32" shortDescription="This parameter describes the measured battery voltage"&gt;
+						&lt;xtce:LongDescription&gt;The battery on BogusSAT is a modeled by a typical flooded lead acid car battery.&lt;/xtce:LongDescription&gt;
+						&lt;xtce:UnitSet&gt;
+							&lt;xtce:Unit description="Potential"&gt;Volts&lt;/xtce:Unit&gt;
+						&lt;/xtce:UnitSet&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32" changeThreshold="0.01"/&gt;
+						&lt;xtce:ValidRange minInclusive="0.0" maxInclusive="15.0"/&gt;
+						&lt;xtce:DefaultAlarm minViolations="1"&gt;
+							&lt;xtce:StaticAlarmRanges&gt;
+								&lt;xtce:WarningRange minExclusive="12.35" maxExclusive="13.80"/&gt;
+								&lt;xtce:CriticalRange minExclusive="12.10" maxExclusive="14.34"/&gt;
+							&lt;/xtce:StaticAlarmRanges&gt;
+						&lt;/xtce:DefaultAlarm&gt;
+						&lt;xtce:ContextAlarmList&gt;
+							&lt;xtce:ContextAlarm minViolations="1"&gt;
+								&lt;xtce:StaticAlarmRanges&gt;
+									&lt;xtce:WarningRange minInclusive="12.60" maxInclusive="14.00"/&gt;
+									&lt;xtce:CriticalRange minInclusive="12.35" maxInclusive="14.34"/&gt;
+								&lt;/xtce:StaticAlarmRanges&gt;
+								&lt;xtce:ContextMatch&gt;
+									&lt;xtce:Comparison parameterRef="Battery_Charge_Mode" value="CHARGE"/&gt;
+								&lt;/xtce:ContextMatch&gt;
+							&lt;/xtce:ContextAlarm&gt;
+							&lt;xtce:ContextAlarm minViolations="1"&gt;
+								&lt;xtce:StaticAlarmRanges&gt;
+									&lt;xtce:WarningRange minInclusive="12.35" maxInclusive="12.60"/&gt;
+									&lt;xtce:CriticalRange minInclusive="12.10" maxInclusive="13.00"/&gt;
+								&lt;/xtce:StaticAlarmRanges&gt;
+								&lt;xtce:ContextMatch&gt;
+									&lt;xtce:Comparison parameterRef="Battery_Charge_Mode" value="DISCHARGE"/&gt;
+								&lt;/xtce:ContextMatch&gt;
+							&lt;/xtce:ContextAlarm&gt;
+						&lt;/xtce:ContextAlarmList&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Battery_Current_Type" sizeInBits="32" shortDescription="This parameter describes the measured current draw" initialValue="0.2"&gt;
+						&lt;xtce:LongDescription&gt;The battery on BogusSAT is a modeled by a typical flooded lead acid car battery.&lt;/xtce:LongDescription&gt;
+						&lt;xtce:UnitSet&gt;
+							&lt;xtce:Unit description="Current"&gt;Amperes&lt;/xtce:Unit&gt;
+						&lt;/xtce:UnitSet&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32" changeThreshold="0.01"/&gt;
+						&lt;xtce:ValidRange minInclusive="-100.0" maxInclusive="100.0"/&gt;
+						&lt;xtce:DefaultAlarm minViolations="1"&gt;
+							&lt;xtce:StaticAlarmRanges&gt;
+								&lt;xtce:WarningRange minExclusive="-5.0" maxExclusive="10.0"/&gt;
+								&lt;xtce:CriticalRange minExclusive="-20.0" maxExclusive="15.0"/&gt;
+							&lt;/xtce:StaticAlarmRanges&gt;
+						&lt;/xtce:DefaultAlarm&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Battery_State_Of_Charge_Type" sizeInBits="32" shortDescription="Calculated battery state of charge"&gt;
+						&lt;xtce:UnitSet&gt;
+							&lt;xtce:Unit&gt;Percent&lt;/xtce:Unit&gt;
+						&lt;/xtce:UnitSet&gt;
+						&lt;xtce:ValidRange minInclusive="0.0" maxInclusive="100.0"/&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Solar_Array_Voltage_Type" sizeInBits="32" shortDescription="This parameter describes the measured solar array output voltage at the charger"&gt;
+						&lt;xtce:LongDescription&gt;The solar array on BogusSAT is 10 230W Trina TSM-DA05 monocrystalline panels, wired in series.&lt;/xtce:LongDescription&gt;
+						&lt;xtce:UnitSet&gt;
+							&lt;xtce:Unit description="Potential"&gt;Volts&lt;/xtce:Unit&gt;
+						&lt;/xtce:UnitSet&gt;
+						&lt;xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="12" changeThreshold="1"&gt;
+							&lt;xtce:DefaultCalibrator&gt;
+								&lt;xtce:PolynomialCalibrator&gt;
+									&lt;xtce:Term exponent="0" coefficient="-100.0"/&gt;
+									&lt;xtce:Term exponent="1" coefficient="0.1"/&gt;
+								&lt;/xtce:PolynomialCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:IntegerDataEncoding&gt;
+						&lt;xtce:ValidRange minInclusive="0.00" maxInclusive="4000.00"/&gt;
+						&lt;xtce:DefaultAlarm minViolations="2"&gt;
+							&lt;xtce:StaticAlarmRanges&gt;
+								&lt;xtce:CriticalRange minInclusive="0.0" maxInclusive="370.0"/&gt;
+							&lt;/xtce:StaticAlarmRanges&gt;
+						&lt;/xtce:DefaultAlarm&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Quadratic_Demo_Type" sizeInBits="64" shortDescription="This is an analog parameter with a simple quadratic encoding"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="16" changeThreshold="1"&gt;
+							&lt;xtce:DefaultCalibrator shortDescription="this is y = x^2 + 2x - 8"&gt;
+								&lt;xtce:PolynomialCalibrator&gt;
+									&lt;xtce:Term exponent="0" coefficient="-8"/&gt;
+									&lt;xtce:Term exponent="1" coefficient="2"/&gt;
+									&lt;xtce:Term exponent="2" coefficient="1"/&gt;
+								&lt;/xtce:PolynomialCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:IntegerDataEncoding&gt;
+						&lt;xtce:ValidRange minInclusive="0.00" maxInclusive="4000.00" rangeAppliesToCalibrated="true"/&gt;
+						&lt;xtce:DefaultAlarm minViolations="1"&gt;
+							&lt;xtce:StaticAlarmRanges&gt;
+								&lt;xtce:CriticalRange minInclusive="-100.0" maxInclusive="100.0"/&gt;
+							&lt;/xtce:StaticAlarmRanges&gt;
+						&lt;/xtce:DefaultAlarm&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Quadratic_Demo_SingleRoot_Type" sizeInBits="32" shortDescription="This is a float parameter with a float quadratic encoding"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32"&gt;
+							&lt;xtce:DefaultCalibrator shortDescription="this is y = x^2 + 1"&gt;
+								&lt;xtce:PolynomialCalibrator&gt;
+									&lt;xtce:Term exponent="0" coefficient="1"/&gt;
+									&lt;xtce:Term exponent="2" coefficient="1"/&gt;
+								&lt;/xtce:PolynomialCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+						&lt;xtce:ValidRange minInclusive="-10.00" maxInclusive="10.00" rangeAppliesToCalibrated="false"/&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Quadratic_Demo_SingleRoot2_Type" sizeInBits="32" shortDescription="This is a float parameter with a float quadratic encoding"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32"&gt;
+							&lt;xtce:DefaultCalibrator shortDescription="this is y = x^2 - 4x + 4"&gt;
+								&lt;xtce:PolynomialCalibrator&gt;
+									&lt;xtce:Term exponent="0" coefficient="4.0"/&gt;
+									&lt;xtce:Term exponent="1" coefficient="-4.0"/&gt;
+									&lt;xtce:Term exponent="2" coefficient="1"/&gt;
+								&lt;/xtce:PolynomialCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Spline_Demo_Type" sizeInBits="64" shortDescription="This is a float parameter with a float spline encoding"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64"&gt;
+							&lt;xtce:DefaultCalibrator&gt;
+								&lt;xtce:SplineCalibrator order="1" extrapolate="false"&gt;
+									&lt;xtce:SplinePoint raw="-6.0" calibrated="1.0"/&gt;
+									&lt;xtce:SplinePoint raw="-3.0" calibrated="2.0"/&gt;
+									&lt;xtce:SplinePoint raw="-1.0" calibrated="3.0"/&gt;
+									&lt;xtce:SplinePoint raw="1.0" calibrated="3.0"/&gt;
+									&lt;xtce:SplinePoint raw="3.0" calibrated="2.0"/&gt;
+									&lt;xtce:SplinePoint raw="6.0" calibrated="1.0"/&gt;
+								&lt;/xtce:SplineCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Spline_Quad_Interpolate_Type" sizeInBits="64" shortDescription="This is a float parameter with a float spline encoding and unsupported interpolation"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64"&gt;
+							&lt;xtce:DefaultCalibrator&gt;
+								&lt;xtce:SplineCalibrator order="2" extrapolate="false"&gt;
+									&lt;xtce:SplinePoint raw="-6.0" calibrated="1.0"/&gt;
+									&lt;xtce:SplinePoint raw="-3.0" calibrated="2.0"/&gt;
+									&lt;xtce:SplinePoint raw="-1.0" calibrated="3.0"/&gt;
+									&lt;xtce:SplinePoint raw="1.0" calibrated="3.0"/&gt;
+									&lt;xtce:SplinePoint raw="3.0" calibrated="2.0"/&gt;
+									&lt;xtce:SplinePoint raw="6.0" calibrated="1.0"/&gt;
+								&lt;/xtce:SplineCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Spline_Quad_Infinite_Slope_Type" sizeInBits="64" shortDescription="This is a float parameter with a float spline encoding and infinite slope - no good"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64"&gt;
+							&lt;xtce:DefaultCalibrator&gt;
+								&lt;xtce:SplineCalibrator order="1" extrapolate="false"&gt;
+									&lt;xtce:SplinePoint raw="-6.0" calibrated="1.0"/&gt;
+									&lt;xtce:SplinePoint raw="-3.0" calibrated="2.0"/&gt;
+									&lt;xtce:SplinePoint raw="-1.0" calibrated="3.0"/&gt;
+									&lt;xtce:SplinePoint raw="1.0" calibrated="3.0"/&gt;
+                                                                        &lt;xtce:SplinePoint raw="1.0" calibrated="2.5"/&gt;
+									&lt;xtce:SplinePoint raw="3.0" calibrated="2.0"/&gt;
+									&lt;xtce:SplinePoint raw="6.0" calibrated="1.0"/&gt;
+								&lt;/xtce:SplineCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Float_Missing_PolyTerms_Type" sizeInBits="32" shortDescription="This is a float parameter with no terms in a polynomial calibrator (invalid)"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32"&gt;
+							&lt;xtce:DefaultCalibrator&gt;
+								&lt;xtce:PolynomialCalibrator/&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+						&lt;xtce:ValidRange minInclusive="-10.00" maxInclusive="10.00" rangeAppliesToCalibrated="false"/&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Float_Order0_PolyTerms_Type" sizeInBits="32" shortDescription="This is a float parameter with an order 0 polynomial calibrator"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32"&gt;
+							&lt;xtce:DefaultCalibrator&gt;
+								&lt;xtce:PolynomialCalibrator&gt;
+									&lt;xtce:Term exponent="0" coefficient="2.2"/&gt;
+								&lt;/xtce:PolynomialCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+						&lt;xtce:ValidRange minInclusive="-10.00" maxInclusive="100.00" rangeAppliesToCalibrated="false"/&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Float_Order1_PolyTerms_Type" sizeInBits="32" shortDescription="This is a float parameter with an order 1 polynomial calibrator"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32"&gt;
+							&lt;xtce:DefaultCalibrator&gt;
+								&lt;xtce:PolynomialCalibrator&gt;
+									&lt;xtce:Term exponent="0" coefficient="0.5"/&gt;
+                                                                        &lt;xtce:Term exponent="1" coefficient="1.5"/&gt;
+								&lt;/xtce:PolynomialCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+						&lt;xtce:ValidRange minInclusive="-10.00" maxInclusive="100.00" rangeAppliesToCalibrated="false"/&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="type_defined_later" sizeInBits="32"&gt;
+						&lt;xtce:UnitSet/&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Float_Order3_PolyTerms_Type" sizeInBits="32" shortDescription="This is a float parameter with an order 3 polynomial calibrator"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32"&gt;
+							&lt;xtce:DefaultCalibrator&gt;
+								&lt;xtce:PolynomialCalibrator&gt;
+									&lt;xtce:Term exponent="0" coefficient="0.5"/&gt;
+                                                                        &lt;xtce:Term exponent="1" coefficient="1.5"/&gt;
+                                                                        &lt;xtce:Term exponent="3" coefficient="0.1"/&gt;
+								&lt;/xtce:PolynomialCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+						&lt;xtce:ValidRange minInclusive="-10.00" maxInclusive="100.00" rangeAppliesToCalibrated="false"/&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Float_MathOpCal_1_Type" sizeInBits="32" shortDescription="This is a float parameter with a simple math operation calibrator"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32"&gt;
+							&lt;xtce:DefaultCalibrator&gt;
+                                                            &lt;xtce:MathOperationCalibrator&gt;
+                                                                &lt;xtce:ValueOperand&gt;0.5&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:ThisParameterOperand/&gt;
+                                                                &lt;xtce:Operator&gt;*&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;1.25&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;+&lt;/xtce:Operator&gt;
+                                                            &lt;/xtce:MathOperationCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Float_MathOpCal_2_Type" sizeInBits="64" shortDescription="This is a float parameter with a longer math operation calibrator"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64"&gt;
+							&lt;xtce:DefaultCalibrator&gt;
+                                                            &lt;xtce:MathOperationCalibrator&gt;
+                                                                &lt;!-- Equation in "infix" notation: 64 * log(2)[1.234 * value] 
+                                                                    also is 64 * (ln[1.234 * value] / ln[2]) --&gt;
+                                                                &lt;xtce:ValueOperand&gt;1.234&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:ThisParameterOperand/&gt;
+                                                                &lt;xtce:Operator&gt;*&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;ln&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;2.0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;ln&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;/&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;64.0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;*&lt;/xtce:Operator&gt;
+                                                            &lt;/xtce:MathOperationCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Float_MathOpCal_3_Type" sizeInBits="32" shortDescription="This is a float parameter with no operations in math operation calibrator"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32"&gt;
+							&lt;xtce:DefaultCalibrator&gt;
+                                                            &lt;xtce:MathOperationCalibrator/&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Float_MathOpCal_4_Type" sizeInBits="32" shortDescription="This is a float parameter with unsupported element in math operation calibrator"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32"&gt;
+						&lt;!-- not supported in Yamcs to refer to other parameters for calibration
+							&lt;xtce:DefaultCalibrator&gt;
+                                                            &lt;xtce:MathOperationCalibrator&gt;
+                                                                &lt;xtce:ValueOperand&gt;3.0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:ParameterInstanceRefOperand parameterRef="Float_MathOpCal_1"/&gt;
+                                                                &lt;xtce:Operator&gt;*&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ParameterInstanceRefOperand parameterRef="Float_MathOpCal_2" useCalibratedValue="false"/&gt;
+                                                                &lt;xtce:Operator&gt;+&lt;/xtce:Operator&gt;
+                                                            &lt;/xtce:MathOperationCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+							 --&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Float_MathOpCal_5_Type" sizeInBits="32" shortDescription="This is a float parameter with short stack in math operation calibrator"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32"&gt;
+							&lt;xtce:DefaultCalibrator&gt;
+                                                            &lt;xtce:MathOperationCalibrator&gt;
+                                                                &lt;xtce:ValueOperand&gt;3.0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;+&lt;/xtce:Operator&gt;
+                                                            &lt;/xtce:MathOperationCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Float_MathOpCal_6_Type" sizeInBits="32" shortDescription="This is a float parameter with unsupported operator in math operation calibrator"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32"&gt;
+							&lt;!--commented out otherwise 'foo' will throw an exception in the yamcs parser
+							&lt;xtce:DefaultCalibrator&gt;
+                                                            &lt;xtce:MathOperationCalibrator&gt;
+                                                                &lt;xtce:ValueOperand&gt;3.0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:ThisParameterOperand/&gt;
+                                                                &lt;xtce:Operator&gt;foo&lt;/xtce:Operator&gt;
+                                                            &lt;/xtce:MathOperationCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+							 --&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Float_MathOpCal_7_Type" sizeInBits="64" shortDescription="This is a float parameter with lots of operators in math operation calibrator"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64"&gt;
+							&lt;xtce:DefaultCalibrator&gt;
+                                                            &lt;xtce:MathOperationCalibrator&gt;
+                                                                &lt;xtce:ValueOperand&gt;5.0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:ValueOperand&gt;3.0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;-&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;3.0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;^&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;92&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;+&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;log&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;1/x&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;-4.0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;*&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;abs&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;5.0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;swap&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;-&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;2.0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;-&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;asin&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;cos&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;acos&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;sin&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;acos&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;atan&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;19.0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;+&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;8.0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;%&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;4.0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;y^x&lt;/xtce:Operator&gt;
+                                                            &lt;/xtce:MathOperationCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Float_MathOpCal_8_Type" sizeInBits="64" shortDescription="This is a float parameter with lots of operators in math operation calibrator"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64"&gt;
+						&lt;!-- The conditional operatos are not supported in Yamcs, not sure what they should do
+							&lt;xtce:DefaultCalibrator&gt;
+                                                            &lt;xtce:MathOperationCalibrator&gt;
+                                                                &lt;xtce:ValueOperand&gt;99&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:ValueOperand&gt;100&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;==&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;12&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;!=&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;1&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;==&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;1&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;!=&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;5&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;&amp;lt;&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;&amp;lt;&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;5&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;&amp;gt;&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;-1&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;&amp;gt;&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;1&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;&amp;lt;=&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;2&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;&amp;lt;=&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;&amp;lt;=&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;4&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;&amp;gt;=&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;&amp;gt;=&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;&amp;gt;=&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;e^x&lt;/xtce:Operator&gt;
+                                                            &lt;/xtce:MathOperationCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+							 --&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Float_MathOpCal_9_Type" sizeInBits="64" shortDescription="This is a float parameter with lots of operators in math operation calibrator"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64"&gt;
+							&lt;xtce:DefaultCalibrator&gt;
+                                                            &lt;xtce:MathOperationCalibrator&gt;
+                                                                &lt;xtce:ValueOperand&gt;90&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:ValueOperand&gt;1&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;-&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;cos&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;89&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;+&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;cos&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;45&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;+&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;tan&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;tanh&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;cosh&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;sinh&lt;/xtce:Operator&gt;
+                                                            &lt;/xtce:MathOperationCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Float_MathOpCal_10_Type" sizeInBits="32" shortDescription="This is a float parameter with arithmetic exception in math operation calibrator"&gt;
+						&lt;xtce:UnitSet/&gt;
+						
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32"&gt;
+						&lt;!-- The conditional operatos are not supported in Yamcs, not sure what they should do
+							&lt;xtce:DefaultCalibrator&gt;
+                                                            &lt;xtce:MathOperationCalibrator&gt;
+                                                                - multi-purpose bad expression, throws on divide by zero but catches extra operators on infix print -
+                                                                &lt;xtce:ThisParameterOperand/&gt;
+                                                                &lt;xtce:ValueOperand&gt;0.0&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;/&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;x!&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;atanh&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;acosh&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:Operator&gt;asinh&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;2&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;&amp;amp;&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;3&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;|&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;2&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;&amp;lt;&amp;lt;&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;1&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;&amp;gt;&amp;gt;&lt;/xtce:Operator&gt;
+                                                                &lt;xtce:ValueOperand&gt;1&lt;/xtce:ValueOperand&gt;
+                                                                &lt;xtce:Operator&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/xtce:Operator&gt;
+                                                            &lt;/xtce:MathOperationCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt; --&gt;
+						&lt;/xtce:FloatDataEncoding&gt;
+						
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:BooleanParameterType name="Solar_Array_Voltage_State_Type" initialValue="OFF" zeroStringValue="OFF" oneStringValue="ON" shortDescription="The operational state of the solar array voltage sensor"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="8" changeThreshold="1"/&gt;
+					&lt;/xtce:BooleanParameterType&gt;
+					&lt;xtce:FloatParameterType sizeInBits="64" name="SunSensorPolyCalType"&gt;
+						&lt;xtce:UnitSet&gt;
+							&lt;xtce:Unit&gt;cd/m^2&lt;/xtce:Unit&gt;
+						&lt;/xtce:UnitSet&gt;
+						&lt;xtce:IntegerDataEncoding sizeInBits="16" encoding="twosComplement"&gt;
+							&lt;xtce:DefaultCalibrator&gt;
+								&lt;xtce:PolynomialCalibrator&gt;
+									&lt;xtce:Term exponent="0" coefficient="-10.0"/&gt;
+									&lt;xtce:Term exponent="1" coefficient="5.0"/&gt;
+								&lt;/xtce:PolynomialCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+							&lt;xtce:ContextCalibratorList&gt;
+								&lt;xtce:ContextCalibrator&gt;
+									&lt;xtce:ContextMatch&gt;
+										&lt;xtce:Comparison value="LOW" parameterRef="/BogusSAT/SC001/BusElectronics/SunSensorMode"/&gt;
+									&lt;/xtce:ContextMatch&gt;
+									&lt;xtce:Calibrator&gt;
+										&lt;xtce:PolynomialCalibrator&gt;
+											&lt;xtce:Term exponent="0" coefficient="0.0"/&gt;
+											&lt;xtce:Term exponent="1" coefficient="5.0"/&gt;
+										&lt;/xtce:PolynomialCalibrator&gt;
+									&lt;/xtce:Calibrator&gt;
+								&lt;/xtce:ContextCalibrator&gt;
+								&lt;xtce:ContextCalibrator&gt;
+									&lt;xtce:ContextMatch&gt;
+										&lt;xtce:Comparison value="HIGH" parameterRef="SunSensorMode"/&gt;
+									&lt;/xtce:ContextMatch&gt;
+									&lt;xtce:Calibrator&gt;
+										&lt;xtce:PolynomialCalibrator&gt;
+											&lt;xtce:Term exponent="0" coefficient="0.0"/&gt;
+											&lt;xtce:Term exponent="1" coefficient="15.0"/&gt;
+										&lt;/xtce:PolynomialCalibrator&gt;
+									&lt;/xtce:Calibrator&gt;
+								&lt;/xtce:ContextCalibrator&gt;
+							&lt;/xtce:ContextCalibratorList&gt;
+						&lt;/xtce:IntegerDataEncoding&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType sizeInBits="64" name="EarthSensorSplineCalType"&gt;
+						&lt;xtce:UnitSet&gt;
+							&lt;xtce:Unit&gt;cd/m^2&lt;/xtce:Unit&gt;
+						&lt;/xtce:UnitSet&gt;
+						&lt;xtce:IntegerDataEncoding sizeInBits="16" encoding="twosComplement"&gt;
+							&lt;xtce:DefaultCalibrator&gt;
+								&lt;xtce:SplineCalibrator order="1"&gt;
+									&lt;xtce:SplinePoint raw="0" calibrated="0.0"/&gt;
+									&lt;xtce:SplinePoint raw="10" calibrated="5.0"/&gt;
+									&lt;xtce:SplinePoint raw="20" calibrated="10.0"/&gt;
+								&lt;/xtce:SplineCalibrator&gt;
+							&lt;/xtce:DefaultCalibrator&gt;
+							&lt;xtce:ContextCalibratorList&gt;
+								&lt;xtce:ContextCalibrator&gt;
+									&lt;xtce:ContextMatch&gt;
+										&lt;xtce:Comparison value="LOW" parameterRef="EarthSensorMode"/&gt;
+									&lt;/xtce:ContextMatch&gt;
+									&lt;xtce:Calibrator&gt;
+										&lt;xtce:SplineCalibrator order="1"&gt;
+											&lt;xtce:SplinePoint raw="0" calibrated="5.0"/&gt;
+											&lt;xtce:SplinePoint raw="10" calibrated="10.0"/&gt;
+											&lt;xtce:SplinePoint raw="20" calibrated="15.0"/&gt;
+										&lt;/xtce:SplineCalibrator&gt;
+									&lt;/xtce:Calibrator&gt;
+								&lt;/xtce:ContextCalibrator&gt;
+								&lt;xtce:ContextCalibrator&gt;
+									&lt;xtce:ContextMatch&gt;
+										&lt;xtce:Comparison value="HIGH" parameterRef="/BogusSAT/SC001/BusElectronics/EarthSensorMode"/&gt;
+									&lt;/xtce:ContextMatch&gt;
+									&lt;xtce:Calibrator&gt;
+										&lt;xtce:SplineCalibrator order="0"&gt;
+											&lt;xtce:SplinePoint raw="0" calibrated="10.0"/&gt;
+											&lt;xtce:SplinePoint raw="10" calibrated="15.0"/&gt;
+											&lt;xtce:SplinePoint raw="20" calibrated="20.0"/&gt;
+										&lt;/xtce:SplineCalibrator&gt;
+									&lt;/xtce:Calibrator&gt;
+								&lt;/xtce:ContextCalibrator&gt;
+							&lt;/xtce:ContextCalibratorList&gt;
+						&lt;/xtce:IntegerDataEncoding&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:EnumeratedParameterType name="SunSensorModeType" initialValue="OFF"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/&gt;
+						&lt;xtce:EnumerationList&gt;
+							&lt;xtce:Enumeration label="OFF" value="0"/&gt;
+							&lt;xtce:Enumeration label="LOW" value="1"/&gt;
+							&lt;xtce:Enumeration label="HIGH" value="2"/&gt;
+						&lt;/xtce:EnumerationList&gt;
+					&lt;/xtce:EnumeratedParameterType&gt;
+				&lt;/xtce:ParameterTypeSet&gt;
+				&lt;xtce:ParameterSet&gt;
+					&lt;xtce:Parameter name="Battery_Charge_Mode" parameterTypeRef="Battery_Charge_Mode_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;EPS&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Battery_Voltage" parameterTypeRef="Battery_Voltage_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;EPS&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Battery_Current" parameterTypeRef="Battery_Current_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;EPS&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Battery_State_Of_Charge" parameterTypeRef="Battery_State_Of_Charge_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="derived" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;EPS&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Battery_State_Of_Charge_Custom" parameterTypeRef="Battery_State_Of_Charge_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="derived" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;EPS&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Solar_Array_Voltage_1_State" parameterTypeRef="Solar_Array_Voltage_State_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;EPS&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Solar_Array_Voltage_2_State" parameterTypeRef="Solar_Array_Voltage_State_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;EPS&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Quadratic_Demo" parameterTypeRef="Quadratic_Demo_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Quadratic_Demo_SingleRoot" parameterTypeRef="Quadratic_Demo_SingleRoot_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Quadratic_Demo_SingleRoot2" parameterTypeRef="Quadratic_Demo_SingleRoot2_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Spline_Demo" parameterTypeRef="Spline_Demo_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Spline_Quad_Interpolate_Bad" parameterTypeRef="Spline_Quad_Interpolate_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Spline_Quad_Infinite_Slope" parameterTypeRef="Spline_Quad_Infinite_Slope_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Float_Missing_PolyTerms" parameterTypeRef="Float_Missing_PolyTerms_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Float_Order0_PolyTerms" parameterTypeRef="Float_Order0_PolyTerms_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Float_Order1_PolyTerms" parameterTypeRef="Float_Order1_PolyTerms_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Float_Order3_PolyTerms" parameterTypeRef="Float_Order3_PolyTerms_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Float_MathOpCal_1" parameterTypeRef="Float_MathOpCal_1_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Float_MathOpCal_2" parameterTypeRef="Float_MathOpCal_2_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Float_MathOpCal_3" parameterTypeRef="Float_MathOpCal_3_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Float_MathOpCal_4" parameterTypeRef="Float_MathOpCal_4_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Float_MathOpCal_5" parameterTypeRef="Float_MathOpCal_5_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Float_MathOpCal_6" parameterTypeRef="Float_MathOpCal_6_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Float_MathOpCal_7" parameterTypeRef="Float_MathOpCal_7_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Float_MathOpCal_8" parameterTypeRef="Float_MathOpCal_8_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Float_MathOpCal_9" parameterTypeRef="Float_MathOpCal_9_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Float_MathOpCal_10" parameterTypeRef="Float_MathOpCal_10_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;NONE&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Solar_Array_Voltage_1" parameterTypeRef="Solar_Array_Voltage_Type"&gt;
+						&lt;xtce:AliasSet&gt;
+							&lt;xtce:Alias nameSpace="ID" alias="100345"/&gt;
+							&lt;xtce:Alias nameSpace="FOO" alias="Hello"/&gt;
+						&lt;/xtce:AliasSet&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;EPS&lt;/xtce:SystemName&gt;
+							&lt;xtce:ValidityCondition&gt;
+								&lt;xtce:Comparison parameterRef="Solar_Array_Voltage_1_State" value="ON"/&gt;
+							&lt;/xtce:ValidityCondition&gt;
+							&lt;xtce:PhysicalAddressSet&gt;
+								&lt;xtce:PhysicalAddress sourceAddress="0xb000f100" sourceName="RAM"/&gt;
+							&lt;/xtce:PhysicalAddressSet&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Solar_Array_Voltage_2" parameterTypeRef="Solar_Array_Voltage_Type"&gt;
+						&lt;xtce:AliasSet&gt;
+							&lt;xtce:Alias nameSpace="ID" alias="100445"/&gt;
+							&lt;!-- xtce:Alias nameSpace="ID" alias="123456"/--&gt;
+						&lt;/xtce:AliasSet&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;EPS&lt;/xtce:SystemName&gt;
+							&lt;xtce:ValidityCondition&gt;
+								&lt;xtce:Comparison parameterRef="Solar_Array_Voltage_2_State" value="ON"/&gt;
+							&lt;/xtce:ValidityCondition&gt;
+							&lt;xtce:PhysicalAddressSet&gt;
+								&lt;xtce:PhysicalAddress sourceAddress="0xb000f101" sourceName="RAM"/&gt;
+							&lt;/xtce:PhysicalAddressSet&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Bus_Fault_Message" parameterTypeRef="Bus_Fault_Message_Type"&gt;
+						&lt;xtce:AliasSet&gt;
+							&lt;xtce:Alias nameSpace="ID" alias="100999"/&gt;
+						&lt;/xtce:AliasSet&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;CPU&lt;/xtce:SystemName&gt;
+							&lt;xtce:PhysicalAddressSet&gt;
+								&lt;xtce:PhysicalAddress sourceAddress="0xb0010000" sourceName="RAM"/&gt;
+							&lt;/xtce:PhysicalAddressSet&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="SensorTime" parameterTypeRef="/BogusSAT/POSIXTimeType" shortDescription="Measurement time of the sensor data"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"/&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="SunSensorMode" parameterTypeRef="SunSensorModeType" shortDescription="Operational mode of the sun sensor"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"/&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="EarthSensorMode" parameterTypeRef="SunSensorModeType" shortDescription="Operational mode of the earth sensor"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"/&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="SunSensorLevel" parameterTypeRef="SunSensorPolyCalType" shortDescription="Illumination level measurement of the sun sensor"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"/&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="EarthSensorLevel" parameterTypeRef="EarthSensorSplineCalType" shortDescription="Illumination level of the earth sensor"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"/&gt;
+					&lt;/xtce:Parameter&gt;
+				&lt;/xtce:ParameterSet&gt;
+				&lt;xtce:ContainerSet&gt;
+					&lt;xtce:SequenceContainer name="SensorHistoryRecord"&gt;
+					&lt;xtce:DefaultRateInStream basis="perSecond" minimumValue="0.1" maximumValue="10"/&gt; 
+						&lt;xtce:EntryList&gt;
+							&lt;xtce:ParameterRefEntry parameterRef="SensorTime"/&gt;
+							&lt;xtce:ParameterRefEntry parameterRef="SunSensorMode"/&gt;
+							&lt;xtce:ParameterRefEntry parameterRef="EarthSensorMode"/&gt;
+							&lt;xtce:ParameterRefEntry parameterRef="SunSensorLevel"/&gt;
+							&lt;xtce:ParameterRefEntry parameterRef="EarthSensorLevel"/&gt;
+						&lt;/xtce:EntryList&gt;
+						&lt;xtce:AncillaryDataSet&gt;
+                           &lt;xtce:AncillaryData name="Yamcs"&gt;UseAsArchivingPartition&lt;/xtce:AncillaryData&gt;
+                        &lt;/xtce:AncillaryDataSet&gt;
+					&lt;/xtce:SequenceContainer&gt;
+					&lt;xtce:SequenceContainer name="SensorHistoryBuffer"&gt;
+						&lt;xtce:EntryList&gt;
+							&lt;xtce:ContainerRefEntry containerRef="SensorHistoryRecord"&gt;
+								&lt;xtce:RepeatEntry&gt;
+									&lt;xtce:Count&gt;
+										&lt;xtce:FixedValue&gt;4&lt;/xtce:FixedValue&gt;
+									&lt;/xtce:Count&gt;
+								&lt;/xtce:RepeatEntry&gt;
+							&lt;/xtce:ContainerRefEntry&gt;
+						&lt;/xtce:EntryList&gt;
+					&lt;/xtce:SequenceContainer&gt;
+				&lt;/xtce:ContainerSet&gt;
+				&lt;xtce:AlgorithmSet&gt;
+					&lt;xtce:MathAlgorithm name="ComputeBatterySOC" shortDescription="Compute the battery state of charge"&gt;
+						&lt;xtce:MathOperation outputParameterRef="Battery_State_Of_Charge"&gt;
+							&lt;xtce:ParameterInstanceRefOperand parameterRef="Battery_Voltage"/&gt;
+							&lt;xtce:ValueOperand&gt;11.7&lt;/xtce:ValueOperand&gt;
+							&lt;xtce:Operator&gt;-&lt;/xtce:Operator&gt;
+							&lt;xtce:ValueOperand&gt;0.9&lt;/xtce:ValueOperand&gt;
+							&lt;xtce:Operator&gt;/&lt;/xtce:Operator&gt;
+							&lt;xtce:TriggerSet&gt;
+								&lt;xtce:OnParameterUpdateTrigger parameterRef="Battery_Voltage"/&gt;
+							&lt;/xtce:TriggerSet&gt;
+						&lt;/xtce:MathOperation&gt;
+					&lt;/xtce:MathAlgorithm&gt;
+					&lt;xtce:CustomAlgorithm name="ComputeBatterySOC_Custom" shortDescription="Compute the battery state of charge with custom algorithm"&gt;
+						&lt;xtce:AlgorithmText language="JavaScript"&gt;
+							bscc.value = bv.value - 12;
+						&lt;/xtce:AlgorithmText&gt;
+						&lt;xtce:InputSet&gt;
+							&lt;xtce:InputParameterInstanceRef parameterRef="Battery_Voltage" inputName="bv"/&gt;
+						&lt;/xtce:InputSet&gt;
+						&lt;xtce:OutputSet&gt;
+							&lt;xtce:OutputParameterRef parameterRef="Battery_State_Of_Charge_Custom" outputName="bscc"/&gt;
+						&lt;/xtce:OutputSet&gt;
+						&lt;xtce:TriggerSet&gt;
+							&lt;xtce:OnParameterUpdateTrigger parameterRef="Battery_Voltage"/&gt;
+						&lt;/xtce:TriggerSet&gt;
+					&lt;/xtce:CustomAlgorithm&gt;
+				&lt;/xtce:AlgorithmSet&gt;
+			&lt;/xtce:TelemetryMetaData&gt;
+			&lt;xtce:CommandMetaData&gt;
+				&lt;xtce:ArgumentTypeSet&gt;
+					&lt;xtce:BooleanArgumentType name="Bool_Arg_Type" shortDescription="boolean argument type" initialValue="True"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;IntegerDataEncoding sizeInBits="1"/&gt;
+					&lt;/xtce:BooleanArgumentType&gt;
+					&lt;xtce:StringArgumentType name="FV_String_Type" shortDescription="fixed value string argument type"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;StringDataEncoding&gt;
+						&lt;SizeInBits&gt;
+						    &lt;Fixed&gt;
+                     			&lt;FixedValue&gt;320&lt;/FixedValue&gt;
+                  			&lt;/Fixed&gt;
+               				&lt;/SizeInBits&gt;
+           				 &lt;/StringDataEncoding&gt;
+					&lt;/xtce:StringArgumentType&gt;
+					&lt;xtce:BinaryArgumentType name="FV_Binary_Type" shortDescription="fixed value binary argument type"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;BinaryDataEncoding&gt;
+						&lt;SizeInBits&gt;
+						    &lt;Fixed&gt;
+                     			&lt;FixedValue&gt;128&lt;/FixedValue&gt;
+                  			&lt;/Fixed&gt;
+               				&lt;/SizeInBits&gt;
+           				 &lt;/BinaryDataEncoding&gt;
+					&lt;/xtce:BinaryArgumentType&gt;
+
+					&lt;xtce:IntegerArgumentType name="RW_UNIT_ID_Type" shortDescription="ID number of the reaction wheel"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/&gt;
+						&lt;xtce:ValidRange minInclusive="1" maxInclusive="2"/&gt;
+					&lt;/xtce:IntegerArgumentType&gt;
+					&lt;xtce:IntegerArgumentType name="CmdId_Type"&gt;
+						&lt;xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/&gt;
+					&lt;/xtce:IntegerArgumentType&gt;
+					&lt;xtce:EnumeratedArgumentType name="RW_PWR_STATE_Type" shortDescription="Flag to indicate if power should be turned on or off"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/&gt;
+						&lt;xtce:EnumerationList&gt;
+							&lt;xtce:Enumeration value="0" label="OFF"/&gt;
+							&lt;xtce:Enumeration value="1" label="ON"/&gt;
+						&lt;/xtce:EnumerationList&gt;
+					&lt;/xtce:EnumeratedArgumentType&gt;
+					&lt;xtce:EnumeratedArgumentType name="PHASE_Type"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/&gt;
+						&lt;xtce:EnumerationList&gt;
+							&lt;xtce:Enumeration value="0" label="SAFE"/&gt;
+							&lt;xtce:Enumeration value="1" label="LEOP"/&gt;
+							&lt;xtce:Enumeration value="2" label="ASCENT"/&gt;
+							&lt;xtce:Enumeration value="3" label="MISSION"/&gt;
+							&lt;xtce:Enumeration value="4" label="STORAGE"/&gt;
+							&lt;xtce:Enumeration value="5" label="DEBORBIT"/&gt;
+						&lt;/xtce:EnumerationList&gt;
+					&lt;/xtce:EnumeratedArgumentType&gt;
+				&lt;/xtce:ArgumentTypeSet&gt;
+				&lt;xtce:MetaCommandSet&gt;
+				  &lt;xtce:MetaCommand name="AbstractCmd" shortDescription="parent command" abstract="true"&gt;						
+						&lt;xtce:ArgumentList&gt;
+							&lt;xtce:Argument name="CmdId" argumentTypeRef="CmdId_Type" shortDescription="Command Identifier"/&gt;
+						&lt;/xtce:ArgumentList&gt;
+						&lt;xtce:CommandContainer name="AbstractCmd_container"&gt;							
+							&lt;xtce:EntryList&gt;
+								&lt;xtce:ArgumentRefEntry argumentRef="CmdId"/&gt;
+							&lt;/xtce:EntryList&gt;
+						&lt;/xtce:CommandContainer&gt;
+					&lt;/xtce:MetaCommand&gt;
+					 
+					&lt;xtce:MetaCommand name="Reaction_Wheel_Control" shortDescription="Power on/off reaction wheel"&gt;
+						&lt;xtce:LongDescription&gt;This hardware telecommand directs the hardware to power on or off either of the 2 reaction wheels&lt;/xtce:LongDescription&gt;
+						&lt;xtce:AliasSet&gt;
+							&lt;xtce:Alias nameSpace="OPS" alias="RW_PWR"/&gt;
+						&lt;/xtce:AliasSet&gt;
+						&lt;xtce:BaseMetaCommand metaCommandRef="../../CCSDSDirectTelecommand"/&gt;
+						&lt;xtce:ArgumentList&gt;
+							&lt;xtce:Argument name="RW_UNIT_ID" argumentTypeRef="RW_UNIT_ID_Type"/&gt;
+							&lt;xtce:Argument name="RW_PWR_STATE" argumentTypeRef="RW_PWR_STATE_Type"/&gt;
+						&lt;/xtce:ArgumentList&gt;
+						&lt;xtce:CommandContainer name="Reaction_Wheel_Control_Container"&gt;
+							&lt;xtce:EntryList&gt;
+								&lt;xtce:ArgumentRefEntry argumentRef="RW_UNIT_ID"/&gt;
+								&lt;xtce:ArgumentRefEntry argumentRef="RW_PWR_STATE"/&gt;
+							&lt;/xtce:EntryList&gt;
+							&lt;xtce:BaseContainer containerRef="../../CCSDSDirectTelecommand"/&gt;
+						&lt;/xtce:CommandContainer&gt;
+					&lt;/xtce:MetaCommand&gt;
+					 &lt;!--
+					&lt;xtce:MetaCommand name="Reaction_Wheel_1_On" shortDescription="Turn power on for reaction wheel 1"&gt;
+						&lt;xtce:LongDescription&gt;This hardware telecommand is a derived form of 'Reaction_Wheel_Control' that turns ON reaction wheel 1&lt;/xtce:LongDescription&gt;
+						&lt;xtce:AliasSet&gt;
+							&lt;xtce:Alias nameSpace="OPS" alias="RW_1_ON"/&gt;
+						&lt;/xtce:AliasSet&gt;
+						&lt;xtce:BaseMetaCommand metaCommandRef="Reaction_Wheel_Control"&gt;
+							&lt;xtce:ArgumentAssignmentList&gt;
+								&lt;xtce:ArgumentAssignment argumentName="RW_UNIT_ID" argumentValue="1"/&gt;
+								&lt;xtce:ArgumentAssignment argumentName="RW_PWR_STATE" argumentValue="ON"/&gt;
+							&lt;/xtce:ArgumentAssignmentList&gt;
+						&lt;/xtce:BaseMetaCommand&gt;
+						&lt;xtce:CommandContainer name="Reaction_Wheel_1_On_Container"&gt;
+							&lt;xtce:EntryList/&gt;
+							&lt;xtce:BaseContainer containerRef="Reaction_Wheel_Control_Container"/&gt;
+						&lt;/xtce:CommandContainer&gt;
+					&lt;/xtce:MetaCommand&gt;
+					&lt;xtce:MetaCommand name="Reaction_Wheel_1_Off" shortDescription="Turn power off for reaction wheel 1"&gt;
+						&lt;xtce:LongDescription&gt;This hardware telecommand is a derived form of 'Reaction_Wheel_Control' that turns OFF reaction wheel 1&lt;/xtce:LongDescription&gt;
+						&lt;xtce:AliasSet&gt;
+							&lt;xtce:Alias nameSpace="OPS" alias="RW_1_OFF"/&gt;
+						&lt;/xtce:AliasSet&gt;
+						&lt;xtce:BaseMetaCommand metaCommandRef="Reaction_Wheel_Control"&gt;
+							&lt;xtce:ArgumentAssignmentList&gt;
+								&lt;xtce:ArgumentAssignment argumentName="RW_UNIT_ID" argumentValue="1"/&gt;
+								&lt;xtce:ArgumentAssignment argumentName="RW_PWR_STATE" argumentValue="OFF"/&gt;
+							&lt;/xtce:ArgumentAssignmentList&gt;
+						&lt;/xtce:BaseMetaCommand&gt;
+						&lt;xtce:CommandContainer name="Reaction_Wheel_1_Off_Container"&gt;
+							&lt;xtce:EntryList/&gt;
+							&lt;xtce:BaseContainer containerRef="Reaction_Wheel_Control_Container"/&gt;
+						&lt;/xtce:CommandContainer&gt;
+					&lt;/xtce:MetaCommand&gt;
+					&lt;xtce:MetaCommand name="Reaction_Wheel_2_On" shortDescription="Turn power on for reaction wheel 2"&gt;
+						&lt;xtce:LongDescription&gt;This hardware telecommand is a derived form of 'Reaction_Wheel_Control' that turns ON reaction wheel 2&lt;/xtce:LongDescription&gt;
+						&lt;xtce:AliasSet&gt;
+							&lt;xtce:Alias nameSpace="OPS" alias="RW_2_ON"/&gt;
+						&lt;/xtce:AliasSet&gt;
+						&lt;xtce:BaseMetaCommand metaCommandRef="Reaction_Wheel_Control"&gt;
+							&lt;xtce:ArgumentAssignmentList&gt;
+								&lt;xtce:ArgumentAssignment argumentName="RW_UNIT_ID" argumentValue="2"/&gt;
+								&lt;xtce:ArgumentAssignment argumentName="RW_PWR_STATE" argumentValue="ON"/&gt;
+							&lt;/xtce:ArgumentAssignmentList&gt;
+						&lt;/xtce:BaseMetaCommand&gt;
+						&lt;xtce:CommandContainer name="Reaction_Wheel_2_On_Container"&gt;
+							&lt;xtce:EntryList/&gt;
+							&lt;xtce:BaseContainer containerRef="Reaction_Wheel_Control_Container"/&gt;
+						&lt;/xtce:CommandContainer&gt;
+					&lt;/xtce:MetaCommand&gt;
+					&lt;xtce:MetaCommand name="Reaction_Wheel_2_Off" shortDescription="Turn power off for reaction wheel 2"&gt;
+						&lt;xtce:LongDescription&gt;This hardware telecommand is a derived form of 'Reaction_Wheel_Control' that turns OFF reaction wheel 2&lt;/xtce:LongDescription&gt;
+						&lt;xtce:AliasSet&gt;
+							&lt;xtce:Alias nameSpace="OPS" alias="RW_2_OFF"/&gt;
+						&lt;/xtce:AliasSet&gt;
+						&lt;xtce:BaseMetaCommand metaCommandRef="Reaction_Wheel_Control"&gt;
+							&lt;xtce:ArgumentAssignmentList&gt;
+								&lt;xtce:ArgumentAssignment argumentName="RW_UNIT_ID" argumentValue="2"/&gt;
+								&lt;xtce:ArgumentAssignment argumentName="RW_PWR_STATE" argumentValue="OFF"/&gt;
+							&lt;/xtce:ArgumentAssignmentList&gt;
+						&lt;/xtce:BaseMetaCommand&gt;
+						&lt;xtce:CommandContainer name="Reaction_Wheel_2_Off_Container"&gt;
+							&lt;xtce:EntryList/&gt;
+							&lt;xtce:BaseContainer containerRef="Reaction_Wheel_Control_Container"/&gt;
+						&lt;/xtce:CommandContainer&gt;
+					&lt;/xtce:MetaCommand&gt;
+					--&gt;
+					&lt;xtce:MetaCommand name="Set_Mission_Phase" shortDescription="Set the bus electronics mission phase"&gt;
+						&lt;xtce:BaseMetaCommand metaCommandRef="/BogusSAT/CCSDSPUSTelecommand"/&gt;
+						&lt;xtce:ArgumentList&gt;
+							&lt;xtce:Argument name="PHASE" argumentTypeRef="PHASE_Type" shortDescription="Mission Operational Mode"/&gt;
+						&lt;/xtce:ArgumentList&gt;
+						&lt;xtce:CommandContainer name="Set_Mission_Phase_Container"&gt;
+							&lt;xtce:BaseContainer containerRef="/BogusSAT/CCSDSPUSCommandPacket"/&gt;
+							&lt;xtce:EntryList&gt;
+								&lt;xtce:ArgumentRefEntry argumentRef="PHASE"/&gt;
+							&lt;/xtce:EntryList&gt;
+						&lt;/xtce:CommandContainer&gt;
+					&lt;/xtce:MetaCommand&gt;
+					
+					&lt;xtce:MetaCommand name="Cmd1" shortDescription="testing various argument types"&gt;
+						&lt;xtce:BaseMetaCommand metaCommandRef="AbstractCmd"&gt;
+							&lt;ArgumentAssignmentList&gt;
+                  				&lt;ArgumentAssignment argumentName="CmdId" argumentValue="1" /&gt;                 				
+               				&lt;/ArgumentAssignmentList&gt;							
+						&lt;/xtce:BaseMetaCommand&gt;
+						&lt;xtce:ArgumentList&gt;
+							&lt;xtce:Argument name="STRING_FV" argumentTypeRef="FV_String_Type" shortDescription="fixed string"  initialValue="blabla"/&gt;
+						&lt;/xtce:ArgumentList&gt;
+						&lt;xtce:ArgumentList&gt;
+							&lt;xtce:Argument name="BINARY_FV" argumentTypeRef="FV_Binary_Type" shortDescription="fixed string"/&gt;
+						&lt;/xtce:ArgumentList&gt;
+						&lt;xtce:CommandContainer name="Cmd1_Container"&gt;
+							&lt;xtce:BaseContainer containerRef="/BogusSAT/CCSDSPUSCommandPacket"/&gt;
+							&lt;xtce:EntryList&gt;
+								&lt;xtce:ArgumentRefEntry argumentRef="STRING_FV"/&gt;
+								&lt;xtce:ArgumentRefEntry argumentRef="BINARY_FV"/&gt;
+							&lt;/xtce:EntryList&gt;
+						&lt;/xtce:CommandContainer&gt;
+					&lt;/xtce:MetaCommand&gt;
+					
+					
+				&lt;/xtce:MetaCommandSet&gt;
+			&lt;/xtce:CommandMetaData&gt;
+		&lt;/xtce:SpaceSystem&gt;
+		&lt;xtce:SpaceSystem name="Payload1"&gt;
+			&lt;xtce:LongDescription&gt;This is the primary revenue generating payload software monitor and control data.&lt;/xtce:LongDescription&gt;
+			&lt;xtce:Header validationStatus="Working" classification="NotClassified" version="Build2" date="27-10-2012"/&gt;
+			&lt;xtce:TelemetryMetaData&gt;
+				&lt;xtce:ParameterTypeSet&gt;
+					&lt;xtce:IntegerParameterType name="GENERIC_16BIT_UNSIGNED_INT" signed="false" sizeInBits="16" shortDescription="Generic unsigned 16 bit number"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="16" changeThreshold="1"/&gt;
+					&lt;/xtce:IntegerParameterType&gt;
+					&lt;xtce:StringParameterType name="Payload_Fault_Message_Type" shortDescription="Payload Error Message"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:StringDataEncoding bitOrder="mostSignificantBitFirst" encoding="UTF-8"&gt;
+							&lt;xtce:SizeInBits&gt;
+								&lt;xtce:TerminationChar&gt;00&lt;/xtce:TerminationChar&gt;
+							&lt;/xtce:SizeInBits&gt;
+						&lt;/xtce:StringDataEncoding&gt;
+						&lt;xtce:SizeRangeInCharacters minInclusive="1" maxInclusive="256"/&gt;
+					&lt;/xtce:StringParameterType&gt;
+					&lt;xtce:BinaryParameterType name="Payload_MD5_Type" shortDescription="MD5 Sum of Software Image"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:BinaryDataEncoding bitOrder="mostSignificantBitFirst"&gt;
+							&lt;xtce:SizeInBits&gt;
+								&lt;xtce:FixedValue&gt;128&lt;/xtce:FixedValue&gt;
+							&lt;/xtce:SizeInBits&gt;
+						&lt;/xtce:BinaryDataEncoding&gt;
+					&lt;/xtce:BinaryParameterType&gt;
+					&lt;xtce:BooleanParameterType name="Payload_1_State_Type" zeroStringValue="OFF" oneStringValue="ON" shortDescription="Payload 1 enable state"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" sizeInBits="4" encoding="unsigned" changeThreshold="1"/&gt;
+					&lt;/xtce:BooleanParameterType&gt;
+					&lt;xtce:EnumeratedParameterType name="Payload_1_Phase_Type" shortDescription="Operational Phase of Payload"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" sizeInBits="4" encoding="unsigned" changeThreshold="1"/&gt;
+						&lt;xtce:EnumerationList&gt;
+							&lt;xtce:Enumeration label="TEST" value="1"/&gt;
+							&lt;xtce:Enumeration label="LAUNCH" value="2"/&gt;
+							&lt;xtce:Enumeration label="STANDBY" value="3"/&gt;
+							&lt;xtce:Enumeration label="ACTIVE" value="4"/&gt;
+							&lt;xtce:Enumeration label="SHUTDOWN" value="5"/&gt;
+							&lt;xtce:Enumeration label="FAILED" value="6" maxValue="16"/&gt;
+						&lt;/xtce:EnumerationList&gt;
+					&lt;/xtce:EnumeratedParameterType&gt;
+					&lt;xtce:EnumeratedParameterType name="Payload_1_Antenna_State_Type" shortDescription="Payload 1 antenna operational state"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:EnumerationList&gt;
+							&lt;xtce:Enumeration label="OFF" value="0"/&gt;
+							&lt;xtce:Enumeration label="STANDBY" value="1"/&gt;
+							&lt;xtce:Enumeration label="SIGNAL_PRESENT" value="2"/&gt;
+							&lt;xtce:Enumeration label="ACQUIRED" value="3"/&gt;
+							&lt;xtce:Enumeration label="SIGNAL_LOST" value="4"/&gt;
+							&lt;xtce:Enumeration label="FAILED" value="5"/&gt;
+						&lt;/xtce:EnumerationList&gt;
+						&lt;xtce:DefaultAlarm minViolations="1"&gt;
+							&lt;xtce:EnumerationAlarmList&gt;
+								&lt;xtce:EnumerationAlarm enumerationLabel="FAILED" alarmLevel="critical"/&gt;
+							&lt;/xtce:EnumerationAlarmList&gt;
+						&lt;/xtce:DefaultAlarm&gt;
+						&lt;xtce:ContextAlarmList&gt;
+							&lt;xtce:ContextAlarm minViolations="1"&gt;
+								&lt;xtce:EnumerationAlarmList&gt;
+									&lt;xtce:EnumerationAlarm enumerationLabel="SIGNAL_LOST" alarmLevel="warning"/&gt;
+									&lt;xtce:EnumerationAlarm enumerationLabel="OFF" alarmLevel="critical"/&gt;
+									&lt;xtce:EnumerationAlarm enumerationLabel="FAILED" alarmLevel="critical"/&gt;
+								&lt;/xtce:EnumerationAlarmList&gt;
+								&lt;xtce:ContextMatch&gt;
+									&lt;xtce:Comparison parameterRef="Payload_1_State" value="ON" comparisonOperator="==" useCalibratedValue="true"/&gt;
+								&lt;/xtce:ContextMatch&gt;
+							&lt;/xtce:ContextAlarm&gt;
+						&lt;/xtce:ContextAlarmList&gt;
+					&lt;/xtce:EnumeratedParameterType&gt;
+					&lt;xtce:StringParameterType name="CPU_Fault_Message_Type" shortDescription="CPU Error Message"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:StringDataEncoding bitOrder="mostSignificantBitFirst" encoding="UTF-16"&gt;
+							&lt;xtce:SizeInBits&gt;
+								&lt;xtce:Fixed&gt;
+									&lt;xtce:FixedValue&gt;64&lt;/xtce:FixedValue&gt;
+								&lt;/xtce:Fixed&gt;
+							&lt;/xtce:SizeInBits&gt;
+						&lt;/xtce:StringDataEncoding&gt;
+					&lt;/xtce:StringParameterType&gt;
+					&lt;xtce:FloatParameterType name="Basic_Float32_Type" sizeInBits="32" shortDescription="This is a float32 parameter with a simple float32 encoding"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32" changeThreshold="0.001"/&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;xtce:FloatParameterType name="Basic_Float64_Type" sizeInBits="64" shortDescription="This is a float64 parameter with a simple float64 encoding"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64" changeThreshold="0.000001"/&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					&lt;!--Skipped because Yamcs does not support  MILSTD_1750A encoding on 16 bits
+					&lt;xtce:FloatParameterType name="Basic_MilFloat16_Type" sizeInBits="32" shortDescription="This is a float32 parameter with a milstd float16 encoding"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="MILSTD_1750A" sizeInBits="16" changeThreshold="0.001"/&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					--&gt;					
+					&lt;xtce:FloatParameterType name="Basic_MilFloat32_Type" sizeInBits="32" shortDescription="This is a float32 parameter with a milstd float32 encoding"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="MILSTD_1750A" sizeInBits="32" changeThreshold="0.001"/&gt;
+					&lt;/xtce:FloatParameterType&gt;					
+					&lt;xtce:FloatParameterType name="Basic_MilFloat48_Type" sizeInBits="64" shortDescription="This is a float64 parameter with a milstd float48 encoding"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="MILSTD_1750A" sizeInBits="48" changeThreshold="0.001"/&gt;
+					&lt;/xtce:FloatParameterType&gt;
+					 
+					&lt;xtce:IntegerParameterType name="Basic_uint32_Type" signed="false" sizeInBits="32" shortDescription="Generic unsigned 32 bit number"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="32" changeThreshold="1"/&gt;
+					&lt;/xtce:IntegerParameterType&gt;
+					&lt;xtce:IntegerParameterType name="Basic_int32_signmag_Type" signed="true" sizeInBits="32" shortDescription="Generic signed 32 bit number with sign magnitude encoding"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="signMagnitude" sizeInBits="32" changeThreshold="1"/&gt;
+					&lt;/xtce:IntegerParameterType&gt;
+					&lt;xtce:IntegerParameterType name="Basic_int32_twoscomp_Type" signed="true" sizeInBits="32" shortDescription="Generic signed 32 bit number with twos complement encoding"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="twosComplement" sizeInBits="32" changeThreshold="1"/&gt;
+					&lt;/xtce:IntegerParameterType&gt;
+					&lt;xtce:IntegerParameterType name="Basic_int32_onescomp_Type" signed="true" sizeInBits="32" shortDescription="Generic signed 32 bit number with ones complement encoding"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="onesComplement" sizeInBits="32" changeThreshold="1"/&gt;
+					&lt;/xtce:IntegerParameterType&gt;
+				&lt;/xtce:ParameterTypeSet&gt;
+				&lt;xtce:ParameterSet&gt;
+					&lt;xtce:Parameter name="Payload_1_State" parameterTypeRef="Payload_1_State_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;CPU&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Payload_1_Phase" parameterTypeRef="Payload_1_Phase_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;CPU&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Payload_1_Antenna_State" parameterTypeRef="Payload_1_Antenna_State_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;GCS&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Payload_Fault_Message" parameterTypeRef="Payload_Fault_Message_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;CPU&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="CPU_Fault_Message" parameterTypeRef="CPU_Fault_Message_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;CPU&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Payload_MD5" parameterTypeRef="Payload_MD5_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;CPU&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Basic_Float32" parameterTypeRef="Basic_Float32_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;CPU&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Basic_Float64" parameterTypeRef="Basic_Float64_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;CPU&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;!-- not supported by Yamcs  
+					&lt;xtce:Parameter name="Basic_MilFloat16" parameterTypeRef="Basic_MilFloat16_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;CPU&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					 --&gt;
+					&lt;xtce:Parameter name="Basic_MilFloat32" parameterTypeRef="Basic_MilFloat32_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;CPU&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Basic_MilFloat48" parameterTypeRef="Basic_MilFloat48_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;CPU&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					
+					&lt;xtce:Parameter name="Basic_uint32" parameterTypeRef="Basic_uint32_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;CPU&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Basic_int32_signmag" parameterTypeRef="Basic_int32_signmag_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;CPU&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Basic_int32_twoscomp" parameterTypeRef="Basic_int32_twoscomp_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;CPU&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+					&lt;xtce:Parameter name="Basic_int32_onescomp" parameterTypeRef="Basic_int32_onescomp_Type"&gt;
+						&lt;xtce:ParameterProperties dataSource="telemetered" readOnly="true"&gt;
+							&lt;xtce:SystemName&gt;CPU&lt;/xtce:SystemName&gt;
+						&lt;/xtce:ParameterProperties&gt;
+					&lt;/xtce:Parameter&gt;
+				&lt;/xtce:ParameterSet&gt;
+			&lt;/xtce:TelemetryMetaData&gt;
+			&lt;xtce:CommandMetaData&gt;
+				&lt;xtce:ArgumentTypeSet&gt;
+					&lt;xtce:EnumeratedArgumentType name="Payload_State_Type"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding encoding="signMagnitude" sizeInBits="8"/&gt;
+						&lt;xtce:EnumerationList&gt;
+							&lt;xtce:Enumeration value="-1" label="OFF"/&gt;
+							&lt;xtce:Enumeration value="1" label="ON"/&gt;
+							&lt;xtce:Enumeration value="0" label="STANDBY"/&gt;
+						&lt;/xtce:EnumerationList&gt;
+					&lt;/xtce:EnumeratedArgumentType&gt;
+					&lt;xtce:FloatArgumentType name="Output_Power_Type" shortDescription="Payload output power"&gt;
+						&lt;xtce:UnitSet&gt;
+							&lt;xtce:Unit description="current"&gt;Amperes&lt;/xtce:Unit&gt;
+						&lt;/xtce:UnitSet&gt;
+						&lt;xtce:FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985"/&gt;
+						&lt;xtce:ValidRange minInclusive="0.00" maxInclusive="4000.00" rangeAppliesToCalibrated="true"/&gt;
+					&lt;/xtce:FloatArgumentType&gt;
+					&lt;xtce:AggregateArgumentType name="Config_Item_Type"&gt;
+						&lt;xtce:MemberList&gt;
+							&lt;xtce:Member name="ADDRESS" typeRef="Address_Type"/&gt;
+							&lt;xtce:Member name="VALUE32" typeRef="Value32_Type"/&gt;
+						&lt;/xtce:MemberList&gt;
+					&lt;/xtce:AggregateArgumentType&gt;
+					&lt;xtce:IntegerArgumentType name="Address_Type" signed="false" shortDescription="Address of configurable"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned"/&gt;
+					&lt;/xtce:IntegerArgumentType&gt;
+					&lt;xtce:IntegerArgumentType name="Value32_Type" shortDescription="New value to set to 32 bit integer item"&gt;
+						&lt;xtce:UnitSet/&gt;
+						&lt;xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned"/&gt;
+					&lt;/xtce:IntegerArgumentType&gt;
+				&lt;/xtce:ArgumentTypeSet&gt;
+				&lt;xtce:MetaCommandSet&gt;
+					&lt;xtce:MetaCommand name="Payload_1_Control" shortDescription="Controls the state of payload operation"&gt;
+						&lt;xtce:BaseMetaCommand metaCommandRef="/BogusSAT/CCSDSPUSTelecommand"/&gt;
+						&lt;xtce:ArgumentList&gt;
+							&lt;xtce:Argument name="STATE" argumentTypeRef="Payload_State_Type"/&gt;
+							&lt;xtce:Argument name="OUTPUT_POWER" argumentTypeRef="Output_Power_Type"&gt;
+								&lt;xtce:LongDescription&gt;Long Description of the output power argument&lt;/xtce:LongDescription&gt;
+							&lt;/xtce:Argument&gt;
+						&lt;/xtce:ArgumentList&gt;
+						&lt;xtce:CommandContainer name="Payload_1_Control_Container"&gt;
+							&lt;xtce:BaseContainer containerRef="/BogusSAT/CCSDSPUSCommandPacket"/&gt;
+							&lt;xtce:EntryList&gt;
+								&lt;xtce:ArgumentRefEntry argumentRef="STATE"/&gt;
+								&lt;xtce:FixedValueEntry binaryValue="f0" sizeInBits="8"/&gt;
+								&lt;xtce:ArgumentRefEntry argumentRef="OUTPUT_POWER"/&gt;
+							&lt;/xtce:EntryList&gt;
+						&lt;/xtce:CommandContainer&gt;
+					&lt;/xtce:MetaCommand&gt;
+					&lt;xtce:MetaCommand name="Adjust_Payload_1_Config" shortDescription="Modify payload configuration"&gt;
+						&lt;xtce:LongDescription&gt;Modifies an internal configurable item at a provided address for the payload processor&lt;/xtce:LongDescription&gt;
+						&lt;xtce:BaseMetaCommand metaCommandRef="/BogusSAT/CCSDSPUSTelecommand"/&gt;
+						&lt;xtce:ArgumentList&gt;
+						&lt;!--  aggregates not supported by Yamcs
+							&lt;xtce:Argument name="CFGITEM" argumentTypeRef="Config_Item_Type"/&gt;
+					     --&gt;
+						&lt;/xtce:ArgumentList&gt;
+						
+						&lt;xtce:CommandContainer name="Adjust_Payload_1_Config_Container"&gt;
+							&lt;xtce:BaseContainer containerRef="/BogusSAT/CCSDSPUSCommandPacket"/&gt;
+							&lt;xtce:EntryList&gt;
+							&lt;!--  aggregates not supported by Yamcs
+								&lt;xtce:ArgumentRefEntry argumentRef="CFGITEM"/&gt;
+						     --&gt;
+							&lt;/xtce:EntryList&gt;
+						&lt;/xtce:CommandContainer&gt;
+					&lt;/xtce:MetaCommand&gt;
+				&lt;/xtce:MetaCommandSet&gt;
+			&lt;/xtce:CommandMetaData&gt;
+		&lt;/xtce:SpaceSystem&gt;
+		&lt;xtce:SpaceSystem name="Payload2" xsi:nil="true"/&gt;
+	&lt;/xtce:SpaceSystem&gt;
+&lt;/xtce:SpaceSystem&gt;
+</pre></div>
+</div>
+</section>
+<section id="indirect-param-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">indirect-param.xml</span></code><a class="headerlink" href="#indirect-param-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-xtce/src/test/resources/indirect-param.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;SpaceSystem name="Example"
+  xmlns="https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  shortDescription="Example XTCE to test IndirectParamRefs with aliases"&gt;
+
+  &lt;TelemetryMetaData&gt;
+    &lt;ParameterTypeSet&gt;
+      &lt;IntegerParameterType name="id_type"&gt;
+        &lt;IntegerDataEncoding sizeInBits="32" /&gt;
+      &lt;/IntegerParameterType&gt;
+      &lt;FloatParameterType name="float_type"&gt;
+        &lt;FloatDataEncoding sizeInBits="32" /&gt;
+      &lt;/FloatParameterType&gt;
+    &lt;/ParameterTypeSet&gt;
+    &lt;ParameterSet&gt;
+      &lt;Parameter parameterTypeRef="id_type" name="id" /&gt;
+      &lt;Parameter parameterTypeRef="float_type" name="example_param1"&gt;
+        &lt;AliasSet&gt;
+          &lt;Alias nameSpace="test-ns-id" alias="1" /&gt;
+        &lt;/AliasSet&gt;
+      &lt;/Parameter&gt;
+      &lt;Parameter parameterTypeRef="float_type" name="example_param2"&gt;
+        &lt;AliasSet&gt;
+          &lt;Alias nameSpace="test-ns-id" alias="2" /&gt;
+        &lt;/AliasSet&gt;
+      &lt;/Parameter&gt;
+    &lt;/ParameterSet&gt;
+    &lt;ContainerSet&gt;
+      &lt;SequenceContainer name="id_value_pair"&gt;
+        &lt;EntryList&gt;
+          &lt;ParameterRefEntry parameterRef="id" /&gt;
+          &lt;IndirectParameterRefEntry aliasNameSpace="test-ns-id"&gt;
+            &lt;ParameterInstance parameterRef="id" /&gt;
+          &lt;/IndirectParameterRefEntry&gt;
+        &lt;/EntryList&gt;
+      &lt;/SequenceContainer&gt;
+      &lt;SequenceContainer name="id_value_pair2"&gt;
+        &lt;EntryList&gt;
+          &lt;ParameterRefEntry parameterRef="id" /&gt;
+          &lt;IndirectParameterRefEntry aliasNameSpace="test-ns-id"&gt;
+            &lt;ParameterInstance parameterRef="id" /&gt;
+          &lt;/IndirectParameterRefEntry&gt;
+           &lt;ParameterRefEntry parameterRef="id" /&gt;
+          &lt;IndirectParameterRefEntry aliasNameSpace="test-ns-id"&gt;
+            &lt;ParameterInstance parameterRef="id" /&gt;
+          &lt;/IndirectParameterRefEntry&gt;
+        &lt;/EntryList&gt;
+      &lt;/SequenceContainer&gt;
+    &lt;/ContainerSet&gt;
+  &lt;/TelemetryMetaData&gt;
+
+&lt;/SpaceSystem&gt;
+</pre></div>
+</div>
+</section>
+<section id="ipre-no-instance-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">ipre-no-instance.xml</span></code><a class="headerlink" href="#ipre-no-instance-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-xtce/src/test/resources/ipre-no-instance.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;SpaceSystem name="Example"
+  xmlns="https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  shortDescription="Example XTCE to test IndirectParamRefs with aliases"&gt;
+
+  &lt;TelemetryMetaData&gt;
+    &lt;ParameterTypeSet&gt;
+      &lt;IntegerParameterType name="id_type"&gt;
+        &lt;IntegerDataEncoding sizeInBits="32" /&gt;
+      &lt;/IntegerParameterType&gt;
+      &lt;FloatParameterType name="float_type"&gt;
+        &lt;FloatDataEncoding sizeInBits="32" /&gt;
+      &lt;/FloatParameterType&gt;
+    &lt;/ParameterTypeSet&gt;
+    &lt;ParameterSet&gt;
+      &lt;Parameter parameterTypeRef="id_type" name="id" /&gt;
+      &lt;Parameter parameterTypeRef="float_type" name="float" /&gt;
+    &lt;/ParameterSet&gt;
+    &lt;ContainerSet&gt;
+      &lt;SequenceContainer name="id_value_pair"&gt;
+        &lt;EntryList&gt;
+          &lt;ParameterRefEntry parameterRef="id" /&gt;
+          &lt;IndirectParameterRefEntry aliasNameSpace="/Example/non-existent-ns"&gt;
+            &lt;!-- missing ParameterInstance --&gt;
+          &lt;/IndirectParameterRefEntry&gt;
+        &lt;/EntryList&gt;
+      &lt;/SequenceContainer&gt;
+    &lt;/ContainerSet&gt;
+  &lt;/TelemetryMetaData&gt;
+
+&lt;/SpaceSystem&gt;
+</pre></div>
+</div>
+</section>
+<section id="ranges-test-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">ranges-test.xml</span></code><a class="headerlink" href="#ranges-test-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-xtce/src/test/resources/ranges-test.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;SpaceSystem name="Example"
+  xmlns="http://www.omg.org/spec/XTCE/20180204"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  shortDescription="Example XTCE to illustrate setting validity ranges for parameters and arguments"&gt;
+
+  &lt;TelemetryMetaData&gt;
+    &lt;ParameterTypeSet&gt;
+      &lt;FloatParameterType name="latitude_t" sizeInBits="64" shortDescription="A type to represent a latitude value"&gt;
+        &lt;UnitSet&gt;
+          &lt;Unit description="Degrees of Mercator projection latitude"&gt;degrees&lt;/Unit&gt;
+        &lt;/UnitSet&gt;
+        &lt;FloatDataEncoding sizeInBits="64" byteOrder="mostSignificantByteFirst" encoding="IEEE754_1985" /&gt;
+        &lt;ValidRange minInclusive="-90.0" maxInclusive="90.0" /&gt;
+      &lt;/FloatParameterType&gt;
+    &lt;/ParameterTypeSet&gt;
+    &lt;ParameterSet&gt;
+      &lt;Parameter parameterTypeRef="latitude_t" name="latitude" /&gt;
+    &lt;/ParameterSet&gt;
+    &lt;ContainerSet&gt;
+      &lt;SequenceContainer name="telemetry"&gt;
+        &lt;EntryList&gt;
+          &lt;ParameterRefEntry parameterRef="latitude" /&gt;
+        &lt;/EntryList&gt;
+      &lt;/SequenceContainer&gt;
+    &lt;/ContainerSet&gt;
+  &lt;/TelemetryMetaData&gt;
+  
+  
+  &lt;CommandMetaData&gt;
+    &lt;ArgumentTypeSet&gt;
+      &lt;EnumeratedArgumentType name="opcode_t"&gt;
+        &lt;IntegerDataEncoding sizeInBits="8" encoding="unsigned" /&gt;
+        &lt;EnumerationList&gt;
+          &lt;Enumeration value="1" label="SetTemperature"/&gt;
+        &lt;/EnumerationList&gt;
+      &lt;/EnumeratedArgumentType&gt;
+      &lt;FloatArgumentType name="temperature_t" sizeInBits="64"&gt;
+        &lt;UnitSet&gt;
+          &lt;Unit description="Desired temperature in degrees Celcius"&gt;degC&lt;/Unit&gt;
+        &lt;/UnitSet&gt;
+        &lt;FloatDataEncoding sizeInBits="64" byteOrder="mostSignificantByteFirst" encoding="IEEE754_1985" /&gt;
+        &lt;ValidRangeSet&gt;
+          &lt;ValidRange minInclusive="10.0" maxExclusive="40.0" /&gt;
+        &lt;/ValidRangeSet&gt;
+      &lt;/FloatArgumentType&gt;
+    &lt;/ArgumentTypeSet&gt;
+    &lt;MetaCommandSet&gt;
+      
+      &lt;MetaCommand name="BaseCommand"&gt;
+        &lt;ArgumentList&gt;
+          &lt;Argument argumentTypeRef="opcode_t" name="opcode" /&gt;
+        &lt;/ArgumentList&gt;
+      &lt;/MetaCommand&gt;
+      
+      &lt;MetaCommand name="SetTemperature"&gt;
+        &lt;BaseMetaCommand metaCommandRef="BaseCommand"&gt;
+          &lt;ArgumentAssignmentList&gt;
+            &lt;ArgumentAssignment argumentName="opcode" argumentValue="SetTemperature" /&gt;
+          &lt;/ArgumentAssignmentList&gt;
+        &lt;/BaseMetaCommand&gt;
+        &lt;ArgumentList&gt;
+          &lt;Argument argumentTypeRef="temperature_t" name="temperature" /&gt;
+        &lt;/ArgumentList&gt;
+        &lt;CommandContainer name="SetTemperature"&gt;
+          &lt;EntryList&gt;
+            &lt;ArgumentRefEntry argumentRef="temperature" /&gt;
+          &lt;/EntryList&gt;
+        &lt;/CommandContainer&gt;
+      &lt;/MetaCommand&gt;
+    &lt;/MetaCommandSet&gt;
+  &lt;/CommandMetaData&gt;
+  
+&lt;/SpaceSystem&gt;
+</pre></div>
+</div>
+</section>
+<section id="to-string-xml">
+<h2><code class="docutils literal notranslate"><span class="pre">to-string.xml</span></code><a class="headerlink" href="#to-string-xml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-xtce/src/test/resources/to-string.xml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;SpaceSystem name="Example"
+  xmlns="http://www.omg.org/spec/XTCE/20180204"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  shortDescription="Example XTCE to test ToString parsing"&gt;
+
+  &lt;TelemetryMetaData&gt;
+    &lt;ParameterTypeSet&gt;
+      &lt;FloatParameterType name="example1_t" sizeInBits="64"&gt;
+        &lt;ToString&gt;
+          &lt;NumberFormat maximumFractionDigits="4" minimumIntegerDigits="4" positivePrefix="+" /&gt;
+        &lt;/ToString&gt;
+      &lt;/FloatParameterType&gt;
+      &lt;FloatParameterType name="example2_t" sizeInBits="64"&gt;
+        &lt;ToString&gt;
+          &lt;NumberFormat notation="scientific" /&gt;
+        &lt;/ToString&gt;
+      &lt;/FloatParameterType&gt;
+      &lt;IntegerParameterType name="example3_t" sizeInBits="64"&gt;
+        &lt;ToString&gt;
+          &lt;NumberFormat numberBase="Hexadecimal" /&gt;
+        &lt;/ToString&gt;
+      &lt;/IntegerParameterType&gt;
+    &lt;/ParameterTypeSet&gt;
+    &lt;ParameterSet&gt;
+      &lt;Parameter parameterTypeRef="example1_t" name="example1" /&gt;
+      &lt;Parameter parameterTypeRef="example2_t" name="example2" /&gt;
+      &lt;Parameter parameterTypeRef="example3_t" name="example3" /&gt;
+    &lt;/ParameterSet&gt;
+  &lt;/TelemetryMetaData&gt;
+
+&lt;/SpaceSystem&gt;
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../java/org/yamcs/xtce/index.html" class="btn btn-neutral float-left" title="xtce" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../../../../yamcs-studio/index.html" class="btn btn-neutral float-right" title="yamcs-studio" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

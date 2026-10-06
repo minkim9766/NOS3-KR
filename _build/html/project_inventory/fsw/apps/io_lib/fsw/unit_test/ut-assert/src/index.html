@@ -1,0 +1,4441 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../search.html" />
+    <link rel="next" title="ut_format_tctf" href="../../ut_format_tctf/index.html" />
+    <link rel="prev" title="inc" href="../inc/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">apps</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">io_lib</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">unit_test</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">ut-assert</a></li>
+      <li class="breadcrumb-item active">src</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../_sources/project_inventory/fsw/apps/io_lib/fsw/unit_test/ut-assert/src/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="src">
+<h1>src<a class="headerlink" href="#src" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="ut-cfe-es-hooks-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ut_cfe_es_hooks.c</span></code><a class="headerlink" href="#ut-cfe-es-hooks-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_es_hooks.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+**
+** File: ut_cfe_es_hooks.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_es_hooks.c 1.1 2011/05/04 11:20:51EDT rmcgraw Exp  $
+**
+** Purpose: Unit test hooks for cFE Executive Services routines
+**
+** $Log: ut_cfe_es_hooks.c  $
+** Revision 1.1 2011/05/04 11:20:51EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:36EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/03/07 17:54:30EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+
+int32 Ut_CFE_ES_RunLoopHook(uint32 *ExitStatus)
+{
+    if (*ExitStatus == CFE_ES_RunStatus_APP_RUN) {
+        return(true);
+    }
+    else { /* CFE_ES_APP_EXIT, CFE_ES_RunStatus_APP_ERROR */
+        return(false);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="ut-cfe-es-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ut_cfe_es_stubs.c</span></code><a class="headerlink" href="#ut-cfe-es-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_es_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+**
+** File: ut_cfe_es_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_es_stubs.c 1.2 2011/05/04 11:28:00EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for cFE Executive Services routines
+**
+** $Log: ut_cfe_es_stubs.c  $
+** Revision 1.2 2011/05/04 11:28:00EDT rmcgraw
+** Changed PoolCreateEx to have new parameter USE_MUTEX
+** Revision 1.1 2011/05/04 11:20:51EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:37EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.5 2011/03/31 14:53:04EDT rmcgraw
+** Added functionality and supressed compiler warnings
+** Revision 1.4 2011/03/23 17:08:18EDT rmcgraw
+** OS_ERROR to OS_SUCCESS for some OS file sys apis
+** Revision 1.3 2011/03/09 10:26:12EST rmcgraw
+** Added SetRtnCode logic to PoolCreateEx
+** Revision 1.2 2011/03/07 17:53:39EST sslegel
+** Added a default hook for ES_CFE_RunLoop
+** Added additional return code support
+** Revision 1.1 2011/02/15 11:13:01EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+/*
+** Include section
+*/
+
+#include "cfe.h"
+#include "ut_cfe_es_stubs.h"
+#include "ut_cfe_es_hooks.h"
+#include &lt;string.h&gt;
+
+Ut_CFE_ES_HookTable_t           Ut_CFE_ES_HookTable;
+Ut_CFE_ES_ReturnCodeTable_t     Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_MAX_INDEX];
+
+void Ut_CFE_ES_Reset(void)
+{
+    memset(&amp;Ut_CFE_ES_HookTable, 0, sizeof(Ut_CFE_ES_HookTable));
+    memset(&amp;Ut_CFE_ES_ReturnCodeTable, 0, sizeof(Ut_CFE_ES_ReturnCodeTable));
+
+    Ut_CFE_ES_SetFunctionHook(UT_CFE_ES_RUNLOOP_INDEX, &amp;Ut_CFE_ES_RunLoopHook);
+}
+
+void Ut_CFE_ES_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if      (Index == UT_CFE_ES_RESETCFE_INDEX)             { Ut_CFE_ES_HookTable.CFE_ES_ResetCFE = FunPtr; }
+    else if (Index == UT_CFE_ES_RESTARTAPP_INDEX)           { Ut_CFE_ES_HookTable.CFE_ES_RestartApp = FunPtr; }
+    else if (Index == UT_CFE_ES_RELOADAPP_INDEX)            { Ut_CFE_ES_HookTable.CFE_ES_ReloadApp = FunPtr; }
+    else if (Index == UT_CFE_ES_DELETEAPP_INDEX)            { Ut_CFE_ES_HookTable.CFE_ES_DeleteApp = FunPtr; }
+    else if (Index == UT_CFE_ES_EXITAPP_INDEX)              { Ut_CFE_ES_HookTable.CFE_ES_ExitApp = FunPtr; }
+    else if (Index == UT_CFE_ES_RUNLOOP_INDEX)              { Ut_CFE_ES_HookTable.CFE_ES_RunLoop = FunPtr; }
+    else if (Index == UT_CFE_ES_WAITFORSTARTUPSYNC_INDEX)   { Ut_CFE_ES_HookTable.CFE_ES_WaitForStartupSync = FunPtr; }
+    else if (Index == UT_CFE_ES_REGISTERAPP_INDEX)          { Ut_CFE_ES_HookTable.CFE_ES_RegisterApp = FunPtr; }
+    else if (Index == UT_CFE_ES_GETAPPID_INDEX)             { Ut_CFE_ES_HookTable.CFE_ES_GetAppID = FunPtr; }
+    else if (Index == UT_CFE_ES_GETAPPIDBYNAME_INDEX)       { Ut_CFE_ES_HookTable.CFE_ES_GetAppIDByName = FunPtr; }
+    else if (Index == UT_CFE_ES_GETAPPNAME_INDEX)           { Ut_CFE_ES_HookTable.CFE_ES_GetAppName = FunPtr; }
+    else if (Index == UT_CFE_ES_GETAPPINFO_INDEX)           { Ut_CFE_ES_HookTable.CFE_ES_GetAppInfo = FunPtr; }
+    else if (Index == UT_CFE_ES_GETTASKINFO_INDEX)          { Ut_CFE_ES_HookTable.CFE_ES_GetTaskInfo = FunPtr; }
+    else if (Index == UT_CFE_ES_REGISTERCHILDTASK_INDEX)    { Ut_CFE_ES_HookTable.CFE_ES_RegisterChildTask = FunPtr; }
+    else if (Index == UT_CFE_ES_CREATECHILDTASK_INDEX)      { Ut_CFE_ES_HookTable.CFE_ES_CreateChildTask = FunPtr; }
+    else if (Index == UT_CFE_ES_DELETECHILDTASK_INDEX)      { Ut_CFE_ES_HookTable.CFE_ES_DeleteChildTask = FunPtr; }
+    else if (Index == UT_CFE_ES_EXITCHILDTASK_INDEX)        { Ut_CFE_ES_HookTable.CFE_ES_ExitChildTask = FunPtr; }
+    else if (Index == UT_CFE_ES_INCREMENTTASKCOUNTER_INDEX) { Ut_CFE_ES_HookTable.CFE_ES_IncrementTaskCounter = FunPtr; }
+    else if (Index == UT_CFE_ES_WRITETOSYSLOG_INDEX)        { Ut_CFE_ES_HookTable.CFE_ES_WriteToSysLog = FunPtr; }
+    else if (Index == UT_CFE_ES_REGISTERDRIVER_INDEX)       { Ut_CFE_ES_HookTable.CFE_ES_RegisterDriver = FunPtr; }
+    else if (Index == UT_CFE_ES_UNLOADDRIVER_INDEX)         { Ut_CFE_ES_HookTable.CFE_ES_UnloadDriver = FunPtr; }
+    else if (Index == UT_CFE_ES_CALCULATECRC_INDEX)         { Ut_CFE_ES_HookTable.CFE_ES_CalculateCRC = FunPtr; }
+    else if (Index == UT_CFE_ES_REGISTERCDS_INDEX)          { Ut_CFE_ES_HookTable.CFE_ES_RegisterCDS = FunPtr; }
+    else if (Index == UT_CFE_ES_COPYTOCDS_INDEX)            { Ut_CFE_ES_HookTable.CFE_ES_CopyToCDS = FunPtr; }
+    else if (Index == UT_CFE_ES_RESTOREFROMCDS_INDEX)       { Ut_CFE_ES_HookTable.CFE_ES_RestoreFromCDS = FunPtr; }
+    else if (Index == UT_CFE_ES_POOLCREATE_INDEX)           { Ut_CFE_ES_HookTable.CFE_ES_PoolCreate = FunPtr; }
+    else if (Index == UT_CFE_ES_POOLCREATEEX_INDEX)         { Ut_CFE_ES_HookTable.CFE_ES_PoolCreateEx = FunPtr; }
+    else if (Index == UT_CFE_ES_GETPOOLBUF_INDEX)           { Ut_CFE_ES_HookTable.CFE_ES_GetPoolBuf = FunPtr; }
+    else if (Index == UT_CFE_ES_GETPOOLBUFINFO_INDEX)       { Ut_CFE_ES_HookTable.CFE_ES_GetPoolBufInfo = FunPtr; }
+    else if (Index == UT_CFE_ES_PUTPOOLBUF_INDEX)           { Ut_CFE_ES_HookTable.CFE_ES_PutPoolBuf = FunPtr; }
+    else if (Index == UT_CFE_ES_GETMEMPOOLSTATS_INDEX)      { Ut_CFE_ES_HookTable.CFE_ES_GetMemPoolStats = FunPtr; }
+    else if (Index == UT_CFE_ES_PERFLOGADD_INDEX)           { Ut_CFE_ES_HookTable.CFE_ES_PerfLogAdd = FunPtr; }
+    else                                                    { printf("Unsupported ES Index In SetFunctionHook Call %u\n", Index); }
+}
+
+void Ut_CFE_ES_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index &lt; UT_CFE_ES_MAX_INDEX) {
+        Ut_CFE_ES_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_CFE_ES_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported ES Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+bool Ut_CFE_ES_UseReturnCode(uint32 Index)
+{
+    if (Ut_CFE_ES_ReturnCodeTable[Index].Count &gt; 0) {
+        Ut_CFE_ES_ReturnCodeTable[Index].Count--;
+        if (Ut_CFE_ES_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+int32 CFE_ES_GetResetType(uint32 *ResetSubtypePtr)
+{
+    return CFE_SUCCESS;
+}
+
+int32  CFE_ES_ResetCFE(uint32 ResetType)
+{
+        /* Check for specified return */
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_RESETCFE_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_RESETCFE_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_RestartApp(uint32 AppID)
+{
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_RESTARTAPP_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_RESTARTAPP_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_ReloadApp(uint32 AppID, const char *AppFileName)
+{
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_RELOADAPP_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_RELOADAPP_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_DeleteApp(uint32 AppID)
+{
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_DELETEAPP_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_DELETEAPP_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+void CFE_ES_ExitApp(uint32 ExitStatus)
+{
+    return;
+}
+
+int32 CFE_ES_RunLoop(uint32 *ExitStatus)
+{
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_RUNLOOP_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_RUNLOOP_INDEX].Value;
+
+    if (Ut_CFE_ES_HookTable.CFE_ES_RunLoop)
+        return Ut_CFE_ES_HookTable.CFE_ES_RunLoop(ExitStatus);
+
+    return true;
+}
+
+void CFE_ES_WaitForStartupSync(uint32 TimeOutMilliseconds)
+{
+    return;
+}
+
+int32 CFE_ES_RegisterApp(void)
+{
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_REGISTERAPP_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_REGISTERAPP_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_GetAppID(uint32 *AppIdPtr)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_GetAppIDByName(uint32 *AppIdPtr, const char *AppName)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_GetAppName(char *AppName, uint32 AppId, uint32 BufferLength)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_GetAppInfo(CFE_ES_AppInfo_t *AppInfo, uint32 AppId)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_GetTaskInfo(CFE_ES_TaskInfo_t *TaskInfo, uint32 TaskId)
+{
+    return CFE_SUCCESS;
+}
+
+int32  CFE_ES_RegisterChildTask(void)
+{
+    return CFE_SUCCESS;
+}
+
+int32  CFE_ES_CreateChildTask(uint32                          *TaskIdPtr,
+                              const char                      *TaskName,
+                              CFE_ES_ChildTaskMainFuncPtr_t    FunctionPtr,
+                              uint32                          *StackPtr,
+                              uint32                           StackSize,
+                              uint32                           Priority,
+                              uint32                           Flags)
+{
+    /* Check for specified return */
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_CREATECHILDTASK_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_CREATECHILDTASK_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_ES_HookTable.CFE_ES_CreateChildTask)
+        return Ut_CFE_ES_HookTable.CFE_ES_CreateChildTask(TaskIdPtr, TaskName, FunctionPtr, StackPtr, StackSize, Priority, Flags);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_DeleteChildTask(uint32 TaskId)
+{
+    return CFE_SUCCESS;
+}
+
+void CFE_ES_ExitChildTask(void)
+{
+    return;
+}
+
+void  CFE_ES_IncrementTaskCounter(void)
+{
+    return;
+}
+
+int32 CFE_ES_WriteToSysLog(const char *SpecStringPtr, ...)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_RegisterDriver(uint32 *DriverIdPtr, uint32 *DriverDescPtr)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_UnloadDriver(uint32 DriverId)
+{
+    return CFE_SUCCESS;
+}
+
+uint32 CFE_ES_CalculateCRC(const void *DataPtr, uint32 DataLength, uint32 InputCRC, uint32 TypeCRC)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_RegisterCDS(CFE_ES_CDSHandle_t *HandlePtr, int32 BlockSize, const char *Name)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_CopyToCDS(CFE_ES_CDSHandle_t Handle, void *DataToCopy)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_RestoreFromCDS(void *RestoreToMemory, CFE_ES_CDSHandle_t Handle)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_PoolCreate(CFE_ES_MemHandle_t *HandlePtr, uint8 *MemPtr, uint32 Size)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_PoolCreateEx(CFE_ES_MemHandle_t *HandlePtr, uint8 *MemPtr, uint32 Size, uint32 NumBlockSizes, uint32 *BlockSizes, uint16 UseMutex)
+{
+    /* Check for specified return */
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_POOLCREATEEX_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_POOLCREATEEX_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_GetPoolBuf(uint32 **BufPtr, CFE_ES_MemHandle_t HandlePtr, uint32 Size)
+{
+    /* Check for specified return */
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_GETPOOLBUF_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_GETPOOLBUF_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_ES_HookTable.CFE_ES_GetPoolBuf)
+        return Ut_CFE_ES_HookTable.CFE_ES_GetPoolBuf(BufPtr,HandlePtr,Size);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_GetPoolBufInfo(CFE_ES_MemHandle_t HandlePtr, uint32 *BufPtr)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_PutPoolBuf(CFE_ES_MemHandle_t HandlePtr, uint32 *BufPtr)
+{
+    /* Check for specified return */
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_PUTPOOLBUF_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_PUTPOOLBUF_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_GetMemPoolStats(CFE_ES_MemPoolStats_t *BufPtr, CFE_ES_MemHandle_t  Handle)
+{
+    return CFE_SUCCESS;
+}
+
+void CFE_ES_PerfLogAdd(uint32 Marker, uint32 EntryExit)
+{
+    return;
+}
+</pre></div>
+</div>
+</section>
+<section id="ut-cfe-evs-hooks-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ut_cfe_evs_hooks.c</span></code><a class="headerlink" href="#ut-cfe-evs-hooks-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_evs_hooks.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+**
+** File: ut_cfe_evs_hooks.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_evs_hooks.c 1.1 2011/05/04 11:20:52EDT rmcgraw Exp  $
+**
+** Purpose: Unit test hooks for cFE Event Services routines
+**
+** $Log: ut_cfe_evs_hooks.c  $
+** Revision 1.1 2011/05/04 11:20:52EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:38EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.2 2011/03/04 14:56:05EST sslegel 
+** Added a event text length check
+** Revision 1.1 2011/02/15 11:13:01EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+#include "utlist.h"
+#include "uttools.h"
+#include &lt;string.h&gt;
+
+UtListHead_t        EventQueue;
+
+typedef struct {
+    uint16      EventID;
+    uint16      EventType;
+    char        EventText[CFE_EVS_MAX_MESSAGE_LENGTH];
+} Ut_CFE_EVS_Event_t;
+
+void Ut_CFE_EVS_ClearEventQueue(void)
+{
+    UtList_Reset(&amp;EventQueue);
+}
+
+uint32 Ut_CFE_EVS_GetEventQueueDepth(void)
+{
+    return(UtList_Depth(&amp;EventQueue));
+}
+
+uint32 Ut_CFE_EVS_GetEventCount(uint16 EventID, uint16 EventType, char *EventText)
+{
+    UtListNode_t        *CurrentNode;
+    Ut_CFE_EVS_Event_t  *EventMessagePtr;
+    uint32               EventCount = 0;
+
+    CurrentNode = UtList_First(&amp;EventQueue);
+    while (CurrentNode) {
+        EventMessagePtr = CurrentNode-&gt;Data;
+        if ((EventMessagePtr-&gt;EventID == EventID) &amp;&amp;
+            (EventMessagePtr-&gt;EventType == EventType) &amp;&amp;
+            (strncmp(EventText, EventMessagePtr-&gt;EventText, strlen(EventText)) == 0)) {
+            EventCount++;
+        }
+        CurrentNode = CurrentNode-&gt;Next;
+    }
+    return(EventCount);
+}
+
+int32 Ut_CFE_EVS_SendEventHook(uint16 EventID, uint16 EventType, char *EventText)
+{
+    Ut_CFE_EVS_Event_t  EventMessage;
+
+    if (strlen(EventText) &gt;= CFE_EVS_MAX_MESSAGE_LENGTH) {
+        UtPrintf("WARNING - Event Message Too Long: %s", EventText);
+    }
+
+    EventMessage.EventID = EventID;
+    EventMessage.EventType = EventType;
+    strncpy(&amp;EventMessage.EventText[0], EventText, CFE_EVS_MAX_MESSAGE_LENGTH);
+    UtList_Add(&amp;EventQueue, &amp;EventMessage, sizeof(EventMessage), 0);
+
+    if (EventType == CFE_EVS_EventType_DEBUG)
+        UtPrintf("DEBUG EVENT ID=%d %s\n", EventID, EventText);
+    else if (EventType == CFE_EVS_EventType_INFORMATION)
+        UtPrintf("INFO EVENT ID=%d %s\n", EventID, EventText);
+    else if (EventType == CFE_EVS_EventType_ERROR)
+        UtPrintf("ERROR EVENT ID=%d %s\n", EventID, EventText);
+    else if (EventType == CFE_EVS_EventType_CRITICAL)
+        UtPrintf("CRITICAL EVENT ID=%d %s\n", EventID, EventText);
+    else
+        UtPrintf("Invalid Event Type %d ID=%d %s\n", EventType, EventID, EventText);
+
+    return CFE_SUCCESS;
+}
+
+bool Ut_CFE_EVS_EventSent(uint16 EventID, uint16 EventType, char *EventText)
+{
+    UtListNode_t        *CurrentNode;
+    Ut_CFE_EVS_Event_t  *EventMessagePtr;
+
+    CurrentNode = UtList_First(&amp;EventQueue);
+    while (CurrentNode) {
+        EventMessagePtr = CurrentNode-&gt;Data;
+        if ((EventMessagePtr-&gt;EventID == EventID) &amp;&amp;
+            (EventMessagePtr-&gt;EventType == EventType) &amp;&amp;
+            (strncmp(EventText, EventMessagePtr-&gt;EventText, strlen(EventText)) == 0)) {
+            return(true);
+        }
+        CurrentNode = CurrentNode-&gt;Next;
+    }
+    return(false);
+}
+</pre></div>
+</div>
+</section>
+<section id="ut-cfe-evs-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ut_cfe_evs_stubs.c</span></code><a class="headerlink" href="#ut-cfe-evs-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_evs_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+**
+** File:  ut_cfe_evs_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_evs_stubs.c 1.1 2011/05/04 11:20:53EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for cFE Event Services routines
+**
+** $Log: ut_cfe_evs_stubs.c  $
+** Revision 1.1 2011/05/04 11:20:53EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:38EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/02/15 11:13:02EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+/*
+** Include section
+*/
+
+#include "cfe.h"
+#include "ut_cfe_evs_stubs.h"
+#include "ut_cfe_evs_hooks.h"
+#include &lt;string.h&gt;
+
+Ut_CFE_EVS_HookTable_t          Ut_CFE_EVS_HookTable;
+Ut_CFE_EVS_ReturnCodeTable_t    Ut_CFE_EVS_ReturnCodeTable[UT_CFE_EVS_MAX_INDEX];
+
+void Ut_CFE_EVS_Reset(void)
+{
+    memset(&amp;Ut_CFE_EVS_HookTable, 0, sizeof(Ut_CFE_EVS_HookTable));
+    memset(&amp;Ut_CFE_EVS_ReturnCodeTable, 0, sizeof(Ut_CFE_EVS_ReturnCodeTable));
+
+    Ut_CFE_EVS_SetFunctionHook(UT_CFE_EVS_SENDEVENT_INDEX, &amp;Ut_CFE_EVS_SendEventHook);
+    Ut_CFE_EVS_ClearEventQueue();
+}
+
+void Ut_CFE_EVS_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if      (Index == UT_CFE_EVS_REGISTER_INDEX)    { Ut_CFE_EVS_HookTable.CFE_EVS_Register = FunPtr; }
+    else if (Index == UT_CFE_EVS_SENDEVENT_INDEX)   { Ut_CFE_EVS_HookTable.CFE_EVS_SendEvent = FunPtr; }
+    else                                            { printf("Unsupported EVS Index In SetFunctionHook Call %u", Index); }
+}
+
+void Ut_CFE_EVS_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index &lt; UT_CFE_EVS_MAX_INDEX) {
+        Ut_CFE_EVS_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_CFE_EVS_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported EVS Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+bool Ut_CFE_EVS_UseReturnCode(uint32 Index)
+{
+    if (Ut_CFE_EVS_ReturnCodeTable[Index].Count &gt; 0) {
+        Ut_CFE_EVS_ReturnCodeTable[Index].Count--;
+        if (Ut_CFE_EVS_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+int32 CFE_EVS_Register (void *Filters, uint16 NumEventFilters, uint16 FilterScheme)
+{
+    if (Ut_CFE_EVS_UseReturnCode(UT_CFE_EVS_REGISTER_INDEX))
+        return Ut_CFE_EVS_ReturnCodeTable[UT_CFE_EVS_REGISTER_INDEX].Value;
+
+    if (Ut_CFE_EVS_HookTable.CFE_EVS_Register)
+        return(Ut_CFE_EVS_HookTable.CFE_EVS_Register(Filters, NumEventFilters, FilterScheme));
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_EVS_SendEvent (uint16 EventID, uint16 EventType, const char *Spec, ... )
+{
+    char     BigBuf[CFE_EVS_MAX_MESSAGE_LENGTH];
+    va_list  Ptr;
+
+    va_start(Ptr, Spec);
+    vsprintf(BigBuf, Spec, Ptr);
+    va_end(Ptr);
+
+    if (Ut_CFE_EVS_UseReturnCode(UT_CFE_EVS_SENDEVENT_INDEX))
+        return Ut_CFE_EVS_ReturnCodeTable[UT_CFE_EVS_SENDEVENT_INDEX].Value;
+
+    if (Ut_CFE_EVS_HookTable.CFE_EVS_SendEvent)
+         return(Ut_CFE_EVS_HookTable.CFE_EVS_SendEvent(EventID, EventType, BigBuf));
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_EVS_SendTimedEvent (CFE_TIME_SysTime_t Time, uint16 EventID, uint16 EventType, const char *Spec, ... )
+{
+    if (Ut_CFE_EVS_UseReturnCode(UT_CFE_EVS_SENDTIMEDEVENT_INDEX))
+        return Ut_CFE_EVS_ReturnCodeTable[UT_CFE_EVS_SENDTIMEDEVENT_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_EVS_SendEventWithAppID (uint16 EventID, uint16 EventType,uint32 AppID, const char *Spec, ... )
+{
+    if (Ut_CFE_EVS_UseReturnCode(UT_CFE_EVS_SENDEVENTWITHAPPID_INDEX))
+        return Ut_CFE_EVS_ReturnCodeTable[UT_CFE_EVS_SENDEVENTWITHAPPID_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_EVS_CleanUpApp (uint32 AppId)
+{
+    return CFE_SUCCESS;
+}
+</pre></div>
+</div>
+</section>
+<section id="ut-cfe-fs-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ut_cfe_fs_stubs.c</span></code><a class="headerlink" href="#ut-cfe-fs-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_fs_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+**
+** File:  ut_cfe_fs_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_fs_stubs.c 1.1 2011/05/04 11:20:53EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for cFE File system routines
+**
+** $Log: ut_cfe_fs_stubs.c  $
+** Revision 1.1 2011/05/04 11:20:53EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:39EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.2 2011/03/22 14:19:02EDT rmcgraw
+** Use Rtn Code Added to CFE_FS_WriteHeader
+** Revision 1.1 2011/02/15 11:13:02EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+#include "ut_cfe_fs_stubs.h"
+#include &lt;string.h&gt;
+
+Ut_CFE_FS_HookTable_t           Ut_CFE_FS_HookTable;
+Ut_CFE_FS_ReturnCodeTable_t     Ut_CFE_FS_ReturnCodeTable[UT_CFE_FS_MAX_INDEX];
+
+void Ut_CFE_FS_Reset(void)
+{
+    memset(&amp;Ut_CFE_FS_HookTable, 0, sizeof(Ut_CFE_FS_HookTable));
+    memset(&amp;Ut_CFE_FS_ReturnCodeTable, 0, sizeof(Ut_CFE_FS_ReturnCodeTable));
+}
+
+void Ut_CFE_FS_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if      (Index == UT_CFE_FS_READHDR_INDEX)                  { Ut_CFE_FS_HookTable.CFE_FS_ReadHeader = FunPtr; }
+    else if (Index == UT_CFE_FS_WRITEHDR_INDEX)                 { Ut_CFE_FS_HookTable.CFE_FS_WriteHeader = FunPtr; }
+    else if (Index == UT_CFE_FS_SETTIMESTAMP_INDEX)             { Ut_CFE_FS_HookTable.CFE_FS_SetTimestamp = FunPtr; }
+    else if (Index == UT_CFE_FS_ISGZFILE_INDEX)                 { Ut_CFE_FS_HookTable.CFE_FS_IsGzFile = FunPtr; }
+    else if (Index == UT_CFE_FS_EXTRACTFILENAMEFROMPATH_INDEX)  { Ut_CFE_FS_HookTable.CFE_FS_ExtractFilenameFromPath = FunPtr; }
+    else if (Index == UT_CFE_FS_DECOMPRESS_INDEX)               { Ut_CFE_FS_HookTable.CFE_FS_Decompress = FunPtr; }
+    else                                                        { printf("Invalid FS Index In SetFunctionHook Call %u\n", Index); }
+}
+
+void Ut_CFE_FS_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index &lt; UT_CFE_FS_MAX_INDEX) {
+        Ut_CFE_FS_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_CFE_FS_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported FS Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+bool Ut_CFE_FS_UseReturnCode(uint32 Index)
+{
+    if (Ut_CFE_FS_ReturnCodeTable[Index].Count &gt; 0) {
+        Ut_CFE_FS_ReturnCodeTable[Index].Count--;
+        if (Ut_CFE_FS_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+int32 CFE_FS_ReadHeader(CFE_FS_Header_t *Hdr, int32 FileDes)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_FS_WriteHeader(int32 FileDes, CFE_FS_Header_t *Hdr)
+{
+    /* Check for specified return */
+    if (Ut_CFE_FS_UseReturnCode(UT_CFE_FS_WRITEHDR_INDEX))
+        return Ut_CFE_FS_ReturnCodeTable[UT_CFE_FS_WRITEHDR_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_FS_SetTimestamp(int32 FileDes, CFE_TIME_SysTime_t NewTimestamp)
+{
+    return CFE_SUCCESS;
+}
+
+bool CFE_FS_IsGzFile(const char *FileName)
+{
+    return true;
+}
+
+int32 CFE_FS_ExtractFilenameFromPath(const char *OriginalPath, char *FileNameOnly)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_FS_Decompress( const char * SourceFile, const char * DestinationFile )
+{
+    return CFE_SUCCESS;
+}
+</pre></div>
+</div>
+</section>
+<section id="ut-cfe-psp-memutils-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ut_cfe_psp_memutils_stubs.c</span></code><a class="headerlink" href="#ut-cfe-psp-memutils-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_psp_memutils_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+**
+** File: ut_cfe_psp_memutils_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_psp_memutils_stubs.c 1.1 2011/05/04 11:20:54EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for cFE PSP Memory Utilities routines
+**
+** $Log: ut_cfe_psp_memutils_stubs.c  $
+** Revision 1.1 2011/05/04 11:20:54EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:39EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/02/15 11:13:02EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+/*
+**  Include Files
+*/
+#include "cfe.h"
+#include &lt;string.h&gt;
+
+int32 CFE_PSP_MemCpy(void *Dest, void *Src, uint32 Size)
+{
+    memcpy(Dest, Src, Size);
+    return(CFE_PSP_SUCCESS);
+}
+
+int32 CFE_PSP_MemSet(void *Dest, uint8 Value, uint32 Size)
+{
+    memset(Dest, Value, Size);
+    return(CFE_PSP_SUCCESS);
+}
+</pre></div>
+</div>
+</section>
+<section id="ut-cfe-sb-hooks-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ut_cfe_sb_hooks.c</span></code><a class="headerlink" href="#ut-cfe-sb-hooks-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_sb_hooks.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+**
+** File: ut_cfe_sb_hooks.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_sb_hooks.c 1.1 2011/05/04 11:20:55EDT rmcgraw Exp  $
+**
+** Purpose: Unit test hooks for cFE Software Bus routines
+**
+** $Log: ut_cfe_sb_hooks.c  $
+** Revision 1.1 2011/05/04 11:20:55EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:40EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.3 2011/03/08 15:49:26EST sslegel
+** Changed the SB Create Pipe Hook so that if the pipe already exists then it just returns the existing pipe id.
+** Revision 1.2 2011/03/04 14:56:54EST sslegel
+** Added a define for the maximum number of pipes
+** Revision 1.1 2011/02/15 11:13:03EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+#include "utlist.h"
+#include "uttools.h"
+#include &lt;string.h&gt;
+
+#define UT_CFE_SB_MAX_PIPES    32
+
+typedef struct {
+    char                PipeName[OS_MAX_API_NAME];
+    UtListHead_t        MsgQueue;
+    bool             InUse;
+} Ut_CFE_SB_PipeTableEntry_t;
+
+UtListHead_t                MsgQueue;
+Ut_CFE_SB_PipeTableEntry_t  PipeTable[UT_CFE_SB_MAX_PIPES];
+
+void Ut_CFE_SB_ClearMsgQueue(void)
+{
+    UtList_Reset(&amp;MsgQueue);
+}
+
+uint32 Ut_CFE_SB_GetMsgQueueDepth(void)
+{
+    return(UtList_Depth(&amp;MsgQueue));
+}
+
+uint32 Ut_CFE_SB_GetMsgCount(uint16 MessageID)
+{
+    UtListNode_t        *CurrentNode;
+    CFE_MSG_Message_t        *MessagePtr;
+    uint32               MessageCount = 0;
+
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_GetMsgId(MessagePtr, &amp;MsgId);
+
+    CurrentNode = UtList_First(&amp;MsgQueue);
+    while (CurrentNode) {
+        MessagePtr = CurrentNode-&gt;Data;
+        if (MessageID == CFE_SB_MsgIdToValue(MsgId)) {
+            MessageCount++;
+        }
+        CurrentNode = CurrentNode-&gt;Next;
+    }
+    return(MessageCount);
+}
+
+int32 Ut_CFE_SB_TransmitMsgHook(CFE_MSG_Message_t *MsgPtr)
+{
+    UtList_Add(&amp;MsgQueue, MsgPtr, CFE_MSG_GetSize(MsgPtr), 0, CFE_MSG_Size_t *Size);
+
+    UtPrintf("PKT: ");
+    UtPrintx(MsgPtr, (uint16)(CFE_MSG_GetSize(MsgPtr)), CFE_MSG_Size_t *Size);
+    return CFE_SUCCESS;
+}
+
+bool Ut_CFE_SB_PacketSent(uint16 MessageID)
+{
+    UtListNode_t        *CurrentNode;
+    CFE_MSG_Message_t        *MessagePtr;
+
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_GetMsgId(MessagePtr, &amp;MsgId);
+
+    CurrentNode = UtList_First(&amp;MsgQueue);
+    while (CurrentNode) {
+        MessagePtr = CurrentNode-&gt;Data;
+        if (MessageID == CFE_SB_MsgIdToValue(MsgId)) {
+            return(true);
+        }
+        CurrentNode = CurrentNode-&gt;Next;
+    }
+    return(false);
+}
+
+void *Ut_CFE_SB_FindPacket(uint16 MessageID, uint32 MessageNumber)
+{
+    UtListNode_t        *CurrentNode;
+    CFE_MSG_Message_t        *MessagePtr;
+    uint32               MessageCount = 0;
+
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_GetMsgId(MessagePtr, &amp;MsgId);
+
+    CurrentNode = UtList_First(&amp;MsgQueue);
+    while (CurrentNode) {
+        MessagePtr = CurrentNode-&gt;Data;
+        if (MessageID == CFE_SB_MsgIdToValue(MsgId)) {
+            MessageCount++;
+            if (MessageCount == MessageNumber) {
+                return(CurrentNode-&gt;Data);
+            }
+        }
+        CurrentNode = CurrentNode-&gt;Next;
+    }
+    return(NULL);
+}
+
+void Ut_CFE_SB_ClearPipes(void)
+{
+    uint32          i;
+
+    for (i=0; i &lt; UT_CFE_SB_MAX_PIPES; i++) {
+        if (PipeTable[i].InUse == true) {
+            UtList_Reset(&amp;PipeTable[i].MsgQueue);
+        }
+    }
+    memset(&amp;PipeTable, 0, sizeof(PipeTable));
+}
+
+int32 Ut_CFE_SB_CreatePipe(char *PipeName)
+{
+    uint32          i;
+
+    for (i=0; i &lt; UT_CFE_SB_MAX_PIPES; i++) {
+        if (PipeTable[i].InUse == false) {
+            strncpy(PipeTable[i].PipeName, PipeName, OS_MAX_API_NAME);
+            PipeTable[i].InUse = true;
+            return(i);
+        }
+    }
+    return(-1);
+}
+
+int32 Ut_CFE_SB_GetPipeDepth(CFE_SB_PipeId_t PipeId)
+{
+    return(UtList_Depth(&amp;PipeTable[PipeId].MsgQueue));
+}
+
+int32 Ut_CFE_SB_FindPipe(char *PipeName)
+{
+    uint32          i;
+
+    for (i=0; i &lt; UT_CFE_SB_MAX_PIPES; i++) {
+        if ((PipeTable[i].InUse == true) &amp;&amp;
+            (strncmp(PipeTable[i].PipeName, PipeName, strlen(PipeName)) == 0)) {
+            return(i);
+        }
+    }
+    return(-1);
+}
+
+void Ut_CFE_SB_AddMsgToPipe(void *MsgPtr, CFE_SB_PipeId_t PipeId)
+{
+    if (PipeTable[PipeId].InUse == true) {
+        UtList_Add(&amp;PipeTable[PipeId].MsgQueue, MsgPtr, CFE_MSG_GetSize((CFE_MSG_Message_t *)MsgPtr), 0, CFE_MSG_Size_t *Size);
+    }
+    else {
+        printf("Error - Invalid PipeId\n");
+    }
+}
+
+int32 Ut_CFE_SB_CreatePipeHook(CFE_SB_PipeId_t *PipeIdPtr, uint16  Depth, char *PipeName)
+{
+    if (Ut_CFE_SB_FindPipe(PipeName) == -1) {
+        *PipeIdPtr = Ut_CFE_SB_CreatePipe(PipeName);
+    }
+    else {
+        *PipeIdPtr = Ut_CFE_SB_FindPipe(PipeName);
+    }
+    return(CFE_SUCCESS);
+}
+
+int32 Ut_CFE_SB_ReceiveBufferHook(CFE_MSG_Message_t * *BufPtr, CFE_SB_PipeId_t PipeId, int32 TimeOut)
+{
+    UtListNode_t        *CurrentNode;
+
+    if (PipeTable[PipeId].InUse == true) {
+
+        if (UtList_IsEmpty(&amp;PipeTable[PipeId].MsgQueue) == false) {
+
+            CurrentNode = UtList_First(&amp;PipeTable[PipeId].MsgQueue);
+            if (CurrentNode-&gt;Tag == true) {         /* Indicates buffer is in use */
+                UtList_DeleteFirst(&amp;PipeTable[PipeId].MsgQueue);
+            }
+
+            if (UtList_IsEmpty(&amp;PipeTable[PipeId].MsgQueue) == false) {
+
+                CurrentNode = UtList_First(&amp;PipeTable[PipeId].MsgQueue);
+                CurrentNode-&gt;Tag = true;            /* Indicates buffer is in use */
+               *BufPtr = CurrentNode-&gt;Data;
+                return(CFE_SUCCESS);
+            }
+        }
+
+        if (TimeOut == CFE_SB_POLL) {
+            return(CFE_SB_NO_MESSAGE);
+        }
+        else {
+            return(CFE_SB_TIME_OUT);
+        }
+    }
+    else {
+        printf("Error - Invalid PipeId\n");
+        return(CFE_SB_NO_MESSAGE);
+    }
+}
+
+void Ut_CFE_MSG_InitHook(void *MsgPtr, CFE_SB_MsgId_t MsgId, uint16 Length, bool Clear)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CCSDS_InitPkt ((CCSDS_PriHdr_t *)MsgPtr,(uint16)MsgId,Length,Clear);
+
+#endif
+} /* end Ut_CFE_MSG_InitHook */
+
+uint16 Ut_CFE_SB_MsgHdrSizeHook(CFE_SB_MsgId_t MsgId)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    uint16 size;
+    CCSDS_PriHdr_t  CCSDSPriHdr;
+    CCSDS_WR_SID(CCSDSPriHdr,MsgId);
+
+	  /* if secondary hdr is not present... */
+	  if(CCSDS_RD_SHDR(CCSDSPriHdr) == 0){
+
+	    size = sizeof(CCSDS_PriHdr_t);
+
+	  }else if(CCSDS_RD_TYPE(CCSDSPriHdr) == CCSDS_CMD){
+
+        size = sizeof(CFE_MSG_CommandHeader_t);
+
+	  }else{
+
+        size = sizeof(CFE_MSG_TelemetryHeader_t);
+	  }
+
+    return size;
+
+#endif
+}/* end Ut_CFE_SB_MsgHdrSizeHook */
+
+void *Ut_CFE_SB_GetUserDataHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+    uint8           *BytePtr;
+    CFE_SB_MsgId_t  MsgId;
+    uint16          HdrSize;
+
+    BytePtr = (uint8 *)MsgPtr;
+    MsgId   = CFE_MSG_GetMsgId(MsgPtr, CFE_SB_MsgId_t *MsgId);
+    HdrSize = CFE_SB_MsgHdrSize(MsgId);
+
+    return (BytePtr + HdrSize);
+#endif
+}/* end Ut_CFE_SB_GetUserDataHook */
+
+CFE_SB_MsgId_t Ut_CFE_SB_GetMsgIdHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    return CFE_MSG_GetMsgId(CFE_MSG_Message_t *MsgPtr, CFE_SB_MsgId_t *MsgId);
+
+#endif
+}/* end Ut_CFE_SB_GetMsgIdHook */
+
+void Ut_CFE_MSG_SetMsgIdHook(CFE_MSG_Message_t * MsgPtr,
+                     CFE_SB_MsgId_t MsgId)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CCSDS_WR_SID(MsgPtr-&gt;Hdr,MsgId);
+
+#endif
+}/* end Ut_CFE_MSG_SetMsgIdHook */
+
+uint16 Ut_CFE_SB_GetUserDataLengthHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+    uint16 TotalMsgSize;
+    uint16 HdrSize;
+
+    CFE_SB_MsgId_t MsgId;
+    MsgId = CFE_MSG_GetMsgId(MsgPtr, CFE_SB_MsgId_t *MsgId);
+
+    TotalMsgSize = CFE_MSG_GetSize(MsgPtr, CFE_MSG_Size_t *Size);
+    HdrSize = CFE_SB_MsgHdrSize(MsgId);
+
+    return (TotalMsgSize - HdrSize);
+#endif
+}/* end Ut_CFE_SB_GetUserDataLengthHook */
+
+void Ut_CFE_SB_SetUserDataLengthHook(CFE_MSG_Message_t * MsgPtr,uint16 DataLength)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    uint32 TotalMsgSize, HdrSize;
+    CFE_SB_MsgId_t MsgId;
+    MsgId = CFE_MSG_GetMsgId(MsgPtr, CFE_SB_MsgId_t *MsgId);
+
+    TotalMsgSize = CFE_MSG_GetSize(MsgPtr, CFE_MSG_Size_t *Size);
+    HdrSize = CFE_SB_MsgHdrSize(MsgId);
+
+    TotalMsgSize = HdrSize + DataLength;
+
+    CCSDS_WR_LEN(MsgPtr-&gt;Hdr,TotalMsgSize);
+
+#endif
+}/* end Ut_CFE_SB_SetUserDataLengthHook */
+
+uint16 Ut_CFE_SB_GetTotalMsgLengthHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    return CFE_MSG_GetSize(CFE_MSG_Message_t *MsgPtr, CFE_MSG_Size_t *Size);
+
+#endif
+}/* end Ut_CFE_SB_GetTotalMsgLengthHook */
+
+void Ut_CFE_SB_SetTotalMsgLengthHook(CFE_MSG_Message_t * MsgPtr,uint16 TotalLength)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CCSDS_WR_LEN(MsgPtr-&gt;Hdr,TotalLength);
+
+#endif
+}/* end Ut_CFE_SB_SetTotalMsgLengthHook */
+
+CFE_TIME_SysTime_t Ut_CFE_SB_GetMsgTimeHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CFE_TIME_SysTime_t  TimeFromMsg;
+    CFE_SB_TlmHdr_t     *TlmHdrPtr;
+
+    /* if msg type is a command or msg has no secondary hdr, return 0 */
+    if((CCSDS_RD_TYPE(MsgPtr-&gt;Hdr) == CCSDS_CMD)||(CCSDS_RD_SHDR(MsgPtr-&gt;Hdr) == 0)){
+        TimeFromMsg.Seconds    =  0;
+        TimeFromMsg.Subseconds =  0;
+    }else{
+        TlmHdrPtr = (CFE_SB_TlmHdr_t *)MsgPtr;
+
+        TimeFromMsg.Seconds    =  *((uint32 *)&amp;TlmHdrPtr-&gt;Sec.Time[0]);
+
+        /* Get the 16 bit subsecond field from the header and place it in the    */
+        /* upper 16 bits of the 32 bit subsecond field of the CFE_TIME_SysTime_t */
+        TimeFromMsg.Subseconds =  *((uint16 *)&amp;TlmHdrPtr-&gt;Sec.Time[4]) &lt;&lt; 16;
+
+    }/* end if */
+
+    return TimeFromMsg;
+
+#endif
+}/* end Ut_CFE_SB_GetMsgTimeHook */
+
+int32 Ut_CFE_MSG_SetMsgTimeHook(CFE_MSG_Message_t * MsgPtr,
+                       CFE_TIME_SysTime_t Time)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CFE_SB_TlmHdr_t *TlmHdrPtr;
+
+   /* if msg type is a command or secondary header is not present... */
+    if((CCSDS_RD_TYPE(MsgPtr-&gt;Hdr) == CCSDS_CMD)||(CCSDS_RD_SHDR(MsgPtr-&gt;Hdr) == 0)){
+        return CFE_SB_WRONG_MSG_TYPE;
+    }/* end if */
+
+    TlmHdrPtr = (CFE_SB_TlmHdr_t *)MsgPtr;
+
+    *((uint32 *)&amp;TlmHdrPtr-&gt;Sec.Time[0]) = Time.Seconds;
+    *((uint16 *)&amp;TlmHdrPtr-&gt;Sec.Time[4]) = Time.Subseconds &gt;&gt; 16;
+
+    return CFE_SUCCESS;
+
+#endif
+}/* end Ut_CFE_MSG_SetMsgTimeHook */
+
+//FIXME - not sure what to do about this yet, want to avoid any dependencies on other api functions if possible.
+//void Ut_CFE_SB_TimeStampMsgHook(CFE_MSG_Message_t * MsgPtr)
+//{
+//    CFE_MSG_SetMsgTime(MsgPtr,CFE_TIME_GetTime());
+//
+//}/* end Ut_CFE_SB_TimeStampMsgHook */
+
+uint16 Ut_CFE_SB_GetCmdCodeHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CFE_SB_CmdHdr_t     *CmdHdrPtr;
+
+    /* if msg type is telemetry or there is no secondary hdr, return 0 */
+    if((CCSDS_RD_TYPE(MsgPtr-&gt;Hdr) == CCSDS_TLM)||(CCSDS_RD_SHDR(MsgPtr-&gt;Hdr) == 0)){
+        return 0;
+    }/* end if */
+
+    /* Cast the input pointer to a Cmd Msg pointer */
+    CmdHdrPtr = (CFE_SB_CmdHdr_t *)MsgPtr;
+
+    return CCSDS_RD_FC(CmdHdrPtr-&gt;Sec);
+
+#endif
+}/* end Ut_CFE_SB_GetCmdCodeHook */
+
+int32 Ut_CFE_SB_SetCmdCodeHook(CFE_MSG_Message_t * MsgPtr,
+                      uint16 CmdCode)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CFE_SB_CmdHdr_t     *CmdHdrPtr;
+
+    /* if msg type is telemetry or there is no secondary hdr... */
+    if((CCSDS_RD_TYPE(MsgPtr-&gt;Hdr) == CCSDS_TLM)||(CCSDS_RD_SHDR(MsgPtr-&gt;Hdr) == 0)){
+        return CFE_SB_WRONG_MSG_TYPE;
+    }/* end if */
+
+    /* Cast the input pointer to a Cmd Msg pointer */
+    CmdHdrPtr = (CFE_SB_CmdHdr_t *)MsgPtr;
+
+    CCSDS_WR_FC(CmdHdrPtr-&gt;Sec,CmdCode);
+
+    return CFE_SUCCESS;
+
+#endif
+
+}/* end Ut_CFE_SB_SetCmdCodeHook */
+
+uint16 Ut_CFE_SB_GetChecksumHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CFE_SB_CmdHdr_t     *CmdHdrPtr;
+
+    /* if msg type is telemetry or there is no secondary hdr... */
+    if((CCSDS_RD_TYPE(MsgPtr-&gt;Hdr) == CCSDS_TLM)||(CCSDS_RD_SHDR(MsgPtr-&gt;Hdr) == 0)){
+        return 0;
+    }/* end if */
+
+    /* cast the input pointer to a Cmd Msg pointer */
+    CmdHdrPtr = (CFE_SB_CmdHdr_t *)MsgPtr;
+
+    return CCSDS_RD_CHECKSUM(CmdHdrPtr-&gt;Sec);
+
+#endif
+}/* end Ut_CFE_SB_GetChecksumHook */
+
+void Ut_CFE_SB_GenerateChecksumHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CCSDS_CmdPkt_t    *CmdPktPtr;
+
+    /* if msg type is telemetry or there is no secondary hdr... */
+    if((CCSDS_RD_TYPE(MsgPtr-&gt;Hdr) == CCSDS_TLM)||(CCSDS_RD_SHDR(MsgPtr-&gt;Hdr) == 0)){
+        return;
+    }/* end if */
+
+    CmdPktPtr = (CCSDS_CmdPkt_t *)MsgPtr;
+
+    CCSDS_LoadCheckSum(CmdPktPtr);
+
+#endif
+}/* end Ut_CFE_SB_GenerateChecksumHook */
+
+bool Ut_CFE_SB_ValidateChecksumHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CCSDS_CmdPkt_t    *CmdPktPtr;
+
+    /* if msg type is telemetry or there is no secondary hdr... */
+    if((CCSDS_RD_TYPE(MsgPtr-&gt;Hdr) == CCSDS_TLM)||(CCSDS_RD_SHDR(MsgPtr-&gt;Hdr) == 0)){
+        return false;
+    }/* end if */
+
+    CmdPktPtr = (CCSDS_CmdPkt_t *)MsgPtr;
+
+    return CCSDS_ValidCheckSum (CmdPktPtr);
+
+#endif
+}/* end Ut_CFE_SB_ValidateChecksumHook */
+
+void CCSDS_InitPkt (CCSDS_PriHdr_t  *PktPtr,
+                    uint16           StreamId,
+                    uint16           Length,
+                    bool          Clear )
+{
+   uint16     SeqCount;
+
+   /* Save the sequence count in case it must be preserved. */
+   SeqCount = CCSDS_RD_SEQ(*PktPtr);
+
+   /* Zero the entire packet if needed. */
+   if (Clear)  memset((void *)PktPtr, 0, Length);
+
+   /* Clear the primary header. */
+   CCSDS_CLR_PRI_HDR(*PktPtr);
+
+   /* Set the stream ID and length fields in the primary header. */
+   CCSDS_WR_SID(*PktPtr, StreamId);
+   CCSDS_WR_LEN(*PktPtr, Length);
+
+   /* Restore the sequence count if needed. */
+   if (!Clear)  CCSDS_WR_SEQ(*PktPtr, SeqCount);
+
+} /* END CCSDS_InitPkt() */
+
+void CCSDS_LoadCheckSum (CCSDS_CmdPkt_t *PktPtr)
+{
+   uint8    CheckSum;
+
+   /* Clear the checksum field so the new checksum is correct. */
+   CCSDS_WR_CHECKSUM(PktPtr-&gt;SecHdr, 0);
+
+   /* Compute and load new checksum. */
+   CheckSum = CCSDS_ComputeCheckSum(PktPtr);
+   CCSDS_WR_CHECKSUM(PktPtr-&gt;SecHdr, CheckSum);
+
+} /* END CCSDS_LoadCheckSum() */
+
+bool CCSDS_ValidCheckSum (CCSDS_CmdPkt_t *PktPtr)
+{
+
+   return (CCSDS_ComputeCheckSum(PktPtr) == 0);
+
+} /* END CCSDS_ValidCheckSum() */
+
+uint8 CCSDS_ComputeCheckSum (CCSDS_CmdPkt_t *PktPtr)
+{
+   uint16   PktLen   = CFE_MSG_GetSize(CFE_MSG_Message_t *MsgPtr, CFE_MSG_Size_t *Size);
+   uint8   *BytePtr  = (uint8 *)PktPtr;
+   uint8    CheckSum;
+
+   CheckSum = 0xFF;
+   while (PktLen--)  CheckSum ^= *(BytePtr++);
+
+   return CheckSum;
+
+} /* END CCSDS_ComputeCheckSum() */
+</pre></div>
+</div>
+</section>
+<section id="ut-cfe-sb-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ut_cfe_sb_stubs.c</span></code><a class="headerlink" href="#ut-cfe-sb-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_sb_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+**
+** File: ut_cfe_sb_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_sb_stubs.c 1.1 2011/05/04 11:20:56EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for cFE Software Bus routines
+**
+** $Log: ut_cfe_sb_stubs.c  $
+** Revision 1.1 2011/05/04 11:20:56EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:41EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.2 2011/03/10 11:18:33EST sslegel
+** Added hook support to CFE_SB_Subscribe, CFE_SB_SubscribeEx, and CFE_SB_Unsunscribe
+** Revision 1.1 2011/02/15 11:13:03EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+#include "ut_cfe_sb_stubs.h"
+#include "ut_cfe_sb_hooks.h"
+
+Ut_CFE_SB_HookTable_t           Ut_CFE_SB_HookTable;
+Ut_CFE_SB_ReturnCodeTable_t     Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_MAX_INDEX];
+
+void Ut_CFE_SB_Reset(void)
+{
+    memset(&amp;Ut_CFE_SB_HookTable, 0, sizeof(Ut_CFE_SB_HookTable));
+    memset(&amp;Ut_CFE_SB_ReturnCodeTable, 0, sizeof(Ut_CFE_SB_ReturnCodeTable));
+
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_CREATEPIPE_INDEX, &amp;Ut_CFE_SB_CreatePipeHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_SENDMSG_INDEX, &amp;Ut_CFE_SB_TransmitMsgHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_RCVMSG_INDEX, &amp;Ut_CFE_SB_ReceiveBufferHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_INITMSG_INDEX, &amp;Ut_CFE_MSG_InitHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_MSGHDRSIZE_INDEX, &amp;Ut_CFE_SB_MsgHdrSizeHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_GETUSERDATA_INDEX, &amp;Ut_CFE_SB_GetUserDataHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_GETMSGID_INDEX, &amp;Ut_CFE_SB_GetMsgIdHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_SETMSGID_INDEX, &amp;Ut_CFE_MSG_SetMsgIdHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_GETUSERDATALENGTH_INDEX, &amp;Ut_CFE_SB_GetUserDataLengthHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_SETUSERDATALENGTH_INDEX, &amp;Ut_CFE_SB_SetUserDataLengthHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_GETTOTALMSGLENGTH_INDEX, &amp;Ut_CFE_SB_GetTotalMsgLengthHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_SETTOTALMSGLENGTH_INDEX, &amp;Ut_CFE_SB_SetTotalMsgLengthHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_GETMSGTIME_INDEX, &amp;Ut_CFE_SB_GetMsgTimeHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_SETMSGTIME_INDEX, &amp;Ut_CFE_MSG_SetMsgTimeHook);
+//    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_TIMESTAMPMSG_INDEX, &amp;Ut_CFE_SB_TimeStampMsgHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_GETCMDCODE_INDEX, &amp;Ut_CFE_SB_GetCmdCodeHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_SETCMDCODE_INDEX, &amp;Ut_CFE_SB_SetCmdCodeHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_GETCHECKSUM_INDEX, &amp;Ut_CFE_SB_GetChecksumHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_GENERATECHECKSUM_INDEX, &amp;Ut_CFE_SB_GenerateChecksumHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_VALIDATECHECKSUM_INDEX, &amp;Ut_CFE_SB_ValidateChecksumHook);
+
+    Ut_CFE_SB_ClearPipes();
+    Ut_CFE_SB_ClearMsgQueue();
+}
+
+void Ut_CFE_SB_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if      (Index == UT_CFE_SB_CREATEPIPE_INDEX)         { Ut_CFE_SB_HookTable.CFE_SB_CreatePipe = FunPtr; }
+    else if (Index == UT_CFE_SB_DELETEPIPE_INDEX)         { Ut_CFE_SB_HookTable.CFE_SB_DeletePipe = FunPtr; }
+    else if (Index == UT_CFE_SB_SUBSCRIBEEX_INDEX)        { Ut_CFE_SB_HookTable.CFE_SB_SubscribeEx = FunPtr; }
+    else if (Index == UT_CFE_SB_SUBSCRIBE_INDEX)          { Ut_CFE_SB_HookTable.CFE_SB_Subscribe = FunPtr; }
+    else if (Index == UT_CFE_SB_SUBSCRIBELOCAL_INDEX)     { Ut_CFE_SB_HookTable.CFE_SB_SubscribeLocal = FunPtr; }
+    else if (Index == UT_CFE_SB_UNSUBSCRIBE_INDEX)        { Ut_CFE_SB_HookTable.CFE_SB_Unsubscribe = FunPtr; }
+    else if (Index == UT_CFE_SB_UNSUBSCRIBELOCAL_INDEX)   { Ut_CFE_SB_HookTable.CFE_SB_UnsubscribeLocal = FunPtr; }
+    else if (Index == UT_CFE_SB_SENDMSG_INDEX)            { Ut_CFE_SB_HookTable.CFE_SB_TransmitMsg = FunPtr; }
+    else if (Index == UT_CFE_SB_PASSMSG_INDEX)            { Ut_CFE_SB_HookTable.CFE_SB_PassMsg = FunPtr; }
+    else if (Index == UT_CFE_SB_RCVMSG_INDEX)             { Ut_CFE_SB_HookTable.CFE_SB_ReceiveBuffer = FunPtr; }
+    else if (Index == UT_CFE_SB_GETLASTSENDERID_INDEX)    { Ut_CFE_SB_HookTable.CFE_SB_GetLastSenderId = FunPtr; }
+    else if (Index == UT_CFE_SB_ZEROCOPYGETPTR_INDEX)     { Ut_CFE_SB_HookTable.CFE_SB_ZeroCopyGetPtr = FunPtr; }
+    else if (Index == UT_CFE_SB_ZEROCOPYRELEASEPTR_INDEX) { Ut_CFE_SB_HookTable.CFE_SB_ZeroCopyReleasePtr = FunPtr; }
+    else if (Index == UT_CFE_SB_ZEROCOPYSEND_INDEX)       { Ut_CFE_SB_HookTable.CFE_SB_ZeroCopySend = FunPtr; }
+    else if (Index == UT_CFE_SB_ZEROCOPYPASS_INDEX)       { Ut_CFE_SB_HookTable.CFE_SB_ZeroCopyPass = FunPtr; }
+    else if (Index == UT_CFE_SB_INITMSG_INDEX)            { Ut_CFE_SB_HookTable.CFE_MSG_Init = FunPtr; }
+    else if (Index == UT_CFE_SB_MSGHDRSIZE_INDEX)         { Ut_CFE_SB_HookTable.CFE_SB_MsgHdrSize = FunPtr; }
+    else if (Index == UT_CFE_SB_GETUSERDATA_INDEX)        { Ut_CFE_SB_HookTable.CFE_SB_GetUserData = FunPtr; }
+    else if (Index == UT_CFE_SB_GETMSGID_INDEX)           { Ut_CFE_SB_HookTable.CFE_SB_GetMsgId = FunPtr; }
+    else if (Index == UT_CFE_SB_SETMSGID_INDEX)           { Ut_CFE_SB_HookTable.CFE_MSG_SetMsgId = FunPtr; }
+    else if (Index == UT_CFE_SB_GETUSERDATALENGTH_INDEX)  { Ut_CFE_SB_HookTable.CFE_SB_GetUserDataLength = FunPtr; }
+    else if (Index == UT_CFE_SB_SETUSERDATALENGTH_INDEX)  { Ut_CFE_SB_HookTable.CFE_SB_SetUserDataLength = FunPtr; }
+    else if (Index == UT_CFE_SB_GETTOTALMSGLENGTH_INDEX)  { Ut_CFE_SB_HookTable.CFE_SB_GetTotalMsgLength = FunPtr; }
+    else if (Index == UT_CFE_SB_SETTOTALMSGLENGTH_INDEX)  { Ut_CFE_SB_HookTable.CFE_SB_SetTotalMsgLength = FunPtr; }
+    else if (Index == UT_CFE_SB_GETMSGTIME_INDEX)         { Ut_CFE_SB_HookTable.CFE_SB_GetMsgTime = FunPtr; }
+    else if (Index == UT_CFE_SB_SETMSGTIME_INDEX)         { Ut_CFE_SB_HookTable.CFE_MSG_SetMsgTime = FunPtr; }
+    else if (Index == UT_CFE_SB_TIMESTAMPMSG_INDEX)       { Ut_CFE_SB_HookTable.CFE_SB_TimeStampMsg = FunPtr; }
+    else if (Index == UT_CFE_SB_GETCMDCODE_INDEX)         { Ut_CFE_SB_HookTable.CFE_SB_GetCmdCode = FunPtr; }
+    else if (Index == UT_CFE_SB_SETCMDCODE_INDEX)         { Ut_CFE_SB_HookTable.CFE_SB_SetCmdCode = FunPtr; }
+    else if (Index == UT_CFE_SB_GETCHECKSUM_INDEX)        { Ut_CFE_SB_HookTable.CFE_SB_GetChecksum = FunPtr; }
+    else if (Index == UT_CFE_SB_GENERATECHECKSUM_INDEX)   { Ut_CFE_SB_HookTable.CFE_SB_GenerateChecksum = FunPtr; }
+    else if (Index == UT_CFE_SB_VALIDATECHECKSUM_INDEX)   { Ut_CFE_SB_HookTable.CFE_SB_ValidateChecksum = FunPtr; }
+    else if (Index == UT_CFE_SB_CLEANUPAPP_INDEX)         { Ut_CFE_SB_HookTable.CFE_SB_CleanUpApp = FunPtr; }
+    else                                                  { printf("Unsupported SB Index In SetFunctionHook Call %u\n", Index); }
+}
+
+void Ut_CFE_SB_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index &lt; UT_CFE_SB_MAX_INDEX) {
+        Ut_CFE_SB_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_CFE_SB_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported SB Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+bool Ut_CFE_SB_UseReturnCode(uint32 Index)
+{
+    if (Ut_CFE_SB_ReturnCodeTable[Index].Count &gt; 0) {
+        Ut_CFE_SB_ReturnCodeTable[Index].Count--;
+        if (Ut_CFE_SB_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+int32 CFE_SB_CreatePipe (CFE_SB_PipeId_t *PipeIdPtr, uint16 Depth, const char *PipeName)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_CREATEPIPE_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_CREATEPIPE_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_CreatePipe)
+        return Ut_CFE_SB_HookTable.CFE_SB_CreatePipe(PipeIdPtr, Depth, PipeName);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_DeletePipe (CFE_SB_PipeId_t PipeId)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_DELETEPIPE_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_DELETEPIPE_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_SubscribeEx (CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId,
+                          CFE_SB_Qos_t Quality, uint16 MsgLim)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_SUBSCRIBEEX_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_SUBSCRIBEEX_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_SubscribeEx)
+        return Ut_CFE_SB_HookTable.CFE_SB_SubscribeEx(MsgId, PipeId, Quality, MsgLim);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_Subscribe(CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_SUBSCRIBE_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_SUBSCRIBE_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_Subscribe)
+        return Ut_CFE_SB_HookTable.CFE_SB_Subscribe(MsgId, PipeId);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_SubscribeLocal(CFE_SB_MsgId_t   MsgId, CFE_SB_PipeId_t  PipeId,uint16 MsgLim)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_SUBSCRIBELOCAL_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_SUBSCRIBELOCAL_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_Unsubscribe(CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_UNSUBSCRIBE_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_UNSUBSCRIBE_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_Unsubscribe)
+        return Ut_CFE_SB_HookTable.CFE_SB_Unsubscribe(MsgId, PipeId);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_UnsubscribeLocal(CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_UNSUBSCRIBELOCAL_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_UNSUBSCRIBELOCAL_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_TransmitMsg (CFE_MSG_Message_t *MsgPtr)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_SENDMSG_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_SENDMSG_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_TransmitMsg)
+        return Ut_CFE_SB_HookTable.CFE_SB_TransmitMsg(MsgPtr, true);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_PassMsg (CFE_MSG_Message_t *MsgPtr)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_PASSMSG_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_PASSMSG_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_ReceiveBuffer (CFE_MSG_Message_t * *BufPtr, CFE_SB_PipeId_t PipeId,
+                    int32 TimeOut)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_RCVMSG_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_RCVMSG_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_ReceiveBuffer)
+        return Ut_CFE_SB_HookTable.CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)BufPtr, PipeId, TimeOut);
+
+    return CFE_SUCCESS;
+}
+
+uint32  CFE_SB_GetLastSenderId(CFE_SB_SenderId_t **Ptr,CFE_SB_PipeId_t  PipeId)
+{
+    return CFE_SUCCESS;
+}
+
+CFE_MSG_Message_t  *CFE_SB_ZeroCopyGetPtr(uint16  MsgSize,CFE_SB_ZeroCopyHandle_t *BufferHandle)
+{
+    return NULL;
+}
+
+int32 CFE_SB_ZeroCopyReleasePtr(CFE_MSG_Message_t  *Ptr2Release,CFE_SB_ZeroCopyHandle_t BufferHandle)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_ZeroCopySend(CFE_MSG_Message_t   *MsgPtr, CFE_SB_ZeroCopyHandle_t BufferHandle)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_ZeroCopyPass(CFE_MSG_Message_t   *MsgPtr, CFE_SB_ZeroCopyHandle_t BufferHandle)
+{
+    return CFE_SUCCESS;
+}
+
+void CFE_MSG_Init (void *MsgPtr, CFE_SB_MsgId_t MsgId, uint16 Length, bool Clear)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_MSG_Init)
+        Ut_CFE_SB_HookTable.CFE_MSG_Init(MsgPtr, MsgId, Length);
+
+    return;
+}
+
+uint16 CFE_SB_MsgHdrSize (CFE_SB_MsgId_t MsgId)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_MsgHdrSize)
+        return Ut_CFE_SB_HookTable.CFE_SB_MsgHdrSize(MsgId);
+
+    return CFE_SUCCESS;
+}
+
+void *CFE_SB_GetUserData(CFE_MSG_Message_t * MsgPtr)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_GetUserData)
+        return Ut_CFE_SB_HookTable.CFE_SB_GetUserData(MsgPtr);
+
+    return  NULL;
+}
+
+CFE_SB_MsgId_t CFE_SB_GetMsgId (CFE_MSG_Message_t * MsgPtr)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_GetMsgId)
+        return Ut_CFE_SB_HookTable.CFE_MSG_GetMsgId(MsgPtr, CFE_SB_MsgId_t *MsgId);
+
+    return CFE_SUCCESS;
+}
+
+void  CFE_MSG_SetMsgId (CFE_MSG_Message_t * MsgPtr, CFE_SB_MsgId_t MsgId)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_MSG_SetMsgId)
+        Ut_CFE_SB_HookTable.CFE_MSG_SetMsgId(MsgPtr,MsgId);
+
+    return;
+}
+
+uint16 CFE_SB_GetUserDataLength(CFE_MSG_Message_t * MsgPtr)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_GetUserDataLength)
+        return Ut_CFE_SB_HookTable.CFE_SB_GetUserDataLength(MsgPtr);
+
+    return CFE_SUCCESS;
+}/* end CFE_SB_GetUserDataLength */
+
+void CFE_SB_SetUserDataLength(CFE_MSG_Message_t * MsgPtr,uint16 DataLength)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_SetUserDataLength)
+        Ut_CFE_SB_HookTable.CFE_SB_SetUserDataLength(MsgPtr,DataLength);
+
+    return;
+}
+
+uint16 CFE_MSG_GetSize(CFE_MSG_Message_t * MsgPtr, CFE_MSG_Size_t *Size)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_GetTotalMsgLength)
+        return Ut_CFE_SB_HookTable.CFE_MSG_GetSize(MsgPtr, CFE_MSG_Size_t *Size);
+
+    return CFE_SUCCESS;
+}
+
+void CFE_MSG_SetSize(CFE_MSG_Message_t * MsgPtr, uint16 TotalLength)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_SetTotalMsgLength)
+        Ut_CFE_SB_HookTable.CFE_MSG_SetSize(MsgPtr, TotalLength);
+
+    return;
+}
+
+CFE_TIME_SysTime_t CFE_SB_GetMsgTime (CFE_MSG_Message_t * MsgPtr)
+{
+    CFE_TIME_SysTime_t  Time;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_GetMsgTime)
+        return Ut_CFE_SB_HookTable.CFE_SB_GetMsgTime(MsgPtr);
+
+    Time.Seconds    =  0;
+    Time.Subseconds =  0;
+
+    return Time;
+}
+
+int32 CFE_MSG_SetMsgTime (CFE_MSG_Message_t * MsgPtr, CFE_TIME_SysTime_t time)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_MSG_SetMsgTime)
+        return Ut_CFE_SB_HookTable.CFE_MSG_SetMsgTime(MsgPtr, time);
+
+    return CFE_SUCCESS;
+}
+
+void CFE_SB_TimeStampMsg (CFE_MSG_Message_t * MsgPtr)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_TimeStampMsg)
+        Ut_CFE_SB_HookTable.CFE_SB_TimeStampMsg(MsgPtr);
+
+    return;
+}
+
+uint16 CFE_SB_GetCmdCode (CFE_MSG_Message_t * MsgPtr)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_GetCmdCode)
+        return Ut_CFE_SB_HookTable.CFE_MSG_GetFcnCode(MsgPtr, CFE_MSG_FcnCode_t *FcnCode);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_SetCmdCode (CFE_MSG_Message_t * MsgPtr, uint16 CmdCode)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_SetCmdCode)
+        return Ut_CFE_SB_HookTable.CFE_MSG_SetFcnCode(MsgPtr, CmdCode);
+
+    return CFE_SUCCESS;
+}
+
+uint16 CFE_SB_GetChecksum(CFE_MSG_Message_t * MsgPtr)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_GetChecksum)
+        return Ut_CFE_SB_HookTable.CFE_SB_GetChecksum(MsgPtr);
+
+    return CFE_SUCCESS;
+}
+
+void CFE_SB_GenerateChecksum(CFE_MSG_Message_t * MsgPtr)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_GenerateChecksum)
+        Ut_CFE_SB_HookTable.CFE_SB_GenerateChecksum(MsgPtr);
+
+    return;
+}
+
+bool CFE_SB_ValidateChecksum(CFE_MSG_Message_t * MsgPtr)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_ValidateChecksum)
+        return Ut_CFE_SB_HookTable.CFE_SB_ValidateChecksum(MsgPtr);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_CleanUpApp (uint32 AppId)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_CLEANUPAPP_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_CLEANUPAPP_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+</pre></div>
+</div>
+</section>
+<section id="ut-cfe-tbl-hooks-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ut_cfe_tbl_hooks.c</span></code><a class="headerlink" href="#ut-cfe-tbl-hooks-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_tbl_hooks.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+**
+** File: ut_cfe_tbl_hooks.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_tbl_hooks.c 1.1 2011/05/04 11:20:57EDT rmcgraw Exp  $
+**
+** Purpose: Unit test hooks for cFE Table Services routines
+**
+** $Log: ut_cfe_tbl_hooks.c  $
+** Revision 1.1 2011/05/04 11:20:57EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:42EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.5 2011/03/04 14:59:12EST sslegel 
+** Added a define for the maximum number of tables
+** Fixed a memory leak in Ut_CFE_TBL_ClearTables
+** Fixed a bug in Ut_CFE_TBL_RegisterTable where the table buffer was not cleared after the memory was allocated
+** Revision 1.4 2011/02/21 16:15:32EST sslegel 
+** Renamed global tables
+** Revision 1.3 2011/02/18 15:57:42EST sslegel 
+** Added new hooks and return codes
+** Changed Ut_CFE_TBL_LoadHook to automatically call the table validate function
+** Revision 1.2 2011/02/17 16:34:26EST rmcgraw 
+** Tbl GetAdr Hook change to return TBL_UPDATED after a TBL load
+** Revision 1.1 2011/02/15 11:13:04EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+#include "utlist.h"
+#include &lt;string.h&gt;
+
+#define UT_CFE_TBL_MAX_TABLES   32
+
+typedef struct {
+    bool                     InUse;
+    bool                     TblUpdatedFlag;
+    void                       *Buffer;
+    char                        Name[CFE_TBL_MAX_FULL_NAME_LEN];
+    uint32                      Size;
+    uint16                      TblOptionFlags;
+    CFE_TBL_CallbackFuncPtr_t   TblValidationFuncPtr;    
+} Ut_CFE_TBL_Registry_t;
+
+typedef struct {
+    bool                     InUse;
+    char                        Filename[OS_MAX_PATH_LEN];
+    void                       *TablePtr;
+} Ut_CFE_TBL_Images_t;
+
+Ut_CFE_TBL_Images_t     Ut_CFE_TBL_Images[UT_CFE_TBL_MAX_TABLES];
+Ut_CFE_TBL_Registry_t   Ut_CFE_TBL_Registry[UT_CFE_TBL_MAX_TABLES];
+
+int32 Ut_CFE_TBL_RegisterTable(const char *Name, uint32 Size, uint16 TblOptionFlags, CFE_TBL_CallbackFuncPtr_t TblValidationFuncPtr)
+{
+    uint32          i;
+
+    for (i=0; i &lt; UT_CFE_TBL_MAX_TABLES; i++) {
+        if (Ut_CFE_TBL_Registry[i].InUse == false) {
+            Ut_CFE_TBL_Registry[i].InUse = true;
+            Ut_CFE_TBL_Registry[i].TblUpdatedFlag = false;
+            Ut_CFE_TBL_Registry[i].Buffer = malloc(Size);
+            memset(Ut_CFE_TBL_Registry[i].Buffer, 0, Size);
+            strncpy(Ut_CFE_TBL_Registry[i].Name, Name, CFE_TBL_MAX_FULL_NAME_LEN);
+            Ut_CFE_TBL_Registry[i].Size = Size;
+            Ut_CFE_TBL_Registry[i].TblOptionFlags = TblOptionFlags;
+            Ut_CFE_TBL_Registry[i].TblValidationFuncPtr = TblValidationFuncPtr;
+            return(i);
+        }
+    }
+
+    return(-1);    
+}
+
+int32 Ut_CFE_TBL_AddTable(char *Filename, void *TablePtr)
+{
+    uint32          i;
+
+    for (i=0; i &lt; UT_CFE_TBL_MAX_TABLES; i++) {
+        if (Ut_CFE_TBL_Images[i].InUse == false) {
+            Ut_CFE_TBL_Images[i].InUse = true;
+            strncpy(Ut_CFE_TBL_Images[i].Filename, Filename, OS_MAX_PATH_LEN);
+            Ut_CFE_TBL_Images[i].TablePtr = TablePtr;
+            return(i);
+        }
+    }
+
+    return(-1);
+}
+
+int32 Ut_CFE_TBL_LoadTable(CFE_TBL_Handle_t TblHandle, void *SrcDataPtr)
+{
+    if (Ut_CFE_TBL_Registry[TblHandle].InUse) {
+        memcpy(Ut_CFE_TBL_Registry[TblHandle].Buffer, SrcDataPtr, Ut_CFE_TBL_Registry[TblHandle].Size);
+        Ut_CFE_TBL_Registry[TblHandle].TblUpdatedFlag = true;
+        return(CFE_SUCCESS);
+    }
+    else {
+        return(CFE_TBL_ERR_INVALID_HANDLE);
+    }
+}
+
+void Ut_CFE_TBL_ClearTables(void)
+{
+    uint32          i;
+
+    for (i=0; i &lt; UT_CFE_TBL_MAX_TABLES; i++) {
+        if (Ut_CFE_TBL_Registry[i].InUse == true &amp;&amp;
+            Ut_CFE_TBL_Registry[i].Buffer != NULL) {
+            free(Ut_CFE_TBL_Registry[i].Buffer);
+        }
+    }
+    memset(&amp;Ut_CFE_TBL_Registry, 0, sizeof(Ut_CFE_TBL_Registry));
+    memset(&amp;Ut_CFE_TBL_Images, 0, sizeof(Ut_CFE_TBL_Images));
+}
+
+int32 Ut_CFE_TBL_FindTable(char *Filename)
+{
+    uint32          i;
+
+    for (i=0; i &lt; UT_CFE_TBL_MAX_TABLES; i++) {
+        if ((Ut_CFE_TBL_Images[i].InUse == true) &amp;&amp;
+            (strncmp(Ut_CFE_TBL_Images[i].Filename, Filename, strlen(Filename)) == 0)) {
+            return(i);
+        }
+    }
+    return(-1);
+}
+
+void *Ut_CFE_TBL_GetAddress(CFE_TBL_Handle_t TblHandle)
+{
+    if (Ut_CFE_TBL_Registry[TblHandle].InUse) {
+        return(Ut_CFE_TBL_Registry[TblHandle].Buffer);
+    }
+    else {
+        return(NULL);
+    }
+}
+
+int32 Ut_CFE_TBL_RegisterHook(CFE_TBL_Handle_t *TblHandlePtr, const char *Name, uint32 Size, uint16 TblOptionFlags, CFE_TBL_CallbackFuncPtr_t TblValidationFuncPtr)
+{
+    *TblHandlePtr = Ut_CFE_TBL_RegisterTable(Name, Size, TblOptionFlags, TblValidationFuncPtr);
+    return(CFE_SUCCESS);
+}
+
+int32 Ut_CFE_TBL_LoadHook(CFE_TBL_Handle_t TblHandle, CFE_TBL_SrcEnum_t SrcType, const void *SrcDataPtr)
+{
+    int32   TableIndex;
+    int32   Status;
+
+    TableIndex = Ut_CFE_TBL_FindTable((char *)SrcDataPtr);
+    if (TableIndex &gt;= 0) {
+        if (Ut_CFE_TBL_Registry[TblHandle].TblValidationFuncPtr != NULL) {
+            Status = Ut_CFE_TBL_Registry[TblHandle].TblValidationFuncPtr(Ut_CFE_TBL_Images[TableIndex].TablePtr);
+            if (Status != CFE_SUCCESS)
+                return(Status);
+        }
+        return(Ut_CFE_TBL_LoadTable(TblHandle, Ut_CFE_TBL_Images[TableIndex].TablePtr));
+    }
+    else {
+        return(CFE_TBL_ERR_FILE_NOT_FOUND);
+    }
+}
+
+int32 Ut_CFE_TBL_GetAddressHook(void **TblPtr, CFE_TBL_Handle_t TblHandle)
+{
+    if ((*TblPtr = Ut_CFE_TBL_GetAddress(TblHandle)) != NULL) {
+
+        if(Ut_CFE_TBL_Registry[TblHandle].TblUpdatedFlag == true) {
+            Ut_CFE_TBL_Registry[TblHandle].TblUpdatedFlag = false;
+            return (CFE_TBL_INFO_UPDATED);
+        }
+        
+        return(CFE_SUCCESS);
+    }
+    else {
+        
+        return(CFE_TBL_ERR_INVALID_HANDLE);
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="ut-cfe-tbl-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ut_cfe_tbl_stubs.c</span></code><a class="headerlink" href="#ut-cfe-tbl-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_tbl_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+**
+** File: ut_cfe_tbl_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_tbl_stubs.c 1.1 2011/05/04 11:20:57EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for cFE Table Services routines
+**
+** $Log: ut_cfe_tbl_stubs.c  $
+** Revision 1.1 2011/05/04 11:20:57EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:43EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.4 2011/03/10 11:19:20EST sslegel
+** Added return code support to CFE_TBL_GetInfo
+** Revision 1.3 2011/02/18 15:57:42EST sslegel
+** Added new hooks and return codes
+** Changed Ut_CFE_TBL_LoadHook to automatically call the table validate function
+** Revision 1.2 2011/02/17 16:34:27EST rmcgraw
+** Tbl GetAdr Hook change to return TBL_UPDATED after a TBL load
+** Revision 1.1 2011/02/15 11:13:04EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+#include "ut_cfe_tbl_stubs.h"
+#include "ut_cfe_tbl_hooks.h"
+#include &lt;string.h&gt;
+
+Ut_CFE_TBL_HookTable_t          Ut_CFE_TBL_HookTable;
+Ut_CFE_TBL_ReturnCodeTable_t    Ut_CFE_TBL_ReturnCodeTable[UT_CFE_TBL_MAX_INDEX];
+
+void Ut_CFE_TBL_Reset(void)
+{
+    memset(&amp;Ut_CFE_TBL_HookTable, 0, sizeof(Ut_CFE_TBL_HookTable));
+    memset(&amp;Ut_CFE_TBL_ReturnCodeTable, 0, sizeof(Ut_CFE_TBL_ReturnCodeTable));
+
+    Ut_CFE_TBL_SetFunctionHook(UT_CFE_TBL_REGISTER_INDEX, (void *)&amp;Ut_CFE_TBL_RegisterHook);
+    Ut_CFE_TBL_SetFunctionHook(UT_CFE_TBL_LOAD_INDEX, (void *)&amp;Ut_CFE_TBL_LoadHook);
+    Ut_CFE_TBL_SetFunctionHook(UT_CFE_TBL_GETADDRESS_INDEX, (void *)&amp;Ut_CFE_TBL_GetAddressHook);
+
+    Ut_CFE_TBL_ClearTables();
+}
+
+void Ut_CFE_TBL_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if      (Index == UT_CFE_TBL_REGISTER_INDEX)      { Ut_CFE_TBL_HookTable.CFE_TBL_Register = FunPtr; }
+    else if (Index == UT_CFE_TBL_LOAD_INDEX)          { Ut_CFE_TBL_HookTable.CFE_TBL_Load = FunPtr; }
+    else if (Index == UT_CFE_TBL_MANAGE_INDEX)        { Ut_CFE_TBL_HookTable.CFE_TBL_Manage = FunPtr; }
+    else if (Index == UT_CFE_TBL_GETADDRESS_INDEX)    { Ut_CFE_TBL_HookTable.CFE_TBL_GetAddress = FunPtr; }
+    else if (Index == UT_CFE_TBL_GETADDRESSES_INDEX)  { Ut_CFE_TBL_HookTable.CFE_TBL_GetAddresses = FunPtr; }
+    else if (Index == UT_CFE_TBL_GETINFO_INDEX)       { Ut_CFE_TBL_HookTable.CFE_TBL_GetInfo = FunPtr; }
+    else                                              { printf("Unsupported TBL Index In SetFunctionHook Call %u\n", Index); }
+}
+
+void Ut_CFE_TBL_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index &lt; UT_CFE_TBL_MAX_INDEX) {
+        Ut_CFE_TBL_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_CFE_TBL_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported TBL Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+bool Ut_CFE_TBL_UseReturnCode(uint32 Index)
+{
+    if (Ut_CFE_TBL_ReturnCodeTable[Index].Count &gt; 0) {
+        Ut_CFE_TBL_ReturnCodeTable[Index].Count--;
+        if (Ut_CFE_TBL_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+int32 CFE_TBL_Register( CFE_TBL_Handle_t *TblHandlePtr,
+                        const char   *Name,
+                        uint32  Size,
+                        uint16  TblOptionFlags,
+                        CFE_TBL_CallbackFuncPtr_t TblValidationFuncPtr )
+{
+    /* Check for specified return */
+    if (Ut_CFE_TBL_UseReturnCode(UT_CFE_TBL_REGISTER_INDEX))
+        return Ut_CFE_TBL_ReturnCodeTable[UT_CFE_TBL_REGISTER_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_TBL_HookTable.CFE_TBL_Register)
+        return(Ut_CFE_TBL_HookTable.CFE_TBL_Register(TblHandlePtr, Name, Size, TblOptionFlags,TblValidationFuncPtr));
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_Share( CFE_TBL_Handle_t *TblHandlePtr,      /* Returned Handle */
+                     const char *TblName )
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_Unregister ( CFE_TBL_Handle_t TblHandle )
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_Load( CFE_TBL_Handle_t TblHandle,
+                    CFE_TBL_SrcEnum_t SrcType,
+                    const void *SrcDataPtr )
+{
+    /* Check for specified return */
+    if (Ut_CFE_TBL_UseReturnCode(UT_CFE_TBL_LOAD_INDEX))
+        return Ut_CFE_TBL_ReturnCodeTable[UT_CFE_TBL_LOAD_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_TBL_HookTable.CFE_TBL_Load)
+        return(Ut_CFE_TBL_HookTable.CFE_TBL_Load(TblHandle, SrcType, SrcDataPtr));
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_Update( CFE_TBL_Handle_t TblHandle )
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_GetAddress( void **TblPtr,
+                          CFE_TBL_Handle_t TblHandle )
+{
+    /* Check for specified return */
+    if (Ut_CFE_TBL_UseReturnCode(UT_CFE_TBL_GETADDRESS_INDEX))
+        return Ut_CFE_TBL_ReturnCodeTable[UT_CFE_TBL_GETADDRESS_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_TBL_HookTable.CFE_TBL_GetAddress)
+        return(Ut_CFE_TBL_HookTable.CFE_TBL_GetAddress(TblPtr, TblHandle));
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_ReleaseAddress( CFE_TBL_Handle_t TblHandle )
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_GetAddresses( void **TblPtrs[],
+                            uint16 NumTables,
+                            const CFE_TBL_Handle_t TblHandles[] )
+{
+    /* Check for specified return */
+    if (Ut_CFE_TBL_UseReturnCode(UT_CFE_TBL_GETADDRESSES_INDEX))
+        return Ut_CFE_TBL_ReturnCodeTable[UT_CFE_TBL_GETADDRESSES_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_TBL_HookTable.CFE_TBL_GetAddresses)
+        return(Ut_CFE_TBL_HookTable.CFE_TBL_GetAddresses(TblPtrs, NumTables, TblHandles));
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_ReleaseAddresses( uint16 NumTables,
+                                const CFE_TBL_Handle_t TblHandles[] )
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_Validate( CFE_TBL_Handle_t TblHandle )
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_Manage( CFE_TBL_Handle_t TblHandle )
+{
+    /* Check for specified return */
+    if (Ut_CFE_TBL_UseReturnCode(UT_CFE_TBL_MANAGE_INDEX))
+        return Ut_CFE_TBL_ReturnCodeTable[UT_CFE_TBL_MANAGE_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_TBL_HookTable.CFE_TBL_Manage)
+        return(Ut_CFE_TBL_HookTable.CFE_TBL_Manage(TblHandle));
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_GetStatus( CFE_TBL_Handle_t TblHandle )
+{
+    /* Check for specified return */
+    if (Ut_CFE_TBL_UseReturnCode(UT_CFE_TBL_GETSTATUS_INDEX))
+        return Ut_CFE_TBL_ReturnCodeTable[UT_CFE_TBL_GETSTATUS_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_GetInfo( CFE_TBL_Info_t *TblInfoPtr, const char *TblName )
+{
+    /* Check for specified return */
+    if (Ut_CFE_TBL_UseReturnCode(UT_CFE_TBL_GETINFO_INDEX))
+        return Ut_CFE_TBL_ReturnCodeTable[UT_CFE_TBL_GETINFO_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_TBL_HookTable.CFE_TBL_GetInfo)
+        return(Ut_CFE_TBL_HookTable.CFE_TBL_GetInfo(TblInfoPtr, TblName));
+
+    return CFE_SUCCESS;
+}
+
+int32   CFE_TBL_DumpToBuffer( CFE_TBL_Handle_t TblHandle )
+{
+    return CFE_SUCCESS;
+}
+
+int32   CFE_TBL_Modified( CFE_TBL_Handle_t TblHandle )
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_CleanUpApp (uint32 AppId)
+{
+    return CFE_SUCCESS;
+}
+</pre></div>
+</div>
+</section>
+<section id="ut-cfe-time-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ut_cfe_time_stubs.c</span></code><a class="headerlink" href="#ut-cfe-time-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_time_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+**
+** File: ut_cfe_time_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_time_stubs.c 1.1 2011/05/04 11:20:58EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for cFE Time Services routines
+**
+** $Log: ut_cfe_time_stubs.c  $
+** Revision 1.1 2011/05/04 11:20:58EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:43EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/02/15 11:13:05EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+#include "ut_cfe_time_stubs.h"
+#include &lt;string.h&gt;
+
+Ut_CFE_TIME_HookTable_t         Ut_CFE_TIME_HookTable;
+Ut_CFE_TIME_ReturnCodeTable_t   Ut_CFE_TIME_ReturnCodeTable[UT_CFE_TIME_MAX_INDEX];
+
+void Ut_CFE_TIME_Reset(void)
+{
+    memset(&amp;Ut_CFE_TIME_HookTable, 0, sizeof(Ut_CFE_TIME_HookTable));
+    memset(&amp;Ut_CFE_TIME_ReturnCodeTable, 0, sizeof(Ut_CFE_TIME_ReturnCodeTable));
+}
+
+void Ut_CFE_TIME_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if      (Index == UT_CFE_TIME_GETTIME_INDEX)      { Ut_CFE_TIME_HookTable.CFE_TIME_GetTime = FunPtr; }
+    else                                              { printf("Unsupported TIME Index In SetFunctionHook Call %u\n", Index); }
+}
+
+void Ut_CFE_TIME_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index &lt; UT_CFE_TIME_MAX_INDEX) {
+        Ut_CFE_TIME_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_CFE_TIME_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported TIME Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+bool Ut_CFE_TIME_UseReturnCode(uint32 Index)
+{
+    if (Ut_CFE_TIME_ReturnCodeTable[Index].Count &gt; 0) {
+        Ut_CFE_TIME_ReturnCodeTable[Index].Count--;
+        if (Ut_CFE_TIME_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+CFE_TIME_SysTime_t  CFE_TIME_GetTime(void)
+{
+    CFE_TIME_SysTime_t  Time;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_TIME_HookTable.CFE_TIME_GetTime)
+        return Ut_CFE_TIME_HookTable.CFE_TIME_GetTime();
+
+    Time.Seconds = 0;
+    Time.Subseconds = 0;
+
+    return Time;
+}
+</pre></div>
+</div>
+</section>
+<section id="ut-osapi-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ut_osapi_stubs.c</span></code><a class="headerlink" href="#ut-osapi-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_osapi_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+** File: ut_osapi_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_osapi_stubs.c 1.2 2011/05/16 16:25:35EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for OSAPI routines.
+**
+** $Log: ut_osapi_stubs.c  $
+** Revision 1.2 2011/05/16 16:25:35EDT rmcgraw
+** Added hook functionality to Count Semaphore APIs
+** Revision 1.4 2011/05/16 14:42:42EDT rmcgraw
+** Added SetRtnCode processing to Counting Semaphore APIs
+** Revision 1.3 2011/04/01 16:02:41EDT sslegel
+** Added (void) to unused parameters to avoid compiler warnings
+** Revision 1.2 2011/03/08 15:42:09EST rmcgraw
+** Added OS_CountSemGetIdByName
+** Revision 1.1 2011/02/15 11:13:05EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+*/
+
+/*
+** Include section
+*/
+#include "cfe.h"
+#include "ut_osapi_stubs.h"
+#include &lt;time.h&gt;
+#include &lt;string.h&gt;
+
+Ut_OSAPI_HookTable_t        Ut_OSAPI_HookTable;
+Ut_OSAPI_ReturnCodeTable_t  Ut_OSAPI_ReturnCodeTable[UT_OSAPI_MAX_INDEX];
+
+void Ut_OSAPI_Reset(void)
+{
+    memset(&amp;Ut_OSAPI_HookTable, 0, sizeof(Ut_OSAPI_HookTable));
+    memset(&amp;Ut_OSAPI_ReturnCodeTable, 0, sizeof(Ut_OSAPI_ReturnCodeTable));
+}
+
+void Ut_OSAPI_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if      (Index == UT_OSAPI_TASKDELAY_INDEX)       { Ut_OSAPI_HookTable.OS_TaskDelay = FunPtr; }
+    else if (Index == UT_OSAPI_BINSEMTAKE_INDEX)      { Ut_OSAPI_HookTable.OS_BinSemTake = FunPtr; }
+    else if (Index == UT_OSAPI_BINSEMTIMEDWAIT_INDEX) { Ut_OSAPI_HookTable.OS_BinSemTimedWait = FunPtr; }
+    else if (Index == UT_OSAPI_MUTSEMTAKE_INDEX)      { Ut_OSAPI_HookTable.OS_MutSemTake = FunPtr; }
+    else if (Index == UT_OSAPI_GETLOCALTIME_INDEX)    { Ut_OSAPI_HookTable.OS_GetLocalTime = FunPtr; }
+    else if (Index == UT_OSAPI_QUEUEGET_INDEX)        { Ut_OSAPI_HookTable.OS_QueueGet = FunPtr; }
+    else if (Index == UT_OSAPI_QUEUEPUT_INDEX)        { Ut_OSAPI_HookTable.OS_QueuePut = FunPtr; }
+    else if (Index == UT_OSAPI_TASKDELETE_INDEX)      { Ut_OSAPI_HookTable.OS_TaskDelete = FunPtr; }
+    else if (Index == UT_OSAPI_BINSEMGIVE_INDEX)      { Ut_OSAPI_HookTable.OS_BinSemGive = FunPtr; }
+    else if (Index == UT_OSAPI_COUNTSEMCREATE_INDEX)  { Ut_OSAPI_HookTable.OS_CountSemCreate = FunPtr; }
+    else if (Index == UT_OSAPI_COUNTSEMDELETE_INDEX)  { Ut_OSAPI_HookTable.OS_CountSemDelete = FunPtr; }
+    else if (Index == UT_OSAPI_COUNTSEMGIVE_INDEX)    { Ut_OSAPI_HookTable.OS_CountSemGive = FunPtr; }
+    else if (Index == UT_OSAPI_COUNTSEMTAKE_INDEX)    { Ut_OSAPI_HookTable.OS_CountSemTake = FunPtr; }
+    else if (Index == UT_OSAPI_COUNTSEMTIMEDWAIT_INDEX)   { Ut_OSAPI_HookTable.OS_CountSemTimedWait = FunPtr; }
+    else if (Index == UT_OSAPI_COUNTSEMGETIDBYNAME_INDEX) { Ut_OSAPI_HookTable.OS_CountSemGetIdByName = FunPtr; }
+    else if (Index == UT_OSAPI_COUNTSEMGETINFO_INDEX) { Ut_OSAPI_HookTable.OS_CountSemGetInfo = FunPtr; }
+    else                                              { printf("Unsupported OSAPI Index In SetFunctionHook Call %u\n", Index); }
+}
+
+void Ut_OSAPI_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index &lt; UT_OSAPI_MAX_INDEX) {
+        Ut_OSAPI_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_OSAPI_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported OSAPI Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+bool Ut_OSAPI_UseReturnCode(uint32 Index)
+{
+    if (Ut_OSAPI_ReturnCodeTable[Index].Count &gt; 0) {
+        Ut_OSAPI_ReturnCodeTable[Index].Count--;
+        if (Ut_OSAPI_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+/**********************************************************************************
+                                    TASK API
+**********************************************************************************/
+
+int32 OS_TaskCreate(uint32 *task_id, const char *task_name, osal_task_entry function_pointer, uint32 *stack_pointer,
+                    uint32 stack_size, uint32 priority, uint32 flags)
+{
+    (void) task_id;
+    (void) task_name;
+    (void) function_pointer;
+    (void) stack_pointer;
+    (void) stack_size;
+    (void) priority;
+    (void) flags;
+
+    return(OS_SUCCESS);
+}
+
+int32 OS_TaskDelete (uint32 task_id)
+{
+    if (Ut_OSAPI_HookTable.OS_TaskDelete)
+        return(Ut_OSAPI_HookTable.OS_TaskDelete(task_id));
+
+    return(OS_SUCCESS);
+}
+
+int32 OS_TaskInstallDeleteHandler(osal_task_entry function_pointer)
+{
+    (void) function_pointer;
+
+    return(OS_SUCCESS);
+}
+
+void OS_TaskExit(void)
+{
+    return;
+}
+
+int32 OS_TaskDelay(uint32 millisecond)
+{
+    (void) millisecond;
+
+    if (Ut_OSAPI_HookTable.OS_TaskDelay)
+        return(Ut_OSAPI_HookTable.OS_TaskDelay(millisecond));
+
+    return(OS_SUCCESS);
+}
+
+int32 OS_TaskSetPriority (uint32 task_id, uint32 new_priority)
+{
+    (void) task_id;
+    (void) new_priority;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_TaskRegister (void)
+{
+    return (OS_SUCCESS);
+}
+
+uint32 OS_TaskGetId (void)
+{
+    return (uint32)(7);
+}
+
+int32 OS_TaskGetIdByName (uint32 *task_id, const char *task_name)
+{
+    (void) task_id;
+    (void) task_name;
+
+    return (uint32)(7);
+}
+
+int32 OS_TaskGetInfo (uint32 task_id, OS_task_prop_t *task_prop)
+{
+    (void) task_id;
+
+    task_prop = NULL;        /* currently not implemented */
+    return(OS_INVALID_POINTER);
+}
+
+/****************************************************************************************
+                              MESSAGE QUEUE API
+*****************************************************************************************/
+
+int32 OS_QueueCreate (uint32 *queue_id, const char *queue_name, uint32 queue_depth,
+                       uint32 data_size, uint32 flags)
+{
+    (void) queue_id;
+    (void) queue_name;
+    (void) queue_depth;
+    (void) data_size;
+    (void) flags;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_QueueDelete (uint32 queue_id)
+{
+    (void) queue_id;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_QueueGet (uint32 queue_id, void *data, uint32 size, uint32 *size_copied, int32 timeout)
+{
+    if (Ut_OSAPI_HookTable.OS_QueueGet)
+        return(Ut_OSAPI_HookTable.OS_QueueGet(queue_id, data, size, size_copied, timeout));
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_QueuePut (uint32 queue_id, const void *data, uint32 size, uint32 flags)
+{
+    if (Ut_OSAPI_HookTable.OS_QueuePut)
+        return(Ut_OSAPI_HookTable.OS_QueuePut(queue_id, data, size, flags));
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_QueueGetIdByName (uint32 *queue_id, const char *queue_name)
+{
+    (void) queue_id;
+    (void) queue_name;
+
+    return (OS_SUCCESS);
+}
+
+/******************************************************************************************
+                                  SEMAPHORE API
+******************************************************************************************/
+
+int32 OS_BinSemCreate (uint32 *sem_id, const char *sem_name, uint32 sem_initial_value, uint32 options)
+{
+    (void) sem_id;
+    (void) sem_name;
+    (void) sem_initial_value;
+    (void) options;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_BinSemDelete (uint32 sem_id)
+{
+    (void) sem_id;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_BinSemGive (uint32 sem_id)
+{
+    if (Ut_OSAPI_HookTable.OS_BinSemGive)
+        return(Ut_OSAPI_HookTable.OS_BinSemGive(sem_id));
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_BinSemTake (uint32 sem_id)
+{
+    if (Ut_OSAPI_HookTable.OS_BinSemTake)
+        return(Ut_OSAPI_HookTable.OS_BinSemTake(sem_id));
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_BinSemTimedWait (uint32 sem_id, uint32 msecs)
+{
+    if (Ut_OSAPI_HookTable.OS_BinSemTimedWait)
+        return(Ut_OSAPI_HookTable.OS_BinSemTimedWait(sem_id, msecs));
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_BinSemGetIdByName (uint32 *sem_id, const char *sem_name)
+{
+    (void) sem_name;
+
+    sem_id = NULL;             /* currently not implemented */
+    return(OS_INVALID_POINTER);
+}
+
+int32 OS_BinSemGetInfo (uint32 sem_id, OS_bin_sem_prop_t *bin_prop)
+{
+    (void) sem_id;
+
+    bin_prop = NULL;        /* currently not implemented */
+    return(OS_INVALID_POINTER);
+}
+
+int32 OS_CountSemCreate (uint32 *sem_id, const char *sem_name, uint32 sem_initial_value, uint32 options)
+{
+    if (Ut_OSAPI_UseReturnCode(UT_OSAPI_COUNTSEMCREATE_INDEX))
+        return Ut_OSAPI_ReturnCodeTable[UT_OSAPI_COUNTSEMCREATE_INDEX].Value;
+
+    if (Ut_OSAPI_HookTable.OS_CountSemCreate)
+        return(Ut_OSAPI_HookTable.OS_CountSemCreate(sem_id, sem_name, sem_initial_value, options));
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_CountSemDelete (uint32 sem_id)
+{
+    (void) sem_id;
+
+    if (Ut_OSAPI_HookTable.OS_CountSemDelete)
+        return(Ut_OSAPI_HookTable.OS_CountSemDelete(sem_id));
+
+    if (Ut_OSAPI_UseReturnCode(UT_OSAPI_COUNTSEMDELETE_INDEX))
+        return Ut_OSAPI_ReturnCodeTable[UT_OSAPI_COUNTSEMDELETE_INDEX].Value;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_CountSemGive (uint32 sem_id)
+{
+    if (Ut_OSAPI_HookTable.OS_CountSemGive)
+        return(Ut_OSAPI_HookTable.OS_CountSemGive(sem_id));
+
+    if (Ut_OSAPI_UseReturnCode(UT_OSAPI_COUNTSEMGIVE_INDEX))
+        return Ut_OSAPI_ReturnCodeTable[UT_OSAPI_COUNTSEMGIVE_INDEX].Value;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_CountSemTake (uint32 sem_id)
+{
+    if (Ut_OSAPI_HookTable.OS_CountSemTake)
+        return(Ut_OSAPI_HookTable.OS_CountSemTake(sem_id));
+
+    if (Ut_OSAPI_UseReturnCode(UT_OSAPI_COUNTSEMTAKE_INDEX))
+        return Ut_OSAPI_ReturnCodeTable[UT_OSAPI_COUNTSEMTAKE_INDEX].Value;
+
+    return OS_SUCCESS;
+}
+
+int32 OS_CountSemTimedWait (uint32 sem_id, uint32 msecs)
+{
+    (void) sem_id;
+    (void) msecs;
+
+    if (Ut_OSAPI_HookTable.OS_CountSemTimedWait)
+        return(Ut_OSAPI_HookTable.OS_CountSemTimedWait(sem_id,msecs));
+
+    if (Ut_OSAPI_UseReturnCode(UT_OSAPI_COUNTSEMTIMEDWAIT_INDEX))
+        return Ut_OSAPI_ReturnCodeTable[UT_OSAPI_COUNTSEMTIMEDWAIT_INDEX].Value;
+
+    return OS_SUCCESS;
+}
+
+int32 OS_CountSemGetIdByName (uint32 *sem_id, const char *sem_name)
+{
+
+    if (Ut_OSAPI_HookTable.OS_CountSemGetIdByName)
+        return(Ut_OSAPI_HookTable.OS_CountSemGetIdByName(sem_id, sem_name));
+
+    if (Ut_OSAPI_UseReturnCode(UT_OSAPI_COUNTSEMGETIDBYNAME_INDEX))
+        return Ut_OSAPI_ReturnCodeTable[UT_OSAPI_COUNTSEMGETIDBYNAME_INDEX].Value;
+
+    return OS_SUCCESS;
+}
+
+int32 OS_CountSemGetInfo (uint32 sem_id, OS_count_sem_prop_t *count_prop)
+{
+    (void) sem_id;
+    (void) count_prop;
+
+    if (Ut_OSAPI_HookTable.OS_CountSemGetInfo)
+        return(Ut_OSAPI_HookTable.OS_CountSemGetInfo(sem_id, count_prop));
+
+    if (Ut_OSAPI_UseReturnCode(UT_OSAPI_COUNTSEMGETINFO_INDEX))
+        return Ut_OSAPI_ReturnCodeTable[UT_OSAPI_COUNTSEMGETINFO_INDEX].Value;
+
+    return OS_SUCCESS;
+}
+
+/****************************************************************************************
+                                  MUTEX API
+****************************************************************************************/
+
+int32 OS_MutSemCreate (uint32 *sem_id, const char *sem_name, uint32 options)
+{
+    (void) sem_id;
+    (void) sem_name;
+    (void) options;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_MutSemDelete (uint32 sem_id)
+{
+    (void) sem_id;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_MutSemGive (uint32 sem_id)
+{
+    (void) sem_id;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_MutSemTake (uint32 sem_id)
+{
+    if (Ut_OSAPI_HookTable.OS_MutSemTake)
+        return(Ut_OSAPI_HookTable.OS_MutSemTake(sem_id));
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_MutSemGetIdByName (uint32 *sem_id, const char *sem_name)
+{
+    (void) sem_name;
+
+    sem_id = NULL;             /* currently not implemented */
+    return(OS_INVALID_POINTER);
+}
+
+int32 OS_MutSemGetInfo (uint32 sem_id, OS_mut_sem_prop_t *mut_prop)
+{
+    (void) sem_id;
+
+    mut_prop = NULL;        /* currently not implemented */
+    return(OS_INVALID_POINTER);
+}
+
+/****************************************************************************************
+                                  Time/Tick Related API
+****************************************************************************************/
+
+int32 OS_Milli2Ticks(uint32 milli_seconds)
+{
+    uint32 num_of_ticks,tick_duration_usec ;
+
+    tick_duration_usec = OS_Tick2Micros() ;
+
+    num_of_ticks = ( (milli_seconds * 1000) + tick_duration_usec -1 ) / tick_duration_usec ;
+
+    return(num_of_ticks) ;
+}
+
+int32 OS_Tick2Micros (void)
+{
+    return((1/(CLOCKS_PER_SEC))*1000);
+}
+
+int32 OS_GetLocalTime(OS_time_t *time_struct)
+{
+    if (Ut_OSAPI_HookTable.OS_GetLocalTime)
+        return(Ut_OSAPI_HookTable.OS_GetLocalTime(time_struct));
+
+    return (OS_SUCCESS);
+}
+
+/****************************************************************************************
+                                  Exception API
+****************************************************************************************/
+
+int32 OS_ExcAttachHandler(uint32 ExceptionNumber, void (*ExceptionHandler)(uint32, const void *,uint32), int32 Parameter)
+{
+    (void) ExceptionNumber;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+int32 OS_ExcEnable(int32 ExceptionNumber)
+{
+    (void) ExceptionNumber;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+int32 OS_ExcDisable(int32 ExceptionNumber)
+{
+    (void) ExceptionNumber;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+/****************************************************************************************
+                                  Floating Point Unit API
+****************************************************************************************/
+
+int32 OS_FPUExcAttachHandler(uint32 ExceptionNumber, void * ExceptionHandler, int32 Parameter)
+{
+    (void) ExceptionNumber;
+    (void) ExceptionHandler;
+    (void) Parameter;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+int32 OS_FPUExcEnable(int32 ExceptionNumber)
+{
+    (void) ExceptionNumber;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+int32 OS_FPUExcDisable(int32 ExceptionNumber)
+{
+    (void) ExceptionNumber;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+int32 OS_FPUExcSetMask(uint32 Mask)
+{
+    (void) Mask;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+int32 OS_FPUExcGetMask(uint32 *Mask)
+{
+    (void) Mask;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+/****************************************************************************************
+                                  Interrupt API
+****************************************************************************************/
+
+int32 OS_IntAttachHandler(uint32 InterruptNumber, osal_task_entry InterruptHandler, int32 Parameter)
+{
+    (void) InterruptNumber;
+    (void) InterruptHandler;
+    (void) Parameter;
+
+    return(OS_SUCCESS);
+}
+
+int32 OS_IntEnable(int32 Level)
+{
+    (void) Level;
+
+    return(OS_SUCCESS);
+}
+
+int32 OS_IntDisable(int32 Level)
+{
+    (void) Level;
+
+    return(OS_SUCCESS);
+}
+
+int32 OS_IntUnlock (int32 IntLevel)
+{
+    (void) IntLevel;
+
+    return(OS_SUCCESS);
+}
+
+int32 OS_IntLock (void)
+{
+    return(OS_SUCCESS);
+}
+
+int32 OS_IntSetMask(uint32 Mask)
+{
+    (void) Mask;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+int32 OS_IntGetMask(uint32 *Mask)
+{
+    (void) Mask;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+int32 OS_IntAck(int32 InterruptNumber)
+{
+    (void) InterruptNumber;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+/****************************************************************************************
+                                  Debug API
+****************************************************************************************/
+
+int32 OS_GetErrorName(int32 error_num, os_err_name_t * err_name)
+{
+    os_err_name_t local_name;
+    uint32 return_code;
+
+    return_code = OS_SUCCESS;
+
+    switch (error_num)
+    {
+        case OS_SUCCESS:
+            strcpy(local_name,"OS_SUCCESS"); break;
+        case OS_ERROR:
+            strcpy(local_name,"OS_ERROR"); break;
+        case OS_INVALID_POINTER:
+            strcpy(local_name,"OS_INVALID_POINTER"); break;
+        case OS_ERROR_ADDRESS_MISALIGNED:
+            strcpy(local_name,"OS_ADDRESS_MISALIGNED"); break;
+        case OS_ERROR_TIMEOUT:
+            strcpy(local_name,"OS_ERROR_TIMEOUT"); break;
+        case OS_INVALID_INT_NUM:
+            strcpy(local_name,"OS_INVALID_INT_NUM"); break;
+        case OS_SEM_FAILURE:
+            strcpy(local_name,"OS_SEM_FAILURE"); break;
+        case OS_SEM_TIMEOUT:
+            strcpy(local_name,"OS_SEM_TIMEOUT"); break;
+        case OS_QUEUE_EMPTY:
+            strcpy(local_name,"OS_QUEUE_EMPTY"); break;
+        case OS_QUEUE_FULL:
+            strcpy(local_name,"OS_QUEUE_FULL"); break;
+        case OS_QUEUE_TIMEOUT:
+            strcpy(local_name,"OS_QUEUE_TIMEOUT"); break;
+        case OS_QUEUE_INVALID_SIZE:
+            strcpy(local_name,"OS_QUEUE_INVALID_SIZE"); break;
+        case OS_QUEUE_ID_ERROR:
+            strcpy(local_name,"OS_QUEUE_ID_ERROR"); break;
+        case OS_ERR_NAME_TOO_LONG:
+            strcpy(local_name,"OS_ERR_NAME_TOO_LONG"); break;
+        case OS_ERR_NO_FREE_IDS:
+            strcpy(local_name,"OS_ERR_NO_FREE_IDS"); break;
+        case OS_ERR_NAME_TAKEN:
+            strcpy(local_name,"OS_ERR_NAME_TAKEN"); break;
+        case OS_ERR_INVALID_ID:
+            strcpy(local_name,"OS_ERR_INVALID_ID"); break;
+        case OS_ERR_NAME_NOT_FOUND:
+            strcpy(local_name,"OS_ERR_NAME_NOT_FOUND"); break;
+        case OS_ERR_SEM_NOT_FULL:
+            strcpy(local_name,"OS_ERR_SEM_NOT_FULL"); break;
+        case OS_ERR_INVALID_PRIORITY:
+            strcpy(local_name,"OS_ERR_INVALID_PRIORITY"); break;
+
+        default: strcpy(local_name,"ERROR_UNKNOWN");
+                 return_code = OS_ERROR;
+    }
+    strcpy((char*) err_name, local_name);
+    return return_code;
+}
+
+void OS_printf( const char *String, ...)
+{
+    va_list     ptr;
+    char msg_buffer [OS_BUFFER_SIZE];
+
+    va_start(ptr,String);
+    vsprintf(&amp;msg_buffer[0], String, ptr);
+    va_end(ptr);
+
+    msg_buffer[OS_BUFFER_SIZE-1] = '\0';
+    printf("%s", &amp;msg_buffer[0]); //FIXME??
+}
+</pre></div>
+</div>
+</section>
+<section id="ut-osfileapi-stubs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ut_osfileapi_stubs.c</span></code><a class="headerlink" href="#ut-osfileapi-stubs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_osfileapi_stubs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+**
+** File: ut_osfileapi_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_osfileapi_stubs.c 1.1 2011/05/04 11:21:00EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for the OSAPI File Services routines
+**
+** $Log: ut_osfileapi_stubs.c  $
+** Revision 1.1 2011/05/04 11:21:00EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:45EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.6 2011/03/31 14:53:05EDT rmcgraw
+** Added functionality and supressed compiler warnings
+** Revision 1.5 2011/03/30 09:58:57EDT rmcgraw
+** Added Hook and Return enhancements to Directory APIs
+** Revision 1.4 2011/03/24 13:14:55EDT rmcgraw
+** Added Hook and RtnCode functionality to OS_stat
+** Revision 1.3 2011/03/23 17:18:08EDT rmcgraw
+** correct OS_read return value
+** Revision 1.2 2011/03/23 17:08:19EDT rmcgraw
+** OS_ERROR to OS_SUCCESS for some OS file sys apis
+** Revision 1.1 2011/02/15 11:13:05EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+#include "ut_osfileapi_stubs.h"
+#include &lt;string.h&gt;
+
+Ut_OSFILEAPI_HookTable_t           Ut_OSFILEAPI_HookTable;
+Ut_OSFILEAPI_ReturnCodeTable_t     Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_MAX_INDEX];
+
+void Ut_OSFILEAPI_Reset(void)
+{
+    memset(&amp;Ut_OSFILEAPI_HookTable, 0, sizeof(Ut_OSFILEAPI_HookTable));
+    memset(&amp;Ut_OSFILEAPI_ReturnCodeTable, 0, sizeof(Ut_OSFILEAPI_ReturnCodeTable));
+}
+
+void Ut_OSFILEAPI_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if      (Index == UT_OSFILEAPI_CREAT_INDEX)    { Ut_OSFILEAPI_HookTable.OS_creat = FunPtr; }
+    else if (Index == UT_OSFILEAPI_WRITE_INDEX)    { Ut_OSFILEAPI_HookTable.OS_write = FunPtr; }
+    else if (Index == UT_OSFILEAPI_READ_INDEX)     { Ut_OSFILEAPI_HookTable.OS_read = FunPtr; }
+    else if (Index == UT_OSFILEAPI_OPENDIR_INDEX)  { Ut_OSFILEAPI_HookTable.OS_opendir = FunPtr; }
+    else if (Index == UT_OSFILEAPI_READDIR_INDEX)  { Ut_OSFILEAPI_HookTable.OS_readdir = FunPtr; }
+    else if (Index == UT_OSFILEAPI_CLOSE_INDEX)    { Ut_OSFILEAPI_HookTable.OS_close = FunPtr; }
+    else if (Index == UT_OSFILEAPI_OPEN_INDEX)     { Ut_OSFILEAPI_HookTable.OS_open = FunPtr; }
+    else if (Index == UT_OSFILEAPI_CLOSEDIR_INDEX) { Ut_OSFILEAPI_HookTable.OS_closedir = FunPtr; }
+    else if (Index == UT_OSFILEAPI_STAT_INDEX)     { Ut_OSFILEAPI_HookTable.OS_stat = FunPtr; }
+    else if (Index == UT_OSFILEAPI_FDGETINFO_INDEX){ Ut_OSFILEAPI_HookTable.OS_FDGetInfo = FunPtr; }
+    else                                           { printf("Unsupported OSFILEAPI Index In SetFunctionHook Call %u\n", Index); }
+}
+
+void Ut_OSFILEAPI_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index &lt; UT_OSFILEAPI_MAX_INDEX) {
+        Ut_OSFILEAPI_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_OSFILEAPI_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported OSFILEAPI Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+bool Ut_OSFILEAPI_UseReturnCode(uint32 Index)
+{
+    if (Ut_OSFILEAPI_ReturnCodeTable[Index].Count &gt; 0) {
+        Ut_OSFILEAPI_ReturnCodeTable[Index].Count--;
+        if (Ut_OSFILEAPI_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+/*
+** Standard File system API
+*/
+
+int32 OS_creat  (const char *path, int32  access)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_CREAT_INDEX))
+        return Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_CREAT_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_creat)
+        return Ut_OSFILEAPI_HookTable.OS_creat(path, access);
+
+    return OS_ERROR;
+}
+
+int32 OS_open   (const char *path,  int32 access,  uint32  mode)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_OPEN_INDEX))
+        return Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_OPEN_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_open)
+        return Ut_OSFILEAPI_HookTable.OS_OpenCreate(osal_id_t *filedes, path, OS_FILE_FLAG_NONE,  access);
+
+    return OS_ERROR;
+}
+
+int32 OS_close (int32  filedes)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_CLOSE_INDEX))
+        return Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_CLOSE_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_close)
+        return Ut_OSFILEAPI_HookTable.OS_close(filedes);
+
+    return OS_SUCCESS;
+}
+
+int32 OS_read  (int32  filedes, void *buffer, uint32 nbytes)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_READ_INDEX))
+        return Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_READ_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_read)
+        return Ut_OSFILEAPI_HookTable.OS_read(filedes, buffer, nbytes);
+
+    return OS_ERROR;
+}
+
+int32 OS_write (int32  filedes, void *buffer, uint32 nbytes)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_WRITE_INDEX))
+        return Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_WRITE_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_write)
+        return Ut_OSFILEAPI_HookTable.OS_write(filedes, buffer, nbytes);
+
+    return nbytes;
+}
+
+int32 OS_chmod  (const char *path, uint32 access)
+{
+    return OS_SUCCESS;
+}
+
+int32 OS_stat   (const char *path, os_fstat_t *filestats)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_STAT_INDEX))
+        return Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_STAT_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_stat)
+        return Ut_OSFILEAPI_HookTable.OS_stat(path, filestats);
+
+    return OS_ERROR;
+}
+
+int32 OS_lseek  (int32  filedes, int32 offset, uint32 whence)
+{
+    return OS_SUCCESS;
+}
+
+int32 OS_remove (const char *path)
+{
+    return OS_SUCCESS;
+}
+
+int32 OS_rename (const char *old, const char *new)
+{
+    return OS_SUCCESS;
+}
+
+int32 OS_cp (const char *src, const char *dest)
+{
+    return OS_SUCCESS;
+}
+
+int32 OS_mv (const char *src, const char *dest)
+{
+    return OS_SUCCESS;
+}
+
+/*
+** Directory API
+*/
+
+int32 OS_mkdir (const char *path, uint32 access)
+{
+    return OS_SUCCESS;
+}
+
+os_dirp_t OS_opendir (const char *path)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_OPENDIR_INDEX))
+        return (os_dirp_t)Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_OPENDIR_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_opendir)
+        return Ut_OSFILEAPI_HookTable.OS_opendir(path);
+
+    return NULL;
+}
+
+int32 OS_closedir (os_dirp_t directory)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_CLOSEDIR_INDEX))
+        return Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_CLOSEDIR_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_closedir)
+        return Ut_OSFILEAPI_HookTable.OS_closedir(directory);
+
+    return OS_SUCCESS;
+}
+
+os_dirent_t *  OS_readdir (os_dirp_t directory)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_READDIR_INDEX))
+        return (os_dirent_t *)Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_READDIR_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_readdir)
+        return Ut_OSFILEAPI_HookTable.OS_readdir(directory);
+
+    return NULL;
+}
+
+int32  OS_rmdir (const char *path)
+{
+    return OS_ERROR;
+}
+
+int32 OS_check_name_length(const char *path)
+{
+    return OS_SUCCESS;
+}
+
+int32 OS_ShellOutputToFile(char* Cmd, int32 OS_fd)
+{
+    return OS_SUCCESS;
+}
+
+int32 OS_FDGetInfo (int32 filedes, OS_FDTableEntry *fd_prop)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_FDGETINFO_INDEX))
+        return Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_FDGETINFO_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_FDGetInfo)
+        return Ut_OSFILEAPI_HookTable.OS_FDGetInfo(filedes,fd_prop);
+
+    return OS_FS_ERR_INVALID_FD;
+}
+</pre></div>
+</div>
+</section>
+<section id="utassert-c">
+<h2><code class="docutils literal notranslate"><span class="pre">utassert.c</span></code><a class="headerlink" href="#utassert-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/utassert.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * Filename: utassert.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains a standard set of asserts for use in unit tests.
+ *
+ */
+
+/*
+ * Includes
+ */
+
+#include "common_types.h"
+#include "utassert.h"
+#include "uttools.h"
+
+/*
+ * Local Data
+ */
+
+uint32      UtAssertPassCount = 0;
+uint32      UtAssertFailCount = 0;
+
+/*
+ * Function Definitions
+ */
+
+uint32 UtAssert_GetPassCount(void)
+{
+    return(UtAssertPassCount);
+}
+
+uint32 UtAssert_GetFailCount(void)
+{
+    return(UtAssertFailCount);
+}
+
+bool UtAssert(bool Expression, char *Description, char *File, uint32 Line)
+{
+    if (Expression) {
+        #ifdef UT_VERBOSE
+        printf("PASS: %s\n", Description);
+        #endif
+        UtAssertPassCount++;
+        return(true);
+    }
+    else {
+        printf("FAIL: %s, File: %s, Line: %u\n", Description, File, Line);
+        UtAssertFailCount++;
+        return(false);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="utlist-c">
+<h2><code class="docutils literal notranslate"><span class="pre">utlist.c</span></code><a class="headerlink" href="#utlist-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/utlist.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * Filename: utlist.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains functions to implement a generic linked list data structure.
+ *
+ */
+
+/*
+ * Includes
+ */
+
+#include "common_types.h"
+#include "utlist.h"
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+/*
+ * Function Definitions
+ */
+
+UtListHead_t *UtList_Create(void)
+{
+    UtListHead_t *NewList;
+
+    NewList = malloc(sizeof(UtListHead_t));
+    NewList-&gt;First = NULL;
+    NewList-&gt;Last = NULL;
+    NewList-&gt;NumberOfEntries = 0;
+    return (NewList);
+}
+
+void UtList_Destroy(UtListHead_t *ListHead)
+{
+    UtList_Reset(ListHead);
+    free(ListHead);
+}
+
+void UtList_Reset(UtListHead_t *ListHead)
+{
+    while (!UtList_IsEmpty(ListHead)) {
+        UtList_DeleteFirst(ListHead);
+    }
+}
+
+void UtList_Add(UtListHead_t *ListHead, void *Data, uint32 DataSize, uint32 Tag)
+{
+    UtListNode_t *NewNode = NULL;
+    
+    NewNode = malloc(sizeof(UtListNode_t));
+    if (ListHead-&gt;NumberOfEntries == 0) {
+
+        ListHead-&gt;First = NewNode;
+        ListHead-&gt;Last = NewNode;
+        ListHead-&gt;NumberOfEntries++;
+
+        NewNode-&gt;Next = NULL;
+        NewNode-&gt;Prev = NULL;
+        NewNode-&gt;Tag = Tag;
+        NewNode-&gt;DataSize = DataSize;
+        NewNode-&gt;Data = malloc(DataSize);
+        memcpy(NewNode-&gt;Data, Data, DataSize);
+    }
+    else {
+
+        NewNode-&gt;Next = NULL;
+        NewNode-&gt;Prev = ListHead-&gt;Last;
+        NewNode-&gt;Tag = Tag;
+        NewNode-&gt;DataSize = DataSize;
+        NewNode-&gt;Data = malloc(DataSize);
+        memcpy(NewNode-&gt;Data, Data, DataSize);
+
+        ListHead-&gt;Last-&gt;Next = NewNode;
+        ListHead-&gt;Last = NewNode;
+        ListHead-&gt;NumberOfEntries++;
+    }
+}
+
+void UtList_DeleteFirst(UtListHead_t *ListHead)
+{
+    UtList_DeleteNode(ListHead, ListHead-&gt;First);
+}
+
+void UtList_DeleteLast(UtListHead_t *ListHead)
+{
+    UtList_DeleteNode(ListHead, ListHead-&gt;Last);
+}
+
+void UtList_DeleteNode(UtListHead_t *ListHead, UtListNode_t *DeleteNode)
+{
+   
+    if (!UtList_IsEmpty(ListHead)) {
+
+        if (ListHead-&gt;NumberOfEntries == 1) {
+            ListHead-&gt;First = NULL;
+            ListHead-&gt;Last = NULL;
+            ListHead-&gt;NumberOfEntries = 0;
+        }
+        else if (DeleteNode == ListHead-&gt;First) {
+            ListHead-&gt;First = DeleteNode-&gt;Next;
+            ListHead-&gt;First-&gt;Prev = NULL;
+            ListHead-&gt;NumberOfEntries--;
+        }
+        else if (DeleteNode == ListHead-&gt;Last) {
+            ListHead-&gt;Last = DeleteNode-&gt;Prev;
+            ListHead-&gt;Last-&gt;Next = NULL;
+            ListHead-&gt;NumberOfEntries--;        
+        }
+        else {
+            DeleteNode-&gt;Prev-&gt;Next = DeleteNode-&gt;Next;
+            DeleteNode-&gt;Next-&gt;Prev = DeleteNode-&gt;Prev;
+            ListHead-&gt;NumberOfEntries--;
+        }
+
+        free(DeleteNode-&gt;Data);
+        free(DeleteNode);
+    }
+}
+
+void UtList_RemoveFirst(UtListHead_t *ListHead, void *Data)
+{
+    UtList_RemoveNode(ListHead, Data, ListHead-&gt;First);
+}
+
+void UtList_RemoveLast(UtListHead_t *ListHead, void *Data)
+{
+    UtList_RemoveNode(ListHead, Data, ListHead-&gt;Last);
+}
+
+void UtList_RemoveNode(UtListHead_t *ListHead, void *Data, UtListNode_t *CurrentNode)
+{
+    if (!UtList_IsEmpty(ListHead)) {
+        memcpy(Data, CurrentNode-&gt;Data, CurrentNode-&gt;DataSize);
+        UtList_DeleteNode(ListHead, CurrentNode);
+    }
+}
+
+UtListNode_t *UtList_First(UtListHead_t *ListHead)
+{
+    return(ListHead-&gt;First);
+}
+
+UtListNode_t *UtList_Last(UtListHead_t *ListHead)
+{
+    return(ListHead-&gt;Last);
+}
+
+bool UtList_IsEmpty(UtListHead_t *ListHead)
+{
+    return(ListHead-&gt;NumberOfEntries == 0);
+}
+
+uint32 UtList_Depth(UtListHead_t *ListHead)
+{
+    return(ListHead-&gt;NumberOfEntries);
+}
+</pre></div>
+</div>
+</section>
+<section id="uttest-c">
+<h2><code class="docutils literal notranslate"><span class="pre">uttest.c</span></code><a class="headerlink" href="#uttest-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/uttest.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * Filename: uttest.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains functions to implement a standard way to execute unit tests.
+ *
+ */
+
+/*
+ * Includes
+ */
+
+#include "common_types.h"
+#include "utassert.h"
+#include "utlist.h"
+
+/*
+ * Type Definitions
+ */
+
+typedef struct {
+    void    (*Test)(void);
+    void    (*Setup)(void);
+    void    (*Teardown)(void);
+    char     *TestName;
+} UtTestDataBaseEntry_t;
+
+/*
+ * Local Data
+ */
+
+UtListHead_t    UtTestDataBase;
+uint32          UtTestsExecutedCount = 0;
+
+/*
+ * Function Definitions
+ */
+
+void UtTest_Add(void (*Test)(void), void (*Setup)(void), void (*Teardown)(void), char *TestName)
+{
+    UtTestDataBaseEntry_t   UtTestDataBaseEntry;
+
+    UtTestDataBaseEntry.Test = Test;
+    UtTestDataBaseEntry.Setup = Setup;
+    UtTestDataBaseEntry.Teardown = Teardown;
+    UtTestDataBaseEntry.TestName = TestName;
+    UtList_Add(&amp;UtTestDataBase, &amp;UtTestDataBaseEntry, sizeof(UtTestDataBaseEntry_t), 0);
+}
+
+int UtTest_Run(void)
+{
+    uint32                   i;
+    UtListNode_t            *UtListNode;
+    UtTestDataBaseEntry_t   *UtTestDataBaseEntry;
+
+    if (UtTestDataBase.NumberOfEntries &gt; 0) {
+
+        UtListNode = UtTestDataBase.First;
+        for (i=0; i &lt; UtTestDataBase.NumberOfEntries; i++) {
+
+            UtTestDataBaseEntry = UtListNode-&gt;Data;
+
+            #ifdef UT_VERBOSE
+            if (strlen(UtTestDataBaseEntry-&gt;TestName) &gt; 0) { printf("\nRunning Test: %s\n", UtTestDataBaseEntry-&gt;TestName); }
+            #endif
+
+            if (UtTestDataBaseEntry-&gt;Setup)    { UtTestDataBaseEntry-&gt;Setup(); }
+            if (UtTestDataBaseEntry-&gt;Test)     { UtTestDataBaseEntry-&gt;Test(); UtTestsExecutedCount++; }
+            if (UtTestDataBaseEntry-&gt;Teardown) { UtTestDataBaseEntry-&gt;Teardown(); }
+
+            UtListNode = UtListNode-&gt;Next;
+        }
+    }
+
+    printf("\n");
+    printf("Tests Executed:    %u\n", UtTestsExecutedCount);
+    printf("Assert Pass Count: %u\n", UtAssert_GetPassCount());
+    printf("Assert Fail Count: %u\n", UtAssert_GetFailCount());
+
+    UtList_Reset(&amp;UtTestDataBase);
+
+    return (UtAssert_GetFailCount() &gt; 0);
+}
+</pre></div>
+</div>
+</section>
+<section id="uttools-c">
+<h2><code class="docutils literal notranslate"><span class="pre">uttools.c</span></code><a class="headerlink" href="#uttools-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/io_lib/fsw/unit_test/ut-assert/src/uttools.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * Filename: uttools.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains functions to implement a set of tools for use in unit testing.
+ *
+ */
+
+/*
+ * Includes
+ */
+
+#include "common_types.h"
+#include &lt;stdarg.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;string.h&gt;
+#include &lt;ctype.h&gt;
+
+/*
+ * Function Definitions
+ */
+
+bool UtMem2BinFile(void *Memory, char *Filename, uint32 Length)
+{
+    FILE   *fp;
+
+    if ((fp = fopen(Filename, "w"))) {
+        fwrite(Memory, Length, 1, fp);
+        fclose(fp);
+        return(true);
+    }
+    else {
+        printf("UtMem2BinFile: Error Opening File: %s, %s\n", Filename, strerror(errno));
+        return(false);
+    }
+}
+
+bool UtBinFile2Mem(void *Memory, char *Filename, uint32 Length)
+{
+    FILE   *fp;
+
+    if ((fp = fopen(Filename, "r"))) {
+        fread(Memory, Length, 1, fp);
+        fclose(fp);
+        return(true);
+    }
+    else {
+        printf("UtBinFile2Mem: Error Opening File: %s, %s\n", Filename, strerror(errno));
+        return(false);
+    }
+}
+
+bool UtMem2HexFile(void *Memory, char *Filename, uint32 Length)
+{
+    FILE        *fp;
+    uint32       i;
+    uint32       j;
+
+    if ((fp = fopen(Filename, "w"))) {
+
+        for (i=0; i &lt; Length; i+=16) {
+            fprintf(fp, "   %06X: ", i);
+            for (j=0; j &lt; 16; j++) {
+                if ((i+j) &lt; Length)
+                    fprintf(fp, "%02X ", ((uint8 *)Memory)[i+j]);
+                else
+                    fprintf(fp, "   ");
+            }
+            fprintf(fp, " ");
+            for (j=0; j &lt; 16; j++) {
+                if ((i+j) &lt; Length)
+                    fprintf(fp, "%c", isprint(((uint8 *)Memory)[i+j]) ? ((uint8 *)Memory)[i+j] : '.');
+            }
+            fprintf(fp, "\n");
+        }
+        fclose(fp);
+        return(true);
+    }
+    else {
+        printf("UtMem2HexFile: Error Opening File: %s, %s\n", Filename, strerror(errno));
+        return(false);
+    }
+}
+
+void UtMemFill(void *Memory, uint32 Length)
+{
+    uint32 i;
+    uint8  *Byte_ptr = Memory;
+
+    for(i=0; i &lt; Length; i++) {
+        Byte_ptr[i] = i;
+    }
+}
+
+void UtPrintf(char *Spec, ...)
+{
+#ifdef UT_VERBOSE
+    va_list         Args;
+    static char     Text[256];
+
+    va_start(Args, Spec);
+    vsprintf(Text, Spec, Args);
+    va_end(Args);
+
+    printf("%s", Text);
+#else
+    (void)Spec;
+#endif
+}
+
+char *UtSprintf(char *Spec, ...)
+{
+    va_list         Args;
+    static char     Text[10][256];
+    static uint32   TextIndex = 0;
+
+    if (TextIndex &gt;= 10) TextIndex = 0;
+
+    va_start(Args, Spec);
+    vsprintf(Text[TextIndex], Spec, Args);
+    va_end(Args);
+
+    return(Text[TextIndex++]);
+}
+
+void UtPrintx(void *Memory, uint32 Length)
+{
+    uint32 i;
+    uint8  *Byte_ptr = Memory;
+
+    for (i=0; i &lt; Length; i++) {
+        UtPrintf("%02X ", Byte_ptr[i]);
+    }
+    UtPrintf("\n");
+}
+
+bool UtMemCmpValue(void *Memory, uint8 Value, uint32 Length)
+{
+    uint32 i;
+    uint8  *Byte_ptr = Memory;
+
+    for (i=0; i &lt; Length; i++) {
+        if (Byte_ptr[i] != Value) {
+            return(false);
+        }
+    }
+    return (true);
+}
+
+bool UtMemCmpCount(void *Memory, uint32 Length)
+{
+    uint32 i;
+    uint8  *Byte_ptr = Memory;
+
+    for (i=0; i &lt; Length; i++) {
+        if (Byte_ptr[i] != (i &amp; 0xFF)) {
+           return(false);
+        }
+    }
+    return (true);
+}
+
+bool UtMem2BinFileCmp(void *Memory, char *Filename)
+{
+    FILE   *fp;
+    uint8  *MemByte = Memory;
+    int     FileByte;
+    bool Success;
+    uint32  i;
+
+    Success = true;
+    if ((fp = fopen(Filename, "r"))) {
+
+        for (i=0; (FileByte = fgetc(fp)) != EOF; i++) {
+            if (MemByte[i] != FileByte) {
+                Success = false;
+                printf("UtMem2BinFileCmp: Miscompare in file: %s, byte offset: %u, expected: %u, found: %u\n", Filename, i, MemByte[i], FileByte);
+                break;
+            }
+        }
+        fclose(fp);
+    }
+    else {
+        Success = false;
+        printf("UtMem2BinFileCmp: Error Opening File: %s, %s\n", Filename, strerror(errno));
+    }
+
+    return(Success);
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../inc/index.html" class="btn btn-neutral float-left" title="inc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../ut_format_tctf/index.html" class="btn btn-neutral float-right" title="ut_format_tctf" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -131,9 +131,10 @@ def render_directory_page(
 ) -> str:
     directory_path = PurePosixPath() if entry is None else entry.relative
     label = directory_path.as_posix() + "/" if entry else root.name + "/"
+    title = entry.path.name if entry else root.name
     lines = [
         MARKER,
-        "# NOS3 파일 인벤토리",
+        f"# {title}",
         "",
         f"**경로:** {inline_code(label)}",
         "",
@@ -174,7 +175,7 @@ def render_directory_page(
 
 def render_file_section(entry: Entry) -> List[str]:
     lines = [
-        f"### {inline_code(entry.path.name)}",
+        f"## {inline_code(entry.path.name)}",
         "",
         f"**경로:** {inline_code(entry.relative.as_posix())}",
         "",
@@ -202,7 +203,7 @@ def render_file_section(entry: Entry) -> List[str]:
         except (OSError, UnicodeDecodeError) as error:
             raise OSError(f"Cannot read text file {entry.path}: {error}") from error
         content = "".join(content_chunks)
-        code_block = f"{fence}{language_for(entry.path)}\n{content}"
+        code_block = f"{fence}text\n{content}"
         if content and not content.endswith(("\n", "\r")):
             code_block += "\n"
         code_block += fence
@@ -222,39 +223,6 @@ def markdown_fence(path: Path) -> str:
                 else:
                     current = 0
     return "`" * max(3, longest + 1)
-
-
-def language_for(path: Path) -> str:
-    if path.name == "CMakeLists.txt":
-        return "cmake"
-    if path.name in {"Makefile", "GNUmakefile"} or path.suffix.lower() == ".mk":
-        return "make"
-    return {
-        ".c": "c",
-        ".cc": "cpp",
-        ".cpp": "cpp",
-        ".cxx": "cpp",
-        ".h": "c",
-        ".hh": "cpp",
-        ".hpp": "cpp",
-        ".hxx": "cpp",
-        ".py": "python",
-        ".sh": "bash",
-        ".cmake": "cmake",
-        ".xml": "xml",
-        ".html": "html",
-        ".css": "css",
-        ".js": "javascript",
-        ".ts": "typescript",
-        ".json": "json",
-        ".yml": "yaml",
-        ".yaml": "yaml",
-        ".md": "markdown",
-        ".rst": "rst",
-        ".rb": "ruby",
-        ".java": "java",
-        ".fpp": "fpp",
-    }.get(path.suffix.lower(), "text")
 
 
 def atomic_write(path: Path, contents: str) -> None:

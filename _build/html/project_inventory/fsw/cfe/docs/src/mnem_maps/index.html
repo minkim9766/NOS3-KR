@@ -1,0 +1,1221 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mnem_maps &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="modules" href="../../../modules/index.html" />
+    <link rel="prev" title="src" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">cfe</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">docs</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">src</a></li>
+      <li class="breadcrumb-item active">mnem_maps</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/fsw/cfe/docs/src/mnem_maps/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="mnem-maps">
+<h1>mnem_maps<a class="headerlink" href="#mnem-maps" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/docs/src/mnem_maps/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="cfe-es-cmd-mnem-map">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_es_cmd_mnem_map</span></code><a class="headerlink" href="#cfe-es-cmd-mnem-map" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/docs/src/mnem_maps/cfe_es_cmd_mnem_map</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific command mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+ES_NOOP=$sc_$cpu_ES_NOOP \
+ES_RESETCTRS=$sc_$cpu_ES_ResetCtrs \
+ES_RESET="$sc_$cpu_ES_ProcessorReset, $sc_$cpu_ES_PowerOnReset" \
+ES_SHELL=$sc_$cpu$_ES_Shell \
+ES_STARTAPP=$sc_$cpu_ES_StartApp \
+ES_STOPAPP=$sc_$cpu_ES_StopApp \
+ES_RESTARTAPP=$sc_$cpu_ES_ResetApp \
+ES_RELOADAPP=$sc_$cpu_ES_ReloadApp \
+ES_QUERYAPP=$sc_$cpu_ES_QueryApp \
+ES_WRITEAPPINFO2FILE=$sc_$cpu_ES_WriteAppInfo2File \
+ES_CLEARSYSLOG=$sc_$cpu_ES_ClearSysLog \
+ES_WRITESYSLOG2FILE=$sc_$cpu_ES_WriteSysLog2File \
+ES_CLEARERLOG=$sc_$cpu_ES_ClearERLog \
+ES_WRITEERLOG2FILE=$sc_$cpu_ES_WriteERLog2File \
+ES_STARTLADATA=$sc_$cpu_ES_StartLAData \
+ES_STOPLADATA=$sc_$cpu_ES_StopLAData \
+ES_LAFILTERMASK=$sc_$cpu_ES_LAFilterMask \
+ES_LATRIGGERMASK=$sc_$cpu_ES_LATriggerMask \
+ES_OVERWRITESYSLOGMODE=$sc_$cpu_ES_OverwriteSysLogMode \
+ES_RESETPRCNT=$sc_$cpu_ES_ResetPRCnt \
+ES_SETMAXPRCNT=$sc_$cpu_ES_SetMaxPRCnt \
+ES_DELETECDS=$sc_$cpu_ES_DeleteCDS \
+ES_DUMPCDSREG=$sc_$cpu_ES_WriteCDS2File \
+ES_TLMPOOLSTATS=$sc_$cpu_ES_PoolStats \
+ES_WRITETASKINFO2FILE=$sc_$cpu_ES_WriteTaskInfo2File
+</pre></div>
+</div>
+</section>
+<section id="cfe-es-tlm-mnem-map">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_es_tlm_mnem_map</span></code><a class="headerlink" href="#cfe-es-tlm-mnem-map" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/docs/src/mnem_maps/cfe_es_tlm_mnem_map</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific telemetry mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+ES_CMDPC=$sc_$cpu_ES_CMDPC \
+ES_CMDEC=$sc_$cpu_ES_CMDEC \
+ES_CKSUM=$sc_$cpu_ES_CKSUM \
+ES_CFEMAJORVER=$sc_$cpu_ES_CFEMAJORVER \
+ES_CFEMINORVER=$sc_$cpu_ES_CFEMINORVER \
+ES_CFEREVISION=$sc_$cpu_ES_CFEREVISION \
+ES_CFEMISSIONREV=$sc_$cpu_ES_CFEMISSIONREV \
+ES_CFESUBMINORVER=$sc_$cpu_ES_CFESUBMINORVER \
+ES_OSMAJORVER=$sc_$cpu_ES_OSMAJORVER \
+ES_OSMINORVER=$sc_$cpu_ES_OSMINORVER \
+ES_OSREVISION=$sc_$cpu_ES_OSREVISION \
+ES_OSMISSIONREV=$sc_$cpu_ES_OSMISSIONREV \
+ES_PSPMAJORVER=$sc_$cpu_ES_PSPMAJORVER \
+ES_PSPMINORVER=$sc_$cpu_ES_PSPMINORVER \
+ES_PSPREVISION=$sc_$cpu_ES_PSPREVISION \
+ES_PSPMISSIONREV=$sc_$cpu_ES_PSPMISSIONREV \
+ES_PAD1=$sc_$cpu_ES_PAD1 \
+ES_PAD2=$sc_$cpu_ES_PAD2 \
+ES_PAD3=$sc_$cpu_ES_PAD3 \
+ES_SYSLOGBYTEUSED=$sc_$cpu_ES_SYSLOGBYTEUSED \
+ES_SYSLOGSIZE=$sc_$cpu_ES_SYSLOGSIZE \
+ES_SYSLOGENTRIES=$sc_$cpu_ES_SYSLOGENTRIES \
+ES_SYSLOGMODE=$sc_$cpu_ES_SYSLOGMODE \
+ES_ERLOGINDEX=$sc_$cpu_ES_ERLOGINDEX \
+ES_ERLOGENTRIES=$sc_$cpu_ES_ERLOGENTRIES \
+ES_REGCOREAPPS=$sc_$cpu_ES_RegCoreApps \
+ES_REGEXTAPPS=$sc_$cpu_ES_RegExtApps \
+ES_REGTASKS=$sc_$cpu_ES_RegTasks \
+ES_REGLIBS=$sc_$cpu_ES_RegLibs \
+ES_RESETTYPE=$sc_$cpu_ES_ResetType \
+ES_RESETSUBTYPE=$sc_$cpu_ES_ResetSubtype \
+ES_PROCRESETCNT=$sc_$cpu_ES_ProcResetCnt \
+ES_MAXPROCRESETS=$sc_$cpu_ES_MaxProcResets \
+ES_BOOTSOURCE=$sc_$cpu_ES_BootSource \
+ES_PERFSTATE=$sc_$cpu_ES_PerfState \
+ES_PERFMODE=$sc_$cpu_ES_PerfMode \
+ES_PERFTRIGCNT=$sc_$cpu_ES_PerfTrigCnt \
+ES_PERFFLTRMASK=$sc_$cpu_ES_PerfFltrMask[MaskCnt] \
+ES_PERFTRIGMASK=$sc_$cpu_ES_PerfTrigMask[MaskCnt] \
+ES_PERFDATASTART=$sc_$cpu_ES_PerfDataStart \
+ES_PERFDATAEND=$sc_$cpu_ES_PerfDataEnd \
+ES_PERFDATACNT=$sc_$cpu_ES_PerfDataCnt \
+ES_PERFDATA2WRITE=$sc_$cpu_ES_PerfData2Write \
+ES_HEAPBYTESFREE=$sc_$cpu_ES_HeapBytesFree \
+ES_HEAPBLKSFREE=$sc_$cpu_ES_HeapBlocksFree \
+ES_HEAPMAXBLK=$sc_$cpu_ES_HeapMaxBlkSize \
+ES_APP_ID=$sc_$cpu_ES_AppID \
+ES_APPTYPE=$sc_$cpu_ES_AppType \
+ES_APPNAME=$sc_$cpu_ES_AppName[OS_MAX_API_NAME] \
+ES_APPENTRYPT=$sc_$cpu_ES_AppEntryPt[OS_MAX_API_NAME] \
+ES_APPFILENAME=$sc_$cpu_ES_AppFilename[OS_MAX_PATH_LEN] \
+ES_STACKSIZE=$sc_$cpu_ES_StackSize \
+ES_MODULEID=$sc_$cpu_ES_ModuleID \
+ES_ADDRVALID=$sc_$cpu_ES_AddrsValid \
+ES_CODEADDR=$sc_$cpu_ES_CodeAddress \
+ES_CODESIZE=$sc_$cpu_ES_CodeSize \
+ES_DATAADDR=$sc_$cpu_ES_DataAddress \
+ES_DATASIZE=$sc_$cpu_ES_DataSize \
+ES_BSSADDR=$sc_$cpu_ES_BSSAddress \
+ES_BSSSIZE=$sc_$cpu_ES_BSSSize \
+ES_STARTADDR=$sc_$cpu_ES_StartAddr \
+ES_EXCEPTNACTN=$sc_$cpu_ES_ExceptnActn \
+ES_PRIORITY=$sc_$cpu_ES_Priority \
+ES_MAINTASKID=$sc_$cpu_ES_MainTaskId \
+ES_MAINTASKEXECNT=$sc_$cpu_ES_ExecutionCtr \
+ES_MAINTASKNAME=$sc_$cpu_ES_MainTaskName[OS_MAX_API_NAME] \
+ES_CHILDTASKS=$sc_$cpu_ES_ChildTasks \
+ES_POOLHANDLE=$sc_$cpu_ES_PoolHandle \
+ES_POOLSIZE=$sc_$cpu_ES_PoolSize \
+ES_BLKSREQ=$sc_$cpu_ES_BlksREQ \
+ES_BLKERRCTR=$sc_$cpu_ES_BlkErrCTR \
+ES_FREEBYTES=$sc_$cpu_ES_FreeBytes \
+ES_BLKSTATS=$sc_$cpu_ES_BlkStats[BLK_SIZES]
+</pre></div>
+</div>
+</section>
+<section id="cfe-evs-cmd-mnem-map">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_evs_cmd_mnem_map</span></code><a class="headerlink" href="#cfe-evs-cmd-mnem-map" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/docs/src/mnem_maps/cfe_evs_cmd_mnem_map</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific command mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+EVS_NOOP=$sc_$cpu_EVS_NOOP \
+EVS_RESETCTRS=$sc_$cpu_EVS_ResetCtrs \
+EVS_ENAEVENTTYPE="$sc_$cpu_EVS_EnaEventType, $sc_$cpu_EVS_EnaEventTypeMask" \
+EVS_DISEVENTTYPE="$sc_$cpu_EVS_DisEventType, $sc_$cpu_EVS_DisEventTypeMask" \
+EVS_SETEVTFMT=$sc_$cpu_EVS_SetEvtFmt \
+EVS_ENAAPPEVTTYPE="$sc_$cpu_EVS_EnaAppEvtType, $sc_$cpu_EVS_EnaAppEvtTypeMask" \
+EVS_DISAPPEVTTYPE="$sc_$cpu_EVS_DisAppEvtType, $sc_$cpu_EVS_DisAppEvtTypeMask" \
+EVS_ENAAPPEVGEN=$sc_$cpu_EVS_EnaAppEvGen \
+EVS_DISAPPEVGEN=$sc_$cpu_EVS_DisAppEvGen \
+EVS_RSTAPPCTRS=$sc_$cpu_EVS_RstAppCtrs \
+EVS_SETBINFLTRMASK=$sc_$cpu_EVS_SetBinFltrMask \
+EVS_ENAPORT="$sc_$cpu_EVS_EnaPort, $sc_$cpu_EVS_EnaPortMask" \
+EVS_DISPORT="$sc_$cpu_EVS_DisPort, $sc_$cpu_EVS_DisPortMask" \
+EVS_RSTBINFLTRCTR=$sc_$cpu_EVS_RstBinFltrCtr \
+EVS_RSTALLFLTRS=$sc_$cpu_EVS_RstAllFltrs \
+EVS_ADDEVTFLTR=$sc_$cpu_EVS_AddEvtFltr \
+EVS_DELEVTFLTR=$sc_$cpu_EVS_DelEvtFltr \
+EVS_WRITEAPPDATA2FILE=$sc_$cpu_EVS_WriteAppData2File \
+EVS_WRITELOG2FILE=$sc_$cpu_EVS_WriteLog2File \
+EVS_SETLOGMODE=$sc_$cpu_EVS_SetLogMode \
+EVS_CLRLOG=$sc_$cpu_EVS_ClrLog
+</pre></div>
+</div>
+</section>
+<section id="cfe-evs-tlm-mnem-map">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_evs_tlm_mnem_map</span></code><a class="headerlink" href="#cfe-evs-tlm-mnem-map" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/docs/src/mnem_maps/cfe_evs_tlm_mnem_map</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific telemetry mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+EVS_CMDPC=$sc_$cpu_EVS_CMDPC \
+EVS_CMDEC=$sc_$cpu_EVS_CMDEC \
+EVS_MSGFMTMODE=$sc_$cpu_EVS_MSGFMTMODE \
+EVS_MSGTRUNC=$sc_$cpu_EVS_MSGTRUNC \
+EVS_UNREGAPPC=$sc_$cpu_EVS_UNREGAPPC \
+EVS_OUTPUTPORT=$sc_$cpu_EVS_OUTPUTPORT \
+EVS_LOGFULL=$sc_$cpu_EVS_LOGFULL \
+EVS_LOGMODE=$sc_$cpu_EVS_LOGMODE \
+EVS_MSGSENTC=$sc_$cpu_EVS_MSGSENTC \
+EVS_LOGOVERFLOWC=$sc_$cpu_EVS_LOGOVERFLOWC \
+EVS_LOGENABLED=$sc_$cpu_EVS_LOGENABLED \
+EVS_HK_SPARE1=$sc_$cpu_EVS_HK_SPARE1 \
+EVS_HK_SPARE2=$sc_$cpu_EVS_HK_SPARE2 \
+EVS_HK_SPARE3=$sc_$cpu_EVS_HK_SPARE3 \
+EVS_MEMPOOLHDL=$sc_$cpu_EVS_MemPoolHdl \
+EVS_APP=$sc_$cpu_EVS_APP[CFE_PLATFORM_ES_MAX_APPLICATIONS] \
+EVS_APPID=$sc_$cpu_EVS_APP[CFE_PLATFORM_ES_MAX_APPLICATIONS].APPID \
+EVS_APPMSGSENTC=$sc_$cpu_EVS_APP[CFE_PLATFORM_ES_MAX_APPLICATIONS].APPMSGSENTC \
+EVS_APPENASTAT=$sc_$cpu_EVS_APP[CFE_PLATFORM_ES_MAX_APPLICATIONS].APPENASTAT \
+EVS_SQUELCHEDC=$sc_$cpu_EVS_APP[CFE_PLATFORM_ES_MAX_APPLICATIONS].SQUELCHEDC \
+EVS_APPNAME=$sc_$cpu_EVS_APPNAME[OS_MAX_API_NAME] \
+EVS_EVENTID=$sc_$cpu_EVS_EVENTID \
+EVS_EVENTTYPE=$sc_$cpu_EVS_EVENTTYPE \
+EVS_SCID=$sc_$cpu_EVS_SCID \
+EVS_PROCESSORID=$sc_$cpu_EVS_PROCESSORID \
+EVS_EVENT=$sc_$cpu_EVS_EVENT[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH] \
+EVS_SPARE1=$sc_$cpu_EVS_SPARE1 \
+EVS_SPARE2=$sc_$cpu_EVS_SPARE2
+</pre></div>
+</div>
+</section>
+<section id="cfe-sb-cmd-mnem-map">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_sb_cmd_mnem_map</span></code><a class="headerlink" href="#cfe-sb-cmd-mnem-map" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/docs/src/mnem_maps/cfe_sb_cmd_mnem_map</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific command mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+SB_NOOP=$sc_$cpu_SB_NOOP \
+SB_RESETCTRS=$sc_$cpu_SB_ResetCtrs \
+SB_DUMPSTATS=$sc_$cpu_SB_DumpStats \
+SB_WRITEROUTING2FILE=$sc_$cpu_SB_WriteRouting2File \
+SB_ENAROUTE=$sc_$cpu_SB_EnaRoute \
+SB_DISROUTE=$sc_$cpu_SB_DisRoute \
+SB_DUMPNETWORK=$sc_$cpu_SB_DumpNetwork \
+SB_WRITEPIPE2FILE=$sc_$cpu_SB_WritePipe2File \
+SB_WRITEMAP2FILE=$sc_$cpu_SB_WriteMap2File \
+SB_ENASUBRPTG=$sc_$cpu_SB_EnaSubRptg \
+SB_DISSUBRPTG=$sc_$cpu_SB_DisSubRptg \
+SB_SENDPREVSUBS=$sc_$cpu_SB_SendPrevSubs
+</pre></div>
+</div>
+</section>
+<section id="cfe-sb-tlm-mnem-map">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_sb_tlm_mnem_map</span></code><a class="headerlink" href="#cfe-sb-tlm-mnem-map" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/docs/src/mnem_maps/cfe_sb_tlm_mnem_map</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific telemetry mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+SB_CMDPC=$sc_$cpu_SB_CMDPC \
+SB_CMDEC=$sc_$cpu_SB_CMDEC \
+SB_NOSUBEC=$sc_$cpu_SB_NoSubEC \
+SB_MSGSNDEC=$sc_$cpu_SB_MsgSndEC \
+SB_MSGRECEC=$sc_$cpu_SB_MsgRecEC \
+SB_INTERNALEC=$sc_$cpu_SB_InternalEC \
+SB_NEWPIPEEC=$sc_$cpu_SB_NewPipeEC \
+SB_SUBSCREC=$sc_$cpu_SB_SubscrEC \
+SB_PIPEOPTSEC=$sc_$cpu_SB_PipeOptsEC \
+SB_DUPSUBCNT=$sc_$cpu_SB_DupSubCnt \
+SB_GETPIPEIDBYNAMEEC=$sc_$cpu_SB_GetPipeIDByNameEC \
+SB_SPARE2ALIGN=$sc_$cpu_SB_Spare2Align[2] \
+SB_PIPEOVREC=$sc_$cpu_SB_PipeOvrEC \
+SB_MSGLIMEC=$sc_$cpu_SB_MsgLimEC \
+SB_MEMPOOLHANDLE=$sc_$cpu_SB_MemPoolHdl \
+SB_MEMINUSE=$sc_$cpu_SB_MemInUse \
+SB_UNMARKEDMEM=$sc_$cpu_SB_UnMarkedMem \
+SB_PDPIPEID=$sc_$cpu_SB_Stat.SB_SMPDS[CFE_PLATFORM_SB_MAX_PIPES].SB_PDPIPEID \
+SB_PDSPARE=$sc_$cpu_SB_Stat.SB_SMPDS[CFE_PLATFORM_SB_MAX_PIPES].SB_PDSPARE \
+SB_PDDEPTH=$sc_$cpu_SB_Stat.SB_SMPDS[CFE_PLATFORM_SB_MAX_PIPES].SB_PDDEPTH \
+SB_PDINUSE=$sc_$cpu_SB_Stat.SB_SMPDS[CFE_PLATFORM_SB_MAX_PIPES].SB_PDINUSE \
+SB_PDPKINUSE=$sc_$cpu_SB_Stat.SB_SMPDS[CFE_PLATFORM_SB_MAX_PIPES].SB_PDPKINUSE \
+SB_SMMIDIU=$sc_$cpu_SB_Stat.SB_SMMIDIU \
+SB_SMPMIDIU=$sc_$cpu_SB_Stat.SB_SMPMIDIU \
+SB_SMMMIDALW=$sc_$cpu_SB_Stat.SB_SMMMIDALW \
+SB_SMPIU=$sc_$cpu_SB_Stat.SB_SMPIU \
+SB_SMPPIU=$sc_$cpu_SB_Stat.SB_SMPPIU \
+SB_SMMPALW=$sc_$cpu_SB_Stat.SB_SMMPALW \
+SB_SMBMIU=$sc_$cpu_SB_Stat.SB_SMBMIU \
+SB_SMPBMIU=$sc_$cpu_SB_Stat.SB_SMPBMIU \
+SB_SMMBMALW=$sc_$cpu_SB_Stat.SB_SMMBMALW \
+SB_SMSIU=$sc_$cpu_SB_Stat.SB_SMSIU \
+SB_SMPSIU=$sc_$cpu_SB_Stat.SB_SMPSIU \
+SB_SMMSALW=$sc_$cpu_SB_Stat.SB_SMMSALW \
+SB_SMELEIU=$sc_$cpu_SB_Stat.SB_SMELEIU \
+SB_SMPELEIU=$sc_$cpu_SB_Stat.SB_SMPELEIU \
+SB_SMMELEA=$sc_$cpu_SB_Stat.SB_SMMELEA \
+SB_SMSBBIU=$sc_$cpu_SB_Stat.SB_SMSBBIU \
+SB_SMPSBBIU=$sc_$cpu_SB_Stat.SB_SMPSBBIU \
+SB_SMMPDALW=$sc_$cpu_SB_Stat.SB_SMMPDALW \
+SB_SMPDS=$sc_$cpu_SB_Stat.SB_SMPDS[CFE_PLATFORM_SB_MAX_PIPES]
+</pre></div>
+</div>
+</section>
+<section id="cfe-tbl-cmd-mnem-map">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_tbl_cmd_mnem_map</span></code><a class="headerlink" href="#cfe-tbl-cmd-mnem-map" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/docs/src/mnem_maps/cfe_tbl_cmd_mnem_map</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific command mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+TBL_NOOP=$sc_$cpu_TBL_NOOP \
+TBL_RESETCTRS=$sc_$cpu_TBL_ResetCtrs \
+TBL_LOAD=$sc_$cpu_TBL_Load \
+TBL_DUMP=$sc_$cpu_TBL_DUMP \
+TBL_VALIDATE=$sc_$cpu_TBL_VALIDATE \
+TBL_ACTIVATE=$sc_$cpu_TBL_ACTIVATE \
+TBL_WRITEREG2FILE=$sc_$cpu_TBL_WriteReg2File \
+TBL_TLMREG=$sc_$cpu_TBL_TLMReg \
+TBL_DELETECDS=$sc_$cpu_TBL_DeleteCDS \
+TBL_LOADABORT=$sc_$cpu_TBL_LOADABORT
+</pre></div>
+</div>
+</section>
+<section id="cfe-tbl-tlm-mnem-map">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_tbl_tlm_mnem_map</span></code><a class="headerlink" href="#cfe-tbl-tlm-mnem-map" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/docs/src/mnem_maps/cfe_tbl_tlm_mnem_map</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific telemetry mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+TBL_CMDPC=$sc_$cpu_TBL_CMDPC \
+TBL_CMDEC=$sc_$cpu_TBL_CMDEC \
+TBL_NUMTABLES=$sc_$cpu_TBL_NumTables \
+TBL_NUMUPDATESPEND=$sc_$cpu_TBL_NumUpdatesPend \
+TBL_VALCOMPLTDCTR=$sc_$cpu_TBL_ValCompltdCtr \
+TBL_LASTVALCRC=$sc_$cpu_TBL_LastValCRC \
+TBL_LASTVALS=$sc_$cpu_TBl_LastValS \
+TBL_LASTVALBUF=$sc_$cpu_TBL_LastValBuf \
+TBL_LASTVALTBLNAME=$sc_$cpu_TBL_LastValTblName[CFE_TB_MAX_FULL_NAME_LEN] \
+TBL_VALSUCCESSCTR=$sc_$cpu_TBL_ValSuccessCtr \
+TBL_VALFAILEDCTR=$sc_$cpu_TBL_ValFailedCtr \
+TBL_VALREQCTR=$sc_$cpu_TBL_ValReqCtr \
+TBL_NUMFREESHRBUF=$sc_$cpu_TBL_NumFreeShrBuf \
+TBL_BYTEALIGNPAD1=$sc_$cpu_TBL_ByteAlignPad1 \
+TBL_MEMPOOLHANDLE=$sc_$cpu_TBL_MemPoolHandle \
+TBL_LASTUPDTIME="$sc_$cpu_TBL_LastUpdTime, $sc_$cpu_TBL_SECONDS, $sc_$cpu_TBL_SUBSECONDS" \
+TBL_LASTUPDTBLNAME=$sc_$cpu_TBL_LastUpdTblName[CFE_TB_MAX_FULL_NAME_LEN] \
+TBL_LASTFILELOADED=$sc_$cpu_TBL_LastFileLoaded[OS_MAX_PATH_LEN] \
+TBL_LASTFILEDUMPED=$sc_$cpu_TBL_LastFileDumped[OS_MAX_PATH_LEN] \
+TBL_LASTTABLELOADED=$sc_$cpu_TBL_LastTableLoaded[CFE_TBL_MAX_FULL_NAME_LEN] \
+TBL_BYTEALIGNPAD2=$sc_$cpu_TBL_ByteAlignPad2 \
+TBL_SIZE=$sc_$cpu_TBL_SIZE \
+TBL_CRC=$sc_$cpu_TBL_CRC \
+TBL_ACTBUFADD=$sc_$cpu_TBL_ActBufAdd \
+TBL_IACTBUFADD=$sc_$cpu_TBL_IActBufAdd \
+TBL_VALFUNCPTR=$sc_$cpu_TBL_ValFuncPtr \
+TBL_TIMELASTUPD="$sc_$cpu_TBL_TimeLastUpd, $sc_$cpu_TBL_TLUSECONDS, $sc_$cpu_TBL_TLUSUBSECONDS" \
+TBL_FILECSECONDS=$sc_$cpu_TBL_FILECSECONDS \
+TBL_FILECSUBSECONDS=$sc_$cpu_TBL_FILECSUBSECONDS \
+TBL_LOADEDONCE=$sc_$cpu_TBL_LoadedOnce \
+TBL_UPDATEPNDNG=$sc_$cpu_TBL_UpdatePndng \
+TBL_DUMPONLY=$sc_$cpu_TBL_DumpOnly \
+TBL_DBLBUFFERED=$sc_$cpu_TBL_DblBuffered \
+TBL_NAME=$sc_$cpu_TBL_Name[CFE_TB_MAX_FULL_NAME_LEN] \
+TBL_LASTFILEUPD=$sc_$cpu_TBL_LastFileUpd[OS_MAX_PATH_LEN] \
+TBL_OWNERAPP=$sc_$cpu_TBL_OwnerApp[OS_MAX_API_NAME] \
+TBL_CRITICAL=$sc_$cpu_TBL_Spare3 \
+TBL_SPARE4=$sc_$cpu_TBL_Spare4
+</pre></div>
+</div>
+</section>
+<section id="cfe-time-cmd-mnem-map">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_time_cmd_mnem_map</span></code><a class="headerlink" href="#cfe-time-cmd-mnem-map" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/docs/src/mnem_maps/cfe_time_cmd_mnem_map</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific command mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+TIME_NOOP=$sc_$cpu_TIME_NOOP \
+TIME_RESETCTRS=$sc_$cpu_TIME_ResetCtrs \
+TIME_REQUESTDIAG=$sc_$cpu_TIME_RequestDiag \
+TIME_SETSOURCE=$sc_$cpu_TIME_SetSource \
+TIME_SETSTATE=$sc_$cpu_TIME_SetState \
+TIME_ADDCLOCKLAT=$sc_$cpu_TIME_AddClockLat \
+TIME_SUBCLOCKLAT=$sc_$cpu_TIME_SubClockLat \
+TIME_SETCLOCK=$sc_$cpu_TIME_SetClock \
+TIME_SETCLOCKMET=$sc_$cpu_TIME_SetClockMET \
+TIME_SETCLOCKSTCF=$sc_$cpu_TIME_SetClockSTCF \
+TIME_SETCLOCKLEAP=$sc_$cpu_TIME_SetClockLeap \
+TIME_ADDSTCFADJ=$sc_$cpu_TIME_AddSTCFAdj \
+TIME_SUBSTCFADJ=$sc_$cpu_TIME_SubSTCFAdj \
+TIME_ADD1HZSTCF=$sc_$cpu_TIME_Add1HzSTCF \
+TIME_SUB1HZSTCF=$sc_$cpu_TIME_Sub1HzSTCF \
+TIME_STOPADD1HZ=$sc_$cpu_TIME_StopAdd1Hz \
+TIME_STOPSUB1HZ=$sc_$cpu_TIME_StopSub1Hz \
+TIME_SETSIGNAL=$sc_$cpu_TIME_SetSignal
+</pre></div>
+</div>
+</section>
+<section id="cfe-time-tlm-mnem-map">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_time_tlm_mnem_map</span></code><a class="headerlink" href="#cfe-time-tlm-mnem-map" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/docs/src/mnem_maps/cfe_time_tlm_mnem_map</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific telemetry mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+TIME_CMDPC=$sc_$cpu_TIME_CMDPC \
+TIME_CMDEC=$sc_$cpu_TIME_CMDEC \
+TIME_STATEFLG="$sc_$cpu_TIME_StateFlg, $sc_$cpu_TIME_FlagSet, $sc_$cpu_TIME_FlagFly, $sc_$cpu_TIME_FlagSrc, $sc_$cpu_TIME_FlagPri, $sc_$cpu_TIME_FlagSfly, $sc_$cpu_TIME_FlagCfly, $sc_$cpu_TIME_FlagAdjd, $sc_$cpu_TIME_Flag1Hzd, $sc_$cpu_TIME_FlagClat, $sc_$cpu_TIME_FlagSorC, $sc_$cpu_TIME_FlagNIU" \
+TIME_APISTATE=$sc_$cpu_TIME_APIState \
+TIME_LEAPSECS=$sc_$cpu_TIME_LeapSecs \
+TIME_METSECS=$sc_$cpu_TIME_METSecs \
+TIME_METSUBSECS=$sc_$cpu_TIME_METSubsecs \
+TIME_STCFSECS=$sc_$cpu_TIME_STCFSecs \
+TIME_STCFSUBSECS=$sc_$cpu_TIME_STCFSubsecs \
+TIME_1HZADJSECS=$sc_$cpu_TIME_1HzAdjSecs \
+TIME_1HZADJSSECS=$sc_$cpu_TIME_1HzAdjSSecs \
+TIME_1HZDLYSECS=$sc_$cpu_TIME_1HzAdjSecs \
+TIME_1HZDLYSSECS=$sc_$cpu_TIME_1HzAdjSSecs \
+TIME_TMETS="$sc_$cpu_TIME_DTMETS, $sc_$cpu_TIME_DTMETSs" \
+TIME_STCFS="$sc_$cpu_TIME_DSTCFS, $sc_$cpu_TIME_DSTCFSS" \
+TIME_LATENTS="$sc_$cpu_TIME_DLatentS, $sc_$cpu_TIME_DLatentSs" \
+TIME_TVALIDS="$sc_$cpu_TIME_DTValidS, $sc_$cpu_TIME_DTValidSs" \
+TIME_LEAPS=$sc_$cpu_TIME_DLeapS \
+TIME_APISTATE=$sc_$cpu_TIME_DAPIState \
+TIME_ELAPSEDS="$sc_$cpu_TIME_DElapsedS, $sc_$cpu_TIME_DElapsedSs" \
+TIME_LOCALS="$sc_$cpu_TIME_DLocalS, $sc_$cpu_TIME_DLocalSs" \
+TIME_METS="$sc_$cpu_TIME_DMETS, $sc_$cpu_TIME_DMETSs" \
+TIME_TAIS="$sc_$cpu_TIME_DTAIS, $sc_$cpu_TIME_DTAISS" \
+TIME_UTCS="$sc_$cpu_TIME_DUTCS, $sc_$cpu_TIME_DUTCSS" \
+TIME_VALID=$sc_$cpu_TIME_DValid \
+TIME_FLYWHEEL=$sc_$cpu_TIME_DFlywheel \
+TIME_SOURCE=$sc_$cpu_TIME_DSource \
+TIME_SIGNAL=$sc_$cpu_TIME_DSignal \
+TIME_SRVFLY=$sc_$cpu_TIME_DSrvFly \
+TIME_CMD2FLY=$sc_$cpu_TIME_DCMD2Fly \
+TIME_STATEFLAGS="$sc_$cpu_TIME_DStateFlags, $sc_$cpu_TIME_DFlagSet, $sc_$cpu_TIME_DFlagFly, $sc_$cpu_TIME_DFlagSrc, $sc_$cpu_TIME_DFlagPri, $sc_$cpu_TIME_DFlagSfly, $sc_$cpu_TIME_DFlagCfly, $sc_$cpu_TIME_DFlagAdjd, $sc_$cpu_TIME_DFlag1Hzd, $sc_$cpu_TIME_DFlagClat, $sc_$cpu_TIME_DFlagSorC, $sc_$cpu_TIME_DFlagNIU" \
+TIME_ADJUSTDIR=$sc_$cpu_TIME_DAdjustDir \
+TIME_1HZADJDIR=$sc_$cpu_TIME_D1HzAdjDir \
+TIME_LATENTDIR=$sc_$cpu_TIME_DLatentDir \
+TIME_ADJUSTS="$sc_$cpu_TIME_DAdjustS, $sc_$cpu_TIME_DAdjustSs" \
+TIME_1HZADJS="$sc_$cpu_TIME_D1HzAdjS, $sc_$cpu_TIME_D1HzAdjSs" \
+TIME_TTS="$sc_$cpu_TIME_DTTS, $sc_$cpu_TIME_DTTSs" \
+TIME_TDS="$sc_$cpu_TIME_DTDS, $sc_$cpu_TIME_DTDSs" \
+TIME_VERIFYCNT=$sc_$cpu_TIME_DVerifyCNT \
+TIME_VERIFYER=$sc_$cpu_TIME_DVerifyER \
+TIME_TSDETCNT=$sc_$cpu_TIME_DTSDetCNT \
+TIME_TATTCNT=$sc_$cpu_TIME_DTatTCNT \
+TIME_TSISRCNT=$sc_$cpu_TIME_DTsISRCNT \
+TIME_TSISRERR=$sc_$cpu_TIME_DTsISRERR \
+TIME_TSTASKCNT=$sc_$cpu_TIME_DTsTaskCNT \
+TIME_VERSIONCNT=$sc_$cpu_TIME_DVersionCNT \
+TIME_1HZISRCNT=$sc_$cpu_TIME_D1HzISRCNT \
+TIME_1HZTASKCNT=$sc_$cpu_TIME_D1HzTaskCNT \
+TIME_LOGICALMET=$sc_$cpu_TIME_DLogicalMET \
+TIME_MINWINDOW=$sc_$cpu_TIME_DMinWindow \
+TIME_MAXWINDOW=$sc_$cpu_TIME_DMaxWindow \
+TIME_WRAPS="$sc_$cpu_TIME_DWrapS, $sc_$cpu_TIME_DWrapSs" \
+TIME_MAXSS=$sc_$cpu_TIME_DMaxSs \
+TIME_MINSS=$sc_$cpu_TIME_DMinSs \
+TIME_ATASTSTAT=$sc_$cpu_TIME_DataStStat
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="src" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../../modules/index.html" class="btn btn-neutral float-right" title="modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

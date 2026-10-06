@@ -1,0 +1,2583 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>internal &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="internal_stub" href="../internal_stub/index.html" />
+    <link rel="prev" title="custom_stub" href="../custom_stub/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">components</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">components</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">cryptolib</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">sa</a></li>
+      <li class="breadcrumb-item active">internal</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/components/cryptolib/src/sa/internal/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="internal">
+<h1>internal<a class="headerlink" href="#internal" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/cryptolib/src/sa/internal/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="sa-interface-inmemory-template-c">
+<h2><code class="docutils literal notranslate"><span class="pre">sa_interface_inmemory.template.c</span></code><a class="headerlink" href="#sa-interface-inmemory-template-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/cryptolib/src/sa/internal/sa_interface_inmemory.template.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * Copyright 2021, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * Transfer at the California Institute of Technology.
+ *
+ * This software may be subject to U.S. export control laws. By accepting
+ * this software, the user agrees to comply with all applicable U.S.
+ * export laws and regulations. User has the responsibility to obtain
+ * export licenses, or other export authority as may be required before
+ * exporting such information to foreign countries or providing access to
+ * foreign persons.
+ */
+
+#include "crypto.h"
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+// Security Association Initialization Functions
+static int32_t sa_config(void);
+static int32_t sa_init(void);
+static int32_t sa_close(void);
+// Security Association Interaction Functions
+static int32_t sa_get_from_spi(uint16_t, SecurityAssociation_t **);
+static int32_t sa_get_operational_sa_from_gvcid(uint8_t, uint16_t, uint16_t, uint8_t, SecurityAssociation_t **);
+static int32_t sa_save_sa(SecurityAssociation_t *sa);
+static int32_t sa_setIV(uint16_t spi, char *iv);
+// Security Association Utility Functions
+static int32_t sa_stop(TC_t *tc_frame);
+static int32_t sa_start(TC_t *tc_frame);
+static int32_t sa_expire(TC_t *tc_frame);
+static int32_t sa_rekey(TC_t *tc_frame);
+static int32_t sa_status(uint8_t *);
+static int32_t sa_create(TC_t *tc_frame);
+static int32_t sa_setARSN(TC_t *tc_frame);
+static int32_t sa_setARSNW(TC_t *tc_frame);
+static int32_t sa_delete(TC_t *tc_frame);
+// Security Association Local Functions
+int32_t sa_verify_data(SecurityAssociation_t *);
+
+/*
+** Global Variables
+*/
+// Security
+static SaInterfaceStruct     sa_if_struct;
+static SecurityAssociation_t sa[NUM_SA];
+
+/**
+ * @brief Function: get_sa_interface_inmemory
+ * @return SaInterface
+ **/
+SaInterface get_sa_interface_inmemory(void)
+{
+    sa_if_struct.sa_config                        = sa_config;
+    sa_if_struct.sa_init                          = sa_init;
+    sa_if_struct.sa_close                         = sa_close;
+    sa_if_struct.sa_get_from_spi                  = sa_get_from_spi;
+    sa_if_struct.sa_get_operational_sa_from_gvcid = sa_get_operational_sa_from_gvcid;
+    sa_if_struct.sa_stop                          = sa_stop;
+    sa_if_struct.sa_save_sa                       = sa_save_sa;
+    sa_if_struct.sa_start                         = sa_start;
+    sa_if_struct.sa_expire                        = sa_expire;
+    sa_if_struct.sa_rekey                         = sa_rekey;
+    sa_if_struct.sa_status                        = sa_status;
+    sa_if_struct.sa_create                        = sa_create;
+    sa_if_struct.sa_setARSN                       = sa_setARSN;
+    sa_if_struct.sa_setARSNW                      = sa_setARSNW;
+    sa_if_struct.sa_delete                        = sa_delete;
+    sa_if_struct.sa_setIV                         = sa_setIV;
+    return &amp;sa_if_struct;
+}
+
+/**
+ * @brief Function: sa_load_file
+ * Loads saved sa_file
+ **/
+int32_t sa_load_file(void)
+{
+    FILE   *sa_save_file;
+    int32_t status       = CRYPTO_LIB_SUCCESS;
+    int     success_flag = 0;
+
+    sa_save_file = fopen(CRYPTO_SA_SAVE, "rb+"); // Should this be rb instead of wb+
+
+    if (sa_save_file == NULL)
+    {
+#ifdef SA_DEBUG
+        printf("Unable to open sa_save_file!\n");
+#endif
+        status = CRYPTO_LIB_ERR_FAIL_SA_LOAD;
+    }
+    else
+    {
+#ifdef SA_DEBUG
+        printf("Opened sa_save_file successfully!\n");
+#endif
+    }
+    if (status == CRYPTO_LIB_SUCCESS)
+    {
+        success_flag = fread(&amp;sa[0], SA_SIZE, NUM_SA, sa_save_file);
+        if (success_flag)
+        {
+            status = CRYPTO_LIB_SUCCESS;
+#ifdef SA_DEBUG
+            printf("SA Load Successfull!\n");
+#endif
+        }
+        else
+        {
+            status = CRYPTO_LIB_ERR_FAIL_SA_LOAD;
+#ifdef SA_DEBUG
+            printf("SA Load Failure!\n");
+#endif
+        }
+    }
+
+    if (sa_save_file != NULL)
+        fclose(sa_save_file);
+    return status;
+}
+
+/**
+ * @brief Function: update_sa_from_ptr
+ * Updates SA Array with individual SA pointer.
+ * @return int32_t: Success/Failure
+ **/
+int32_t update_sa_from_ptr(SecurityAssociation_t *sa_ptr)
+{
+    if (sa_ptr == NULL)
+    {
+        return CRYPTO_LIB_ERR_NULL_SA;
+    }
+
+    int location = sa_ptr-&gt;spi;
+    if (location &lt; 0 || location &gt;= NUM_SA)
+    {
+        return CRYPTO_LIB_ERR_SPI_INDEX_OOB;
+    }
+
+    sa[location].spi  = sa_ptr-&gt;spi;
+    sa[location].ekid = sa_ptr-&gt;ekid;
+    sa[location].akid = sa_ptr-&gt;akid;
+    memcpy(sa[location].ek_ref, sa_ptr-&gt;ek_ref, REF_SIZE);
+    memcpy(sa[location].ak_ref, sa_ptr-&gt;ak_ref, REF_SIZE);
+    sa[location].sa_state   = sa_ptr-&gt;sa_state;
+    sa[location].gvcid_blk  = sa_ptr-&gt;gvcid_blk;
+    sa[location].lpid       = sa_ptr-&gt;lpid;
+    sa[location].est        = sa_ptr-&gt;est;
+    sa[location].ast        = sa_ptr-&gt;ast;
+    sa[location].shivf_len  = sa_ptr-&gt;shivf_len;
+    sa[location].shsnf_len  = sa_ptr-&gt;shsnf_len;
+    sa[location].shplf_len  = sa_ptr-&gt;shplf_len;
+    sa[location].stmacf_len = sa_ptr-&gt;stmacf_len;
+    sa[location].ecs        = sa_ptr-&gt;ecs;
+    sa[location].ecs_len    = sa_ptr-&gt;ecs_len;
+    for (int i = 0; i &lt; sa_ptr-&gt;iv_len; i++)
+    {
+        sa[location].iv[i] = sa_ptr-&gt;iv[i];
+    }
+    sa[location].iv_len  = sa_ptr-&gt;iv_len;
+    sa[location].acs_len = sa_ptr-&gt;acs_len;
+    sa[location].acs     = sa_ptr-&gt;acs;
+    sa[location].abm_len = sa_ptr-&gt;abm_len;
+    for (int i = 0; i &lt; sa_ptr-&gt;abm_len; i++)
+    {
+        sa[location].abm[i] = sa_ptr-&gt;abm[i];
+    }
+    sa[location].arsn_len = sa_ptr-&gt;arsn_len;
+    for (int i = 0; i &lt; sa_ptr-&gt;arsn_len; i++)
+    {
+        sa[location].arsn[i] = sa_ptr-&gt;arsn[i];
+    }
+    sa[location].arsnw_len = sa_ptr-&gt;arsnw_len;
+    sa[location].arsnw     = sa_ptr-&gt;arsnw;
+
+    return CRYPTO_LIB_SUCCESS;
+}
+
+/**
+ * @brief Function: sa_perform_save
+ * Saves SA Array to file
+ **/
+int32_t sa_perform_save(SecurityAssociation_t *sa_ptr)
+{
+    int32_t status = CRYPTO_LIB_SUCCESS;
+    FILE   *sa_save_file;
+    int     success_flag = 0;
+
+    status = update_sa_from_ptr(sa_ptr);
+    if (status != CRYPTO_LIB_SUCCESS)
+    {
+        return status;
+    }
+
+    sa_save_file = fopen(CRYPTO_SA_SAVE, "wb");
+
+    if (sa_save_file == NULL)
+    {
+        status = CRYPTO_LIB_ERR_FAIL_SA_SAVE;
+    }
+
+    if (status == CRYPTO_LIB_SUCCESS)
+    {
+        success_flag = fwrite(sa, SA_SIZE, NUM_SA, sa_save_file);
+
+        if (success_flag)
+        {
+            status = CRYPTO_LIB_SUCCESS;
+
+#ifdef SA_DEBUG
+            printf("SA Written Successfully to file!\n");
+#endif
+        }
+        else
+        {
+            status = CRYPTO_LIB_ERR_FAIL_SA_SAVE;
+#ifdef SA_DEBUG
+            printf("ERROR: SA Write FAILED!\n");
+#endif
+        }
+    }
+    fclose(sa_save_file);
+
+    return status;
+}
+
+/**
+ * @brief Function: sa_save_sa
+ * @param sa: SecurityAssociation_t*
+ * @return int32: Success/Failure
+ **/
+static int32_t sa_save_sa(SecurityAssociation_t *sa)
+{
+    int32_t status      = CRYPTO_LIB_SUCCESS;
+    int     ignore_save = 1;
+
+#ifdef SA_FILE
+    status      = sa_perform_save(sa);
+    ignore_save = 0;
+#endif
+    if (ignore_save)
+        sa = sa;
+    return status;
+}
+
+/**
+ * @brief Function: sa_populate
+ * Populates in-memory SA
+ * @return int32_t: Success/Failure
+ **/
+int32_t sa_populate(void)
+{
+    // Security Associations
+    sa[0].spi             = 0;
+    sa[0].sa_state        = SA_UNKEYED;
+    sa[0].est             = 0;
+    sa[0].ast             = 0;
+    sa[0].shivf_len       = 0;
+    sa[0].iv_len          = 0;
+    sa[0].shsnf_len       = 0;
+    sa[0].arsn_len        = 0;
+    sa[0].arsnw_len       = 0;
+    sa[0].arsnw           = 0;
+    sa[0].gvcid_blk.tfvn  = 0;
+    sa[0].gvcid_blk.scid  = 0;
+    sa[0].gvcid_blk.vcid  = 0;
+    sa[0].gvcid_blk.mapid = TYPE_TC;
+
+    // TC - CLEAR MODE (Operational)
+    // IV = 0 ... 0, IV-Len = 12, TFVN = 0, VCID = 0, MAC-Len = 0, ARSNW = 5
+    // EKID = 1
+    sa[1].spi             = 1;
+    sa[1].sa_state        = SA_OPERATIONAL;
+    sa[1].est             = 0;
+    sa[1].ast             = 0;
+    sa[1].shivf_len       = 12;
+    sa[1].iv_len          = 12;
+    sa[1].shsnf_len       = 0;
+    sa[1].arsnw           = 5;
+    sa[1].arsnw_len       = 1;
+    sa[1].arsn_len        = 0;
+    sa[1].gvcid_blk.tfvn  = 0;
+    sa[1].gvcid_blk.scid  = SCID &amp; 0x3FF;
+    sa[1].gvcid_blk.vcid  = 0;
+    sa[1].gvcid_blk.mapid = TYPE_TC;
+
+    // TC - Encryption Only - AES-GCM-256 (Keyed)
+    // IV = 0...0, IV-Len = 12, TFVN = 0, VCID = 0; MAC-Len = 0, ARSNW = 5
+    // EKID = 2
+    sa[2].spi             = 2;
+    sa[2].ekid            = 2;
+    sa[2].sa_state        = SA_OPERATIONAL;
+    sa[2].ecs_len         = 1;
+    sa[2].ecs             = CRYPTO_CIPHER_AES256_GCM;
+    sa[2].est             = 1;
+    sa[2].ast             = 0;
+    sa[2].shivf_len       = 12;
+    sa[2].iv_len          = 12;
+    sa[2].arsnw_len       = 1;
+    sa[2].arsnw           = 5;
+    sa[2].arsn_len        = 0;
+    sa[2].gvcid_blk.tfvn  = 0;
+    sa[2].gvcid_blk.scid  = SCID &amp; 0x3FF;
+    sa[2].gvcid_blk.vcid  = 2;
+    sa[2].gvcid_blk.mapid = TYPE_TC;
+
+    // TC - Authentication Only - HMAC_SHA512 (Keyed)
+    // IV = 0...0, IV-Len = 12, MAC-Len = 16, TFVN = 0, VCID = 0, ARSNW = 5
+    // AKID = 3
+    sa[3].spi             = 3;
+    sa[3].akid            = 3;
+    sa[3].sa_state        = SA_KEYED;
+    sa[3].acs_len         = 1;
+    sa[3].acs             = CRYPTO_MAC_HMAC_SHA512;
+    sa[3].est             = 0;
+    sa[3].ast             = 1;
+    sa[3].shivf_len       = 12;
+    sa[3].iv_len          = 12;
+    sa[3].shsnf_len       = 2;
+    sa[3].arsn_len        = 2;
+    sa[3].arsnw_len       = 1;
+    sa[3].arsnw           = 5;
+    sa[3].stmacf_len      = 16;
+    sa[3].gvcid_blk.tfvn  = 0;
+    sa[3].gvcid_blk.scid  = SCID &amp; 0x3FF;
+    sa[3].gvcid_blk.vcid  = 0;
+    sa[3].gvcid_blk.mapid = TYPE_TC;
+
+    // TC - Authenticated Encryption - AES-GCM-256 (Keyed)
+    // IV = 0 ... 0, IV-Len = 12, MAC-Len = 16, TFVN = 0, VCID = 0, ARSNW = 5
+    // EKID = 4
+    sa[4].spi             = 4;
+    sa[4].ekid            = 4;
+    sa[4].sa_state        = SA_KEYED;
+    sa[4].ecs_len         = 1;
+    sa[4].ecs             = CRYPTO_CIPHER_AES256_GCM;
+    sa[4].est             = 1;
+    sa[4].ast             = 1;
+    sa[4].shivf_len       = 12;
+    sa[4].iv_len          = 12;
+    sa[4].abm_len         = ABM_SIZE;
+    sa[4].arsnw_len       = 1;
+    sa[4].arsnw           = 5;
+    sa[4].arsn_len        = ((sa[4].arsnw * 2) + 1);
+    sa[4].stmacf_len      = 16;
+    sa[4].gvcid_blk.tfvn  = 0;
+    sa[4].gvcid_blk.scid  = SCID &amp; 0x3FF;
+    sa[4].gvcid_blk.vcid  = 0;
+    sa[4].gvcid_blk.mapid = TYPE_TC;
+
+    // TM - CLEAR MODE (Keyed)
+    // IV = 0...0, IV-Len = 12, MAC-Len = 0, TFVN = 0, VCID = 0, ARSNW = 5
+    // EKID = 5
+    sa[5].spi             = 5;
+    sa[5].sa_state        = SA_KEYED;
+    sa[5].est             = 0;
+    sa[5].ast             = 0;
+    sa[5].shivf_len       = 12;
+    sa[5].iv_len          = 12;
+    sa[5].shsnf_len       = 2;
+    sa[5].arsnw           = 5;
+    sa[5].arsnw_len       = 1;
+    sa[5].arsn_len        = 2;
+    sa[5].gvcid_blk.tfvn  = 0;
+    sa[5].gvcid_blk.scid  = SCID &amp; 0x3FF;
+    sa[5].gvcid_blk.vcid  = 1;
+    sa[5].gvcid_blk.mapid = TYPE_TC;
+
+    // TM - Encryption Only - AES-CBC-256 (Keyed)
+    // IV = 0...0, IV-Len = 16, TFVN = 0, VCID = 0; MAC-Len = 0, ARSNW = 5
+    // EKID = 6
+    sa[6].spi             = 6;
+    sa[6].ekid            = 6;
+    sa[6].sa_state        = SA_KEYED;
+    sa[6].ecs_len         = 1;
+    sa[6].ecs             = CRYPTO_CIPHER_AES256_CBC;
+    sa[6].est             = 1;
+    sa[6].ast             = 0;
+    sa[6].shivf_len       = 16;
+    sa[6].iv_len          = 16;
+    sa[6].shplf_len       = 1;
+    sa[6].stmacf_len      = 0;
+    sa[6].arsn_len        = 2;
+    sa[6].arsnw_len       = 1;
+    sa[6].arsnw           = 5;
+    sa[6].gvcid_blk.tfvn  = 0;
+    sa[6].gvcid_blk.scid  = SCID &amp; 0x3FF;
+    sa[6].gvcid_blk.vcid  = 0;
+    sa[6].gvcid_blk.mapid = TYPE_TC;
+
+    // TM - Authentication Only HMAC_SHA512 (Keyed)
+    // IV = 0...0, IV-Len = 12, MAC-Len = 16, TFVN = 0, VCID = 0, ARSNW = 5
+    // AKID = 7
+    sa[7].spi             = 7;
+    sa[7].akid            = 7;
+    sa[7].sa_state        = SA_KEYED;
+    sa[7].acs_len         = 1;
+    sa[7].acs             = CRYPTO_MAC_HMAC_SHA512;
+    sa[7].est             = 0;
+    sa[7].ast             = 1;
+    sa[7].shivf_len       = 12;
+    sa[7].iv_len          = 12;
+    sa[7].shsnf_len       = 2;
+    sa[7].arsn_len        = 2;
+    sa[7].arsnw_len       = 1;
+    sa[7].arsnw           = 5;
+    sa[7].stmacf_len      = 16;
+    sa[7].gvcid_blk.tfvn  = 0;
+    sa[7].gvcid_blk.scid  = SCID &amp; 0x3FF;
+    sa[7].gvcid_blk.vcid  = 0;
+    sa[7].gvcid_blk.mapid = TYPE_TC;
+
+    // TM - Authenticated Encryption AES-CBC-256 (Keyed)
+    // IV = 0...0, IV-Len = 16, MAC-Len = 16, TFVN = 0, VCID = 0, ARSNW = 5
+    // EKID = 8
+    sa[8].spi             = 8;
+    sa[8].ekid            = 8;
+    sa[8].sa_state        = SA_KEYED;
+    sa[8].ecs_len         = 1;
+    sa[8].ecs             = CRYPTO_CIPHER_AES256_CBC;
+    sa[8].est             = 1;
+    sa[8].ast             = 1;
+    sa[8].shplf_len       = 1;
+    sa[8].shivf_len       = 16;
+    sa[8].iv_len          = 16;
+    sa[8].shsnf_len       = 2;
+    sa[8].arsn_len        = 2;
+    sa[8].arsnw_len       = 1;
+    sa[8].arsnw           = 5;
+    sa[8].stmacf_len      = 16;
+    sa[8].gvcid_blk.tfvn  = 0;
+    sa[8].gvcid_blk.scid  = SCID &amp; 0x3FF;
+    sa[8].gvcid_blk.vcid  = 0;
+    sa[8].gvcid_blk.mapid = TYPE_TC;
+
+    // AOS - Clear Mode
+    // IV = 0...0, IV-Len = 12, MAC-Len = 0, TFVN = 1, VCID = 0, ARSNW = 5
+    // EKID = 9
+    sa[9].spi             = 9;
+    sa[9].sa_state        = SA_KEYED;
+    sa[9].est             = 0;
+    sa[9].ast             = 0;
+    sa[9].shivf_len       = 12;
+    sa[9].iv_len          = 12;
+    sa[9].shsnf_len       = 0;
+    sa[9].arsnw           = 5;
+    sa[9].arsnw_len       = 1;
+    sa[9].arsn_len        = 0;
+    sa[9].gvcid_blk.tfvn  = 0x01;
+    sa[9].gvcid_blk.scid  = SCID &amp; 0x3FF;
+    sa[9].gvcid_blk.vcid  = 0;
+    sa[9].gvcid_blk.mapid = 0;
+
+    // AOS - Authentication Only, HMAC_SHA512 (Keyed)
+    // IV = 0...0, IV-Len = 16, MAC-Len = 16, TFVN = 1, VCID = 0, ARSNW = 5
+    // AKID = 10
+    sa[10].spi             = 10;
+    sa[10].akid            = 10;
+    sa[10].sa_state        = SA_OPERATIONAL;
+    sa[10].est             = 0;
+    sa[10].ast             = 1;
+    sa[10].acs_len         = 1;
+    sa[10].acs             = CRYPTO_MAC_HMAC_SHA512;
+    sa[10].stmacf_len      = 16;
+    sa[10].arsnw           = 5;
+    sa[10].arsnw_len       = 1;
+    sa[10].arsn_len        = 2;
+    sa[10].abm_len         = ABM_SIZE;
+    sa[10].gvcid_blk.tfvn  = 0x01;
+    sa[10].gvcid_blk.scid  = SCID &amp; 0x3FF;
+    sa[10].gvcid_blk.vcid  = 0;
+    sa[10].gvcid_blk.mapid = 0;
+
+    // AOS  - Encryption Only, AES-GCM-256 (Keyed)
+    // IV = 0...0, IV-Len = 16, MAC-Len = 0, TFVN = 1, VCID = 0, ARSNW = 5
+    // EKID = 11
+    sa[11].spi             = 11;
+    sa[11].ekid            = 11;
+    sa[11].sa_state        = SA_KEYED;
+    sa[11].est             = 1;
+    sa[11].ast             = 0;
+    sa[11].ecs_len         = 1;
+    sa[11].shplf_len       = 1;
+    sa[11].ecs             = CRYPTO_CIPHER_AES256_CBC;
+    sa[11].iv_len          = 16;
+    sa[11].shivf_len       = 16;
+    sa[11].stmacf_len      = 0;
+    sa[11].shsnf_len       = 2;
+    sa[11].arsn_len        = 2;
+    sa[11].arsnw_len       = 1;
+    sa[11].arsnw           = 5;
+    sa[11].gvcid_blk.tfvn  = 0x01;
+    sa[11].gvcid_blk.scid  = SCID &amp; 0x3FF;
+    sa[11].gvcid_blk.vcid  = 0;
+    sa[11].gvcid_blk.mapid = 0;
+
+    // AOS - Authenticated Encryption, AES-CBC-256 (Keyed)
+    // IV = 0...0, IV-Len = 16, MAC-Len = 16, TFVN = 1, VCID = 0, ARSNW = 5
+    // EKID = 12
+    sa[12].spi            = 12;
+    sa[12].ekid           = 12;
+    sa[12].sa_state       = SA_KEYED;
+    sa[12].est            = 1;
+    sa[12].ast            = 1;
+    sa[12].ecs_len        = 1;
+    sa[12].ecs            = CRYPTO_CIPHER_AES256_GCM;
+    sa[12].iv_len         = 16;
+    sa[12].shivf_len      = 16;
+    sa[12].stmacf_len     = 16;
+    sa[12].shsnf_len      = 2;
+    sa[12].arsn_len       = 2;
+    sa[12].arsnw_len      = 1;
+    sa[12].arsnw          = 5;
+    sa[12].gvcid_blk.tfvn = 0x01;
+    sa[12].gvcid_blk.scid = SCID &amp; 0x3FF;
+    sa[12].gvcid_blk.vcid = 0;
+
+    // EP - Testing SAs
+
+    // TC - NULL (SA_None)
+    sa[13].spi             = 13;
+    sa[13].sa_state        = SA_NONE;
+    sa[13].est             = 0;
+    sa[13].ast             = 0;
+    sa[13].shivf_len       = 12;
+    sa[13].iv_len          = 12;
+    sa[13].shsnf_len       = 2;
+    sa[13].arsnw           = 5;
+    sa[13].arsnw_len       = 1;
+    sa[13].arsn_len        = 2;
+    sa[13].gvcid_blk.tfvn  = 2;
+    sa[13].gvcid_blk.scid  = SCID &amp; 0x3FF;
+    sa[13].gvcid_blk.vcid  = 0;
+    sa[13].gvcid_blk.mapid = TYPE_TC;
+
+    // TC - Unkeyed
+    sa[14].spi             = 14;
+    sa[14].ekid            = 14;
+    sa[14].sa_state        = SA_UNKEYED;
+    sa[14].est             = 0;
+    sa[14].ast             = 0;
+    sa[14].shivf_len       = 12;
+    sa[14].iv_len          = 12;
+    sa[14].shsnf_len       = 2;
+    sa[14].arsnw           = 5;
+    sa[14].arsnw_len       = 1;
+    sa[14].arsn_len        = 2;
+    sa[14].gvcid_blk.tfvn  = 2;
+    sa[14].gvcid_blk.scid  = SCID &amp; 0x3FF;
+    sa[14].gvcid_blk.vcid  = 2;
+    sa[14].gvcid_blk.mapid = TYPE_TC;
+
+    // TC - Operational
+    sa[15].spi             = 15;
+    sa[15].ekid            = 15;
+    sa[15].sa_state        = SA_OPERATIONAL;
+    sa[15].est             = 0;
+    sa[15].ast             = 0;
+    sa[15].shivf_len       = 12;
+    sa[15].iv_len          = 12;
+    sa[15].shsnf_len       = 2;
+    sa[15].arsnw           = 5;
+    sa[15].arsnw_len       = 1;
+    sa[15].arsn_len        = 2;
+    sa[15].gvcid_blk.tfvn  = 2;
+    sa[15].gvcid_blk.scid  = SCID &amp; 0x3FF;
+    sa[15].gvcid_blk.vcid  = 7;
+    sa[15].gvcid_blk.mapid = TYPE_TC;
+
+    int32_t status = sa_perform_save(&amp;sa[0]);
+    return status;
+}
+
+/**
+ * @brief Function Key_Validation()
+ * Validates the use of a single key per encryption type per SA
+ * At most an SA can contain 2 unique Keys.  These my not be utilized in another SA
+ */
+int32_t key_validation(void)
+{
+    int32_t status = CRYPTO_LIB_SUCCESS;
+    int     i      = 0;
+    int     j      = 0;
+    for (i = 0; i &lt; NUM_SA; i++)
+    {
+        uint16_t i_ekid = sa[i].ekid;
+        uint16_t i_akid = sa[i].akid;
+
+        if (i_ekid == i_akid)
+        {
+            status = CRYPTO_LIB_ERR_KEY_VALIDATION;
+#ifdef DEBUG
+            printf(KRED "SA Key Validation FAILURE!\n");
+            printf("Key Duplication: SA #%d, EKID: %d, AKID: %d\n", i, i_ekid, i_akid);
+            printf("\n" RESET);
+#endif
+            break;
+        }
+
+        for (j = i + 1; j &lt; NUM_SA; j++)
+        {
+            uint16_t j_ekid = sa[j].ekid;
+            uint16_t j_akid = sa[j].akid;
+
+            if ((i_ekid == j_ekid) || (i_ekid == j_akid) || (i_akid == j_ekid) || (i_akid == j_akid) ||
+                (j_ekid == j_akid))
+            {
+                status = CRYPTO_LIB_ERR_KEY_VALIDATION;
+#ifdef DEBUG
+                printf(KRED "SA Key Validation FAILURE!\n");
+                printf("Key Duplication SA: %d, EKID: %d, AKID: %d\n\tSA: %d, EKID: %d, AKID: %d\n", i, i_ekid, i_akid,
+                       j, j_ekid, j_akid);
+                printf("\n" RESET);
+#endif
+                break;
+            }
+        }
+    }
+    return status;
+}
+
+/**
+ * @brief Function; sa_config
+ * @return int32: Success/Failure
+ **/
+int32_t sa_config(void)
+{
+    int32_t status       = CRYPTO_LIB_SUCCESS;
+    int     use_internal = 1;
+
+#ifdef SA_FILE
+    use_internal = 0;
+#endif
+
+    if (use_internal)
+    {
+        status = sa_populate();
+#ifdef KEY_VALIDATION
+        if (status == CRYPTO_LIB_SUCCESS)
+        {
+            status = key_validation();
+        }
+#endif
+    }
+
+    return status;
+}
+
+/**
+ * @brief Function: sa_init
+ * @return int32: Success/Failure
+ **/
+int32_t sa_init(void)
+{
+    int32_t status = CRYPTO_LIB_SUCCESS;
+
+    int use_internal = 1;
+
+#ifdef SA_FILE
+    use_internal = 0;
+    status       = sa_load_file();
+    if (status != CRYPTO_LIB_SUCCESS)
+    {
+#ifdef DEBUG
+        printf("SA Load Failure!\n");
+        printf("Falling back to in-memory SA!\n");
+        use_internal = 1;
+        status       = CRYPTO_LIB_SUCCESS;
+#endif
+    }
+#endif
+
+    if (use_internal)
+    {
+        for (int x = 0; x &lt; NUM_SA; x++)
+        {
+            sa[x].spi       = x;
+            sa[x].ekid      = x;
+            sa[x].akid      = x;
+            sa[x].sa_state  = SA_NONE;
+            sa[x].ecs_len   = 0;
+            sa[x].ecs       = 0;
+            sa[x].shivf_len = 0;
+            for (int y = 0; y &lt; IV_SIZE; y++)
+            {
+                sa[x].iv[y] = 0;
+            }
+            sa[x].iv_len = 0;
+            for (int y = 0; y &lt; ABM_SIZE; y++)
+            {
+                sa[x].abm[y] = 0;
+            }
+            for (int y = 0; y &lt; REF_SIZE; y++)
+            {
+                sa[x].ek_ref[y] = '\0';
+                sa[x].ak_ref[y] = '\0';
+            }
+            sa[x].abm_len    = 0;
+            sa[x].acs_len    = 0;
+            sa[x].acs        = 0;
+            sa[x].shsnf_len  = 0;
+            sa[x].arsn_len   = 0;
+            sa[x].stmacf_len = 0;
+            for (int y = 0; y &lt; ARSN_SIZE; y++)
+            {
+                sa[x].arsn[y] = 0;
+            }
+        }
+
+        status = sa_populate();
+#ifdef KEY_VALIDATION
+        if (status == CRYPTO_LIB_SUCCESS)
+        {
+            status = key_validation();
+        }
+#endif
+    }
+    return status;
+}
+
+/**
+ * @brief Function: sa_close
+ * @return int32: Success/Failure
+ **/
+static int32_t sa_close(void)
+{
+    int32_t status = CRYPTO_LIB_SUCCESS;
+    return status;
+}
+
+/*
+** Security Association Interaction Functions
+*/
+/**
+ * @brief Function: sa_get_from_spi
+ * @param spi: uint16
+ * @param security_association: SecurityAssociation_t**
+ * @return int32: Success/Failure
+ **/
+static int32_t sa_get_from_spi(uint16_t spi, SecurityAssociation_t **security_association)
+{
+    int32_t status = CRYPTO_LIB_SUCCESS;
+    // Check if spi index in sa array
+    if (spi &gt;= NUM_SA)
+    {
+#ifdef SA_DEBUG
+        printf(KRED "sa_get_from_spi: SPI: %d &gt; NUM_SA: %d.\n" RESET, spi, NUM_SA);
+#endif
+        status = CRYPTO_LIB_ERR_SPI_INDEX_OOB;
+        mc_if-&gt;mc_log(status);
+        return status;
+    }
+    *security_association = &amp;sa[spi];
+
+    if ((sa[spi].abm_len == 0) &amp;&amp; sa[spi].ast)
+    {
+        status = CRYPTO_LIB_ERR_NULL_ABM;
+        mc_if-&gt;mc_log(status);
+        return status;
+    } // Must have abm if doing authentication
+
+    // ARSN must be 0 octets in length if not using Auth/Auth Enc
+    // SHSNF is a better indicator as it's the actual presence accounted for in the header
+    // CCSDS 3550b2 Section 4.1.1.4.4
+    if (sa[spi].ast == 0 &amp;&amp; sa[spi].shsnf_len != 0 &amp;&amp; sa[spi].arsn_len != 0)
+    {
+#ifdef SA_DEBUG
+        printf("USING SA %d!\n", spi);
+        printf("AST IS %d, shsnf_len is %d, arsn_len is %d\n", sa[spi].ast, sa[spi].shsnf_len, sa[spi].arsn_len);
+#endif
+        status = CRYPTO_LIB_ERR_INVALID_SVC_TYPE_WITH_ARSN;
+        mc_if-&gt;mc_log(status);
+        return status;
+    }
+
+    // ARSN length cannot be less than shsnf length
+    if (sa[spi].shsnf_len &gt; sa[spi].arsn_len)
+    {
+        status = CRYPTO_LIB_ERR_ARSN_LT_SHSNF;
+        mc_if-&gt;mc_log(status);
+        return status;
+    }
+
+#ifdef SA_DEBUG
+    printf(KYEL "DEBUG - Printing local copy of SA Entry for current SPI.\n" RESET);
+    Crypto_saPrint(*security_association);
+#endif
+    return status;
+}
+
+int32_t sa_get_operational_sa_from_gvcid_find_iv(uint8_t tfvn, uint16_t scid, uint16_t vcid, uint8_t mapid,
+                                                 SecurityAssociation_t **security_association)
+{
+    int32_t status = CRYPTO_LIB_ERR_NO_OPERATIONAL_SA;
+    int     i      = 0;
+
+    for (i = 0; i &lt; NUM_SA; i++)
+    {
+        // If valid match found
+        if ((sa[i].gvcid_blk.tfvn == tfvn) &amp;&amp; (sa[i].gvcid_blk.scid == scid) &amp;&amp; (sa[i].gvcid_blk.vcid == vcid) &amp;&amp;
+            (sa[i].sa_state == SA_OPERATIONAL) &amp;&amp;
+            (crypto_config.unique_sa_per_mapid == TC_UNIQUE_SA_PER_MAP_ID_FALSE || sa[i].gvcid_blk.mapid == mapid))
+        // only require MapID match is unique SA per MapID set (only relevant
+        // when using segmentation hdrs)
+        {
+            *security_association = &amp;sa[i];
+
+            // Must have ABM if doing authentication
+            if (sa[i].ast &amp;&amp; sa[i].abm_len &lt;= 0)
+            {
+                status = CRYPTO_LIB_ERR_NULL_ABM;
+                return status;
+            }
+
+#ifdef SA_DEBUG
+            printf("Valid operational SA found at index %d.\n", i);
+            printf("\t Tfvn: %d\n", tfvn);
+            printf("\t Scid: %d\n", scid);
+            printf("\t Vcid: %d\n", vcid);
+#endif
+
+            status = CRYPTO_LIB_SUCCESS;
+            break;
+        }
+    }
+    return status;
+}
+
+void sa_mismatched_tfvn_error(int *i_p, int32_t *status, uint8_t tfvn, uint16_t scid, uint16_t vcid, uint8_t mapid)
+{
+    int i = *i_p;
+    if ((sa[i].gvcid_blk.tfvn != tfvn) &amp;&amp; (sa[i].gvcid_blk.scid == scid) &amp;&amp; (sa[i].gvcid_blk.vcid == vcid) &amp;&amp;
+        (sa[i].gvcid_blk.mapid == mapid &amp;&amp; sa[i].sa_state == SA_OPERATIONAL))
+    {
+#ifdef SA_DEBUG
+        printf(KRED "An operational SA was found - but mismatched tfvn.\n" RESET);
+        printf(KRED "SA is %d\n", i);
+        printf(KRED "Incoming tfvn is %d\n", tfvn);
+        printf(KRED "SA tfvn is %d\n", sa[i].gvcid_blk.tfvn);
+#endif
+        *status = CRYPTO_LIB_ERR_INVALID_TFVN;
+    }
+    *i_p = i;
+}
+
+void sa_mismatched_scid(int *i_p, int32_t *status, uint8_t tfvn, uint16_t scid, uint16_t vcid, uint8_t mapid)
+{
+    int i = *i_p;
+    if ((sa[i].gvcid_blk.tfvn == tfvn) &amp;&amp; (sa[i].gvcid_blk.scid != scid) &amp;&amp; (sa[i].gvcid_blk.vcid == vcid) &amp;&amp;
+        (sa[i].gvcid_blk.mapid == mapid &amp;&amp; sa[i].sa_state == SA_OPERATIONAL))
+    {
+#ifdef SA_DEBUG
+        printf(KRED "An operational SA was found - but mismatched scid.\n" RESET);
+        printf(KRED "SA is %d\n", i);
+        printf(KRED "SCID is %d\n", scid);
+        printf(KRED "gvcid_blk SCID is %d\n", sa[i].gvcid_blk.scid);
+#endif
+        *status = CRYPTO_LIB_ERR_INVALID_SCID;
+    }
+    *i_p = i;
+}
+
+void sa_mismatched_vcid(int *i_p, int32_t *status, uint8_t tfvn, uint16_t scid, uint16_t vcid, uint8_t mapid)
+{
+    int i = *i_p;
+    if ((sa[i].gvcid_blk.tfvn == tfvn) &amp;&amp; (sa[i].gvcid_blk.scid == scid) &amp;&amp; (sa[i].gvcid_blk.vcid != vcid) &amp;&amp;
+        (sa[i].gvcid_blk.mapid == mapid &amp;&amp; sa[i].sa_state == SA_OPERATIONAL))
+    {
+#ifdef SA_DEBUG
+        printf(KRED "An operational SA was found - but mismatched vcid.\n" RESET);
+        printf(KRED "SA is %d\n", i);
+#endif
+        *status = CRYPTO_LIB_ERR_INVALID_VCID;
+    }
+    *i_p = i;
+}
+
+void sa_mismatched_mapid(int *i_p, int32_t *status, uint8_t tfvn, uint16_t scid, uint16_t vcid, uint8_t mapid)
+{
+    int i = *i_p;
+    if ((sa[i].gvcid_blk.tfvn == tfvn) &amp;&amp; (sa[i].gvcid_blk.scid == scid) &amp;&amp; (sa[i].gvcid_blk.vcid == vcid) &amp;&amp;
+        (sa[i].gvcid_blk.mapid != mapid &amp;&amp; sa[i].sa_state == SA_OPERATIONAL))
+    {
+#ifdef SA_DEBUG
+        printf(KRED "An operational SA was found - but mismatched mapid.\n" RESET);
+#endif
+        *status = CRYPTO_LIB_ERR_INVALID_MAPID;
+    }
+    *i_p = i;
+}
+
+void sa_non_operational_sa(int *i_p, int32_t *status, uint8_t tfvn, uint16_t scid, uint16_t vcid, uint8_t mapid)
+{
+    int i = *i_p;
+    if ((sa[i].gvcid_blk.tfvn == tfvn) &amp;&amp; (sa[i].gvcid_blk.scid == scid) &amp;&amp; (sa[i].gvcid_blk.vcid == vcid) &amp;&amp;
+        (sa[i].gvcid_blk.mapid == mapid &amp;&amp; sa[i].sa_state != SA_OPERATIONAL))
+    {
+#ifdef SA_DEBUG
+        printf(KRED "A valid but non-operational SA was found: SPI: %d.\n" RESET, sa[i].spi);
+#endif
+        *status = CRYPTO_LIB_ERR_NO_OPERATIONAL_SA;
+    }
+    *i_p = i;
+}
+
+void sa_mismatched_arsn(int *i_p, int32_t *status, uint8_t tfvn, uint16_t scid, uint16_t vcid, uint8_t mapid)
+{
+    int i = *i_p;
+    if ((sa[i].arsn_len &gt; 0 &amp;&amp; sa[i].ast == 0) &amp;&amp; (sa[i].gvcid_blk.tfvn == tfvn) &amp;&amp; (sa[i].gvcid_blk.scid == scid) &amp;&amp;
+        (sa[i].gvcid_blk.vcid == vcid) &amp;&amp; (sa[i].gvcid_blk.mapid == mapid &amp;&amp; sa[i].sa_state == SA_OPERATIONAL))
+    {
+#ifdef SA_DEBUG
+        printf(KRED "An operational SA (%d) was found - but invalid ARSN length.\n" RESET, sa[i].spi);
+#endif
+        *status = CRYPTO_LIB_ERR_INVALID_SVC_TYPE_WITH_ARSN;
+    }
+    *i_p = i;
+}
+
+void sa_debug_block(uint8_t tfvn, uint16_t scid, uint16_t vcid, uint8_t mapid)
+{
+// Detailed debug block
+#ifdef SA_DEBUG
+    printf(KYEL "Incoming frame parameters:\n" RESET);
+    printf(KYEL "\ttfvn %02X\n" RESET, tfvn);
+    printf(KYEL "\tscid %d\n" RESET, scid);
+    printf(KYEL "\tvcid %d\n" RESET, vcid);
+    printf(KYEL "\tmapid %02X\n" RESET, mapid);
+#endif
+    // Ignore Unused Variables
+    (void)tfvn;
+    (void)scid;
+    (void)vcid;
+    (void)mapid;
+}
+
+int32_t sa_get_operational_sa_from_gvcid_generate_error(int32_t *status, uint8_t tfvn, uint16_t scid, uint16_t vcid,
+                                                        uint8_t mapid)
+{
+    int i = 0;
+
+    if (*status != CRYPTO_LIB_SUCCESS)
+    {
+#ifdef SA_DEBUG
+        printf(KRED "Error - Making best attempt at a useful error code:\n\t" RESET);
+#endif
+        for (i = 0; i &lt; NUM_SA; i++)
+        {
+            // Could possibly have more than one field mismatched,
+            // ordering so the 'most accurate' SA's error is returned
+            // (determined by matching header fields L to R)
+            sa_mismatched_tfvn_error(&amp;i, status, tfvn, scid, vcid, mapid);
+            if (*status != CRYPTO_LIB_SUCCESS)
+            {
+                sa_debug_block(tfvn, scid, vcid, mapid);
+                return *status;
+            }
+            sa_mismatched_scid(&amp;i, status, tfvn, scid, vcid, mapid);
+            if (*status != CRYPTO_LIB_SUCCESS)
+            {
+                sa_debug_block(tfvn, scid, vcid, mapid);
+                return *status;
+            }
+            sa_mismatched_vcid(&amp;i, status, tfvn, scid, vcid, mapid);
+            if (*status != CRYPTO_LIB_SUCCESS)
+            {
+                sa_debug_block(tfvn, scid, vcid, mapid);
+                return *status;
+            }
+            sa_mismatched_mapid(&amp;i, status, tfvn, scid, vcid, mapid);
+            if (*status != CRYPTO_LIB_SUCCESS)
+            {
+                sa_debug_block(tfvn, scid, vcid, mapid);
+                return *status;
+            }
+            sa_non_operational_sa(&amp;i, status, tfvn, scid, vcid, mapid);
+            if (*status != CRYPTO_LIB_SUCCESS)
+            {
+                sa_debug_block(tfvn, scid, vcid, mapid);
+                return *status;
+            }
+            sa_mismatched_arsn(&amp;i, status, tfvn, scid, vcid, mapid);
+            if (*status != CRYPTO_LIB_SUCCESS)
+            {
+                sa_debug_block(tfvn, scid, vcid, mapid);
+                return *status;
+            }
+        }
+    }
+    return *status;
+}
+
+/**
+ * @brief Function: sa_get_operational_sa_from_gvcid
+ * @param tfvn: uint8
+ * @param scid: uint16
+ * @param vcid: uint16
+ * @param mapid: uint8 // tc only
+ * @param security_association: SecurityAssociation_t**
+ * @return int32: Success/Failure
+ **/
+static int32_t sa_get_operational_sa_from_gvcid(uint8_t tfvn, uint16_t scid, uint16_t vcid, uint8_t mapid,
+                                                SecurityAssociation_t **security_association)
+{
+    int32_t status = CRYPTO_LIB_ERR_NO_OPERATIONAL_SA;
+
+    status = sa_get_operational_sa_from_gvcid_find_iv(tfvn, scid, vcid, mapid, security_association);
+
+    // If not a success, attempt to generate a meaningful error code
+    status = sa_get_operational_sa_from_gvcid_generate_error(&amp;status, tfvn, scid, vcid, mapid);
+
+    return status;
+}
+
+/*
+** Security Association Management Services
+*/
+/**
+ * @brief sa_start
+ * @param tc_frame: TC_t
+ * @return int32: Success/Failure
+ **/
+static int32_t sa_start(TC_t *tc_frame)
+{
+    // Local variables
+    uint8_t        count = 0;
+    uint16_t       spi   = 0x0000;
+    crypto_gvcid_t gvcid;
+    int            x;
+    int            i;
+    int            num_gvcid = (((sdls_frame.tlv_pdu.hdr.pdu_len / 8) - 2) / 4);
+
+    printf("\nParsed GVCID: %d\n", num_gvcid);
+
+    // Read ingest
+    spi = ((uint8_t)sdls_frame.tlv_pdu.data[0] &lt;&lt; 8) | (uint8_t)sdls_frame.tlv_pdu.data[1];
+
+    // Check SPI exists and in 'Keyed' state
+    if (spi &lt; NUM_SA)
+    {
+        // Overwrite last PID : 8 bits
+        // Bits from L-R
+        //   1 : Procedure Type Flag (type)
+        //   2 : User Flag (uf)
+        // 3-4 : Service Group Field (sg)
+        // 5-8 : Procedure Identification Field (pid)
+        sa[spi].lpid = (sdls_frame.tlv_pdu.hdr.type &lt;&lt; 7) | (sdls_frame.tlv_pdu.hdr.uf &lt;&lt; 6) |
+                       (sdls_frame.tlv_pdu.hdr.sg &lt;&lt; 4) | sdls_frame.tlv_pdu.hdr.pid;
+
+        if (sa[spi].sa_state == SA_KEYED)
+        {
+            count = 2;
+
+            for (x = 0; x &lt;= num_gvcid; x++)
+            { // Read in GVCID
+                gvcid.tfvn = (sdls_frame.tlv_pdu.data[count] &gt;&gt; 4);
+                gvcid.scid = (sdls_frame.tlv_pdu.data[count] &lt;&lt; 12) | (sdls_frame.tlv_pdu.data[count + 1] &lt;&lt; 4) |
+                             (sdls_frame.tlv_pdu.data[count + 2] &gt;&gt; 4);
+                gvcid.vcid = (((sdls_frame.tlv_pdu.data[count + 2] &amp; 0x0F) &lt;&lt; 2) |
+                              (sdls_frame.tlv_pdu.data[count + 3] &amp; 0xC0) &gt;&gt; 6);
+
+                if (tc_current_managed_parameters_struct.has_segmentation_hdr == TC_HAS_SEGMENT_HDRS)
+                {
+                    gvcid.mapid = (sdls_frame.tlv_pdu.data[count + 3] &amp; 0x3F);
+                }
+                else
+                {
+                    gvcid.mapid = 0;
+                }
+
+                count += 4;
+                printf("\tMAPID: %d\n", gvcid.mapid);
+
+                // TC
+                if (gvcid.vcid != tc_frame-&gt;tc_header.vcid)
+                { // Clear all GVCIDs for provided SPI
+                    if (gvcid.mapid == TYPE_TC)
+                    {
+                        sa[spi].gvcid_blk.tfvn  = 0;
+                        sa[spi].gvcid_blk.scid  = 0;
+                        sa[spi].gvcid_blk.vcid  = 0;
+                        sa[spi].gvcid_blk.mapid = 0;
+                    }
+                    // Write channel to SA
+                    if (gvcid.mapid != TYPE_MAP)
+                    { // TC
+                        sa[spi].gvcid_blk.tfvn  = gvcid.tfvn;
+                        sa[spi].gvcid_blk.scid  = gvcid.scid;
+                        sa[spi].gvcid_blk.mapid = gvcid.mapid;
+                    }
+                    else
+                    {
+                        // TODO: Handle TYPE_MAP
+                    }
+                }
+                // TM
+                if (gvcid.vcid != tm_frame_pri_hdr.vcid) // TODO Check this tm_frame.tm_header.vcid)
+                {                                        // Clear all GVCIDs for provided SPI
+                    if (gvcid.mapid == TYPE_TM)
+                    {
+                        for (i = 0; i &lt; NUM_GVCID; i++) // This is looping
+                        {                               // TM
+                            sa[spi].gvcid_blk.tfvn  = 0;
+                            sa[spi].gvcid_blk.scid  = 0;
+                            sa[spi].gvcid_blk.vcid  = 0;
+                            sa[spi].gvcid_blk.mapid = 0;
+                        }
+                    }
+                    // Write channel to SA
+                    if (gvcid.mapid != TYPE_MAP)
+                    {                                          // TM
+                        sa[spi].gvcid_blk.tfvn  = gvcid.tfvn;  // Hope for the best
+                        sa[spi].gvcid_blk.scid  = gvcid.scid;  // Hope for the best
+                        sa[spi].gvcid_blk.vcid  = gvcid.vcid;  // Hope for the best
+                        sa[spi].gvcid_blk.mapid = gvcid.mapid; // Hope for the best
+                    }
+                    else
+                    {
+                        // TODO: Handle TYPE_MAP
+                    }
+                }
+
+#ifdef PDU_DEBUG
+                printf("SPI %d changed to OPERATIONAL state. \n", spi);
+                switch (gvcid.mapid)
+                {
+                    case TYPE_TC:
+                        printf("Type TC, ");
+                        break;
+                    case TYPE_MAP:
+                        printf("Type MAP, ");
+                        break;
+                    case TYPE_TM:
+                        printf("Type TM, ");
+                        break;
+                    case TYPE_AOS:
+                        printf("Type AOS, ");
+                        break;
+                    default:
+                        printf("Type Unknown, ");
+                        break;
+                }
+#endif
+
+                // Change to operational state
+                sa[spi].sa_state = SA_OPERATIONAL;
+            }
+        }
+        else
+        {
+#ifdef DEBUG
+            printf(KRED "ERROR: SPI %d is not in the KEYED state.\n" RESET, spi);
+#endif
+        }
+    }
+    else
+    {
+#ifdef DEBUG
+        printf(KRED "ERROR: SPI %d does not exist.\n" RESET, spi);
+#endif
+    }
+
+#ifdef DEBUG
+    printf("\t spi = %d \n", spi);
+#endif
+
+    return CRYPTO_LIB_SUCCESS;
+}
+
+/**
+ * @brief Function: sa_stop
+ * @return int32: Success/Failure
+ **/
+static int32_t sa_stop(TC_t *tc_frame)
+{
+    // Local variables
+    int32_t  status      = CRYPTO_LIB_SUCCESS;
+    uint16_t spi         = 0x0000;
+    uint16_t control_spi = 0x0000;
+    int      x;
+
+    // Read ingest
+    spi         = ((uint8_t)sdls_frame.tlv_pdu.data[0] &lt;&lt; BYTE_LEN) | (uint8_t)sdls_frame.tlv_pdu.data[1];
+    control_spi = tc_frame-&gt;tc_sec_header.spi;
+
+#ifdef DEBUG
+    printf("control_spi = %d \n", control_spi);
+    printf("spi = %d \n", spi);
+#endif
+
+    if (spi == control_spi)
+    {
+#ifdef DEBUG
+        printf(KRED "ERROR: Cannot modify SA in use\n" RESET);
+#endif
+        status = CRYPTO_LIB_ERR_SDLS_EP_WRONG_SPI;
+        return status;
+    }
+
+    // Check SPI exists and in 'Active' state
+    if (spi &lt; NUM_SA)
+    {
+        // Overwrite last PID : 8 bits
+        // Bits from L-R
+        //   1 : Procedure Type Flag (type)
+        //   2 : User Flag (uf)
+        // 3-4 : Service Group Field (sg)
+        // 5-8 : Procedure Identification Field (pid)
+        sa[spi].lpid = (sdls_frame.tlv_pdu.hdr.type &lt;&lt; 7) | (sdls_frame.tlv_pdu.hdr.uf &lt;&lt; 6) |
+                       (sdls_frame.tlv_pdu.hdr.sg &lt;&lt; 4) | sdls_frame.tlv_pdu.hdr.pid;
+
+        if (sa[spi].sa_state == SA_OPERATIONAL)
+        {
+            // Remove all GVC/GMAP IDs
+            sa[spi].gvcid_blk.tfvn  = 0;
+            sa[spi].gvcid_blk.scid  = 0;
+            sa[spi].gvcid_blk.vcid  = 0;
+            sa[spi].gvcid_blk.mapid = 0;
+            for (x = 0; x &lt; NUM_GVCID; x++)
+            {
+                // TM
+                sa[spi].gvcid_blk.tfvn  = 0; // TODO REVISIT
+                sa[spi].gvcid_blk.scid  = 0; // TODO REVISIT
+                sa[spi].gvcid_blk.vcid  = 0; // TODO REVISIT
+                sa[spi].gvcid_blk.mapid = 0; // TODO REVISIT
+            }
+
+            // Change to operational state
+            sa[spi].sa_state = SA_KEYED;
+#ifdef PDU_DEBUG
+            printf("SPI %d changed to KEYED state. \n", spi);
+#endif
+        }
+        else
+        {
+#ifdef DEBUG
+            printf(KRED "ERROR: SPI %d is not in the OPERATIONAL state.\n" RESET, spi);
+#endif
+            status = CRYPTO_LIB_ERR_SA_NOT_OPERATIONAL;
+        }
+    }
+    else
+    {
+#ifdef DEBUG
+        printf(KRED "ERROR: SPI %d does not exist.\n" RESET, spi);
+#endif
+        status = CRYPTO_LIB_ERR_SPI_INDEX_OOB;
+    }
+
+#ifdef DEBUG
+    printf("\t spi = %d \n", spi);
+#endif
+
+    return status;
+}
+
+/**
+ * @brief Function: sa_rekey
+ * @return int32: Success/Failure
+ **/
+static int32_t sa_rekey(TC_t *tc_frame)
+{
+    // Local variables
+    uint16_t spi         = 0x0000;
+    uint16_t control_spi = 0x0000;
+    int32_t  status      = CRYPTO_LIB_SUCCESS;
+    int      count       = 0;
+    int      x           = 0;
+
+    // Read ingest
+    spi   = ((uint8_t)sdls_frame.tlv_pdu.data[count] &lt;&lt; BYTE_LEN) | (uint8_t)sdls_frame.tlv_pdu.data[count + 1];
+    count = count + 2;
+
+    control_spi = tc_frame-&gt;tc_sec_header.spi;
+    if (spi == control_spi)
+    {
+#ifdef DEBUG
+        printf(KRED "ERROR: Cannot modify SA in use\n" RESET);
+#endif
+        status = CRYPTO_LIB_ERR_SDLS_EP_WRONG_SPI;
+        return status;
+    }
+
+    // Check SPI exists and in 'Unkeyed' state
+    if (spi &lt; NUM_SA)
+    {
+        // Overwrite last PID : 8 bits
+        // Bits from L-R
+        //   1 : Procedure Type Flag (type)
+        //   2 : User Flag (uf)
+        // 3-4 : Service Group Field (sg)
+        // 5-8 : Procedure Identification Field (pid)
+        sa[spi].lpid = (sdls_frame.tlv_pdu.hdr.type &lt;&lt; 7) | (sdls_frame.tlv_pdu.hdr.uf &lt;&lt; 6) |
+                       (sdls_frame.tlv_pdu.hdr.sg &lt;&lt; 4) | sdls_frame.tlv_pdu.hdr.pid;
+
+        if (sa[spi].sa_state == SA_UNKEYED)
+        { // Encryption Key
+            sa[spi].ekid =
+                ((uint8_t)sdls_frame.tlv_pdu.data[count] &lt;&lt; BYTE_LEN) | (uint8_t)sdls_frame.tlv_pdu.data[count + 1];
+            count = count + 2;
+
+            // Anti-Replay Seq Num
+#ifdef PDU_DEBUG
+            printf("SPI %d IV updated to: 0x", spi);
+#endif
+            if (sa[spi].shivf_len &gt; 0)
+            { // Set IV - authenticated encryption
+                for (x = count; x &lt; (sa[spi].shivf_len + count); x++)
+                {
+                    // TODO: Uncomment once fixed in ESA implementation
+                    // TODO: Assuming this was fixed...
+                    *(sa[spi].iv + x - count) = (uint8_t)sdls_frame.tlv_pdu.data[x];
+#ifdef PDU_DEBUG
+                    printf("%02x", sdls_frame.tlv_pdu.data[x]);
+#endif
+                }
+            }
+            else
+            { // Set SN
+              // TODO
+            }
+#ifdef PDU_DEBUG
+            printf("\n");
+#endif
+
+            // Change to keyed state
+            sa[spi].sa_state = SA_KEYED;
+#ifdef PDU_DEBUG
+            printf("SPI %d changed to KEYED state with encrypted Key ID %d. \n", spi, sa[spi].ekid);
+#endif
+        }
+        else
+        {
+#ifdef PDU_DEBUG
+            printf(KRED "ERROR: SPI %d is not in the UNKEYED state.\n" RESET, spi);
+#endif
+        }
+    }
+    else
+    {
+#ifdef PDU_DEBUG
+        printf(KRED "ERROR: SPI %d does not exist.\n" RESET, spi);
+#endif
+    }
+
+#ifdef PDU_DEBUG
+    printf("\t spi  = %d \n", spi);
+    printf("\t ekid = %d \n", sa[spi].ekid);
+#endif
+
+    return CRYPTO_LIB_SUCCESS;
+}
+
+/**
+ * @brief Function: sa_expire
+ * @return int32: Success/Failure
+ **/
+static int32_t sa_expire(TC_t *tc_frame)
+{
+    // Local variables
+    uint16_t spi         = 0x0000;
+    uint16_t control_spi = 0x0000;
+    int32_t  status      = CRYPTO_LIB_SUCCESS;
+
+    // Read ingest
+    spi = ((uint8_t)sdls_frame.tlv_pdu.data[0] &lt;&lt; BYTE_LEN) | (uint8_t)sdls_frame.tlv_pdu.data[1];
+
+    control_spi = tc_frame-&gt;tc_sec_header.spi;
+    if (spi == control_spi)
+    {
+#ifdef DEBUG
+        printf(KRED "ERROR: Cannot modify SA in use\n" RESET);
+#endif
+        status = CRYPTO_LIB_ERR_SDLS_EP_WRONG_SPI;
+        return status;
+    }
+
+    // Check SPI exists and in 'Keyed' state
+    if (spi &lt; NUM_SA)
+    {
+        // Overwrite last PID : 8 bits
+        // Bits from L-R
+        //   1 : Procedure Type Flag (type)
+        //   2 : User Flag (uf)
+        // 3-4 : Service Group Field (sg)
+        // 5-8 : Procedure Identification Field (pid)
+        sa[spi].lpid = (sdls_frame.tlv_pdu.hdr.type &lt;&lt; 7) | (sdls_frame.tlv_pdu.hdr.uf &lt;&lt; 6) |
+                       (sdls_frame.tlv_pdu.hdr.sg &lt;&lt; 4) | sdls_frame.tlv_pdu.hdr.pid;
+
+        if (sa[spi].sa_state == SA_KEYED)
+        { // Change to 'Unkeyed' state
+            sa[spi].sa_state = SA_UNKEYED;
+#ifdef PDU_DEBUG
+            printf("SPI %d changed to UNKEYED state. \n", spi);
+#endif
+        }
+        else
+        {
+#ifdef DEBUG
+            printf(KRED "ERROR: SPI %d is not in the KEYED state.\n" RESET, spi);
+#endif
+        }
+    }
+    else
+    {
+#ifdef DEBUG
+        printf(KRED "ERROR: SPI %d does not exist.\n" RESET, spi);
+#endif
+    }
+
+    return CRYPTO_LIB_SUCCESS;
+}
+
+/**
+ * @brief Function: sa_create
+ * @return int32: Success/Failure
+ **/
+static int32_t sa_create(TC_t *tc_frame)
+{
+    // Local variables
+    int32_t  status      = CRYPTO_LIB_SUCCESS;
+    uint8_t  count       = 6;
+    uint16_t spi         = 0x0000;
+    uint16_t control_spi = 0x0000;
+    int      x;
+
+    // Read sdls_frame.tlv_pdu.data
+    spi = ((uint8_t)sdls_frame.tlv_pdu.data[0] &lt;&lt; BYTE_LEN) | (uint8_t)sdls_frame.tlv_pdu.data[1];
+#ifdef DEBUG
+    printf("spi = %d \n", spi);
+#endif
+
+    control_spi = tc_frame-&gt;tc_sec_header.spi;
+    if (spi == control_spi)
+    {
+#ifdef DEBUG
+        printf(KRED "ERROR: Cannot modify SA in use\n" RESET);
+#endif
+        status = CRYPTO_LIB_ERR_SDLS_EP_WRONG_SPI;
+        return status;
+    }
+
+    // Check if valid SPI
+    if (spi &lt; NUM_SA)
+    {
+        SecurityAssociation_t *temp_sa;
+        sa_if-&gt;sa_get_from_spi(spi, &amp;temp_sa);
+        // Overwrite last PID : 8 bits
+        // Bits from L-R
+        //   1 : Procedure Type Flag (type)
+        //   2 : User Flag (uf)
+        // 3-4 : Service Group Field (sg)
+        // 5-8 : Procedure Identification Field (pid)
+        temp_sa-&gt;lpid = (sdls_frame.tlv_pdu.hdr.type &lt;&lt; 7) | (sdls_frame.tlv_pdu.hdr.uf &lt;&lt; 6) |
+                        (sdls_frame.tlv_pdu.hdr.sg &lt;&lt; 4) | sdls_frame.tlv_pdu.hdr.pid;
+
+        // Write SA Configuration
+        temp_sa-&gt;est        = ((uint8_t)sdls_frame.tlv_pdu.data[2] &amp; 0x80) &gt;&gt; 7;
+        temp_sa-&gt;ast        = ((uint8_t)sdls_frame.tlv_pdu.data[2] &amp; 0x40) &gt;&gt; 6;
+        temp_sa-&gt;shivf_len  = ((uint8_t)sdls_frame.tlv_pdu.data[2] &amp; 0x3F);
+        temp_sa-&gt;shsnf_len  = ((uint8_t)sdls_frame.tlv_pdu.data[3] &amp; 0xFC) &gt;&gt; 2;
+        temp_sa-&gt;shplf_len  = ((uint8_t)sdls_frame.tlv_pdu.data[3] &amp; 0x03);
+        temp_sa-&gt;stmacf_len = ((uint8_t)sdls_frame.tlv_pdu.data[4]);
+        temp_sa-&gt;ecs_len    = ((uint8_t)sdls_frame.tlv_pdu.data[5]);
+        for (x = 0; x &lt; temp_sa-&gt;ecs_len; x++)
+        {
+            temp_sa-&gt;ecs = ((uint8_t)sdls_frame.tlv_pdu.data[count++]);
+        }
+        temp_sa-&gt;shivf_len = ((uint8_t)sdls_frame.tlv_pdu.data[count++]);
+        for (x = 0; x &lt; temp_sa-&gt;shivf_len; x++)
+        {
+            temp_sa-&gt;iv[x] = ((uint8_t)sdls_frame.tlv_pdu.data[count++]);
+        }
+        temp_sa-&gt;acs_len = ((uint8_t)sdls_frame.tlv_pdu.data[count++]);
+        for (x = 0; x &lt; temp_sa-&gt;acs_len; x++)
+        {
+            temp_sa-&gt;acs = ((uint8_t)sdls_frame.tlv_pdu.data[count++]);
+        }
+        temp_sa-&gt;abm_len =
+            (uint8_t)((sdls_frame.tlv_pdu.data[count] &lt;&lt; BYTE_LEN) | (sdls_frame.tlv_pdu.data[count + 1]));
+        count = count + 2;
+        for (x = 0; x &lt; temp_sa-&gt;abm_len; x++)
+        {
+            temp_sa-&gt;abm[x] = ((uint8_t)sdls_frame.tlv_pdu.data[count++]);
+        }
+        temp_sa-&gt;arsn_len = ((uint8_t)sdls_frame.tlv_pdu.data[count++]);
+        for (x = 0; x &lt; temp_sa-&gt;arsn_len; x++)
+        {
+            *(temp_sa-&gt;arsn + x) = ((uint8_t)sdls_frame.tlv_pdu.data[count++]);
+        }
+        temp_sa-&gt;arsnw_len = ((uint8_t)sdls_frame.tlv_pdu.data[count++]);
+        for (x = 0; x &lt; temp_sa-&gt;arsnw_len; x++)
+        {
+            temp_sa-&gt;arsnw = temp_sa-&gt;arsnw | (((uint8_t)sdls_frame.tlv_pdu.data[count++]) &lt;&lt; (temp_sa-&gt;arsnw_len - x));
+        }
+
+        // Set state to unkeyed
+        temp_sa-&gt;sa_state = SA_UNKEYED;
+
+        // Verify data
+        status = sa_verify_data(temp_sa);
+
+        if (status == CRYPTO_LIB_SUCCESS)
+        {
+            // Copy data from temp_sa to sa[spi]
+            sa[spi].lpid       = temp_sa-&gt;lpid;
+            sa[spi].est        = temp_sa-&gt;est;
+            sa[spi].ast        = temp_sa-&gt;ast;
+            sa[spi].shivf_len  = temp_sa-&gt;shivf_len;
+            sa[spi].shsnf_len  = temp_sa-&gt;shsnf_len;
+            sa[spi].shplf_len  = temp_sa-&gt;shplf_len;
+            sa[spi].stmacf_len = temp_sa-&gt;stmacf_len;
+            sa[spi].ecs_len    = temp_sa-&gt;ecs_len;
+            sa[spi].ecs        = temp_sa-&gt;ecs;
+            for (x = 0; x &lt; sa[spi].shivf_len; x++)
+            {
+                sa[spi].iv[x] = temp_sa-&gt;iv[x];
+            }
+            sa[spi].acs     = temp_sa-&gt;acs;
+            sa[spi].abm_len = temp_sa-&gt;abm_len;
+            for (x = 0; x &lt; sa[spi].abm_len; x++)
+            {
+                sa[spi].abm[x] = temp_sa-&gt;abm[x];
+            }
+            sa[spi].arsn_len = temp_sa-&gt;arsn_len;
+            for (x = 0; x &lt; sa[spi].arsn_len; x++)
+            {
+                *(sa[spi].arsn + x) = *(temp_sa-&gt;arsn + x);
+            }
+            sa[spi].arsnw_len = temp_sa-&gt;arsnw_len;
+            sa[spi].arsnw     = temp_sa-&gt;arsnw;
+            sa[spi].sa_state  = temp_sa-&gt;sa_state;
+        }
+
+#ifdef PDU_DEBUG
+        Crypto_saPrint(&amp;sa[spi]);
+#endif
+    }
+    else
+    {
+#ifdef DEBUG
+        printf(KRED "ERROR: SPI %d cannot be created.\n" RESET, spi);
+#endif
+    }
+
+    return status;
+}
+
+/**
+ * @brief Function: sa_delete
+ * @return int32: Success/Failure
+ **/
+static int32_t sa_delete(TC_t *tc_frame)
+{
+    // Local variables
+    uint16_t spi         = 0x0000;
+    uint16_t control_spi = 0x0000;
+    int32_t  status      = CRYPTO_LIB_SUCCESS;
+
+    // Read ingest
+    spi = ((uint8_t)sdls_frame.tlv_pdu.data[0] &lt;&lt; BYTE_LEN) | (uint8_t)sdls_frame.tlv_pdu.data[1];
+#ifdef DEBUG
+    printf("spi = %d \n", spi);
+#endif
+
+    control_spi = tc_frame-&gt;tc_sec_header.spi;
+    if (spi == control_spi)
+    {
+#ifdef DEBUG
+        printf(KRED "ERROR: Cannot modify SA in use\n" RESET);
+#endif
+        status = CRYPTO_LIB_ERR_SDLS_EP_WRONG_SPI;
+        return status;
+    }
+
+    // Check SPI exists and in 'Unkeyed' state
+    if (spi &lt; NUM_SA)
+    {
+        // Overwrite last PID : 8 bits
+        // Bits from L-R
+        //   1 : Procedure Type Flag (type)
+        //   2 : User Flag (uf)
+        // 3-4 : Service Group Field (sg)
+        // 5-8 : Procedure Identification Field (pid)
+        sa[spi].lpid = (sdls_frame.tlv_pdu.hdr.type &lt;&lt; 7) | (sdls_frame.tlv_pdu.hdr.uf &lt;&lt; 6) |
+                       (sdls_frame.tlv_pdu.hdr.sg &lt;&lt; 4) | sdls_frame.tlv_pdu.hdr.pid;
+
+        if (sa[spi].sa_state == SA_UNKEYED)
+        { // Change to 'None' state
+            sa[spi].sa_state = SA_NONE;
+#ifdef PDU_DEBUG
+            printf("SPI %d changed to NONE state. \n", spi);
+#endif
+
+            // TODO: Zero entire SA
+            sa[spi].spi       = spi;
+            sa[spi].ekid      = spi;
+            sa[spi].akid      = spi;
+            sa[spi].sa_state  = SA_NONE;
+            sa[spi].ecs_len   = 0;
+            sa[spi].ecs       = 0;
+            sa[spi].shivf_len = 0;
+            for (int y = 0; y &lt; IV_SIZE; y++)
+            {
+                sa[spi].iv[y] = 0;
+            }
+            sa[spi].iv_len = 0;
+            for (int y = 0; y &lt; ABM_SIZE; y++)
+            {
+                sa[spi].abm[y] = 0;
+            }
+            for (int y = 0; y &lt; REF_SIZE; y++)
+            {
+                sa[spi].ek_ref[y] = '\0';
+                sa[spi].ak_ref[y] = '\0';
+            }
+            sa[spi].abm_len    = 0;
+            sa[spi].acs_len    = 0;
+            sa[spi].acs        = 0;
+            sa[spi].shsnf_len  = 0;
+            sa[spi].arsn_len   = 0;
+            sa[spi].stmacf_len = 0;
+            for (int y = 0; y &lt; ARSN_SIZE; y++)
+            {
+                sa[spi].arsn[y] = 0;
+            }
+        }
+        else
+        {
+#ifdef DEBUG
+            printf(KRED "ERROR: SPI %d is not in the UNKEYED state.\n" RESET, spi);
+#endif
+            status = CRYPTO_LIB_ERROR;
+        }
+    }
+    else
+    {
+#ifdef DEBUG
+        printf(KRED "ERROR: SPI %d does not exist.\n" RESET, spi);
+#endif
+        status = CRYPTO_LIB_ERR_SPI_INDEX_OOB;
+    }
+
+    return status;
+}
+
+/**
+ * @brief Function: sa_setASRN
+ * @return int32: Success/Failure
+ **/
+static int32_t sa_setARSN(TC_t *tc_frame)
+{
+    // Local variables
+    uint16_t spi         = 0x0000;
+    uint16_t control_spi = 0x0000;
+    int32_t  status      = CRYPTO_LIB_SUCCESS;
+    int      x;
+
+    // Read ingest
+    spi = ((uint8_t)sdls_frame.tlv_pdu.data[0] &lt;&lt; BYTE_LEN) | (uint8_t)sdls_frame.tlv_pdu.data[1];
+
+    control_spi = tc_frame-&gt;tc_sec_header.spi;
+    if (spi == control_spi)
+    {
+#ifdef DEBUG
+        printf(KRED "ERROR: Cannot modify SA in use\n" RESET);
+#endif
+        status = CRYPTO_LIB_ERR_SDLS_EP_WRONG_SPI;
+        return status;
+    }
+
+    // TODO: Check SA type (authenticated, encrypted, both) and set appropriately
+    // TODO: Add more checks on bounds
+
+    // Check SPI exists
+    if (spi &lt; NUM_SA)
+    {
+        // Check if Auth or Auth Enc
+        if ((sa[spi].est == 1 &amp;&amp; sa[spi].ast == 1) || sa[spi].ast == 1)
+        { // Set SN
+#ifdef PDU_DEBUG
+            printf("SPI %d ARSN updated to: 0x", spi);
+#endif
+            for (x = 0; x &lt; sa[spi].arsn_len; x++)
+            {
+                *(sa[spi].arsn + x) = (uint8_t)sdls_frame.tlv_pdu.data[x + 2];
+#ifdef PDU_DEBUG
+                printf("%02x", *(sa[spi].arsn + x));
+#endif
+            }
+#ifdef PDU_DEBUG
+            printf("\n");
+#endif
+        }
+        else
+        {
+#ifdef PDU_DEBUG
+            printf("Failed setARSN on SPI %d, ECS %d, ACS %d\n", spi, sa[spi].ecs, sa[spi].acs);
+#endif
+        }
+    }
+    else
+    {
+        printf("sa_setARSN ERROR: SPI %d does not exist.\n", spi);
+    }
+
+    return CRYPTO_LIB_SUCCESS;
+}
+
+/**
+ * @brief Function: sa_setARSNW
+ * @return int32: Success/Failure
+ **/
+static int32_t sa_setARSNW(TC_t *tc_frame)
+{
+    // Local variables
+    uint16_t spi         = 0x0000;
+    uint16_t control_spi = 0x0000;
+    int32_t  status      = CRYPTO_LIB_SUCCESS;
+
+    // Read ingest
+    spi = ((uint8_t)sdls_frame.tlv_pdu.data[0] &lt;&lt; BYTE_LEN) | (uint8_t)sdls_frame.tlv_pdu.data[1];
+#ifdef PDU_DEBUG
+    printf("spi = %d \n", spi);
+#endif
+
+    control_spi = tc_frame-&gt;tc_sec_header.spi;
+    if (spi == control_spi)
+    {
+#ifdef DEBUG
+        printf(KRED "ERROR: Cannot modify SA in use\n" RESET);
+#endif
+        status = CRYPTO_LIB_ERR_SDLS_EP_WRONG_SPI;
+        return status;
+    }
+
+    // Check SPI exists
+    if (spi &lt; NUM_SA)
+    {
+        // Check for out of bounds
+        if (sa[spi].arsnw_len &gt; (ARSN_SIZE))
+        {
+            sa[spi].arsnw_len = ARSN_SIZE;
+        }
+
+        sa[spi].arsnw = (((uint8_t)sdls_frame.tlv_pdu.data[2]));
+#ifdef PDU_DEBUG
+        printf("ARSN set to: %d\n", sa[spi].arsnw);
+#endif
+    }
+    else
+    {
+#ifdef PDU_DEBUG
+        printf("sa_setARSNW ERROR: SPI %d does not exist.\n", spi);
+#endif
+    }
+
+    return CRYPTO_LIB_SUCCESS;
+}
+
+/**
+ * @brief Function: sa_status
+ * @param ingest: uint8_t*
+ * @return int32: count
+ **/
+static int32_t sa_status(uint8_t *ingest)
+{
+    // TODO: Count is not being returned yet
+    int32_t status = CRYPTO_LIB_SUCCESS;
+    if (ingest == NULL)
+    {
+        status = CRYPTO_LIB_ERROR;
+    }
+
+    if (status == CRYPTO_LIB_SUCCESS)
+    {
+        // Local variables
+        int      count = 0;
+        uint16_t spi   = 0x0000;
+
+        // Read ingest
+        spi = ((uint8_t)sdls_frame.tlv_pdu.data[0] &lt;&lt; BYTE_LEN) | (uint8_t)sdls_frame.tlv_pdu.data[1];
+        // printf("spi = %d \n", spi);
+
+        // Check SPI exists
+        if (spi &lt; NUM_SA)
+        {
+            // printf("SIZE: %ld\n", SDLS_SA_STATUS_RPLY_SIZE);
+            //  Prepare for Reply
+            sdls_frame.tlv_pdu.hdr.pdu_len = SDLS_SA_STATUS_RPLY_SIZE * BYTE_LEN;
+            sdls_frame.hdr.pkt_length =
+                CCSDS_HDR_SIZE + ECSS_PUS_SIZE + SDLS_TLV_HDR_SIZE + (sdls_frame.tlv_pdu.hdr.pdu_len / BYTE_LEN) - 1;
+            count = Crypto_Prep_Reply(sdls_ep_reply, CRYPTOLIB_APPID);
+            // PDU
+            sdls_ep_reply[count++] = (spi &amp; 0xFF00) &gt;&gt; BYTE_LEN;
+            sdls_ep_reply[count++] = (spi &amp; 0x00FF);
+            sdls_ep_reply[count++] = sa[spi].lpid;
+        }
+        else
+        {
+            printf("sa_status ERROR: SPI %d does not exist.\n", spi);
+            status = CRYPTO_LIB_ERR_SPI_INDEX_OOB;
+        }
+
+#ifdef SA_DEBUG
+        Crypto_saPrint(&amp;sa[spi]);
+        if (status == CRYPTO_LIB_SUCCESS)
+        {
+            printf("SA Status Reply:   0x");
+            for (int x = 0; x &lt; count; x++)
+            {
+                printf("%02X", sdls_ep_reply[x]);
+            }
+            printf("\n\n");
+        }
+#endif
+    }
+
+    return status;
+}
+
+int32_t sa_verify_data(SecurityAssociation_t *sa_ptr)
+{
+    int32_t status = CRYPTO_LIB_SUCCESS;
+    if (sa_ptr-&gt;shivf_len &gt; IV_SIZE)
+    {
+        status = CRYPTO_LIB_ERR_SHIVF_LEN_GREATER_THAN_MAX_IV_SIZE;
+    }
+    if (sa_ptr-&gt;shsnf_len &gt; ARSN_SIZE)
+    {
+        status = CRYPTO_LIB_ERR_SHSNF_LEN_GREATER_THAN_MAX_ARSN_SIZE;
+    }
+    if (sa_ptr-&gt;abm_len &gt; ABM_SIZE)
+    {
+        status = CRYPTO_LIB_ERR_ABM_LEN_GREATER_THAN_MAX_ABM_SIZE;
+    }
+    if (sa_ptr-&gt;stmacf_len &gt; MAC_SIZE)
+    {
+        status = CRYPTO_LIB_ERR_STMACF_LEN_GREATER_THAN_MAX_MAC_SIZE;
+    }
+    if (sa_ptr-&gt;shplf_len &gt; PAD_SIZE)
+    {
+        status = CRYPTO_LIB_ERR_SHPLF_LEN_GREATER_THAN_MAX_PAD_SIZE;
+    }
+    return status;
+}
+
+static int32_t sa_setIV(uint16_t spi, char *iv)
+{
+    int32_t status = CRYPTO_LIB_SUCCESS;
+
+    if (iv == NULL) // NULL pointer
+    {
+        status = CRYPTO_LIB_ERR_NULL_BUFFER;
+        mc_if-&gt;mc_log(status);
+        return status;
+    }
+
+    uint16_t iv_len = strlen(iv) / 2;
+
+    if (iv_len &gt; IV_SIZE)
+    {
+#ifdef SA_DEBUG
+        printf("Specified IV longer than Config Maximum");
+#endif
+        status = CRYPTO_LIB_ERROR;
+        mc_if-&gt;mc_log(status);
+        return status;
+    }
+
+    SecurityAssociation_t *sa;
+    sa_get_from_spi(spi, &amp;sa);
+
+    if (sa-&gt;iv_len &lt; iv_len) // make sure it wont underflow
+    {
+        iv_len = sa-&gt;iv_len;
+    }
+
+    int offset = sa-&gt;iv_len - iv_len;
+
+    unsigned int byte;
+    for (int i = 0; i &lt; (int)strlen(iv); i += 2)
+    {
+        sscanf(&amp;iv[i], "%02x", &amp;byte);
+        sa-&gt;iv[i / 2 + offset] = byte;
+    }
+
+#ifdef SA_DEBUG
+    printf(KYEL "IV set to: ");
+    for (int i = 0; i &lt; sa-&gt;iv_len; i++)
+    {
+        printf("%02x", sa-&gt;iv[i]);
+    }
+    printf("\n" RESET);
+#endif
+    return status;
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../custom_stub/index.html" class="btn btn-neutral float-left" title="custom_stub" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../internal_stub/index.html" class="btn btn-neutral float-right" title="internal_stub" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

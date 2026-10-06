@@ -1,0 +1,2081 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="unit_test" href="../unit_test/index.html" />
+    <link rel="prev" title="platform_inc" href="../platform_inc/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">components</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">components</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">arducam</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">cfs</a></li>
+      <li class="breadcrumb-item active">src</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/components/arducam/fsw/cfs/src/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="src">
+<h1>src<a class="headerlink" href="#src" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/arducam/fsw/cfs/src/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="cam-app-c">
+<h2><code class="docutils literal notranslate"><span class="pre">cam_app.c</span></code><a class="headerlink" href="#cam-app-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/arducam/fsw/cfs/src/cam_app.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+documentation will conform to the program, or any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+out of the results of, or use of, the software, documentation or services provided hereunder
+
+ITC Team
+NASA IV&amp;V
+ivv-itc@lists.nasa.gov
+*/
+
+/*******************************************************************************
+** File: cam_app.c
+**
+** Purpose:
+**   This file contains the source code for the Sample STF1 App.
+**
+*******************************************************************************/
+
+#include "cam_app.h"
+
+/*
+** global app data
+*/
+CAM_AppData_t CAM_AppData;
+
+/*
+** arducam_AppMain() -- Application entry point and main process loop
+*/
+void arducam_AppMain(void)
+{
+    int32 status          = 0;
+    CAM_AppData.RunStatus = CFE_ES_RunStatus_APP_RUN;
+    CFE_ES_PerfLogEntry(CAM_PERF_ID);
+
+    /*
+    ** initialize the application, register the app, etc
+    */
+    status = CAM_AppInit();
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CAM_INIT_ERR_EID, CFE_EVS_EventType_ERROR, "CAM App: init error %d", status);
+        CAM_AppData.RunStatus = CFE_ES_RunStatus_APP_ERROR;
+    }
+
+    /*
+    ** CAM Runloop
+    */
+    while (CFE_ES_RunLoop(&amp;CAM_AppData.RunStatus) == true)
+    {
+        /*
+        ** Exit performance profiling.  It will be restarted later in this while loop.
+        */
+        CFE_ES_PerfLogExit(CAM_PERF_ID);
+
+        /*
+        ** Pend on receipt of command packet -- set timeout to 500ms as cFE default
+        ** could also set no timeout - this means that this app
+        ** will block until a message is received.  Refer to the header file docs
+        ** for more information on using this function
+        */
+        status =
+            CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&amp;CAM_AppData.MsgPtr, CAM_AppData.CmdPipe, CFE_SB_PEND_FOREVER);
+
+        /*
+        ** Begin performance metrics on anything after this line. This will help to determine
+        ** where we are spending most of the time during this app execution
+        */
+        CFE_ES_PerfLogEntry(CAM_PERF_ID);
+
+        /*
+        ** If the RcvMsg() was successful, then continue to process the CommandPacket()
+        ** if not successful, then
+        */
+        if (status == CFE_SUCCESS)
+        {
+            CAM_ProcessCommandPacket();
+        }
+        else if (status == CFE_SB_PIPE_RD_ERR)
+        {
+            /* This is an example of exiting on an error.
+            ** Note that a SB read error is not always going to
+            ** result in an app quitting.
+            */
+            CFE_EVS_SendEvent(CAM_PIPE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "CAM APP: SB Pipe Read Error, CAM APP will continue with error = %d", status);
+            // CAM_AppData.RunStatus = CFE_ES_RunStatus_APP_ERROR;
+        }
+    }
+
+    CFE_ES_ExitApp(CAM_AppData.RunStatus);
+}
+
+/*
+** CAM_AppInit() --  initialization
+*/
+int32 CAM_AppInit(void)
+{
+    int32 status = OS_SUCCESS;
+
+    while (true)
+    {
+        /*
+        ** Register the events
+        */
+        status = CFE_EVS_Register(NULL, 0, CFE_EVS_EventFilter_BINARY);
+        if (status != CFE_SUCCESS)
+        {
+            OS_printf("CAM APP: EVS register error %d", status);
+            break;
+        }
+
+        /*
+        ** Create the Software Bus command pipe
+        */
+        status = CFE_SB_CreatePipe(&amp;CAM_AppData.CmdPipe, CAM_PIPE_DEPTH, "CAM_CMD_PIPE");
+        if (status != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CAM_INIT_PIPE_ERR_EID, CFE_EVS_EventType_ERROR, "CAM APP: Cmd pipe error %d", status);
+            break;
+        }
+
+        /*
+        ** Subscribe to "ground commands". Ground commands are those commands with command codes
+        */
+        status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CAM_CMD_MID), CAM_AppData.CmdPipe);
+        if (status != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CAM_INIT_SUB_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "CAM APP: Ground command subscription error %d", status);
+            break;
+        }
+
+        /*
+        ** Subscribe to housekeeping (hk) messages.  HK messages are those messages that request
+        ** an app to send its HK telemetry
+        */
+        status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CAM_SEND_HK_MID), CAM_AppData.CmdPipe);
+        if (status != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CAM_INIT_SUB_HK_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "CAM APP: HK command subscription error %d", status);
+            break;
+        }
+
+        /*
+        ** Create data mutex
+        */
+        status = OS_MutSemCreate(&amp;CAM_AppData.data_mutex, CAM_MUTEX_NAME, 0);
+        if (status != OS_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CAM_MUTEX_ERR_EID, CFE_EVS_EventType_ERROR, "CAM APP: Create mutex error %d", status);
+            break;
+        }
+
+        /*
+        ** Create child task wakeup semaphore
+        */
+        status = OS_BinSemCreate(&amp;CAM_AppData.sem_id, CAM_SEM_NAME, 0, 0);
+        if (status != OS_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CAM_SEMAPHORE_ERR_EID, CFE_EVS_EventType_ERROR, "CAM APP: Semaphore create error %d",
+                              status);
+            break;
+        }
+
+        /*
+        ** Initialize Application Data
+        */
+        CAM_AppData.State                            = CAM_STOP;
+        CAM_AppData.Exp                              = 0;
+        CAM_AppData.Size                             = size_160x120;
+        CAM_AppData.HkTelemetryPkt.CommandCount      = 0;
+        CAM_AppData.HkTelemetryPkt.CommandErrorCount = 0;
+
+        /*
+        ** Create child task
+        */
+        status = CAM_ChildInit();
+        if (status != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CAM_INIT_CHILD_ERR_EID, CFE_EVS_EventType_ERROR, "CAM App: Child task init error %d",
+                              status);
+            break;
+        }
+
+        /* Initialize the published HK message - this HK message will contain the telemetry
+        ** that has been defined in the CAM_HkTelemetryPkt for this app
+        */
+        CFE_MSG_Init(CFE_MSG_PTR(CAM_AppData.HkTelemetryPkt.TlmHeader), CFE_SB_ValueToMsgId(CAM_HK_TLM_MID),
+                     CAM_HK_TLM_LNGTH);
+
+        CFE_MSG_Init(CFE_MSG_PTR(CAM_AppData.Exp_Pkt.TlmHeader), CFE_SB_ValueToMsgId(CAM_EXP_TLM_MID),
+                     CAM_EXP_TLM_LNGTH);
+
+        /*
+        ** Important to send an information event that the app has initialized. this is
+        ** useful for debugging the loading of individual apps
+        */
+        CFE_EVS_SendEvent(CAM_STARTUP_INF_EID, CFE_EVS_EventType_INFORMATION,
+                          "CAM App Initialized. Version %d.%d.%d.%d", CAM_MAJOR_VERSION, CAM_MINOR_VERSION,
+                          CAM_REVISION, CAM_MISSION_REV);
+        break;
+    }
+
+    return status;
+}
+
+/*
+**  Name:  CAM_ProcessCommandPacket
+**
+**  Purpose:
+**  This routine will process any packet that is received on the CAM command pipe.
+*/
+void CAM_ProcessCommandPacket(void)
+{
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+    OS_MutSemTake(CAM_AppData.data_mutex);
+    CFE_MSG_GetMsgId(CAM_AppData.MsgPtr, &amp;MsgId);
+    OS_MutSemGive(CAM_AppData.data_mutex);
+    switch (CFE_SB_MsgIdToValue(MsgId))
+    {
+        /*
+        ** Ground Commands with command codes fall under the CAM_APP_CMD_MID
+        ** message ID
+        */
+        case CAM_CMD_MID:
+            CAM_ProcessGroundCommand();
+            break;
+
+        /*
+        ** All other messages, other than ground commands, add to this case statement.
+        ** The HK MID comes first, as it is currently the only other messages defined
+        ** besides the CAM_APP_CMD_MID message above
+        */
+        case CAM_SEND_HK_MID:
+            CAM_ReportHousekeeping();
+            break;
+
+            /*
+            ** All other invalid messages that this app doesn't recognize, increment
+            ** the command error counter and log as an error event.
+            */
+        default:
+            CAM_AppData.HkTelemetryPkt.CommandErrorCount++;
+            CFE_EVS_SendEvent(CAM_COMMAND_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "CAM App: invalid command packet, MID = 0x%x", CFE_SB_MsgIdToValue(MsgId));
+            break;
+    }
+
+    return;
+}
+
+/*
+** CAM_ProcessGroundCommand() -- CAM ground commands
+*/
+void CAM_ProcessGroundCommand(void)
+{
+    // Local variables
+    uint8             state       = 1;
+    uint16            x           = 0;
+    CFE_SB_MsgId_t    MsgId       = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode = 0;
+
+    /*
+    ** MsgId is only needed if the command code is not recognized. See default case below
+    */
+    OS_MutSemTake(CAM_AppData.data_mutex);
+    CFE_MSG_GetMsgId(CAM_AppData.MsgPtr, &amp;MsgId);
+    OS_MutSemGive(CAM_AppData.data_mutex);
+
+    /*
+    ** Ground Commands, by definition, has a command code associated with them.  Pull
+    ** this command code from the message and then process the action associated with
+    ** the command code.
+    */
+    OS_MutSemTake(CAM_AppData.data_mutex);
+    CFE_MSG_GetFcnCode(CAM_AppData.MsgPtr, &amp;CommandCode);
+    OS_MutSemGive(CAM_AppData.data_mutex);
+    switch (CommandCode)
+    {
+        /*
+        ** NOOP Command
+        */
+        case CAM_NOOP_CC:
+            /*
+            ** notice the usage of the VerifyCmdLength() function call to verify that
+            ** the command length is as expected.
+            */
+            if (CAM_VerifyCmdLength(CAM_AppData.MsgPtr, sizeof(CAM_NoArgsCmd_t)))
+            {
+                OS_MutSemTake(CAM_AppData.data_mutex);
+                CAM_AppData.HkTelemetryPkt.CommandCount++;
+                OS_MutSemGive(CAM_AppData.data_mutex);
+                CFE_EVS_SendEvent(CAM_COMMANDNOP_INF_EID, CFE_EVS_EventType_INFORMATION, "CAM App: NOOP command");
+            }
+            break;
+
+        /*
+        ** Reset Counters Command
+        */
+        case CAM_RESET_COUNTERS_CC:
+            CAM_ResetCounters();
+            break;
+
+        /*
+        ** Stop Science Command
+        */
+        case CAM_STOP_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_STOP_INF_EID, CFE_EVS_EventType_INFORMATION, "CAM App: STOP command");
+            break;
+
+        /*
+        ** Pause Science Command
+        */
+        case CAM_PAUSE_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            CAM_AppData.State = CAM_PAUSE;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_PAUSE_INF_EID, CFE_EVS_EventType_INFORMATION, "CAM App: PAUSE command");
+            break;
+
+        /*
+        ** Resume Science Command
+        */
+        case CAM_RESUME_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            CAM_AppData.State = CAM_RUN;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_RUN_INF_EID, CFE_EVS_EventType_INFORMATION, "CAM App: RESUME command");
+            break;
+
+        /*
+        ** Timeout Command
+        */
+        case CAM_TIMEOUT_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            CAM_AppData.State = CAM_TIME;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_TIMEOUT_INF_EID, CFE_EVS_EventType_INFORMATION, "CAM App: TIMEOUT command");
+            break;
+
+        /*
+        ** Low Voltage Command
+        */
+        case CAM_LOW_VOLTAGE_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            CAM_AppData.State = CAM_LOW_VOLTAGE;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_LOW_VOLTAGE_INT_EID, CFE_EVS_EventType_INFORMATION, "CAM App: LOW_VOLTAGE command");
+            break;
+
+        /*
+        ** EXP 1 - Small
+        */
+        case CAM_EXP1_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            CAM_AppData.Exp = 1;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_EXP1_EID, CFE_EVS_EventType_INFORMATION, "CAM App: EXP 1 Command - Small Picture");
+            OS_BinSemGive(CAM_AppData.sem_id);
+            break;
+
+        /*
+        ** EXP 2  - Medium
+        */
+        case CAM_EXP2_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            CAM_AppData.Exp = 2;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_EXP2_EID, CFE_EVS_EventType_INFORMATION, "CAM App: EXP 2 Command - Medium Picture");
+            OS_BinSemGive(CAM_AppData.sem_id);
+            break;
+        /*
+        ** EXP 3 - Large
+        */
+        case CAM_EXP3_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            CAM_AppData.Exp = 3;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_EXP3_EID, CFE_EVS_EventType_INFORMATION, "CAM App: EXP 3 Command - Large Picture");
+            OS_BinSemGive(CAM_AppData.sem_id);
+            break;
+
+        /*
+        **  Hardware Check
+        */
+        case CAM_HW_CHECK_CC:
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            state = OS_SUCCESS;
+            state = CAM_init_i2c();
+            if (state != OS_SUCCESS)
+            {
+                CFE_EVS_SendEvent(CAM_INIT_I2C_ERR_EID, CFE_EVS_EventType_ERROR, "CAM App: I2C Failure");
+            }
+            else
+            {
+                state = CAM_init_spi();
+                if (state != OS_SUCCESS)
+                {
+                    CFE_EVS_SendEvent(CAM_INIT_SPI_ERR_EID, CFE_EVS_EventType_ERROR, "CAM App: SPI Failure");
+                }
+                else
+                {
+                    CFE_EVS_SendEvent(CAM_HW_CHECK_EID, CFE_EVS_EventType_INFORMATION, "CAM App: Hardware Checked Out");
+                }
+            }
+            break;
+
+        /*
+        **  Debug and Testing CC
+        */
+        case CAM_HWLIB_INIT_I2C_CC:
+            CAM_init_i2c();
+            break;
+        case CAM_HWLIB_INIT_SPI_CC:
+            CAM_init_spi();
+            break;
+        case CAM_HWLIB_CONFIG_CC:
+            CAM_config();
+            break;
+        case CAM_HWLIB_JPEG_INIT_CC:
+            CAM_jpeg_init();
+            break;
+        case CAM_HWLIB_YUV422_CC:
+            CAM_yuv422();
+            break;
+        case CAM_HWLIB_JPEG_CC:
+            CAM_jpeg();
+            break;
+        case CAM_HWLIB_SETUP_CC:
+            CAM_setup();
+            break;
+        case CAM_HWLIB_SETSIZE_CC:
+            CAM_setSize(CAM_AppData.Size);
+            break;
+        case CAM_HWLIB_CAPTURE_PREP_CC:
+            CAM_capture_prep();
+            break;
+        case CAM_HWLIB_CAPTURE_CC:
+            CAM_capture();
+            break;
+        case CAM_HWLIB_READ_PREP_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.Exp_Pkt.msg_count = 0x0000;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CAM_read_prep((char *)&amp;CAM_AppData.Exp_Pkt.data, (uint16 *)&amp;x);
+            break;
+        case CAM_HWLIB_READ_CC:
+            x     = 1;
+            state = 1;
+            CAM_fifo(&amp;x, &amp;state);
+            break;
+
+        /*
+        ** Invalid Command Codes
+        */
+        default:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandErrorCount++;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_COMMAND_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "CAM App: invalid command code for packet MID = 0x%x CC = 0x%x",
+                              CFE_SB_MsgIdToValue(MsgId), CommandCode);
+            break;
+    }
+    return;
+}
+
+/*
+**  Name:  CAM_ReportHousekeeping
+**
+**  Purpose:
+**         This function is triggered in response to a task telemetry request
+**         from the housekeeping task. This function will gather the Apps
+**         telemetry, packetize it and send it to the housekeeping task via
+**         the software bus
+*/
+void CAM_ReportHousekeeping(void)
+{
+    OS_MutSemTake(CAM_AppData.data_mutex);
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&amp;CAM_AppData.HkTelemetryPkt);
+    CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&amp;CAM_AppData.HkTelemetryPkt, true);
+    OS_MutSemGive(CAM_AppData.data_mutex);
+    return;
+}
+
+/*
+**  Name:  CAM_ResetCounters
+**
+**  Purpose:
+**         This function resets all the global counter variables that are
+**         part of the task telemetry.
+*/
+void CAM_ResetCounters(void)
+{
+    /* Status of commands processed by the CAM App */
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 0;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 0;
+    CFE_EVS_SendEvent(CAM_COMMANDRST_INF_EID, CFE_EVS_EventType_INFORMATION, "CAM App: RESET Counters Command");
+    return;
+}
+
+/*
+** CAM_VerifyCmdLength() -- Verify command packet length
+*/
+bool CAM_VerifyCmdLength(CFE_MSG_Message_t *msg, uint16 ExpectedLength)
+{
+    bool              result       = true;
+    size_t            ActualLength = 0;
+    CFE_SB_MsgId_t    MessageID    = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode  = 0;
+
+    /*
+    ** Verify the command packet length.
+    */
+    CFE_MSG_GetSize(msg, &amp;ActualLength);
+    if (ExpectedLength != ActualLength)
+    {
+        CFE_MSG_GetMsgId(msg, &amp;MessageID);
+        CFE_MSG_GetFcnCode(msg, &amp;CommandCode);
+
+        CFE_EVS_SendEvent(CAM_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid msg length: ID = 0x%X CC = %d Len = %ld Expected = %d",
+                          CFE_SB_MsgIdToValue(MessageID), CommandCode, ActualLength, ExpectedLength);
+
+        result = false;
+        CAM_AppData.HkTelemetryPkt.CommandErrorCount++;
+    }
+
+    return (result);
+}
+</pre></div>
+</div>
+</section>
+<section id="cam-app-h">
+<h2><code class="docutils literal notranslate"><span class="pre">cam_app.h</span></code><a class="headerlink" href="#cam-app-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/arducam/fsw/cfs/src/cam_app.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+documentation will conform to the program, or any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+out of the results of, or use of, the software, documentation or services provided hereunder
+
+ITC Team
+NASA IV&amp;V
+ivv-itc@lists.nasa.gov
+*/
+
+#ifndef _CAM_H_
+#define _CAM_H_
+
+/*
+** Required header files.
+*/
+#include "cfe.h"
+#include "cam_perfids.h"
+#include "cam_msgids.h"
+#include "cam_msg.h"
+#include "cam_events.h"
+#include "cam_version.h"
+#include "cam_device.h"
+#include "cam_child.h"
+#include "hwlib.h"
+
+/*
+** This is the specified pipe depth for the app, meaning how many messages will be
+**   queued in the pipe.  32 is the cFE default
+*/
+#define CAM_PIPE_DEPTH 32
+
+/*
+** The cFE convention is to put all global app data in a single struct.
+** This struct would be defined in the cam_app.h file. You would then have one global instance
+** in the.c file. You would also extern the global struct in the header file. This is important for
+** the Unit Test Framework(UTF). When using the UTF, you need access to the app global data so
+** it's a good idea to play along.
+*/
+typedef struct
+{
+    /*
+    ** Housekeeping telemetry packet...each app defines its own packet which contains
+    ** its OWN telemetry that you want to be sent
+    */
+    CAM_Hk_tlm_t HkTelemetryPkt; /* CAM Housekeeping Telemetry Packet */
+
+    /*
+    ** Operational data (not reported in housekeeping)...
+    */
+    CFE_MSG_Message_t *MsgPtr;    /* Pointer to msg received on software bus */
+    CFE_SB_PipeId_t    CmdPipe;   /* Pipe Id for HK command pipe */
+    uint32             RunStatus; /* App run status for controlling the application state */
+    CAM_Exp_tlm_t      Exp_Pkt;   /* Experiment Packet */
+
+    /*
+    ** Child data
+    */
+    uint32 ChildTaskID; /* Task ID provided by CFS on initialization */
+    uint32 data_mutex;
+    uint32 sem_id; /* Semaphore ID */
+    uint32 Exp;
+    uint32 State;
+    uint32 Size; /* Resolution of picture */
+} CAM_AppData_t;
+
+/*
+** Exported Data
+*/
+extern CAM_AppData_t CAM_AppData; /* CAM App Data */
+
+/*
+**
+** Local function prototypes.
+**
+** Note: Except for the entry point (CAM_AppMain), these
+**       functions are not called from any other source module.
+*/
+// void CAM_AppMain(void);
+int32 CAM_AppInit(void);
+void  CAM_ProcessCommandPacket(void);
+void  CAM_ProcessGroundCommand(void);
+void  CAM_ReportHousekeeping(void);
+void  CAM_ProcessPR(void);
+void  CAM_ResetCounters(void);
+
+/*
+** This function is provided as an example of verifying the size of the command
+*/
+bool CAM_VerifyCmdLength(CFE_MSG_Message_t *msg, uint16 ExpectedLength);
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="cam-child-c">
+<h2><code class="docutils literal notranslate"><span class="pre">cam_child.c</span></code><a class="headerlink" href="#cam-child-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/arducam/fsw/cfs/src/cam_child.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+documentation will conform to the program, or any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+out of the results of, or use of, the software, documentation or services provided hereunder
+
+ITC Team
+NASA IV&amp;V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "cam_child.h"
+
+/*
+**  Name:  CAM_publish
+**
+**  Purpose:
+** 		   Break apart functionality, publish received data.
+*/
+int32_t CAM_publish(void)
+{
+    OS_MutSemTake(CAM_AppData.data_mutex);
+    CAM_AppData.Exp_Pkt.msg_count++;
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&amp;CAM_AppData.Exp_Pkt);
+    CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&amp;CAM_AppData.Exp_Pkt, true);
+    OS_MutSemGive(CAM_AppData.data_mutex);
+    return OS_SUCCESS;
+} /* End of CAM_publish() */
+
+/*
+**  Name:  CAM_state
+**
+**  Purpose:
+** 		   	Checks the state of the experiment
+**			Holds on pause and quits on stop
+*/
+int32_t CAM_state(void)
+{
+    int32_t  result = OS_ERROR;
+    uint32_t state;
+
+    OS_MutSemTake(CAM_AppData.data_mutex);
+    state = CAM_AppData.State;
+    OS_MutSemGive(CAM_AppData.data_mutex);
+
+    switch (state)
+    {
+        case CAM_LOW_VOLTAGE:
+            OS_printf("CAM child task low voltage received");
+            break;
+
+        case CAM_TIME:
+            OS_printf("CAM child task timeout received");
+            break;
+
+        case CAM_STOP:
+            // Do nothing
+            break;
+
+        case CAM_PAUSE:
+            while (state == CAM_PAUSE)
+            {
+                OS_MutSemTake(CAM_AppData.data_mutex);
+                state = CAM_AppData.State;
+                OS_MutSemGive(CAM_AppData.data_mutex);
+                OS_TaskDelay(1000);
+            }
+            if (state == CAM_STOP)
+            {
+                result = OS_ERROR;
+            }
+            result = OS_SUCCESS;
+            break;
+
+        default: // CAM_RUN
+            result = OS_SUCCESS;
+    }
+    return result;
+}
+
+/*
+**  Name:  CAM_fifo
+**
+**  Purpose:
+** 		   Read the camera FIFO until commanded to stop, complete, or error occurs.
+*/
+int32_t CAM_fifo(uint16 *x, uint8 *status)
+{
+    int32_t result = OS_SUCCESS;
+
+    while ((*status &gt; 0) &amp;&amp; (*status &lt;= 8) &amp;&amp;
+           (CAM_AppData.Exp_Pkt.msg_count &lt; ((CAM_AppData.Exp_Pkt.length / CAM_DATA_SIZE) + 1)))
+    // Status is used to track key points such as start and end of the image
+    // Limiting this number ensures that cycling through the FIFO repeatedly is avoided
+    {
+        // Read a packet
+        OS_MutSemTake(CAM_AppData.data_mutex);
+        result = CAM_read((char *)&amp;CAM_AppData.Exp_Pkt.data, x, status);
+        OS_MutSemGive(CAM_AppData.data_mutex);
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM read error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+        (*x) = 0;
+
+        // Publish the packet
+        result = CAM_publish();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM publish error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Delay between messages to allow for processing
+        OS_TaskDelay(250);
+
+#ifdef STF1_DEBUG
+        OS_MutSemTake(CAM_AppData.data_mutex);
+        OS_printf("\n status   = %d \n", *status);
+        OS_printf("\n msg_count = %d \n", CAM_AppData.Exp_Pkt.msg_count);
+        OS_MutSemGive(CAM_AppData.data_mutex);
+#endif
+    }
+    return result;
+}
+
+/*
+**  Name:  CAM_exp
+**
+**  Purpose:
+** 		   The experiment runs until the parent dies or is commanded to stop by the parent
+** 		   but has the ability to be paused and resumed depending on the current state.
+*/
+int32_t CAM_exp(void)
+{
+    int32_t result = OS_ERROR;
+    uint8   status = 1;
+    uint16  x      = 0;
+
+    while (status == 1)
+    { // Check state
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Initialize Serial Peripheral Interface
+        result = CAM_init_spi();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM init spi error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Initialize Inter-Integrated Circuit
+        result = CAM_init_i2c();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM init i2c error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Configure Camera for Upload
+        result = CAM_config();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM configure camera for upload error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Configure Registers
+        result = CAM_jpeg_init();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM jpeg init error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Configure Registers
+        result = CAM_yuv422();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM yuv422 error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Configure Registers
+        result = CAM_jpeg();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM jpeg error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Configure Camera for Size
+        result = CAM_setup();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM setup error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Upload Size
+        result = CAM_setSize(CAM_AppData.Size);
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM upload size error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Prepare for Capture
+        result = CAM_capture_prep();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM capture prep error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Capture Image
+        result = CAM_capture();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM capture error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Read FIFO Size
+        result = CAM_read_fifo_length(&amp;CAM_AppData.Exp_Pkt.length);
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM read fifo length error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Prepare for FIFO Read
+        OS_MutSemTake(CAM_AppData.data_mutex);
+        CAM_AppData.Exp_Pkt.msg_count = 0x0000;
+        result                        = CAM_read_prep((char *)&amp;CAM_AppData.Exp_Pkt.data, (uint16 *)&amp;x);
+        OS_MutSemGive(CAM_AppData.data_mutex);
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM read prep error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Read FIFO
+        result = CAM_fifo((uint16 *)&amp;x, (uint8 *)&amp;status);
+        break;
+    }
+
+    return result;
+}
+
+/*
+** CAM Child Task Startup Initialization
+*/
+int32_t CAM_ChildInit(void)
+{
+    int32_t result;
+
+    /* Create child task (low priority command handler) */
+    result = CFE_ES_CreateChildTask(&amp;CAM_AppData.ChildTaskID, CAM_CHILD_TASK_NAME, CAM_ChildTask, 0,
+                                    CAM_CHILD_TASK_STACK_SIZE, CAM_CHILD_TASK_PRIORITY, 0);
+
+    if (result != CFE_SUCCESS)
+    {
+        OS_printf("CAM child task initialization error: create task failed: result = %d", result);
+    }
+
+    return result;
+} /* End of CAM_ChildInit() */
+
+/*
+**  Name:  CAM_ChildTask
+**
+**  Purpose:
+** 		   The child task remains active until provided the binary semaphore by the parent
+**         when and experiment is kicked off.
+*/
+void CAM_ChildTask(void)
+{
+    int32_t result;
+    int32_t state;
+
+    OS_printf("CAM child task initialization complete");
+
+    while (true)
+    {
+        // Block on Semaphore
+        OS_BinSemTake(CAM_AppData.sem_id);
+
+        // Check State
+        OS_MutSemTake(CAM_AppData.data_mutex);
+        state = CAM_AppData.State;
+        OS_MutSemGive(CAM_AppData.data_mutex);
+        if (state == CAM_PAUSE)
+        {
+            while (CAM_state() != OS_SUCCESS)
+                ;
+        }
+
+        // Initialize Child Process Flags
+        OS_MutSemTake(CAM_AppData.data_mutex);
+        CAM_AppData.State = CAM_RUN;
+        switch (CAM_AppData.Exp)
+        {
+            case 1:
+#ifdef OV2640
+                CAM_AppData.Size = size_160x120;
+#endif
+#ifdef OV5640
+                CAM_AppData.Size = size_320x240;
+#endif
+#ifdef OV5642
+                CAM_AppData.Size = size_320x240;
+#endif
+                break;
+            case 2:
+#ifdef OV2640
+                CAM_AppData.Size = size_800x600;
+#endif
+#ifdef OV5640
+                CAM_AppData.Size = size_1600x1200;
+#endif
+#ifdef OV5642
+                CAM_AppData.Size = size_1600x1200;
+#endif
+                break;
+            case 3:
+#ifdef OV2640
+                CAM_AppData.Size = size_1600x1200;
+#endif
+#ifdef OV5640
+                CAM_AppData.Size = size_2592x1944;
+#endif
+#ifdef OV5642
+                CAM_AppData.Size = size_2592x1944;
+#endif
+                break;
+            default:
+                OS_printf("CAM experiment ID error");
+                CAM_AppData.State = CAM_STOP;
+                break;
+        }
+        OS_MutSemGive(CAM_AppData.data_mutex);
+
+        // Run Experiment
+        result = CAM_exp();
+        // Check Result
+        OS_MutSemTake(CAM_AppData.data_mutex);
+        if ((result == OS_SUCCESS) &amp;&amp; (CAM_AppData.State == CAM_RUN))
+        {
+            switch (CAM_AppData.Exp)
+            {
+                case 1:
+                    // OS_printf("CAM EXP1 Complete\n");
+                    CFE_EVS_SendEvent(CAM_EXP3_EID, CFE_EVS_EventType_INFORMATION, "CAM App: EXP 1 Completed");
+                    break;
+                case 2:
+                    // OS_printf("CAM EXP2 Complete\n");
+                    CFE_EVS_SendEvent(CAM_EXP3_EID, CFE_EVS_EventType_INFORMATION, "CAM App: EXP 2 Completed");
+                    break;
+                case 3:
+                    // OS_printf("CAM EXP3 Complete\n");
+                    CFE_EVS_SendEvent(CAM_EXP3_EID, CFE_EVS_EventType_INFORMATION, "CAM App: EXP 3 Completed");
+                    break;
+                default:
+                    break;
+            }
+            // Delay to allow for all CAM Tlm messages to be cleared from pipe
+            OS_TaskDelay(10000);
+        }
+        // Cleanup
+        CAM_AppData.State = CAM_STOP;
+        OS_MutSemGive(CAM_AppData.data_mutex);
+    }
+
+    /* This call allows cFE to clean-up system resources */
+    OS_printf("CAM child task exit complete");
+    CFE_ES_ExitChildTask();
+} /* End of CAM_ChildTask() */
+</pre></div>
+</div>
+</section>
+<section id="cam-child-h">
+<h2><code class="docutils literal notranslate"><span class="pre">cam_child.h</span></code><a class="headerlink" href="#cam-child-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/arducam/fsw/cfs/src/cam_child.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+documentation will conform to the program, or any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+out of the results of, or use of, the software, documentation or services provided hereunder
+
+ITC Team
+NASA IV&amp;V
+ivv-itc@lists.nasa.gov
+*/
+
+#ifndef _cam_child_h_
+#define _cam_child_h_
+
+#include "device_cfg.h"
+#include "cam_app.h"
+#include "cam_platform_cfg.h"
+
+int32_t CAM_publish(void);
+int32_t CAM_state(void);
+int32_t CAM_fifo(uint16_t *, uint8_t *);
+int32_t CAM_exp(void);
+int32_t CAM_ChildInit(void);
+void    CAM_ChildTask(void);
+
+#endif /* _cam_child_h_ */
+</pre></div>
+</div>
+</section>
+<section id="cam-events-h">
+<h2><code class="docutils literal notranslate"><span class="pre">cam_events.h</span></code><a class="headerlink" href="#cam-events-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/arducam/fsw/cfs/src/cam_events.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+documentation will conform to the program, or any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+out of the results of, or use of, the software, documentation or services provided hereunder
+
+ITC Team
+NASA IV&amp;V
+ivv-itc@lists.nasa.gov
+*/
+
+#ifndef _CAM_EVENTS_H_
+#define _CAM_EVENTS_H_
+
+/* define any custom app event IDs */
+#define CAM_RESERVED_EID          0
+#define CAM_STARTUP_INF_EID       1
+#define CAM_COMMAND_ERR_EID       2
+#define CAM_COMMANDNOP_INF_EID    3
+#define CAM_COMMANDRST_INF_EID    4
+#define CAM_INVALID_MSGID_ERR_EID 5
+#define CAM_LEN_ERR_EID           6
+#define CAM_PIPE_ERR_EID          7
+#define CAM_MUTEX_ERR_EID         8
+#define CAM_SEMAPHORE_ERR_EID     9
+#define CAM_CHILD_REG_ERR_EID     10
+#define CAM_INIT_CHILD_ERR_EID    11
+#define CAM_INIT_ERR_EID          12
+#define CAM_INIT_REG_ERR_EID      13
+#define CAM_INIT_PIPE_ERR_EID     14
+#define CAM_INIT_SUB_CMD_ERR_EID  15
+#define CAM_INIT_SUB_HK_ERR_EID   16
+
+/* Child Task IDs */
+#define CAM_STOP_INF_EID        20
+#define CAM_PAUSE_INF_EID       21
+#define CAM_RUN_INF_EID         22
+#define CAM_TIMEOUT_INF_EID     23
+#define CAM_LOW_VOLTAGE_INT_EID 24
+#define CAM_CHILD_STOP_INF_EID  25
+#define CAM_CHILD_PAUSE_INF_EID 26
+#define CAM_CHILD_RUN_INF_EID   27
+#define CAM_CHILD_INIT_EID      28
+#define CAM_CHILD_INIT_ERR_EID  29
+#define CAM_CHILD_EXP_EID       30
+#define CAM_CHILD_EXP_ERR_EID   31
+
+/* Full Experiments Completed */
+#define CAM_EXP1_EID     40
+#define CAM_EXP2_EID     41
+#define CAM_EXP3_EID     42
+#define CAM_HW_CHECK_EID 43
+
+/* Errors */
+#define CAM_INIT_SPI_ERR_EID      61
+#define CAM_INIT_I2C_ERR_EID      62
+#define CAM_CONFIG_ERR_EID        63
+#define CAM_JPEG_INIT_ERR_EID     64
+#define CAM_YUV422_ERR_EID        65
+#define CAM_JPEG_ERR_EID          66
+#define CAM_SETUP_ERR_EID         67
+#define CAM_SET_SIZE_ERR_EID      68
+#define CAM_CAPTURE_PREP_ERR_EID  69
+#define CAM_CAPTURE_ERR_EID       70
+#define CAM_READ_FIFO_LEN_ERR_EID 71
+#define CAM_READ_PREP_ERR_EID     72
+#define CAM_READ_ERR_EID          73
+#define CAM_PUBLISH_ERR_EID       74
+#define CAM_LOW_VOLTAGE_EID       75
+#define CAM_TIME_EID              76
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="cam-msg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">cam_msg.h</span></code><a class="headerlink" href="#cam-msg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/arducam/fsw/cfs/src/cam_msg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+documentation will conform to the program, or any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+out of the results of, or use of, the software, documentation or services provided hereunder
+
+ITC Team
+NASA IV&amp;V
+ivv-itc@lists.nasa.gov
+*/
+
+#ifndef _CAM_MSG_H_
+#define _CAM_MSG_H_
+
+#include "cam_device.h"
+#include "cfe_sb.h"
+
+/*
+** CAM App command codes
+*/
+// \camcmd CAM NOOP Command
+#define CAM_NOOP_CC 0
+// \camcmd CAM Reset Counter Command
+#define CAM_RESET_COUNTERS_CC 1
+
+/* Generic Science CC */
+// \camcmd CAM Stop Science
+#define CAM_STOP_CC 2 // Stop all science in preperation for immediate shutdown
+// \camcmd CAM Pause Science
+#define CAM_PAUSE_CC 3 // Pause data transfer
+// \camcmd CAM Resume Science
+#define CAM_RESUME_CC 4 // Resume data transfer
+// \camcmd CAM Timeout Science
+#define CAM_TIMEOUT_CC 5 // Stop all science due to experiment timeout
+// \camcmd CAM Low Voltage
+#define CAM_LOW_VOLTAGE_CC 6 // Stop all science due to low voltage
+
+/* Complete Experiment CC */
+// \camcmd CAM Experiment 1 - Small
+#define CAM_EXP1_CC 10
+// \camcmd CAM Experiment 2 - Medium
+#define CAM_EXP2_CC 11
+// \camcmd CAM Experiment 3 - Large
+#define CAM_EXP3_CC 12
+// \camcmd CAM Hardware Check
+#define CAM_HW_CHECK_CC 13
+
+/* Debug and Testing CC */
+#define CAM_HWLIB_INIT_I2C_CC     20
+#define CAM_HWLIB_INIT_SPI_CC     21
+#define CAM_HWLIB_CONFIG_CC       22
+#define CAM_HWLIB_JPEG_INIT_CC    23
+#define CAM_HWLIB_YUV422_CC       24
+#define CAM_HWLIB_JPEG_CC         25
+#define CAM_HWLIB_SETUP_CC        26
+#define CAM_HWLIB_SETSIZE_CC      27
+#define CAM_HWLIB_CAPTURE_PREP_CC 28
+#define CAM_HWLIB_CAPTURE_CC      29
+#define CAM_HWLIB_READ_PREP_CC    30
+#define CAM_HWLIB_READ_CC         31
+#define CAM_PUBLISH_CC            32
+
+#define CAM_DATA_SIZE 1010 // Necessary to avoid compiler errors
+
+/*
+** CAM no argument command
+** See also: #CAM_NOOP_CC, #CAM_RESET_COUNTER_CC, #CAM_STOP_CC,
+** #CAM_PAUSE_CC, #CAM_RESUME_CC, #CAM_EXP1_CC, #CAM_EXP2_CC,
+** #CAM_EXP3_CC
+*/
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader;
+
+} CAM_NoArgsCmd_t;
+#define CAM_NOARGSCMD_LNGTH sizeof(CAM_NoArgsCmd_t)
+
+/*
+** Type definition (CAM housekeeping)
+** \camtlm CAM Housekeeping telemetry packet
+** #CAM_HK_TLM_MID
+*/
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader;
+    uint8                     CommandErrorCount;
+    uint8                     CommandCount;
+
+} CAM_Hk_tlm_t;
+#define CAM_HK_TLM_LNGTH sizeof(CAM_Hk_tlm_t)
+
+/*
+** Type definition (CAM EXP)
+** \camtlm CAM Experiment telemetry packet
+** #CAM_EXP_TLM_MID
+*/
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader;
+    uint8                     data[CAM_DATA_SIZE];
+    uint16                    spare;
+    uint32                    msg_count;
+    uint32                    length;
+
+} CAM_Exp_tlm_t;
+#define CAM_EXP_TLM_LNGTH sizeof(CAM_Exp_tlm_t)
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="cam-version-h">
+<h2><code class="docutils literal notranslate"><span class="pre">cam_version.h</span></code><a class="headerlink" href="#cam-version-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/arducam/fsw/cfs/src/cam_version.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+documentation will conform to the program, or any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+out of the results of, or use of, the software, documentation or services provided hereunder
+
+ITC Team
+NASA IV&amp;V
+ivv-itc@lists.nasa.gov
+*/
+
+/************************************************************************
+** File:
+**   $Id: cam_version.h  $
+**
+** Purpose:
+**  The CAM Application header file containing version number
+**
+** Notes:
+**
+*************************************************************************/
+
+/* The Sample Application header file containing version number */
+#ifndef _CAM_VERSION_H_
+#define _CAM_VERSION_H_
+
+#define CAM_MAJOR_VERSION 1
+#define CAM_MINOR_VERSION 0
+#define CAM_REVISION      0
+#define CAM_MISSION_REV   1
+
+#endif
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../platform_inc/index.html" class="btn btn-neutral float-left" title="platform_inc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../unit_test/index.html" class="btn btn-neutral float-right" title="unit_test" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

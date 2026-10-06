@@ -1,0 +1,2960 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>client &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../../search.html" />
+    <link rel="next" title="archive" href="archive/index.html" />
+    <link rel="prev" title="yamcs" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../../index.html">gsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">gsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">yamcs-client</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">main</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">java</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">org</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">yamcs</a></li>
+      <li class="breadcrumb-item active">client</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../../_sources/project_inventory/gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="client">
+<h1>client<a class="headerlink" href="#client" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/</span></code></p>
+<section id="id1">
+<h2>하위 폴더<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="archive/index.html">archive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base/index.html">base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filetransfer/index.html">filetransfer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mdb/index.html">mdb</a></li>
+<li class="toctree-l1"><a class="reference internal" href="processor/index.html">processor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="storage/index.html">storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="timeline/index.html">timeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils/index.html">utils</a></li>
+</ul>
+</div>
+</section>
+<section id="id2">
+<h2>이 폴더의 파일<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+</section>
+<section id="acknowledgment-java">
+<h2><code class="docutils literal notranslate"><span class="pre">Acknowledgment.java</span></code><a class="headerlink" href="#acknowledgment-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Acknowledgment.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import java.time.Instant;
+
+public class Acknowledgment {
+
+    public static final String QUEUED = "Acknowledge_Queued";
+    public static final String RELEASED = "Acknowledge_Released";
+    public static final String SENT = "Acknowledge_Sent";
+
+    private String name;
+    private Instant time;
+    private String status;
+    private String message;
+
+    Acknowledgment(String name, Instant time, String status, String message) {
+        this.name = name;
+        this.time = time;
+        this.status = status;
+        this.message = message;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isLocal() {
+        return QUEUED.equals(name) || RELEASED.equals(name) || SENT.equals(name);
+    }
+
+    /**
+     * Last update time of this acknowledgment.
+     */
+    public Instant getTime() {
+        return time;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s: %s", name, status);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="alarmsubscription-java">
+<h2><code class="docutils literal notranslate"><span class="pre">AlarmSubscription.java</span></code><a class="headerlink" href="#alarmsubscription-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/AlarmSubscription.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.AlarmData;
+import org.yamcs.protobuf.alarms.SubscribeAlarmsRequest;
+
+/**
+ * Subscription for receiving alarm detail.
+ */
+public class AlarmSubscription extends AbstractSubscription&lt;SubscribeAlarmsRequest, AlarmData&gt; {
+
+    protected AlarmSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "alarms", AlarmData.class);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="basicauthcredentials-java">
+<h2><code class="docutils literal notranslate"><span class="pre">BasicAuthCredentials.java</span></code><a class="headerlink" href="#basicauthcredentials-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/BasicAuthCredentials.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpRequest;
+
+public class BasicAuthCredentials implements Credentials {
+
+    private final String authorizationHeader;
+
+    public BasicAuthCredentials(String username, char[] password) {
+        authorizationHeader = "Basic " + Base64.getEncoder().encodeToString(
+                (username + ":" + new String(password)).getBytes(StandardCharsets.UTF_8));
+    }
+
+    public String getAuthorizationHeader() {
+        return authorizationHeader;
+    }
+
+    @Override
+    public boolean isExpired() {
+        return false;
+    }
+
+    @Override
+    public void modifyRequest(HttpRequest request) {
+        request.headers().add(HttpHeaderNames.AUTHORIZATION, authorizationHeader);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="clearancesubscription-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ClearanceSubscription.java</span></code><a class="headerlink" href="#clearancesubscription-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ClearanceSubscription.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.ClearanceInfo;
+
+import com.google.protobuf.Empty;
+
+/**
+ * Subscription for receiving clearance updates.
+ */
+public class ClearanceSubscription extends AbstractSubscription&lt;Empty, ClearanceInfo&gt; {
+
+    private volatile ClearanceInfo latest;
+
+    protected ClearanceSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "clearance", ClearanceInfo.class);
+        addMessageListener(this::processMessage);
+    }
+
+    protected void processMessage(ClearanceInfo clearance) {
+        latest = clearance;
+    }
+
+    public ClearanceInfo getCurrent() {
+        return latest;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="clientexception-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ClientException.java</span></code><a class="headerlink" href="#clientexception-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ClientException.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import com.google.protobuf.Any;
+
+@SuppressWarnings("serial")
+public class ClientException extends Exception {
+
+    private final ExceptionData detail;
+
+    public ClientException(String message) {
+        this(message, null);
+    }
+
+    public ClientException(Throwable t) {
+        this(null, t);
+    }
+
+    public ClientException(String message, Throwable t) {
+        super(message, t);
+        this.detail = null;
+    }
+    public ClientException(ExceptionData detail) {
+        super(detail.getMessage());
+        this.detail = detail;
+    }
+
+    public ExceptionData getDetail() {
+        return detail;
+    }
+
+    public static class ExceptionData {
+        private String type;
+        private String message;
+        private Any detail;
+
+        public ExceptionData(String type, String message, Any detail) {
+            this.type = type;
+            this.message = message;
+            this.detail = detail;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public Any getDetail() {
+            return detail;
+        }
+
+        @Override
+        public String toString() {
+            return "ExceptionData{" +
+                    "type='" + type + '\'' +
+                    ", message='" + message + '\'' +
+                    ", detail=" + detail +
+                    '}';
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="command-java">
+<h2><code class="docutils literal notranslate"><span class="pre">Command.java</span></code><a class="headerlink" href="#command-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Command.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.yamcs.client.utils.WellKnownTypes;
+import org.yamcs.protobuf.Commanding.CommandAssignment;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.IssueCommandResponse;
+
+public class Command implements Comparable&lt;Command&gt; {
+
+    private static final String ATTR_BINARY = "binary";
+    private static final String ATTR_QUEUE = "queue";
+    private static final String ATTR_UNPROCESSED_BINARY = "unprocessedBinary";
+    private static final String ATTR_USERNAME = "username";
+    private static final String ATTR_COMMENT = "comment";
+    private static final String LEGACY_ATTR_SOURCE = "source";
+    private static final String[] STANDARD_ATTRIBUTES = new String[] {
+            ATTR_BINARY,
+            ATTR_COMMENT,
+            ATTR_QUEUE,
+            ATTR_UNPROCESSED_BINARY,
+            ATTR_USERNAME,
+            LEGACY_ATTR_SOURCE,
+    };
+
+    private static final String PREFIX_COMMAND_COMPLETE = "CommandComplete";
+    private static final String PREFIX_TRANSMISSION_CONSTRAINTS = "TransmissionConstraints";
+    private static final String[] STANDARD_ATTRIBUTE_PREFIXES = new String[] {
+            PREFIX_COMMAND_COMPLETE,
+            PREFIX_TRANSMISSION_CONSTRAINTS,
+    };
+
+    private static final String SUFFIX_TIME = "_Time";
+    private static final String SUFFIX_MESSAGE = "_Message";
+    private static final String SUFFIX_STATUS = "_Status";
+    private static final String[] STANDARD_ATTRIBUTE_SUFFIXES = new String[] {
+            SUFFIX_TIME,
+            SUFFIX_MESSAGE,
+            SUFFIX_STATUS,
+    };
+
+    // Entries that come from a cascading server are prefixed with one or more
+    // patterns of the kind: yamcs&lt;SERVER&gt;_
+    private static final Pattern CASCADED_PREFIX = Pattern.compile("^(yamcs&lt;[^&gt;]+&gt;_)+(.+)");
+
+    private final String id;
+    private final String name;
+    private final Map&lt;String, String&gt; aliases = new HashMap&lt;&gt;();
+    private final List&lt;CommandAssignment&gt; assignments;
+    private final String origin;
+    private final int sequenceNumber;
+    private final Instant generationTime;
+    private final String source;
+
+    private Map&lt;String, Object&gt; attributes = Collections.synchronizedMap(new LinkedHashMap&lt;&gt;());
+
+    // Command info that was relayed from an upstream (cascaded) server.
+    private Map&lt;String, Command&gt; cascadedRecordsByPrefix = new LinkedHashMap&lt;&gt;();
+
+    public Command(String id, String name, Map&lt;String, String&gt; aliases, List&lt;CommandAssignment&gt; assignments,
+            String origin, int sequenceNumber,
+            Instant generationTime) {
+        this.id = id;
+        this.name = name;
+        this.aliases.putAll(aliases);
+        this.assignments = assignments;
+        this.origin = origin;
+        this.sequenceNumber = sequenceNumber;
+        this.generationTime = generationTime;
+        this.source = buildSource(name, assignments);
+    }
+
+    public Command(IssueCommandResponse response) {
+        this.id = response.getId();
+        this.name = response.getCommandName();
+        this.aliases.putAll(response.getAliasesMap());
+        this.assignments = response.getAssignmentsList();
+        this.origin = response.getOrigin();
+        this.sequenceNumber = response.getSequenceNumber();
+        this.generationTime = Helpers.toInstant(response.getGenerationTime());
+        this.source = buildSource(name, response.getAssignmentsList());
+
+        if (response.hasUnprocessedBinary()) {
+            attributes.put(ATTR_UNPROCESSED_BINARY, response.getUnprocessedBinary().toByteArray());
+        }
+        if (response.hasBinary()) {
+            attributes.put(ATTR_BINARY, response.getBinary().toByteArray());
+        }
+        if (response.hasQueue()) {
+            attributes.put(ATTR_QUEUE, response.getQueue());
+        }
+        if (response.hasUsername()) {
+            attributes.put(ATTR_USERNAME, response.getUsername());
+        }
+    }
+
+    public Command(CommandHistoryEntry entry) {
+        this(entry.getId(), entry.getCommandName(), entry.getAliasesMap(), entry.getAssignmentsList(),
+                entry.getOrigin(), entry.getSequenceNumber(), Helpers.toInstant(entry.getGenerationTime()));
+        merge(entry);
+    }
+
+    private static String buildSource(String name, List&lt;CommandAssignment&gt; assignments) {
+        StringBuilder buf = new StringBuilder(name).append("(");
+        buf.append(assignments.stream()
+                .filter(CommandAssignment::getUserInput)
+                .map(assignment -&gt; {
+                    Object value = Helpers.parseValue(assignment.getValue());
+                    if (value instanceof String) {
+                        return assignment.getName() + ": \"" + value + "\"";
+                    } else if (value instanceof byte[]) {
+                        return assignment.getName() + ": 0x" + WellKnownTypes.toHex((byte[]) value);
+                    } else {
+                        return assignment.getName() + ": " + value;
+                    }
+                }).collect(Collectors.joining(", ")));
+        return buf.append(")").toString();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Instant getGenerationTime() {
+        return generationTime;
+    }
+
+    /**
+     * Fully qualified command name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Alias under the specified namespace. Returns {@code null} if this command has no such alias.
+     */
+    public String getName(String namespace) {
+        return aliases.get(namespace);
+    }
+
+    public List&lt;CommandAssignment&gt; getAssignments() {
+        return Collections.unmodifiableList(assignments);
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public int getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    /**
+     * Username of the issuer
+     */
+    public String getUsername() {
+        return (String) attributes.get(ATTR_USERNAME);
+    }
+
+    /**
+     * The assigned command queue
+     */
+    public String getQueue() {
+        return (String) attributes.get(ATTR_QUEUE);
+    }
+
+    /**
+     * String representation of the command
+     */
+    public String getSource() {
+        return source;
+    }
+
+    /**
+     * Unprocessed binary representation of the command (prior to postprocessing).
+     */
+    public byte[] getUnprocessedBinary() {
+        return (byte[]) attributes.get(ATTR_UNPROCESSED_BINARY);
+    }
+
+    /**
+     * Binary representation of the command
+     */
+    public byte[] getBinary() {
+        return (byte[]) attributes.get(ATTR_BINARY);
+    }
+
+    @SuppressWarnings("unchecked")
+    public &lt;T&gt; T getAttribute(String key) {
+        return (T) attributes.get(key);
+    }
+
+    /**
+     * Returns whether this command is complete. A command can be complete, yet still failed.
+     */
+    public boolean isComplete() {
+        Acknowledgment ack = getAcknowledgment(PREFIX_COMMAND_COMPLETE);
+        return ack != null &amp;&amp; (ack.getStatus().equals("OK") || ack.getStatus().equals("NOK"));
+    }
+
+    /**
+     * Returns true if this command has completed successfully
+     */
+    public boolean isSuccess() {
+        Acknowledgment ack = getAcknowledgment(PREFIX_COMMAND_COMPLETE);
+        return ack != null &amp;&amp; ack.getStatus().equals("OK");
+    }
+
+    /**
+     * Returns true if this command failed
+     */
+    public boolean isFailure() {
+        Acknowledgment ack = getAcknowledgment(PREFIX_COMMAND_COMPLETE);
+        return ack != null &amp;&amp; ack.getStatus().equals("NOK");
+    }
+
+    /**
+     * Error message in case this command failed
+     */
+    public String getError() {
+        Acknowledgment ack = getAcknowledgment(PREFIX_COMMAND_COMPLETE);
+        if (ack != null &amp;&amp; ack.getStatus().equals("NOK")) {
+            return ack.getMessage();
+        }
+        return null;
+    }
+
+    public String getComment() {
+        return (String) attributes.get(ATTR_COMMENT);
+    }
+
+    /**
+     * Returns all attributes of this commands.
+     */
+    public Map&lt;String, Object&gt; getAttributes() {
+        synchronized (attributes) {
+            return new LinkedHashMap&lt;&gt;(attributes);
+        }
+    }
+
+    public void merge(CommandHistoryEntry entry) {
+        for (CommandHistoryAttribute attr : entry.getAttrList()) {
+            var matcher = CASCADED_PREFIX.matcher(attr.getName());
+            if (matcher.matches()) {
+                var prefix = matcher.group(1);
+                var cascadedCommand = cascadedRecordsByPrefix.get(prefix);
+                if (cascadedCommand == null) {
+                    cascadedCommand = new Command(id, name, entry.getAliasesMap(), assignments, origin, sequenceNumber,
+                            generationTime);
+                    cascadedRecordsByPrefix.put(prefix, cascadedCommand);
+                }
+                var truncatedName = matcher.group(2);
+                cascadedCommand.attributes.put(truncatedName, Helpers.parseValue(attr.getValue()));
+            } else {
+                attributes.put(attr.getName(), Helpers.parseValue(attr.getValue()));
+            }
+        }
+    }
+
+    public void merge(Command other) {
+        synchronized (other.attributes) {
+            attributes.putAll(other.attributes);
+        }
+        for (var entry : other.cascadedRecordsByPrefix.entrySet()) {
+            var prefix = entry.getKey();
+            var cascadedRecord = entry.getValue();
+            var existing = cascadedRecordsByPrefix.get(prefix);
+            if (existing == null) {
+                cascadedRecordsByPrefix.put(prefix, cascadedRecord);
+            } else {
+                synchronized (cascadedRecord.attributes) {
+                    existing.attributes.putAll(cascadedRecord.attributes);
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns non-standard attributes
+     */
+    public LinkedHashMap&lt;String, Object&gt; getExtraAttributes() {
+        var extra = new LinkedHashMap&lt;String, Object&gt;();
+        synchronized (attributes) {
+            for (var attr : attributes.entrySet()) {
+                String name = attr.getKey();
+                if (isExtraAttribute(name)) {
+                    extra.put(name, attr.getValue());
+                }
+            }
+        }
+        return extra;
+    }
+
+    /**
+     * All acknowledgments by name
+     */
+    public LinkedHashMap&lt;String, Acknowledgment&gt; getAcknowledgments() {
+        var acknowledgments = new LinkedHashMap&lt;String, Acknowledgment&gt;();
+        synchronized (attributes) {
+            for (var attr : attributes.entrySet()) {
+                String name = attr.getKey();
+                if (isAcknowledgmentStatusAttribute(name)) {
+                    var ack = getAcknowledgment(name.substring(0, name.length() - 7));
+                    if (ack != null) {
+                        acknowledgments.put(ack.getName(), ack);
+                    }
+                }
+            }
+        }
+        return acknowledgments;
+    }
+
+    private boolean isExtraAttribute(String attributeName) {
+        for (String suffix : STANDARD_ATTRIBUTE_SUFFIXES) {
+            if (attributeName.endsWith(suffix)) {
+                return false;
+            }
+        }
+        for (String prefix : STANDARD_ATTRIBUTE_PREFIXES) {
+            if (attributeName.startsWith(prefix)) {
+                return false;
+            }
+        }
+        return Arrays.binarySearch(STANDARD_ATTRIBUTES, attributeName) &gt;= 0;
+    }
+
+    private boolean isAcknowledgmentStatusAttribute(String attributeName) {
+        if (!attributeName.endsWith(SUFFIX_STATUS)) {
+            return false;
+        }
+        for (String prefix : STANDARD_ATTRIBUTE_PREFIXES) {
+            if (attributeName.startsWith(prefix)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Acknowledgment getQueuedAcknowledgment() {
+        return getAcknowledgment(Acknowledgment.QUEUED);
+    }
+
+    public Acknowledgment getReleasedAcknowledgment() {
+        return getAcknowledgment(Acknowledgment.RELEASED);
+    }
+
+    public Acknowledgment getSentAcknowledgment() {
+        return getAcknowledgment(Acknowledgment.SENT);
+    }
+
+    public Acknowledgment getAcknowledgment(String name) {
+        Instant time = (Instant) attributes.get(name + SUFFIX_TIME);
+        String status = (String) attributes.get(name + SUFFIX_STATUS);
+        String message = (String) attributes.get(name + SUFFIX_MESSAGE);
+        if (time != null &amp;&amp; status != null) {
+            return new Acknowledgment(name, time, status, message);
+        }
+        return null;
+    }
+
+    /**
+     * Returns command records that capture state of upstream (cascaded) servers.
+     * &lt;p&gt;
+     * The returned map is keyed by the cascading prefix, for example: {@code yamcs&lt;SERVER1&gt;_} when the information is
+     * cascaded from SERVER1, or {@code yamcs&lt;SERVER2&gt;_yamcs&lt;SERVER1&gt;_} when the information is cascaded from SERVER 1
+     * over SERVER2.
+     */
+    public Map&lt;String, Command&gt; getCascadedRecords() {
+        return Collections.unmodifiableMap(cascadedRecordsByPrefix);
+    }
+
+
+    @Override
+    public int compareTo(Command other) {
+        return id.compareTo(other.id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Command)) {
+            return false;
+        }
+        Command other = (Command) obj;
+        return id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return getId();
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="commandlistener-java">
+<h2><code class="docutils literal notranslate"><span class="pre">CommandListener.java</span></code><a class="headerlink" href="#commandlistener-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/CommandListener.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+
+@FunctionalInterface
+public interface CommandListener {
+
+    /**
+     * Called when a new command is received and also updated.
+     * 
+     * @param command
+     */
+    void onUpdate(Command command);
+
+    /**
+     * Same as above but also provides the list of new/updated attributes
+     * 
+     * @param command
+     *            command including all attributes
+     * @param cmdHistEntry
+     *            the list of new or updated attributes
+     */
+    default void onUpdate(Command command, CommandHistoryEntry cmdHistEntry) {
+    }
+
+    /**
+     * Called when an exception claused the call to abort.
+     */
+    default void onError(Throwable t) {
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="commandsubscription-java">
+<h2><code class="docutils literal notranslate"><span class="pre">CommandSubscription.java</span></code><a class="headerlink" href="#commandsubscription-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/CommandSubscription.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import java.time.Instant;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.SubscribeCommandsRequest;
+
+/**
+ * Subscription for tracking issued commands, their attributes and acknowledgment status.
+ */
+public class CommandSubscription extends AbstractSubscription&lt;SubscribeCommandsRequest, CommandHistoryEntry&gt; {
+
+    // Concurrency only between consumers and update mechanism.
+    // We are not expecting (nor supporting) parallel updates.
+    private Map&lt;String, Command&gt; commands = new ConcurrentHashMap&lt;&gt;();
+    private Set&lt;CommandListener&gt; commandListeners = new CopyOnWriteArraySet&lt;&gt;();
+
+    public CommandSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "commands", CommandHistoryEntry.class);
+        addMessageListener(new MessageListener&lt;CommandHistoryEntry&gt;() {
+
+            @Override
+            public void onMessage(CommandHistoryEntry entry) {
+                Instant generationTime = Helpers.toInstant(entry.getGenerationTime());
+                Command command = commands.computeIfAbsent(entry.getId(), id -&gt; new Command(entry.getId(),
+                        entry.getCommandName(), entry.getAliasesMap(), entry.getAssignmentsList(), entry.getOrigin(),
+                        entry.getSequenceNumber(), generationTime));
+                command.merge(entry);
+                commandListeners.forEach(l -&gt; {
+                    l.onUpdate(command);
+                    l.onUpdate(command, entry);
+                });
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                commandListeners.forEach(l -&gt; l.onError(t));
+            }
+        });
+    }
+
+    public void addListener(CommandListener listener) {
+        commandListeners.add(listener);
+    }
+
+    public void removeListener(CommandListener listener) {
+        commandListeners.remove(listener);
+    }
+
+    public void clear() {
+        commands.clear();
+    }
+
+    public Command getCommand(String id) {
+        return commands.get(id);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="connectionlistener-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ConnectionListener.java</span></code><a class="headerlink" href="#connectionlistener-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ConnectionListener.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import java.util.EventListener;
+
+/**
+ * A connection listener interface for clients connecting to Yamcs.
+ */
+public interface ConnectionListener extends EventListener {
+
+    /**
+     * Called right before the initial connection to Yamcs is being made.
+     */
+    public void connecting();
+
+    /**
+     * Called after a successful connection to Yamcs has been established.
+     */
+    public void connected();
+
+    /**
+     * Called when the initial connection to Yamcs has failed, e.g. the maximum number of retry attempts has exceeded.
+     * 
+     * @param cause
+     *            Optional cause of the connection failure, may be null.
+     */
+    public void connectionFailed(Throwable cause);
+
+    /**
+     * Called when the connection to Yamcs is closed.
+     */
+    public void disconnected();
+
+    /**
+     * Used to log messages.
+     * 
+     * @param message
+     *            the messages to be logged
+     */
+    default void log(String message) {
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="containersubscription-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ContainerSubscription.java</span></code><a class="headerlink" href="#containersubscription-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ContainerSubscription.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.ContainerData;
+import org.yamcs.protobuf.SubscribeContainersRequest;
+
+public class ContainerSubscription extends AbstractSubscription&lt;SubscribeContainersRequest, ContainerData&gt; {
+    protected ContainerSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "containers", ContainerData.class);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="credentials-java">
+<h2><code class="docutils literal notranslate"><span class="pre">Credentials.java</span></code><a class="headerlink" href="#credentials-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Credentials.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import io.netty.handler.codec.http.HttpRequest;
+
+public interface Credentials {
+
+    boolean isExpired();
+
+    void modifyRequest(HttpRequest request);
+}
+</pre></div>
+</div>
+</section>
+<section id="eventsubscription-java">
+<h2><code class="docutils literal notranslate"><span class="pre">EventSubscription.java</span></code><a class="headerlink" href="#eventsubscription-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/EventSubscription.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.Event;
+import org.yamcs.protobuf.SubscribeEventsRequest;
+
+/**
+ * Subscription for receiving events.
+ */
+public class EventSubscription extends AbstractSubscription&lt;SubscribeEventsRequest, Event&gt; {
+
+    protected EventSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "events", Event.class);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="globalalarmstatussubscription-java">
+<h2><code class="docutils literal notranslate"><span class="pre">GlobalAlarmStatusSubscription.java</span></code><a class="headerlink" href="#globalalarmstatussubscription-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/GlobalAlarmStatusSubscription.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.alarms.GlobalAlarmStatus;
+import org.yamcs.protobuf.alarms.SubscribeGlobalStatusRequest;
+
+/**
+ * Subscription for receiving alarm detail.
+ */
+public class GlobalAlarmStatusSubscription
+        extends AbstractSubscription&lt;SubscribeGlobalStatusRequest, GlobalAlarmStatus&gt; {
+
+    protected GlobalAlarmStatusSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "global-alarm-status", GlobalAlarmStatus.class);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="helpers-java">
+<h2><code class="docutils literal notranslate"><span class="pre">Helpers.java</span></code><a class="headerlink" href="#helpers-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Helpers.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.Value;
+
+import com.google.protobuf.Timestamp;
+
+public class Helpers {
+
+    public static Instant toInstant(Timestamp timestamp) {
+        return Instant.ofEpochSecond(timestamp.getSeconds(), timestamp.getNanos());
+    }
+
+    public static NamedObjectId toNamedObjectId(String name) {
+        // Some API calls still require NamedObjectId objects, which are bothersome.
+        // This method automatically generates them from a name which can either be the qualified name (preferred)
+        // or some alias in the form NAMESPACE/NAME
+        if (name.startsWith("/")) {
+            return NamedObjectId.newBuilder().setName(name).build();
+        } else {
+            String[] parts = name.split("\\/", 2);
+            if (parts.length &lt; 2) {
+                throw new IllegalArgumentException(String.format("'%s' is not a valid name."
+                        + " Use fully-qualified names or, alternatively,"
+                        + " an alias in the format NAMESPACE/NAME", name));
+            }
+            return NamedObjectId.newBuilder().setNamespace(parts[0]).setName(parts[1]).build();
+        }
+    }
+
+    public static String toName(NamedObjectId id) {
+        if (id.hasNamespace()) {
+            return id.getNamespace() + "/" + id.getName();
+        } else {
+            return id.getName();
+        }
+    }
+
+    /**
+     * Converts a Protobuf value from the API into a Java equivalent
+     */
+    public static Object parseValue(Value value) {
+        switch (value.getType()) {
+        case FLOAT:
+            return value.getFloatValue();
+        case DOUBLE:
+            return value.getDoubleValue();
+        case SINT32:
+            return value.getSint32Value();
+        case UINT32:
+            return value.getUint32Value() &amp; 0xFFFFFFFFL;
+        case UINT64:
+            return value.getUint64Value();
+        case SINT64:
+            return value.getSint64Value();
+        case STRING:
+            return value.getStringValue();
+        case BOOLEAN:
+            return value.getBooleanValue();
+        case TIMESTAMP:
+            return Instant.parse(value.getStringValue());
+        case ENUMERATED:
+            return value.getStringValue();
+        case BINARY:
+            return value.getBinaryValue().toByteArray();
+        case ARRAY:
+            List&lt;Object&gt; arr = new ArrayList&lt;&gt;(value.getArrayValueCount());
+            for (Value item : value.getArrayValueList()) {
+                arr.add(parseValue(item));
+            }
+            return arr;
+        case AGGREGATE:
+            Map&lt;String, Object&gt; obj = new LinkedHashMap&lt;&gt;();
+            for (int i = 0; i &lt; value.getAggregateValue().getNameCount(); i++) {
+                obj.put(value.getAggregateValue().getName(i), value.getAggregateValue().getValue(i));
+            }
+            return obj;
+        default:
+            throw new IllegalStateException("Unexpected value type " + value.getType());
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="instancefilter-java">
+<h2><code class="docutils literal notranslate"><span class="pre">InstanceFilter.java</span></code><a class="headerlink" href="#instancefilter-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/InstanceFilter.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.protobuf.YamcsInstance.InstanceState;
+
+public class InstanceFilter {
+
+    private List&lt;String&gt; filterExpressions = new ArrayList&lt;&gt;();
+
+    public void addLabel(String label, String value) {
+        filterExpressions.add("label." + label + "=" + value);
+    }
+
+    public void setState(InstanceState state) {
+        filterExpressions.add("state=" + state);
+    }
+
+    public void excludeState(InstanceState state) {
+        filterExpressions.add("state!=" + state);
+    }
+
+    List&lt;String&gt; getFilterExpressions() {
+        return filterExpressions;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="linksubscription-java">
+<h2><code class="docutils literal notranslate"><span class="pre">LinkSubscription.java</span></code><a class="headerlink" href="#linksubscription-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/LinkSubscription.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.links.LinkEvent;
+import org.yamcs.protobuf.links.SubscribeLinksRequest;
+
+/**
+ * Subscription for receiving link-related events.
+ */
+public class LinkSubscription extends AbstractSubscription&lt;SubscribeLinksRequest, LinkEvent&gt; {
+
+    protected LinkSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "links", LinkEvent.class);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="messagelistener-java">
+<h2><code class="docutils literal notranslate"><span class="pre">MessageListener.java</span></code><a class="headerlink" href="#messagelistener-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/MessageListener.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import com.google.protobuf.Message;
+
+/**
+ * A listener for handling data messages received from a WebSocket call.
+ */
+@FunctionalInterface
+public interface MessageListener&lt;T extends Message&gt; {
+
+    /**
+     * Called when a single data message is received. Implementations should return quickly.
+     */
+    void onMessage(T message);
+
+    /**
+     * Called when an exception claused the call to abort.
+     */
+    default void onError(Throwable t) {
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="oauth2credentials-java">
+<h2><code class="docutils literal notranslate"><span class="pre">OAuth2Credentials.java</span></code><a class="headerlink" href="#oauth2credentials-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/OAuth2Credentials.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.yamcs.client.base.SpnegoInfo;
+
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpRequest;
+
+/**
+ * Contains the authorization state for an identified user or service account.
+ */
+public class OAuth2Credentials implements Credentials {
+
+    // Matches patterns of the form:
+    // "key": "value",
+    // "key": "value"}
+    // "key": value,
+    // "key": value}
+    private static final Pattern KEY_VALUE = Pattern.compile("\"(\\w+)\"\\s*\\:\\s*\"?([^\",]*)\"?\\s*[,\\}]");
+
+    private String tokenResponse;
+    private String accessToken;
+    private String refreshToken;
+    private Date expiry;
+
+    // We keep this around for when we need to acquire a new access token
+    // (SPNEGO connections do not get refreshed using oauth, so that the TGT can be reconfirmed)
+    private SpnegoInfo spnegoInfo;
+
+    public OAuth2Credentials(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
+
+    /**
+     * Returns a JSON string with the full unmodified token response.
+     */
+    public String getTokenResponse() {
+        return tokenResponse;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public SpnegoInfo getSpnegoInfo() {
+        return spnegoInfo;
+    }
+
+    public void setSpnegoInfo(SpnegoInfo spnegoInfo) {
+        this.spnegoInfo = spnegoInfo;
+    }
+
+    @Override
+    public boolean isExpired() {
+        return expiry != null &amp;&amp; new Date().getTime() &gt;= expiry.getTime();
+    }
+
+    @Override
+    public void modifyRequest(HttpRequest request) {
+        request.headers().set(HttpHeaderNames.AUTHORIZATION, "Bearer " + accessToken);
+    }
+
+    public static OAuth2Credentials fromJsonTokenResponse(String json) {
+        Map&lt;String, String&gt; map = toMap(json);
+        String accessToken = map.get("access_token");
+        String refreshToken = map.get("refresh_token");
+        var credentials = new OAuth2Credentials(accessToken, refreshToken);
+
+        int ttl = Integer.valueOf(map.get("expires_in"));
+        credentials.expiry = new Date(new Date().getTime() + (ttl * 1000));
+        credentials.tokenResponse = json;
+        return credentials;
+    }
+
+    private static Map&lt;String, String&gt; toMap(String json) {
+        // Use just a simple regex because we prefer not to force a full-blown JSON library
+        // as a dependency of yamcs-client.
+        Map&lt;String, String&gt; map = new HashMap&lt;&gt;();
+        Matcher matcher = KEY_VALUE.matcher(json);
+        while (matcher.find()) {
+            map.put(matcher.group(1), matcher.group(2));
+        }
+        return map;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="packetsubscription-java">
+<h2><code class="docutils literal notranslate"><span class="pre">PacketSubscription.java</span></code><a class="headerlink" href="#packetsubscription-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/PacketSubscription.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.SubscribePacketsRequest;
+import org.yamcs.protobuf.TmPacketData;
+
+/**
+ * Subscription for receiving packet updates.
+ */
+public class PacketSubscription extends AbstractSubscription&lt;SubscribePacketsRequest, TmPacketData&gt; {
+
+    protected PacketSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "packets", TmPacketData.class);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="page-java">
+<h2><code class="docutils literal notranslate"><span class="pre">Page.java</span></code><a class="headerlink" href="#page-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Page.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import java.util.concurrent.CompletableFuture;
+
+public interface Page&lt;T&gt; extends Iterable&lt;T&gt; {
+
+    boolean hasNextPage();
+
+    CompletableFuture&lt;Page&lt;T&gt;&gt; getNextPage();
+}
+</pre></div>
+</div>
+</section>
+<section id="parametersubscription-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ParameterSubscription.java</span></code><a class="headerlink" href="#parametersubscription-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ParameterSubscription.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.SubscribeParametersData;
+import org.yamcs.protobuf.SubscribeParametersRequest;
+import org.yamcs.protobuf.SubscribeParametersRequest.Action;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+
+public class ParameterSubscription extends AbstractSubscription&lt;SubscribeParametersRequest, SubscribeParametersData&gt; {
+
+    protected Set&lt;Listener&gt; listeners = new CopyOnWriteArraySet&lt;&gt;();
+
+    private Map&lt;NamedObjectId, ParameterValue&gt; latestValues = new ConcurrentHashMap&lt;&gt;();
+
+    // Maps server-assigned numeric ids against the request identifiers
+    protected Map&lt;Integer, NamedObjectId&gt; mapping = new ConcurrentHashMap&lt;&gt;();
+
+    protected ParameterSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "parameters", SubscribeParametersData.class);
+        addMessageListener(this::processMessage);
+    }
+
+    protected void processMessage(SubscribeParametersData message) {
+        mapping.putAll(message.getMappingMap());
+
+        for (NamedObjectId id : message.getInvalidList()) {
+            listeners.forEach(l -&gt; l.onInvalidIdentification(id));
+        }
+
+        List&lt;ParameterValue&gt; values = new ArrayList&lt;&gt;(message.getValuesCount());
+        for (ParameterValue incomingValue : message.getValuesList()) {
+            NamedObjectId id = mapping.get(incomingValue.getNumericId());
+            ParameterValue value = ParameterValue.newBuilder(incomingValue).setId(id).build();
+            values.add(value);
+            latestValues.put(id, value);
+        }
+
+        if (!values.isEmpty()) {
+            listeners.forEach(l -&gt; l.onData(values));
+        }
+    }
+
+    public void addListener(Listener listener) {
+        listeners.add(listener);
+    }
+
+    /**
+     * Get the latest value for a specific parameter. This method looks for the value from a local cache. It does not
+     * contact Yamcs.
+     */
+    public ParameterValue get(NamedObjectId id) {
+        return latestValues.get(id);
+    }
+
+    /**
+     * Extends the ongoing subscription with the provided identifiers.
+     */
+    public void add(List&lt;NamedObjectId&gt; ids) {
+        if (!ids.isEmpty()) {
+            clientObserver.next(SubscribeParametersRequest.newBuilder()
+                    .setAction(Action.ADD)
+                    .setAbortOnInvalid(false)
+                    .addAllId(ids)
+                    .build());
+        }
+    }
+
+    /**
+     * Shrinks the ongoing subscription by removing the provided identifiers.
+     */
+    public void remove(List&lt;NamedObjectId&gt; ids) {
+        if (!ids.isEmpty()) {
+            clientObserver.next(SubscribeParametersRequest.newBuilder()
+                    .setAction(Action.REMOVE)
+                    .setAbortOnInvalid(false)
+                    .addAllId(ids)
+                    .build());
+        }
+    }
+
+    @FunctionalInterface
+    public static interface Listener {
+
+        void onData(List&lt;ParameterValue&gt; values);
+
+        default void onInvalidIdentification(NamedObjectId id) {
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="processorsubscription-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ProcessorSubscription.java</span></code><a class="headerlink" href="#processorsubscription-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ProcessorSubscription.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.ProcessorInfo;
+import org.yamcs.protobuf.SubscribeProcessorsRequest;
+
+public class ProcessorSubscription extends AbstractSubscription&lt;SubscribeProcessorsRequest, ProcessorInfo&gt; {
+
+    protected ProcessorSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "processors", ProcessorInfo.class);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="queueeventsubscription-java">
+<h2><code class="docutils literal notranslate"><span class="pre">QueueEventSubscription.java</span></code><a class="headerlink" href="#queueeventsubscription-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/QueueEventSubscription.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.Commanding.CommandQueueEvent;
+import org.yamcs.protobuf.SubscribeQueueEventsRequest;
+
+public class QueueEventSubscription extends AbstractSubscription&lt;SubscribeQueueEventsRequest, CommandQueueEvent&gt; {
+
+    protected QueueEventSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "queue-events", CommandQueueEvent.class);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="queuestatisticssubscription-java">
+<h2><code class="docutils literal notranslate"><span class="pre">QueueStatisticsSubscription.java</span></code><a class="headerlink" href="#queuestatisticssubscription-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/QueueStatisticsSubscription.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.Commanding.CommandQueueInfo;
+import org.yamcs.protobuf.SubscribeQueueStatisticsRequest;
+
+public class QueueStatisticsSubscription
+        extends AbstractSubscription&lt;SubscribeQueueStatisticsRequest, CommandQueueInfo&gt; {
+
+    protected QueueStatisticsSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "queue-stats", CommandQueueInfo.class);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="streamreceiver-java">
+<h2><code class="docutils literal notranslate"><span class="pre">StreamReceiver.java</span></code><a class="headerlink" href="#streamreceiver-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/StreamReceiver.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+@FunctionalInterface
+public interface StreamReceiver&lt;T&gt; {
+
+    void accept(T message);
+}
+</pre></div>
+</div>
+</section>
+<section id="streamsender-java">
+<h2><code class="docutils literal notranslate"><span class="pre">StreamSender.java</span></code><a class="headerlink" href="#streamsender-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/StreamSender.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import java.util.concurrent.CompletableFuture;
+
+public interface StreamSender&lt;ItemT, ResponseT&gt; {
+
+    void send(ItemT message);
+
+    CompletableFuture&lt;ResponseT&gt; complete();
+}
+</pre></div>
+</div>
+</section>
+<section id="subscription-java">
+<h2><code class="docutils literal notranslate"><span class="pre">Subscription.java</span></code><a class="headerlink" href="#subscription-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Subscription.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import java.util.concurrent.Future;
+
+import com.google.protobuf.Message;
+
+/**
+ * Top-level interface for any topic subscriptions to Yamcs that make use of the WebSocket API.
+ * &lt;p&gt;
+ * Topics are capable of bi-directional communication, where each topic has only a single client and server message
+ * type. In practice most topics are one-directional, with the client issuing a single subscription request.
+ * &lt;p&gt;
+ * A topic subscription is usually long-running. The server keeps pushing updates until the client cancels the call, or
+ * closes the connection. Instances of this class are also futures covering the lifecycle of the call (or any error
+ * replies to sent message).
+ * &lt;p&gt;
+ * This base class adds general listener support for receiving the unprocessed data messages. Specific implementations
+ * of this class sometimes add more customized functionalities, such as polling or processing.
+ * 
+ * @param &lt;C&gt;
+ *            The client message
+ * @param &lt;S&gt;
+ *            The server message
+ */
+public interface Subscription&lt;C extends Message, S extends Message&gt; extends Future&lt;Void&gt; {
+
+    /**
+     * Get updated on received server messages.
+     */
+    void addMessageListener(MessageListener&lt;S&gt; listener);
+
+    /**
+     * Sends a message to Yamcs. Note that most topic subscriptions support only a single message to be sent.
+     */
+    void sendMessage(C message);
+}
+</pre></div>
+</div>
+</section>
+<section id="timelistener-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimeListener.java</span></code><a class="headerlink" href="#timelistener-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/TimeListener.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import java.time.Instant;
+
+@FunctionalInterface
+public interface TimeListener {
+
+    void onUpdate(Instant time);
+
+    /**
+     * Called when an exception claused the call to abort.
+     */
+    default void onError(Throwable t) {
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="timesubscription-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimeSubscription.java</span></code><a class="headerlink" href="#timesubscription-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/TimeSubscription.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import java.time.Instant;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.SubscribeTimeRequest;
+
+import com.google.protobuf.Timestamp;
+
+/**
+ * Subscription for receiving time updates.
+ */
+public class TimeSubscription extends AbstractSubscription&lt;SubscribeTimeRequest, Timestamp&gt; {
+
+    private volatile Instant latest;
+    private Set&lt;TimeListener&gt; timeListeners = new CopyOnWriteArraySet&lt;&gt;();
+
+    protected TimeSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "time", Timestamp.class);
+        addMessageListener(new MessageListener&lt;Timestamp&gt;() {
+            @Override
+            public void onMessage(Timestamp timestamp) {
+                latest = Instant.ofEpochSecond(timestamp.getSeconds(), timestamp.getNanos());
+                timeListeners.forEach(l -&gt; l.onUpdate(latest));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                timeListeners.forEach(l -&gt; l.onError(t));
+            }
+        });
+    }
+
+    public void addListener(TimeListener listener) {
+        timeListeners.add(listener);
+    }
+
+    public void removeListener(TimeListener listener) {
+        timeListeners.remove(listener);
+    }
+
+    /**
+     * Returns the value of the latest received timestamp.
+     */
+    public Instant getCurrent() {
+        return latest;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="unauthorizedexception-java">
+<h2><code class="docutils literal notranslate"><span class="pre">UnauthorizedException.java</span></code><a class="headerlink" href="#unauthorizedexception-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/UnauthorizedException.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+@SuppressWarnings("serial")
+public class UnauthorizedException extends ClientException {
+
+    public UnauthorizedException() {
+        super("Unauthorized");
+    }
+
+    public UnauthorizedException(String message) {
+        super("Unauthorized: " + message);
+    }
+
+    public UnauthorizedException(ExceptionData restData) {
+        super(restData);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="yamcsclient-java">
+<h2><code class="docutils literal notranslate"><span class="pre">YamcsClient.java</span></code><a class="headerlink" href="#yamcsclient-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/YamcsClient.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client;
+
+import java.io.IOException;
+import java.net.SocketException;
+import java.nio.file.Path;
+import java.security.GeneralSecurityException;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.net.ssl.SSLException;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.archive.ArchiveClient;
+import org.yamcs.client.base.HttpMethodHandler;
+import org.yamcs.client.base.ResponseObserver;
+import org.yamcs.client.base.RestClient;
+import org.yamcs.client.base.ServerURL;
+import org.yamcs.client.base.SpnegoInfo;
+import org.yamcs.client.base.WebSocketClient;
+import org.yamcs.client.base.WebSocketClientCallback;
+import org.yamcs.client.mdb.MissionDatabaseClient;
+import org.yamcs.client.processor.ProcessorClient;
+import org.yamcs.client.storage.StorageClient;
+import org.yamcs.client.timeline.TimelineClient;
+import org.yamcs.protobuf.CreateEventRequest;
+import org.yamcs.protobuf.CreateInstanceRequest;
+import org.yamcs.protobuf.CreateProcessorRequest;
+import org.yamcs.protobuf.Event;
+import org.yamcs.protobuf.EventsApiClient;
+import org.yamcs.protobuf.FileTransferApiClient;
+import org.yamcs.protobuf.FileTransferServiceInfo;
+import org.yamcs.protobuf.GetInstanceRequest;
+import org.yamcs.protobuf.GetServerInfoResponse;
+import org.yamcs.protobuf.IamApiClient;
+import org.yamcs.protobuf.InstancesApiClient;
+import org.yamcs.protobuf.LeapSecondsTable;
+import org.yamcs.protobuf.ListFileTransferServicesRequest;
+import org.yamcs.protobuf.ListFileTransferServicesResponse;
+import org.yamcs.protobuf.ListInstancesRequest;
+import org.yamcs.protobuf.ListInstancesResponse;
+import org.yamcs.protobuf.ListProcessorsRequest;
+import org.yamcs.protobuf.ListProcessorsResponse;
+import org.yamcs.protobuf.ListServicesRequest;
+import org.yamcs.protobuf.ListServicesResponse;
+import org.yamcs.protobuf.ProcessingApiClient;
+import org.yamcs.protobuf.ProcessorInfo;
+import org.yamcs.protobuf.ReconfigureInstanceRequest;
+import org.yamcs.protobuf.RestartInstanceRequest;
+import org.yamcs.protobuf.ServerApiClient;
+import org.yamcs.protobuf.ServiceInfo;
+import org.yamcs.protobuf.ServicesApiClient;
+import org.yamcs.protobuf.StartInstanceRequest;
+import org.yamcs.protobuf.StartServiceRequest;
+import org.yamcs.protobuf.StopInstanceRequest;
+import org.yamcs.protobuf.StopServiceRequest;
+import org.yamcs.protobuf.TimeApiClient;
+import org.yamcs.protobuf.UserInfo;
+import org.yamcs.protobuf.YamcsInstance;
+import org.yamcs.protobuf.alarms.AlarmsApiClient;
+import org.yamcs.protobuf.alarms.EditAlarmRequest;
+import org.yamcs.protobuf.alarms.ListAlarmsRequest;
+import org.yamcs.protobuf.alarms.ListAlarmsResponse;
+import org.yamcs.protobuf.alarms.ListProcessorAlarmsRequest;
+import org.yamcs.protobuf.alarms.ListProcessorAlarmsResponse;
+import org.yamcs.protobuf.links.DisableLinkRequest;
+import org.yamcs.protobuf.links.EnableLinkRequest;
+import org.yamcs.protobuf.links.LinkInfo;
+import org.yamcs.protobuf.links.LinksApiClient;
+
+import com.google.protobuf.Empty;
+
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.websocketx.WebSocketHandshakeException;
+
+public class YamcsClient {
+
+    private static final Logger log = Logger.getLogger(YamcsClient.class.getName());
+
+    private final ServerURL serverURL;
+    private boolean verifyTls;
+    private int connectionAttempts;
+    private long retryDelay;
+
+    private final RestClient baseClient;
+    private final WebSocketClient websocketClient;
+
+    private volatile boolean closed = false;
+
+    private List&lt;ConnectionListener&gt; connectionListeners = new CopyOnWriteArrayList&lt;&gt;();
+
+    private MethodHandler methodHandler;
+
+    private AlarmsApiClient alarmService;
+    private TimeApiClient timeService;
+    private ServicesApiClient serviceService;
+    private InstancesApiClient instanceService;
+    private LinksApiClient linkService;
+    private EventsApiClient eventService;
+    private ProcessingApiClient processingService;
+    private IamApiClient iamService;
+    private ServerApiClient serverService;
+
+    private YamcsClient(ServerURL serverURL, boolean verifyTls, int connectionAttempts, long retryDelay) {
+        this.serverURL = serverURL;
+        this.verifyTls = verifyTls;
+        this.connectionAttempts = connectionAttempts;
+        this.retryDelay = retryDelay;
+
+        baseClient = new RestClient(serverURL);
+        baseClient.setAutoclose(false);
+
+        websocketClient = new WebSocketClient(serverURL, new WebSocketClientCallback() {
+            @Override
+            public void disconnected() {
+                if (!closed) {
+                    String msg = String.format("Connection to %s lost", serverURL);
+                    connectionListeners.forEach(l -&gt; l.log(msg));
+                    log.warning(msg);
+                }
+                connectionListeners.forEach(l -&gt; l.disconnected());
+            }
+        });
+
+        methodHandler = new HttpMethodHandler(this, baseClient, websocketClient);
+
+        alarmService = new AlarmsApiClient(methodHandler);
+        eventService = new EventsApiClient(methodHandler);
+        linkService = new LinksApiClient(methodHandler);
+        iamService = new IamApiClient(methodHandler);
+        instanceService = new InstancesApiClient(methodHandler);
+        timeService = new TimeApiClient(methodHandler);
+        processingService = new ProcessingApiClient(methodHandler);
+        serverService = new ServerApiClient(methodHandler);
+        serviceService = new ServicesApiClient(methodHandler);
+    }
+
+    public static Builder newBuilder(String serverUrl) {
+        return new Builder(ServerURL.parse(serverUrl));
+    }
+
+    public static Builder newBuilder(String host, int port) {
+        return new Builder(ServerURL.parse("http://" + host + ":" + port));
+    }
+
+    public synchronized void loginWithKerberos() throws ClientException {
+        loginWithKerberos(System.getProperty("user.name"));
+    }
+
+    public synchronized void loginWithKerberos(String principal) throws ClientException {
+        pollServer();
+        SpnegoInfo spnegoInfo = new SpnegoInfo(serverURL, verifyTls, principal);
+        String authorizationCode;
+        try {
+            authorizationCode = baseClient.authorizeKerberos(spnegoInfo);
+        } catch (ClientException e) {
+            for (ConnectionListener cl : connectionListeners) {
+                cl.connectionFailed(e);
+            }
+            logConnectionFailed(e);
+            throw new UnauthorizedException();
+        }
+
+        try {
+            baseClient.loginWithAuthorizationCode(authorizationCode);
+        } catch (ClientException e) {
+            for (ConnectionListener cl : connectionListeners) {
+                cl.connectionFailed(e);
+            }
+            logConnectionFailed(e);
+            throw e;
+        }
+        var creds = (OAuth2Credentials) baseClient.getCredentials();
+        creds.setSpnegoInfo(spnegoInfo); // Can get reused when the access token expires
+    }
+
+    public synchronized void login(String username, char[] password) throws ClientException {
+        pollServer();
+        try {
+            baseClient.login(username, password);
+        } catch (ClientException e) {
+            for (ConnectionListener cl : connectionListeners) {
+                cl.connectionFailed(e);
+            }
+            logConnectionFailed(e);
+            throw e;
+        }
+    }
+
+    /**
+     * Polls the server, to see if it is ready.
+     */
+    public void pollServer() throws ClientException {
+        for (int i = 0; i &lt; connectionAttempts; i++) {
+            synchronized (this) {
+                try {
+                    // Use an endpoint that does not require auth
+                    baseClient.doBaseRequest("/auth", HttpMethod.GET, null).get(5, TimeUnit.SECONDS);
+                    return; // Server up!
+                } catch (ExecutionException e) {
+                    Throwable cause = e.getCause();
+                    if (cause instanceof UnauthorizedException) {
+                        for (ConnectionListener cl : connectionListeners) {
+                            cl.connectionFailed((UnauthorizedException) cause);
+                        }
+                        logConnectionFailed(cause);
+                        throw (UnauthorizedException) cause; // Jump out
+                    } else {
+                        for (ConnectionListener cl : connectionListeners) {
+                            cl.connectionFailed(cause);
+                        }
+                        logConnectionFailed(cause);
+                    }
+                } catch (TimeoutException e) {
+                    for (ConnectionListener cl : connectionListeners) {
+                        cl.connectionFailed(e);
+                    }
+                    logConnectionFailed(e);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    for (ConnectionListener cl : connectionListeners) {
+                        cl.connectionFailed(new ClientException("Thread interrupted", e));
+                    }
+                }
+            }
+
+            if (i + 1 &lt; connectionAttempts) {
+                try {
+                    Thread.sleep(retryDelay);
+                } catch (InterruptedException e1) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+
+        if (connectionAttempts &gt; 1) {
+            ClientException e = new ClientException(connectionAttempts + " connection attempts failed, giving up.");
+            for (ConnectionListener cl : connectionListeners) {
+                cl.log(connectionAttempts + " connection attempts failed, giving up.");
+                cl.connectionFailed(e);
+            }
+            log.log(Level.WARNING, connectionAttempts + " connection attempts failed, giving up.");
+            throw e;
+        } else {
+            throw new ClientException("Server is not available");
+        }
+    }
+
+    /**
+     * Establish a live communication channel.
+     */
+    public synchronized void connectWebSocket() throws ClientException {
+        Credentials creds = baseClient.getCredentials();
+        if (creds == null) {
+            connect(null, false);
+        } else if (creds instanceof OAuth2Credentials) {
+            String accessToken = ((OAuth2Credentials) creds).getAccessToken();
+            String authorization = "Bearer " + accessToken;
+            connect(authorization, true);
+        } else if (creds instanceof BasicAuthCredentials) {
+            String authorization = ((BasicAuthCredentials) creds).getAuthorizationHeader();
+            connect(authorization, true);
+        } else {
+            throw new IllegalStateException("Unexpected credentials of type " + creds.getClass());
+        }
+    }
+
+    /**
+     * Establish a live communication channel using a previously acquired access token.
+     */
+    private synchronized void connect(String authorization, boolean bypassUpCheck) throws ClientException {
+        if (!bypassUpCheck) {
+            pollServer();
+        }
+
+        for (ConnectionListener cl : connectionListeners) {
+            cl.connecting();
+        }
+
+        try {
+            websocketClient.connect(authorization).get(5000, TimeUnit.MILLISECONDS);
+
+            for (ConnectionListener cl : connectionListeners) {
+                cl.connected();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return;
+        } catch (SSLException | GeneralSecurityException | TimeoutException e) {
+            for (ConnectionListener cl : connectionListeners) {
+                cl.connectionFailed(e);
+            }
+            logConnectionFailed(e);
+            throw new ClientException("Cannot connect WebSocket client", e);
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            for (ConnectionListener cl : connectionListeners) {
+                cl.connectionFailed(cause);
+            }
+            logConnectionFailed(cause);
+            if (cause instanceof WebSocketHandshakeException &amp;&amp; cause.getMessage().contains("401")) {
+                throw new UnauthorizedException();
+            } else if (cause instanceof ClientException) {
+                throw (ClientException) cause;
+            } else {
+                throw new ClientException(cause);
+            }
+        }
+    }
+
+    public CompletableFuture&lt;YamcsInstance&gt; createInstance(CreateInstanceRequest request) {
+        CompletableFuture&lt;YamcsInstance&gt; f = new CompletableFuture&lt;&gt;();
+        instanceService.createInstance(null, request, new ResponseObserver&lt;&gt;(f));
+        return f;
+    }
+
+    public CompletableFuture&lt;YamcsInstance&gt; reconfigureInstance(ReconfigureInstanceRequest request) {
+        CompletableFuture&lt;YamcsInstance&gt; f = new CompletableFuture&lt;&gt;();
+        instanceService.reconfigureInstance(null, request, new ResponseObserver&lt;&gt;(f));
+        return f;
+    }
+
+    public CompletableFuture&lt;List&lt;YamcsInstance&gt;&gt; listInstances() {
+        CompletableFuture&lt;ListInstancesResponse&gt; f = new CompletableFuture&lt;&gt;();
+        instanceService.listInstances(null, ListInstancesRequest.getDefaultInstance(), new ResponseObserver&lt;&gt;(f));
+        return f.thenApply(response -&gt; response.getInstancesList());
+    }
+
+    public CompletableFuture&lt;YamcsInstance&gt; getInstance(String instance) {
+        GetInstanceRequest request = GetInstanceRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        CompletableFuture&lt;YamcsInstance&gt; f = new CompletableFuture&lt;&gt;();
+        instanceService.getInstance(null, request, new ResponseObserver&lt;&gt;(f));
+        return f;
+    }
+
+    public CompletableFuture&lt;ListInstancesResponse&gt; listInstances(InstanceFilter filter) {
+        ListInstancesRequest.Builder requestb = ListInstancesRequest.newBuilder();
+        for (String expression : filter.getFilterExpressions()) {
+            requestb.addFilter(expression);
+        }
+        CompletableFuture&lt;ListInstancesResponse&gt; f = new CompletableFuture&lt;&gt;();
+        instanceService.listInstances(null, requestb.build(), new ResponseObserver&lt;&gt;(f));
+        return f;
+    }
+
+    public CompletableFuture&lt;YamcsInstance&gt; startInstance(String instance) {
+        StartInstanceRequest request = StartInstanceRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        CompletableFuture&lt;YamcsInstance&gt; f = new CompletableFuture&lt;&gt;();
+        instanceService.startInstance(null, request, new ResponseObserver&lt;&gt;(f));
+        return f;
+    }
+
+    public CompletableFuture&lt;YamcsInstance&gt; stopInstance(String instance) {
+        StopInstanceRequest request = StopInstanceRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        CompletableFuture&lt;YamcsInstance&gt; f = new CompletableFuture&lt;&gt;();
+        instanceService.stopInstance(null, request, new ResponseObserver&lt;&gt;(f));
+        return f;
+    }
+
+    public CompletableFuture&lt;YamcsInstance&gt; restartInstance(String instance) {
+        RestartInstanceRequest request = RestartInstanceRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        CompletableFuture&lt;YamcsInstance&gt; f = new CompletableFuture&lt;&gt;();
+        instanceService.restartInstance(null, request, new ResponseObserver&lt;&gt;(f));
+        return f;
+    }
+
+    public CompletableFuture&lt;List&lt;ProcessorInfo&gt;&gt; listProcessors(String instance) {
+        ListProcessorsRequest request = ListProcessorsRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        CompletableFuture&lt;ListProcessorsResponse&gt; f = new CompletableFuture&lt;&gt;();
+        processingService.listProcessors(null, request, new ResponseObserver&lt;&gt;(f));
+        return f.thenApply(response -&gt; response.getProcessorsList());
+    }
+
+    public CompletableFuture&lt;GetServerInfoResponse&gt; getServerInfo() {
+        CompletableFuture&lt;GetServerInfoResponse&gt; f = new CompletableFuture&lt;&gt;();
+        serverService.getServerInfo(null, Empty.getDefaultInstance(), new ResponseObserver&lt;&gt;(f));
+        return f;
+    }
+
+    public String getServerURL() {
+        return serverURL.toString();
+    }
+
+    public CompletableFuture&lt;UserInfo&gt; getOwnUserInfo() {
+        CompletableFuture&lt;UserInfo&gt; f = new CompletableFuture&lt;&gt;();
+        iamService.getOwnUser(null, Empty.getDefaultInstance(), new ResponseObserver&lt;&gt;(f));
+        return f;
+    }
+
+    public CompletableFuture&lt;List&lt;ServiceInfo&gt;&gt; listServices(String instance) {
+        ListServicesRequest request = ListServicesRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        CompletableFuture&lt;ListServicesResponse&gt; f = new CompletableFuture&lt;&gt;();
+        serviceService.listServices(null, request, new ResponseObserver&lt;&gt;(f));
+        return f.thenApply(response -&gt; response.getServicesList());
+    }
+
+    public CompletableFuture&lt;Void&gt; startService(String instance, String service) {
+        StartServiceRequest request = StartServiceRequest.newBuilder()
+                .setInstance(instance)
+                .setName(service)
+                .build();
+        CompletableFuture&lt;Empty&gt; f = new CompletableFuture&lt;&gt;();
+        serviceService.startService(null, request, new ResponseObserver&lt;&gt;(f));
+        return f.thenApply(response -&gt; null);
+    }
+
+    public CompletableFuture&lt;LinkInfo&gt; enableLink(String instance, String link) {
+        EnableLinkRequest request = EnableLinkRequest.newBuilder()
+                .setInstance(instance)
+                .setLink(link)
+                .build();
+        CompletableFuture&lt;LinkInfo&gt; f = new CompletableFuture&lt;&gt;();
+        linkService.enableLink(null, request, new ResponseObserver&lt;&gt;(f));
+        return f;
+    }
+
+    public CompletableFuture&lt;LinkInfo&gt; disableLink(String instance, String link) {
+        DisableLinkRequest request = DisableLinkRequest.newBuilder()
+                .setInstance(instance)
+                .setLink(link)
+                .build();
+        CompletableFuture&lt;LinkInfo&gt; f = new CompletableFuture&lt;&gt;();
+        linkService.disableLink(null, request, new ResponseObserver&lt;&gt;(f));
+        return f;
+    }
+
+    public CompletableFuture&lt;Void&gt; stopService(String instance, String service) {
+        StopServiceRequest request = StopServiceRequest.newBuilder()
+                .setInstance(instance)
+                .setName(service)
+                .build();
+        CompletableFuture&lt;Empty&gt; f = new CompletableFuture&lt;&gt;();
+        serviceService.stopService(null, request, new ResponseObserver&lt;&gt;(f));
+        return f.thenApply(response -&gt; null);
+    }
+
+    public CompletableFuture&lt;LeapSecondsTable&gt; getLeapSeconds() {
+        CompletableFuture&lt;LeapSecondsTable&gt; f = new CompletableFuture&lt;&gt;();
+        timeService.getLeapSeconds(null, Empty.getDefaultInstance(), new ResponseObserver&lt;&gt;(f));
+        return f;
+    }
+
+    public CompletableFuture&lt;ProcessorClient&gt; createProcessor(CreateProcessorRequest request) {
+        CompletableFuture&lt;Empty&gt; f = new CompletableFuture&lt;&gt;();
+        processingService.createProcessor(null, request, new ResponseObserver&lt;&gt;(f));
+        return f.thenApply(response -&gt; new ProcessorClient(methodHandler, request.getInstance(), request.getName()));
+    }
+
+    public CompletableFuture&lt;Event&gt; createEvent(CreateEventRequest request) {
+        CompletableFuture&lt;Event&gt; f = new CompletableFuture&lt;&gt;();
+        eventService.createEvent(null, request, new ResponseObserver&lt;&gt;(f));
+        return f;
+    }
+
+    public CompletableFuture&lt;ListAlarmsResponse&gt; listAlarms(String instance) {
+        ListAlarmsRequest request = ListAlarmsRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        CompletableFuture&lt;ListAlarmsResponse&gt; f = new CompletableFuture&lt;&gt;();
+        alarmService.listAlarms(null, request, new ResponseObserver&lt;&gt;(f));
+        return f;
+    }
+
+    public CompletableFuture&lt;ListProcessorAlarmsResponse&gt; listAlarms(String instance, String processor) {
+        ListProcessorAlarmsRequest request = ListProcessorAlarmsRequest.newBuilder()
+                .setInstance(instance)
+                .setProcessor(processor)
+                .build();
+        CompletableFuture&lt;ListProcessorAlarmsResponse&gt; f = new CompletableFuture&lt;&gt;();
+        alarmService.listProcessorAlarms(null, request, new ResponseObserver&lt;&gt;(f));
+        return f;
+    }
+
+    public CompletableFuture&lt;Void&gt; editAlarm(EditAlarmRequest request) {
+        CompletableFuture&lt;Empty&gt; f = new CompletableFuture&lt;&gt;();
+        alarmService.editAlarm(null, request, new ResponseObserver&lt;&gt;(f));
+        return f.thenApply(response -&gt; null);
+    }
+
+    public CompletableFuture&lt;List&lt;FileTransferServiceInfo&gt;&gt; getFileTransferServices(String instance) {
+        ListFileTransferServicesRequest request = ListFileTransferServicesRequest.newBuilder().setInstance(instance)
+                .build();
+        CompletableFuture&lt;ListFileTransferServicesResponse&gt; f = new CompletableFuture&lt;&gt;();
+
+        FileTransferApiClient ftService = new FileTransferApiClient(methodHandler);
+        ftService.listFileTransferServices(null, request, new ResponseObserver&lt;&gt;(f));
+        return f.thenApply(r -&gt; r.getServicesList());
+    }
+
+    public StorageClient createStorageClient() {
+        return new StorageClient(methodHandler);
+    }
+
+    public ArchiveClient createArchiveClient(String instance) {
+        instance = Objects.requireNonNull(instance);
+        return new ArchiveClient(methodHandler, instance);
+    }
+
+    public MissionDatabaseClient createMissionDatabaseClient(String instance) {
+        instance = Objects.requireNonNull(instance);
+        return new MissionDatabaseClient(methodHandler, instance);
+    }
+
+    public ProcessorClient createProcessorClient(String instance, String processor) {
+        instance = Objects.requireNonNull(instance);
+        processor = Objects.requireNonNull(processor);
+        return new ProcessorClient(methodHandler, instance, processor);
+    }
+
+    public TimelineClient createTimelineClient(String instance, String processor) {
+        instance = Objects.requireNonNull(instance);
+        return new TimelineClient(methodHandler, instance);
+    }
+
+    public String getHost() {
+        return serverURL.getHost();
+    }
+
+    public int getPort() {
+        return serverURL.getPort();
+    }
+
+    public boolean isTLS() {
+        return serverURL.isTLS();
+    }
+
+    public String getContext() {
+        return serverURL.getContext();
+    }
+
+    public boolean isVerifyTLS() {
+        return verifyTls;
+    }
+
+    public void addConnectionListener(ConnectionListener connectionListener) {
+        connectionListeners.add(connectionListener);
+    }
+
+    public void removeConnectionListener(ConnectionListener connectionListener) {
+        connectionListeners.remove(connectionListener);
+    }
+
+    public WebSocketClient getWebSocketClient() {
+        return websocketClient;
+    }
+
+    public MethodHandler getMethodHandler() {
+        return methodHandler;
+    }
+
+    public String getUrl() {
+        return serverURL.toString();
+    }
+
+    public TimeSubscription createTimeSubscription() {
+        return new TimeSubscription(methodHandler);
+    }
+
+    public ClearanceSubscription createClearanceSubscription() {
+        return new ClearanceSubscription(methodHandler);
+    }
+
+    public EventSubscription createEventSubscription() {
+        return new EventSubscription(methodHandler);
+    }
+
+    public AlarmSubscription createAlarmSubscription() {
+        return new AlarmSubscription(methodHandler);
+    }
+
+    public GlobalAlarmStatusSubscription createGlobalAlarmStatusSubscription() {
+        return new GlobalAlarmStatusSubscription(methodHandler);
+    }
+
+    public PacketSubscription createPacketSubscription() {
+        return new PacketSubscription(methodHandler);
+    }
+
+    public ProcessorSubscription createProcessorSubscription() {
+        return new ProcessorSubscription(methodHandler);
+    }
+
+    public CommandSubscription createCommandSubscription() {
+        return new CommandSubscription(methodHandler);
+    }
+
+    public QueueEventSubscription createQueueEventSubscription() {
+        return new QueueEventSubscription(methodHandler);
+    }
+
+    public QueueStatisticsSubscription createQueueStatisticsSubscription() {
+        return new QueueStatisticsSubscription(methodHandler);
+    }
+
+    public ParameterSubscription createParameterSubscription() {
+        return new ParameterSubscription(methodHandler);
+    }
+
+    public LinkSubscription createLinkSubscription() {
+        return new LinkSubscription(methodHandler);
+    }
+
+    public ContainerSubscription createContainerSubscription() {
+        return new ContainerSubscription(methodHandler);
+    }
+
+    public void close() {
+        if (closed) {
+            return;
+        }
+        closed = true;
+        if (websocketClient.isConnected()) {
+            websocketClient.disconnect();
+        }
+        baseClient.close();
+        websocketClient.shutdown();
+    }
+
+    public static class Builder {
+
+        private ServerURL serverURL;
+        private boolean verifyTls = true;
+        private Path caCertFile;
+        private String userAgent;
+        private Credentials credentials;
+        private int maxResponseLength = 10 * 1024 * 1024;
+        private int maxFramePayloadLength = 10 * 1024 * 1024;
+
+        private int connectionAttempts = 1;
+        private long retryDelay = 5000;
+
+        private Builder(ServerURL serverURL) {
+            this.serverURL = serverURL;
+        }
+
+        /**
+         * Deprecated: append any context to the server URL instead.
+         */
+        @Deprecated
+        public Builder withContext(String context) {
+            serverURL.setContext(context);
+            return this;
+        }
+
+        /**
+         * Deprecated: use either http:// or https:// on the server URL instead.
+         */
+        @Deprecated
+        public Builder withTls(boolean tls) {
+            serverURL.setTLS(tls);
+            return this;
+        }
+
+        public Builder withVerifyTls(boolean verifyTls) {
+            this.verifyTls = verifyTls;
+            return this;
+        }
+
+        public Builder withCaCertFile(Path caCertFile) {
+            this.caCertFile = caCertFile;
+            return this;
+        }
+
+        public Builder withUserAgent(String userAgent) {
+            this.userAgent = userAgent;
+            return this;
+        }
+
+        public Builder withConnectionAttempts(int connectionAttempts) {
+            this.connectionAttempts = connectionAttempts;
+            return this;
+        }
+
+        public Builder withRetryDelay(long retryDelay) {
+            this.retryDelay = retryDelay;
+            return this;
+        }
+
+        public Builder withCredentials(Credentials credentials) {
+            this.credentials = credentials;
+            return this;
+        }
+
+        public Builder withMaxResponseLength(int maxResponseLength) {
+            this.maxResponseLength = maxResponseLength;
+            return this;
+        }
+
+        public Builder withMaxFramePayloadLength(int maxFramePayloadLength) {
+            this.maxFramePayloadLength = maxFramePayloadLength;
+            return this;
+        }
+
+        public YamcsClient build() {
+            YamcsClient client = new YamcsClient(serverURL, verifyTls, connectionAttempts, retryDelay);
+            client.baseClient.setInsecureTls(!verifyTls);
+            client.websocketClient.setInsecureTls(!verifyTls);
+            client.baseClient.setCredentials(credentials);
+            if (caCertFile != null) {
+                try {
+                    client.baseClient.setCaCertFile(caCertFile.toString());
+                    client.websocketClient.setCaCertFile(caCertFile.toString());
+                } catch (IOException | GeneralSecurityException e) {
+                    throw new RuntimeException("Cannot set CA Cert file", e);
+                }
+            }
+            if (userAgent != null) {
+                client.baseClient.setUserAgent(userAgent);
+                client.websocketClient.setUserAgent(userAgent);
+            }
+            client.baseClient.setMaxResponseLength(maxResponseLength);
+            client.websocketClient.setMaxFramePayloadLength(maxFramePayloadLength);
+            return client;
+        }
+    }
+
+    private void logConnectionFailed(Throwable cause) {
+        if (cause instanceof SocketException) {
+            log.log(Level.WARNING, "Connection to " + serverURL + " failed: " + cause.getMessage());
+        } else {
+            log.log(Level.WARNING, "Connection to " + serverURL + " failed", cause);
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="yamcs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="archive/index.html" class="btn btn-neutral float-right" title="archive" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

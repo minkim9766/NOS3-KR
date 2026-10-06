@@ -1,0 +1,1615 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>filesystem &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../../search.html" />
+    <link rel="next" title="memory" href="../memory/index.html" />
+    <link rel="prev" title="file" href="../file/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">fprime-nos3</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">lib</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Os</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">test</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">ut</a></li>
+      <li class="breadcrumb-item active">filesystem</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../../_sources/project_inventory/fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="filesystem">
+<h1>filesystem<a class="headerlink" href="#filesystem" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="commontests-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">CommonTests.cpp</span></code><a class="headerlink" href="#commontests-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/CommonTests.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/test/ut/filesystem/CommonTests.cpp
+// \brief common test implementations
+// ======================================================================
+#include "Os/test/ut/filesystem/CommonTests.hpp"
+
+#include &lt;STest/Pick/Pick.hpp&gt;
+
+std::unique_ptr&lt;Os::Test::FileSystem::Tester&gt; get_tester_implementation() {
+    return std::unique_ptr&lt;Os::Test::FileSystem::Tester&gt;(new Os::Test::FileSystem::Tester());
+}
+
+Functionality::Functionality() : tester(get_tester_implementation()) {}
+
+void Functionality::SetUp() {
+    using namespace Os::Test::FileSystem;
+    const FwSizeType NUMBER_TEST_FILES = 30;
+
+    // Lambda function to generate a random alphanumeric string
+    // used to populate the contents of the test files
+    // If need to debug, it can be useful to manually set strings
+    // of known values in this-&gt;m_test_files instead
+    auto generate_random_string = []() -&gt; std::string {
+        static const char alphanums[] =
+            "0123456789"
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            "abcdefghijklmnopqrstuvwxyz";
+        FwIndexType len = STest::Pick::lowerUpper(1, 4);
+        std::string result;
+        result.reserve(len);
+        for (FwIndexType i = 0; i &lt; len; ++i) {
+            result += alphanums[STest::Pick::lowerUpper(0, sizeof(alphanums) - 2)];
+        }
+        return result;
+    };
+
+    // Set up test state - create a directory structure with files
+    std::string root_dir = "filesystem_test_directory";
+    tester-&gt;m_test_dirs = {TestDirectory(root_dir), TestDirectory(root_dir + "/sub_dir_1"),
+                           TestDirectory(root_dir + "/sub_dir_2")};
+
+    for (FwSizeType i = 0; i &lt; NUMBER_TEST_FILES; ++i) {
+        std::string path = root_dir + "/test_file_" + std::to_string(i);
+        tester-&gt;m_test_files.push_back(TestFile(path, generate_random_string()));
+    }
+
+    // All of the above is in the tester state, i.e. in memory
+    // The below initializes the filesystem with the same structure, on disk
+    tester-&gt;write_test_state_to_disk();
+}
+
+void Functionality::TearDown() {
+    tester-&gt;purge_test_state_from_disk();
+}
+
+// ----------------------------------------------------------------------
+// Test Cases
+// ----------------------------------------------------------------------
+
+// Existing paths exists, non-existing paths do not exist
+TEST_F(Functionality, Exists) {
+    Os::Test::FileSystem::Tester::DirectoryExists dir_exist_rule;
+    Os::Test::FileSystem::Tester::FileExists file_exist_rule;
+    Os::Test::FileSystem::Tester::PathNotExists no_exist_rule;
+    dir_exist_rule.apply(*tester);
+    file_exist_rule.apply(*tester);
+    no_exist_rule.apply(*tester);
+}
+
+// RemoveFile removes a file
+TEST_F(Functionality, RemoveFile) {
+    Os::Test::FileSystem::Tester::RemoveFile rm_file_rule;
+    rm_file_rule.apply(*tester);
+}
+
+// RemoveDirectory removes a directory
+TEST_F(Functionality, RemoveDirectory) {
+    Os::Test::FileSystem::Tester::RemoveDirectory rm_dir_rule;
+    rm_dir_rule.apply(*tester);
+}
+
+// TouchFile touches a file
+TEST_F(Functionality, TouchFile) {
+    Os::Test::FileSystem::Tester::TouchFile touch_rule;
+    touch_rule.apply(*tester);
+}
+
+// CreateDirectory
+TEST_F(Functionality, CreateDirectory) {
+    Os::Test::FileSystem::Tester::CreateDirectory create_dir_rule;
+    create_dir_rule.apply(*tester);
+}
+
+// MoveFile
+TEST_F(Functionality, MoveFile) {
+    Os::Test::FileSystem::Tester::MoveFile move_rule;
+    move_rule.apply(*tester);
+}
+
+// RenameFile
+TEST_F(Functionality, RenameFile) {
+    Os::Test::FileSystem::Tester::RenameFile rename_rule;
+    rename_rule.apply(*tester);
+}
+
+// CopyFile
+TEST_F(Functionality, CopyFile) {
+    Os::Test::FileSystem::Tester::CopyFile move_rule;
+    move_rule.apply(*tester);
+}
+
+// AppendFile
+TEST_F(Functionality, AppendFile) {
+    Os::Test::FileSystem::Tester::AppendFile append_rule;
+    append_rule.apply(*tester);
+}
+
+// AppendToNewFile
+TEST_F(Functionality, AppendToNewFile) {
+    Os::Test::FileSystem::Tester::AppendToNewFile append_new_rule;
+    append_new_rule.apply(*tester);
+}
+
+// GetFileSize
+TEST_F(Functionality, GetFileSize) {
+    Os::Test::FileSystem::Tester::GetFileSize get_size_rule;
+    get_size_rule.apply(*tester);
+}
+
+// GetFreeSpace
+TEST_F(Functionality, GetFreeSpace) {
+    Os::Test::FileSystem::Tester::GetFreeSpace free_space_rule;
+    free_space_rule.apply(*tester);
+}
+
+// // Test both get and set working directory
+TEST_F(Functionality, GetSetWorkingDirectory) {
+    Os::Test::FileSystem::Tester::GetSetWorkingDirectory change_cwd_rule;
+    change_cwd_rule.apply(*tester);
+}
+
+// Randomized testing
+TEST_F(Functionality, RandomizedTesting) {
+    // Enumerate all rules and construct an instance of each
+
+    Os::Test::FileSystem::Tester::DirectoryExists directory_exists_rule;
+    Os::Test::FileSystem::Tester::FileExists file_exists_rule;
+    Os::Test::FileSystem::Tester::PathNotExists not_exists_rule;
+    Os::Test::FileSystem::Tester::RemoveFile remove_rule;
+    Os::Test::FileSystem::Tester::RemoveDirectory remove_directory_rule;
+    Os::Test::FileSystem::Tester::TouchFile touch_rule;
+    Os::Test::FileSystem::Tester::CreateDirectory create_directory_rule;
+    Os::Test::FileSystem::Tester::MoveFile move_rule;
+    Os::Test::FileSystem::Tester::RenameFile rename_rule;
+    Os::Test::FileSystem::Tester::CopyFile copyfile_rule;
+    Os::Test::FileSystem::Tester::AppendFile append_rule;
+    Os::Test::FileSystem::Tester::AppendToNewFile append_new_rule;
+    Os::Test::FileSystem::Tester::GetFileSize file_size_rule;
+    Os::Test::FileSystem::Tester::GetFreeSpace free_space_rule;
+    Os::Test::FileSystem::Tester::GetSetWorkingDirectory cwd_rule;
+
+    // Place these rules into a list of rules
+    STest::Rule&lt;Os::Test::FileSystem::Tester&gt;* rules[] = {&amp;directory_exists_rule,
+                                                          &amp;file_exists_rule,
+                                                          &amp;not_exists_rule,
+                                                          &amp;remove_rule,
+                                                          &amp;remove_directory_rule,
+                                                          &amp;touch_rule,
+                                                          &amp;create_directory_rule,
+                                                          &amp;move_rule,
+                                                          &amp;rename_rule,
+                                                          &amp;copyfile_rule,
+                                                          &amp;append_rule,
+                                                          &amp;append_new_rule,
+                                                          &amp;file_size_rule,
+                                                          &amp;free_space_rule,
+                                                          &amp;cwd_rule};
+
+    // Take the rules and place them into a random scenario
+    STest::RandomScenario&lt;Os::Test::FileSystem::Tester&gt; random("Random Rules", rules, FW_NUM_ARRAY_ELEMENTS(rules));
+
+    // Create a bounded scenario wrapping the random scenario
+    STest::BoundedScenario&lt;Os::Test::FileSystem::Tester&gt; bounded("Bounded Random Rules Scenario", random, 1000);
+    // Run!
+    const U32 numSteps = bounded.run(*tester);
+    printf("Ran %u steps.\n", numSteps);
+}
+</pre></div>
+</div>
+</section>
+<section id="commontests-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">CommonTests.hpp</span></code><a class="headerlink" href="#commontests-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/CommonTests.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/test/ut/filesystem/CommonTests.hpp
+// \brief GoogleTest fixture definitions used in common FileSystem testing
+// ======================================================================
+#ifndef OS_TEST_UT_COMMON_FILESYSTEM_TESTS_HPP
+#define OS_TEST_UT_COMMON_FILESYSTEM_TESTS_HPP
+
+#include &lt;gtest/gtest.h&gt;
+#include &lt;Os/FileSystem.hpp&gt;
+#include &lt;Os/test/ut/filesystem/RulesHeaders.hpp&gt;
+
+class Functionality : public ::testing::Test {
+  public:
+    //! Constructor
+    Functionality();
+
+    //! SetUp test fixture
+    void SetUp() override;
+
+    //! TearDown test fixture for safe destruction
+    void TearDown() override;
+
+    //! Tester/state implementation
+    std::unique_ptr&lt;Os::Test::FileSystem::Tester&gt; tester;
+};
+
+#endif  // OS_TEST_UT_COMMON_FILESYSTEM_TESTS_HPP
+</pre></div>
+</div>
+</section>
+<section id="filesystemrules-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">FileSystemRules.cpp</span></code><a class="headerlink" href="#filesystemrules-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/FileSystemRules.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/test/ut/filesystem/FileSystemRules.cpp
+// \brief rule implementations for common testing of filesystem
+// ======================================================================
+
+#include "FileSystemRules.hpp"
+#include "RulesHeaders.hpp"
+#include "STest/Pick/Pick.hpp"
+
+// ------------------------------------------------------------------------------------------------------
+// Utility functions
+// ------------------------------------------------------------------------------------------------------
+
+bool compare_file_contents_on_disk(std::string path1, std::string path2) {
+    Os::File file1, file2;
+    file1.open(path1.c_str(), Os::File::OPEN_READ);
+    file2.open(path2.c_str(), Os::File::OPEN_READ);
+
+    const FwSizeType chunk_size = 128;
+
+    FwSizeType file1Size, file2Size;
+    file1.size(file1Size);
+    file2.size(file2Size);
+    if (file1Size != file2Size) {
+        return false;
+    }
+    const FwIndexType loopLimit = file1Size / chunk_size + 2;
+
+    U8 buffer1[chunk_size], buffer2[chunk_size];
+    FwSizeType bytesRead1 = chunk_size, bytesRead2 = chunk_size;
+
+    for (FwIndexType i = 0; i &lt; loopLimit; i++) {
+        file1.read(buffer1, bytesRead1);
+        file2.read(buffer2, bytesRead2);
+        if (bytesRead1 != bytesRead2 || memcmp(buffer1, buffer2, bytesRead1) != 0) {
+            return false;
+        }
+        if (bytesRead1 &lt; chunk_size) {
+            return true;  // End of file reached
+        }
+    }
+    return false;
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  DirectoryExists
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::DirectoryExists::DirectoryExists()
+    : STest::Rule&lt;Os::Test::FileSystem::Tester&gt;("DirectoryExists") {}
+
+bool Os::Test::FileSystem::Tester::DirectoryExists::precondition(const Os::Test::FileSystem::Tester&amp; state) {
+    return state.m_test_dirs.size() &gt; 0;  // should always be true in random testing
+}
+
+void Os::Test::FileSystem::Tester::DirectoryExists::action(Os::Test::FileSystem::Tester&amp; state) {
+    std::string dirPath = state.get_random_directory().path;
+    printf("--&gt; Rule: %s directory path %s\n", this-&gt;getName(), dirPath.c_str());
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(dirPath.c_str())) &lt;&lt; "exists() failed for directory";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  FileExists
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::FileExists::FileExists() : STest::Rule&lt;Os::Test::FileSystem::Tester&gt;("FileExists") {}
+
+bool Os::Test::FileSystem::Tester::FileExists::precondition(const Os::Test::FileSystem::Tester&amp; state) {
+    return state.m_test_files.size() &gt; 0;
+}
+
+void Os::Test::FileSystem::Tester::FileExists::action(Os::Test::FileSystem::Tester&amp; state) {
+    std::string filename = state.get_random_file().path;
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(filename.c_str())) &lt;&lt; "exists() failed for file";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  PathNotExists
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::PathNotExists::PathNotExists()
+    : STest::Rule&lt;Os::Test::FileSystem::Tester&gt;("PathNotExists") {}
+
+bool Os::Test::FileSystem::Tester::PathNotExists::precondition(const Os::Test::FileSystem::Tester&amp; state) {
+    return true;
+}
+
+void Os::Test::FileSystem::Tester::PathNotExists::action(Os::Test::FileSystem::Tester&amp; state) {
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists("does_not_exist"))
+        &lt;&lt; "exists() failed to return false for nonexistent path";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  RemoveFile
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::RemoveFile::RemoveFile() : STest::Rule&lt;Os::Test::FileSystem::Tester&gt;("RemoveFile") {}
+
+bool Os::Test::FileSystem::Tester::RemoveFile::precondition(const Os::Test::FileSystem::Tester&amp; state) {
+    return state.m_test_files.size() &gt; 0;
+}
+
+void Os::Test::FileSystem::Tester::RemoveFile::action(Os::Test::FileSystem::Tester&amp; state) {
+    std::string filepath = state.get_random_file().path;
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(filepath.c_str()));
+    Os::FileSystem::Status status = Os::FileSystem::getSingleton().removeFile(filepath.c_str());
+    state.remove_file(filepath);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) &lt;&lt; "Failed to remove test file";
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists(filepath.c_str())) &lt;&lt; "exists() failed for touched file";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  TouchFile
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::TouchFile::TouchFile() : STest::Rule&lt;Os::Test::FileSystem::Tester&gt;("TouchFile") {}
+
+bool Os::Test::FileSystem::Tester::TouchFile::precondition(const Os::Test::FileSystem::Tester&amp; state) {
+    return true;
+}
+
+void Os::Test::FileSystem::Tester::TouchFile::action(Os::Test::FileSystem::Tester&amp; state) {
+    std::string new_filename = state.new_random_filepath();
+    Os::FileSystem::Status status;
+    status = Os::FileSystem::getSingleton().touch(new_filename.c_str());
+    state.touch_file(new_filename);
+    // Check that the file was created
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) &lt;&lt; "Failed to touch file";
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(new_filename.c_str())) &lt;&lt; "exists() failed for touched file";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CreateDirectory
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::CreateDirectory::CreateDirectory()
+    : STest::Rule&lt;Os::Test::FileSystem::Tester&gt;("CreateDirectory") {}
+
+bool Os::Test::FileSystem::Tester::CreateDirectory::precondition(const Os::Test::FileSystem::Tester&amp; state) {
+    return true;
+}
+
+void Os::Test::FileSystem::Tester::CreateDirectory::action(Os::Test::FileSystem::Tester&amp; state) {
+    std::string dirpath = state.get_random_directory().path + "/" + state.get_new_dirname();
+    Os::FileSystem::Status status;
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists(dirpath.c_str()));
+    status = Os::FileSystem::getSingleton().createDirectory(dirpath.c_str());
+    state.create_directory(dirpath);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) &lt;&lt; "Failed to create test directory";
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(dirpath.c_str()))
+        &lt;&lt; "exists() should return true for created directory";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  RemoveDirectory
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::RemoveDirectory::RemoveDirectory()
+    : STest::Rule&lt;Os::Test::FileSystem::Tester&gt;("RemoveDirectory") {}
+
+bool Os::Test::FileSystem::Tester::RemoveDirectory::precondition(const Os::Test::FileSystem::Tester&amp; state) {
+    return true;
+}
+
+void Os::Test::FileSystem::Tester::RemoveDirectory::action(Os::Test::FileSystem::Tester&amp; state) {
+    // We create a new directory to be removed because we need to ensure that the directory is empty
+    // and this is the simplest way to do so. CreateDirectory is already tested above.
+    std::string dirpath = state.get_random_directory().path + "/to_be_removed";
+    Os::FileSystem::Status status;
+    status = Os::FileSystem::getSingleton().createDirectory(dirpath.c_str());
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) &lt;&lt; "Failed to create test directory";
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(dirpath.c_str())) &lt;&lt; "exists() failed for created test directory";
+    status = Os::FileSystem::getSingleton().removeDirectory(dirpath.c_str());
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) &lt;&lt; "Failed to remove test directory";
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists(dirpath.c_str()))
+        &lt;&lt; "exists() should return false for removed directory";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  RenameFile
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::RenameFile::RenameFile() : STest::Rule&lt;Os::Test::FileSystem::Tester&gt;("RenameFile") {}
+
+bool Os::Test::FileSystem::Tester::RenameFile::precondition(const Os::Test::FileSystem::Tester&amp; state) {
+    return state.m_test_files.size() &gt; 0;
+}
+
+void Os::Test::FileSystem::Tester::RenameFile::action(Os::Test::FileSystem::Tester&amp; state) {
+    TestFile&amp; file = state.get_random_file();
+    std::string source_path = file.path;
+    std::string original_content = file.contents;
+
+    std::string dest_path = state.new_random_filepath();
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(source_path.c_str()));
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists(dest_path.c_str()));
+    Os::FileSystem::Status status;
+    status = Os::FileSystem::getSingleton().rename(source_path.c_str(), dest_path.c_str());
+    state.move_file(file, dest_path);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) &lt;&lt; "Failed to rename file";
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists(source_path.c_str()));
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(dest_path.c_str()));
+
+    // Assert file contents on disk
+    ASSERT_TRUE(state.validate_contents_on_disk(file));
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  MoveFile
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::MoveFile::MoveFile() : STest::Rule&lt;Os::Test::FileSystem::Tester&gt;("MoveFile") {}
+
+bool Os::Test::FileSystem::Tester::MoveFile::precondition(const Os::Test::FileSystem::Tester&amp; state) {
+    return state.m_test_files.size() &gt; 0;
+}
+
+void Os::Test::FileSystem::Tester::MoveFile::action(Os::Test::FileSystem::Tester&amp; state) {
+    TestFile&amp; file = state.get_random_file();
+    std::string source_path = file.path;
+    std::string original_content = file.contents;
+
+    std::string dest_path = state.new_random_filepath();
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(source_path.c_str()));
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists(dest_path.c_str()));
+    Os::FileSystem::Status status;
+    status = Os::FileSystem::getSingleton().moveFile(source_path.c_str(), dest_path.c_str());
+    state.move_file(file, dest_path);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) &lt;&lt; "Failed to move file";
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists(source_path.c_str()));
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(dest_path.c_str()));
+
+    // Assert file contents on disk
+    ASSERT_TRUE(state.validate_contents_on_disk(file));
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CopyFile
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::CopyFile::CopyFile() : STest::Rule&lt;Os::Test::FileSystem::Tester&gt;("CopyFile") {}
+
+bool Os::Test::FileSystem::Tester::CopyFile::precondition(const Os::Test::FileSystem::Tester&amp; state) {
+    return state.m_test_files.size() &gt; 0;
+}
+
+void Os::Test::FileSystem::Tester::CopyFile::action(Os::Test::FileSystem::Tester&amp; state) {
+    Os::FileSystem::Status status;
+
+    TestFile&amp; source = state.get_random_file();
+    std::string source_path = source.path;
+    std::string dest_path = state.new_random_filepath();
+
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(source_path.c_str()));
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists(dest_path.c_str()));
+    status = Os::FileSystem::getSingleton().copyFile(source_path.c_str(), dest_path.c_str());
+    state.copy_file(source, dest_path);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) &lt;&lt; "Failed to move file";
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(source_path.c_str()));
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(dest_path.c_str()));
+
+    // Compare contents of source and dest on disk
+    ASSERT_TRUE(compare_file_contents_on_disk(source_path, dest_path));
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  AppendFile
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::AppendFile::AppendFile() : STest::Rule&lt;Os::Test::FileSystem::Tester&gt;("AppendFile") {}
+
+bool Os::Test::FileSystem::Tester::AppendFile::precondition(const Os::Test::FileSystem::Tester&amp; state) {
+    return state.m_test_files.size() &gt; 0;
+}
+
+void Os::Test::FileSystem::Tester::AppendFile::action(Os::Test::FileSystem::Tester&amp; state) {
+    Os::FileSystem::Status status;
+    TestFile&amp; source = state.get_random_file();
+    std::string source_path = source.path;
+    TestFile&amp; dest = state.get_random_file();
+    std::string dest_path = dest.path;
+
+    bool createMissingDest = false;
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(dest_path.c_str()));
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(source_path.c_str()));
+    status = Os::FileSystem::getSingleton().appendFile(source_path.c_str(), dest_path.c_str(), createMissingDest);
+    state.append_file(source, dest, createMissingDest);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) &lt;&lt; "Failed to append file";
+    // Compare contents of dest on disk with expected contents
+    ASSERT_TRUE(state.validate_contents_on_disk(dest));
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  AppendToNewFile
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::AppendToNewFile::AppendToNewFile()
+    : STest::Rule&lt;Os::Test::FileSystem::Tester&gt;("AppendToNewFile") {}
+
+bool Os::Test::FileSystem::Tester::AppendToNewFile::precondition(const Os::Test::FileSystem::Tester&amp; state) {
+    return state.m_test_files.size() &gt; 0;
+}
+
+void Os::Test::FileSystem::Tester::AppendToNewFile::action(Os::Test::FileSystem::Tester&amp; state) {
+    Os::FileSystem::Status status;
+    TestFile&amp; source = state.get_random_file();
+    std::string source_path = source.path;
+    TestFile&amp; dest = state.get_random_file();
+    std::string dest_path = dest.path;
+
+    if (source_path == dest_path) {
+        return;  // skip test - cannot remove dest if it is the same as source
+    }
+    // Set up test state: remove dest file from disk and reset contents in test state
+    bool createMissingDest = true;
+    Os::FileSystem::getSingleton().removeFile(dest_path.c_str());
+    dest.contents = "";
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(source_path.c_str()));
+    // Perform append operation
+    status = Os::FileSystem::getSingleton().appendFile(source_path.c_str(), dest_path.c_str(), createMissingDest);
+    state.append_file(source, dest, createMissingDest);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) &lt;&lt; "Failed to append file";
+    // Compare contents of dest on disk with expected contents
+    ASSERT_TRUE(state.validate_contents_on_disk(dest));
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  GetFileSize
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::GetFileSize::GetFileSize() : STest::Rule&lt;Os::Test::FileSystem::Tester&gt;("GetFileSize") {}
+
+bool Os::Test::FileSystem::Tester::GetFileSize::precondition(const Os::Test::FileSystem::Tester&amp; state) {
+    return state.m_test_files.size() &gt; 0;
+}
+
+void Os::Test::FileSystem::Tester::GetFileSize::action(Os::Test::FileSystem::Tester&amp; state) {
+    TestFile file = state.get_random_file();
+    Os::FileSystem::Status status;
+    FwSizeType size;
+    status = Os::FileSystem::getSingleton().getFileSize(file.path.c_str(), size);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) &lt;&lt; "Failed to get file size";
+    ASSERT_EQ(size, file.contents.size()) &lt;&lt; "File size should match contents size";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  GetFreeSpace
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::GetFreeSpace::GetFreeSpace()
+    : STest::Rule&lt;Os::Test::FileSystem::Tester&gt;("GetFreeSpace") {}
+
+bool Os::Test::FileSystem::Tester::GetFreeSpace::precondition(const Os::Test::FileSystem::Tester&amp; state) {
+    return true;
+}
+
+void Os::Test::FileSystem::Tester::GetFreeSpace::action(Os::Test::FileSystem::Tester&amp; state) {
+    Os::FileSystem::Status status;
+    FwSizeType totalBytes = 0, freeBytes = 0;
+    status = Os::FileSystem::getSingleton().getFreeSpace("/", totalBytes, freeBytes);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) &lt;&lt; "Failed to run getFreeSpace";
+    ASSERT_GT(totalBytes, 0) &lt;&lt; "Total bytes should be greater than 0";
+    ASSERT_GT(freeBytes, 0) &lt;&lt; "Free bytes should be greater than 0";
+    ASSERT_GT(totalBytes, freeBytes) &lt;&lt; "Total bytes should be greater than free bytes";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  GetSetWorkingDirectory: Test both get and set working directory
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::GetSetWorkingDirectory::GetSetWorkingDirectory()
+    : STest::Rule&lt;Os::Test::FileSystem::Tester&gt;("GetSetWorkingDirectory") {}
+
+bool Os::Test::FileSystem::Tester::GetSetWorkingDirectory::precondition(const Os::Test::FileSystem::Tester&amp; state) {
+    return true;
+}
+
+void Os::Test::FileSystem::Tester::GetSetWorkingDirectory::action(Os::Test::FileSystem::Tester&amp; state) {
+    Os::FileSystem::Status status;
+    FwSizeType cwdSize = PATH_MAX;
+    char cwdBuffer[cwdSize];
+
+    // Get original working directory
+    status = Os::FileSystem::getSingleton().getWorkingDirectory(cwdBuffer, cwdSize);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) &lt;&lt; "Failed to get original working directory";
+    std::string original_cwd(cwdBuffer);
+
+    // Change working directory
+    std::string other_dir = state.get_random_directory().path;
+    status = Os::FileSystem::getSingleton().changeWorkingDirectory(other_dir.c_str());
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) &lt;&lt; "Failed to change working directory";
+    status = Os::FileSystem::getSingleton().getWorkingDirectory(cwdBuffer, cwdSize);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) &lt;&lt; "Failed to change working directory back";
+    ASSERT_TRUE(other_dir.compare(cwdBuffer)) &lt;&lt; "getWorkingDirectory did not return the expected directory";
+
+    // Change back to original working directory
+    // This is done so that this test does not affect the working directory of other tests during random testing
+    status = Os::FileSystem::getSingleton().changeWorkingDirectory(original_cwd.c_str());
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) &lt;&lt; "Failed to change working directory back";
+}
+</pre></div>
+</div>
+</section>
+<section id="filesystemrules-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">FileSystemRules.hpp</span></code><a class="headerlink" href="#filesystemrules-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/FileSystemRules.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/test/ut/filesystem/FileSystemRules.hpp
+// \brief rule definitions for common testing of filesystem
+// ======================================================================
+// Stripped when compiled, here for IDEs
+#include "RulesHeaders.hpp"
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  DirectoryExists: Check that exists() returns true for an existing directory
+// ------------------------------------------------------------------------------------------------------
+struct DirectoryExists : public STest::Rule&lt;Os::Test::FileSystem::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    DirectoryExists();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileSystem::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileSystem::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  FileExists: Check that exists() returns false for an existing file
+// ------------------------------------------------------------------------------------------------------
+struct FileExists : public STest::Rule&lt;Os::Test::FileSystem::Tester&gt; {
+    FileExists();
+    bool precondition(const Os::Test::FileSystem::Tester&amp; state);
+    void action(Os::Test::FileSystem::Tester&amp; state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  PathNotExists: Check that exists() returns false for a non-existing path
+// ------------------------------------------------------------------------------------------------------
+struct PathNotExists : public STest::Rule&lt;Os::Test::FileSystem::Tester&gt; {
+    PathNotExists();
+    bool precondition(const Os::Test::FileSystem::Tester&amp; state);
+    void action(Os::Test::FileSystem::Tester&amp; state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  RemoveFile: Check that removeFile() removes a file
+// ------------------------------------------------------------------------------------------------------
+struct RemoveFile : public STest::Rule&lt;Os::Test::FileSystem::Tester&gt; {
+    RemoveFile();
+    bool precondition(const Os::Test::FileSystem::Tester&amp; state);
+    void action(Os::Test::FileSystem::Tester&amp; state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  TouchFile: Check that touch() creates a file
+// ------------------------------------------------------------------------------------------------------
+struct TouchFile : public STest::Rule&lt;Os::Test::FileSystem::Tester&gt; {
+    TouchFile();
+    bool precondition(const Os::Test::FileSystem::Tester&amp; state);
+    void action(Os::Test::FileSystem::Tester&amp; state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  RemoveDirectory: Check directory removal
+// ------------------------------------------------------------------------------------------------------
+struct RemoveDirectory : public STest::Rule&lt;Os::Test::FileSystem::Tester&gt; {
+    RemoveDirectory();
+    bool precondition(const Os::Test::FileSystem::Tester&amp; state);
+    void action(Os::Test::FileSystem::Tester&amp; state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CreateDirectory: Check directory creation
+// ------------------------------------------------------------------------------------------------------
+struct CreateDirectory : public STest::Rule&lt;Os::Test::FileSystem::Tester&gt; {
+    CreateDirectory();
+    bool precondition(const Os::Test::FileSystem::Tester&amp; state);
+    void action(Os::Test::FileSystem::Tester&amp; state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  RenameFile: Move a file from one location to another
+// ------------------------------------------------------------------------------------------------------
+struct RenameFile : public STest::Rule&lt;Os::Test::FileSystem::Tester&gt; {
+    RenameFile();
+    bool precondition(const Os::Test::FileSystem::Tester&amp; state);
+    void action(Os::Test::FileSystem::Tester&amp; state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  MoveFile: Move a file from one location to another
+// ------------------------------------------------------------------------------------------------------
+struct MoveFile : public STest::Rule&lt;Os::Test::FileSystem::Tester&gt; {
+    MoveFile();
+    bool precondition(const Os::Test::FileSystem::Tester&amp; state);
+    void action(Os::Test::FileSystem::Tester&amp; state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CopyFile: Copy a file from one location to another
+// ------------------------------------------------------------------------------------------------------
+struct CopyFile : public STest::Rule&lt;Os::Test::FileSystem::Tester&gt; {
+    CopyFile();
+    bool precondition(const Os::Test::FileSystem::Tester&amp; state);
+    void action(Os::Test::FileSystem::Tester&amp; state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  AppendFile: Append a file to another existing file
+// ------------------------------------------------------------------------------------------------------
+struct AppendFile : public STest::Rule&lt;Os::Test::FileSystem::Tester&gt; {
+    AppendFile();
+    bool precondition(const Os::Test::FileSystem::Tester&amp; state);
+    void action(Os::Test::FileSystem::Tester&amp; state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  AppendToNewFile: Append file to a new path, using createMissingDest
+// ------------------------------------------------------------------------------------------------------
+struct AppendToNewFile : public STest::Rule&lt;Os::Test::FileSystem::Tester&gt; {
+    AppendToNewFile();
+    bool precondition(const Os::Test::FileSystem::Tester&amp; state);
+    void action(Os::Test::FileSystem::Tester&amp; state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  GetFileSize: Test the GetFileSize function
+// ------------------------------------------------------------------------------------------------------
+struct GetFileSize : public STest::Rule&lt;Os::Test::FileSystem::Tester&gt; {
+    GetFileSize();
+    bool precondition(const Os::Test::FileSystem::Tester&amp; state);
+    void action(Os::Test::FileSystem::Tester&amp; state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  GetFreeSpace: Test the GetFreeSpace function
+// ------------------------------------------------------------------------------------------------------
+struct GetFreeSpace : public STest::Rule&lt;Os::Test::FileSystem::Tester&gt; {
+    GetFreeSpace();
+    bool precondition(const Os::Test::FileSystem::Tester&amp; state);
+    void action(Os::Test::FileSystem::Tester&amp; state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  GetSetWorkingDirectory: Get working directory, set working directory
+// ------------------------------------------------------------------------------------------------------
+struct GetSetWorkingDirectory : public STest::Rule&lt;Os::Test::FileSystem::Tester&gt; {
+    GetSetWorkingDirectory();
+    bool precondition(const Os::Test::FileSystem::Tester&amp; state);
+    void action(Os::Test::FileSystem::Tester&amp; state);
+};
+</pre></div>
+</div>
+</section>
+<section id="rulesheaders-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">RulesHeaders.hpp</span></code><a class="headerlink" href="#rulesheaders-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/RulesHeaders.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/test/ut/filesystem/RulesHeaders.hpp
+// \brief rule definitions for common testing
+// ======================================================================
+#ifndef __RULES_HEADERS__
+#define __RULES_HEADERS__
+
+#include &lt;gtest/gtest.h&gt;
+#include "Os/FileSystem.hpp"
+#include "STest/Pick/Pick.hpp"
+#include "STest/Rule/Rule.hpp"
+#include "STest/Scenario/BoundedScenario.hpp"
+#include "STest/Scenario/RandomScenario.hpp"
+#include "STest/Scenario/Scenario.hpp"
+
+namespace Os {
+namespace Test {
+namespace FileSystem {
+
+struct FileSystemNode {
+    std::string path;
+    explicit FileSystemNode(std::string a_path) : path(a_path) {};
+    bool operator==(const FileSystemNode&amp; other) const { return this-&gt;path == other.path; }
+};
+struct TestFile : FileSystemNode {
+    std::string contents;
+    TestFile(std::string a_path, std::string a_contents) : FileSystemNode(a_path), contents(a_contents) {};
+};  //!&lt; Representation of a file for tracking state of the filesystem during testing
+
+struct TestDirectory : FileSystemNode {
+    explicit TestDirectory(std::string a_path) : FileSystemNode(a_path) {};
+};  //!&lt; Representation of a directory for tracking state of the filesystem during testing
+
+struct Tester {
+    // Constructors that ensures the filesystem is always valid
+    Tester() = default;
+
+    // Destructor must be virtual
+    virtual ~Tester() = default;
+
+    //! State representation of a section of FileSystem (i.e. a test directory)
+    //! This only tracks relative paths, and not hierarchy. This means that all files
+    //! and directories that are nested within the root of the test directory are all
+    //! tracked in the same vector. This is for simplicity, because hierarchy is not
+    //! needed for the tests.
+    std::vector&lt;TestDirectory&gt; m_test_dirs;
+    std::vector&lt;TestFile&gt; m_test_files;
+
+    U64 m_counter;  //!&lt; Counter for generating unique file/directory names
+
+    // ---------------------------------------------------------------
+    // Functions to manipulate the state of the Tester w.r.t filesystem
+    // ---------------------------------------------------------------
+    void touch_file(std::string path) { this-&gt;m_test_files.push_back(TestFile(path, "")); }
+    void create_directory(std::string path) { this-&gt;m_test_dirs.push_back(TestDirectory(path)); }
+    void remove_file(std::string path) {
+        for (auto it = this-&gt;m_test_files.begin(); it != this-&gt;m_test_files.end(); ++it) {
+            if (it-&gt;path == path) {
+                this-&gt;m_test_files.erase(it);
+                return;
+            }
+        }
+    }
+    void move_file(TestFile&amp; source, std::string dest_path) { source.path = dest_path; }
+    void copy_file(TestFile&amp; source, std::string dest_path) {
+        TestFile new_file(dest_path, source.contents);
+        this-&gt;m_test_files.push_back(new_file);
+    }
+    void append_file(TestFile&amp; source_file, TestFile&amp; dest_file, bool createMissingDest) {
+        dest_file.contents += source_file.contents;
+    }
+
+    // ----------------------------------------------------------------
+    // Helper functions for testing
+    // ----------------------------------------------------------------
+    std::string get_new_filename() {
+        assert(m_counter != std::numeric_limits&lt;U64&gt;::max());
+        return "test_file_" + std::to_string(m_counter++);
+    }
+    std::string get_new_dirname() {
+        assert(m_counter != std::numeric_limits&lt;U64&gt;::max());
+        return "test_dir_" + std::to_string(m_counter++);
+    }
+    TestFile&amp; get_random_file() {
+        return this-&gt;m_test_files[STest::Pick::lowerUpper(0, this-&gt;m_test_files.size() - 1)];
+    }
+    TestDirectory&amp; get_random_directory() {
+        return this-&gt;m_test_dirs[STest::Pick::lowerUpper(0, this-&gt;m_test_dirs.size() - 1)];
+    }
+    std::string new_random_filepath() { return get_random_directory().path + "/" + get_new_filename(); }
+
+    bool validate_contents_on_disk(TestFile&amp; file) {
+        Os::File os_file;
+        os_file.open(file.path.c_str(), Os::File::OPEN_READ);
+        FwSizeType size;
+        os_file.size(size);
+        if (size == 0) {
+            os_file.close();
+            return file.contents.empty();
+        }
+        U8 buffer[size];
+        os_file.read(buffer, size);
+        os_file.close();
+        std::string disk_contents(reinterpret_cast&lt;char*&gt;(buffer), size);
+        return disk_contents == file.contents;
+    }
+
+    // ----------------------------------------------------------------
+    // Helpers to write and remove test state from disk
+    // ----------------------------------------------------------------
+    void write_test_state_to_disk() {
+        Os::File file;
+        Os::Directory dir;
+        // Create and write directories
+        for (TestDirectory&amp; dir_track : this-&gt;m_test_dirs) {
+            dir.open(dir_track.path.c_str(), Os::Directory::OpenMode::CREATE_IF_MISSING);
+            dir.close();
+            this-&gt;m_counter++;
+        }
+        // Create and write files
+        for (TestFile&amp; file_track : this-&gt;m_test_files) {
+            file.open(file_track.path.c_str(), Os::File::OPEN_CREATE);
+            FwSizeType bytesRead = file_track.contents.size();
+            file.write(reinterpret_cast&lt;const U8*&gt;(file_track.contents.c_str()), bytesRead);
+            file.close();
+            this-&gt;m_counter++;
+        }
+    }
+
+    void purge_test_state_from_disk() {
+        for (auto filename : this-&gt;m_test_files) {
+            Os::FileSystem::removeFile(filename.path.c_str());
+        }
+        for (auto it = this-&gt;m_test_dirs.rbegin(); it != this-&gt;m_test_dirs.rend(); ++it) {
+            Os::FileSystem::removeDirectory(it-&gt;path.c_str());
+        }
+    }
+
+// Do NOT alter, adds rules to Tester as inner classes
+#include "FileSystemRules.hpp"
+};
+
+}  // namespace FileSystem
+}  // namespace Test
+}  // namespace Os
+#endif  // __RULES_HEADERS__
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../file/index.html" class="btn btn-neutral float-left" title="file" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../memory/index.html" class="btn btn-neutral float-right" title="memory" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

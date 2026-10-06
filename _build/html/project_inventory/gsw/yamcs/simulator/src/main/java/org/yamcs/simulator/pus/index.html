@@ -1,0 +1,2045 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pus &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../../../search.html" />
+    <link rel="next" title="resources" href="../../../../../resources/index.html" />
+    <link rel="prev" title="cfdp" href="../cfdp/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../../../index.html">gsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../index.html">gsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">simulator</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">main</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">java</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">org</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">simulator</a></li>
+      <li class="breadcrumb-item active">pus</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../../../_sources/project_inventory/gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="pus">
+<h1>pus<a class="headerlink" href="#pus" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="abstractpusservice-java">
+<h2><code class="docutils literal notranslate"><span class="pre">AbstractPusService.java</span></code><a class="headerlink" href="#abstractpusservice-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/AbstractPusService.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.simulator.pus;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.yamcs.simulator.pus.PusSimulator.MAIN_APID;
+import static org.yamcs.simulator.pus.PusSimulator.ack;
+import static org.yamcs.simulator.pus.PusSimulator.nack;
+
+public abstract class AbstractPusService {
+    // start errors
+    static final int START_ERR_INVALID_PUS_SUBTYPE = 1;
+    static final int START_ERR_NOT_IMPLEMENTED = 2;
+
+    // completion errors
+    static final int COMPL_ERR_NOT_IMPLEMENTED = 2;
+    static final int COMPL_ERR_INVALID_EVENT_ID = 3;
+    static final int COMPL_ERR_SCHEDULE_TIME_IN_THE_PAST = 4;
+
+    protected final Logger log = LoggerFactory.getLogger(this.getClass());
+    protected final PusSimulator pusSimulator;
+    protected final int pusType;
+
+    public AbstractPusService(PusSimulator pusSimulator, int pusType) {
+        this.pusSimulator = pusSimulator;
+        this.pusType = pusType;
+    }
+
+    public void start() {
+
+    }
+    public abstract void executeTc(PusTcPacket tc);
+    
+    public PusTmPacket newPacket(int subtype, int userDataLength) {
+        return new PusTmPacket(MAIN_APID, userDataLength, pusType, subtype);
+    }
+
+    public void ack_start(PusTcPacket tc) {
+        pusSimulator.transmitRealtimeTM(ack(tc, 3));
+    }
+
+    public void nack_start(PusTcPacket tc, int code) {
+        pusSimulator.transmitRealtimeTM(nack(tc, 4, code));
+    }
+
+    public void ack_completion(PusTcPacket tc) {
+        pusSimulator.transmitRealtimeTM(ack(tc, 7));
+    }
+
+    public void nack_completion(PusTcPacket tc, int code) {
+        pusSimulator.transmitRealtimeTM(nack(tc, 8, code));
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="pus11service-java">
+<h2><code class="docutils literal notranslate"><span class="pre">Pus11Service.java</span></code><a class="headerlink" href="#pus11service-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/Pus11Service.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.simulator.pus;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.utils.StringConverter;
+
+/**
+ * ST[11] time-based scheduling
+ * &lt;p&gt;
+ * The time-based scheduling service type provides the capability to command on-board application processes using
+ * requests pre­loaded on-board the spacecraft and released at their due time.
+ * 
+ */
+public class Pus11Service extends AbstractPusService {
+    ScheduledThreadPoolExecutor executor;
+
+    int count;
+    boolean enabled = true;
+    PriorityQueue&lt;ScheduledCommand&gt; commands = new PriorityQueue&lt;&gt;();
+    private ScheduledFuture&lt;?&gt; scheduledFuture;
+
+    // subschedule id -&gt; subschedule status (true = enabled, false = disabled)
+    Map&lt;Integer, Boolean&gt; subschStatus = new HashMap&lt;&gt;();
+
+    Pus11Service(PusSimulator pusSimulator) {
+        super(pusSimulator, 11);
+    }
+
+    @Override
+    public void start() {
+        this.executor = pusSimulator.executor;
+    }
+
+    public synchronized void executeTc(PusTcPacket tc) {
+        switch (tc.getSubtype()) {
+        // TC[11,1] enable the time-based schedule execution function
+        case 1 -&gt; {
+            ack_start(tc);
+            log.info("Enabling the time-based schedule execution");
+            enabled = true;
+            ack_completion(tc);
+        }
+        // TC[11,2] disable the time-based schedule execution function
+        case 2 -&gt; {
+            ack_start(tc);
+            log.info("Disabling the time-based schedule execution");
+            enabled = false;
+            ack_completion(tc);
+        }
+        // TC[11,3] reset the time-based schedule
+        case 3 -&gt; {
+            ack_start(tc);
+            log.info("Reseting the time-based schedule execution");
+            enabled = false;
+            commands.clear();
+            ack_completion(tc);
+        }
+        // TC[11,4] insert activities into the time-based schedule
+        case 4 -&gt; insertActivities(tc);
+        // TC[11,5] delete time-based scheduled activities identified by request identifier
+        case 5 -&gt; deleteByRequestId(tc);
+        // TC[11,6] delete the time-based scheduled activities identified by a filter
+        case 6 -&gt; deleteByFilter(tc);
+        // TC[11,7] time-shift scheduled activities identified by request identifier
+        case 7 -&gt; timeShiftById(tc);
+        // TC[11,8] time-shift the scheduled activities identified by a filter
+        case 8 -&gt; timeShiftByFilter(tc);
+        // TC[11,9] detail-report time-based scheduled activities identified by request identifier
+        case 9 -&gt; detailReportById(tc);
+        // TC[11,11] detail-report the time-based scheduled activities identified by a filter
+        case 11 -&gt; detailReportByFilter(tc);
+        // TC[11,12] summary-report time-based scheduled activities identified by request identifier
+        case 12 -&gt; summaryReportById(tc);
+        // TC[11,14] summary-report the time-based scheduled activities identified by a filter
+        case 14 -&gt; summaryReportByFilter(tc);
+        // TC[11,15] time-shift all scheduled activities
+        case 15 -&gt; timeShiftAll(tc);
+        // TC[11,16] detail-report all time-based scheduled activities
+        case 16 -&gt; detailReportAll(tc);
+        // TC[11,17] summary-report all time-based scheduled activities
+        case 17 -&gt; summaryReportAll(tc);
+        // TC[11,18] report the status of each time-based sub-schedule
+        case 18 -&gt; scheduleStatusReport(tc);
+        // TC[11,20] enable time-based sub-schedules
+        case 20 -&gt; enableSubschedule(tc);
+        // TC[11,21] disable time-based sub-schedules
+        case 21 -&gt; disableSubschedule(tc);
+        // TC[11,22] create time-based scheduling groups
+        case 22 -&gt; nack_start(tc, START_ERR_NOT_IMPLEMENTED);
+        // TC[11,23] delete time-based scheduling groups
+        case 23 -&gt; nack_start(tc, START_ERR_NOT_IMPLEMENTED);
+        // TC[11,24] enable time-based scheduling groups
+        case 24 -&gt; nack_start(tc, START_ERR_NOT_IMPLEMENTED);
+        // TC[11,25] disable time-based scheduling groups
+        case 25 -&gt; nack_start(tc, START_ERR_NOT_IMPLEMENTED);
+        // TC[11,26] report the status of each time-based scheduling group
+        case 26 -&gt; nack_start(tc, START_ERR_NOT_IMPLEMENTED);
+        default -&gt; nack_start(tc, START_ERR_INVALID_PUS_SUBTYPE);
+        }
+    }
+
+    private void insertActivities(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+        int subschedule = bb.get() &amp; 0xFF;
+        int n = bb.get() &amp; 0xFF;
+
+        log.info("Received {} command(s) for subschedule {}", n, subschedule);
+
+        var now = PusTime.now();
+
+        synchronized (subschStatus) {
+            if (!subschStatus.containsKey(subschedule)) {
+                subschStatus.put(subschedule, true);
+            }
+        }
+        PusTime firstReleaseTime = null;
+
+        for (int i = 0; i &lt; n; i++) {
+            PusTime releaseTime = PusTime.read(bb);
+            if (releaseTime.isBefore(now)) {
+                log.warn("Command schedule time {} is before now {}, rejecting command", releaseTime, now);
+                nack_completion(tc, COMPL_ERR_SCHEDULE_TIME_IN_THE_PAST);
+                return;
+            }
+
+            if (firstReleaseTime == null || releaseTime.isBefore(firstReleaseTime)) {
+                firstReleaseTime = releaseTime;
+            }
+            int length = (bb.getShort(bb.position() + 4) &amp; 0xFFFF) + 7;
+            byte[] packet = new byte[length];
+            bb.get(packet);
+            log.info("Scheduling command {} at {}", StringConverter.arrayToHexString(packet), releaseTime);
+
+            ScheduledCommand sc = new ScheduledCommand(releaseTime, subschedule, new PusTcPacket(packet));
+            commands.add(sc);
+        }
+        scheduleNext();
+
+        ack_completion(tc);
+    }
+
+    private void deleteByRequestId(PusTcPacket tc) {
+        ack_start(tc);
+
+        ByteBuffer bb = tc.getUserDataBuffer();
+        filterById(bb, true);
+
+        ack_completion(tc);
+    }
+
+    private void deleteByFilter(PusTcPacket tc) {
+        ack_start(tc);
+
+        ByteBuffer bb = tc.getUserDataBuffer();
+        filterByFilter(bb, true);
+
+        ack_completion(tc);
+    }
+
+    private void timeShiftById(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+
+        int timeShiftMillis = bb.getInt();
+
+        var toShift = filterById(bb, true);
+
+        if (!toShift.isEmpty()) {
+            for (var cmd : toShift) {
+                cmd.releaseTime = cmd.releaseTime.shiftByMillis(timeShiftMillis);
+                commands.add(cmd);
+                log.info("Time-shifted command {} by {} milliseconds", cmd.tc, timeShiftMillis);
+            }
+            scheduleNext();
+        }
+
+        ack_completion(tc);
+    }
+
+    private void timeShiftByFilter(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+
+        int timeShiftMillis = bb.getInt();
+
+        var toShift = filterByFilter(bb, true);
+
+        if (!toShift.isEmpty()) {
+            for (var cmd : toShift) {
+                cmd.releaseTime = cmd.releaseTime.shiftByMillis(timeShiftMillis);
+                commands.add(cmd);
+                log.info("Time-shifted command {} by {} milliseconds", cmd.tc, timeShiftMillis);
+            }
+            scheduleNext();
+        }
+
+        ack_completion(tc);
+    }
+
+    private void timeShiftAll(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+
+        int timeShiftMillis = bb.getInt();
+
+        List&lt;ScheduledCommand&gt; updatedCommands = new ArrayList&lt;&gt;();
+
+        while (!commands.isEmpty()) {
+            ScheduledCommand cmd = commands.poll(); // Remove the command from the queue
+            cmd.releaseTime = cmd.releaseTime.shiftByMillis(timeShiftMillis); // Shift the command's release time
+            updatedCommands.add(cmd); // Add the updated command to the temporary list
+        }
+
+        commands.addAll(updatedCommands);
+        scheduleNext();
+
+        ack_completion(tc);
+    }
+
+    private void scheduleStatusReport(PusTcPacket tc) {
+        ack_start(tc);
+
+        synchronized (subschStatus) {
+            var pkt = newPacket(19, 4 + subschStatus.size() * 2);
+            var bb = pkt.getUserDataBuffer();
+
+            bb.putInt(subschStatus.size());
+            for (var me : subschStatus.entrySet()) {
+                bb.put(me.getKey().byteValue());
+                bb.put((byte) (me.getValue() ? 1 : 0));
+            }
+            pusSimulator.transmitRealtimeTM(pkt);
+        }
+
+        ack_completion(tc);
+    }
+
+    private void detailReportByFilter(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+        var cmds = filterByFilter(bb, false);
+        sendDetailReport(cmds);
+        ack_completion(tc);
+    }
+
+    private void summaryReportById(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+        var cmds = filterById(bb, false);
+        sendSummaryReport(cmds);
+        ack_completion(tc);
+    }
+
+    private void summaryReportByFilter(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+        var cmds = filterByFilter(bb, false);
+        sendSummaryReport(cmds);
+        ack_completion(tc);
+    }
+
+    private void detailReportAll(PusTcPacket tc) {
+        ack_start(tc);
+        sendDetailReport(commands);
+        ack_completion(tc);
+    }
+
+    private void summaryReportAll(PusTcPacket tc) {
+        ack_start(tc);
+        sendSummaryReport(commands);
+        ack_completion(tc);
+    }
+
+    private void detailReportById(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+        var cmds = filterById(bb, false);
+        sendDetailReport(cmds);
+        ack_completion(tc);
+    }
+
+    private void enableSubschedule(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+        int subschedule = bb.get() &amp; 0xFF;
+        synchronized (subschStatus) {
+            subschStatus.put(subschedule, true);
+        }
+        log.info("Enabled subschedule {}", subschedule);
+        ack_completion(tc);
+    }
+
+    private void disableSubschedule(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+        int subschedule = bb.get() &amp; 0xFF;
+        synchronized (subschStatus) {
+            subschStatus.put(subschedule, false);
+        }
+        log.info("Disabled subschedule {}", subschedule);
+        ack_completion(tc);
+    }
+
+    private void sendSummaryReport(Collection&lt;ScheduledCommand&gt; cmds) {
+        var pkt = newPacket(13, 4 + cmds.size() * 15);
+        var bb = pkt.getUserDataBuffer();
+        bb.putShort((short) cmds.size());
+        for (var cmd : cmds) {
+            bb.put((byte) cmd.subschedule);
+            cmd.releaseTime.encode(bb);
+            encodeRequestId(bb, cmd.tc);
+        }
+        pusSimulator.transmitRealtimeTM(pkt);
+    }
+
+    private static final int MAX_DETAIL_REPORT_SIZE = 1400;
+
+    private void sendDetailReport(Collection&lt;ScheduledCommand&gt; cmds) {
+        Iterator&lt;ScheduledCommand&gt; iterator = cmds.iterator();
+
+        while (iterator.hasNext()) {
+            int totalSize = 4;
+            List&lt;ScheduledCommand&gt; batch = new ArrayList&lt;&gt;();
+
+            while (iterator.hasNext()) {
+                ScheduledCommand cmd = iterator.next();
+                int cmdSize = 9 + cmd.tc.getLength();
+
+                if (totalSize + cmdSize &gt; MAX_DETAIL_REPORT_SIZE) {
+                    break;
+                }
+
+                batch.add(cmd);
+                totalSize += cmdSize;
+            }
+
+            var pkt = newPacket(10, totalSize);
+            var bb = pkt.getUserDataBuffer();
+
+            bb.putShort((short) batch.size());
+            for (var cmd : batch) {
+                bb.put((byte) cmd.subschedule);
+                cmd.releaseTime.encode(bb);
+                bb.put(cmd.tc.getBytes());
+            }
+            pusSimulator.transmitRealtimeTM(pkt);
+        }
+    }
+
+
+    private List&lt;ScheduledCommand&gt; filterById(ByteBuffer bb, boolean remove) {
+        List&lt;ScheduledCommand&gt; cmds = new ArrayList&lt;&gt;();
+        int n = bb.getShort() &amp; 0xFFFF;
+        log.info("Filtering by {} id filters", n);
+        for (int i = 0; i &lt; n; i++) {
+            int sourceId = bb.getShort() &amp; 0xFFFF;
+            int apid = bb.getShort() &amp; 0x07FF;
+            int seqCount = bb.getShort() &amp; 0xFFFF;
+            log.info("Filter by ID source: {}, apid: {}, seqCount: {}", sourceId, apid, seqCount);
+            Iterator&lt;ScheduledCommand&gt; it = commands.iterator();
+
+            while (it.hasNext()) {
+                var cmd = it.next();
+                if (cmd.tc.getSourceId() == sourceId &amp;&amp; cmd.tc.getAPID() == apid
+                        &amp;&amp; cmd.tc.getSequenceCount() == seqCount) {
+                    cmds.add(cmd);
+                    if (remove) {
+                        it.remove();
+                    }
+                }
+            }
+        }
+        log.info("{} commands matched the filters", cmds.size());
+        return cmds;
+    }
+
+    private List&lt;ScheduledCommand&gt; filterByFilter(ByteBuffer bb, boolean remove) {
+
+        int type = bb.get() &amp; 0xFF; // Type of time window (enumerated)
+
+        // First time tag (for "from time tag" types)
+        PusTime timeTag1 = (type == 1 || type == 2) ? PusTime.read(bb) : null;
+        // Second time tag (for "to time tag" types)
+        PusTime timeTag2 = (type == 1 || type == 3) ? PusTime.read(bb) : null;
+
+        BitSet subschedules = null;
+        // Read the number of sub-schedules
+        int n = bb.get() &amp; 0xFF;
+        if (n &gt; 0) {
+            subschedules = new BitSet();
+            for (int i = 0; i &lt; n; i++) {
+                int subschedule = bb.get() &amp; 0xFF;
+                subschedules.set(subschedule);
+            }
+        }
+        log.info("Filter start_time: {}, end_time: {}, subschedules: {}", timeTag1, timeTag2, subschedules);
+
+        // Iterate over scheduled commands and remove matching ones
+        Iterator&lt;ScheduledCommand&gt; iterator = commands.iterator();
+        List&lt;ScheduledCommand&gt; result = new ArrayList&lt;&gt;();
+        while (iterator.hasNext()) {
+            ScheduledCommand cmd = iterator.next();
+            if (subschedules == null || subschedules.get(cmd.subschedule)) {
+                boolean matches = switch (type) {
+                // "select all"
+                case 0 -&gt; true;
+                // "from time tag to time tag"
+                case 1 -&gt; !cmd.releaseTime.isBefore(timeTag1) &amp;&amp; !cmd.releaseTime.isAfter(timeTag2);
+                // "from time tag"
+                case 2 -&gt; !cmd.releaseTime.isBefore(timeTag1);
+                // "to time tag"
+                case 3 -&gt; !cmd.releaseTime.isAfter(timeTag2);
+                default -&gt; {
+                    log.warn("Unknown time window type: {}", type);
+                    yield false; // Default case for unknown type
+                }
+                };
+
+                if (matches) {
+                    result.add(cmd);
+                    if (remove) {
+                        log.info("Removing command {} scheduled at {}", cmd.tc, cmd.releaseTime);
+                        iterator.remove();
+                    }
+                }
+            }
+        }
+
+        log.info("{} commands matched the filter", result.size());
+        return result;
+    }
+
+    static void encodeRequestId(ByteBuffer bb, PusTcPacket tc) {
+        bb.putShort((short) tc.getSourceId());
+        bb.putShort((short) tc.getAPID());
+        bb.putShort((short) tc.getSequenceCount());
+    }
+
+    private void runSchedule(PusTime now) {
+        while (true) {
+            var cmd = commands.peek();
+            if (cmd == null) {
+                break;
+            }
+            int c = cmd.releaseTime.compareTo(now);
+            if (c &lt; 0) {
+                log.warn("Dropping command {} because its release time {} has passed (now: {})", cmd.tc,
+                        cmd.releaseTime, now);
+                commands.remove();
+            } else if (c == 0) {
+                synchronized (subschStatus) {
+                    if (!subschStatus.getOrDefault(cmd.subschedule, false)) {
+                        log.warn("Dropping command {} because the subschedule {} is disabled", cmd.tc,
+                                cmd.subschedule);
+                        commands.remove();
+                        continue;
+                    }
+                }
+                log.info("Executing command {}", cmd.tc);
+                commands.remove();
+                pusSimulator.processTc(cmd.tc);
+            } else {
+                scheduleNext();
+                break;
+            }
+        }
+    }
+
+    private void scheduleNext() {
+        var cmd = commands.peek();
+        if (cmd == null) {
+            return;
+        }
+        long millis = cmd.releaseTime.deltaMillis(PusTime.now());
+        if (scheduledFuture != null) {
+            scheduledFuture.cancel(false);
+        }
+        scheduledFuture = executor.schedule(() -&gt; runSchedule(cmd.releaseTime), millis, TimeUnit.MILLISECONDS);
+    }
+
+    static class ScheduledCommand implements Comparable&lt;ScheduledCommand&gt; {
+        PusTime releaseTime;
+        final int subschedule;
+        final PusTcPacket tc;
+
+        public ScheduledCommand(PusTime releaseTime, int subschedule, PusTcPacket tc) {
+            super();
+            this.releaseTime = releaseTime;
+            this.subschedule = subschedule;
+            this.tc = tc;
+        }
+
+        @Override
+        public int compareTo(ScheduledCommand o) {
+            return this.releaseTime.compareTo(o.releaseTime);
+        }
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="pus17service-java">
+<h2><code class="docutils literal notranslate"><span class="pre">Pus17Service.java</span></code><a class="headerlink" href="#pus17service-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/Pus17Service.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.simulator.pus;
+
+
+public class Pus17Service extends AbstractPusService {
+    Pus17Service(PusSimulator pusSimulator) {
+        super(pusSimulator, 17);
+    }
+
+    @Override
+    public void executeTc(PusTcPacket tc) {
+
+        if (tc.getSubtype() != 1) {
+            log.info("invalid subtype {}, sending NACK start", tc.getSubtype());
+            nack_start(tc, START_ERR_INVALID_PUS_SUBTYPE);
+            return;
+        }
+
+        ack_start(tc);
+        pusSimulator.transmitRealtimeTM(newPacket(2, 0));
+        ack_completion(tc);
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="pus5service-java">
+<h2><code class="docutils literal notranslate"><span class="pre">Pus5Service.java</span></code><a class="headerlink" href="#pus5service-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/Pus5Service.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.simulator.pus;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeUnit;
+
+
+public class Pus5Service extends AbstractPusService {
+    int count;
+    boolean[] enabled = { true, true };
+
+    Pus5Service(PusSimulator pusSimulator) {
+        super(pusSimulator, 5);
+    }
+
+    @Override
+    public void start() {
+        pusSimulator.executor.scheduleAtFixedRate(() -&gt; sendEvent(), 0, 1000, TimeUnit.MILLISECONDS);
+    }
+
+    public void sendEvent() {
+        var id = count % 5;
+        if (id == 0 &amp;&amp; enabled[0]) {
+            // send event1
+            PusTmPacket packet = newPacket(1, 7);
+            ByteBuffer bb = packet.getUserDataBuffer();
+            bb.put((byte) 1);
+            bb.putShort((short) count);
+            bb.putFloat((float) (count + 3.14159265));
+
+            pusSimulator.transmitRealtimeTM(packet);
+        } else if (enabled[1]) {
+            // send event2 with subtype (severity level) id
+            byte[] msg = ("This is an event with subtype " + id).getBytes(StandardCharsets.UTF_8);
+            PusTmPacket packet = newPacket(id, 3 + msg.length);
+            ByteBuffer bb = packet.getUserDataBuffer();
+            bb.put((byte) 2);
+            bb.putShort((short) msg.length);
+            bb.put(msg);
+            pusSimulator.transmitRealtimeTM(packet);
+        }
+        count++;
+    }
+
+
+    public void executeTc(PusTcPacket tc) {
+        if (tc.getSubtype() == 5 ||tc.getSubtype() == 6 ) {
+            ack_start(tc);
+            enableDisableEvents(tc, tc.getSubtype() == 5);
+        } else if (tc.getSubtype() == 7) {
+            nack_start(tc, START_ERR_NOT_IMPLEMENTED);
+        } else {
+            log.info("invalid subtype {}, sending NACK start", tc.getSubtype());
+            nack_start(tc, START_ERR_INVALID_PUS_SUBTYPE);
+            return;
+        }
+    }
+
+    void enableDisableEvents(PusTcPacket tc, boolean enable) {
+        ByteBuffer bb = tc.getUserDataBuffer();
+        int n = bb.get() &amp; 0xFF;
+        for (int i = 0; i &lt; n; i++) {
+            int eventId = bb.get() &amp; 0xFF;
+            if (eventId == 0 || eventId  &gt; enabled.length) {
+                log.info("invalid event id {}, sending NACK start", eventId);
+                nack_completion(tc, COMPL_ERR_INVALID_EVENT_ID);
+                return;
+            }
+            enabled[eventId - 1] = enable;
+        }
+        ack_completion(tc);
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="pussimulator-java">
+<h2><code class="docutils literal notranslate"><span class="pre">PusSimulator.java</span></code><a class="headerlink" href="#pussimulator-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/PusSimulator.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.simulator.pus;
+
+import java.io.File;
+import java.nio.ByteBuffer;
+import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.cfdp.pdu.CfdpPacket;
+import org.yamcs.simulator.AbstractSimulator;
+import org.yamcs.simulator.cfdp.CfdpCcsdsPacket;
+import org.yamcs.simulator.cfdp.CfdpReceiver;
+import org.yamcs.simulator.DHSHandler;
+import org.yamcs.simulator.EpsLvpduHandler;
+import org.yamcs.simulator.FlightDataHandler;
+import org.yamcs.simulator.PowerHandler;
+import org.yamcs.simulator.RCSHandler;
+import org.yamcs.simulator.SimulatorCcsdsPacket;
+import org.yamcs.simulator.TcpTmTcLink;
+
+/**
+ * PUS (Packet Utilisation Standard) simulator.
+ * 
+ * Supports services:
+ * &lt;ul&gt;
+ * &lt;li&gt;ST[01] - request verification&lt;/li&gt;
+ * &lt;li&gt;ST[03] - housekeeping&lt;/li&gt;
+ * &lt;li&gt;ST[05] - event reporting - TODO&lt;/li&gt;
+ * &lt;li&gt;ST[06] - memory management - TODO&lt;/li&gt;
+ * &lt;li&gt;ST[09] - time management - only sending the time packet&lt;/li&gt;
+ * &lt;li&gt;ST[11] - time based schedule&lt;/li&gt;
+ * &lt;li&gt;ST[12] - on-board monitoring - TODO&lt;/li&gt;
+ * &lt;li&gt;ST[13] - large packet transfer - TODO&lt;/li&gt;
+ * &lt;li&gt;ST[15] - on-board storage and retrieval - TODO&lt;/li&gt;
+ * &lt;li&gt;ST[17] - test&lt;/li&gt;
+ * &lt;li&gt;ST[23] - file management - TODO&lt;/li&gt;
+ * 
+ * &lt;li&gt;
+ * 
+ * &lt;/ul&gt;
+ * 
+ */
+public class PusSimulator extends AbstractSimulator {
+    static final int MAIN_APID = 1;
+
+    static final int PUS_TYPE_ACK = 1;
+    static final int PUS_TYPE_HK = 3;
+    static final int PUS_TYPE_EVENT = 5;
+
+    static final int PUS_SUBTYPE_ACK_ACCEPTANCE = 1;
+    static final int PUS_SUBTYPE_NACK_ACCEPTANCE = 2;
+    static final int PUS_SUBTYPE_ACK_START = 3;
+    static final int PUS_SUBTYPE_NACK_START = 4;
+    static final int PUS_SUBTYPE_ACK_COMPLETION = 7;
+    static final int PUS_SUBTYPE_NACK_COMPLETION = 8;
+
+    static final int START_FAILURE_INVALID_VOLTAGE_NUM = 100;
+    private static final Logger log = LoggerFactory.getLogger(PusSimulator.class);
+
+    final Random random = new Random();
+
+    ScheduledThreadPoolExecutor executor;
+    TcpTmTcLink tmLink;
+
+    FlightDataHandler flightDataHandler;
+    DHSHandler dhsHandler;
+    PowerHandler powerDataHandler;
+    RCSHandler rcsHandler;
+    EpsLvpduHandler epslvpduHandler;
+    CfdpReceiver cfdpReceiver;
+    Pus5Service pus5Service;
+    Pus11Service pus11Service;
+    Pus17Service pus17Service;
+
+    protected BlockingQueue&lt;PusTcPacket&gt; pendingCommands = new ArrayBlockingQueue&lt;&gt;(100);
+
+    public PusSimulator(File dataDir) {
+        powerDataHandler = new PowerHandler();
+        rcsHandler = new RCSHandler();
+        epslvpduHandler = new EpsLvpduHandler();
+        flightDataHandler = new FlightDataHandler();
+        dhsHandler = new DHSHandler();
+        cfdpReceiver = new CfdpReceiver(this, dataDir);
+        pus5Service = new Pus5Service(this);
+        pus11Service = new Pus11Service(this);
+        pus17Service = new Pus17Service(this);
+    }
+
+    @Override
+    protected void doStart() {
+        executor = new ScheduledThreadPoolExecutor(1);
+        executor.scheduleAtFixedRate(() -&gt; sendTimePacket(), 0, 4, TimeUnit.SECONDS);
+
+        executor.scheduleAtFixedRate(() -&gt; sendFlightPacket(), 0, 200, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(() -&gt; sendHkTm(), 0, 1000, TimeUnit.MILLISECONDS);
+        // executor.scheduleAtFixedRate(() -&gt; sendCfdp(), 0, 1000, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(() -&gt; executePendingCommands(), 0, 200, TimeUnit.MILLISECONDS);
+
+        pus5Service.start();
+        pus11Service.start();
+    }
+
+    private void sendFlightPacket() {
+        PusTmPacket packet = new PusTmPacket(MAIN_APID, 4 + flightDataHandler.dataSize(), PUS_TYPE_HK, 25);
+        ByteBuffer buffer = packet.getUserDataBuffer();
+        buffer.putInt(0);
+        flightDataHandler.fillPacket(buffer.slice());
+        transmitRealtimeTM(packet);
+    }
+
+    private void sendHkTm() {
+        try {
+            PusTmPacket packet = new PusTmPacket(MAIN_APID, 4 + powerDataHandler.dataSize(), PUS_TYPE_HK, 25);
+            ByteBuffer buffer = packet.getUserDataBuffer();
+            buffer.putInt(1);
+            powerDataHandler.fillPacket(buffer.slice());
+            transmitRealtimeTM(packet);
+
+            packet = new PusTmPacket(MAIN_APID, 4 + dhsHandler.dataSize(), PUS_TYPE_HK, 25);
+            buffer = packet.getUserDataBuffer();
+            buffer.putInt(2);
+            dhsHandler.fillPacket(buffer.slice());
+            transmitRealtimeTM(packet);
+
+            packet = new PusTmPacket(MAIN_APID, 4 + rcsHandler.dataSize(), PUS_TYPE_HK, 25);
+            buffer = packet.getUserDataBuffer();
+            buffer.putInt(3);
+            rcsHandler.fillPacket(buffer.slice());
+            transmitRealtimeTM(packet);
+
+            packet = new PusTmPacket(MAIN_APID, 4 + epslvpduHandler.dataSize(), PUS_TYPE_HK, 25);
+            buffer = packet.getUserDataBuffer();
+            buffer.putInt(4);
+            epslvpduHandler.fillPacket(buffer.slice());
+            transmitRealtimeTM(packet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void transmitRealtimeTM(PusTmPacket packet) {
+        packet.fillChecksum();
+        tmLink.sendPacket(packet.getBytes());
+    }
+
+    private void sendTimePacket() {
+        tmLink.sendImmediate(new PusTmTimePacket());
+    }
+
+    @Override
+    protected void doStop() {
+        executor.shutdownNow();
+    }
+
+    @Override
+    public void transmitCfdp(CfdpPacket packet) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void processTc(SimulatorCcsdsPacket tc) {
+        PusTcPacket pustc = (PusTcPacket) tc;
+        if (tc.getAPID() == CfdpCcsdsPacket.APID) {
+            // cfdpReceiver.processCfdp(tc.getUserDataBuffer());
+        } else {
+            transmitRealtimeTM(ack(pustc, 1));
+            try {
+                pendingCommands.put(pustc);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    private void switchBatteryOn(PusTcPacket commandPacket) {
+        int batNum = commandPacket.getUserDataBuffer().get(0);
+        if (batNum &lt; 1 || batNum &gt; 3) {
+            log.info("CMD: BATERRY ON {}, sending NACK start", batNum);
+            transmitRealtimeTM(nack(commandPacket, 4, START_FAILURE_INVALID_VOLTAGE_NUM));
+            return;
+        }
+        if (batNum != 2) {
+            log.info("CMD: BATERRY ON {} ACK start", batNum);
+            transmitRealtimeTM(ack(commandPacket, 3));
+        } else {
+            log.info("CMD: BATERRY ON {}, skip ACK start", batNum);
+        }
+
+        executor.schedule(() -&gt; {
+            if (batNum == 3) {
+                int returnCode = random.nextInt(5);
+                log.info("CMD: BATERRY ON {}, sending failure completion with code {}", batNum, returnCode);
+                transmitRealtimeTM(nack(commandPacket, 8, returnCode));
+            } else {
+                powerDataHandler.setBatteryOn(batNum);
+                transmitRealtimeTM(ack(commandPacket, 7));
+            }
+        }, 1500, TimeUnit.MILLISECONDS);
+    }
+
+    private void switchBatteryOff(PusTcPacket commandPacket) {
+        transmitRealtimeTM(ack(commandPacket, 3));
+        int batNum = commandPacket.getUserDataBuffer().get(0);
+        log.info("CMD: BATERRY OFF {}", batNum);
+        executor.schedule(() -&gt; {
+            powerDataHandler.setBatteryOff(batNum);
+            transmitRealtimeTM(ack(commandPacket, 7));
+        }, 500, TimeUnit.MILLISECONDS);
+    }
+
+    private void executePendingCommands() {
+        PusTcPacket commandPacket;
+        while ((commandPacket = pendingCommands.poll()) != null) {
+            try {
+                log.info("Received PUS TC : {} (now: {})", commandPacket, PusTime.now());
+                switch (commandPacket.getType()) {
+                case 5 -&gt; pus5Service.executeTc(commandPacket);
+                case 11 -&gt; pus11Service.executeTc(commandPacket);
+                case 17 -&gt; pus17Service.executeTc(commandPacket);
+                case 25 -&gt; {
+                    switch (commandPacket.getSubtype()) {
+                    case 1 -&gt; switchBatteryOn(commandPacket);
+                    case 2 -&gt; switchBatteryOff(commandPacket);
+                    default -&gt; log.error("Invalid command  subtype {}", commandPacket.getSubtype());
+                    }
+                }
+                default -&gt; log.warn("Unknown command type {}", commandPacket.getType());
+                }
+            } catch (Exception e) {
+                log.warn("Error executing command", e);
+            }
+        }
+    }
+
+    protected static PusTmPacket ack(PusTcPacket commandPacket, int subtype) {
+        PusTmPacket ackPacket = new PusTmPacket(MAIN_APID, 4, PUS_TYPE_ACK, subtype);
+
+        ByteBuffer bb = ackPacket.getUserDataBuffer();
+        bb.put(commandPacket.getBytes(), 0, 4);
+        return ackPacket;
+    }
+
+    public static PusTmPacket nack(PusTcPacket commandPacket, int subtype, int code) {
+        PusTmPacket ackPacket = new PusTmPacket(MAIN_APID, 8, PUS_TYPE_ACK, subtype);
+
+        ByteBuffer bb = ackPacket.getUserDataBuffer();
+        bb.put(commandPacket.getBytes(), 0, 4);
+        bb.putInt(code);
+        return ackPacket;
+    }
+
+    @Override
+    protected void setTmLink(TcpTmTcLink tmLink) {
+        this.tmLink = tmLink;
+    }
+
+    @Override
+    protected void setTm2Link(TcpTmTcLink tm2Link) {
+        // ignore only send packets on tmlink
+    }
+
+    @Override
+    protected void setLosLink(TcpTmTcLink losLink) {
+        // ignore only send packets on tmlink
+    }
+
+    @Override
+    public int maxTmDataSize() {
+        return 1500;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="pustcpacket-java">
+<h2><code class="docutils literal notranslate"><span class="pre">PusTcPacket.java</span></code><a class="headerlink" href="#pustcpacket-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/PusTcPacket.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.simulator.pus;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.simulator.SimulatorCcsdsPacket;
+import org.yamcs.tctm.ccsds.error.CrcCciitCalculator;
+
+/**
+ * TC packets according to PUS standard
+ * ECSS-E-ST-70-41C 15 April 2016
+ * 
+ * 
+ * &lt;pre&gt;
+ *  Secondary header (5 bytes)
+ * 
+ *  version number - 4 bits
+ *  acknowledgement flags - 4 bits
+ *  service type  -   8 bits
+ *  service subtype  - 8 bits
+ *  source Id - 16 bits
+ * &lt;/pre&gt;
+ * 
+ * 
+ */
+public class PusTcPacket extends SimulatorCcsdsPacket {
+    public static final int SH_OFFSET = 6;
+    public static final int DATA_OFFSET = SH_OFFSET + 5;
+
+    static final CrcCciitCalculator crcCalculator = new CrcCciitCalculator();
+
+    public PusTcPacket(byte[] packet) {
+        super(packet);
+    }
+
+    public PusTcPacket(int apid, int userDataLength, int ackFlags, int type, int subtype) {
+        super(ByteBuffer.allocate(getPacketLength(userDataLength)));
+        setHeader(apid, 1, 1, 3, getSeq(apid));
+
+        bb.position(SH_OFFSET);
+        bb.put((byte) (0x20 + (ackFlags &amp; 0x0F)));
+        bb.put((byte) type);
+        bb.put((byte) subtype);
+        int sourceId = 0;
+        bb.putShort((short) sourceId);
+    }
+
+    public void setType(int type) {
+        bb.put(SH_OFFSET + 1, (byte) type);
+    }
+
+    public int getType() {
+        return bb.get(SH_OFFSET + 1) &amp; 0xFF;
+    }
+
+    public void setSubtype(int subtype) {
+        bb.put(SH_OFFSET + 2, (byte) subtype);
+    }
+
+    public int getSubtype() {
+        return bb.get(SH_OFFSET + 2) &amp; 0xFF;
+    }
+
+    public int getSourceId() {
+        return bb.getShort(SH_OFFSET + 3) &amp; 0xFFFF;
+    }
+
+    private static int getPacketLength(int userDataLength) {
+        return DATA_OFFSET + userDataLength + 2;// 2 bytes for the CRC
+    }
+
+    public int getAckFlags() {
+        return bb.get(DATA_OFFSET);
+    }
+
+    @Override
+    public ByteBuffer getUserDataBuffer() {
+        bb.position(DATA_OFFSET);
+        return bb.slice();
+    }
+
+    @Override
+    protected void fillChecksum() {
+        int crc = crcCalculator.compute(bb.array(), bb.arrayOffset(), bb.capacity() - bb.arrayOffset() - 2);
+        bb.position(bb.capacity() - 2);
+        bb.putShort((short) crc);
+    }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("apid: ").append(getAPID())
+        .append(", type: ").append(getType())
+        .append(", subtype: ").append(getSubtype())
+        .append("\n");
+        appendBinaryData(sb);
+        return sb.toString();
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="pustime-java">
+<h2><code class="docutils literal notranslate"><span class="pre">PusTime.java</span></code><a class="headerlink" href="#pustime-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/PusTime.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.simulator.pus;
+
+import java.nio.ByteBuffer;
+
+/**
+ * PUS time used by the simulator is 1 byte for the pfield, 4 bytes seconds and 3 bytes sub-second
+ * 
+ * The time is started at 0 when the simulator starts and drifts with a constant drift
+ *
+ */
+public class PusTime implements Comparable&lt;PusTime&gt; {
+    public static final int LENGTH_BYTES = 8;
+    static final long NANOS_IN_SEC = 1000_000_000l;
+    static final long MAX_FRACTIONAL_PART = 0xFFFFFFl;
+    static final byte TIME_PFIELD = (byte) 0x2F;
+
+    static double drift = 1 + 1e-7;
+    static long t0 = System.nanoTime();
+
+    final int seconds;
+    // 4 bytes unsigned
+    final long fractionalTime;
+
+    public PusTime(int seconds, long fractionalTime) {
+        this.seconds = seconds;
+        this.fractionalTime = fractionalTime;
+    }
+
+    public void encode(ByteBuffer bb) {
+        bb.put(TIME_PFIELD);
+        bb.putInt(seconds);
+        bb.put((byte) (fractionalTime &gt;&gt; 16));
+        bb.putShort((short) (fractionalTime &amp; 0xFFFF));
+
+    }
+
+    public static PusTime now() {
+        long nanos = System.nanoTime() - t0;
+        int sec = (int) (nanos / NANOS_IN_SEC);
+        double fine = drift * ((nanos % NANOS_IN_SEC) / (double) NANOS_IN_SEC);
+        while (fine &gt; 1) {
+            sec++;
+            fine -= 1;
+        }
+        long fractionalTime = (long) (fine * MAX_FRACTIONAL_PART);
+        return new PusTime(sec, fractionalTime);
+    }
+
+    @Override
+    public String toString() {
+        return "PusTime [seconds=" + seconds + ", fractionalTime=" + fractionalTime + "]";
+    }
+
+    public static PusTime read(ByteBuffer bb) {
+        byte pfield = bb.get();
+        if (pfield != TIME_PFIELD) {
+            throw new IllegalArgumentException("Expected time pfield " + TIME_PFIELD + ", got " + pfield);
+        }
+        int seconds = bb.getInt();
+        int fractionalTime = ((bb.getShort() &amp; 0xFFFF) &lt;&lt; 8) + (bb.get() &amp; 0xFF);
+        return new PusTime(seconds, fractionalTime);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (fractionalTime ^ (fractionalTime &gt;&gt;&gt; 32));
+        result = prime * result + seconds;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        PusTime other = (PusTime) obj;
+        if (seconds != other.seconds)
+            return false;
+        if (fractionalTime != other.fractionalTime)
+            return false;
+        return true;
+    }
+
+    @Override
+    public int compareTo(PusTime other) {
+        if (this.seconds != other.seconds) {
+            return Integer.compare(this.seconds, other.seconds);
+        }
+        return Long.compare(this.fractionalTime, other.fractionalTime);
+    }
+
+    public long deltaMillis(PusTime other) {
+        int deltaSeconds = this.seconds - other.seconds;
+
+        long deltaFractionalTime = this.fractionalTime - other.fractionalTime;
+
+        if (deltaFractionalTime &lt; 0) {
+            deltaSeconds -= 1;
+            deltaFractionalTime += MAX_FRACTIONAL_PART;
+        }
+        return deltaSeconds * 1000 + deltaFractionalTime * 1000 / MAX_FRACTIONAL_PART;
+    }
+
+    public boolean isBefore(PusTime other) {
+        return this.compareTo(other) &lt; 0;
+    }
+
+    public boolean isAfter(PusTime other) {
+        return this.compareTo(other) &gt; 0;
+    }
+
+    public PusTime shiftByMillis(int timeShiftMillis) {
+        long shiftNanos = timeShiftMillis * 1_000_000L;
+        long fractionalShift = (shiftNanos * MAX_FRACTIONAL_PART) / NANOS_IN_SEC;
+        long newFractionalTime = this.fractionalTime + fractionalShift;
+        int carryOverSeconds = 0;
+
+        if (newFractionalTime &gt; MAX_FRACTIONAL_PART) {
+            carryOverSeconds = (int) (newFractionalTime / (MAX_FRACTIONAL_PART + 1));
+            newFractionalTime = newFractionalTime % (MAX_FRACTIONAL_PART + 1);
+        }
+
+        int newSeconds = this.seconds + timeShiftMillis / 1000 + carryOverSeconds;
+
+        return new PusTime(newSeconds, newFractionalTime);
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="pustmpacket-java">
+<h2><code class="docutils literal notranslate"><span class="pre">PusTmPacket.java</span></code><a class="headerlink" href="#pustmpacket-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/PusTmPacket.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.simulator.pus;
+
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.simulator.SimulatorCcsdsPacket;
+import org.yamcs.tctm.ccsds.error.CrcCciitCalculator;
+
+/**
+ * TM packets according to PUS standard
+ * ECSS-E-ST-70-41C 15 April 2016
+ * 
+ * 
+ * &lt;pre&gt;
+ * Secondary header (16 bytes)
+ * 
+ *  version number - 4 bits
+ *  spacecraft time reference status - 4 bits
+ *  service type  -   8 bits
+ *  message subtype  - 8 bits
+ *  message type counter - 16 bits
+ *  destination Id - 16 bits
+ *  time - variable size but we use 9 bytes
+ * &lt;/pre&gt;
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class PusTmPacket extends SimulatorCcsdsPacket {
+    public static final int SH_OFFSET = 6;
+    public static final int DATA_OFFSET = SH_OFFSET + 7 + PusTime.LENGTH_BYTES;
+
+    static final CrcCciitCalculator crcCalculator = new CrcCciitCalculator();
+
+    protected static HashMap&lt;Integer, AtomicInteger&gt; countMap = new HashMap&lt;&gt;(2); // destination -&gt; msgCounter
+
+    public PusTmPacket(byte[] packet) {
+        super(packet);
+    }
+
+    public PusTmPacket(int apid, int userDataLength, int type, int subtype) {
+        super(ByteBuffer.allocate(getPacketLength(userDataLength)));
+        setHeader(apid, 0, 1, 3, getSeq(apid));
+        bb.position(SH_OFFSET);
+        bb.put((byte) (0x21));
+        bb.put((byte) type);
+        bb.put((byte) subtype);
+        int destination = 0;
+        bb.putShort((short) getCount(destination));
+        bb.putShort((short) destination);
+        PusTime now = PusTime.now();
+        now.encode(bb);
+    }
+
+    public void setType(int type) {
+        bb.put(SH_OFFSET + 1, (byte) type);
+
+    }
+
+    public void setSubtype(int subtype) {
+        bb.put(SH_OFFSET + 2, (byte) subtype);
+    }
+
+    private static int getPacketLength(int userDataLength) {
+        return DATA_OFFSET + userDataLength + 2;// 2 bytes for the CRC
+    }
+
+    @Override
+    public ByteBuffer getUserDataBuffer() {
+        bb.position(DATA_OFFSET);
+        return bb.slice();
+    }
+
+    @Override
+    protected void fillChecksum() {
+        int crc = crcCalculator.compute(bb.array(), bb.arrayOffset(), bb.capacity() - bb.arrayOffset() - 2);
+        bb.position(bb.capacity() - 2);
+        bb.putShort((short) crc);
+    }
+
+    protected static int getCount(int apid) {
+        AtomicInteger count = countMap.computeIfAbsent(apid, a -&gt; new AtomicInteger(0));
+        return count.getAndIncrement() &amp; 0xFFFF;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="pustmtimepacket-java">
+<h2><code class="docutils literal notranslate"><span class="pre">PusTmTimePacket.java</span></code><a class="headerlink" href="#pustmtimepacket-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/PusTmTimePacket.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.simulator.pus;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.simulator.SimulatorCcsdsPacket;
+import org.yamcs.tctm.ccsds.error.CrcCciitCalculator;
+
+/**
+ * PUS time packet APID = 0 no secondary header
+ * data is composed of
+ * 
+ * &lt;pre&gt;
+ * rate exponential value - 1 byte = 2 (reporting time every 2^2 = 4 seconds)
+ * time - 8 byes
+ * crc - 2 bytes
+ * &lt;/pre&gt;
+ * 
+ * @author nm
+ *
+ */
+public class PusTmTimePacket extends SimulatorCcsdsPacket {
+    static final CrcCciitCalculator crcCalculator = new CrcCciitCalculator();
+
+    public PusTmTimePacket() {
+        super(ByteBuffer.allocate(6 + 1 + PusTime.LENGTH_BYTES + 2));
+        setHeader(0, 1, 0, 3, getSeq(0));
+        bb.position(6);
+        bb.put((byte)2);
+        PusTime now = PusTime.now();
+        now.encode(bb);
+        fillChecksum();
+    }
+
+    public PusTmTimePacket(byte[] packet) {
+        super(packet);
+    }
+
+    @Override
+    public ByteBuffer getUserDataBuffer() {
+        bb.position(6);
+        return bb.slice();
+    }
+
+    @Override
+    protected void fillChecksum() {
+        int crc = crcCalculator.compute(bb.array(), bb.arrayOffset(), bb.capacity() - bb.arrayOffset()-2);
+        bb.position(bb.capacity()-2);
+        bb.putShort((short)crc);
+    }
+
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../cfdp/index.html" class="btn btn-neutral float-left" title="cfdp" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../../../../resources/index.html" class="btn btn-neutral float-right" title="resources" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

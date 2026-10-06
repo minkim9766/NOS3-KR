@@ -1,0 +1,2124 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cfg &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../search.html" />
+    <link rel="next" title="fsw" href="../fsw/index.html" />
+    <link rel="prev" title="scripts" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">scripts</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">scripts</a></li>
+      <li class="breadcrumb-item active">cfg</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/project_inventory/scripts/cfg/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="cfg">
+<h1>cfg<a class="headerlink" href="#cfg" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">scripts/cfg/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="config-sh">
+<h2><code class="docutils literal notranslate"><span class="pre">config.sh</span></code><a class="headerlink" href="#config-sh" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">scripts/cfg/config.sh</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#!/bin/bash -i
+
+# Convenience script for NOS3 development
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &amp;&gt; /dev/null &amp;&amp; pwd )
+source "$SCRIPT_DIR/../env.sh"
+
+ORIGINAL_CONFIG="$BASE_DIR/cfg/nos3-mission.xml"
+CONFIG_FILE="$ORIGINAL_CONFIG"
+
+# Make flight software configuration directory
+mkdir -p "$BASE_DIR/cfg/build/temp_mission/"
+cp -r "$BASE_DIR/cfg/nos3-mission.xml" "$BASE_DIR/cfg/build/temp_mission/"
+
+# Copy baseline configurations into build directory
+cp -r "$BASE_DIR/cfg/InOut" "$BASE_DIR/cfg/build/"
+cp -r "$BASE_DIR/cfg/nos3_defs" "$BASE_DIR/cfg/build/"
+cp -r "$BASE_DIR/cfg/sims" "$BASE_DIR/cfg/build/"
+
+# If SC1_CFG is passed in, validate and patch
+if [ -n "${SC1_CFG// }" ]; then
+    REL_SC1_CFG="${SC1_CFG#cfg/}"   # Strip leading cfg/ if present
+    FULL_SC1_CFG="$BASE_DIR/cfg/$REL_SC1_CFG"
+
+    if [ ! -f "$FULL_SC1_CFG" ]; then
+        echo "ERROR: Config file '$FULL_SC1_CFG' does not exist."
+        exit 1
+    fi
+
+    echo "Overriding &lt;sc-1-cfg&gt; with: $REL_SC1_CFG"
+    TEMP_CONFIG=$(mktemp "$BASE_DIR/cfg/build/temp_mission/XXXXXX.xml")
+    sed "s|&lt;sc-1-cfg&gt;.*&lt;/sc-1-cfg&gt;|&lt;sc-1-cfg&gt;$REL_SC1_CFG&lt;/sc-1-cfg&gt;|" "$ORIGINAL_CONFIG" &gt; "$TEMP_CONFIG"
+    CONFIG_FILE="$TEMP_CONFIG"
+
+    echo "$CONFIG_FILE" &gt; "$BASE_DIR/cfg/build/current_config_path.txt"
+else
+    echo "$ORIGINAL_CONFIG" &gt; "$BASE_DIR/cfg/build/current_config_path.txt"
+fi
+
+# Run the configuration Python script
+python3 "$SCRIPT_DIR/cfg/configure.py" "$CONFIG_FILE"
+
+# Configure Cosmos Targets
+python3 $BASE_DIR/scripts/cfg/declare_cosmos_target.py
+python3 $BASE_DIR/scripts/cfg/configure_cosmos_target.py
+python3 $BASE_DIR/scripts/cfg/configure_test_runner.py
+</pre></div>
+</div>
+</section>
+<section id="configure-py">
+<h2><code class="docutils literal notranslate"><span class="pre">configure.py</span></code><a class="headerlink" href="#configure-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">scripts/cfg/configure.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#
+# Convenience script for NOS3 development
+# Configures NOS3 based on mission and spacecraft XML files
+#   Script assumes run from top level directory of NOS3 repo
+#
+
+import datetime
+import os
+import xml.etree.ElementTree as ET
+import sys
+
+# Use passed-in mission file if provided, otherwise default to ./cfg/nos3-mission.xml
+mission_file = sys.argv[1] if len(sys.argv) &gt; 1 else 'nos3-mission.xml'
+
+# Ensure it exists
+if not os.path.isfile(mission_file):
+    print(f"ERROR: Mission configuration file '{mission_file}' not found!")
+    sys.exit(1)
+
+# Parse mission configuration
+mission_tree = ET.parse("./cfg/build/temp_mission/" + os.path.basename(mission_file))
+mission_root = mission_tree.getroot()
+mission_start_time = mission_root.find('start-time').text
+print('  start-time:', mission_start_time)
+mission_start_time_utc = datetime.datetime(2000, 1, 1, 12, 0) + datetime.timedelta(seconds=float(mission_start_time))
+print('  start-time-utc:', mission_start_time_utc)
+print('  mission-file: ', mission_file)
+# FSW
+fsw_str = 'fsw'
+fsw_cfg = mission_root.find(fsw_str).text
+print(' ', fsw_str, ':', fsw_cfg)
+fsw_identified = 0
+if (fsw_cfg == 'fprime'):
+    fsw_identified = 1
+    os.system('cp ./scripts/fsw/fsw_fprime_build.sh ./cfg/build/fsw_build.sh')
+    os.system('cp ./scripts/fsw/fsw_fprime_launch.sh ./cfg/build/launch.sh')
+if (fsw_cfg == 'cfs'):
+    fsw_identified = 1
+    os.system('cp ./scripts/fsw/fsw_cfs_build.sh ./cfg/build/fsw_build.sh')
+    os.system('cp ./scripts/fsw/fsw_cfs_launch.sh ./cfg/build/launch.sh')
+    # os.system('cp ./scripts/fsw/fsw_cfs_multipleGSW_launch.sh ./cfg/build/launch.sh')
+if (fsw_identified == 0):
+    print('Invalid FSW in configuration file!')
+    print('Exiting due to error...')
+
+# GSW
+gsw_str = 'gsw'
+gsw_cfg = mission_root.find(gsw_str).text
+print(' ', gsw_str, ':', gsw_cfg)
+gsw_identified = 0
+if (gsw_cfg == 'openc3'):
+    # Copy openc3 scripts into ./cfg/build
+    gsw_identified = 1
+    os.system('cp ./scripts/gsw/gsw_openc3_build.sh ./cfg/build/gsw_build.sh')
+    os.system('cp ./scripts/gsw/gsw_openc3_launch.sh ./cfg/build/gsw_launch.sh')
+if (gsw_cfg == 'cosmos'):
+    # Copy cosmos scripts into ./cfg/build
+    gsw_identified = 1
+    os.system('cp ./scripts/gsw/gsw_cosmos_build.sh ./cfg/build/gsw_build.sh')
+    os.system('cp ./scripts/gsw/gsw_cosmos_launch.sh ./cfg/build/gsw_launch.sh')
+if (gsw_cfg == 'fprime'):
+    # Copy fprime scripts into ./cfg/build
+    gsw_identified = 1
+    os.system('cp ./scripts/gsw/gsw_fprime_build.sh ./cfg/build/gsw_build.sh')
+    os.system('cp ./scripts/gsw/gsw_fprime_launch.sh ./cfg/build/gsw_launch.sh')
+if (gsw_cfg == 'ait'):
+    # Copy ait scripts into ./cfg/build
+    gsw_identified = 1
+    os.system('cp ./scripts/gsw/gsw_ait_build.sh ./cfg/build/gsw_build.sh')
+    os.system('cp ./scripts/gsw/gsw_ait_launch.sh ./cfg/build/gsw_launch.sh')
+if (gsw_cfg == 'yamcs'):
+    # Copy yamcs scripts into ./cfg/build
+    gsw_identified = 1
+    os.system('cp ./scripts/gsw/gsw_yamcs_build.sh ./cfg/build/gsw_build.sh')
+    os.system('cp ./scripts/gsw/gsw_yamcs_launch.sh ./cfg/build/gsw_launch.sh')
+    os.system('cp ./scripts/cfg/yamcs_default.nos3.yaml ./gsw/yamcs/nos3/src/main/yamcs/etc/yamcs.nos3.yaml')
+if (gsw_cfg == 'multiple'):
+    # Copy mulitple scripts into ./cfg/build
+    gsw_identified = 1
+    os.system('cp ./scripts/gsw/gsw_cosmos_multi_build.sh ./cfg/build/gsw_build.sh')
+    os.system('cp ./scripts/gsw/gsw_cosmos_launch.sh ./cfg/build/gsw_launch.sh')
+    os.system('cp ./scripts/gsw/gsw_yamcs_build.sh ./cfg/build/gsw_build2.sh')
+    os.system('cp ./scripts/gsw/gsw_yamcs_multi_launch.sh ./cfg/build/gsw_launch2.sh')  
+    os.system('cp ./cfg/build/sims/nos3-simulator-multipleGDS.xml ./cfg/build/sims/nos3-simulator.xml')
+    os.system('cp ./scripts/fsw/fsw_cfs_multipleGSW_launch.sh ./cfg/build/launch.sh')
+    os.system('cp ./scripts/cfg/yamcs_multiGDS.nos3.yaml ./gsw/yamcs/nos3/src/main/yamcs/etc/yamcs.nos3.yaml')
+if (gsw_identified == 0):
+    print('Invalid GSW in configuration file!')
+    print('Exiting due to error...')
+
+# Scenario
+scenario = mission_root.find('scenario').text
+print('  scenario:', scenario)
+if (scenario == 'DeepSpace'):
+    os.system('cp ./cfg/InOut/Inp_Sim_DeepSpace.txt ./cfg/InOut/Inp_Sim.txt')
+    os.system('cp ./cfg/InOut/Inp_Graphics_DeepSpace.txt ./cfg/InOut/Inp_Graphics.txt')
+elif (scenario == 'Gateway'):
+    os.system('cp ./cfg/InOut/Inp_Sim_Gateway.txt ./cfg/InOut/Inp_Sim.txt')
+    os.system('cp ./cfg/InOut/Inp_Graphics_Gateway.txt ./cfg/InOut/Inp_Graphics.txt')
+else:
+    os.system('cp ./cfg/InOut/Inp_Sim_STF1.txt ./cfg/InOut/Inp_Sim.txt')
+    os.system('cp ./cfg/InOut/Inp_Graphics_STF1.txt ./cfg/InOut/Inp_Graphics.txt')
+
+# Read number of spacecraft
+mission_number_spacecraft = mission_root.find('number-spacecraft').text
+print('  number-spacecraft:', mission_number_spacecraft)
+num_sc = int(mission_number_spacecraft)
+
+# Check number of spacecraft valid
+spacecraft_cfg = []
+if (num_sc &lt; 1):
+    print('Invalid number of spacecraft in configuration file!')
+    print('Exiting due to error...')
+else:
+    # Iterate through spacecraft configurations
+    for x in range(1, int(mission_number_spacecraft) + 1):
+        sc_str = 'sc-' + str(x) + '-cfg'
+        sc_cfg = mission_root.find(sc_str).text
+        #print(' ', sc_str, ':', sc_cfg)
+        spacecraft_cfg.append(sc_cfg)
+
+        # Open spacecraft configuration
+        sc_cfg_str = './cfg/' + sc_cfg
+        sc_tree = ET.parse(sc_cfg_str)
+        sc_root = sc_tree.getroot()
+
+        # Parse spacecraft configuration
+        sc_cf_en = sc_root.find('applications/cf/enable').text
+        sc_ds_en = sc_root.find('applications/ds/enable').text
+        sc_fm_en = sc_root.find('applications/fm/enable').text
+        sc_lc_en = sc_root.find('applications/lc/enable').text
+        sc_sbn_en = sc_root.find('applications/sbn/enable').text 
+        sc_sc_en = sc_root.find('applications/sc/enable').text
+
+        sc_adcs_en = sc_root.find('components/adcs/enable').text
+        sc_cam_en = sc_root.find('components/cam/enable').text
+        sc_css_en = sc_root.find('components/css/enable').text
+        sc_eps_en = sc_root.find('components/eps/enable').text
+        sc_fss_en = sc_root.find('components/fss/enable').text
+        sc_gps_en = sc_root.find('components/gps/enable').text
+        sc_imu_en = sc_root.find('components/imu/enable').text
+        sc_mag_en = sc_root.find('components/mag/enable').text
+        sc_mgr_en = sc_root.find('components/mgr/enable').text
+        sc_radio_en = sc_root.find('components/radio/enable').text
+        sc_rw_en = sc_root.find('components/rw/enable').text
+        sc_sample_en = sc_root.find('components/sample/enable').text
+        sc_st_en = sc_root.find('components/st/enable').text
+        sc_syn_en = sc_root.find('components/syn/enable').text
+        sc_torquer_en = sc_root.find('components/torquer/enable').text
+        sc_thruster_en = sc_root.find('components/thruster/enable').text
+
+        sc_gui_en = sc_root.find('gui/enable').text
+        sc_orbit_tipoff_x = sc_root.find('orbit/tipoff_x').text
+        sc_orbit_tipoff_y = sc_root.find('orbit/tipoff_y').text
+        sc_orbit_tipoff_z = sc_root.find('orbit/tipoff_z').text
+        sc_sim_truth_en = sc_root.find('sim/sim_truth_interface').text
+
+        ###
+        ### Flight Software - Startup Script
+        ###
+        
+        # Capture lines to be used if enabled in startup script
+        with open('./cfg/nos3_defs/cpu1_cfe_es_startup.scr', 'r') as fp:
+            lines = fp.readlines()
+            
+            # Initialize variables
+            sc_startup_eof = 999
+            cf_line = ""
+            ds_line = ""
+            fm_line = ""
+            lc_line = ""
+            sbn_line = ""
+            sc_line = ""
+            adcs_line = ""
+            cam_line = ""
+            css_line = ""
+            eps_line = ""
+            fss_line = ""
+            gps_line = ""
+            imu_line = ""
+            mag_line = ""
+            mgr_line = ""
+            radio_line = ""
+            rw_line = ""
+            sample_line = ""
+            st_line = ""
+            syn_line = ""
+            torquer_line = ""
+            thruster_line = ""
+            
+            # Parse lines
+            for line in lines:
+                if line.find('!') != -1:
+                    if (lines.index(line)) &lt; sc_startup_eof:
+                        sc_startup_eof = lines.index(line)
+                if line.find('CF,') != -1:
+                    if (sc_cf_en == 'true'):
+                        cf_line = line
+                if line.find('DS,') != -1:
+                    if (sc_ds_en == 'true'):
+                        ds_line = line
+                if line.find('FM,') != -1:
+                    if (sc_fm_en == 'true'):
+                        fm_line = line
+                if line.find('LC,') != -1:
+                    if (sc_lc_en == 'true'):
+                        lc_line = line
+                if line.find('SBN,') != -1:
+                    if (sc_sbn_en == 'true'):
+                        sbn_line = line
+                if line.find('SC,') != -1:
+                    if (sc_sc_en == 'true'):
+                        sc_line = line
+                if line.find('ADCS,') != -1:
+                    if (sc_adcs_en == 'true'):
+                        adcs_line = line
+                if line.find('CAM,') != -1:
+                    if (sc_cam_en == 'true'):
+                        cam_line = line
+                if line.find('CSS,') != -1:
+                    if (sc_css_en == 'true'):
+                        css_line = line
+                if line.find('EPS,') != -1:
+                    if (sc_eps_en == 'true'):
+                        eps_line = line
+                if line.find('FSS,') != -1:
+                    if (sc_fss_en == 'true'):
+                        fss_line = line
+                if line.find('IMU,') != -1:
+                    if (sc_imu_en == 'true'):
+                        imu_line = line
+                if line.find('MAG,') != -1:
+                    if (sc_mag_en == 'true'):
+                        mag_line = line
+                if line.find('MGR,') != -1:
+                    if (sc_mgr_en == 'true'):
+                        mgr_line = line
+                if line.find('RADIO,') != -1:
+                    if (sc_radio_en == 'true'):
+                        radio_line = line
+                if line.find('RW,') != -1:
+                    if (sc_rw_en == 'true'):
+                        rw_line = line
+                if line.find('NAV,') != -1:
+                    if (sc_gps_en == 'true'):
+                        gps_line = line
+                if line.find('SAMPLE,') != -1:
+                    if (sc_sample_en == 'true'):
+                        sample_line = line
+                if line.find('ST,') != -1:
+                    if (sc_st_en == 'true'):
+                        st_line = line
+                if line.find('SYN,') != -1:
+                    if (sc_syn_en == 'true'):
+                        syn_line = line
+                if line.find('TORQUER,') != -1:
+                    if (sc_torquer_en == 'true'):
+                        torquer_line = line
+                if line.find('THRUSTER,') != -1:
+                    if (sc_thruster_en == 'true'):
+                        thruster_line = line
+
+        # Modify startup script per spacecraft configuration
+        lines.insert(sc_startup_eof, "\n")
+        lines.insert(sc_startup_eof, torquer_line)
+        lines.insert(sc_startup_eof, thruster_line)
+        lines.insert(sc_startup_eof, syn_line)
+        lines.insert(sc_startup_eof, st_line)
+        lines.insert(sc_startup_eof, sample_line)
+        lines.insert(sc_startup_eof, rw_line)
+        lines.insert(sc_startup_eof, radio_line)
+        lines.insert(sc_startup_eof, mag_line)
+        lines.insert(sc_startup_eof, mgr_line)
+        lines.insert(sc_startup_eof, imu_line)
+        lines.insert(sc_startup_eof, gps_line)
+        lines.insert(sc_startup_eof, fss_line)
+        lines.insert(sc_startup_eof, eps_line)
+        lines.insert(sc_startup_eof, css_line)
+        lines.insert(sc_startup_eof, cam_line)
+        lines.insert(sc_startup_eof, adcs_line)
+        lines.insert(sc_startup_eof, sc_line)
+        lines.insert(sc_startup_eof, sbn_line)
+        lines.insert(sc_startup_eof, lc_line)
+        lines.insert(sc_startup_eof, fm_line)
+        lines.insert(sc_startup_eof, ds_line)
+        lines.insert(sc_startup_eof, cf_line)
+                        
+        # Write startup script file
+        with open('./cfg/build/nos3_defs/cpu1_cfe_es_startup.scr', 'w') as fp:
+            lines = "".join(lines)
+            fp.write(lines)
+
+        ###
+        ### 42 - InOut Files
+        ###
+
+        # Inp_Sim.txt
+        gui_index = 999
+        date_index = 999
+        time_index = 999
+        with open('./cfg/InOut/Inp_Sim.txt', 'r') as fp:
+            lines = fp.readlines()
+            for line in lines:
+                if line.find('Graphics Front End') != -1:
+                    if (lines.index(line)) &lt; gui_index:
+                        gui_index = lines.index(line)
+                if line.find('Date (UTC)') != -1:
+                    if (lines.index(line)) &lt; date_index:
+                        date_index = lines.index(line)
+                if line.find('Time (UTC)') != -1:
+                    if (lines.index(line)) &lt; time_index:
+                        time_index = lines.index(line)
+
+        if (sc_gui_en == 'false'):
+            lines[gui_index] = 'FALSE                           !  Graphics Front End?\n'
+
+        lines[date_index] = mission_start_time_utc.strftime('%m %d %Y') + '  !  Date (UTC) (Month, Day, Year)\n'
+        lines[time_index] = mission_start_time_utc.strftime('%H %M %S') + '  !  Time (UTC) (Hr,Min,Sec)\n'
+
+        with open('./cfg/build/InOut/Inp_Sim.txt', 'w') as fp:
+            lines = "".join(lines)
+            fp.write(lines)
+
+        # SC_NOS3.txt
+        tipoff_index = 999
+        with open('./cfg/InOut/SC_NOS3.txt', 'r') as fp:
+            lines = fp.readlines()
+            for line in lines:
+                if line.find('Ang Vel (deg/sec)') != -1:
+                    if (lines.index(line)) &lt; tipoff_index:
+                        tipoff_index = lines.index(line)
+        
+        lines[tipoff_index] = sc_orbit_tipoff_x + ' ' + sc_orbit_tipoff_y + ' ' + sc_orbit_tipoff_z + '  ! Ang Vel (deg/sec)\n'
+
+        with open('./cfg/build/InOut/SC_NOS3.txt', 'w') as fp:
+            lines = "".join(lines)
+            fp.write(lines)
+
+        # Inp_IPC.txt
+        css_index = 999
+        eps_index = 999
+        fss_index = 999
+        gps_index = 999
+        imu_index = 999
+        mag_index = 999
+        rw0_to_index = 999
+        rw0_from_index = 999
+        rw1_to_index = 999
+        rw1_from_index = 999
+        rw2_to_index = 999
+        rw2_from_index = 999
+        #sample_index = 999
+        st_index = 999
+        torquer_index = 999
+        thruster_index = 999
+        truth_index = 999
+
+        with open('./cfg/InOut/Inp_IPC.txt', 'r') as fp:
+            lines = fp.readlines()
+            for line in lines:
+                if line.find('CSS IPC') != -1:
+                    if (lines.index(line)) &lt; css_index:
+                        css_index = lines.index(line) + 1
+                if line.find('EPS IPC') != -1:
+                    if (lines.index(line)) &lt; eps_index:
+                        eps_index = lines.index(line) + 1
+                if line.find('FSS IPC') != -1:
+                    if (lines.index(line)) &lt; fss_index:
+                        fss_index = lines.index(line) + 1
+                if line.find('GPS IPC') != -1:
+                    if (lines.index(line)) &lt; gps_index:
+                        gps_index = lines.index(line) + 1
+                if line.find('IMU IPC') != -1:
+                    if (lines.index(line)) &lt; imu_index:
+                        imu_index = lines.index(line) + 1
+                if line.find('MAG IPC') != -1:
+                    if (lines.index(line)) &lt; mag_index:
+                        mag_index = lines.index(line) + 1
+                if line.find('RW 0 to 42') != -1:
+                    if (lines.index(line)) &lt; rw0_to_index:
+                        rw0_to_index = lines.index(line) + 1
+                if line.find('RW 0 from 42') != -1:
+                    if (lines.index(line)) &lt; rw0_from_index:
+                        rw0_from_index = lines.index(line) + 1
+                if line.find('RW 1 to 42') != -1:
+                    if (lines.index(line)) &lt; rw1_to_index:
+                        rw1_to_index = lines.index(line) + 1
+                if line.find('RW 1 from 42') != -1:
+                    if (lines.index(line)) &lt; rw1_from_index:
+                        rw1_from_index = lines.index(line) + 1
+                if line.find('RW 2 to 42') != -1:
+                    if (lines.index(line)) &lt; rw2_to_index:
+                        rw2_to_index = lines.index(line) + 1
+                if line.find('RW 2 from 42') != -1:
+                    if (lines.index(line)) &lt; rw2_from_index:
+                        rw2_from_index = lines.index(line) + 1
+                #if line.find('Sample IPC') != -1:
+                #    if (lines.index(line)) &lt; sample_index:
+                #        sample_index = lines.index(line) + 1
+                if line.find('Star Tracker IPC') != -1:
+                    if (lines.index(line)) &lt; st_index:
+                        st_index = lines.index(line) + 1
+                if line.find('Torquer IPC') != -1:
+                    if (lines.index(line)) &lt; torquer_index:
+                        torquer_index = lines.index(line) + 1
+                if line.find('Thruster IPC') != -1:
+                    if (lines.index(line)) &lt; thruster_index:
+                        thruster_index = lines.index(line) + 1
+                if line.find('Truth data') != -1:
+                    if (lines.index(line)) &lt; truth_index:
+                        truth_index = lines.index(line) + 1
+        
+        ipc_off = 'OFF                                     ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)\n'
+        if (sc_css_en != 'true'):
+            lines[css_index] = ipc_off
+        if (sc_eps_en != 'true'):
+            lines[eps_index] = ipc_off
+        if (sc_fss_en != 'true'):
+            lines[fss_index] = ipc_off
+        if (sc_gps_en != 'true'):
+            lines[gps_index] = ipc_off
+        if (sc_imu_en != 'true'):
+            lines[imu_index] = ipc_off
+        if (sc_mag_en != 'true'):
+            lines[mag_index] = ipc_off
+        if (sc_rw_en != 'true'):
+            lines[rw0_to_index] = ipc_off
+            lines[rw0_from_index] = ipc_off
+            lines[rw1_to_index] = ipc_off
+            lines[rw1_from_index] = ipc_off
+            lines[rw2_to_index] = ipc_off
+            lines[rw2_from_index] = ipc_off
+        #if (sc_sample_en != 'true'):
+        #    lines[sample_index] = ipc_off
+        if (sc_st_en != 'true'):
+            lines[st_index] = ipc_off
+        if (sc_torquer_en != 'true'):
+            lines[torquer_index] = ipc_off
+        if (sc_thruster_en != 'true'):
+            lines[thruster_index] = ipc_off
+        if (sc_sim_truth_en != 'true'):
+            lines[truth_index] = ipc_off
+
+        with open('./cfg/build/InOut/Inp_IPC.txt', 'w') as fp:
+            lines = "".join(lines)
+            fp.write(lines)
+
+        # Inp_Graphics.txt
+        os.system('cp ./cfg/InOut/Inp_Graphics.txt ./cfg/build/InOut/Inp_Graphics.txt')
+
+
+        ###
+        ### Simulators - nos3-simulator.xml
+        ###
+        cam_index = 999
+        css_index = 999
+        eps_index = 999
+        fss_index = 999
+        gps_index = 999
+        imu_index = 999
+        mag_index = 999
+        radio_index = 999
+        rw0_index = 999
+        rw1_index = 999
+        rw2_index = 999
+        sample_index = 999
+        st_index = 999
+        torquer_index = 999
+        thruster_index = 999
+
+        with open('./cfg/build/sims/nos3-simulator.xml', 'r') as fp:
+            lines = fp.readlines()
+            for line in lines:
+                if line.find('&lt;absolute-start-time&gt;') != -1:
+                    lines[lines.index(line)] = "        &lt;absolute-start-time&gt;{}&lt;/absolute-start-time&gt;\n".format(mission_start_time)
+                if line.find('camsim&lt;/name&gt;') != -1:
+                    if (lines.index(line)) &lt; cam_index:
+                        cam_index = lines.index(line) + 1
+                if line.find('css-sim&lt;/name&gt;') != -1:
+                    if (lines.index(line)) &lt; css_index:
+                        css_index = lines.index(line) + 1
+                if line.find('eps-sim&lt;/name&gt;') != -1:
+                    if (lines.index(line)) &lt; eps_index:
+                        eps_index = lines.index(line) + 1
+                if line.find('fss-sim&lt;/name&gt;') != -1:
+                    if (lines.index(line)) &lt; fss_index:
+                        fss_index = lines.index(line) + 1
+                if line.find('gps&lt;/name&gt;') != -1:
+                    if (lines.index(line)) &lt; gps_index:
+                        gps_index = lines.index(line) + 1
+                if line.find('imu-sim&lt;/name&gt;') != -1:
+                    if (lines.index(line)) &lt; imu_index:
+                        imu_index = lines.index(line) + 1
+                if line.find('mag-sim&lt;/name&gt;') != -1:
+                    if (lines.index(line)) &lt; mag_index:
+                        mag_index = lines.index(line) + 1
+                if line.find('radio-sim&lt;/name&gt;') != -1:
+                    if (lines.index(line)) &lt; radio_index:
+                        radio_index = lines.index(line) + 1
+                if line.find('reactionwheel-sim0&lt;/name&gt;') != -1:
+                    if (lines.index(line)) &lt; rw0_index:
+                        rw0_index = lines.index(line) + 1
+                if line.find('reactionwheel-sim1&lt;/name&gt;') != -1:
+                    if (lines.index(line)) &lt; rw1_index:
+                        rw1_index = lines.index(line) + 1
+                if line.find('reactionwheel-sim2&lt;/name&gt;') != -1:
+                    if (lines.index(line)) &lt; rw2_index:
+                        rw2_index = lines.index(line) + 1
+                if line.find('sample-sim&lt;/name&gt;') != -1:
+                    if (lines.index(line)) &lt; sample_index:
+                        sample_index = lines.index(line) + 1
+                if line.find('star-tracker-sim&lt;/name&gt;') != -1:
+                    if (lines.index(line)) &lt; st_index:
+                        st_index = lines.index(line) + 1
+                if line.find('generic-torquer-sim&lt;/name&gt;') != -1:
+                    if (lines.index(line)) &lt; torquer_index:
+                        torquer_index = lines.index(line) + 1
+                if line.find('generic-thruster-sim&lt;/name&gt;') != -1:
+                    if (lines.index(line)) &lt; thruster_index:
+                        thruster_index = lines.index(line) + 1
+
+        sim_disabled = '            &lt;active&gt;false&lt;/active&gt;\n'
+        if (sc_cam_en != 'true'):
+            lines[cam_index] = sim_disabled
+        if (sc_css_en != 'true'):
+            lines[css_index] = sim_disabled
+        if (sc_eps_en != 'true'):
+            lines[eps_index] = sim_disabled
+        if (sc_fss_en != 'true'):
+            lines[fss_index] = sim_disabled
+        if (sc_gps_en != 'true'):
+            lines[gps_index] = sim_disabled
+        if (sc_imu_en != 'true'):
+            lines[imu_index] = sim_disabled
+        if (sc_mag_en != 'true'):
+            lines[mag_index] = sim_disabled
+        if (sc_radio_en != 'true'):
+            lines[radio_index] = sim_disabled
+        if (sc_rw_en != 'true'):
+            lines[rw0_index] = sim_disabled
+            lines[rw1_index] = sim_disabled
+            lines[rw2_index] = sim_disabled
+        if (sc_sample_en != 'true'):
+            lines[sample_index] = sim_disabled
+        if (sc_st_en != 'true'):
+            lines[st_index] = sim_disabled
+        if (sc_torquer_en != 'true'):
+            lines[torquer_index] = sim_disabled
+        if (sc_thruster_en != 'true'):
+            lines[thruster_index] = sim_disabled
+
+        with open('./cfg/build/sims/nos3-simulator.xml', 'w') as fp:
+            lines = "".join(lines)
+            fp.write(lines)
+</pre></div>
+</div>
+</section>
+<section id="configure-cosmos-target-py">
+<h2><code class="docutils literal notranslate"><span class="pre">configure_cosmos_target.py</span></code><a class="headerlink" href="#configure-cosmos-target-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">scripts/cfg/configure_cosmos_target.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import os
+import shutil
+import xml.etree.ElementTree as ET
+
+# Component to XML mapping
+components = {
+    "arducam": "cam",
+    "cryptolib": "radio",
+    "generic_adcs": "adcs",
+    "generic_css": "css",
+    "generic_eps": "eps",
+    "generic_fss": "fss",
+    "generic_imu": "imu",
+    "generic_mag": "mag",
+    "generic_radio": "radio",
+    "generic_reaction_wheel": "rw",
+    "generic_star_tracker": "st",
+    "generic_thruster": "thruster",
+    "generic_torquer": "torquer",
+    "mgr": "mgr",
+    "novatel_oem615": "gps",
+    "onair": "onair",
+    "sample": "sample",
+    "syn": "syn"
+}
+
+def clean_target_lines(input_file, output_file, sc_root):
+    """Remove TARGET lines for disabled components (and their _RADIO versions)."""
+    with open(input_file, 'r') as f:
+        lines = f.readlines()
+
+    lines_to_remove = set()
+
+    for comp_key, xml_name in components.items():
+        component_upper = comp_key.upper()
+        node = sc_root.find(f"components/{xml_name}/enable")
+        enabled = node is not None and node.text.strip().lower() == 'true'
+
+        if enabled:
+            continue
+
+        print(f"[REMOVE] {comp_key} disabled — removing TARGET lines.")
+        lines_to_remove.update({
+            f"TARGET {component_upper}",
+            f"TARGET {component_upper}_RADIO"
+        })
+
+        # Special case for 'syn' → SYNOPSIS
+        if comp_key == "syn":
+            lines_to_remove.update({
+                "TARGET SYNOPSIS",
+                "TARGET SYNOPSIS_RADIO"
+            })
+
+    # Filter out unwanted lines
+    filtered_lines = [line for line in lines if line.strip() not in lines_to_remove]
+
+    with open(output_file, 'w') as f:
+        f.writelines(filtered_lines)
+
+def main():
+    # === Parse XML to get SC config ===
+    mission_file = 'nos3-mission.xml'
+    mission_path = "./cfg/build/temp_mission/" + os.path.basename(mission_file)
+    
+    try:
+        mission_tree = ET.parse(mission_path)
+        mission_root = mission_tree.getroot()
+        sc_cfg = mission_root.find("sc-1-cfg").text
+        sc_cfg_path = './cfg/' + sc_cfg
+        sc_tree = ET.parse(sc_cfg_path)
+        sc_root = sc_tree.getroot()
+    except Exception as e:
+        print(f"Error parsing XML: {e}")
+        return
+
+    # === File paths ===
+    input_path = './gsw/cosmos/config/tools/cmd_tlm_server/stash/cmd_tlm_server.txt'
+    output_path = './gsw/cosmos/config/tools/cmd_tlm_server/cmd_tlm_server.txt'
+
+    shutil.copyfile(input_path, output_path)
+
+    clean_target_lines(output_path, output_path, sc_root)
+
+if __name__ == '__main__':
+    main()
+</pre></div>
+</div>
+</section>
+<section id="configure-test-runner-py">
+<h2><code class="docutils literal notranslate"><span class="pre">configure_test_runner.py</span></code><a class="headerlink" href="#configure-test-runner-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">scripts/cfg/configure_test_runner.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import os
+import shutil
+import xml.etree.ElementTree as ET
+
+# Component to XML mapping
+components = {
+    "arducam_test": "cam",
+    "generic_adcs_test": "adcs",
+    "generic_css_test": "css",
+    "generic_eps_test": "eps",
+    "generic_fss_test": "fss",
+    "generic_imu_test": "imu",
+    "generic_mag_test": "mag",
+    "generic_radio_test": "radio",
+    "generic_rw_test": "rw",
+    "generic_st_test": "st",
+    "generic_thruster_test": "thruster",
+    "generic_torquer_test": "torquer",
+    "novatel_oem615_test": "gps",
+}
+
+def clean_test_runner_targets(input_file, output_file, sc_root):
+    """Remove REQUIRE_UTILITY lines for disabled components"""
+    with open(input_file, 'r') as f:
+        lines = f.readlines()
+
+    lines_to_remove = set()
+
+    for comp_key, xml_name in components.items():
+        component_upper = comp_key.upper()
+        node = sc_root.find(f"components/{xml_name}/enable")
+        enabled = node is not None and node.text.strip().lower() == 'true'
+
+        if enabled:
+            continue
+
+        print(f"[REMOVE] {comp_key} disabled — removing REQUIRE_UTILITY lines.")
+        lines_to_remove.update({
+            f"REQUIRE_UTILITY '{comp_key}'"
+        })
+
+    # Filter out unwanted lines
+    filtered_lines = [line for line in lines if line.strip() not in lines_to_remove]
+
+    with open(output_file, 'w') as f:
+        f.writelines(filtered_lines)
+
+def main():
+    # === Parse XML to get SC config ===
+    mission_file = 'nos3-mission.xml'
+    mission_path = "./cfg/build/temp_mission/" + os.path.basename(mission_file)
+    
+    try:
+        mission_tree = ET.parse(mission_path)
+        mission_root = mission_tree.getroot()
+        sc_cfg = mission_root.find("sc-1-cfg").text
+        sc_cfg_path = './cfg/' + sc_cfg
+        sc_tree = ET.parse(sc_cfg_path)
+        sc_root = sc_tree.getroot()
+    except Exception as e:
+        print(f"Error parsing XML: {e}")
+        return
+
+    # === File paths ===
+    input_path = './gsw/cosmos/config/tools/test_runner/stash/test_runner.txt'
+    output_path = './gsw/cosmos/config/tools/test_runner/test_runner.txt'
+
+    shutil.copyfile(input_path, output_path)
+
+    clean_test_runner_targets(output_path, output_path, sc_root)
+
+if __name__ == '__main__':
+    main()
+</pre></div>
+</div>
+</section>
+<section id="declare-cosmos-target-py">
+<h2><code class="docutils literal notranslate"><span class="pre">declare_cosmos_target.py</span></code><a class="headerlink" href="#declare-cosmos-target-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">scripts/cfg/declare_cosmos_target.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import os
+import shutil
+import xml.etree.ElementTree as ET
+
+# Map component names to their XML identifiers
+components = {
+    "arducam": "cam",
+    "cryptolib": "radio",
+    "generic_adcs": "adcs",
+    "generic_css": "css",
+    "generic_eps": "eps",
+    "generic_fss": "fss",
+    "generic_imu": "imu",
+    "generic_mag": "mag",
+    "generic_radio": "radio",
+    "generic_reaction_wheel": "rw",
+    "generic_star_tracker": "st",
+    "generic_thruster": "thruster",
+    "generic_torquer": "torquer",
+    "mgr": "mgr",
+    "novatel_oem615": "gps",
+    "onair": "onair",
+    "sample": "sample",
+    "syn": "syn"
+}
+
+def clean_declare_targets(input_file, output_file, sc_root, component_key, xml_name):
+    """Remove DECLARE_TARGET lines related to a disabled component."""
+    component_upper = component_key.upper()
+    node = sc_root.find(f"components/{xml_name}/enable")
+    enabled = node is not None and node.text.strip().lower() == 'true'
+
+    if enabled:
+        return
+
+    # Lines to remove if the component is disabled
+    patterns_to_remove = {
+        f'DECLARE_TARGET ../../COMPONENTS/{component_upper} {component_upper}',
+        f'DECLARE_TARGET ../../COMPONENTS/GENERIC_{component_upper} GENERIC_{component_upper}',
+        f'DECLARE_TARGET ../../COMPONENTS/{component_upper} {component_upper}_RADIO',
+        f'DECLARE_TARGET ../../COMPONENTS/GENERIC_{component_upper} GENERIC_{component_upper}_RADIO',
+        f'DECLARE_TARGET ../../COMPONENTS/{component_upper} SYNOPSIS',
+        f'DECLARE_TARGET ../../COMPONENTS/{component_upper} SYNOPSIS_RADIO'
+    }
+
+    with open(input_file, 'r') as f:
+        lines = f.readlines()
+
+    # Remove any line that matches exactly one of the patterns
+    filtered_lines = [line for line in lines if line.strip() not in patterns_to_remove]
+
+    with open(output_file, 'w') as f:
+        f.writelines(filtered_lines)
+
+def main():
+    # === Parse XML to get SC config ===
+    mission_file = 'nos3-mission.xml'
+    mission_path = "./cfg/build/temp_mission/" + os.path.basename(mission_file)
+    
+    try:
+        mission_tree = ET.parse(mission_path)
+        mission_root = mission_tree.getroot()
+        sc_cfg = mission_root.find("sc-1-cfg").text
+        sc_cfg_path = './cfg/' + sc_cfg
+        sc_tree = ET.parse(sc_cfg_path)
+        sc_root = sc_tree.getroot()
+    except Exception as e:
+        print(f"Error parsing XML: {e}")
+        return
+
+    # === File paths ===
+    input_path = './gsw/cosmos/config/system/stash/system.txt'
+    output_path = './gsw/cosmos/config/system/system.txt'
+
+    # Start fresh from stash copy
+    shutil.copyfile(input_path, output_path)
+
+    # Process each component
+    for comp_key, xml_name in components.items():
+        clean_declare_targets(output_path, output_path, sc_root, comp_key, xml_name)
+
+if __name__ == '__main__':
+    main()
+</pre></div>
+</div>
+</section>
+<section id="igniter-launch-sh">
+<h2><code class="docutils literal notranslate"><span class="pre">igniter_launch.sh</span></code><a class="headerlink" href="#igniter-launch-sh" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">scripts/cfg/igniter_launch.sh</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#!/bin/bash -i
+#
+# Convenience script for NOS# development
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &amp;&gt; /dev/null &amp;&amp; pwd )
+source $SCRIPT_DIR/../env.sh
+echo ""
+echo ""
+
+cd $BASE_DIR
+python3 $BASE_DIR/cfg/gui/cfg_gui_main.py &amp;
+echo ""
+echo ""
+</pre></div>
+</div>
+</section>
+<section id="prep-gsw-sh">
+<h2><code class="docutils literal notranslate"><span class="pre">prep_gsw.sh</span></code><a class="headerlink" href="#prep-gsw-sh" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">scripts/cfg/prep_gsw.sh</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#!/bin/bash
+
+sudo ip addr add 10.10.10.100 dev eth1
+sudo ip route add default via 10.10.10.100 dev eth1
+
+# The next thing to do is to 'create' a docker swarm. Swarm containers are not
+# necessary here, but to connect the two computers it is necessary to run
+# docker swarm init on the main computer (which I have been using as the gsw
+# machine); then "docker swarm join" must be run on the satellite machine. 
+# 
+# The successful output of "docker swarm init" will give the command which must
+# be run on the satellite VM.
+
+docker swarm init --advertise-addr 10.10.10.100
+</pre></div>
+</div>
+</section>
+<section id="prep-sat-sh">
+<h2><code class="docutils literal notranslate"><span class="pre">prep_sat.sh</span></code><a class="headerlink" href="#prep-sat-sh" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">scripts/cfg/prep_sat.sh</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#!/bin/bash
+
+sudo ip addr add 10.10.10.101 dev eth1
+sudo ip route add default via 10.10.10.101 dev eth1
+
+# Open the relevant ports for a Docker overlay network?
+# 2377, 4789, and 7946 might be all; the first and last
+# on tcp, and the last two on udp.
+</pre></div>
+</div>
+</section>
+<section id="prepare-sh">
+<h2><code class="docutils literal notranslate"><span class="pre">prepare.sh</span></code><a class="headerlink" href="#prepare-sh" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">scripts/cfg/prepare.sh</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+#
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &amp;&gt; /dev/null &amp;&amp; pwd )
+source $SCRIPT_DIR/../env.sh
+
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &amp;&gt; /dev/null &amp;&amp; pwd )
+source $SCRIPT_DIR/env.sh
+echo ""
+echo ""
+
+echo "Create local user directory..."
+mkdir $USER_NOS3_DIR 2&gt; /dev/null
+echo "  "$USER_NOS3_DIR
+mkdir $USER_NOS3_DIR/42 2&gt; /dev/null
+echo ""
+echo ""
+
+echo "Prepare nos3 docker container..."
+$DCALL image pull $DBOX
+echo ""
+echo ""
+
+echo "Prepare 42..."
+cd $USER_NOS3_DIR
+git clone https://github.com/nasa-itc/42.git --depth 1 -b dev_20260403
+cd $USER_NOS3_DIR/42
+$DFLAGS_CPUS -v $BASE_DIR:$BASE_DIR -v $USER_NOS3_DIR:$USER_NOS3_DIR -w $USER_NOS3_DIR/42 --name "nos3_42_build" $DBOX make
+echo ""
+echo ""
+
+echo "NOS3 required preparations complete!"
+echo "Proceeding to optional additions."
+echo ""
+echo ""
+
+echo "Preparing Shared Folders for YAMCS..."
+mkdir $USER_YAMCS_PATH 2&gt; /dev/null
+echo ""
+echo ""
+
+echo "Preparing Shared Folders for Fprime..."
+mkdir $USER_FPRIME_PATH 2&gt; /dev/null
+echo ""
+echo ""
+
+echo "Prepare Igniter (optional)..."
+pip3 install pyside6 xmltodict
+cd $BASE_DIR
+python3 $BASE_DIR/cfg/gui/cfg_gui_main.py &amp;
+echo ""
+echo ""
+
+sleep 3
+echo ""
+echo ""
+
+echo "NOS3 prep script complete:"
+echo "  Some above optional installations may have failed, that's ok. You just may not have those extra features."
+echo "  You can choose to use the Igniter GUI or close it in favor of the command line."
+echo "  To launch igniter again simply run the following in the terminal:"
+echo "    make igniter"
+echo ""
+echo ""
+</pre></div>
+</div>
+</section>
+<section id="uninstall-sh">
+<h2><code class="docutils literal notranslate"><span class="pre">uninstall.sh</span></code><a class="headerlink" href="#uninstall-sh" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">scripts/cfg/uninstall.sh</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &amp;&gt; /dev/null &amp;&amp; pwd )
+source $SCRIPT_DIR/../env.sh
+
+echo "Cleaning up any COSMOS files..."
+yes | rm $BASE_DIR/gsw/cosmos/Gemfile 2&gt; /dev/null
+yes | rm $BASE_DIR/gsw/cosmos/Gemfile.lock 2&gt; /dev/null
+yes | rm -r $BASE_DIR/gsw/cosmos/COMPONENTS 2&gt; /dev/null
+yes | rm -r $BASE_DIR/gsw/cosmos/outputs 2&gt; /dev/null
+
+echo "Cleaning up Minicom log..."
+yes | rm $BASE_DIR/minicom.cap 2&gt; /dev/null
+
+echo "Cleaning up local user directory..."
+if docker ps -a --format "{{.Names}}" | grep -q "^${DBOX}$"; then
+    rm -f "${USER_NOS3_DIR}"
+fi
+rm -rf $USER_NOS3_DIR/*
+rm -rf $USER_FPRIME_PATH
+
+echo "Removing NOS Based containers..."
+yes 2&gt; /dev/null | $DCALL images --format "{{.Repository}}:{{.Tag}}" | grep '^ivvitc' | xargs -r docker rmi  
+
+echo "Removing NOS Based container networks..."
+yes | $DNETWORK ls --format "{{.Name}}" | grep '^nos3_' | xargs -r docker network rm 2&gt; /dev/null
+
+echo "Removing BallAerospace Based containers..."
+yes 2&gt; /dev/null | $DCALL images --format "{{.Repository}}:{{.Tag}}" | grep '^ballaerospace' | xargs -r docker rmi  
+
+echo "Removing OpenC3 Based containers..."
+yes 2&gt; /dev/null | $DCALL images --format "{{.Repository}}:{{.Tag}}" | grep '^openc3' | xargs -r docker rmi  
+
+echo "Removing OpenC3 Based container networks..."
+yes | $DNETWORK ls --format "{{.Name}}" | grep '^openc3' | xargs -r docker network rm 2&gt; /dev/null
+
+yes | $DCALL swarm leave --force 2&gt; /dev/null
+
+exit 0
+</pre></div>
+</div>
+</section>
+<section id="yamcs-default-nos3-yaml">
+<h2><code class="docutils literal notranslate"><span class="pre">yamcs_default.nos3.yaml</span></code><a class="headerlink" href="#yamcs-default-nos3-yaml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">scripts/cfg/yamcs_default.nos3.yaml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>timeService:
+   class: org.yamcs.time.SimulationTimeService
+ 
+services:
+  - class: org.yamcs.archive.XtceTmRecorder
+  - class: org.yamcs.archive.ParameterRecorder
+  - class: org.yamcs.archive.AlarmRecorder
+  - class: org.yamcs.archive.EventRecorder
+  - class: org.yamcs.archive.ReplayServer
+  - class: org.yamcs.parameter.SystemParametersService
+    args:
+      producers:
+        - fs
+        - jvm
+  - class: org.yamcs.ProcessorCreatorService
+    args:
+      name: realtime
+      type: realtime
+  - class: org.yamcs.archive.CommandHistoryRecorder
+  - class: org.yamcs.parameterarchive.ParameterArchive
+    args:
+      realtimeFiller:
+        enabled: true
+      backFiller:
+        enabled: false
+        warmupTime: 60
+  - class: org.yamcs.plists.ParameterListService
+  - class: org.yamcs.timeline.TimelineService
+  - class: org.yamcs.cfdp.CfdpService
+    name: cfdp
+    args:
+     inactivityTimeout: 30000
+     sequenceNrLength: 4
+     maxPduSize: 484
+     inStream: cfdp_in
+     outStream: cfdp_out
+     incomingBucket: "ground"
+     allowRemoteProvidedBucket: false
+     allowRemoteProvidedSubdirectory: true
+     allowDownloadOverwrites: false
+     maxExistingFileRenames: 1000
+     eofAckTimeout: 5000
+     eofAckLimit: 5
+     sleepBetweenPdus: 250
+     maxNumPendingUploads: 1
+     pendingAfterCompletion: 10000
+     localEntities:
+       - name: ground
+         id: 21
+         bucket: ground
+     remoteEntities:
+       - name: spacecraft
+         id: 24
+         bucket: spacecraft
+     entityIdLength: 4
+     hasFileListingCapability: false
+     senderFaultHandlers:
+       AckLimitReached: suspend
+     fileListingParserClassName: org.yamcs.filetransfer.CsvListingParser
+     fileListingParserArgs:
+       timestampMultiplier: 1
+
+dataLinks:
+  - name: radio-in
+    class: org.yamcs.tctm.UdpTmDataLink
+    stream: tm_realtime
+    port: 6011
+    packetPreprocessorClassName: org.yamcs.tctm.cfs.CfsPacketPreprocessor
+    packetPreprocessorArgs:
+      useLocalGenerationTime: true
+
+  - name: radio-out
+    class: org.yamcs.tctm.UdpTcDataLink
+    stream: tc_realtime
+    host: cryptolib
+    port: 6010
+    commandPostprocessorClassName: org.yamcs.tctm.cfs.CfsCommandPostprocessor
+
+  - name: debug-in
+    class: org.yamcs.tctm.UdpTmDataLink
+    stream: tm_realtime
+    port: 5013
+    packetPreprocessorClassName: org.yamcs.tctm.cfs.CfsPacketPreprocessor
+    packetPreprocessorArgs:
+      useLocalGenerationTime: true
+      
+  - name: debug-out
+    class: org.yamcs.tctm.UdpTcDataLink
+    stream: tc_realtime
+    host: nos-fsw
+    port: 5012
+    commandPostprocessorClassName: org.yamcs.tctm.cfs.CfsCommandPostprocessor
+
+  - name: truth42-in
+    class: org.yamcs.tctm.UdpTmDataLink
+    stream: truth42_data
+    port: 5111
+    updateSimulationTime: true
+    packetPreprocessorClassName: org.yamcs.nos3.Truth42PacketPreprocessor    
+
+mdb:
+  - type: xtce
+    args:
+      file: mdb/ccsds.xtce
+  - type: xtce
+    args:
+      file: mdb/cfs.xtce
+  - type: xtce
+    args:
+      file: mdb/ci_debug.xtce
+  - type: xtce
+    args:
+      file: mdb/cmd_util.xtce
+  - type: xtce
+    args:
+      file: mdb/sim_42_truth.xtce
+  - type: xtce
+    args:
+      file: mdb/system.xtce
+  - type: xtce
+    args:
+      file: mdb/to_debug.xtce
+  - type: xtce
+    args:
+      file: mdb/pdu.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/arducam/gsw/arducam.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_adcs/gsw/generic_adcs.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_css/gsw/generic_css.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_eps/gsw/generic_eps.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_fss/gsw/generic_fss.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_imu/gsw/generic_imu.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_mag/gsw/generic_mag.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_radio/gsw/generic_radio.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_reaction_wheel/gsw/generic_reaction_wheel.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_star_tracker/gsw/generic_star_tracker.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_thruster/gsw/generic_thruster.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_torquer/gsw/generic_torquer.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/novatel_oem615/gsw/novatel_oem615.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/sample/gsw/sample.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/mgr/gsw/mgr.xtce
+#  - type: xtce
+#    args:
+#      file: mdb/syn.xtce
+
+# Configuration for streams created at server startup
+streamConfig:
+  tm:
+    - name: "tm_realtime"
+      processor: "realtime"
+      rootContainer: "/CCSDS/CCSDS_TM"
+    - name: "truth42_data"
+      processor: "realtime"
+      rootContainer: "/SIM_42_TRUTH/SIM_42_TRUTH_DATA/SIM_42_TRUTH_DATA"
+    - name: "tm_dump"
+  cmdHist: ["cmdhist_realtime", "cmdhist_dump"]
+  event: ["events_realtime", "events_dump"]
+  param: ["pp_realtime", "pp_dump", "sys_param", "proc_param"]
+  parameterAlarm: ["alarms_realtime"]
+  tc:
+    # - name: "tc_debug"
+    #  processor: "realtime"
+    #  tcPatterns: ["/TO_DEBUG/CMD/.*"]
+    - name: "tc_realtime"
+      processor: "realtime"
+  sqlFile: "etc/extra_streams.sql"
+</pre></div>
+</div>
+</section>
+<section id="yamcs-multigds-nos3-yaml">
+<h2><code class="docutils literal notranslate"><span class="pre">yamcs_multiGDS.nos3.yaml</span></code><a class="headerlink" href="#yamcs-multigds-nos3-yaml" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">scripts/cfg/yamcs_multiGDS.nos3.yaml</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>timeService:
+   class: org.yamcs.time.SimulationTimeService
+ 
+services:
+  - class: org.yamcs.archive.XtceTmRecorder
+  - class: org.yamcs.archive.ParameterRecorder
+  - class: org.yamcs.archive.AlarmRecorder
+  - class: org.yamcs.archive.EventRecorder
+  - class: org.yamcs.archive.ReplayServer
+  - class: org.yamcs.parameter.SystemParametersService
+    args:
+      producers:
+        - fs
+        - jvm
+  - class: org.yamcs.ProcessorCreatorService
+    args:
+      name: realtime
+      type: realtime
+  - class: org.yamcs.archive.CommandHistoryRecorder
+  - class: org.yamcs.parameterarchive.ParameterArchive
+    args:
+      realtimeFiller:
+        enabled: true
+      backFiller:
+        enabled: false
+        warmupTime: 60
+  - class: org.yamcs.plists.ParameterListService
+  - class: org.yamcs.timeline.TimelineService
+  - class: org.yamcs.cfdp.CfdpService
+    name: cfdp
+    args:
+     inactivityTimeout: 30000
+     sequenceNrLength: 4
+     maxPduSize: 484
+     inStream: cfdp_in
+     outStream: cfdp_out
+     incomingBucket: "ground"
+     allowRemoteProvidedBucket: false
+     allowRemoteProvidedSubdirectory: true
+     allowDownloadOverwrites: false
+     maxExistingFileRenames: 1000
+     eofAckTimeout: 5000
+     eofAckLimit: 5
+     sleepBetweenPdus: 250
+     maxNumPendingUploads: 1
+     pendingAfterCompletion: 10000
+     localEntities:
+       - name: ground
+         id: 21
+         bucket: ground
+     remoteEntities:
+       - name: spacecraft
+         id: 24
+         bucket: spacecraft
+     entityIdLength: 4
+     hasFileListingCapability: false
+     senderFaultHandlers:
+       AckLimitReached: suspend
+     fileListingParserClassName: org.yamcs.filetransfer.CsvListingParser
+     fileListingParserArgs:
+       timestampMultiplier: 1
+
+dataLinks:
+  - name: radio-in
+    class: org.yamcs.tctm.UdpTmDataLink
+    stream: tm_realtime
+    port: 6011
+    packetPreprocessorClassName: org.yamcs.tctm.cfs.CfsPacketPreprocessor
+    packetPreprocessorArgs:
+      useLocalGenerationTime: true
+
+  - name: radio-out
+    class: org.yamcs.tctm.UdpTcDataLink
+    stream: tc_realtime
+    host: cryptolib2
+    port: 6010
+    commandPostprocessorClassName: org.yamcs.tctm.cfs.CfsCommandPostprocessor
+
+  - name: debug-in
+    class: org.yamcs.tctm.UdpTmDataLink
+    stream: tm_realtime
+    port: 5013
+    packetPreprocessorClassName: org.yamcs.tctm.cfs.CfsPacketPreprocessor
+    packetPreprocessorArgs:
+      useLocalGenerationTime: true
+      
+  - name: debug-out
+    class: org.yamcs.tctm.UdpTcDataLink
+    stream: tc_realtime
+    host: nos-fsw
+    port: 5012
+    commandPostprocessorClassName: org.yamcs.tctm.cfs.CfsCommandPostprocessor
+
+  - name: truth42-in
+    class: org.yamcs.tctm.UdpTmDataLink
+    stream: truth42_data
+    port: 5111
+    updateSimulationTime: true
+    packetPreprocessorClassName: org.yamcs.nos3.Truth42PacketPreprocessor    
+
+mdb:
+  - type: xtce
+    args:
+      file: mdb/ccsds.xtce
+  - type: xtce
+    args:
+      file: mdb/cfs.xtce
+  - type: xtce
+    args:
+      file: mdb/ci_debug.xtce
+  - type: xtce
+    args:
+      file: mdb/cmd_util.xtce
+  - type: xtce
+    args:
+      file: mdb/sim_42_truth.xtce
+  - type: xtce
+    args:
+      file: mdb/system.xtce
+  - type: xtce
+    args:
+      file: mdb/to_debug.xtce
+  - type: xtce
+    args:
+      file: mdb/pdu.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/arducam/gsw/arducam.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_adcs/gsw/generic_adcs.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_css/gsw/generic_css.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_eps/gsw/generic_eps.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_fss/gsw/generic_fss.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_imu/gsw/generic_imu.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_mag/gsw/generic_mag.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_radio/gsw/generic_radio.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_reaction_wheel/gsw/generic_reaction_wheel.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_star_tracker/gsw/generic_star_tracker.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_thruster/gsw/generic_thruster.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_torquer/gsw/generic_torquer.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/novatel_oem615/gsw/novatel_oem615.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/sample/gsw/sample.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/mgr/gsw/mgr.xtce
+#  - type: xtce
+#    args:
+#      file: mdb/syn.xtce
+
+# Configuration for streams created at server startup
+streamConfig:
+  tm:
+    - name: "tm_realtime"
+      processor: "realtime"
+      rootContainer: "/CCSDS/CCSDS_TM"
+    - name: "truth42_data"
+      processor: "realtime"
+      rootContainer: "/SIM_42_TRUTH/SIM_42_TRUTH_DATA/SIM_42_TRUTH_DATA"
+    - name: "tm_dump"
+  cmdHist: ["cmdhist_realtime", "cmdhist_dump"]
+  event: ["events_realtime", "events_dump"]
+  param: ["pp_realtime", "pp_dump", "sys_param", "proc_param"]
+  parameterAlarm: ["alarms_realtime"]
+  tc:
+    # - name: "tc_debug"
+    #  processor: "realtime"
+    #  tcPatterns: ["/TO_DEBUG/CMD/.*"]
+    - name: "tc_realtime"
+      processor: "realtime"
+  sqlFile: "etc/extra_streams.sql"
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="scripts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../fsw/index.html" class="btn btn-neutral float-right" title="fsw" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

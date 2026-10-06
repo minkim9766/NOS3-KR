@@ -1,0 +1,3768 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>override_inc &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../search.html" />
+    <link rel="next" title="arpa" href="arpa/index.html" />
+    <link rel="prev" title="inc" href="../inc/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">osal</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">unit-test-coverage</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">ut-stubs</a></li>
+      <li class="breadcrumb-item active">override_inc</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../_sources/project_inventory/fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="override-inc">
+<h1>override_inc<a class="headerlink" href="#override-inc" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/</span></code></p>
+<section id="id1">
+<h2>하위 폴더<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="arpa/index.html">arpa</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drv/index.html">drv</a></li>
+<li class="toctree-l1"><a class="reference internal" href="net/index.html">net</a></li>
+<li class="toctree-l1"><a class="reference internal" href="netinet/index.html">netinet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sys/index.html">sys</a></li>
+</ul>
+</div>
+</section>
+<section id="id2">
+<h2>이 폴더의 파일<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+</section>
+<section id="assert-h">
+<h2><code class="docutils literal notranslate"><span class="pre">assert.h</span></code><a class="headerlink" href="#assert-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/assert.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for assert.h
+ */
+
+#ifndef OVERRIDE_ASSERT_H
+#define OVERRIDE_ASSERT_H
+
+#include "OCS_assert.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in assert.h */
+/* ----------------------------------------- */
+
+#define assert OCS_assert
+
+#endif /* OVERRIDE_ASSERT_H */
+</pre></div>
+</div>
+</section>
+<section id="blkio-h">
+<h2><code class="docutils literal notranslate"><span class="pre">blkIo.h</span></code><a class="headerlink" href="#blkio-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/blkIo.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for blkIo.h
+ */
+
+#ifndef OVERRIDE_BLKIO_H
+#define OVERRIDE_BLKIO_H
+
+#include "OCS_blkIo.h"
+#include &lt;vxWorks.h&gt;
+
+/* ---------------------------------------*/
+/* mappings for declarations in blkIo.h */
+/* ---------------------------------------*/
+#define NULLDEV    OCS_NULLDEV
+#define BLK_DEV    OCS_BLK_DEV
+#define BLK_DEV_ID OCS_BLK_DEV_ID
+
+#endif /* OVERRIDE_BLKIO_H */
+</pre></div>
+</div>
+</section>
+<section id="bsp-impl-h">
+<h2><code class="docutils literal notranslate"><span class="pre">bsp-impl.h</span></code><a class="headerlink" href="#bsp-impl-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/bsp-impl.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * Declarations and prototypes for bsp-impl
+ */
+
+#ifndef OVERRIDE_BSP_IMPL_H
+#define OVERRIDE_BSP_IMPL_H
+
+#include "OCS_bsp-impl.h"
+
+#define OS_BSP_CONSOLEMODE_NORMAL    OCS_OS_BSP_CONSOLEMODE_NORMAL
+#define OS_BSP_CONSOLEMODE_RED       OCS_OS_BSP_CONSOLEMODE_RED
+#define OS_BSP_CONSOLEMODE_GREEN     OCS_OS_BSP_CONSOLEMODE_GREEN
+#define OS_BSP_CONSOLEMODE_BLUE      OCS_OS_BSP_CONSOLEMODE_BLUE
+#define OS_BSP_CONSOLEMODE_HIGHLIGHT OCS_OS_BSP_CONSOLEMODE_HIGHLIGHT
+
+#define OS_BSP_Lock_Impl           OCS_OS_BSP_Lock_Impl
+#define OS_BSP_ConsoleOutput_Impl  OCS_OS_BSP_ConsoleOutput_Impl
+#define OS_BSP_ConsoleSetMode_Impl OCS_OS_BSP_ConsoleSetMode_Impl
+#define OS_BSP_Unlock_Impl         OCS_OS_BSP_Unlock_Impl
+
+/*********************
+   END bsp-impl.h
+ *********************/
+
+#endif /* OVERRIDE_BSP_IMPL_H */
+</pre></div>
+</div>
+</section>
+<section id="cbiolib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">cbioLib.h</span></code><a class="headerlink" href="#cbiolib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/cbioLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for cbioLib.h
+ */
+
+#ifndef OVERRIDE_CBIOLIB_H
+#define OVERRIDE_CBIOLIB_H
+
+#include "OCS_cbioLib.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in cbioLib.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_CBIOLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="complex-h">
+<h2><code class="docutils literal notranslate"><span class="pre">complex.h</span></code><a class="headerlink" href="#complex-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/complex.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for complex.h
+ */
+
+#ifndef OVERRIDE_COMPLEX_H
+#define OVERRIDE_COMPLEX_H
+
+#include "OCS_complex.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in complex.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_COMPLEX_H */
+</pre></div>
+</div>
+</section>
+<section id="ctype-h">
+<h2><code class="docutils literal notranslate"><span class="pre">ctype.h</span></code><a class="headerlink" href="#ctype-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/ctype.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for ctype.h
+ */
+
+#ifndef OVERRIDE_CTYPE_H
+#define OVERRIDE_CTYPE_H
+
+#include "OCS_ctype.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in ctype.h */
+/* ----------------------------------------- */
+
+#define isgraph OCS_isgraph
+
+#endif /* OVERRIDE_CTYPE_H */
+</pre></div>
+</div>
+</section>
+<section id="dirent-h">
+<h2><code class="docutils literal notranslate"><span class="pre">dirent.h</span></code><a class="headerlink" href="#dirent-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/dirent.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for dirent.h
+ */
+
+#ifndef OVERRIDE_DIRENT_H
+#define OVERRIDE_DIRENT_H
+
+#include "OCS_dirent.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in dirent.h */
+/* ----------------------------------------- */
+
+#define DIR       OCS_DIR
+#define dirent    OCS_dirent
+#define closedir  OCS_closedir
+#define opendir   OCS_opendir
+#define readdir   OCS_readdir
+#define rewinddir OCS_rewinddir
+
+#endif /* OVERRIDE_DIRENT_H */
+</pre></div>
+</div>
+</section>
+<section id="dlfcn-h">
+<h2><code class="docutils literal notranslate"><span class="pre">dlfcn.h</span></code><a class="headerlink" href="#dlfcn-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/dlfcn.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for dlfcn.h
+ */
+
+#ifndef OVERRIDE_DLFCN_H
+#define OVERRIDE_DLFCN_H
+
+#include "OCS_dlfcn.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in dlfcn.h */
+/* ----------------------------------------- */
+
+#define dlclose OCS_dlclose
+#define dlerror OCS_dlerror
+#define dlopen  OCS_dlopen
+#define dlsym   OCS_dlsym
+
+#endif /* OVERRIDE_DLFCN_H */
+</pre></div>
+</div>
+</section>
+<section id="dosfslib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">dosFsLib.h</span></code><a class="headerlink" href="#dosfslib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/dosFsLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for dosFsLib.h
+ */
+
+#ifndef OVERRIDE_DOSFSLIB_H
+#define OVERRIDE_DOSFSLIB_H
+
+#include "OCS_dosFsLib.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in dosFsLib.h */
+/* ----------------------------------------- */
+#define DOS_CHK_ONLY        OCS_DOS_CHK_ONLY
+#define DOS_CHK_REPAIR      OCS_DOS_CHK_REPAIR
+#define DOS_CHK_VERB_0      OCS_DOS_CHK_VERB_0
+#define DOS_CHK_VERB_SILENT OCS_DOS_CHK_VERB_SILENT
+#define DOS_OPT_BLANK       OCS_DOS_OPT_BLANK
+
+#define dosFsVolFormat OCS_dosFsVolFormat
+
+#endif /* OVERRIDE_DOSFSLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="errno-h">
+<h2><code class="docutils literal notranslate"><span class="pre">errno.h</span></code><a class="headerlink" href="#errno-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/errno.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for errno.h
+ */
+
+#ifndef OVERRIDE_ERRNO_H
+#define OVERRIDE_ERRNO_H
+
+#include "OCS_errno.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in errno.h */
+/* ----------------------------------------- */
+#define EINTR     OCS_EINTR
+#define EAGAIN    OCS_EAGAIN
+#define EINVAL    OCS_EINVAL
+#define EEXIST    OCS_EEXIST
+#define EMSGSIZE  OCS_EMSGSIZE
+#define ETIMEDOUT OCS_ETIMEDOUT
+#define ESPIPE    OCS_ESPIPE
+#define ENOTSUP   OCS_ENOTSUP
+#define ENOSYS    OCS_ENOSYS
+#define EROFS     OCS_EROFS
+
+#define errno OCS_errno
+
+#endif /* OVERRIDE_ERRNO_H */
+</pre></div>
+</div>
+</section>
+<section id="errnolib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">errnoLib.h</span></code><a class="headerlink" href="#errnolib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/errnoLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for errnoLib.h
+ */
+
+#ifndef OVERRIDE_ERRNOLIB_H
+#define OVERRIDE_ERRNOLIB_H
+
+#include "OCS_errnoLib.h"
+#include &lt;vxWorks.h&gt;
+
+/* -----------------------------------------  */
+/* mappings for declarations in errnoLib.h */
+/* -----------------------------------------  */
+#define errnoGet OCS_errnoGet
+
+#endif /* OVERRIDE_ERRNOLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="fcntl-h">
+<h2><code class="docutils literal notranslate"><span class="pre">fcntl.h</span></code><a class="headerlink" href="#fcntl-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/fcntl.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for fcntl.h
+ */
+
+#ifndef OVERRIDE_FCNTL_H
+#define OVERRIDE_FCNTL_H
+
+#include "OCS_fcntl.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in fcntl.h */
+/* ----------------------------------------- */
+#define S_IRWXU    OCS_S_IRWXU
+#define S_IRWXG    OCS_S_IRWXG
+#define S_IRWXO    OCS_S_IRWXO
+#define S_IXOTH    OCS_S_IXOTH
+#define S_IXGRP    OCS_S_IXGRP
+#define S_IXUSR    OCS_S_IXUSR
+#define S_IROTH    OCS_S_IROTH
+#define S_IRGRP    OCS_S_IRGRP
+#define S_IRUSR    OCS_S_IRUSR
+#define S_IWOTH    OCS_S_IWOTH
+#define S_IWGRP    OCS_S_IWGRP
+#define S_IWUSR    OCS_S_IWUSR
+#define S_IFDIR    OCS_S_IFDIR
+#define S_ISDIR(x) OCS_S_ISDIR(x)
+#define O_RDONLY   OCS_O_RDONLY
+#define O_WRONLY   OCS_O_WRONLY
+#define O_RDWR     OCS_O_RDWR
+#define O_CREAT    OCS_O_CREAT
+#define O_TRUNC    OCS_O_TRUNC
+#define O_NONBLOCK OCS_O_NONBLOCK
+#define F_GETFL    OCS_F_GETFL
+#define F_SETFL    OCS_F_SETFL
+#define F_GETFD    OCS_F_GETFD
+#define F_SETFD    OCS_F_SETFD
+#define F_DUPFD    OCS_F_DUPFD
+
+#define fcntl OCS_fcntl
+#define open  OCS_open
+
+#endif /* OVERRIDE_FCNTL_H */
+</pre></div>
+</div>
+</section>
+<section id="fenv-h">
+<h2><code class="docutils literal notranslate"><span class="pre">fenv.h</span></code><a class="headerlink" href="#fenv-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/fenv.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for fenv.h
+ */
+
+#ifndef OVERRIDE_FENV_H
+#define OVERRIDE_FENV_H
+
+#include "OCS_fenv.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in fenv.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_FENV_H */
+</pre></div>
+</div>
+</section>
+<section id="float-h">
+<h2><code class="docutils literal notranslate"><span class="pre">float.h</span></code><a class="headerlink" href="#float-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/float.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for float.h
+ */
+
+#ifndef OVERRIDE_FLOAT_H
+#define OVERRIDE_FLOAT_H
+
+#include "OCS_float.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in float.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_FLOAT_H */
+</pre></div>
+</div>
+</section>
+<section id="hostlib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">hostLib.h</span></code><a class="headerlink" href="#hostlib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/hostLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for hostLib.h
+ */
+
+#ifndef OVERRIDE_HOSTLIB_H
+#define OVERRIDE_HOSTLIB_H
+
+#include "OCS_hostLib.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in hostLib.h */
+/* ----------------------------------------- */
+#define hostGetByName OCS_hostGetByName
+
+#endif /* OVERRIDE_HOSTLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="intlib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">intLib.h</span></code><a class="headerlink" href="#intlib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/intLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for intLib.h
+ */
+
+#ifndef OVERRIDE_INTLIB_H
+#define OVERRIDE_INTLIB_H
+
+#include "OCS_intLib.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in intLib.h */
+/* ----------------------------------------- */
+
+#define intConnect   OCS_intConnect
+#define intDisable   OCS_intDisable
+#define intEnable    OCS_intEnable
+#define intLock      OCS_intLock
+#define intUnlock    OCS_intUnlock
+#define INUM_TO_IVEC OCS_INUM_TO_IVEC
+
+#endif /* OVERRIDE_INTLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="inttypes-h">
+<h2><code class="docutils literal notranslate"><span class="pre">inttypes.h</span></code><a class="headerlink" href="#inttypes-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/inttypes.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for inttypes.h
+ */
+
+#ifndef OVERRIDE_INTTYPES_H
+#define OVERRIDE_INTTYPES_H
+
+#include "OCS_inttypes.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in inttypes.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_INTTYPES_H */
+</pre></div>
+</div>
+</section>
+<section id="iolib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">ioLib.h</span></code><a class="headerlink" href="#iolib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/ioLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for ioLib.h
+ */
+
+#ifndef OVERRIDE_IOLIB_H
+#define OVERRIDE_IOLIB_H
+
+#include "OCS_ioLib.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in ioLib.h */
+/* ----------------------------------------- */
+
+#define FIOCHKDSK  OCS_FIOCHKDSK
+#define FIOUNMOUNT OCS_FIOUNMOUNT
+#define FIONBIO    OCS_FIONBIO
+#define ioctl      OCS_ioctl
+
+#endif /* OVERRIDE_IOLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="iv-h">
+<h2><code class="docutils literal notranslate"><span class="pre">iv.h</span></code><a class="headerlink" href="#iv-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/iv.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for iv.h
+ */
+
+#ifndef OVERRIDE_IV_H
+#define OVERRIDE_IV_H
+
+#include "OCS_iv.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in iv.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_IV_H */
+</pre></div>
+</div>
+</section>
+<section id="loadlib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">loadLib.h</span></code><a class="headerlink" href="#loadlib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/loadLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for loadLib.h
+ */
+
+#ifndef OVERRIDE_LOADLIB_H
+#define OVERRIDE_LOADLIB_H
+
+#include "OCS_loadLib.h"
+#include &lt;vxWorks.h&gt;
+#include &lt;moduleLib.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in loadLib.h */
+/* ----------------------------------------- */
+
+#define loadModule OCS_loadModule
+
+#endif /* OVERRIDE_LOADLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="locale-h">
+<h2><code class="docutils literal notranslate"><span class="pre">locale.h</span></code><a class="headerlink" href="#locale-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/locale.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for locale.h
+ */
+
+#ifndef OVERRIDE_LOCALE_H
+#define OVERRIDE_LOCALE_H
+
+#include "OCS_locale.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in locale.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_LOCALE_H */
+</pre></div>
+</div>
+</section>
+<section id="loglib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">logLib.h</span></code><a class="headerlink" href="#loglib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/logLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for logLib.h
+ */
+
+#ifndef OVERRIDE_LOGLIB_H
+#define OVERRIDE_LOGLIB_H
+
+#include "OCS_logLib.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in logLib.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_LOGLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="math-h">
+<h2><code class="docutils literal notranslate"><span class="pre">math.h</span></code><a class="headerlink" href="#math-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/math.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for math.h
+ */
+
+#ifndef OVERRIDE_MATH_H
+#define OVERRIDE_MATH_H
+
+#include "OCS_math.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in math.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_MATH_H */
+</pre></div>
+</div>
+</section>
+<section id="mempartlib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">memPartLib.h</span></code><a class="headerlink" href="#mempartlib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/memPartLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for memPartLib.h
+ */
+
+#ifndef OVERRIDE_MEMPARTLIB_H
+#define OVERRIDE_MEMPARTLIB_H
+
+#include "OCS_memPartLib.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in memPartLib.h */
+/* ----------------------------------------- */
+#define PART_ID        OCS_PART_ID
+#define MEM_PART_STATS OCS_MEM_PART_STATS
+
+#define memPartShow    OCS_memPartShow
+#define memPartInfoGet OCS_memPartInfoGet
+#define memSysPartId   OCS_memSysPartId
+
+#endif /* OVERRIDE_MEMPARTLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="modulelib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">moduleLib.h</span></code><a class="headerlink" href="#modulelib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/moduleLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for moduleLib.h
+ */
+
+#ifndef OVERRIDE_MODULELIB_H
+#define OVERRIDE_MODULELIB_H
+
+#include "OCS_moduleLib.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in moduleLib.h */
+/* ----------------------------------------- */
+
+#define MODULE_ID   OCS_MODULE_ID
+#define MODULE_INFO OCS_MODULE_INFO
+
+#define moduleInfoGet OCS_moduleInfoGet
+
+#endif /* OVERRIDE_MODULELIB_H */
+</pre></div>
+</div>
+</section>
+<section id="mqueue-h">
+<h2><code class="docutils literal notranslate"><span class="pre">mqueue.h</span></code><a class="headerlink" href="#mqueue-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/mqueue.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for mqueue.h
+ */
+
+#ifndef OVERRIDE_MQUEUE_H
+#define OVERRIDE_MQUEUE_H
+
+#include "OCS_mqueue.h"
+#include &lt;time.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in mqueue.h */
+/* ----------------------------------------- */
+
+#define mqd_t   OCS_mqd_t
+#define mq_attr OCS_mq_attr
+
+#define mq_close        OCS_mq_close
+#define mq_open         OCS_mq_open
+#define mq_receive      OCS_mq_receive
+#define mq_timedreceive OCS_mq_timedreceive
+#define mq_timedsend    OCS_mq_timedsend
+#define mq_unlink       OCS_mq_unlink
+
+#endif /* OVERRIDE_MQUEUE_H */
+</pre></div>
+</div>
+</section>
+<section id="msgqlib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">msgQLib.h</span></code><a class="headerlink" href="#msgqlib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/msgQLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for msgQLib.h
+ */
+
+#ifndef OVERRIDE_MSGQLIB_H
+#define OVERRIDE_MSGQLIB_H
+
+#include "OCS_msgQLib.h"
+#include &lt;vxWorks.h&gt;
+#include &lt;objLib.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in msgQLib.h */
+/* ----------------------------------------- */
+#define MSG_Q_FIFO             OCS_MSG_Q_FIFO
+#define MSG_Q_PRIORITY         OCS_MSG_Q_PRIORITY
+#define WIND_MSG_Q_OPTION_MASK OCS_WIND_MSG_Q_OPTION_MASK
+#define MSG_PRI_NORMAL         OCS_MSG_PRI_NORMAL
+#define MSG_PRI_URGENT         OCS_MSG_PRI_URGENT
+
+#define MSG_Q_ID OCS_MSG_Q_ID
+
+#define msgQCreate  OCS_msgQCreate
+#define msgQDelete  OCS_msgQDelete
+#define msgQReceive OCS_msgQReceive
+#define msgQSend    OCS_msgQSend
+
+#endif /* OVERRIDE_MSGQLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="netdb-h">
+<h2><code class="docutils literal notranslate"><span class="pre">netdb.h</span></code><a class="headerlink" href="#netdb-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/netdb.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for netdb.h
+ */
+
+#ifndef OVERRIDE_NETDB_H
+#define OVERRIDE_NETDB_H
+
+#include "OCS_netdb.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in netdb.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_NETDB_H */
+</pre></div>
+</div>
+</section>
+<section id="objlib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">objLib.h</span></code><a class="headerlink" href="#objlib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/objLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for objLib.h
+ */
+
+#ifndef OVERRIDE_OBJLIB_H
+#define OVERRIDE_OBJLIB_H
+
+#include "OCS_objLib.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in objLib.h */
+/* ----------------------------------------- */
+
+#define M_objLib                 OCS_M_objLib
+#define S_objLib_OBJ_ID_ERROR    OCS_S_objLib_OBJ_ID_ERROR
+#define S_objLib_OBJ_UNAVAILABLE OCS_S_objLib_OBJ_UNAVAILABLE
+#define S_objLib_OBJ_DELETED     OCS_S_objLib_OBJ_DELETED
+#define S_objLib_OBJ_TIMEOUT     OCS_S_objLib_OBJ_TIMEOUT
+#define S_objLib_OBJ_NO_METHOD   OCS_S_objLib_OBJ_NO_METHOD
+
+#endif /* OVERRIDE_OBJLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="poll-h">
+<h2><code class="docutils literal notranslate"><span class="pre">poll.h</span></code><a class="headerlink" href="#poll-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/poll.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for poll.h
+ */
+
+#ifndef OVERRIDE_POLL_H
+#define OVERRIDE_POLL_H
+
+#include "OCS_poll.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in poll.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_POLL_H */
+</pre></div>
+</div>
+</section>
+<section id="pthread-h">
+<h2><code class="docutils literal notranslate"><span class="pre">pthread.h</span></code><a class="headerlink" href="#pthread-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/pthread.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for pthread.h
+ */
+
+#ifndef OVERRIDE_PTHREAD_H
+#define OVERRIDE_PTHREAD_H
+
+#include "OCS_pthread.h"
+#include &lt;sched.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in pthread.h */
+/* ----------------------------------------- */
+
+#define PTHREAD_PRIO_INHERIT    OCS_PTHREAD_PRIO_INHERIT
+#define PTHREAD_MUTEX_RECURSIVE OCS_PTHREAD_MUTEX_RECURSIVE
+#define PTHREAD_EXPLICIT_SCHED  OCS_PTHREAD_EXPLICIT_SCHED
+
+#define pthread_t           OCS_pthread_t
+#define pthread_attr_t      OCS_pthread_attr_t
+#define pthread_mutex_t     OCS_pthread_mutex_t
+#define pthread_mutexattr_t OCS_pthread_mutexattr_t
+#define pthread_cond_t      OCS_pthread_cond_t
+#define pthread_condattr_t  OCS_pthread_condattr_t
+#define pthread_key_t       OCS_pthread_key_t
+
+#define pthread_attr_destroy          OCS_pthread_attr_destroy
+#define pthread_attr_getschedparam    OCS_pthread_attr_getschedparam
+#define pthread_attr_init             OCS_pthread_attr_init
+#define pthread_attr_setinheritsched  OCS_pthread_attr_setinheritsched
+#define pthread_attr_setschedparam    OCS_pthread_attr_setschedparam
+#define pthread_attr_setschedpolicy   OCS_pthread_attr_setschedpolicy
+#define pthread_attr_setstacksize     OCS_pthread_attr_setstacksize
+#define pthread_cancel                OCS_pthread_cancel
+#define pthread_cond_broadcast        OCS_pthread_cond_broadcast
+#define pthread_cond_destroy          OCS_pthread_cond_destroy
+#define pthread_cond_init             OCS_pthread_cond_init
+#define pthread_cond_signal           OCS_pthread_cond_signal
+#define pthread_cond_timedwait        OCS_pthread_cond_timedwait
+#define pthread_cond_wait             OCS_pthread_cond_wait
+#define pthread_create                OCS_pthread_create
+#define pthread_detach                OCS_pthread_detach
+#define pthread_equal                 OCS_pthread_equal
+#define pthread_exit                  OCS_pthread_exit
+#define pthread_getschedparam         OCS_pthread_getschedparam
+#define pthread_getspecific           OCS_pthread_getspecific
+#define pthread_key_create            OCS_pthread_key_create
+#define pthread_mutexattr_destroy     OCS_pthread_mutexattr_destroy
+#define pthread_mutexattr_init        OCS_pthread_mutexattr_init
+#define pthread_mutexattr_setprotocol OCS_pthread_mutexattr_setprotocol
+#define pthread_mutexattr_settype     OCS_pthread_mutexattr_settype
+#define pthread_mutex_destroy         OCS_pthread_mutex_destroy
+#define pthread_mutex_init            OCS_pthread_mutex_init
+#define pthread_mutex_lock            OCS_pthread_mutex_lock
+#define pthread_mutex_unlock          OCS_pthread_mutex_unlock
+#define pthread_self                  OCS_pthread_self
+#define pthread_setschedparam         OCS_pthread_setschedparam
+#define pthread_setschedprio          OCS_pthread_setschedprio
+#define pthread_setspecific           OCS_pthread_setspecific
+#define pthread_sigmask               OCS_pthread_sigmask
+
+#endif /* OVERRIDE_PTHREAD_H */
+</pre></div>
+</div>
+</section>
+<section id="ramdiskcbio-h">
+<h2><code class="docutils literal notranslate"><span class="pre">ramDiskCbio.h</span></code><a class="headerlink" href="#ramdiskcbio-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/ramDiskCbio.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for ramDiskCbio.h
+ */
+
+#ifndef OVERRIDE_RAMDISKCBIO_H
+#define OVERRIDE_RAMDISKCBIO_H
+
+#include "OCS_ramDiskCbio.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in ramDiskCbio.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_RAMDISKCBIO_H */
+</pre></div>
+</div>
+</section>
+<section id="ramdrv-h">
+<h2><code class="docutils literal notranslate"><span class="pre">ramDrv.h</span></code><a class="headerlink" href="#ramdrv-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/ramDrv.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for ramDrv.h
+ */
+
+#ifndef OVERRIDE_RAMDRV_H
+#define OVERRIDE_RAMDRV_H
+
+#include "OCS_ramDrv.h"
+#include &lt;vxWorks.h&gt;
+#include &lt;blkIo.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in ramDrv.h */
+/* ----------------------------------------- */
+
+#define ramDevCreate OCS_ramDevCreate
+
+#endif /* OVERRIDE_RAMDRV_H */
+</pre></div>
+</div>
+</section>
+<section id="sched-h">
+<h2><code class="docutils literal notranslate"><span class="pre">sched.h</span></code><a class="headerlink" href="#sched-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sched.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sched.h
+ */
+
+#ifndef OVERRIDE_SCHED_H
+#define OVERRIDE_SCHED_H
+
+#include "OCS_sched.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in sched.h */
+/* ----------------------------------------- */
+
+#define SCHED_FIFO OCS_SCHED_FIFO
+#define SCHED_RR   OCS_SCHED_RR
+
+#define sched_param OCS_sched_param
+
+#define sched_get_priority_max OCS_sched_get_priority_max
+#define sched_get_priority_min OCS_sched_get_priority_min
+
+#endif /* OVERRIDE_SCHED_H */
+</pre></div>
+</div>
+</section>
+<section id="selectlib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">selectLib.h</span></code><a class="headerlink" href="#selectlib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/selectLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * Declarations and prototypes for selectLib
+ */
+
+#ifndef OVERRIDE_SELECTLIB_H
+#define OVERRIDE_SELECTLIB_H
+
+#include &lt;vxWorks.h&gt;
+#include &lt;sys/select.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in selectLib.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_SELECTLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="semaphore-h">
+<h2><code class="docutils literal notranslate"><span class="pre">semaphore.h</span></code><a class="headerlink" href="#semaphore-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/semaphore.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for semaphore.h
+ */
+
+#ifndef OVERRIDE_SEMAPHORE_H
+#define OVERRIDE_SEMAPHORE_H
+
+#include "OCS_semaphore.h"
+#include &lt;time.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in semaphore.h */
+/* ----------------------------------------- */
+#define sem_t         OCS_sem_t
+#define sem_destroy   OCS_sem_destroy
+#define sem_getvalue  OCS_sem_getvalue
+#define sem_init      OCS_sem_init
+#define sem_post      OCS_sem_post
+#define sem_timedwait OCS_sem_timedwait
+#define sem_wait      OCS_sem_wait
+
+#endif /* OVERRIDE_SEMAPHORE_H */
+</pre></div>
+</div>
+</section>
+<section id="semlib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">semLib.h</span></code><a class="headerlink" href="#semlib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/semLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for semLib.h
+ */
+
+#ifndef OVERRIDE_SEMLIB_H
+#define OVERRIDE_SEMLIB_H
+
+#include "OCS_semLib.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in semLib.h */
+/* ----------------------------------------- */
+
+#define VX_BINARY_SEMAPHORE(x)   OCS_VX_BINARY_SEMAPHORE(x)
+#define VX_COUNTING_SEMAPHORE(x) OCS_VX_COUNTING_SEMAPHORE(x)
+#define VX_MUTEX_SEMAPHORE(x)    OCS_VX_MUTEX_SEMAPHORE(x)
+
+#define SEM_ID                   OCS_SEM_ID
+#define SEM_B_STATE              OCS_SEM_B_STATE
+#define SEM_EMPTY                OCS_SEM_EMPTY
+#define SEM_FULL                 OCS_SEM_FULL
+#define SEM_Q_FIFO               OCS_SEM_Q_FIFO
+#define SEM_Q_PRIORITY           OCS_SEM_Q_PRIORITY
+#define SEM_DELETE_SAFE          OCS_SEM_DELETE_SAFE
+#define SEM_INVERSION_SAFE       OCS_SEM_INVERSION_SAFE
+#define SEM_EVENTSEND_ERR_NOTIFY OCS_SEM_EVENTSEND_ERR_NOTIFY
+
+#define semBInitialize OCS_semBInitialize
+#define semBCreate     OCS_semBCreate
+#define semMInitialize OCS_semMInitialize
+#define semMCreate     OCS_semMCreate
+#define semCInitialize OCS_semCInitialize
+#define semCCreate     OCS_semCCreate
+#define semDelete      OCS_semDelete
+#define semFlush       OCS_semFlush
+#define semTake        OCS_semTake
+#define semGive        OCS_semGive
+
+#endif /* OVERRIDE_SEMLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="setjmp-h">
+<h2><code class="docutils literal notranslate"><span class="pre">setjmp.h</span></code><a class="headerlink" href="#setjmp-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/setjmp.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for setjmp.h
+ */
+
+#ifndef OVERRIDE_SETJMP_H
+#define OVERRIDE_SETJMP_H
+
+#include "OCS_setjmp.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in setjmp.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_SETJMP_H */
+</pre></div>
+</div>
+</section>
+<section id="shelllib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">shellLib.h</span></code><a class="headerlink" href="#shelllib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/shellLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for shellLib.h
+ */
+
+#ifndef OVERRIDE_SHELLLIB_H
+#define OVERRIDE_SHELLLIB_H
+
+#include "OCS_shellLib.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in shellLib.h */
+/* ----------------------------------------- */
+#define shellGenericInit OCS_shellGenericInit
+
+#endif /* OVERRIDE_SHELLLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="signal-h">
+<h2><code class="docutils literal notranslate"><span class="pre">signal.h</span></code><a class="headerlink" href="#signal-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/signal.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for signal.h
+ */
+
+#ifndef OVERRIDE_SIGNAL_H
+#define OVERRIDE_SIGNAL_H
+
+#include "OCS_signal.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in signal.h */
+/* ----------------------------------------- */
+
+#define SIG_SETMASK  OCS_SIG_SETMASK
+#define SIGHUP       OCS_SIGHUP
+#define SIGINT       OCS_SIGINT
+#define SIGABRT      OCS_SIGABRT
+#define SIGSEGV      OCS_SIGSEGV
+#define SIGBUS       OCS_SIGBUS
+#define SIGFPE       OCS_SIGFPE
+#define SIGILL       OCS_SIGILL
+#define SIGRTMIN     OCS_SIGRTMIN
+#define SIGRTMAX     OCS_SIGRTMAX
+#define SIGEV_SIGNAL OCS_SIGEV_SIGNAL
+
+#define sighandler_t OCS_sighandler_t
+#define sigset_t     OCS_sigset_t
+#define sig_atomic_t OCS_sig_atomic_t
+#define sigevent     OCS_sigevent
+
+#define kill        OCS_kill
+#define sigaddset   OCS_sigaddset
+#define sigdelset   OCS_sigdelset
+#define sigemptyset OCS_sigemptyset
+#define sigfillset  OCS_sigfillset
+#define sigismember OCS_sigismember
+#define signal      OCS_signal
+#define sigprocmask OCS_sigprocmask
+#define sigsuspend  OCS_sigsuspend
+#define sigwait     OCS_sigwait
+
+#endif /* OVERRIDE_SIGNAL_H */
+</pre></div>
+</div>
+</section>
+<section id="stat-h">
+<h2><code class="docutils literal notranslate"><span class="pre">stat.h</span></code><a class="headerlink" href="#stat-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/stat.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for stat.h
+ */
+
+#ifndef OVERRIDE_STAT_H
+#define OVERRIDE_STAT_H
+
+#include "OCS_stat.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in sys/stat.h */
+/* ----------------------------------------- */
+
+#define stat   OCS_stat
+#define fstat  OCS_fstat
+#define fchmod OCS_fchmod
+#define chmod  OCS_chmod
+#define mkdir  OCS_mkdir
+
+/* ----------------------------------------- */
+/* mappings for declarations in sys/statvfs.h */
+/* ----------------------------------------- */
+#define statvfs OCS_statvfs
+#define statfs  OCS_statvfs
+
+#endif /* OVERRIDE_STAT_H */
+</pre></div>
+</div>
+</section>
+<section id="stdarg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">stdarg.h</span></code><a class="headerlink" href="#stdarg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/stdarg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for stdarg.h
+ */
+
+#ifndef OVERRIDE_STDARG_H
+#define OVERRIDE_STDARG_H
+
+#include "OCS_stdarg.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in stdarg.h */
+/* ----------------------------------------- */
+
+#define va_list            OCS_va_list
+#define va_start(ap, last) OCS_va_start(ap, last)
+#define va_end(ap)         OCS_va_end(ap)
+
+#endif /* OVERRIDE_STDARG_H */
+</pre></div>
+</div>
+</section>
+<section id="stdio-h">
+<h2><code class="docutils literal notranslate"><span class="pre">stdio.h</span></code><a class="headerlink" href="#stdio-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/stdio.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for stdio.h
+ */
+
+#ifndef OVERRIDE_STDIO_H
+#define OVERRIDE_STDIO_H
+
+#include "OCS_stdio.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in stdio.h */
+/* ----------------------------------------- */
+
+#define FILE         OCS_FILE
+#define fclose       OCS_fclose
+#define fgets        OCS_fgets
+#define fopen        OCS_fopen
+#define fputs        OCS_fputs
+#define remove       OCS_remove
+#define rename       OCS_rename
+#define snprintf     OCS_snprintf
+#define vsnprintf    OCS_vsnprintf
+#define printf(...)  OCS_printf(__VA_ARGS__)
+#define fprintf(...) OCS_fprintf(__VA_ARGS__)
+#define putchar      OCS_putchar
+
+#define stdin  OCS_stdin
+#define stdout OCS_stdout
+#define stderr OCS_stderr
+
+#endif /* OVERRIDE_STDIO_H */
+</pre></div>
+</div>
+</section>
+<section id="stdlib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">stdlib.h</span></code><a class="headerlink" href="#stdlib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/stdlib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for stdlib.h
+ */
+
+#ifndef OVERRIDE_STDLIB_H
+#define OVERRIDE_STDLIB_H
+
+#include "OCS_stdlib.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in stdlib.h */
+/* ----------------------------------------- */
+
+#define EXIT_SUCCESS OCS_EXIT_SUCCESS
+#define EXIT_FAILURE OCS_EXIT_FAILURE
+#define abort        OCS_abort
+#define exit         OCS_exit
+#define strtoul      OCS_strtoul
+#define system       OCS_system
+#define malloc       OCS_malloc
+#define free         OCS_free
+
+#endif /* OVERRIDE_STDLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="string-h">
+<h2><code class="docutils literal notranslate"><span class="pre">string.h</span></code><a class="headerlink" href="#string-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/string.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for string.h
+ */
+
+#ifndef OVERRIDE_STRING_H
+#define OVERRIDE_STRING_H
+
+#include "OCS_string.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in string.h */
+/* ----------------------------------------- */
+#define memchr   OCS_memchr
+#define memcpy   OCS_memcpy
+#define memset   OCS_memset
+#define strcmp   OCS_strcmp
+#define strcpy   OCS_strcpy
+#define strlen   OCS_strlen
+#define strncmp  OCS_strncmp
+#define strncpy  OCS_strncpy
+#define strchr   OCS_strchr
+#define strrchr  OCS_strrchr
+#define strcat   OCS_strcat
+#define strncat  OCS_strncat
+#define strerror OCS_strerror
+
+#endif /* OVERRIDE_STRING_H */
+</pre></div>
+</div>
+</section>
+<section id="strings-h">
+<h2><code class="docutils literal notranslate"><span class="pre">strings.h</span></code><a class="headerlink" href="#strings-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/strings.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for strings.h
+ */
+
+#ifndef OVERRIDE_STRINGS_H
+#define OVERRIDE_STRINGS_H
+
+#include "OCS_strings.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in strings.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_STRINGS_H */
+</pre></div>
+</div>
+</section>
+<section id="symlib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">symLib.h</span></code><a class="headerlink" href="#symlib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/symLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * Declarations and prototypes for symLib
+ */
+
+#ifndef OVERRIDE_SYMLIB_H
+#define OVERRIDE_SYMLIB_H
+
+#include "OCS_symLib.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in symLib.h */
+/* ----------------------------------------- */
+#define LOAD_ALL_SYMBOLS OCS_LOAD_ALL_SYMBOLS
+#define SYM_FIND_BY_NAME OCS_SYM_FIND_BY_NAME
+
+#define SYM_TYPE    OCS_SYM_TYPE
+#define SYMTAB      OCS_SYMTAB
+#define SYMBOL      OCS_SYMBOL
+#define SYMTAB_ID   OCS_SYMTAB_ID
+#define SYMBOL_ID   OCS_SYMBOL_ID
+#define SYMBOL_DESC OCS_SYMBOL_DESC
+#define SYM_GROUP   OCS_SYM_GROUP
+#define SYM_VALUE   OCS_SYM_VALUE
+
+#define sysSymTbl     OCS_sysSymTbl
+#define symFindByName OCS_symFindByName
+#define symEach       OCS_symEach
+#define symFind       OCS_symFind
+
+#endif /* OVERRIDE_SYMLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="syslib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">sysLib.h</span></code><a class="headerlink" href="#syslib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sysLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sysLib.h
+ */
+
+#ifndef OVERRIDE_SYSLIB_H
+#define OVERRIDE_SYSLIB_H
+
+#include "OCS_sysLib.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in sysLib.h */
+/* ----------------------------------------- */
+#define sysClkRateGet OCS_sysClkRateGet
+
+#endif /* OVERRIDE_SYSLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="tasklib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">taskLib.h</span></code><a class="headerlink" href="#tasklib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/taskLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for taskLib.h
+ */
+
+#ifndef OVERRIDE_TASKLIB_H
+#define OVERRIDE_TASKLIB_H
+
+#include "OCS_taskLib.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in taskLib.h */
+/* ----------------------------------------- */
+#define VX_FP_TASK OCS_VX_FP_TASK
+#define TASK_ID    OCS_TASK_ID
+#define WIND_TCB   OCS_WIND_TCB
+#define TASK_DESC  OCS_TASK_DESC
+
+#define taskName        OCS_taskName
+#define taskNameToId    OCS_taskNameToId
+#define taskIdDefault   OCS_taskIdDefault
+#define taskIsReady     OCS_taskIsReady
+#define taskIsSuspended OCS_taskIsSuspended
+#define taskGetInfo     OCS_taskGetInfo
+
+#define taskActivate    OCS_taskActivate
+#define taskExit        OCS_taskExit
+#define taskIdSelf      OCS_taskIdSelf
+#define taskDelay       OCS_taskDelay
+#define taskDelete      OCS_taskDelete
+#define taskDeleteForce OCS_taskDeleteForce
+#define taskSuspend     OCS_taskSuspend
+#define taskResume      OCS_taskResume
+#define taskPrioritySet OCS_taskPrioritySet
+#define taskSpawn       OCS_taskSpawn
+#define taskInit        OCS_taskInit
+#define taskTcb         OCS_taskTcb
+
+#endif /* OVERRIDE_TASKLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="taskvarlib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">taskVarLib.h</span></code><a class="headerlink" href="#taskvarlib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/taskVarLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for taskVarLib.h
+ */
+
+#ifndef OVERRIDE_TASKVARLIB_H
+#define OVERRIDE_TASKVARLIB_H
+
+#include "OCS_taskVarLib.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in taskVarLib.h */
+/* ----------------------------------------- */
+
+#define taskVarAdd OCS_taskVarAdd
+
+#endif /* OVERRIDE_TASKVARLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="termios-h">
+<h2><code class="docutils literal notranslate"><span class="pre">termios.h</span></code><a class="headerlink" href="#termios-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/termios.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for termios.h
+ */
+
+#ifndef OVERRIDE_TERMIOS_H
+#define OVERRIDE_TERMIOS_H
+
+#include "OCS_termios.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in termios.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_TERMIOS_H */
+</pre></div>
+</div>
+</section>
+<section id="tgmath-h">
+<h2><code class="docutils literal notranslate"><span class="pre">tgmath.h</span></code><a class="headerlink" href="#tgmath-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/tgmath.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for tgmath.h
+ */
+
+#ifndef OVERRIDE_TGMATH_H
+#define OVERRIDE_TGMATH_H
+
+#include "OCS_tgmath.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in tgmath.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_TGMATH_H */
+</pre></div>
+</div>
+</section>
+<section id="time-h">
+<h2><code class="docutils literal notranslate"><span class="pre">time.h</span></code><a class="headerlink" href="#time-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/time.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for time.h
+ */
+
+#ifndef OVERRIDE_TIME_H
+#define OVERRIDE_TIME_H
+
+#include "OCS_time.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in time.h */
+/* ----------------------------------------- */
+
+#define CLOCK_REALTIME  OCS_CLOCK_REALTIME
+#define CLOCK_MONOTONIC OCS_CLOCK_MONOTONIC
+#define TIMER_ABSTIME   OCS_TIMER_ABSTIME
+
+#define clockid_t          OCS_clockid_t
+#define timer_t            OCS_timer_t
+#define time_t             OCS_time_t
+#define suseconds_t        OCS_suseconds_t
+#define timespec           OCS_timespec
+#define timeval            OCS_timeval
+#define itimerspec         OCS_itimerspec
+#define TIMER_CONNECT_FUNC OCS_TIMER_CONNECT_FUNC
+
+#define clock_getres    OCS_clock_getres
+#define clock_gettime   OCS_clock_gettime
+#define clock_nanosleep OCS_clock_nanosleep
+#define clock_settime   OCS_clock_settime
+#define timer_create    OCS_timer_create
+#define timer_delete    OCS_timer_delete
+#define timer_gettime   OCS_timer_gettime
+#define timer_settime   OCS_timer_settime
+#define timer_connect   OCS_timer_connect
+
+#endif /* OVERRIDE_TIME_H */
+</pre></div>
+</div>
+</section>
+<section id="timers-h">
+<h2><code class="docutils literal notranslate"><span class="pre">timers.h</span></code><a class="headerlink" href="#timers-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/timers.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for timers.h
+ */
+
+#ifndef OVERRIDE_TIMERS_H
+#define OVERRIDE_TIMERS_H
+
+#include "OCS_timers.h"
+#include &lt;time.h&gt;
+
+/*
+ * Note: this is just an alias for time.h
+ */
+
+#endif /* OVERRIDE_TIMERS_H */
+</pre></div>
+</div>
+</section>
+<section id="ulimit-h">
+<h2><code class="docutils literal notranslate"><span class="pre">ulimit.h</span></code><a class="headerlink" href="#ulimit-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/ulimit.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for ulimit.h
+ */
+
+#ifndef OVERRIDE_ULIMIT_H
+#define OVERRIDE_ULIMIT_H
+
+#include "OCS_ulimit.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in ulimit.h */
+/* ----------------------------------------- */
+#define ulimit OCS_ulimit
+
+#endif /* OVERRIDE_ULIMIT_H */
+</pre></div>
+</div>
+</section>
+<section id="unistd-h">
+<h2><code class="docutils literal notranslate"><span class="pre">unistd.h</span></code><a class="headerlink" href="#unistd-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/unistd.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for unistd.h
+ */
+
+#ifndef OVERRIDE_UNISTD_H
+#define OVERRIDE_UNISTD_H
+
+#include "OCS_unistd.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in unistd.h */
+/* ----------------------------------------- */
+
+#define SEEK_SET      OCS_SEEK_SET
+#define SEEK_CUR      OCS_SEEK_CUR
+#define SEEK_END      OCS_SEEK_END
+#define STDIN_FILENO  OCS_STDIN_FILENO
+#define STDOUT_FILENO OCS_STDOUT_FILENO
+#define STDERR_FILENO OCS_STDERR_FILENO
+
+#define close       OCS_close
+#define getegid     OCS_getegid
+#define geteuid     OCS_geteuid
+#define gethostid   OCS_gethostid
+#define gethostname OCS_gethostname
+#define getpid      OCS_getpid
+#define lseek       OCS_lseek
+#define read        OCS_read
+#define rmdir       OCS_rmdir
+#define sysconf     OCS_sysconf
+#define write       OCS_write
+
+#endif /* OVERRIDE_UNISTD_H */
+</pre></div>
+</div>
+</section>
+<section id="unldlib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">unldLib.h</span></code><a class="headerlink" href="#unldlib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/unldLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for unldLib.h
+ */
+
+#ifndef OVERRIDE_UNLDLIB_H
+#define OVERRIDE_UNLDLIB_H
+
+#include "OCS_unldLib.h"
+#include &lt;vxWorks.h&gt;
+#include &lt;moduleLib.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in unldLib.h */
+/* ----------------------------------------- */
+#define unldByModuleId OCS_unldByModuleId
+
+#endif /* OVERRIDE_UNLDLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="usrlib-h">
+<h2><code class="docutils literal notranslate"><span class="pre">usrLib.h</span></code><a class="headerlink" href="#usrlib-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/usrLib.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for usrLib.h
+ */
+
+#ifndef OVERRIDE_USRLIB_H
+#define OVERRIDE_USRLIB_H
+
+#include "OCS_usrLib.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in usrLib.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_USRLIB_H */
+</pre></div>
+</div>
+</section>
+<section id="version-h">
+<h2><code class="docutils literal notranslate"><span class="pre">version.h</span></code><a class="headerlink" href="#version-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/version.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for version.h
+ */
+
+#ifndef OVERRIDE_VERSION_H
+#define OVERRIDE_VERSION_H
+
+#include "OCS_version.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in version.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_VERSION_H */
+</pre></div>
+</div>
+</section>
+<section id="vxworks-h">
+<h2><code class="docutils literal notranslate"><span class="pre">vxWorks.h</span></code><a class="headerlink" href="#vxworks-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/vxWorks.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * Declarations and prototypes for vxWorks
+ */
+
+#ifndef OVERRIDE_VXWORKS_H
+#define OVERRIDE_VXWORKS_H
+
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in vxWorks.h */
+/* ----------------------------------------- */
+#define ERROR        OCS_ERROR
+#define OK           OCS_OK
+#define WAIT_FOREVER OCS_WAIT_FOREVER
+#define NO_WAIT      OCS_NO_WAIT
+
+#define STATUS      OCS_STATUS
+#define BOOL        OCS_BOOL
+#define FUNCPTR     OCS_FUNCPTR
+#define VOIDFUNCPTR OCS_VOIDFUNCPTR
+
+#define UINT   OCS_UINT
+#define INT8   OCS_INT8
+#define UINT8  OCS_UINT8
+#define INT16  OCS_INT16
+#define UINT16 OCS_UINT16
+#define INT32  OCS_INT32
+#define UINT32 OCS_UINT32
+
+#define _Vx_usr_arg_t OCS_Vx_usr_arg_t
+
+#endif /* OVERRIDE_VXWORKS_H */
+</pre></div>
+</div>
+</section>
+<section id="wchar-h">
+<h2><code class="docutils literal notranslate"><span class="pre">wchar.h</span></code><a class="headerlink" href="#wchar-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/wchar.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for wchar.h
+ */
+
+#ifndef OVERRIDE_WCHAR_H
+#define OVERRIDE_WCHAR_H
+
+#include "OCS_wchar.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in wchar.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_WCHAR_H */
+</pre></div>
+</div>
+</section>
+<section id="wctype-h">
+<h2><code class="docutils literal notranslate"><span class="pre">wctype.h</span></code><a class="headerlink" href="#wctype-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/wctype.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for wctype.h
+ */
+
+#ifndef OVERRIDE_WCTYPE_H
+#define OVERRIDE_WCTYPE_H
+
+#include "OCS_wctype.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in wctype.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_WCTYPE_H */
+</pre></div>
+</div>
+</section>
+<section id="xbdblkdev-h">
+<h2><code class="docutils literal notranslate"><span class="pre">xbdBlkDev.h</span></code><a class="headerlink" href="#xbdblkdev-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/xbdBlkDev.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for xbdBlkDev.h
+ */
+
+#ifndef OVERRIDE_XBDBLKDEV_H
+#define OVERRIDE_XBDBLKDEV_H
+
+#include "OCS_xbdBlkDev.h"
+#include &lt;vxWorks.h&gt;
+#include &lt;blkIo.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in xbdBlkDev.h */
+/* ----------------------------------------- */
+
+#define NULLDEV             OCS_NULLDEV
+#define device_t            OCS_device_t
+#define xbdBlkDevCreateSync OCS_xbdBlkDevCreateSync
+#define xbdBlkDevDelete     OCS_xbdBlkDevDelete
+
+#endif /* OVERRIDE_XBDBLKDEV_H */
+</pre></div>
+</div>
+</section>
+<section id="xbdramdisk-h">
+<h2><code class="docutils literal notranslate"><span class="pre">xbdRamDisk.h</span></code><a class="headerlink" href="#xbdramdisk-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/xbdRamDisk.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for xbdRamDisk.h
+ */
+
+#ifndef OVERRIDE_XBDRAMDISK_H
+#define OVERRIDE_XBDRAMDISK_H
+
+#include "OCS_xbdRamDisk.h"
+#include &lt;vxWorks.h&gt;
+
+/* ----------------------------------------- */
+/* mappings for declarations in xbdRamDisk.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_XBDRAMDISK_H */
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../inc/index.html" class="btn btn-neutral float-left" title="inc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="arpa/index.html" class="btn btn-neutral float-right" title="arpa" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

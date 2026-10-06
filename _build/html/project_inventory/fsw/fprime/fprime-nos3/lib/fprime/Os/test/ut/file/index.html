@@ -1,0 +1,3660 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>file &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../../search.html" />
+    <link rel="next" title="filesystem" href="../filesystem/index.html" />
+    <link rel="prev" title="directory" href="../directory/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">fprime-nos3</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">lib</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Os</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">test</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">ut</a></li>
+      <li class="breadcrumb-item active">file</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../../_sources/project_inventory/fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/file/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="file">
+<h1>file<a class="headerlink" href="#file" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/file/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="commontests-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">CommonTests.cpp</span></code><a class="headerlink" href="#commontests-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/file/CommonTests.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/test/ut/file/CommonTests.cpp
+// \brief common test implementations
+// ======================================================================
+#include "Os/test/ut/file/CommonTests.hpp"
+#include &lt;gtest/gtest.h&gt;
+#include "Os/File.hpp"
+
+static const U32 RANDOM_BOUND = 1000;
+
+Os::Test::FileTest::Tester::Tester() {
+    // Wipe out the file system with a fresh copy
+    SyntheticFile::setFileSystem(std::unique_ptr&lt;SyntheticFileSystem&gt;(new SyntheticFileSystem()));
+}
+
+Functionality::Functionality() : tester(Os::Test::FileTest::get_tester_implementation()) {}
+
+void Functionality::SetUp() {
+    Os::Test::FileTest::setUp(false);
+}
+
+void Functionality::TearDown() {
+    Os::Test::FileTest::tearDown();
+}
+
+void FunctionalIO::SetUp() {
+    // Check that the tester supports functional tests
+    if (this-&gt;tester-&gt;functional()) {
+        this-&gt;Functionality::SetUp();
+    } else {
+        GTEST_SKIP() &lt;&lt; "Tester does not support functional i/o testing";
+    }
+}
+
+// Ensure that open mode changes work reliably
+TEST_F(Functionality, OpenWithCreation) {
+    Os::Test::FileTest::Tester::OpenFileCreate rule(false);
+    rule.apply(*tester);
+}
+
+// Ensure that close mode changes work reliably
+TEST_F(Functionality, Close) {
+    Os::Test::FileTest::Tester::OpenFileCreate create_rule(false);
+    Os::Test::FileTest::Tester::CloseFile close_rule;
+    create_rule.apply(*tester);
+    close_rule.apply(*tester);
+}
+
+// Ensure that the assignment operator works correctly
+TEST_F(Functionality, AssignmentOperator) {
+    Os::Test::FileTest::Tester::OpenFileCreate open_rule(false);
+    Os::Test::FileTest::Tester::CopyAssignment copy_rule;
+    Os::Test::FileTest::Tester::CloseFile close_rule;
+    open_rule.apply(*tester);
+    copy_rule.apply(*tester);
+    close_rule.apply(*tester);
+}
+
+// Ensure the copy constructor works correctly
+TEST_F(Functionality, CopyConstructor) {
+    Os::Test::FileTest::Tester::OpenFileCreate open_rule(false);
+    Os::Test::FileTest::Tester::CopyConstruction copy_rule;
+    Os::Test::FileTest::Tester::CloseFile close_rule;
+    open_rule.apply(*tester);
+    copy_rule.apply(*tester);
+    close_rule.apply(*tester);
+}
+
+// Ensure that open on existence works
+TEST_F(FunctionalIO, OpenWithCreationExists) {
+    Os::Test::FileTest::Tester::OpenFileCreate open_rule(false);
+    Os::Test::FileTest::Tester::CloseFile close_rule;
+    open_rule.apply(*tester);
+    close_rule.apply(*tester);
+    open_rule.apply(*tester);
+}
+
+// Ensure that open on existence with overwrite works
+TEST_F(Functionality, OpenWithCreationOverwrite) {
+    Os::Test::FileTest::Tester::OpenFileCreate open_rule(false);
+    Os::Test::FileTest::Tester::OpenFileCreateOverwrite open_overwrite(false);
+    Os::Test::FileTest::Tester::CloseFile close_rule;
+    open_rule.apply(*tester);
+    close_rule.apply(*tester);
+    open_overwrite.apply(*tester);
+}
+
+// Ensure that open mode changes work reliably
+TEST_F(Functionality, OpenInvalidModes) {
+    Os::Test::FileTest::Tester::OpenFileCreate original_open(false);
+    Os::Test::FileTest::Tester::OpenInvalidModes invalid_open;
+    original_open.apply(*tester);
+    invalid_open.apply(*tester);
+}
+
+// Ensure that Os::File properly refuses preallocate calls when not open
+TEST_F(Functionality, PreallocateWithoutOpen) {
+    Os::Test::FileTest::Tester::PreallocateWithoutOpen rule;
+    rule.apply(*tester);
+}
+
+// Ensure that Os::File properly refuses seek calls when not open
+TEST_F(Functionality, SeekWithoutOpen) {
+    Os::Test::FileTest::Tester::SeekWithoutOpen rule;
+    rule.apply(*tester);
+}
+
+// Ensure that Os::File properly refuses seek calls when not open
+TEST_F(FunctionalIO, SeekInvalidSize) {
+    Os::Test::FileTest::Tester::OpenFileCreate original_open(false);
+    Os::Test::FileTest::Tester::SeekInvalidSize rule;
+    original_open.apply(*tester);
+    rule.apply(*tester);
+}
+
+// Ensure that Os::File properly refuses flush calls when not open and when reading
+TEST_F(Functionality, FlushInvalidModes) {
+    Os::Test::FileTest::Tester::FlushInvalidModes flush_rule;
+    Os::Test::FileTest::Tester::OpenFileCreate open_rule(false);
+    Os::Test::FileTest::Tester::CloseFile close_rule;
+    Os::Test::FileTest::Tester::OpenForRead open_read;
+
+    // Test flush in closed state
+    flush_rule.apply(*tester);
+
+    // Used to create the test file an open in read-mode correctly
+    open_rule.apply(*tester);
+    close_rule.apply(*tester);
+    tester-&gt;assert_file_closed();
+    open_read.apply(*tester);
+    tester-&gt;assert_file_opened(tester-&gt;m_current_path);
+
+    // Check that a read-mode file cannot flush
+    flush_rule.apply(*tester);
+}
+
+// Ensure that Os::File properly refuses read calls when not open and when reading
+TEST_F(Functionality, ReadInvalidModes) {
+    Os::Test::FileTest::Tester::OpenFileCreate open_rule(false);
+    Os::Test::FileTest::Tester::CloseFile close_rule;
+    Os::Test::FileTest::Tester::OpenForWrite open_write;
+    Os::Test::FileTest::Tester::ReadInvalidModes read_rule;
+
+    // Test read in closed state
+    read_rule.apply(*tester);
+    tester-&gt;assert_file_closed();
+
+    // Used to create the test file and ensure reads cannot happen in read-mode
+    open_rule.apply(*tester);
+    read_rule.apply(*tester);
+    close_rule.apply(*tester);
+    tester-&gt;assert_file_closed();
+
+    // Used to open (now existent) file in write-mode
+    open_write.apply(*tester);
+    tester-&gt;assert_file_opened(tester-&gt;m_current_path);
+
+    // Check that a read won't work on write-mode data
+    read_rule.apply(*tester);
+}
+
+// Ensure that Os::File properly refuses write calls when not open and when reading
+TEST_F(Functionality, WriteInvalidModes) {
+    Os::Test::FileTest::Tester::OpenFileCreate open_rule(false);
+    Os::Test::FileTest::Tester::CloseFile close_rule;
+    Os::Test::FileTest::Tester::OpenForRead open_read;
+    Os::Test::FileTest::Tester::WriteInvalidModes write_rule;
+
+    // Test write in closed state
+    write_rule.apply(*tester);
+    tester-&gt;assert_file_closed();
+
+    // Used to create the test file in read-mode correctly
+    open_rule.apply(*tester);
+    close_rule.apply(*tester);
+    tester-&gt;assert_file_closed();
+    open_read.apply(*tester);
+    tester-&gt;assert_file_opened(tester-&gt;m_current_path);
+
+    // Check that a write won't work on write-mode data
+    write_rule.apply(*tester);
+}
+
+// Ensure a write followed by a read produces valid data
+TEST_F(FunctionalIO, WriteSeekAppendReadBack) {
+    Os::Test::FileTest::Tester::OpenFileCreate open_rule(false);
+    Os::Test::FileTest::Tester::OpenForAppend open_append_rule(false);
+    Os::Test::FileTest::Tester::Write write_rule;
+    Os::Test::FileTest::Tester::Seek seek_rule;
+    Os::Test::FileTest::Tester::CloseFile close_rule;
+    Os::Test::FileTest::Tester::OpenForRead open_read;
+    Os::Test::FileTest::Tester::Read read_rule;
+
+    open_rule.apply(*tester);
+    write_rule.apply(*tester);
+    close_rule.apply(*tester);
+    open_read.apply(*tester);
+    close_rule.apply(*tester);
+    open_append_rule.apply(*tester);
+    write_rule.apply(*tester);
+    seek_rule.apply(*tester);
+    write_rule.apply(*tester);
+    close_rule.apply(*tester);
+    open_read.apply(*tester);
+    read_rule.apply(*tester);
+    close_rule.apply(*tester);
+}
+
+// Ensure a write followed by a read produces valid data
+TEST_F(FunctionalIO, WriteReadBack) {
+    Os::Test::FileTest::Tester::OpenFileCreate open_rule(false);
+    Os::Test::FileTest::Tester::Write write_rule;
+    Os::Test::FileTest::Tester::CloseFile close_rule;
+    Os::Test::FileTest::Tester::OpenForRead open_read;
+    Os::Test::FileTest::Tester::Read read_rule;
+
+    open_rule.apply(*tester);
+    write_rule.apply(*tester);
+    close_rule.apply(*tester);
+    open_read.apply(*tester);
+    read_rule.apply(*tester);
+}
+
+// Ensure a write followed by a read produces valid data
+TEST_F(FunctionalIO, WriteReadSeek) {
+    Os::Test::FileTest::Tester::OpenFileCreate open_rule(false);
+    Os::Test::FileTest::Tester::Write write_rule;
+    Os::Test::FileTest::Tester::CloseFile close_rule;
+    Os::Test::FileTest::Tester::OpenForRead open_read;
+    Os::Test::FileTest::Tester::Read read_rule;
+    Os::Test::FileTest::Tester::Seek seek_rule;
+
+    open_rule.apply(*tester);
+    write_rule.apply(*tester);
+    close_rule.apply(*tester);
+    open_read.apply(*tester);
+    read_rule.apply(*tester);
+    seek_rule.apply(*tester);
+}
+
+// Ensure a write followed by a full crc produces valid results
+TEST_F(FunctionalIO, WriteFullCrc) {
+    Os::Test::FileTest::Tester::OpenFileCreate open_rule(false);
+    Os::Test::FileTest::Tester::Write write_rule;
+    Os::Test::FileTest::Tester::CloseFile close_rule;
+    Os::Test::FileTest::Tester::OpenForRead open_read;
+    Os::Test::FileTest::Tester::FullCrc crc_rule;
+
+    open_rule.apply(*tester);
+    write_rule.apply(*tester);
+    close_rule.apply(*tester);
+    open_read.apply(*tester);
+    crc_rule.apply(*tester);
+}
+
+// Ensure a write followed by a partial crc produces valid results
+TEST_F(FunctionalIO, WritePartialCrc) {
+    Os::Test::FileTest::Tester::OpenFileCreate open_rule(false);
+    Os::Test::FileTest::Tester::Write write_rule;
+    Os::Test::FileTest::Tester::CloseFile close_rule;
+    Os::Test::FileTest::Tester::OpenForRead open_read;
+    Os::Test::FileTest::Tester::IncrementalCrc crc_rule;
+    Os::Test::FileTest::Tester::FinalizeCrc finalize_rule;
+
+    open_rule.apply(*tester);
+    write_rule.apply(*tester);
+    close_rule.apply(*tester);
+    open_read.apply(*tester);
+    crc_rule.apply(*tester);
+    finalize_rule.apply(*tester);
+}
+
+// Ensure a preallocate produces valid sizes
+TEST_F(FunctionalIO, Flush) {
+    Os::Test::FileTest::Tester::OpenFileCreate open_rule(false);
+    Os::Test::FileTest::Tester::Write write_rule;
+    Os::Test::FileTest::Tester::Flush flush_rule;
+
+    open_rule.apply(*tester);
+    write_rule.apply(*tester);
+    flush_rule.apply(*tester);
+}
+
+// Ensure a preallocate produces valid sizes
+TEST_F(FunctionalIO, Preallocate) {
+    Os::Test::FileTest::Tester::OpenFileCreate open_rule(false);
+    Os::Test::FileTest::Tester::Preallocate preallocate_rule;
+
+    open_rule.apply(*tester);
+    preallocate_rule.apply(*tester);
+}
+
+// Randomized testing on the interfaces
+TEST_F(Functionality, RandomizedInterfaceTesting) {
+    // Enumerate all rules and construct an instance of each
+    Os::Test::FileTest::Tester::OpenFileCreateOverwrite open_file_create_overwrite_rule(true);
+    Os::Test::FileTest::Tester::CloseFile close_file_rule;
+    Os::Test::FileTest::Tester::CopyConstruction copy_construction;
+    Os::Test::FileTest::Tester::CopyAssignment copy_assignment;
+    Os::Test::FileTest::Tester::OpenInvalidModes open_invalid_modes_rule;
+    Os::Test::FileTest::Tester::PreallocateWithoutOpen preallocate_without_open_rule;
+    Os::Test::FileTest::Tester::SeekWithoutOpen seek_without_open_rule;
+    Os::Test::FileTest::Tester::FlushInvalidModes flush_invalid_modes_rule;
+    Os::Test::FileTest::Tester::ReadInvalidModes read_invalid_modes_rule;
+    Os::Test::FileTest::Tester::WriteInvalidModes write_invalid_modes_rule;
+    Os::Test::FileTest::Tester::OpenIllegalPath open_illegal_path;
+    Os::Test::FileTest::Tester::OpenIllegalMode open_illegal_mode;
+    Os::Test::FileTest::Tester::SeekIllegal seek_illegal;
+    Os::Test::FileTest::Tester::ReadIllegalBuffer read_illegal_buffer;
+    Os::Test::FileTest::Tester::WriteIllegalBuffer write_illegal_buffer;
+    Os::Test::FileTest::Tester::IncrementalCrcInvalidModes incremental_invalid_mode_rule;
+    Os::Test::FileTest::Tester::FullCrcInvalidModes full_invalid_mode_rule;
+
+    // Place these rules into a list of rules
+    STest::Rule&lt;Os::Test::FileTest::Tester&gt;* rules[] = {&amp;open_file_create_overwrite_rule,
+                                                        &amp;close_file_rule,
+                                                        &amp;copy_assignment,
+                                                        &amp;copy_construction,
+                                                        &amp;open_invalid_modes_rule,
+                                                        &amp;preallocate_without_open_rule,
+                                                        &amp;seek_without_open_rule,
+                                                        &amp;flush_invalid_modes_rule,
+                                                        &amp;read_invalid_modes_rule,
+                                                        &amp;write_invalid_modes_rule,
+                                                        &amp;open_illegal_path,
+                                                        &amp;open_illegal_mode,
+                                                        &amp;seek_illegal,
+                                                        &amp;read_illegal_buffer,
+                                                        &amp;write_illegal_buffer,
+                                                        &amp;incremental_invalid_mode_rule,
+                                                        &amp;full_invalid_mode_rule};
+
+    // Take the rules and place them into a random scenario
+    STest::RandomScenario&lt;Os::Test::FileTest::Tester&gt; random("Random Rules", rules, FW_NUM_ARRAY_ELEMENTS(rules));
+
+    // Create a bounded scenario wrapping the random scenario
+    STest::BoundedScenario&lt;Os::Test::FileTest::Tester&gt; bounded("Bounded Random Rules Scenario", random,
+                                                               RANDOM_BOUND / 10);
+    // Run!
+    const U32 numSteps = bounded.run(*tester);
+    printf("Ran %u steps.\n", numSteps);
+}
+
+// Ensure a write followed by a read produces valid data
+TEST_F(FunctionalIO, RandomizedTesting) {
+    // Enumerate all rules and construct an instance of each
+    Os::Test::FileTest::Tester::OpenFileCreate open_file_create_rule(true);
+    Os::Test::FileTest::Tester::OpenFileCreateOverwrite open_file_create_overwrite_rule(true);
+    Os::Test::FileTest::Tester::OpenForWrite open_for_write_rule(true);
+    Os::Test::FileTest::Tester::OpenForRead open_for_read_rule(true);
+    Os::Test::FileTest::Tester::CloseFile close_file_rule;
+    Os::Test::FileTest::Tester::Read read_rule;
+    Os::Test::FileTest::Tester::Write write_rule;
+    Os::Test::FileTest::Tester::Seek seek_rule;
+    Os::Test::FileTest::Tester::Preallocate preallocate_rule;
+    Os::Test::FileTest::Tester::Flush flush_rule;
+    Os::Test::FileTest::Tester::CopyConstruction copy_construction;
+    Os::Test::FileTest::Tester::CopyAssignment copy_assignment;
+    Os::Test::FileTest::Tester::IncrementalCrc incremental_crc_rule;
+    Os::Test::FileTest::Tester::FinalizeCrc finalize_crc_rule;
+    Os::Test::FileTest::Tester::FullCrc full_crc_rule;
+    Os::Test::FileTest::Tester::OpenInvalidModes open_invalid_modes_rule;
+    Os::Test::FileTest::Tester::PreallocateWithoutOpen preallocate_without_open_rule;
+    Os::Test::FileTest::Tester::SeekWithoutOpen seek_without_open_rule;
+    Os::Test::FileTest::Tester::SeekInvalidSize seek_invalid_size;
+    Os::Test::FileTest::Tester::FlushInvalidModes flush_invalid_modes_rule;
+    Os::Test::FileTest::Tester::ReadInvalidModes read_invalid_modes_rule;
+    Os::Test::FileTest::Tester::WriteInvalidModes write_invalid_modes_rule;
+    Os::Test::FileTest::Tester::IncrementalCrcInvalidModes incremental_invalid_mode_rule;
+    Os::Test::FileTest::Tester::FullCrcInvalidModes full_invalid_mode_rule;
+
+    // Place these rules into a list of rules
+    STest::Rule&lt;Os::Test::FileTest::Tester&gt;* rules[] = {&amp;open_file_create_rule,
+                                                        &amp;open_file_create_overwrite_rule,
+                                                        &amp;open_for_write_rule,
+                                                        &amp;open_for_read_rule,
+                                                        &amp;close_file_rule,
+                                                        &amp;copy_assignment,
+                                                        &amp;copy_construction,
+                                                        &amp;read_rule,
+                                                        &amp;write_rule,
+                                                        &amp;seek_rule,
+                                                        &amp;preallocate_rule,
+                                                        &amp;flush_rule,
+                                                        &amp;incremental_crc_rule,
+                                                        &amp;finalize_crc_rule,
+                                                        &amp;full_crc_rule,
+                                                        &amp;open_invalid_modes_rule,
+                                                        &amp;preallocate_without_open_rule,
+                                                        &amp;seek_without_open_rule,
+                                                        &amp;seek_invalid_size,
+                                                        &amp;flush_invalid_modes_rule,
+                                                        &amp;read_invalid_modes_rule,
+                                                        &amp;write_invalid_modes_rule,
+                                                        &amp;incremental_invalid_mode_rule,
+                                                        &amp;full_invalid_mode_rule};
+
+    // Take the rules and place them into a random scenario
+    STest::RandomScenario&lt;Os::Test::FileTest::Tester&gt; random("Random Rules", rules, FW_NUM_ARRAY_ELEMENTS(rules));
+
+    // Create a bounded scenario wrapping the random scenario
+    STest::BoundedScenario&lt;Os::Test::FileTest::Tester&gt; bounded("Bounded Random Rules Scenario", random, RANDOM_BOUND);
+    // Run!
+    const U32 numSteps = bounded.run(*tester);
+    printf("Ran %u steps.\n", numSteps);
+}
+
+// Ensure that Os::File properly refuses fullCrc when not in write mode
+TEST_F(Functionality, FullCrcInvalidMode) {
+    Os::Test::FileTest::Tester::OpenFileCreate open_rule(false);
+    Os::Test::FileTest::Tester::FullCrcInvalidModes rule;
+    open_rule.apply(*tester);
+    rule.apply(*tester);
+}
+
+// Ensure that Os::File properly refuses incrementalCrc when not in write mode
+TEST_F(Functionality, IncrementalCrcInvalidMode) {
+    Os::Test::FileTest::Tester::OpenFileCreate open_rule(false);
+    Os::Test::FileTest::Tester::IncrementalCrcInvalidModes rule;
+    open_rule.apply(*tester);
+    rule.apply(*tester);
+}
+
+// Ensure open prevents nullptr as path
+TEST_F(InvalidArguments, OpenBadPath) {
+    Os::Test::FileTest::Tester::OpenIllegalPath rule;
+    rule.apply(*tester);
+}
+
+// Ensure open prevents bad modes
+TEST_F(InvalidArguments, OpenBadMode) {
+    Os::Test::FileTest::Tester::OpenIllegalMode rule;
+    rule.apply(*tester);
+}
+
+// Ensure preallocate prevents bad length
+TEST_F(InvalidArguments, SeekAbsoluteWithNegativeLength) {
+    Os::Test::FileTest::Tester::SeekIllegal rule;
+    rule.apply(*tester);
+}
+
+// Ensure read prevents bad buffer pointers
+TEST_F(InvalidArguments, ReadInvalidBuffer) {
+    Os::Test::FileTest::Tester::ReadIllegalBuffer rule;
+    rule.apply(*tester);
+}
+
+// Ensure write prevents bad buffer pointers
+TEST_F(InvalidArguments, WriteInvalidBuffer) {
+    Os::Test::FileTest::Tester::WriteIllegalBuffer rule;
+    rule.apply(*tester);
+}
+</pre></div>
+</div>
+</section>
+<section id="commontests-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">CommonTests.hpp</span></code><a class="headerlink" href="#commontests-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/file/CommonTests.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/test/ut/file/CommonTests.hpp
+// \brief definitions used in common file testing
+// ======================================================================
+#include &lt;Os/File.hpp&gt;
+#include &lt;Os/test/ut/file/RulesHeaders.hpp&gt;
+
+#ifndef OS_TEST_UT_COMMON_FILE_TESTS_HPP
+#define OS_TEST_UT_COMMON_FILE_TESTS_HPP
+namespace Os {
+namespace Test {
+namespace FileTest {
+
+//! Set up function as defined by the unit test implementor
+void setUp(bool requires_io  //!&lt; Does this test require functional io devices
+);
+
+//! Tear down function as defined by the unit test implementor
+void tearDown();
+
+}  // namespace FileTest
+}  // namespace Test
+}  // namespace Os
+
+// Basic file tests
+class Functionality : public ::testing::Test {
+  public:
+    //! Constructor
+    Functionality();
+
+    //! Setup function delegating to UT setUp function
+    void SetUp() override;
+
+    //! Setup function delegating to UT tearDown function
+    void TearDown() override;
+
+    //! Tester/state implementation
+    std::unique_ptr&lt;Os::Test::FileTest::Tester&gt; tester;
+};
+
+//! Interface testing
+class Interface : public Functionality {};
+
+//! Category of tests to check for invalid argument assertions
+class InvalidArguments : public Functionality {};
+
+//! Category of tests dependent on functional io
+class FunctionalIO : public Functionality {
+    //! Specialized setup method used to pass requirement for functional i/o
+    void SetUp() override;
+};
+
+#endif  // OS_TEST_UT_COMMON_FILE_TESTS_HPP
+</pre></div>
+</div>
+</section>
+<section id="filerules-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">FileRules.cpp</span></code><a class="headerlink" href="#filerules-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/file/FileRules.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/test/ut/file/MyRules.cpp
+// \brief rule implementations for common testing
+// ======================================================================
+#include &lt;cstdio&gt;
+#include "RulesHeaders.hpp"
+#include "STest/Pick/Pick.hpp"
+extern "C" {
+#include &lt;Utils/Hash/libcrc/lib_crc.h&gt;  // borrow CRC
+}
+
+// For testing, limit files to 32K
+const FwSizeType FILE_DATA_MAXIMUM = 32 * 1024;
+
+Os::File::Status Os::Test::FileTest::Tester::shadow_open(const std::string&amp; path,
+                                                         Os::File::Mode open_mode,
+                                                         bool overwrite) {
+    Os::File::Status status =
+        this-&gt;m_shadow.open(path.c_str(), open_mode,
+                            overwrite ? Os::File::OverwriteType::OVERWRITE : Os::File::OverwriteType::NO_OVERWRITE);
+    if (Os::File::Status::OP_OK == status) {
+        this-&gt;m_current_path = path;
+        this-&gt;m_mode = open_mode;
+        this-&gt;m_independent_crc = Os::File::INITIAL_CRC;
+    } else {
+        this-&gt;m_current_path.clear();
+    }
+
+    return status;
+}
+
+void Os::Test::FileTest::Tester::shadow_close() {
+    this-&gt;m_shadow.close();
+    this-&gt;m_current_path.clear();
+    this-&gt;m_mode = Os::File::Mode::OPEN_NO_MODE;
+    // Checks on the shadow data to ensure consistency
+    ASSERT_TRUE(this-&gt;m_current_path.empty());
+}
+
+std::vector&lt;U8&gt; Os::Test::FileTest::Tester::shadow_read(FwSizeType size) {
+    std::vector&lt;U8&gt; output;
+    output.resize(size);
+    Os::File::Status status = m_shadow.read(output.data(), size, Os::File::WaitType::WAIT);
+    output.resize(size);
+    EXPECT_EQ(status, Os::File::Status::OP_OK);
+    return output;
+}
+
+void Os::Test::FileTest::Tester::shadow_write(const std::vector&lt;U8&gt;&amp; write_data) {
+    FwSizeType size = static_cast&lt;FwSizeType&gt;(write_data.size());
+    FwSizeType original_size = size;
+    Os::File::Status status = Os::File::OP_OK;
+    if (write_data.data() != nullptr) {
+        status = m_shadow.write(write_data.data(), size, Os::File::WaitType::WAIT);
+    }
+    ASSERT_EQ(status, Os::File::Status::OP_OK);
+    ASSERT_EQ(size, original_size);
+}
+
+void Os::Test::FileTest::Tester::shadow_seek(const FwSignedSizeType offset, const bool absolute) {
+    Os::File::Status status =
+        m_shadow.seek(offset, absolute ? Os::File::SeekType::ABSOLUTE : Os::File::SeekType::RELATIVE);
+    ASSERT_EQ(status, Os::File::Status::OP_OK);
+}
+
+void Os::Test::FileTest::Tester::shadow_preallocate(const FwSizeType offset, const FwSizeType length) {
+    Os::File::Status status = m_shadow.preallocate(offset, length);
+    ASSERT_EQ(status, Os::File::Status::OP_OK);
+}
+
+void Os::Test::FileTest::Tester::shadow_flush() {
+    Os::File::Status status = m_shadow.flush();
+    ASSERT_EQ(status, Os::File::Status::OP_OK);
+}
+
+void Os::Test::FileTest::Tester::shadow_crc(U32&amp; crc) {
+    crc = this-&gt;m_independent_crc;
+    SyntheticFileData&amp; data = *reinterpret_cast&lt;SyntheticFileData*&gt;(this-&gt;m_shadow.getHandle());
+
+    // Calculate CRC on full file starting at m_pointer
+    for (FwSizeType i = data.m_pointer; i &lt; data.m_data.size();
+         i++, this-&gt;m_shadow.seek(1, Os::File::SeekType::RELATIVE)) {
+        crc = update_crc_32(crc, static_cast&lt;char&gt;(data.m_data.at(i)));
+    }
+    // Update tracking variables
+    this-&gt;m_independent_crc = Os::File::INITIAL_CRC;
+}
+
+void Os::Test::FileTest::Tester::shadow_partial_crc(FwSizeType&amp; size) {
+    SyntheticFileData data = *reinterpret_cast&lt;SyntheticFileData*&gt;(this-&gt;m_shadow.getHandle());
+
+    // Calculate CRC on full file starting at m_pointer
+    const FwSizeType bound = FW_MIN(static_cast&lt;FwSizeType&gt;(data.m_pointer) + size, data.m_data.size());
+    size = (data.m_pointer &gt;= bound) ? 0 : static_cast&lt;FwSizeType&gt;(bound - data.m_pointer);
+    for (FwSizeType i = data.m_pointer; i &lt; bound; i++) {
+        this-&gt;m_independent_crc = update_crc_32(this-&gt;m_independent_crc, static_cast&lt;char&gt;(data.m_data.at(i)));
+        this-&gt;m_shadow.seek(1, Os::File::SeekType::RELATIVE);
+    }
+}
+
+void Os::Test::FileTest::Tester::shadow_finalize(U32&amp; crc) {
+    crc = this-&gt;m_independent_crc;
+    this-&gt;m_independent_crc = Os::File::INITIAL_CRC;
+}
+
+Os::Test::FileTest::Tester::FileState Os::Test::FileTest::Tester::current_file_state() {
+    Os::Test::FileTest::Tester::FileState state;
+    // Invariant: mode must not be closed, or path must be nullptr
+    EXPECT_TRUE((Os::File::Mode::OPEN_NO_MODE != this-&gt;m_file.m_mode) || (nullptr == this-&gt;m_file.m_path));
+
+    // Read state when file is open
+    if (Os::File::Mode::OPEN_NO_MODE != this-&gt;m_file.m_mode) {
+        EXPECT_EQ(this-&gt;m_file.position(state.position), Os::File::Status::OP_OK);
+        EXPECT_EQ(this-&gt;m_file.size(state.size), Os::File::Status::OP_OK);
+        // Extra check to ensure size does not alter pointer
+        FwSizeType new_position = std::numeric_limits&lt;FwSizeType&gt;::max();
+        EXPECT_EQ(this-&gt;m_file.position(new_position), Os::File::Status::OP_OK);
+        EXPECT_EQ(new_position, state.position);
+    }
+    return state;
+}
+
+void Os::Test::FileTest::Tester::assert_valid_mode_status(Os::File::Status&amp; status) const {
+    if (Os::File::Mode::OPEN_NO_MODE == this-&gt;m_mode) {
+        ASSERT_EQ(status, Os::File::Status::NOT_OPENED);
+    } else {
+        ASSERT_EQ(status, Os::File::Status::INVALID_MODE);
+    }
+}
+
+void Os::Test::FileTest::Tester::assert_file_consistent() {
+    // Ensure file mode
+    ASSERT_EQ(this-&gt;m_mode, this-&gt;m_file.m_mode);
+    // Ensure CRC match
+    ASSERT_EQ(this-&gt;m_file.m_crc, this-&gt;m_independent_crc);
+    if (this-&gt;m_file.m_path == nullptr) {
+        ASSERT_EQ(this-&gt;m_current_path, std::string(""));
+    } else {
+        // Ensure the state path matches the file path
+        std::string path = std::string(this-&gt;m_file.m_path);
+        ASSERT_EQ(path, this-&gt;m_current_path);
+
+        // Check real file properties when able to do so
+        if (this-&gt;functional()) {
+            //  File exists, check all properties
+            if (SyntheticFile::exists(this-&gt;m_current_path.c_str())) {
+                // Ensure the file pointer is consistent
+                FwSizeType current_position = 0;
+                FwSizeType shadow_position = 0;
+                ASSERT_EQ(this-&gt;m_file.position(current_position), Os::File::Status::OP_OK);
+                ASSERT_EQ(this-&gt;m_shadow.position(shadow_position), Os::File::Status::OP_OK);
+
+                ASSERT_EQ(current_position, shadow_position);
+                // Ensure the file size is consistent
+                FwSizeType current_size = 0;
+                FwSizeType shadow_size = 0;
+                ASSERT_EQ(this-&gt;m_file.size(current_size), Os::File::Status::OP_OK);
+                ASSERT_EQ(this-&gt;m_shadow.size(shadow_size), Os::File::Status::OP_OK);
+                ASSERT_EQ(current_size, shadow_size);
+            }
+            // Does not exist
+            else {
+                ASSERT_FALSE(this-&gt;exists(this-&gt;m_current_path));
+            }
+        }
+    }
+}
+
+void Os::Test::FileTest::Tester::assert_file_opened(const std::string&amp; path,
+                                                    Os::File::Mode newly_opened_mode,
+                                                    bool overwrite) {
+    // Assert the that the file is opened in some mode
+    ASSERT_NE(this-&gt;m_file.m_mode, Os::File::Mode::OPEN_NO_MODE);
+    ASSERT_TRUE(this-&gt;m_file.isOpen()) &lt;&lt; "`isOpen()` failed to indicate file is open";
+    ASSERT_EQ(this-&gt;m_file.m_mode, this-&gt;m_mode);
+
+    // When the open mode has been specified assert that is in an exact state
+    if (not path.empty() &amp;&amp; Os::File::Mode::OPEN_NO_MODE != newly_opened_mode) {
+        // Assert file pointer always at beginning when functional
+        if (functional()) {
+            FwSizeType file_position = std::numeric_limits&lt;FwSizeType&gt;::max();
+            ASSERT_EQ(this-&gt;m_file.position(file_position), Os::File::Status::OP_OK);
+            ASSERT_EQ(file_position, 0);
+        }
+        ASSERT_EQ(std::string(this-&gt;m_file.m_path), path);
+        ASSERT_EQ(this-&gt;m_file.m_mode, newly_opened_mode) &lt;&lt; "File is in unexpected mode";
+
+        // Check truncations
+        const bool truncate = (Os::File::Mode::OPEN_CREATE == newly_opened_mode) &amp;&amp; overwrite;
+        if (truncate) {
+            if (this-&gt;functional()) {
+                FwSizeType file_size = std::numeric_limits&lt;FwSizeType&gt;::max();
+                ASSERT_EQ(this-&gt;m_file.size(file_size), Os::File::Status::OP_OK);
+                ASSERT_EQ(file_size, 0);
+            }
+        }
+    }
+}
+
+void Os::Test::FileTest::Tester::assert_file_closed() {
+    ASSERT_EQ(this-&gt;m_file.m_mode, Os::File::Mode::OPEN_NO_MODE) &lt;&lt; "File is in unexpected mode";
+    ASSERT_FALSE(this-&gt;m_file.isOpen()) &lt;&lt; "`isOpen()` failed to indicate file is open";
+}
+
+void Os::Test::FileTest::Tester::assert_file_read(const std::vector&lt;U8&gt;&amp; state_data,
+                                                  const unsigned char* read_data,
+                                                  FwSizeType size_read) {
+    // Functional tests
+    if (functional()) {
+        ASSERT_EQ(size_read, state_data.size());
+        ASSERT_EQ(std::vector&lt;U8&gt;(read_data, read_data + size_read), state_data);
+        FwSizeType position = std::numeric_limits&lt;FwSizeType&gt;::max();
+        FwSizeType shadow_position = std::numeric_limits&lt;FwSizeType&gt;::max();
+        ASSERT_EQ(this-&gt;m_file.position(position), Os::File::Status::OP_OK);
+        ASSERT_EQ(this-&gt;m_shadow.position(shadow_position), Os::File::Status::OP_OK);
+        ASSERT_EQ(position, shadow_position);
+    }
+}
+
+void Os::Test::FileTest::Tester::assert_file_write(const std::vector&lt;U8&gt;&amp; write_data, FwSizeType size_written) {
+    ASSERT_EQ(size_written, write_data.size());
+    FwSizeType file_size = 0;
+    FwSizeType shadow_size = 0;
+    ASSERT_EQ(this-&gt;m_file.size(file_size), Os::File::Status::OP_OK);
+    ASSERT_EQ(this-&gt;m_shadow.size(shadow_size), Os::File::Status::OP_OK);
+    ASSERT_EQ(file_size, shadow_size);
+    FwSizeType file_position = std::numeric_limits&lt;FwSizeType&gt;::max();
+    FwSizeType shadow_position = std::numeric_limits&lt;FwSizeType&gt;::max();
+    ASSERT_EQ(this-&gt;m_file.position(file_position), Os::File::Status::OP_OK);
+    ASSERT_EQ(this-&gt;m_shadow.position(shadow_position), Os::File::Status::OP_OK);
+    ASSERT_EQ(file_position, shadow_position);
+}
+
+void Os::Test::FileTest::Tester::assert_file_seek(const FwSizeType original_position,
+                                                  const FwSignedSizeType seek_desired,
+                                                  const bool absolute) {
+    FwSizeType new_position = 0;
+    FwSizeType shadow_position = 0;
+
+    ASSERT_EQ(this-&gt;m_file.position(new_position), Os::File::Status::OP_OK);
+    ASSERT_EQ(this-&gt;m_shadow.position(shadow_position), Os::File::Status::OP_OK);
+
+    const FwSignedSizeType expected_offset = (absolute) ? seek_desired : (original_position + seek_desired);
+    if (expected_offset &gt;= 0) {
+        ASSERT_EQ(new_position, expected_offset);
+    } else {
+        ASSERT_EQ(new_position, original_position);
+    }
+    ASSERT_EQ(new_position, shadow_position);
+}
+
+// ------------------------------------------------------------------------------------------------------
+//  OpenFile: base rule for all open rules
+//
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileTest::Tester::OpenBaseRule::OpenBaseRule(const char* rule_name,
+                                                       Os::File::Mode mode,
+                                                       const bool overwrite,
+                                                       const bool randomize_filename)
+    : STest::Rule&lt;Os::Test::FileTest::Tester&gt;(rule_name),
+      m_mode(mode),
+      m_overwrite(overwrite ? Os::File::OverwriteType::OVERWRITE : Os::File::OverwriteType::NO_OVERWRITE),
+      m_random(randomize_filename) {}
+
+bool Os::Test::FileTest::Tester::OpenBaseRule::precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return state.m_mode == Os::File::Mode::OPEN_NO_MODE;
+}
+
+void Os::Test::FileTest::Tester::OpenBaseRule::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s mode %d\n", this-&gt;getName(), this-&gt;m_mode);
+    // Initial variables used for this test
+    std::shared_ptr&lt;const std::string&gt; filename = state.get_filename(this-&gt;m_random);
+
+    // Ensure initial and shadow states synchronized
+    state.assert_file_consistent();
+    state.assert_file_closed();
+
+    // Perform action and shadow action asserting the results are the same
+    Os::File::Status status = state.m_file.open(filename-&gt;c_str(), m_mode, this-&gt;m_overwrite);
+    Os::File::Status s2 = state.shadow_open(*filename, m_mode, this-&gt;m_overwrite);
+    ASSERT_EQ(status, s2);
+
+    // Extra check to ensure file is consistently open
+    if (Os::File::Status::OP_OK == status) {
+        state.assert_file_opened(*filename, m_mode);
+        FileState file_state = state.current_file_state();
+        ASSERT_EQ(file_state.position, 0);  // Open always zeros the position
+    }
+    // Assert the file state remains consistent.
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenFileCreate
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::OpenFileCreate::OpenFileCreate(const bool randomize_filename)
+    : Os::Test::FileTest::Tester::OpenBaseRule("OpenFileCreate",
+                                               Os::File::Mode::OPEN_CREATE,
+                                               false,
+                                               randomize_filename) {}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenFileCreateOverwrite
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::OpenFileCreateOverwrite::OpenFileCreateOverwrite(const bool randomize_filename)
+    : Os::Test::FileTest::Tester::OpenBaseRule("OpenFileCreate",
+                                               Os::File::Mode::OPEN_CREATE,
+                                               true,
+                                               randomize_filename) {}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenForWrite
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::OpenForWrite::OpenForWrite(const bool randomize_filename)
+    : Os::Test::FileTest::Tester::OpenBaseRule(
+          "OpenForWrite",
+          // Randomized write mode
+          static_cast&lt;Os::File::Mode&gt;(STest::Pick::lowerUpper(Os::File::Mode::OPEN_WRITE, Os::File::Mode::OPEN_APPEND)),
+          // Randomized overwrite
+          static_cast&lt;bool&gt;(STest::Pick::lowerUpper(0, 1)),
+          randomize_filename) {
+    // Ensures that a random write mode will work correctly
+    static_assert((Os::File::Mode::OPEN_SYNC_WRITE - 1) == Os::File::Mode::OPEN_WRITE, "Write modes not contiguous");
+    static_assert((Os::File::Mode::OPEN_APPEND - 1) == Os::File::Mode::OPEN_SYNC_WRITE, "Write modes not contiguous");
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenForAppend
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::OpenForAppend::OpenForAppend(const bool randomize_filename)
+    : Os::Test::FileTest::Tester::OpenBaseRule("OpenForAppend",
+                                               // Randomized write mode
+                                               Os::File::Mode::OPEN_APPEND,
+                                               // Randomized overwrite
+                                               false,
+                                               randomize_filename) {
+    // Ensures that a random write mode will work correctly
+    static_assert((Os::File::Mode::OPEN_SYNC_WRITE - 1) == Os::File::Mode::OPEN_WRITE, "Write modes not contiguous");
+    static_assert((Os::File::Mode::OPEN_APPEND - 1) == Os::File::Mode::OPEN_SYNC_WRITE, "Write modes not contiguous");
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenForRead
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::OpenForRead::OpenForRead(const bool randomize_filename)
+    : Os::Test::FileTest::Tester::OpenBaseRule("OpenForRead",
+                                               Os::File::Mode::OPEN_READ,
+                                               // Randomized overwrite
+                                               static_cast&lt;bool&gt;(STest::Pick::lowerUpper(0, 1)),
+                                               randomize_filename) {}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CloseFile
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::CloseFile::CloseFile() : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("CloseFile") {}
+
+bool Os::Test::FileTest::Tester::CloseFile::precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return Os::File::Mode::OPEN_NO_MODE != state.m_mode;
+}
+
+void Os::Test::FileTest::Tester::CloseFile::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    // Make sure test state and file state synchronized
+    state.assert_file_consistent();
+    state.assert_file_opened(state.m_current_path);
+    // Close file and shadow state
+    state.m_file.close();
+    state.shadow_close();
+    // Assert test state and file state synchronized
+    state.assert_file_closed();
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Read
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::Read::Read() : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("Read") {}
+
+bool Os::Test::FileTest::Tester::Read::precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return Os::File::Mode::OPEN_READ == state.m_mode;
+}
+
+void Os::Test::FileTest::Tester::Read::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    U8 buffer[FILE_DATA_MAXIMUM];
+    state.assert_file_consistent();
+    FileState original_file_state = state.current_file_state();
+    FwSizeType size_desired = static_cast&lt;FwSizeType&gt;(STest::Pick::lowerUpper(0, FILE_DATA_MAXIMUM));
+    FwSizeType size_read = size_desired;
+    bool wait = static_cast&lt;bool&gt;(STest::Pick::lowerUpper(0, 1));
+    Os::File::Status status =
+        state.m_file.read(buffer, size_read, wait ? Os::File::WaitType::WAIT : Os::File::WaitType::NO_WAIT);
+    ASSERT_EQ(Os::File::Status::OP_OK, status);
+    std::vector&lt;U8&gt; read_data = state.shadow_read(size_desired);
+    state.assert_file_read(read_data, buffer, size_read);
+    FileState final_file_state = state.current_file_state();
+    // File size should not change during read
+    ASSERT_EQ(final_file_state.size, original_file_state.size);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Write
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::Write::Write() : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("Write") {}
+
+bool Os::Test::FileTest::Tester::Write::precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return Os::File::Mode::OPEN_CREATE &lt;= state.m_mode;
+}
+
+void Os::Test::FileTest::Tester::Write::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    U8 buffer[FILE_DATA_MAXIMUM];
+    state.assert_file_consistent();
+    FwSizeType current_position = 0;
+    state.m_file.position(current_position);
+    if (state.m_mode == Os::File::Mode::OPEN_APPEND) {
+        state.m_file.size(current_position);
+    }
+    FwSizeType size_desired = static_cast&lt;FwSizeType&gt;(STest::Pick::lowerUpper(0, FILE_DATA_MAXIMUM - current_position));
+    FwSizeType size_written = size_desired;
+    bool wait = static_cast&lt;bool&gt;(STest::Pick::lowerUpper(0, 1));
+    for (FwSizeType i = 0; i &lt; size_desired; i++) {
+        buffer[i] = static_cast&lt;U8&gt;(STest::Pick::lowerUpper(0, std::numeric_limits&lt;U8&gt;::max()));
+    }
+    std::vector&lt;U8&gt; write_data(buffer, buffer + size_desired);
+    Os::File::Status status =
+        state.m_file.write(buffer, size_written, wait ? Os::File::WaitType::WAIT : Os::File::WaitType::NO_WAIT);
+    ASSERT_EQ(Os::File::Status::OP_OK, status);
+    ASSERT_EQ(size_written, size_desired);
+    state.shadow_write(write_data);
+    state.assert_file_write(write_data, size_written);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Seek
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::Seek::Seek() : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("Seek") {}
+
+bool Os::Test::FileTest::Tester::Seek::precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return Os::File::Mode::OPEN_NO_MODE &lt; state.m_mode;
+}
+
+void Os::Test::FileTest::Tester::Seek::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    FwSignedSizeType seek_offset = 0;
+    state.assert_file_consistent();
+    FileState original_file_state = state.current_file_state();
+
+    // Choose some random values
+    bool absolute = static_cast&lt;bool&gt;(STest::Pick::lowerUpper(0, 1));
+    if (absolute) {
+        seek_offset = STest::Pick::lowerUpper(0, FILE_DATA_MAXIMUM);
+    } else {
+        seek_offset = STest::Pick::lowerUpper(0, FILE_DATA_MAXIMUM);
+        seek_offset -= original_file_state.position;
+    }
+    Os::File::Status status =
+        state.m_file.seek(seek_offset, absolute ? Os::File::SeekType::ABSOLUTE : Os::File::SeekType::RELATIVE);
+    ASSERT_EQ(status, Os::File::Status::OP_OK);
+    state.shadow_seek(seek_offset, absolute);
+    state.assert_file_seek(original_file_state.position, seek_offset, absolute);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Preallocate
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::Preallocate::Preallocate() : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("Preallocate") {}
+
+bool Os::Test::FileTest::Tester::Preallocate::precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return Os::File::Mode::OPEN_CREATE &lt;= state.m_mode;
+}
+
+void Os::Test::FileTest::Tester::Preallocate::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    FileState original_file_state = state.current_file_state();
+    FwSizeType offset = static_cast&lt;FwSizeType&gt;(STest::Pick::lowerUpper(0, FILE_DATA_MAXIMUM - 1));
+    FwSizeType length = static_cast&lt;FwSizeType&gt;(STest::Pick::lowerUpper(1, FILE_DATA_MAXIMUM - offset));
+    Os::File::Status status = state.m_file.preallocate(offset, length);
+    ASSERT_EQ(Os::File::Status::OP_OK, status);
+    state.shadow_preallocate(offset, length);
+    FileState final_file_state = state.current_file_state();
+    ASSERT_EQ(final_file_state.size, FW_MAX(original_file_state.size, offset + length));
+    ASSERT_EQ(final_file_state.position, original_file_state.position);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Flush
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::Flush::Flush() : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("Flush") {}
+
+bool Os::Test::FileTest::Tester::Flush::precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return Os::File::Mode::OPEN_CREATE &lt;= state.m_mode;
+}
+
+void Os::Test::FileTest::Tester::Flush::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    FileState original_file_state = state.current_file_state();
+    Os::File::Status status = state.m_file.flush();
+    ASSERT_EQ(status, Os::File::Status::OP_OK);
+    state.shadow_flush();
+
+    // Ensure no change in size or pointer
+    FileState final_file_state = state.current_file_state();
+    ASSERT_EQ(final_file_state.size, original_file_state.size);
+    ASSERT_EQ(final_file_state.position, original_file_state.position);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenInvalidModes
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::OpenInvalidModes::OpenInvalidModes()
+    : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("OpenInvalidModes") {}
+
+bool Os::Test::FileTest::Tester::OpenInvalidModes::precondition(
+    const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return Os::File::Mode::OPEN_NO_MODE != state.m_mode;
+}
+
+void Os::Test::FileTest::Tester::OpenInvalidModes::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    FileState original_file_state = state.current_file_state();
+    // Check initial file state
+    state.assert_file_opened(state.m_current_path);
+    std::shared_ptr&lt;const std::string&gt; filename = state.get_filename(true);
+    Os::File::Status status = state.m_file.open(filename-&gt;c_str(), Os::File::Mode::OPEN_CREATE);
+    state.assert_valid_mode_status(status);
+    state.assert_file_opened(state.m_current_path);  // Original file remains open
+    // Ensure no change in size or pointer of original file
+    FileState final_file_state = state.current_file_state();
+    ASSERT_EQ(final_file_state.size, original_file_state.size);
+    ASSERT_EQ(final_file_state.position, original_file_state.position);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  PreallocateWithoutOpen
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::PreallocateWithoutOpen::PreallocateWithoutOpen()
+    : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("PreallocateWithoutOpen") {}
+
+bool Os::Test::FileTest::Tester::PreallocateWithoutOpen::precondition(
+    const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return Os::File::Mode::OPEN_NO_MODE == state.m_mode;
+}
+
+void Os::Test::FileTest::Tester::PreallocateWithoutOpen::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    // Check initial file state
+    state.assert_file_closed();
+    // Open file of given filename
+    FwSizeType random_offset = STest::Pick::lowerUpper(0, std::numeric_limits&lt;U32&gt;::max());
+    FwSizeType random_size = STest::Pick::lowerUpper(0, std::numeric_limits&lt;U32&gt;::max());
+
+    Os::File::Status status = state.m_file.preallocate(random_offset, random_size);
+    state.assert_valid_mode_status(status);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  SeekWithoutOpen
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::SeekWithoutOpen::SeekWithoutOpen()
+    : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("SeekWithoutOpen") {}
+
+bool Os::Test::FileTest::Tester::SeekWithoutOpen::precondition(
+    const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return Os::File::Mode::OPEN_NO_MODE == state.m_mode;
+}
+
+void Os::Test::FileTest::Tester::SeekWithoutOpen::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    // Check initial file state
+    state.assert_file_closed();
+    // Open file of given filename
+    FwSignedSizeType random_offset = STest::Pick::lowerUpper(0, std::numeric_limits&lt;U32&gt;::max());
+    bool random_absolute = static_cast&lt;bool&gt;(STest::Pick::lowerUpper(0, 1));
+
+    Os::File::Status status =
+        state.m_file.seek(random_offset, random_absolute ? Os::File::SeekType::ABSOLUTE : Os::File::SeekType::RELATIVE);
+    state.assert_valid_mode_status(status);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  SeekInvalidSize
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::SeekInvalidSize::SeekInvalidSize()
+    : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("SeekInvalidSize") {}
+
+bool Os::Test::FileTest::Tester::SeekInvalidSize::precondition(
+    const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    FwSizeType position = 0;
+    // Operation is effectively constant
+    Os::File::Status status = const_cast&lt;Os::Test::FileTest::Tester&amp;&gt;(state).m_file.position(position);
+    return (Os::File::Mode::OPEN_NO_MODE &lt; state.m_mode) &amp;&amp;
+           // Limitation of the test harness: max random value is U32_MAX, thus we need at least 1 byte headroom
+           (status == Os::File::Status::OP_OK) &amp;&amp; (position &lt; std::numeric_limits&lt;U32&gt;::max());
+}
+
+void Os::Test::FileTest::Tester::SeekInvalidSize::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    FileState original_file_state = state.current_file_state();
+    // Open file of given filename
+    FwSignedSizeType random_offset =
+        STest::Pick::lowerUpper(original_file_state.position + 1, std::numeric_limits&lt;U32&gt;::max());
+    ASSERT_GT(random_offset, original_file_state.position);
+
+    Os::File::Status status = state.m_file.seek(-1 * random_offset, Os::File::SeekType::RELATIVE);
+    ASSERT_EQ(Os::File::Status::INVALID_ARGUMENT, status);
+    // Ensure no change in size or pointer
+    FileState final_file_state = state.current_file_state();
+    ASSERT_EQ(final_file_state.size, original_file_state.size);
+    ASSERT_EQ(final_file_state.position, original_file_state.position);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  FlushInvalidModes
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::FlushInvalidModes::FlushInvalidModes()
+    : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("FlushInvalidModes") {}
+
+bool Os::Test::FileTest::Tester::FlushInvalidModes::precondition(
+    const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return Os::File::Mode::OPEN_NO_MODE == state.m_mode || Os::File::Mode::OPEN_READ == state.m_mode;
+}
+
+void Os::Test::FileTest::Tester::FlushInvalidModes::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    FileState original_file_state = state.current_file_state();
+    ASSERT_TRUE(Os::File::Mode::OPEN_NO_MODE == state.m_file.m_mode ||
+                Os::File::Mode::OPEN_READ == state.m_file.m_mode);
+    Os::File::Status status = state.m_file.flush();
+    state.assert_valid_mode_status(status);
+    // Ensure no change in size or pointer
+    FileState final_file_state = state.current_file_state();
+    ASSERT_EQ(final_file_state.size, original_file_state.size);
+    ASSERT_EQ(final_file_state.position, original_file_state.position);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ReadInvalidModes
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::ReadInvalidModes::ReadInvalidModes()
+    : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("ReadInvalidModes") {}
+
+bool Os::Test::FileTest::Tester::ReadInvalidModes::precondition(
+    const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return Os::File::Mode::OPEN_READ != state.m_mode;
+}
+
+void Os::Test::FileTest::Tester::ReadInvalidModes::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    U8 buffer[10];
+    FwSizeType size = sizeof buffer;
+    state.assert_file_consistent();
+    FileState original_file_state = state.current_file_state();
+    ASSERT_NE(Os::File::Mode::OPEN_READ, state.m_file.m_mode);
+    bool wait = static_cast&lt;bool&gt;(STest::Pick::lowerUpper(0, 1));
+    Os::File::Status status =
+        state.m_file.read(buffer, size, wait ? Os::File::WaitType::WAIT : Os::File::WaitType::NO_WAIT);
+    state.assert_valid_mode_status(status);
+
+    // Ensure no change in size or pointer
+    FileState final_file_state = state.current_file_state();
+    ASSERT_EQ(final_file_state.size, original_file_state.size);
+    ASSERT_EQ(final_file_state.position, original_file_state.position);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  WriteInvalidModes
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::WriteInvalidModes::WriteInvalidModes()
+    : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("WriteInvalidModes") {}
+
+bool Os::Test::FileTest::Tester::WriteInvalidModes::precondition(
+    const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return Os::File::Mode::OPEN_NO_MODE == state.m_mode || Os::File::Mode::OPEN_READ == state.m_mode;
+}
+
+void Os::Test::FileTest::Tester::WriteInvalidModes::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    U8 buffer[10];
+    FwSizeType size = sizeof buffer;
+    state.assert_file_consistent();
+    FileState original_file_state = state.current_file_state();
+    ASSERT_TRUE(Os::File::Mode::OPEN_NO_MODE == state.m_file.m_mode ||
+                Os::File::Mode::OPEN_READ == state.m_file.m_mode);
+    bool wait = static_cast&lt;bool&gt;(STest::Pick::lowerUpper(0, 1));
+    Os::File::Status status =
+        state.m_file.write(buffer, size, wait ? Os::File::WaitType::WAIT : Os::File::WaitType::NO_WAIT);
+    state.assert_valid_mode_status(status);
+    // Ensure no change in size or pointer
+    FileState final_file_state = state.current_file_state();
+    ASSERT_EQ(final_file_state.size, original_file_state.size);
+    ASSERT_EQ(final_file_state.position, original_file_state.position);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Base Rule:  AssertRule
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::AssertRule::AssertRule(const char* name) : STest::Rule&lt;Os::Test::FileTest::Tester&gt;(name) {}
+
+bool Os::Test::FileTest::Tester::AssertRule::precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return true;
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenIllegalPath
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::OpenIllegalPath::OpenIllegalPath()
+    : Os::Test::FileTest::Tester::AssertRule("OpenIllegalPath") {}
+
+void Os::Test::FileTest::Tester::OpenIllegalPath::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    Os::File::Mode random_mode =
+        static_cast&lt;Os::File::Mode&gt;(STest::Pick::lowerUpper(Os::File::Mode::OPEN_READ, Os::File::Mode::OPEN_APPEND));
+    bool overwrite = static_cast&lt;bool&gt;(STest::Pick::lowerUpper(0, 1));
+    ASSERT_DEATH_IF_SUPPORTED(
+        state.m_file.open(nullptr, random_mode,
+                          overwrite ? Os::File::OverwriteType::OVERWRITE : Os::File::OverwriteType::NO_OVERWRITE),
+        ASSERT_IN_FILE_CPP);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenIllegalMode
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::OpenIllegalMode::OpenIllegalMode()
+    : Os::Test::FileTest::Tester::AssertRule("OpenIllegalMode") {}
+
+void Os::Test::FileTest::Tester::OpenIllegalMode::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    std::shared_ptr&lt;const std::string&gt; random_filename = state.get_filename(true);
+    U32 mode = STest::Pick::lowerUpper(0, 1);
+    bool overwrite = static_cast&lt;bool&gt;(STest::Pick::lowerUpper(0, 1));
+    ASSERT_DEATH_IF_SUPPORTED(
+        state.m_file.open(random_filename-&gt;c_str(),
+                          (mode == 0) ? Os::File::Mode::MAX_OPEN_MODE : Os::File::Mode::OPEN_NO_MODE,
+                          overwrite ? Os::File::OverwriteType::OVERWRITE : Os::File::OverwriteType::NO_OVERWRITE),
+        Os::Test::FileTest::Tester::ASSERT_IN_FILE_CPP);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  SeekIllegal
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::SeekIllegal::SeekIllegal() : Os::Test::FileTest::Tester::AssertRule("SeekIllegal") {}
+
+void Os::Test::FileTest::Tester::SeekIllegal::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    ASSERT_DEATH_IF_SUPPORTED(state.m_file.seek(-1, Os::File::SeekType::ABSOLUTE),
+                              Os::Test::FileTest::Tester::ASSERT_IN_FILE_CPP);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ReadIllegalBuffer
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::ReadIllegalBuffer::ReadIllegalBuffer()
+    : Os::Test::FileTest::Tester::AssertRule("ReadIllegalBuffer") {}
+
+void Os::Test::FileTest::Tester::ReadIllegalBuffer::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    FwSizeType size = static_cast&lt;FwSizeType&gt;(STest::Pick::any());
+    bool random_wait = static_cast&lt;bool&gt;(STest::Pick::lowerUpper(0, 1));
+    ASSERT_DEATH_IF_SUPPORTED(
+        state.m_file.read(nullptr, size, random_wait ? Os::File::WaitType::WAIT : Os::File::WaitType::NO_WAIT),
+        Os::Test::FileTest::Tester::ASSERT_IN_FILE_CPP);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  WriteIllegalBuffer
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::WriteIllegalBuffer::WriteIllegalBuffer()
+    : Os::Test::FileTest::Tester::AssertRule("WriteIllegalBuffer") {}
+
+void Os::Test::FileTest::Tester::WriteIllegalBuffer::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    FwSizeType size = static_cast&lt;FwSizeType&gt;(STest::Pick::any());
+    bool random_wait = static_cast&lt;bool&gt;(STest::Pick::lowerUpper(0, 1));
+    ASSERT_DEATH_IF_SUPPORTED(
+        state.m_file.write(nullptr, size, random_wait ? Os::File::WaitType::WAIT : Os::File::WaitType::NO_WAIT),
+        Os::Test::FileTest::Tester::ASSERT_IN_FILE_CPP);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CopyAssignment
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::CopyAssignment::CopyAssignment()
+    : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("CopyAssignment") {}
+
+bool Os::Test::FileTest::Tester::CopyAssignment::precondition(
+    const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return true;
+}
+
+void Os::Test::FileTest::Tester::CopyAssignment::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    Os::File temp = state.m_file;
+    state.assert_file_consistent();  // Prevents optimization
+    state.m_file = temp;
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CopyConstruction
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::CopyConstruction::CopyConstruction()
+    : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("CopyConstruction") {}
+
+bool Os::Test::FileTest::Tester::CopyConstruction::precondition(
+    const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return true;
+}
+
+void Os::Test::FileTest::Tester::CopyConstruction::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    Os::File temp(state.m_file);
+    state.assert_file_consistent();            // Interim check to ensure original file did not change
+    (void)new (&amp;state.m_file) Os::File(temp);  // Copy-construct overtop of the original file
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  FullCrc
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::FullCrc::FullCrc() : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("FullCrc") {}
+
+bool Os::Test::FileTest::Tester::FullCrc::precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return state.m_mode == Os::File::Mode::OPEN_READ;
+}
+
+void Os::Test::FileTest::Tester::FullCrc::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    U32 crc = 1;
+    U32 shadow_crc = 2;
+    state.assert_file_consistent();
+    Os::File::Status status = state.m_file.calculateCrc(crc);
+    state.shadow_crc(shadow_crc);
+    ASSERT_EQ(status, Os::File::Status::OP_OK);
+    ASSERT_EQ(crc, shadow_crc);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  IncrementalCrc
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::IncrementalCrc::IncrementalCrc()
+    : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("IncrementalCrc") {}
+
+bool Os::Test::FileTest::Tester::IncrementalCrc::precondition(
+    const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return state.m_mode == Os::File::Mode::OPEN_READ;
+}
+
+void Os::Test::FileTest::Tester::IncrementalCrc::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    FwSizeType size_desired = static_cast&lt;FwSizeType&gt;(STest::Pick::lowerUpper(0, FW_FILE_CHUNK_SIZE));
+    FwSizeType shadow_size = size_desired;
+    Os::File::Status status = state.m_file.incrementalCrc(size_desired);
+    state.shadow_partial_crc(shadow_size);
+    ASSERT_EQ(status, Os::File::Status::OP_OK);
+    ASSERT_EQ(size_desired, shadow_size);
+    ASSERT_EQ(state.m_file.m_crc, state.m_independent_crc);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  FinalizeCrc
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::FinalizeCrc::FinalizeCrc() : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("FinalizeCrc") {}
+
+bool Os::Test::FileTest::Tester::FinalizeCrc::precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return true;
+}
+
+void Os::Test::FileTest::Tester::FinalizeCrc::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    U32 crc = 1;
+    U32 shadow_crc = 2;
+    state.assert_file_consistent();
+    Os::File::Status status = state.m_file.finalizeCrc(crc);
+    state.shadow_finalize(shadow_crc);
+    ASSERT_EQ(status, Os::File::Status::OP_OK);
+    ASSERT_EQ(crc, shadow_crc);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  FullCrcInvalidModes
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::FullCrcInvalidModes::FullCrcInvalidModes()
+    : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("FullCrcInvalidModes") {}
+
+bool Os::Test::FileTest::Tester::FullCrcInvalidModes::precondition(
+    const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return Os::File::Mode::OPEN_READ != state.m_mode;
+}
+
+void Os::Test::FileTest::Tester::FullCrcInvalidModes::action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    FileState original_file_state = state.current_file_state();
+    ASSERT_TRUE(Os::File::Mode::OPEN_READ != state.m_file.m_mode);
+    U32 crc = 1;
+    Os::File::Status status = state.m_file.calculateCrc(crc);
+    ASSERT_EQ(crc, 0);
+    state.assert_valid_mode_status(status);
+    // Ensure no change in size or pointer
+    FileState final_file_state = state.current_file_state();
+    ASSERT_EQ(final_file_state.size, original_file_state.size);
+    ASSERT_EQ(final_file_state.position, original_file_state.position);
+    state.assert_file_consistent();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  IncrementalCrcInvalidModes
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::FileTest::Tester::IncrementalCrcInvalidModes::IncrementalCrcInvalidModes()
+    : STest::Rule&lt;Os::Test::FileTest::Tester&gt;("IncrementalCrcInvalidModes") {}
+
+bool Os::Test::FileTest::Tester::IncrementalCrcInvalidModes::precondition(
+    const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    return Os::File::Mode::OPEN_READ != state.m_mode;
+}
+
+void Os::Test::FileTest::Tester::IncrementalCrcInvalidModes::action(
+    Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+) {
+    printf("--&gt; Rule: %s \n", this-&gt;getName());
+    state.assert_file_consistent();
+    FileState original_file_state = state.current_file_state();
+    ASSERT_TRUE(Os::File::Mode::OPEN_READ != state.m_file.m_mode);
+    FwSizeType size = static_cast&lt;FwSizeType&gt;(STest::Pick::lowerUpper(0, 1));
+    Os::File::Status status = state.m_file.incrementalCrc(size);
+    state.assert_valid_mode_status(status);
+    // Ensure no change in size or pointer
+    FileState final_file_state = state.current_file_state();
+    ASSERT_EQ(final_file_state.size, original_file_state.size);
+    ASSERT_EQ(final_file_state.position, original_file_state.position);
+    state.assert_file_consistent();
+}
+</pre></div>
+</div>
+</section>
+<section id="filerules-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">FileRules.hpp</span></code><a class="headerlink" href="#filerules-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/file/FileRules.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/test/ut/file/MyRules.hpp
+// \brief rule definitions for common testing
+// ======================================================================
+// Stripped when compiled, here for IDEs
+#include "RulesHeaders.hpp"
+
+// ------------------------------------------------------------------------------------------------------
+//  OpenFile: base rule for all open rules
+//
+// ------------------------------------------------------------------------------------------------------
+struct OpenBaseRule : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    //! Constructor
+    OpenBaseRule(const char* rule_name,
+                 Os::File::Mode mode = Os::File::Mode::OPEN_CREATE,
+                 const bool overwrite = false,
+                 const bool randomize_filename = false);
+
+    Os::File::Mode m_mode;
+    Os::File::OverwriteType m_overwrite;
+    bool m_random;
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenFileCreate
+//
+// ------------------------------------------------------------------------------------------------------
+struct OpenFileCreate : public OpenBaseRule {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    explicit OpenFileCreate(const bool randomize_filename = false);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenFileCreateOverwrite
+//
+// ------------------------------------------------------------------------------------------------------
+struct OpenFileCreateOverwrite : public OpenBaseRule {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    explicit OpenFileCreateOverwrite(const bool randomize_filename = false);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenForAppend
+//
+// ------------------------------------------------------------------------------------------------------
+struct OpenForAppend : public OpenBaseRule {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    explicit OpenForAppend(const bool randomize_filename = false);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenForWrite
+//
+// ------------------------------------------------------------------------------------------------------
+struct OpenForWrite : public OpenBaseRule {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    explicit OpenForWrite(const bool randomize_filename = false);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenForRead
+//
+// ------------------------------------------------------------------------------------------------------
+struct OpenForRead : public OpenBaseRule {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    explicit OpenForRead(const bool randomize_filename = false);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CloseFile
+//
+// ------------------------------------------------------------------------------------------------------
+struct CloseFile : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    CloseFile();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Read
+//
+// ------------------------------------------------------------------------------------------------------
+struct Read : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    Read();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Write
+//
+// ------------------------------------------------------------------------------------------------------
+struct Write : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    Write();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Seek
+//
+// ------------------------------------------------------------------------------------------------------
+struct Seek : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    Seek();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Preallocate
+//
+// ------------------------------------------------------------------------------------------------------
+struct Preallocate : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    Preallocate();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Flush
+//
+// ------------------------------------------------------------------------------------------------------
+struct Flush : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    Flush();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenInvalidModes
+//
+// ------------------------------------------------------------------------------------------------------
+struct OpenInvalidModes : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    OpenInvalidModes();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  PreallocateWithoutOpen
+//
+// ------------------------------------------------------------------------------------------------------
+struct PreallocateWithoutOpen : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    PreallocateWithoutOpen();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  SeekWithoutOpen
+//
+// ------------------------------------------------------------------------------------------------------
+struct SeekWithoutOpen : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    SeekWithoutOpen();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  SeekInvalidSize
+//
+// ------------------------------------------------------------------------------------------------------
+struct SeekInvalidSize : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    SeekInvalidSize();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  FlushInvalidModes
+//
+// ------------------------------------------------------------------------------------------------------
+struct FlushInvalidModes : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    FlushInvalidModes();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ReadInvalidModes
+//
+// ------------------------------------------------------------------------------------------------------
+struct ReadInvalidModes : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    ReadInvalidModes();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  WriteInvalidModes
+//
+// ------------------------------------------------------------------------------------------------------
+struct WriteInvalidModes : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    WriteInvalidModes();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Base Rule:  AssertRule
+//
+// ------------------------------------------------------------------------------------------------------
+struct AssertRule : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    explicit AssertRule(const char* name);
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    virtual void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+                        ) = 0;
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenIllegalPath
+//
+// ------------------------------------------------------------------------------------------------------
+struct OpenIllegalPath : public AssertRule {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    OpenIllegalPath();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+                ) override;
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenIllegalMode
+//
+// ------------------------------------------------------------------------------------------------------
+struct OpenIllegalMode : public AssertRule {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    OpenIllegalMode();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  SeekIllegal
+//
+// ------------------------------------------------------------------------------------------------------
+struct SeekIllegal : public AssertRule {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    SeekIllegal();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ReadIllegalBuffer
+//
+// ------------------------------------------------------------------------------------------------------
+struct ReadIllegalBuffer : public AssertRule {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    ReadIllegalBuffer();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  WriteIllegalBuffer
+//
+// ------------------------------------------------------------------------------------------------------
+struct WriteIllegalBuffer : public AssertRule {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    WriteIllegalBuffer();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CopyAssignment
+//
+// ------------------------------------------------------------------------------------------------------
+struct CopyAssignment : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    CopyAssignment();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CopyConstruction
+//
+// ------------------------------------------------------------------------------------------------------
+struct CopyConstruction : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    CopyConstruction();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  FullCrc
+//
+// ------------------------------------------------------------------------------------------------------
+struct FullCrc : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    FullCrc();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  IncrementalCrc
+//
+// ------------------------------------------------------------------------------------------------------
+struct IncrementalCrc : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    IncrementalCrc();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  FinalizeCrc
+//
+// ------------------------------------------------------------------------------------------------------
+struct FinalizeCrc : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    FinalizeCrc();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  FullCrcInvalidModes
+//
+// ------------------------------------------------------------------------------------------------------
+struct FullCrcInvalidModes : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    FullCrcInvalidModes();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  IncrementalCrcInvalidModes
+//
+// ------------------------------------------------------------------------------------------------------
+struct IncrementalCrcInvalidModes : public STest::Rule&lt;Os::Test::FileTest::Tester&gt; {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    IncrementalCrcInvalidModes();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileTest::Tester&amp; state  //!&lt; The test state
+    );
+};
+</pre></div>
+</div>
+</section>
+<section id="rulesheaders-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">RulesHeaders.hpp</span></code><a class="headerlink" href="#rulesheaders-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/file/RulesHeaders.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/test/ut/file/RulesHeaders.hpp
+// \brief rule definitions for common testing
+// ======================================================================
+
+#ifndef __RULES_HEADERS__
+#define __RULES_HEADERS__
+#include &lt;gtest/gtest.h&gt;
+#include &lt;cstdio&gt;
+#include &lt;map&gt;
+#include "Os/File.hpp"
+#include "Os/test/ut/file/SyntheticFileSystem.hpp"
+#include "STest/Rule/Rule.hpp"
+#include "STest/Scenario/BoundedScenario.hpp"
+#include "STest/Scenario/RandomScenario.hpp"
+#include "STest/Scenario/Scenario.hpp"
+
+namespace Os {
+namespace Test {
+namespace FileTest {
+
+struct Tester {
+    //! State data for an open OS file.
+    //!
+    struct FileState {
+        FwSizeType size = std::numeric_limits&lt;FwSizeType&gt;::max();
+        FwSizeType position = std::numeric_limits&lt;FwSizeType&gt;::max();
+    };
+
+    //! Assert in File.cpp for searching death text
+    static constexpr const char* ASSERT_IN_FILE_CPP = "Assert: \".*/Os/File\\.cpp:[0-9]+\"";
+
+    // Constructors that ensures the file is always valid
+    Tester();
+
+    // Destructor must be virtual
+    virtual ~Tester() = default;
+
+    //! Check if the test file exists.
+    //! \return true if it exists, false otherwise.
+    //!
+    virtual bool exists(const std::string&amp; filename) const = 0;
+
+    //! Check if the back-end tester is fully functional
+    //! \return true if functional, false otherwise
+    //!
+    virtual bool functional() const = 0;
+
+    //! Get a filename, randomly if random is true, otherwise use a basic filename.
+    //! \param random: true if filename should be random, false if predictable
+    //! \return: filename to use for testing as a shared pointer
+    //!
+    virtual std::shared_ptr&lt;const std::string&gt; get_filename(bool random) const = 0;
+
+    //! Performs the "open" action on the shadow state.
+    //!
+    Os::File::Status shadow_open(const std::string&amp; path,
+                                 Os::File::Mode newly_opened_mode = Os::File::Mode::OPEN_NO_MODE,
+                                 bool overwrite = false);
+
+    //! Perform the "close" action on the shadow state.
+    //!
+    void shadow_close();
+
+    //! Perform the "read" action on the shadow state returning the read data.
+    //! \return data read
+    //!
+    std::vector&lt;U8&gt; shadow_read(FwSizeType size);
+
+    //! Perform the "write" action on the shadow state given the data.
+    //!
+    void shadow_write(const std::vector&lt;U8&gt;&amp; data);
+
+    //! Perform the "seek" action on the shadow state given.
+    //!
+    void shadow_seek(const FwSignedSizeType offset, const bool absolute);
+
+    //! Perform the "preallocate" action on the shadow state.
+    //!
+    void shadow_preallocate(const FwSizeType offset, const FwSizeType length);
+
+    //! Perform the "flush" action on the shadow state.
+    //!
+    void shadow_flush();
+
+    //! Perform the "full crc" action on the shadow state.
+    //! \param crc: output for CRC value
+    //!
+    void shadow_crc(U32&amp; crc);
+
+    //! Perform the "incremental crc" action on the shadow state.
+    //! \param crc: output for CRC value
+    //!
+    void shadow_partial_crc(FwSizeType&amp; size);
+
+    //! Perform the "crc finalize" action on the shadow state.
+    //! \param crc: output for CRC value
+    //!
+    void shadow_finalize(U32&amp; crc);
+
+    //! Detect current state of the file. Note: for files that are known, but unopened this will open the file as read
+    //! detect the state, and then close it again.
+    //! \return file state for the test
+    //!
+    FileState current_file_state();
+
+    //! Assert file and shadow state are in-sync
+    //!
+    void assert_file_consistent();
+
+    //! Assert that the supplied status is appropriate for the current mode.
+    //! \param status: status to check
+    //!
+    void assert_valid_mode_status(Os::File::Status&amp; status) const;
+
+    //! Assert that the file is opened
+    //!
+    void assert_file_opened(const std::string&amp; path = "",
+                            Os::File::Mode newly_opened_mode = Os::File::Mode::OPEN_NO_MODE,
+                            bool overwrite = false);
+
+    //! Assert that the file is closed
+    //!
+    void assert_file_closed();
+
+    //! Assert a file read
+    //!
+    void assert_file_read(const std::vector&lt;U8&gt;&amp; state_data, const unsigned char* read_data, FwSizeType size_read);
+
+    //! Assert a file write
+    //!
+    void assert_file_write(const std::vector&lt;U8&gt;&amp; write_data, FwSizeType size_written);
+
+    //! Assert a file seek
+    //!
+    void assert_file_seek(const FwSizeType original_position, const FwSignedSizeType seek_desired, const bool absolute);
+
+    //! File under test
+    Os::File m_file;
+
+    //! Shadow file state: file system
+    Os::Test::SyntheticFile m_shadow;
+
+    //! Currently opened path
+    std::string m_current_path;
+
+    //! Independent tracking of mode
+    Os::File::Mode m_mode = Os::File::Mode::OPEN_NO_MODE;
+
+    U32 m_independent_crc = Os::File::INITIAL_CRC;
+
+// Do NOT alter, adds rules to Tester as inner classes
+#include "FileRules.hpp"
+};
+
+//! Get the tester implementation for the given backend.
+//! \return pointer to tester subclass implementation
+//!
+std::unique_ptr&lt;Os::Test::FileTest::Tester&gt; get_tester_implementation();
+}  // namespace FileTest
+}  // namespace Test
+}  // namespace Os
+#endif  // __RULES_HEADERS__
+</pre></div>
+</div>
+</section>
+<section id="syntheticfilesystem-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">SyntheticFileSystem.cpp</span></code><a class="headerlink" href="#syntheticfilesystem-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/file/SyntheticFileSystem.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/test/ut/file/SyntheticFileSystem.cpp
+// \brief standard template library driven synthetic file system implementation
+// ======================================================================
+#include "Os/test/ut/file/SyntheticFileSystem.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace Os {
+namespace Test {
+
+SyntheticFile::~SyntheticFile() {
+    this-&gt;close();
+}
+
+SyntheticFileSystem::OpenData SyntheticFileSystem::open(const CHAR* char_path,
+                                                        const Os::File::Mode open_mode,
+                                                        const File::OverwriteType overwrite) {
+    SyntheticFileSystem::OpenData return_value;
+    std::string path = char_path;
+    bool exists = (this-&gt;m_filesystem.count(path) &gt; 0);
+
+    // Error case: read on file that does not exist
+    if ((not exists) &amp;&amp; (Os::File::Mode::OPEN_READ == open_mode)) {
+        return_value.status = Os::File::Status::DOESNT_EXIST;
+    }
+    // Error case: create on existing file without overwrite
+    else if (exists and (not overwrite) &amp;&amp; (open_mode == Os::File::Mode::OPEN_CREATE)) {
+        return_value.status = Os::File::Status::FILE_EXISTS;
+    }
+    // Case where file should be opened correctly
+    else {
+        const bool truncate = (Os::File::Mode::OPEN_CREATE == open_mode) &amp;&amp; overwrite;
+
+        // Add new shadow file data when the file is new
+        if (not exists) {
+            this-&gt;m_filesystem[path] = std::make_shared&lt;SyntheticFileData&gt;();
+        }
+        return_value.file = this-&gt;m_filesystem[path];
+        return_value.status = Os::File::Status::OP_OK;
+
+        // Set file properties
+        if (truncate) {
+            return_value.file-&gt;m_data.clear();
+        }
+
+        return_value.file-&gt;m_pointer = 0;
+
+        return_value.file-&gt;m_mode = open_mode;
+        return_value.file-&gt;m_path = path;
+        // Checks on the shadow data to ensure consistency
+        FW_ASSERT(return_value.file-&gt;m_mode != Os::File::OPEN_NO_MODE);
+        FW_ASSERT(return_value.file-&gt;m_pointer == 0);
+        FW_ASSERT(return_value.file-&gt;m_path == path);
+        FW_ASSERT(not truncate || return_value.file-&gt;m_data.empty());
+    }
+    return return_value;
+}
+
+bool SyntheticFileSystem::exists(const CHAR* char_path) {
+    std::string path = char_path;
+    FW_ASSERT(this-&gt;m_filesystem.count(path) &lt;= 1);
+    return this-&gt;m_filesystem.count(path) == 1;
+}
+
+void SyntheticFileSystem::remove(const CHAR* char_path) {
+    std::string path = char_path;
+    this-&gt;m_filesystem.erase(path);
+}
+
+std::unique_ptr&lt;SyntheticFileSystem&gt; SyntheticFile::s_file_system =
+    std::unique_ptr&lt;SyntheticFileSystem&gt;(new SyntheticFileSystem());
+
+void SyntheticFile::setFileSystem(std::unique_ptr&lt;SyntheticFileSystem&gt; new_file_system) {
+    s_file_system = std::move(new_file_system);
+}
+
+void SyntheticFile::remove(const CHAR* char_path) {
+    FW_ASSERT(s_file_system != nullptr);
+    s_file_system-&gt;remove(char_path);
+}
+
+File::Status SyntheticFile::open(const CHAR* char_path,
+                                 const Os::File::Mode open_mode,
+                                 const File::OverwriteType overwrite) {
+    SyntheticFileSystem::OpenData data = s_file_system-&gt;open(char_path, open_mode, overwrite);
+    if (data.status == Os::File::Status::OP_OK) {
+        this-&gt;m_data = data.file;
+        FW_ASSERT(this-&gt;m_data != nullptr);
+    }
+    return data.status;
+}
+
+void SyntheticFile::close() {
+    if (this-&gt;m_data != nullptr) {
+        this-&gt;m_data-&gt;m_mode = Os::File::Mode::OPEN_NO_MODE;
+        this-&gt;m_data-&gt;m_path.clear();
+        this-&gt;m_data-&gt;m_pointer = 0;
+        // Checks on the shadow data to ensure consistency
+        FW_ASSERT(this-&gt;m_data-&gt;m_mode == Os::File::Mode::OPEN_NO_MODE);
+        FW_ASSERT(this-&gt;m_data-&gt;m_path.empty());
+        FW_ASSERT(this-&gt;m_data-&gt;m_pointer == 0);
+    }
+}
+
+Os::File::Status SyntheticFile::read(U8* buffer, FwSizeType&amp; size, WaitType wait) {
+    (void)wait;
+    FW_ASSERT(this-&gt;m_data != nullptr);
+    FW_ASSERT(buffer != nullptr);
+    FW_ASSERT(this-&gt;m_data-&gt;m_mode &lt; Os::File::Mode::MAX_OPEN_MODE);
+    // Check that the file is open before attempting operation
+    if (Os::File::Mode::OPEN_NO_MODE == this-&gt;m_data-&gt;m_mode) {
+        size = 0;
+        return Os::File::Status::NOT_OPENED;
+    } else if (Os::File::Mode::OPEN_READ != this-&gt;m_data-&gt;m_mode) {
+        size = 0;
+        return Os::File::Status::INVALID_MODE;
+    }
+    std::vector&lt;U8&gt; output;
+    FwSizeType original_pointer = this-&gt;m_data-&gt;m_pointer;
+    FwSizeType original_size = static_cast&lt;FwSizeType&gt;(this-&gt;m_data-&gt;m_data.size());
+    // Check expected read bytes
+    FwSizeType i = 0;
+    for (i = 0; i &lt; size; i++, this-&gt;m_data-&gt;m_pointer++) {
+        // End of file
+        if (this-&gt;m_data-&gt;m_pointer &gt;= static_cast&lt;FwSizeType&gt;(this-&gt;m_data-&gt;m_data.size())) {
+            break;
+        }
+        buffer[i] = this-&gt;m_data-&gt;m_data.at(static_cast&lt;std::vector&lt;U8&gt;::size_type&gt;(this-&gt;m_data-&gt;m_pointer));
+    }
+    size = i;
+    // Checks on the shadow data to ensure consistency
+    FW_ASSERT(this-&gt;m_data-&gt;m_data.size() == static_cast&lt;size_t&gt;(original_size));
+    FW_ASSERT(this-&gt;m_data-&gt;m_pointer ==
+              ((original_pointer &gt; original_size) ? original_pointer : FW_MIN(original_pointer + size, original_size)));
+    FW_ASSERT(size == ((original_pointer &gt; original_size) ? 0 : FW_MIN(size, original_size - original_pointer)));
+    return Os::File::Status::OP_OK;
+}
+
+Os::File::Status SyntheticFile::write(const U8* buffer, FwSizeType&amp; size, WaitType wait) {
+    (void)wait;
+    FW_ASSERT(this-&gt;m_data != nullptr);
+    FW_ASSERT(buffer != nullptr);
+    FW_ASSERT(this-&gt;m_data-&gt;m_mode &lt; Os::File::Mode::MAX_OPEN_MODE);
+    // Check that the file is open before attempting operation
+    if (Os::File::Mode::OPEN_NO_MODE == this-&gt;m_data-&gt;m_mode) {
+        size = 0;
+        return Os::File::Status::NOT_OPENED;
+    } else if (Os::File::Mode::OPEN_READ == this-&gt;m_data-&gt;m_mode) {
+        size = 0;
+        return Os::File::Status::INVALID_MODE;
+    }
+    FwSizeType original_position = this-&gt;m_data-&gt;m_pointer;
+    FwSizeType original_size = static_cast&lt;FwSizeType&gt;(this-&gt;m_data-&gt;m_data.size());
+    const U8* write_data = reinterpret_cast&lt;const U8*&gt;(buffer);
+
+    // Appends seek to end before writing
+    if (Os::File::Mode::OPEN_APPEND == this-&gt;m_data-&gt;m_mode) {
+        this-&gt;m_data-&gt;m_pointer = static_cast&lt;FwSizeType&gt;(this-&gt;m_data-&gt;m_data.size());
+    }
+
+    // First add in zeros to account for a pointer past the end of the file
+    const FwSizeType zeros = (this-&gt;m_data-&gt;m_pointer &lt; this-&gt;m_data-&gt;m_data.size())
+                                 ? 0
+                                 : this-&gt;m_data-&gt;m_pointer - this-&gt;m_data-&gt;m_data.size();
+    for (FwSizeType i = 0; i &lt; zeros; i++) {
+        this-&gt;m_data-&gt;m_data.push_back(0);
+    }
+    // Interim checks to ensure zeroing performed correctly
+    FW_ASSERT(static_cast&lt;size_t&gt;(this-&gt;m_data-&gt;m_pointer) &lt;= this-&gt;m_data-&gt;m_data.size());
+    FW_ASSERT(this-&gt;m_data-&gt;m_data.size() == static_cast&lt;size_t&gt;((Os::File::Mode::OPEN_APPEND == this-&gt;m_data-&gt;m_mode)
+                                                                     ? original_size
+                                                                     : FW_MAX(original_position, original_size)));
+
+    FwSizeType pre_write_position = this-&gt;m_data-&gt;m_pointer;
+    FwSizeType pre_write_size = static_cast&lt;FwSizeType&gt;(this-&gt;m_data-&gt;m_data.size());
+
+    // Next write data
+    FwSizeType i = 0;
+    for (i = 0; i &lt; size; i++, this-&gt;m_data-&gt;m_pointer++) {
+        // Overwrite case
+        if (static_cast&lt;size_t&gt;(this-&gt;m_data-&gt;m_pointer) &lt; this-&gt;m_data-&gt;m_data.size()) {
+            this-&gt;m_data-&gt;m_data.at(static_cast&lt;std::vector&lt;U8&gt;::size_type&gt;(this-&gt;m_data-&gt;m_pointer)) = write_data[i];
+        }
+        // Append case
+        else {
+            this-&gt;m_data-&gt;m_data.push_back(write_data[i]);
+        }
+    }
+    size = i;
+    // Checks on the shadow data to ensure consistency
+    FW_ASSERT(this-&gt;m_data-&gt;m_data.size() == static_cast&lt;size_t&gt;(FW_MAX(pre_write_position + size, pre_write_size)));
+    FW_ASSERT(this-&gt;m_data-&gt;m_pointer ==
+              ((Os::File::Mode::OPEN_APPEND == this-&gt;m_data-&gt;m_mode) ? pre_write_size : pre_write_position) + size);
+    return Os::File::Status::OP_OK;
+}
+
+Os::File::Status SyntheticFile::seek(const FwSignedSizeType offset, const SeekType absolute) {
+    FW_ASSERT(this-&gt;m_data != nullptr);
+    Os::File::Status status = Os::File::Status::OP_OK;
+    // Cannot do a seek with a negative offset in absolute mode
+    FW_ASSERT(not absolute || offset &gt;= 0);
+    FW_ASSERT(this-&gt;m_data-&gt;m_mode &lt; Os::File::Mode::MAX_OPEN_MODE);
+    // Check that the file is open before attempting operation
+    if (Os::File::Mode::OPEN_NO_MODE == this-&gt;m_data-&gt;m_mode) {
+        status = Os::File::Status::NOT_OPENED;
+    } else {
+        if (absolute) {
+            this-&gt;m_data-&gt;m_pointer = static_cast&lt;FwSizeType&gt;(offset);
+        }
+        // Seek to &lt; 0
+        else if ((offset &lt; 0) &amp;&amp; ((static_cast&lt;FwSizeType&gt;(-1 * offset) &gt; this-&gt;m_data-&gt;m_pointer) ||
+                                  (offset == std::numeric_limits&lt;FwSignedSizeType&gt;::min()))) {
+            status = Os::File::Status::INVALID_ARGUMENT;
+        }
+        // Other negative offsets
+        else if (offset &lt; 0) {
+            this-&gt;m_data-&gt;m_pointer -= static_cast&lt;FwSizeType&gt;(-1 * offset);
+        }
+        // Overflow
+        else if ((std::numeric_limits&lt;FwSizeType&gt;::max() - this-&gt;m_data-&gt;m_pointer) &lt; static_cast&lt;FwSizeType&gt;(offset)) {
+            status = Os::File::Status::BAD_SIZE;
+        } else {
+            this-&gt;m_data-&gt;m_pointer += static_cast&lt;FwSizeType&gt;(offset);
+        }
+    }
+    return status;
+}
+
+Os::File::Status SyntheticFile::preallocate(const FwSizeType offset, const FwSizeType length) {
+    FW_ASSERT(this-&gt;m_data != nullptr);
+    Os::File::Status status = Os::File::Status::OP_OK;
+    FW_ASSERT(this-&gt;m_data-&gt;m_mode &lt; Os::File::Mode::MAX_OPEN_MODE);
+    // Check that the file is open before attempting operation
+    if (Os::File::Mode::OPEN_NO_MODE == this-&gt;m_data-&gt;m_mode) {
+        status = Os::File::Status::NOT_OPENED;
+    } else if (Os::File::Mode::OPEN_READ == this-&gt;m_data-&gt;m_mode) {
+        status = Os::File::Status::INVALID_MODE;
+    } else {
+        const FwSizeType original_size = static_cast&lt;FwSizeType&gt;(this-&gt;m_data-&gt;m_data.size());
+        const FwSizeType new_length = offset + length;
+        // Loop from existing size to new size adding zeros
+        for (FwSizeType i = static_cast&lt;FwSizeType&gt;(this-&gt;m_data-&gt;m_data.size()); i &lt; new_length; i++) {
+            this-&gt;m_data-&gt;m_data.push_back(0);
+        }
+        FW_ASSERT(this-&gt;m_data-&gt;m_data.size() == static_cast&lt;size_t&gt;(FW_MAX(offset + length, original_size)));
+    }
+    return status;
+}
+
+Os::File::Status SyntheticFile::flush() {
+    FW_ASSERT(this-&gt;m_data != nullptr);
+    Os::File::Status status = Os::File::Status::OP_OK;
+    FW_ASSERT(this-&gt;m_data-&gt;m_mode &lt; Os::File::Mode::MAX_OPEN_MODE);
+    // Check that the file is open before attempting operation
+    if (Os::File::Mode::OPEN_NO_MODE == this-&gt;m_data-&gt;m_mode) {
+        status = Os::File::Status::NOT_OPENED;
+    } else if (Os::File::Mode::OPEN_READ == this-&gt;m_data-&gt;m_mode) {
+        status = Os::File::Status::INVALID_MODE;
+    }
+    return status;
+}
+
+Os::File::Status SyntheticFile::position(FwSizeType&amp; position) {
+    position = this-&gt;m_data-&gt;m_pointer;
+    return Os::File::OP_OK;
+}
+
+Os::File::Status SyntheticFile::size(FwSizeType&amp; size) {
+    size = static_cast&lt;FwSizeType&gt;(this-&gt;m_data-&gt;m_data.size());
+    return Os::File::OP_OK;
+}
+
+FileHandle* SyntheticFile::getHandle() {
+    return this-&gt;m_data.get();
+}
+
+bool SyntheticFile::exists(const CHAR* path) {
+    return s_file_system-&gt;exists(path);
+}
+
+}  // namespace Test
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="syntheticfilesystem-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">SyntheticFileSystem.hpp</span></code><a class="headerlink" href="#syntheticfilesystem-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/file/SyntheticFileSystem.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/test/ut/file/SyntheticFileSystem.hpp
+// \brief standard template library driven synthetic file system definitions
+// ======================================================================
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+#include &lt;map&gt;
+#include &lt;memory&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include "Os/File.hpp"
+
+#ifndef OS_TEST_UT_FILE_SYNTHETIC_FILE_SYSTEM
+#define OS_TEST_UT_FILE_SYNTHETIC_FILE_SYSTEM
+
+namespace Os {
+namespace Test {
+// Forward declaration
+class SyntheticFileSystem;
+
+struct SyntheticFileData : public FileHandle {
+    //! Path of this file
+    std::string m_path;
+    //! Data stored in the file
+    std::vector&lt;U8&gt; m_data;
+    //! Pointer of the file
+    FwSizeType m_pointer = std::numeric_limits&lt;FwSizeType&gt;::max();
+    //! Separate mode tracking
+    File::Mode m_mode = File::OPEN_NO_MODE;
+};
+
+//! \brief Synthetic file data implementation
+//!
+//! File implementation for a synthetic standard template library based file.
+//!
+class SyntheticFile : public FileInterface {
+  public:
+    friend class SyntheticFileSystem;
+
+    //! \brief Destructor in order to correctly close file
+    virtual ~SyntheticFile();
+
+    //! \brief check if file exists
+    static bool exists(const CHAR* path);
+
+    //! \brief set the file system
+    static void setFileSystem(std::unique_ptr&lt;SyntheticFileSystem&gt; new_file_system);
+
+    //! \brief remove a file by path
+    static void remove(const CHAR* path);
+
+    //! \brief open a given path with mode and overwrite
+    //!
+    //! This opens a file at the given path. Mode drives the mode of the file and overwrite will overwrite files if it
+    //! exists and was created. Returns a pair of status and synthetic file data.
+    //!
+    //! \param path: path to open
+    //! \param mode: mode to open with
+    //! \param overwrite: overwrite if exists
+    //! \return (status, synthetic file object)
+    //!
+    Status open(const CHAR* path, const Os::File::Mode mode, const OverwriteType overwrite) override;
+
+    //! \brief close the file
+    //!
+    void close() final;
+
+    //! \brief read data from the file
+    //!
+    //! Read from the synthetic file and fill the buffer up-to size. Fill size with the data that was read.
+    //!
+    //! \param buffer: buffer to fill
+    //! \param size: size of data to read
+    //! \param wait: wait, unused
+    //! \return status of the read
+    //!
+    Os::File::Status read(U8* buffer, FwSizeType&amp; size, File::WaitType wait) override;
+
+    //! \brief write data to the file
+    //!
+    //! Write to the synthetic file from the buffer of given size. Fill size with the data that was written.
+    //!
+    //! \param buffer: buffer to fill
+    //! \param size: size of data to read
+    //! \param bool: wait, unused
+    //! \return status of the write
+    //!
+    Os::File::Status write(const U8* buffer, FwSizeType&amp; size, File::WaitType wait) override;
+
+    //! \brief seek pointer within file
+    //!
+    //! Seek the pointer within the file.
+    //!
+    //! \param offset: offset to seek to
+    //! \param bool: absolute
+    //! \return status of the seek
+    //!
+    Os::File::Status seek(const FwSignedSizeType offset, const File::SeekType absolute) override;
+
+    //! \brief preallocate data within file
+    //!
+    //! Preallocate data within the file.
+    //!
+    //! \param offset: offset to start pre-allocation
+    //! \param length: length of the pre-allocation
+    //! \return status of the preallocate
+    //!
+    Os::File::Status preallocate(const FwSizeType offset, const FwSizeType length) override;
+
+    //! \brief flush is no-op
+    //!
+    Os::File::Status flush() override;
+
+    //! \brief pointer getter
+    Os::File::Status position(FwSizeType&amp; position) override;
+
+    //! \brief size getter
+    Os::File::Status size(FwSizeType&amp; size) override;
+
+    //! \brief silt data handle
+    FileHandle* getHandle() override;
+
+    std::shared_ptr&lt;SyntheticFileData&gt; m_data;
+
+    static std::unique_ptr&lt;SyntheticFileSystem&gt; s_file_system;
+};
+
+//! \brief Synthetic file system implementation
+//!
+//! A synthetic standard template library based in-memory file system for use with testing. It is composed of a map of
+//! string paths to a synthetic file data packet that tracks data and file pointer
+//!
+class SyntheticFileSystem {
+  public:
+    friend class SyntheticFile;
+    //! \brief data returned by the open call
+    //!
+    struct OpenData {
+        std::shared_ptr&lt;SyntheticFileData&gt; file;
+        Os::File::Status status = Os::File::Status::OTHER_ERROR;
+    };
+
+    //! Constructor
+    SyntheticFileSystem() = default;
+
+    //! Destructor
+    virtual ~SyntheticFileSystem() = default;
+
+    //! \brief check a file exists
+    //!
+    //! Check if a file exists.
+    //!
+    //! \return: true if exists, false otherwise
+    //!
+    bool exists(const CHAR* path);
+
+    //! \brief remove file
+    void remove(const CHAR* path);
+
+  private:
+    //! \brief open a given path with mode and overwrite
+    //!
+    //! This opens a file at the given path. Mode drives the mode of the file and overwrite will overwrite files if it
+    //! exists and was created. Returns a pair of status and synthetic file data.
+    //!
+    //! \param path: path to open
+    //! \param mode: mode to open with
+    //! \param overwrite: overwrite if exists
+    //! \return (status, synthetic file object)
+    //!
+    OpenData open(const CHAR* path, const Os::File::Mode mode, const File::OverwriteType overwrite);
+    //! Shadow file state: file system
+    std::map&lt;std::string, std::shared_ptr&lt;SyntheticFileData&gt;&gt; m_filesystem;
+};
+
+}  // namespace Test
+}  // namespace Os
+
+#endif  // OS_TEST_UT_FILE_SYNTHETIC_FILE_SYSTEM
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../directory/index.html" class="btn btn-neutral float-left" title="directory" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../filesystem/index.html" class="btn btn-neutral float-right" title="filesystem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

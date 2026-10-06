@@ -1,0 +1,3531 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>client &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../../../../search.html" />
+    <link rel="next" title="types" href="types/index.html" />
+    <link rel="prev" title="abc" href="../abc/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../../../../index.html">gsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../../index.html">gsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">yamcs-web</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">main</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">webapp</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">projects</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">webapp-sdk</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">lib</a></li>
+      <li class="breadcrumb-item active">client</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../../../../_sources/project_inventory/gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="client">
+<h1>client<a class="headerlink" href="#client" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/</span></code></p>
+<section id="id1">
+<h2>하위 폴더<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="types/index.html">types</a></li>
+</ul>
+</div>
+</section>
+<section id="id2">
+<h2>이 폴더의 파일<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+</section>
+<section id="framelosslistener-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">FrameLossListener.ts</span></code><a class="headerlink" href="#framelosslistener-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/FrameLossListener.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>export interface FrameLossListener {
+  onFrameLoss(): void;
+}
+</pre></div>
+</div>
+</section>
+<section id="httperror-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">HttpError.ts</span></code><a class="headerlink" href="#httperror-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/HttpError.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>export class HttpError extends Error {
+  readonly statusCode: number;
+  readonly statusText: string;
+  readonly detail?: ErrorDetail;
+
+  constructor(
+    readonly response: Response,
+    serverMessage?: string,
+    detail?: ErrorDetail,
+  ) {
+    super(serverMessage || response.statusText);
+    this.statusCode = response.status;
+    this.statusText = response.statusText;
+    this.detail = detail;
+  }
+}
+
+export interface ErrorDetail {
+  [key: string]: any;
+  '@type': string;
+}
+</pre></div>
+</div>
+</section>
+<section id="httphandler-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">HttpHandler.ts</span></code><a class="headerlink" href="#httphandler-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/HttpHandler.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>export interface HttpHandler {
+  handle(url: string, init?: RequestInit): Promise&lt;Response&gt;;
+}
+</pre></div>
+</div>
+</section>
+<section id="httpinterceptor-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">HttpInterceptor.ts</span></code><a class="headerlink" href="#httpinterceptor-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/HttpInterceptor.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { HttpHandler } from './HttpHandler';
+
+/**
+ * Should pass url and init to the given HttpHandler.
+ * Both the request and the response can be intercepted.
+ */
+export type HttpInterceptor = (
+  next: HttpHandler,
+  url: string,
+  init?: RequestInit,
+) =&gt; Promise&lt;Response&gt;;
+</pre></div>
+</div>
+</section>
+<section id="index-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">index.ts</span></code><a class="headerlink" href="#index-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/index.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>export * from './FrameLossListener';
+export * from './HttpError';
+export * from './HttpHandler';
+export * from './HttpInterceptor';
+export * from './SessionListener';
+export * from './StorageClient';
+export * from './types/activities';
+export * from './types/alarms';
+export * from './types/commandHistory';
+export * from './types/config';
+export * from './types/cop1';
+export * from './types/events';
+export * from './types/filetransfer';
+export * from './types/management';
+export * from './types/mdb';
+export * from './types/monitoring';
+export * from './types/plists';
+export * from './types/processing';
+export * from './types/queue';
+export * from './types/session';
+export * from './types/system';
+export * from './types/table';
+export * from './types/time';
+export * from './types/timeline';
+export * from './types/web';
+export * from './WebSocketCall';
+export * from './WebSocketClient';
+export { default as YamcsClient } from './YamcsClient';
+</pre></div>
+</div>
+</section>
+<section id="sessionlistener-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">SessionListener.ts</span></code><a class="headerlink" href="#sessionlistener-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/SessionListener.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>export interface SessionListener {
+  onSessionEnd(message: string): void;
+}
+</pre></div>
+</div>
+</section>
+<section id="storageclient-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">StorageClient.ts</span></code><a class="headerlink" href="#storageclient-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/StorageClient.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { BucketsWrapper } from './types/internal';
+import {
+  Bucket,
+  CreateBucketRequest,
+  ListObjectsOptions,
+  ListObjectsResponse,
+} from './types/system';
+import YamcsClient from './YamcsClient';
+
+export class StorageClient {
+  constructor(private yamcs: YamcsClient) {}
+
+  async createBucket(options: CreateBucketRequest) {
+    const body = JSON.stringify(options);
+    return await this.yamcs.doFetch(`${this.yamcs.apiUrl}/storage/buckets`, {
+      body,
+      method: 'POST',
+    });
+  }
+
+  async getBuckets(): Promise&lt;Bucket[]&gt; {
+    const response = await this.yamcs.doFetch(
+      `${this.yamcs.apiUrl}/storage/buckets`,
+    );
+    const wrapper = (await response.json()) as BucketsWrapper;
+    return wrapper.buckets || [];
+  }
+
+  async getBucket(bucket: string): Promise&lt;Bucket&gt; {
+    const response = await this.yamcs.doFetch(
+      `${this.yamcs.apiUrl}/storage/buckets/${bucket}`,
+    );
+    return (await response.json()) as Bucket;
+  }
+
+  async deleteBucket(bucket: string) {
+    const url = `${this.yamcs.apiUrl}/storage/buckets/${bucket}`;
+    return await this.yamcs.doFetch(url, {
+      method: 'DELETE',
+    });
+  }
+
+  async listObjects(
+    bucket: string,
+    options: ListObjectsOptions = {},
+  ): Promise&lt;ListObjectsResponse&gt; {
+    const url = `${this.yamcs.apiUrl}/storage/buckets/${bucket}/objects`;
+    const response = await this.yamcs.doFetch(url + this.queryString(options));
+    return (await response.json()) as ListObjectsResponse;
+  }
+
+  async getObject(bucket: string, objectName: string) {
+    return await this.yamcs.doFetch(this.getObjectURL(bucket, objectName));
+  }
+
+  getObjectURL(bucket: string, objectName: string) {
+    const encodedName = this.encodeObjectName(objectName);
+    return `${this.yamcs.apiUrl}/storage/buckets/${bucket}/objects/${encodedName}`;
+  }
+
+  async uploadObject(bucket: string, name: string, value: Blob | File) {
+    const url = `${this.yamcs.apiUrl}/storage/buckets/${bucket}/objects`;
+    const formData = new FormData();
+    formData.set(name, value, name);
+    return await this.yamcs.doFetch(url, {
+      method: 'POST',
+      body: formData,
+    });
+  }
+
+  async deleteObject(bucket: string, objectName: string) {
+    const url = `${this.yamcs.apiUrl}/storage/buckets/${bucket}/objects/${encodeURIComponent(objectName)}`;
+    return await this.yamcs.doFetch(url, {
+      method: 'DELETE',
+    });
+  }
+
+  private queryString(options: { [key: string]: any }) {
+    const qs = Object.keys(options)
+      .map((k) =&gt; `${k}=${options[k]}`)
+      .join('&amp;');
+    return qs === '' ? qs : '?' + qs;
+  }
+
+  private encodeObjectName(objectName: string) {
+    return objectName
+      .split('/')
+      .map((component) =&gt; encodeURIComponent(component))
+      .join('/');
+  }
+}
+</pre></div>
+</div>
+</section>
+<section id="websocketcall-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">WebSocketCall.ts</span></code><a class="headerlink" href="#websocketcall-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/WebSocketCall.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { ServerMessage, WebSocketClient } from './WebSocketClient';
+
+/**
+ * A single API call on a WebSocket client.
+ * Multiple calls may be active on the same WebSocket connection.
+ */
+export class WebSocketCall&lt;O, D&gt; {
+  private _id?: number;
+  private seq = 0; // Mirror of received seq count on server messages
+  private _frameLoss = false;
+  private frameLossListeners = new Set&lt;() =&gt; void&gt;();
+  private replyListeners = new Set&lt;() =&gt; void&gt;();
+  private messageListeners = new Set&lt;(data: D) =&gt; void&gt;();
+
+  constructor(
+    private client: WebSocketClient,
+    private requestId: number,
+    private type: string,
+    observer: (data: D) =&gt; void,
+  ) {
+    this.messageListeners.add(observer);
+  }
+
+  /**
+   * Returns the server-assigned unique call id
+   */
+  get id() {
+    return this._id;
+  }
+
+  /**
+   * True if a WebSocket frame loss was detected specific to this call
+   * (at any point during this call).
+   */
+  get frameLoss() {
+    return this._frameLoss;
+  }
+
+  /**
+   * Receive a notification when a frame loss is detected. Only one
+   * such notification is sent.
+   */
+  addFrameLossListener(frameLossListener: () =&gt; void) {
+    this.frameLossListeners.add(frameLossListener);
+  }
+
+  removeFrameLossListener(frameLossListener: () =&gt; void) {
+    this.frameLossListeners.delete(frameLossListener);
+  }
+
+  /**
+   * Receive a notification when the WebSocket call was replied to.
+   * Only one such notification is sent.
+   */
+  addReplyListener(replyListener: () =&gt; void) {
+    this.replyListeners.add(replyListener);
+    if (this._id) {
+      // Already replied to
+      replyListener();
+    }
+  }
+
+  removeReplyListener(replyListener: () =&gt; void) {
+    this.replyListeners.delete(replyListener);
+  }
+
+  addMessageListener(messageListener: (data: D) =&gt; void) {
+    this.messageListeners.add(messageListener);
+  }
+
+  removeMessageListener(messageListener: (data: D) =&gt; void) {
+    this.messageListeners.delete(messageListener);
+  }
+
+  sendMessage(options: O) {
+    if (this._id !== undefined) {
+      this.client.sendMessage({
+        type: this.type,
+        call: this._id,
+        options,
+      });
+    } else {
+      this.client.sendMessage({
+        type: this.type,
+        id: this.requestId,
+        options,
+      });
+    }
+  }
+
+  consume(msg: ServerMessage) {
+    // Yamcs will always send a reply before any other call-related data
+    if (msg.type === 'reply' &amp;&amp; msg.data.replyTo === this.requestId) {
+      this._id = msg.call;
+      if (msg.data.exception) {
+        const errCode = msg.data.exception['code'];
+        const errType = msg.data.exception['type'];
+        const errDetail = msg.data.exception['msg'];
+        console.error(
+          `Received ${errCode} ${errType} for topic '${this.type}': ${errDetail}`,
+        );
+      }
+      this.replyListeners.forEach((listener) =&gt; listener());
+    } else if (msg.type === this.type &amp;&amp; msg.call === this.id) {
+      if (!this.frameLoss &amp;&amp; this.seq + 1 !== msg.seq) {
+        this._frameLoss = true;
+        this.frameLossListeners.forEach((listener) =&gt; listener());
+      }
+      this.seq = msg.seq;
+      this.messageListeners.forEach((l) =&gt; l(msg.data));
+    }
+  }
+
+  cancel() {
+    this.client.cancelCall(this);
+    this.frameLossListeners.clear();
+  }
+}
+</pre></div>
+</div>
+</section>
+<section id="websocketclient-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">WebSocketClient.ts</span></code><a class="headerlink" href="#websocketclient-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/WebSocketClient.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+import { FrameLossListener } from './FrameLossListener';
+import { WebSocketCall } from './WebSocketCall';
+
+export type ClientMessage = {
+  type: string;
+  options: any;
+  id?: number;
+  call?: number;
+  lowPriority?: boolean;
+};
+
+export type ServerMessage = {
+  type: string;
+  call: number;
+  seq: number;
+  data: any;
+};
+
+export class WebSocketClient {
+  readonly connected$ = new BehaviorSubject&lt;boolean&gt;(false);
+
+  private webSocket$: WebSocketSubject&lt;{}&gt;; // Unsubscribing from this closes the connection
+  private calls: Array&lt;WebSocketCall&lt;any, any&gt;&gt; = [];
+
+  private requestSequence = 0;
+
+  constructor(
+    apiUrl: string,
+    private frameLossListener: FrameLossListener,
+  ) {
+    const currentLocation = window.location;
+    let url = 'ws://';
+    if (currentLocation.protocol === 'https:') {
+      url = 'wss://';
+    }
+    url += `${currentLocation.host}${apiUrl}/websocket`;
+
+    this.webSocket$ = webSocket({
+      url,
+      protocol: 'json',
+      closeObserver: {
+        next: () =&gt; this.connected$.next(false),
+      },
+      openObserver: {
+        next: () =&gt; this.connected$.next(true),
+      },
+    });
+
+    this.webSocket$
+      .pipe(
+        tap((msg: ServerMessage) =&gt; {
+          this.calls.forEach((call) =&gt; call.consume(msg));
+        }),
+      )
+      .subscribe();
+  }
+
+  /**
+   * Create a subscription on the active WebSocket connection. This should
+   * be used for subscriptions where all server messages are expected to
+   * be received. If we cannot read sufficiently fast, Yamcs will close the
+   * entire connection (shared with other subscriptions).
+   */
+  createSubscription&lt;O, D&gt;(
+    type: string,
+    options: O,
+    observer: (data: D) =&gt; void,
+  ) {
+    return this.doCreateSubscription(type, false, options, observer);
+  }
+
+  /**
+   * Create a low-priority subscription on the active WebSocket connection. Yamcs may
+   * drop WebSocket frames coming from this type of subscription, if we are not able
+   * to read fast enough.
+   */
+  createLowPrioritySubscription&lt;O, D&gt;(
+    type: string,
+    options: O,
+    observer: (data: D) =&gt; void,
+  ) {
+    return this.doCreateSubscription(type, true, options, observer);
+  }
+
+  private doCreateSubscription&lt;O, D&gt;(
+    type: string,
+    lowPriority: boolean,
+    options: O,
+    observer: (data: D) =&gt; void,
+  ) {
+    const id = ++this.requestSequence;
+    const call = new WebSocketCall(this, id, type, observer);
+    call.addFrameLossListener(() =&gt; {
+      this.frameLossListener.onFrameLoss();
+    });
+    this.calls.push(call);
+    this.sendMessage({ type, id, lowPriority, options });
+    return call;
+  }
+
+  sendMessage(clientMessage: ClientMessage) {
+    this.webSocket$.next(clientMessage);
+  }
+
+  cancelCall(call: WebSocketCall&lt;any, any&gt;) {
+    const idx = this.calls.indexOf(call);
+    if (idx !== -1) {
+      this.calls.splice(idx, 1);
+    }
+    if (call.id !== undefined &amp;&amp; this.connected$.value) {
+      this.sendMessage({
+        type: 'cancel',
+        options: { call: call.id },
+      });
+    }
+  }
+
+  close() {
+    this.calls.length = 0;
+    this.webSocket$.unsubscribe();
+  }
+}
+</pre></div>
+</div>
+</section>
+<section id="yamcsclient-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">YamcsClient.ts</span></code><a class="headerlink" href="#yamcsclient-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/YamcsClient.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { BehaviorSubject } from 'rxjs';
+import { FrameLossListener } from './FrameLossListener';
+import { HttpError } from './HttpError';
+import { HttpHandler } from './HttpHandler';
+import { HttpInterceptor } from './HttpInterceptor';
+import { SessionListener } from './SessionListener';
+import { WebSocketClient } from './WebSocketClient';
+import {
+  ActivitiesPage,
+  Activity,
+  ActivityLog,
+  ActivityLogSubscription,
+  ActivityScriptsPage,
+  ActivitySubscription,
+  CompleteManualActivityOptions,
+  ExecutorsWrapper,
+  GetActivitiesOptions,
+  GetActivityLogResponse,
+  GlobalActivityStatus,
+  GlobalActivityStatusSubscription,
+  StartActivityOptions,
+  SubscribeActivitiesRequest,
+  SubscribeActivityLogRequest,
+  SubscribeGlobalActivityStatusRequest,
+} from './types/activities';
+import {
+  AcknowledgeAlarmOptions,
+  Alarm,
+  AlarmSubscription,
+  ClearAlarmOptions,
+  GetAlarmsOptions,
+  GlobalAlarmStatus,
+  GlobalAlarmStatusSubscription,
+  ShelveAlarmOptions,
+  SubscribeAlarmsRequest,
+  SubscribeGlobalAlarmStatusRequest,
+} from './types/alarms';
+import {
+  CommandSubscription,
+  SubscribeCommandsRequest,
+} from './types/commandHistory';
+import {
+  Cop1Config,
+  Cop1Status,
+  Cop1Subscription,
+  DisableCop1Request,
+  InitiateCop1Request,
+  SubscribeCop1Request,
+} from './types/cop1';
+import {
+  CreateEventRequest,
+  DownloadEventsOptions,
+  Event,
+  EventSubscription,
+  GetEventsOptions,
+  SubscribeEventsRequest,
+} from './types/events';
+import {
+  CreateTransferRequest,
+  GetFileTransfersOptions,
+  ListFilesRequest,
+  ListFilesResponse,
+  RemoteFileListSubscription,
+  RunFileActionRequest,
+  ServicesPage,
+  SubscribeRemoteFileListRequest,
+  SubscribeTransfersRequest,
+  Transfer,
+  TransferSubscription,
+  TransfersPage,
+} from './types/filetransfer';
+import {
+  AlarmsWrapper,
+  CommandQueuesWrapper,
+  EventsWrapper,
+  GroupsWrapper,
+  IndexResult,
+  InstanceTemplatesWrapper,
+  InstancesWrapper,
+  LinksWrapper,
+  ProcessorsWrapper,
+  RangesWrapper,
+  RecordsWrapper,
+  RocksDbDatabasesWrapper,
+  RolesWrapper,
+  SamplesWrapper,
+  ServicesWrapper,
+  SessionsWrapper,
+  SourcesWrapper,
+  StreamsWrapper,
+  TablesWrapper,
+  UsersWrapper,
+} from './types/internal';
+import {
+  CreateInstanceRequest,
+  InstancesSubscription,
+  Link,
+  LinkEvent,
+  LinkSubscription,
+  ListInstancesOptions,
+  SubscribeLinksRequest,
+} from './types/management';
+import {
+  Algorithm,
+  AlgorithmOverrides,
+  AlgorithmStatus,
+  AlgorithmTrace,
+  AlgorithmsPage,
+  Command,
+  CommandsPage,
+  Container,
+  ContainersPage,
+  GetAlgorithmsOptions,
+  GetCommandsOptions,
+  GetContainersOptions,
+  GetParameterTypesOptions,
+  GetParametersOptions,
+  MissionDatabase,
+  NamedObjectId,
+  Parameter,
+  ParameterType,
+  ParameterTypesPage,
+  ParametersPage,
+  SpaceSystem,
+  SpaceSystemsPage,
+} from './types/mdb';
+import {
+  ArchiveRecord,
+  CommandHistoryEntry,
+  CommandHistoryPage,
+  CreateProcessorRequest,
+  DownloadPacketsOptions,
+  DownloadParameterValuesOptions,
+  EditReplayProcessorRequest,
+  ExecutorInfo,
+  ExportParameterValuesOptions,
+  GetCommandHistoryOptions,
+  GetCompletenessIndexOptions,
+  GetPacketsOptions,
+  GetParameterRangesOptions,
+  GetParameterSamplesOptions,
+  GetParameterValuesOptions,
+  IndexGroup,
+  IssueCommandOptions,
+  IssueCommandResponse,
+  ListPacketsResponse,
+  Packet,
+  ParameterData,
+  ParameterValue,
+  Range,
+  Sample,
+  StartProcedureOptions,
+  StreamCommandIndexOptions,
+  StreamCompletenessIndexOptions,
+  StreamEventIndexOptions,
+  StreamPacketIndexOptions,
+  StreamParameterIndexOptions,
+  Value,
+} from './types/monitoring';
+import {
+  CreateParameterListRequest,
+  GetParameterListsResponse,
+  ParameterList,
+  UpdateParameterListRequest,
+} from './types/plists';
+import {
+  AlgorithmStatusSubscription,
+  BackfillingSubscription,
+  DownloadCommandsOptions,
+  ExtractPacketResponse,
+  PacketNamesResponse,
+  ParameterSubscription,
+  Processor,
+  ProcessorSubscription,
+  Statistics,
+  SubscribeAlgorithmStatusRequest,
+  SubscribeBackfillingData,
+  SubscribeBackfillingRequest,
+  SubscribeParametersData,
+  SubscribeParametersRequest,
+  SubscribeProcessorsRequest,
+  SubscribeTMStatisticsRequest,
+  TMStatisticsSubscription,
+} from './types/processing';
+import {
+  CommandQueue,
+  CommandQueueEvent,
+  QueueEventsSubscription,
+  QueueStatisticsSubscription,
+  SubscribeQueueEventsRequest,
+  SubscribeQueueStatisticsRequest,
+} from './types/queue';
+import { SessionEvent, SessionSubscription } from './types/session';
+import {
+  AuditRecordsPage,
+  AuthInfo,
+  Clearance,
+  ClearanceSubscription,
+  CompactRocksDbDatabaseRequest,
+  CreateGroupRequest,
+  CreateServiceAccountRequest,
+  CreateServiceAccountResponse,
+  CreateUserRequest,
+  Database,
+  EditClearanceRequest,
+  EditGroupRequest,
+  EditUserRequest,
+  GeneralInfo,
+  GetAuditRecordsOptions,
+  GetParameterArchivePidsOptions,
+  GetParameterArchivePidsPage,
+  GroupInfo,
+  HttpTraffic,
+  HttpTrafficSubscription,
+  Instance,
+  InstanceConfig,
+  InstanceTemplate,
+  LeapSecondsTable,
+  ListClearancesResponse,
+  ListDatabasesResponse,
+  ListProcessorTypesResponse,
+  ListRoutesResponse,
+  ListServiceAccountsResponse,
+  ListThreadsResponse,
+  ListTopicsResponse,
+  ReplicationInfo,
+  ReplicationInfoSubscription,
+  ResultSet,
+  RoleInfo,
+  Service,
+  ServiceAccount,
+  SystemInfo,
+  SystemInfoSubscription,
+  ThreadInfo,
+  TokenResponse,
+  UserInfo,
+} from './types/system';
+import {
+  Record,
+  Stream,
+  StreamData,
+  StreamEvent,
+  StreamStatisticsSubscription,
+  StreamSubscription,
+  SubscribeStreamRequest,
+  SubscribeStreamStatisticsRequest,
+  Table,
+} from './types/table';
+import { SubscribeTimeRequest, Time, TimeSubscription } from './types/time';
+import {
+  CreateTimelineBandRequest,
+  CreateTimelineItemRequest,
+  CreateTimelineViewRequest,
+  GetTimelineItemsOptions,
+  TimelineBand,
+  TimelineBandsPage,
+  TimelineItem,
+  TimelineItemsPage,
+  TimelineTagsPage,
+  TimelineView,
+  TimelineViewsPage,
+  UpdateTimelineBandRequest,
+  UpdateTimelineItemRequest,
+  UpdateTimelineViewRequest,
+} from './types/timeline';
+import {
+  CreateQueryRequest,
+  EditQueryRequest,
+  ListQueriesResponse,
+  ParseFilterData,
+  ParseFilterRequest,
+  ParseFilterSubscription,
+  Query,
+} from './types/web';
+
+export default class YamcsClient implements HttpHandler {
+  readonly apiUrl: string;
+  readonly authUrl: string;
+
+  private accessToken?: string;
+
+  private interceptor: HttpInterceptor;
+
+  readonly connected$ = new BehaviorSubject&lt;boolean&gt;(false);
+  private webSocketClient?: WebSocketClient;
+
+  constructor(
+    readonly baseHref = '/',
+    private frameLossListener: FrameLossListener,
+    private sessionListener: SessionListener,
+  ) {
+    this.apiUrl = `${this.baseHref}api`;
+    this.authUrl = `${this.baseHref}auth`;
+  }
+
+  createInstancesSubscription(
+    observer: (instance: Instance) =&gt; void,
+  ): InstancesSubscription {
+    return this.webSocketClient!.createSubscription('instances', {}, observer);
+  }
+
+  /**
+   * Returns general auth information. This request
+   * does not itself require authenticated access.
+   */
+  async getAuthInfo() {
+    const response = await this.doFetch(`${this.authUrl}`);
+    return (await response.json()) as AuthInfo;
+  }
+
+  /**
+   * Log in to the Yamcs API.
+   * This will return a short-lived access token and an indeterminate refresh token.
+   */
+  async fetchAccessTokenWithPassword(username: string, password: string) {
+    let body = 'grant_type=password';
+    body += `&amp;username=${encodeURIComponent(username)}`;
+    body += `&amp;password=${encodeURIComponent(password)}`;
+    return this.doFetchAccessToken(body);
+  }
+
+  async fetchAccessTokenWithAuthorizationCode(authorizationCode: string) {
+    let body = 'grant_type=authorization_code';
+    body += `&amp;code=${encodeURIComponent(authorizationCode)}`;
+    return this.doFetchAccessToken(body);
+  }
+
+  async fetchAccessTokenWithRefreshToken(refreshToken: string) {
+    let body = 'grant_type=refresh_token';
+    body += `&amp;refresh_token=${encodeURIComponent(refreshToken)}`;
+    return this.doFetchAccessToken(body);
+  }
+
+  /**
+   * Set or update the access token for use by this client. Access tokens are short-lived, so you
+   * probably have to call this method regularly by first using your refresh token to request
+   * a new access token. This client does not automatically refresh for you, as it does not keep
+   * track of any issued refresh tokens.
+   *
+   * In order to handle common token problems, consider adding an In and/or Out Interceptor.
+   *
+   * - An In Interceptor can prevent requests with expired access tokens. If you still have
+   *   access to a refresh token, you can fetch and install a new access token before continuing
+   *   the request. Else you may need to ask the user to re-login.
+   *
+   * - An Out Interceptor can respond to any 401 issues that may still occur. For example,
+   *   because an access token was used that is not or no longer accepted by
+   *   the server. If you still have access to a refresh token, you can fetch and install
+   *   a new access token before re-issuing the request. Else you may need to ask the user
+   *   to re-login.
+   */
+  public setAccessToken(accessToken: string) {
+    this.accessToken = accessToken;
+  }
+
+  public clearAccessToken() {
+    this.accessToken = undefined;
+  }
+
+  private async doFetchAccessToken(body: string) {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/x-www-form-urlencoded');
+    const response = await fetch(`${this.authUrl}/token`, {
+      method: 'POST',
+      headers,
+      body,
+    });
+
+    if (response.status &gt;= 200 &amp;&amp; response.status &lt; 300) {
+      const tokenResponse = (await response.json()) as TokenResponse;
+      return Promise.resolve(tokenResponse);
+    } else {
+      return Promise.reject(new HttpError(response));
+    }
+  }
+
+  /**
+   * Register an interceptor that will have the opportunity
+   * to inspect, modify, halt, or respond to any request.
+   */
+  setHttpInterceptor(interceptor: HttpInterceptor) {
+    this.interceptor = interceptor;
+  }
+
+  async getGeneralInfo() {
+    const response = await this.doFetch(this.apiUrl);
+    return (await response.json()) as GeneralInfo;
+  }
+
+  /**
+   * Returns info on the authenticated user
+   */
+  async getUserInfo() {
+    const response = await this.doFetch(`${this.apiUrl}/user`);
+    return (await response.json()) as UserInfo;
+  }
+
+  async getRoutes() {
+    const url = `${this.apiUrl}/routes`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as ListRoutesResponse;
+  }
+
+  async getTopics() {
+    const url = `${this.apiUrl}/topics`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as ListTopicsResponse;
+  }
+
+  async getProcessorTypes() {
+    const url = `${this.apiUrl}/processor-types`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as ListProcessorTypesResponse;
+  }
+
+  async getThreads() {
+    const url = `${this.apiUrl}/threads`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as ListThreadsResponse;
+  }
+
+  async getThread(id: number) {
+    const url = `${this.apiUrl}/threads/${id}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as ThreadInfo;
+  }
+
+  async getReplicationInfo() {
+    const url = `${this.apiUrl}/replication`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as ReplicationInfo;
+  }
+
+  async getClearances() {
+    const url = `${this.apiUrl}/clearances`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as ListClearancesResponse;
+  }
+
+  async changeClearance(username: string, options: EditClearanceRequest) {
+    const body = JSON.stringify(options);
+    return this.doFetch(`${this.apiUrl}/clearances/${username}`, {
+      method: 'PATCH',
+      body,
+    });
+  }
+
+  async deleteClearance(username: string) {
+    return this.doFetch(`${this.apiUrl}/clearances/${username}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async createProcessor(options: CreateProcessorRequest) {
+    const body = JSON.stringify(options);
+    return await this.doFetch(`${this.apiUrl}/processors`, {
+      body,
+      method: 'POST',
+    });
+  }
+
+  async getLeapSeconds() {
+    const url = `${this.apiUrl}/leap-seconds`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as LeapSecondsTable;
+  }
+
+  async getInstances(options: ListInstancesOptions = {}) {
+    const url = `${this.apiUrl}/instances`;
+    const response = await this.doFetch(url + this.queryString(options));
+    const wrapper = (await response.json()) as InstancesWrapper;
+    return wrapper.instances || [];
+  }
+
+  async getInstanceTemplates() {
+    const response = await this.doFetch(`${this.apiUrl}/instance-templates`);
+    const wrapper = (await response.json()) as InstanceTemplatesWrapper;
+    return wrapper.templates || [];
+  }
+
+  async getInstanceTemplate(name: string) {
+    const response = await this.doFetch(
+      `${this.apiUrl}/instance-templates/${name}`,
+    );
+    return (await response.json()) as InstanceTemplate;
+  }
+
+  async getInstance(name: string) {
+    const response = await this.doFetch(`${this.apiUrl}/instances/${name}`);
+    return (await response.json()) as Instance;
+  }
+
+  async getInstanceConfig(instance: string) {
+    const response = await this.doFetch(
+      `${this.apiUrl}/web/instance-config/${instance}`,
+    );
+    return (await response.json()) as InstanceConfig;
+  }
+
+  async startInstance(name: string) {
+    return this.doFetch(`${this.apiUrl}/instances/${name}:start`, {
+      method: 'POST',
+    });
+  }
+
+  async stopInstance(name: string) {
+    return this.doFetch(`${this.apiUrl}/instances/${name}:stop`, {
+      method: 'POST',
+    });
+  }
+
+  async restartInstance(name: string) {
+    return this.doFetch(`${this.apiUrl}/instances/${name}:restart`, {
+      method: 'POST',
+    });
+  }
+
+  async getDatabases(): Promise&lt;Database[]&gt; {
+    const url = `${this.apiUrl}/databases`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as ListDatabasesResponse;
+    return wrapper.databases || [];
+  }
+
+  async getDatabase(name: string) {
+    const url = `${this.apiUrl}/databases/${name}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as Database;
+  }
+
+  async getServices(instance: string): Promise&lt;Service[]&gt; {
+    const url = `${this.apiUrl}/services/${instance}`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as ServicesWrapper;
+    return wrapper.services || [];
+  }
+
+  async getService(instance: string, name: string): Promise&lt;Service&gt; {
+    const url = `${this.apiUrl}/services/${instance}/${name}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as Service;
+  }
+
+  async startService(instance: string, name: string) {
+    return this.doFetch(`${this.apiUrl}/services/${instance}/${name}:start`, {
+      method: 'POST',
+    });
+  }
+
+  async stopService(instance: string, name: string) {
+    return this.doFetch(`${this.apiUrl}/services/${instance}/${name}:stop`, {
+      method: 'POST',
+    });
+  }
+
+  async getServiceAccounts() {
+    const url = `${this.apiUrl}/service-accounts`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as ListServiceAccountsResponse;
+  }
+
+  async getServiceAccount(name: string) {
+    const url = `${this.apiUrl}/service-accounts/${name}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as ServiceAccount;
+  }
+
+  async createServiceAccount(options: CreateServiceAccountRequest) {
+    const body = JSON.stringify(options);
+    const url = `${this.apiUrl}/service-accounts`;
+    const response = await this.doFetch(url, {
+      body,
+      method: 'POST',
+    });
+    return (await response.json()) as CreateServiceAccountResponse;
+  }
+
+  async deleteServiceAccount(name: string) {
+    const url = `${this.apiUrl}/service-accounts/${name}`;
+    return await this.doFetch(url, {
+      method: 'DELETE',
+    });
+  }
+
+  async getTimelineViews(instance: string) {
+    const url = `${this.apiUrl}/timeline/${instance}/views`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as TimelineViewsPage;
+  }
+
+  async getTimelineView(instance: string, id: string) {
+    const url = `${this.apiUrl}/timeline/${instance}/views/${id}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as TimelineView;
+  }
+
+  async createTimelineView(
+    instance: string,
+    options: CreateTimelineViewRequest,
+  ) {
+    const body = JSON.stringify(options);
+    const url = `${this.apiUrl}/timeline/${instance}/views`;
+    const response = await this.doFetch(url, {
+      body,
+      method: 'POST',
+    });
+    return (await response.json()) as TimelineView;
+  }
+
+  async updateTimelineView(
+    instance: string,
+    id: string,
+    options: UpdateTimelineViewRequest,
+  ) {
+    const body = JSON.stringify(options);
+    const url = `${this.apiUrl}/timeline/${instance}/views/${id}`;
+    const response = await this.doFetch(url, {
+      body,
+      method: 'PUT',
+    });
+    return (await response.json()) as TimelineView;
+  }
+
+  async deleteTimelineView(instance: string, id: string) {
+    const url = `${this.apiUrl}/timeline/${instance}/views/${id}`;
+    return await this.doFetch(url, {
+      method: 'DELETE',
+    });
+  }
+
+  async getAuditRecords(instance: string, options: GetAuditRecordsOptions) {
+    const url = `${this.apiUrl}/audit/records/${instance}`;
+    const response = await this.doFetch(url + this.queryString(options));
+    return (await response.json()) as AuditRecordsPage;
+  }
+
+  async getTimelineTags(instance: string) {
+    const url = `${this.apiUrl}/timeline/${instance}/tags`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as TimelineTagsPage;
+  }
+
+  async getTimelineBands(instance: string) {
+    const url = `${this.apiUrl}/timeline/${instance}/bands`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as TimelineBandsPage;
+  }
+
+  async getTimelineBand(instance: string, id: string) {
+    const url = `${this.apiUrl}/timeline/${instance}/bands/${id}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as TimelineBand;
+  }
+
+  async getTimelineItems(instance: string, options: GetTimelineItemsOptions) {
+    const url = `${this.apiUrl}/timeline/${instance}/items`;
+    const response = await this.doFetch(url + this.queryString(options));
+    return (await response.json()) as TimelineItemsPage;
+  }
+
+  async getTimelineItem(instance: string, id: string) {
+    const url = `${this.apiUrl}/timeline/${instance}/items/${id}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as TimelineItem;
+  }
+
+  async createTimelineBand(
+    instance: string,
+    options: CreateTimelineBandRequest,
+  ) {
+    const body = JSON.stringify(options);
+    const url = `${this.apiUrl}/timeline/${instance}/bands`;
+    const response = await this.doFetch(url, {
+      body,
+      method: 'POST',
+    });
+    return (await response.json()) as TimelineBand;
+  }
+
+  async updateTimelineBand(
+    instance: string,
+    id: string,
+    options: UpdateTimelineBandRequest,
+  ) {
+    const body = JSON.stringify(options);
+    const url = `${this.apiUrl}/timeline/${instance}/bands/${id}`;
+    const response = await this.doFetch(url, {
+      body,
+      method: 'PUT',
+    });
+    return (await response.json()) as TimelineBand;
+  }
+
+  async deleteTimelineBand(instance: string, id: string) {
+    const url = `${this.apiUrl}/timeline/${instance}/bands/${id}`;
+    return await this.doFetch(url, {
+      method: 'DELETE',
+    });
+  }
+
+  async createTimelineItem(
+    instance: string,
+    options: CreateTimelineItemRequest,
+  ) {
+    const body = JSON.stringify(options);
+    const url = `${this.apiUrl}/timeline/${instance}/items`;
+    const response = await this.doFetch(url, {
+      body,
+      method: 'POST',
+    });
+    return (await response.json()) as TimelineItem;
+  }
+
+  async updateTimelineItem(
+    instance: string,
+    id: string,
+    options: UpdateTimelineItemRequest,
+  ) {
+    const body = JSON.stringify(options);
+    const url = `${this.apiUrl}/timeline/${instance}/items/${id}`;
+    const response = await this.doFetch(url, {
+      body,
+      method: 'PUT',
+    });
+    return (await response.json()) as TimelineItem;
+  }
+
+  async deleteTimelineItem(instance: string, id: string) {
+    const url = `${this.apiUrl}/timeline/${instance}/items/${id}`;
+    return await this.doFetch(url, {
+      method: 'DELETE',
+    });
+  }
+
+  async getParameterLists(instance: string) {
+    const url = `${this.apiUrl}/parameter-lists/${instance}/lists`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as GetParameterListsResponse;
+    return wrapper.lists || [];
+  }
+
+  async getParameterList(instance: string, id: string) {
+    const url = `${this.apiUrl}/parameter-lists/${instance}/lists/${id}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as ParameterList;
+  }
+
+  async createParameterList(
+    instance: string,
+    options: CreateParameterListRequest,
+  ) {
+    const body = JSON.stringify(options);
+    const response = await this.doFetch(
+      `${this.apiUrl}/parameter-lists/${instance}/lists`,
+      {
+        body,
+        method: 'POST',
+      },
+    );
+    return (await response.json()) as ParameterList;
+  }
+
+  async updateParameterList(
+    instance: string,
+    id: string,
+    options: UpdateParameterListRequest,
+  ) {
+    const body = JSON.stringify(options);
+    const response = await this.doFetch(
+      `${this.apiUrl}/parameter-lists/${instance}/lists/${id}`,
+      {
+        body,
+        method: 'PATCH',
+      },
+    );
+    return (await response.json()) as ParameterList;
+  }
+
+  async deleteParameterList(instance: string, id: string) {
+    const url = `${this.apiUrl}/parameter-lists/${instance}/lists/${id}`;
+    return await this.doFetch(url, { method: 'DELETE' });
+  }
+
+  async getUsers() {
+    const url = `${this.apiUrl}/users`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as UsersWrapper;
+    return wrapper.users || [];
+  }
+
+  async getUser(username: string) {
+    const url = `${this.apiUrl}/users/${username}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as UserInfo;
+  }
+
+  async createUser(options: CreateUserRequest) {
+    const body = JSON.stringify(options);
+    const url = `${this.apiUrl}/users`;
+    return await this.doFetch(url, {
+      body,
+      method: 'POST',
+    });
+  }
+
+  async editUser(username: string, options: EditUserRequest) {
+    const body = JSON.stringify(options);
+    const url = `${this.apiUrl}/users/${username}`;
+    return await this.doFetch(url, {
+      body,
+      method: 'PATCH',
+    });
+  }
+
+  async deleteUser(name: string) {
+    const url = `${this.apiUrl}/users/${name}`;
+    return await this.doFetch(url, {
+      method: 'DELETE',
+    });
+  }
+
+  async deleteIdentity(username: string, provider: string) {
+    const url = `${this.apiUrl}/users/${username}/identities/${provider}`;
+    return await this.doFetch(url, { method: 'DELETE' });
+  }
+
+  async createGroup(options: CreateGroupRequest) {
+    const body = JSON.stringify(options);
+    const response = await this.doFetch(`${this.apiUrl}/groups`, {
+      body,
+      method: 'POST',
+    });
+    return (await response.json()) as GroupInfo;
+  }
+
+  async getGroups() {
+    const url = `${this.apiUrl}/groups`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as GroupsWrapper;
+    return wrapper.groups || [];
+  }
+
+  async getGroup(name: string) {
+    const url = `${this.apiUrl}/groups/${name}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as GroupInfo;
+  }
+
+  async editGroup(name: string, options: EditGroupRequest) {
+    const body = JSON.stringify(options);
+    const url = `${this.apiUrl}/groups/${name}`;
+    return await this.doFetch(url, {
+      body,
+      method: 'PATCH',
+    });
+  }
+
+  async deleteGroup(name: string) {
+    const url = `${this.apiUrl}/groups/${name}`;
+    return await this.doFetch(url, { method: 'DELETE' });
+  }
+
+  async getRoles() {
+    const url = `${this.apiUrl}/roles`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as RolesWrapper;
+    return wrapper.roles || [];
+  }
+
+  async getRole(name: string) {
+    const url = `${this.apiUrl}/roles/${name}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as RoleInfo;
+  }
+
+  async getSessions() {
+    const url = `${this.apiUrl}/sessions`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as SessionsWrapper;
+    return wrapper.sessions || [];
+  }
+
+  async getHttpTraffic() {
+    const url = `${this.apiUrl}/http-traffic`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as HttpTraffic;
+  }
+
+  async closeClientConnection(id: string) {
+    const url = `${this.apiUrl}/connections/${id}`;
+    return await this.doFetch(url, { method: 'DELETE' });
+  }
+
+  createSessionSubscription(
+    observer: (sessionEvent: SessionEvent) =&gt; void,
+  ): SessionSubscription {
+    return this.webSocketClient!.createSubscription('session', {}, observer);
+  }
+
+  createTimeSubscription(
+    options: SubscribeTimeRequest,
+    observer: (time: Time) =&gt; void,
+  ): TimeSubscription {
+    return this.webSocketClient!.createSubscription('time', options, observer);
+  }
+
+  createReplicationInfoSubscription(
+    observer: (info: ReplicationInfo) =&gt; void,
+  ): ReplicationInfoSubscription {
+    return this.webSocketClient!.createSubscription(
+      'replication-info',
+      {},
+      observer,
+    );
+  }
+
+  createSystemInfoSubscription(
+    observer: (info: SystemInfo) =&gt; void,
+  ): SystemInfoSubscription {
+    return this.webSocketClient!.createSubscription('sysinfo', {}, observer);
+  }
+
+  createHttpTrafficSubscription(
+    observer: (info: HttpTraffic) =&gt; void,
+  ): HttpTrafficSubscription {
+    return this.webSocketClient!.createSubscription(
+      'http-traffic',
+      {},
+      observer,
+    );
+  }
+
+  createClearanceSubscription(
+    observer: (clearance: Clearance) =&gt; void,
+  ): ClearanceSubscription {
+    return this.webSocketClient!.createSubscription('clearance', {}, observer);
+  }
+
+  createProcessorSubscription(
+    options: SubscribeProcessorsRequest,
+    observer: (processor: Processor) =&gt; void,
+  ): ProcessorSubscription {
+    return this.webSocketClient!.createSubscription(
+      'processors',
+      options,
+      observer,
+    );
+  }
+
+  createBackfillingSubscription(
+    options: SubscribeBackfillingRequest,
+    observer: (data: SubscribeBackfillingData) =&gt; void,
+  ): BackfillingSubscription {
+    return this.webSocketClient!.createSubscription(
+      'backfilling',
+      options,
+      observer,
+    );
+  }
+
+  createCop1Subscription(
+    options: SubscribeCop1Request,
+    observer: (cop1Status: Cop1Status) =&gt; void,
+  ): Cop1Subscription {
+    return this.webSocketClient!.createSubscription('cop1', options, observer);
+  }
+
+  createGlobalAlarmStatusSubscription(
+    options: SubscribeGlobalAlarmStatusRequest,
+    observer: (status: GlobalAlarmStatus) =&gt; void,
+  ): GlobalAlarmStatusSubscription {
+    return this.webSocketClient!.createSubscription(
+      'global-alarm-status',
+      options,
+      observer,
+    );
+  }
+
+  createGlobalActivityStatusSubscription(
+    options: SubscribeGlobalActivityStatusRequest,
+    observer: (status: GlobalActivityStatus) =&gt; void,
+  ): GlobalActivityStatusSubscription {
+    return this.webSocketClient!.createSubscription(
+      'global-activity-status',
+      options,
+      observer,
+    );
+  }
+
+  createTMStatisticsSubscription(
+    options: SubscribeTMStatisticsRequest,
+    observer: (time: Statistics) =&gt; void,
+  ): TMStatisticsSubscription {
+    return this.webSocketClient!.createSubscription(
+      'tmstats',
+      options,
+      observer,
+    );
+  }
+
+  createAlgorithmStatusSubscription(
+    options: SubscribeAlgorithmStatusRequest,
+    observer: (status: AlgorithmStatus) =&gt; void,
+  ): AlgorithmStatusSubscription {
+    return this.webSocketClient!.createSubscription(
+      'algorithm-status',
+      options,
+      observer,
+    );
+  }
+
+  createEventSubscription(
+    options: SubscribeEventsRequest,
+    observer: (event: Event) =&gt; void,
+  ): EventSubscription {
+    return this.webSocketClient!.createSubscription(
+      'events',
+      options,
+      observer,
+    );
+  }
+
+  createLinkSubscription(
+    options: SubscribeLinksRequest,
+    observer: (linkEvent: LinkEvent) =&gt; void,
+  ): LinkSubscription {
+    return this.webSocketClient!.createSubscription('links', options, observer);
+  }
+
+  createActivitySubscription(
+    options: SubscribeActivitiesRequest,
+    observer: (update: Activity) =&gt; void,
+  ): ActivitySubscription {
+    return this.webSocketClient!.createSubscription(
+      'activities',
+      options,
+      observer,
+    );
+  }
+
+  createActivityLogSubscription(
+    options: SubscribeActivityLogRequest,
+    observer: (update: ActivityLog) =&gt; void,
+  ): ActivityLogSubscription {
+    return this.webSocketClient!.createSubscription(
+      'activity-log',
+      options,
+      observer,
+    );
+  }
+
+  createTransferSubscription(
+    options: SubscribeTransfersRequest,
+    observer: (transfer: Transfer) =&gt; void,
+  ): TransferSubscription {
+    return this.webSocketClient!.createSubscription(
+      'file-transfers',
+      options,
+      observer,
+    );
+  }
+
+  createRemoteFileListSubscription(
+    options: SubscribeRemoteFileListRequest,
+    observer: (fileList: ListFilesResponse) =&gt; void,
+  ): RemoteFileListSubscription {
+    return this.webSocketClient!.createSubscription(
+      'remote-file-list',
+      options,
+      observer,
+    );
+  }
+
+  createParameterSubscription(
+    options: SubscribeParametersRequest,
+    observer: (data: SubscribeParametersData) =&gt; void,
+  ): ParameterSubscription {
+    // Allow dropped frames in case of high rate
+    return this.webSocketClient!.createLowPrioritySubscription(
+      'parameters',
+      options,
+      observer,
+    );
+  }
+
+  createParseFilterSubscription(
+    options: ParseFilterRequest,
+    observer: (data: ParseFilterData) =&gt; void,
+  ): ParseFilterSubscription {
+    return this.webSocketClient!.createSubscription(
+      'web.parse-filter',
+      options,
+      observer,
+    );
+  }
+
+  createStreamStatisticsSubscription(
+    options: SubscribeStreamStatisticsRequest,
+    observer: (event: StreamEvent) =&gt; void,
+  ): StreamStatisticsSubscription {
+    return this.webSocketClient!.createSubscription(
+      'stream-stats',
+      options,
+      observer,
+    );
+  }
+
+  createStreamSubscription(
+    options: SubscribeStreamRequest,
+    observer: (data: StreamData) =&gt; void,
+  ): StreamSubscription {
+    // Allow dropped frames in case of high rate
+    return this.webSocketClient!.createLowPrioritySubscription(
+      'stream',
+      options,
+      observer,
+    );
+  }
+
+  createQueueStatisticsSubscription(
+    options: SubscribeQueueStatisticsRequest,
+    observer: (queue: CommandQueue) =&gt; void,
+  ): QueueStatisticsSubscription {
+    return this.webSocketClient!.createSubscription(
+      'queue-stats',
+      options,
+      observer,
+    );
+  }
+
+  createQueueEventsSubscription(
+    options: SubscribeQueueEventsRequest,
+    observer: (event: CommandQueueEvent) =&gt; void,
+  ): QueueEventsSubscription {
+    return this.webSocketClient!.createSubscription(
+      'queue-events',
+      options,
+      observer,
+    );
+  }
+
+  createAlarmSubscription(
+    options: SubscribeAlarmsRequest,
+    observer: (alarm: Alarm) =&gt; void,
+  ): AlarmSubscription {
+    return this.webSocketClient!.createSubscription(
+      'alarms',
+      options,
+      observer,
+    );
+  }
+
+  createCommandSubscription(
+    options: SubscribeCommandsRequest,
+    observer: (entry: CommandHistoryEntry) =&gt; void,
+  ): CommandSubscription {
+    return this.webSocketClient!.createSubscription(
+      'commands',
+      options,
+      observer,
+    );
+  }
+
+  async getSystemInfo() {
+    const url = `${this.apiUrl}/sysinfo`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as SystemInfo;
+  }
+
+  async getRocksDbDatabases() {
+    const url = `${this.apiUrl}/archive/rocksdb/databases`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as RocksDbDatabasesWrapper;
+    return wrapper.databases || [];
+  }
+
+  async getRocksDbDatabaseProperties(tablespace: string, dbPath = '') {
+    const url = `${this.apiUrl}/archive/rocksdb/${tablespace}/${dbPath}:describe`;
+    const response = await this.doFetch(url);
+    return await response.text();
+  }
+
+  async compactRocksDbDatabase(
+    tablespace: string,
+    dbPath = '',
+    options: CompactRocksDbDatabaseRequest,
+  ) {
+    const body = JSON.stringify(options);
+    const url = `${this.apiUrl}/archive/rocksdb/${tablespace}/${dbPath}:compact`;
+    return await this.doFetch(url, {
+      body,
+      method: 'POST',
+    });
+  }
+
+  getThreadDumpURL() {
+    return `${this.apiUrl}/threads:dump`;
+  }
+
+  async createInstance(options: CreateInstanceRequest) {
+    const body = JSON.stringify(options);
+    const response = await this.doFetch(`${this.apiUrl}/instances`, {
+      body,
+      method: 'POST',
+    });
+    return (await response.json()) as Instance;
+  }
+
+  async getPackets(instance: string, options: GetPacketsOptions = {}) {
+    let url = `${this.apiUrl}/archive/${instance}/packets:list`;
+    let body: string;
+    if (options.fields?.length) {
+      url += this.queryString({ fields: options.fields });
+      delete options.fields;
+      body = JSON.stringify(options);
+    } else {
+      body = JSON.stringify(options);
+    }
+    const response = await this.doFetch(url, {
+      body,
+      method: 'POST',
+    });
+    return (await response.json()) as ListPacketsResponse;
+  }
+
+  async getEvents(instance: string, options: GetEventsOptions = {}) {
+    const url = `${this.apiUrl}/archive/${instance}/events:list`;
+    const body = JSON.stringify(options);
+    const response = await this.doFetch(url, {
+      body,
+      method: 'POST',
+    });
+    const wrapper = (await response.json()) as EventsWrapper;
+    return wrapper.events || [];
+  }
+
+  /**
+   * Retrieves the distinct sources for the currently archived events.
+   */
+  async getEventSources(instance: string) {
+    const url = `${this.apiUrl}/archive/${instance}/events/sources`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as SourcesWrapper;
+    return wrapper.sources || [];
+  }
+
+  getEventsDownloadURL(instance: string, options: DownloadEventsOptions = {}) {
+    const url = `${this.apiUrl}/archive/${instance}:exportEvents`;
+    return url + this.queryString(options);
+  }
+
+  async createEvent(instance: string, options: CreateEventRequest) {
+    const body = JSON.stringify(options);
+    const response = await this.doFetch(
+      `${this.apiUrl}/archive/${instance}/events`,
+      {
+        body,
+        method: 'POST',
+      },
+    );
+    return (await response.json()) as Event;
+  }
+
+  async getQueries(instance: string, resource: string) {
+    const url = `${this.apiUrl}/web/queries/${instance}/${resource}`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as ListQueriesResponse;
+    return wrapper.queries || [];
+  }
+
+  async createQuery(
+    instance: string,
+    resource: string,
+    options: CreateQueryRequest,
+  ) {
+    const body = JSON.stringify(options);
+    const response = await this.doFetch(
+      `${this.apiUrl}/web/queries/${instance}/${resource}`,
+      {
+        body,
+        method: 'POST',
+      },
+    );
+    return (await response.json()) as Query;
+  }
+
+  async editQuery(
+    instance: string,
+    resource: string,
+    queryId: string,
+    options: EditQueryRequest,
+  ) {
+    const body = JSON.stringify(options);
+    const url = `${this.apiUrl}/web/queries/${instance}/${resource}/${queryId}`;
+    return await this.doFetch(url, {
+      body,
+      method: 'PATCH',
+    });
+  }
+
+  async deleteQuery(instance: string, resource: string, queryId: string) {
+    const url = `${this.apiUrl}/queries/${instance}/${resource}/${queryId}`;
+    return await this.doFetch(url, {
+      method: 'DELETE',
+    });
+  }
+
+  getCommandsDownloadURL(
+    instance: string,
+    options: DownloadCommandsOptions = {},
+  ) {
+    const url = `${this.apiUrl}/archive/${instance}:exportCommands`;
+    return url + this.queryString(options);
+  }
+
+  async editReplayProcessor(
+    instance: string,
+    processor: string,
+    options: EditReplayProcessorRequest,
+  ) {
+    const body = JSON.stringify(options);
+    const url = `${this.apiUrl}/processors/${instance}/${processor}`;
+    return await this.doFetch(url, {
+      body,
+      method: 'PATCH',
+    });
+  }
+
+  async deleteReplayProcessor(instance: string, processor: string) {
+    const url = `${this.apiUrl}/processors/${instance}/${processor}`;
+    return await this.doFetch(url, {
+      method: 'DELETE',
+    });
+  }
+
+  async getLinks(instance: string): Promise&lt;Link[]&gt; {
+    const url = `${this.apiUrl}/links/${instance}`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as LinksWrapper;
+    return wrapper.links || [];
+  }
+
+  async getLink(instance: string, link: string): Promise&lt;Link&gt; {
+    const url = `${this.apiUrl}/links/${instance}/${link}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as Link;
+  }
+
+  async enableLink(instance: string, link: string) {
+    return this.doFetch(`${this.apiUrl}/links/${instance}/${link}:enable`, {
+      method: 'POST',
+    });
+  }
+
+  async disableLink(instance: string, link: string) {
+    return this.doFetch(`${this.apiUrl}/links/${instance}/${link}:disable`, {
+      method: 'POST',
+    });
+  }
+
+  async runLinkAction(
+    instance: string,
+    link: string,
+    action: string,
+    message?: { [key: string]: any },
+  ) {
+    return this.doFetch(
+      `${this.apiUrl}/links/${instance}/${link}/actions/${action}`,
+      {
+        method: 'POST',
+        body: JSON.stringify(message || {}),
+      },
+    );
+  }
+
+  async resetLinkCounters(instance: string, link: string) {
+    return this.doFetch(
+      `${this.apiUrl}/links/${instance}/${link}:resetCounters`,
+      {
+        method: 'POST',
+      },
+    );
+  }
+
+  async getProcessors(instance: string) {
+    const url = `${this.apiUrl}/processors/${instance}`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as ProcessorsWrapper;
+    return wrapper.processors || [];
+  }
+
+  async getProcessor(instance: string, name: string) {
+    const url = `${this.apiUrl}/processors/${instance}/${name}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as Processor;
+  }
+
+  async issueCommand(
+    instance: string,
+    processorName: string,
+    qualifiedName: string,
+    options?: IssueCommandOptions,
+  ): Promise&lt;IssueCommandResponse&gt; {
+    return this.issueCommandForNamespace(
+      instance,
+      processorName,
+      null,
+      qualifiedName,
+      options,
+    );
+  }
+
+  async issueCommandForNamespace(
+    instance: string,
+    processorName: string,
+    namespace: string | null,
+    name: string,
+    options?: IssueCommandOptions,
+  ): Promise&lt;IssueCommandResponse&gt; {
+    const fullName = namespace ? namespace + '/' + name : name;
+    const encodedName = encodeURIComponent(fullName);
+    const body = JSON.stringify(options);
+    const response = await this.doFetch(
+      `${this.apiUrl}/processors/${instance}/${processorName}/commands/${encodedName}`,
+      {
+        body,
+        method: 'POST',
+      },
+    );
+    return (await response.json()) as IssueCommandResponse;
+  }
+
+  async startProcedure(
+    instance: string,
+    procedure: string,
+    options?: StartProcedureOptions,
+  ): Promise&lt;ExecutorInfo&gt; {
+    const encodedName = encodeURIComponent(procedure);
+    const body = JSON.stringify(options);
+    const response = await this.doFetch(
+      `${this.apiUrl}/spell/${instance}/procedures/${encodedName}:start`,
+      {
+        body,
+        method: 'POST',
+      },
+    );
+    return await response.json();
+  }
+
+  async getCommandHistoryEntry(
+    instance: string,
+    id: string,
+  ): Promise&lt;CommandHistoryEntry&gt; {
+    const url = `${this.apiUrl}/archive/${instance}/commands/${id}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as CommandHistoryEntry;
+  }
+
+  getCommandDownloadURL(instance: string, id: string) {
+    return `${this.apiUrl}/archive/${instance}/commands/${id}:export`;
+  }
+
+  async getCommandHistoryEntries(
+    instance: string,
+    options: GetCommandHistoryOptions = {},
+  ): Promise&lt;CommandHistoryPage&gt; {
+    const url = `${this.apiUrl}/archive/${instance}/commands`;
+    const response = await this.doFetch(url + this.queryString(options));
+    return (await response.json()) as CommandHistoryPage;
+  }
+
+  async getCommandHistoryEntriesForParameter(
+    instance: string,
+    qualifiedName: string,
+    options: GetCommandHistoryOptions = {},
+  ) {
+    const url = `${this.apiUrl}/archive/${instance}/commands${qualifiedName}`;
+    const response = await this.doFetch(url + this.queryString(options));
+    return (await response.json()) as CommandHistoryPage;
+  }
+
+  async getCommandQueues(instance: string, processor: string) {
+    const url = `${this.apiUrl}/processors/${instance}/${processor}/queues`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as CommandQueuesWrapper;
+    return wrapper.queues || [];
+  }
+
+  async getCommandQueue(instance: string, processor: string, queue: string) {
+    const url = `${this.apiUrl}/processors/${instance}/${processor}/queues/${queue}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as CommandQueue;
+  }
+
+  async enableCommandQueue(instance: string, processor: string, queue: string) {
+    const url = `${this.apiUrl}/processors/${instance}/${processor}/queues/${queue}:enable`;
+    const response = await this.doFetch(url, { method: 'POST' });
+    return (await response.json()) as CommandQueue;
+  }
+
+  async disableCommandQueue(
+    instance: string,
+    processor: string,
+    queue: string,
+  ) {
+    const url = `${this.apiUrl}/processors/${instance}/${processor}/queues/${queue}:disable`;
+    const response = await this.doFetch(url, { method: 'POST' });
+    return (await response.json()) as CommandQueue;
+  }
+
+  async blockCommandQueue(instance: string, processor: string, queue: string) {
+    const url = `${this.apiUrl}/processors/${instance}/${processor}/queues/${queue}:block`;
+    const response = await this.doFetch(url, { method: 'POST' });
+    return (await response.json()) as CommandQueue;
+  }
+
+  async acceptCommand(
+    instance: string,
+    processor: string,
+    queue: string,
+    command: string,
+  ) {
+    const url = `${this.apiUrl}/processors/${instance}/${processor}/queues/${queue}/commands/${command}:accept`;
+    await this.doFetch(url, { method: 'POST' });
+  }
+
+  async rejectCommand(
+    instance: string,
+    processor: string,
+    queue: string,
+    command: string,
+  ) {
+    const url = `${this.apiUrl}/processors/${instance}/${processor}/queues/${queue}/commands/${command}:reject`;
+    await this.doFetch(url, { method: 'POST' });
+  }
+
+  async getActiveAlarms(
+    instance: string,
+    processor: string,
+    options: GetAlarmsOptions = {},
+  ): Promise&lt;Alarm[]&gt; {
+    const url = `${this.apiUrl}/processors/${instance}/${processor}/alarms`;
+    const response = await this.doFetch(url + this.queryString(options));
+    const wrapper = (await response.json()) as AlarmsWrapper;
+    return wrapper.alarms || [];
+  }
+
+  async getAlarms(instance: string, options: GetAlarmsOptions = {}) {
+    const url = `${this.apiUrl}/archive/${instance}/alarms`;
+    const response = await this.doFetch(url + this.queryString(options));
+    const wrapper = (await response.json()) as AlarmsWrapper;
+    return wrapper.alarms || [];
+  }
+
+  async getAlarmsForParameter(
+    instance: string,
+    qualifiedName: string,
+    options: GetAlarmsOptions = {},
+  ) {
+    const url = `${this.apiUrl}/archive/${instance}/alarms${qualifiedName}`;
+    const response = await this.doFetch(url + this.queryString(options));
+    const wrapper = (await response.json()) as AlarmsWrapper;
+    return (await wrapper.alarms) || [];
+  }
+
+  async acknowledgeAlarm(
+    instance: string,
+    processor: string,
+    alarm: string,
+    sequenceNumber: number,
+    options: AcknowledgeAlarmOptions,
+  ) {
+    const body = JSON.stringify(options);
+    const url = `${this.apiUrl}/processors/${instance}/${processor}/alarms${alarm}/${sequenceNumber}:acknowledge`;
+    return await this.doFetch(url, {
+      body,
+      method: 'POST',
+    });
+  }
+
+  async shelveAlarm(
+    instance: string,
+    processor: string,
+    alarm: string,
+    sequenceNumber: number,
+    options: ShelveAlarmOptions,
+  ) {
+    const body = JSON.stringify(options);
+    const url = `${this.apiUrl}/processors/${instance}/${processor}/alarms${alarm}/${sequenceNumber}:shelve`;
+    return await this.doFetch(url, {
+      body,
+      method: 'POST',
+    });
+  }
+
+  async unshelveAlarm(
+    instance: string,
+    processor: string,
+    alarm: string,
+    sequenceNumber: number,
+  ) {
+    const url = `${this.apiUrl}/processors/${instance}/${processor}/alarms${alarm}/${sequenceNumber}:unshelve`;
+    return await this.doFetch(url, {
+      method: 'POST',
+    });
+  }
+
+  async clearAlarm(
+    instance: string,
+    processor: string,
+    alarm: string,
+    sequenceNumber: number,
+    options: ClearAlarmOptions,
+  ) {
+    const body = JSON.stringify(options);
+    const url = `${this.apiUrl}/processors/${instance}/${processor}/alarms${alarm}/${sequenceNumber}:clear`;
+    return await this.doFetch(url, {
+      body,
+      method: 'POST',
+    });
+  }
+
+  async getStreams(instance: string) {
+    const url = `${this.apiUrl}/archive/${instance}/streams`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as StreamsWrapper;
+    return (await wrapper.streams) || [];
+  }
+
+  async getStream(instance: string, name: string) {
+    const url = `${this.apiUrl}/archive/${instance}/streams/${name}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as Stream;
+  }
+
+  async getTables(instance: string) {
+    const url = `${this.apiUrl}/archive/${instance}/tables`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as TablesWrapper;
+    return wrapper.tables || [];
+  }
+
+  async getTable(instance: string, name: string) {
+    const url = `${this.apiUrl}/archive/${instance}/tables/${name}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as Table;
+  }
+
+  async getTableData(instance: string, name: string): Promise&lt;Record[]&gt; {
+    const url = `${this.apiUrl}/archive/${instance}/tables/${name}/data`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as RecordsWrapper;
+    return wrapper.record || [];
+  }
+
+  async executeSQL(database: string, statement: string): Promise&lt;ResultSet&gt; {
+    const url = `${this.apiUrl}/archive/${database}:executeSql`;
+    const response = await this.doFetch(url, {
+      body: JSON.stringify({ instance: database, statement }),
+      method: 'POST',
+    });
+    return (await response.json()) as ResultSet;
+  }
+
+  async getParameterArchivePids(
+    instance: string,
+    options: GetParameterArchivePidsOptions,
+  ) {
+    const url = `${this.apiUrl}/parameter-archive/${instance}/pids`;
+    const response = await this.doFetch(url + this.queryString(options));
+    return (await response.json()) as GetParameterArchivePidsPage;
+  }
+
+  async getPacketNames(instance: string) {
+    const url = `${this.apiUrl}/archive/${instance}/packet-names`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as PacketNamesResponse;
+  }
+
+  async streamPacketIndex(
+    instance: string,
+    options: StreamPacketIndexOptions,
+  ): Promise&lt;ArchiveRecord[]&gt; {
+    const url = `${this.apiUrl}/archive/${instance}:streamPacketIndex`;
+    const response = await this.doFetch(url, {
+      body: JSON.stringify(options),
+      method: 'POST',
+    });
+    // In-memory, we expect the stream to be limited by using an appropriate mergeTime
+    const text = await response.text();
+    const sanitized = '[' + text.replace(/}{/g, '},{') + ']';
+    return JSON.parse(sanitized);
+  }
+
+  async streamParameterIndex(
+    instance: string,
+    options: StreamParameterIndexOptions,
+  ): Promise&lt;ArchiveRecord[]&gt; {
+    const url = `${this.apiUrl}/archive/${instance}:streamParameterIndex`;
+    const response = await this.doFetch(url, {
+      body: JSON.stringify(options),
+      method: 'POST',
+    });
+    // In-memory, we expect the stream to be limited by using an appropriate mergeTime
+    const text = await response.text();
+    const sanitized = '[' + text.replace(/}{/g, '},{') + ']';
+    return JSON.parse(sanitized);
+  }
+
+  async streamCommandIndex(
+    instance: string,
+    options: StreamCommandIndexOptions,
+  ): Promise&lt;ArchiveRecord[]&gt; {
+    const url = `${this.apiUrl}/archive/${instance}:streamCommandIndex`;
+    const response = await this.doFetch(url, {
+      body: JSON.stringify(options),
+      method: 'POST',
+    });
+    // In-memory, we expect the stream to be limited by using an appropriate mergeTime
+    const text = await response.text();
+    const sanitized = '[' + text.replace(/}{/g, '},{') + ']';
+    return JSON.parse(sanitized);
+  }
+
+  async streamEventIndex(
+    instance: string,
+    options: StreamEventIndexOptions,
+  ): Promise&lt;ArchiveRecord[]&gt; {
+    const url = `${this.apiUrl}/archive/${instance}:streamEventIndex`;
+    const response = await this.doFetch(url, {
+      body: JSON.stringify(options),
+      method: 'POST',
+    });
+    // In-memory, we expect the stream to be limited by using an appropriate mergeTime
+    const text = await response.text();
+    const sanitized = '[' + text.replace(/}{/g, '},{') + ']';
+    return JSON.parse(sanitized);
+  }
+
+  async getCompletenessIndex(
+    instance: string,
+    options: GetCompletenessIndexOptions,
+  ): Promise&lt;IndexGroup[]&gt; {
+    const url = `${this.apiUrl}/archive/${instance}/completeness-index`;
+    const response = await this.doFetch(url + this.queryString(options));
+    const wrapper = (await response.json()) as IndexResult;
+    return wrapper.group || [];
+  }
+
+  async streamCompletenessIndex(
+    instance: string,
+    options: StreamCompletenessIndexOptions,
+  ): Promise&lt;ArchiveRecord[]&gt; {
+    const url = `${this.apiUrl}/archive/${instance}:streamCompletenessIndex`;
+    const response = await this.doFetch(url, {
+      body: JSON.stringify(options),
+      method: 'POST',
+    });
+    // In-memory, we expect the stream to be limited by using an appropriate mergeTime
+    const text = await response.text();
+    const sanitized = '[' + text.replace(/}{/g, '},{') + ']';
+    return JSON.parse(sanitized);
+  }
+
+  getPacketsDownloadURL(
+    instance: string,
+    options: DownloadPacketsOptions = {},
+  ) {
+    const url = `${this.apiUrl}/archive/${instance}:exportPackets`;
+    return url + this.queryString(options);
+  }
+
+  getPacketDownloadURL(
+    instance: string,
+    pname: string,
+    gentime: string,
+    seqnum: number,
+  ) {
+    const encodedName = encodeURIComponent(pname);
+    return `${this.apiUrl}/archive/${instance}/packets/${encodedName}/${gentime}/${seqnum}:export`;
+  }
+
+  async getPacket(
+    instance: string,
+    pname: string,
+    generationTime: string,
+    sequenceNumber: number,
+  ) {
+    const encodedName = encodeURIComponent(pname);
+    const url = `${this.apiUrl}/archive/${instance}/packets/${encodedName}/${generationTime}/${sequenceNumber}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as Packet;
+  }
+
+  async extractPacket(
+    instance: string,
+    pname: string,
+    generationTime: string,
+    sequenceNumber: number,
+  ): Promise&lt;ExtractPacketResponse&gt; {
+    const encodedName = encodeURIComponent(pname);
+    const url = `${this.apiUrl}/archive/${instance}/packets/${encodedName}/${generationTime}/${sequenceNumber}:extract`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as ExtractPacketResponse;
+  }
+
+  async getMissionDatabase(instance: string) {
+    const url = `${this.apiUrl}/mdb/${instance}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as MissionDatabase;
+  }
+
+  async getSpaceSystems(instance: string) {
+    const url = `${this.apiUrl}/mdb/${instance}/space-systems`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as SpaceSystemsPage;
+  }
+
+  async getSpaceSystem(instance: string, qualifiedName: string) {
+    const url = `${this.apiUrl}/mdb/${instance}/space-systems${qualifiedName}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as SpaceSystem;
+  }
+
+  async exportSpaceSystem(instance: string, qualifiedName: string) {
+    const encodedName = encodeURIComponent(qualifiedName);
+    const url = `${this.apiUrl}/mdb/${instance}/space-systems/${encodedName}:exportXTCE`;
+    const response = await this.doFetch(url);
+    return await response.text();
+  }
+
+  async getParameters(instance: string, options: GetParametersOptions = {}) {
+    const url = `${this.apiUrl}/mdb/${instance}/parameters`;
+    const response = await this.doFetch(url + this.queryString(options));
+    return (await response.json()) as ParametersPage;
+  }
+
+  async getParameter(instance: string, qualifiedName: string) {
+    const encodedName = this.encodeParameterName(qualifiedName);
+    const url = `${this.apiUrl}/mdb/${instance}/parameters${encodedName}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as Parameter;
+  }
+
+  async getParameterById(instance: string, id: NamedObjectId) {
+    let url = `${this.apiUrl}/mdb/${instance}/parameters`;
+    if (id.namespace) {
+      url += '/' + encodeURIComponent(id.namespace);
+      url += '/' + encodeURIComponent(id.name);
+      const response = await this.doFetch(url);
+      return (await response.json()) as Parameter;
+    } else {
+      return this.getParameter(instance, id.name);
+    }
+  }
+
+  async getParameterTypes(
+    instance: string,
+    options: GetParameterTypesOptions = {},
+  ) {
+    const url = `${this.apiUrl}/mdb/${instance}/parameter-types`;
+    const response = await this.doFetch(url + this.queryString(options));
+    return (await response.json()) as ParameterTypesPage;
+  }
+
+  async getParameterType(instance: string, qualifiedName: string) {
+    const encodedName = this.encodeParameterName(qualifiedName);
+    const url = `${this.apiUrl}/mdb/${instance}/parameter-types${encodedName}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as ParameterType;
+  }
+
+  async getParameterValues(
+    instance: string,
+    qualifiedName: string,
+    options: GetParameterValuesOptions = {},
+  ): Promise&lt;ParameterValue[]&gt; {
+    const url = `${this.apiUrl}/archive/${instance}/parameters${qualifiedName}`;
+    const response = await this.doFetch(url + this.queryString(options));
+    const wrapper = (await response.json()) as ParameterData;
+    return wrapper.parameter || [];
+  }
+
+  getParameterValuesDownloadURL(
+    instance: string,
+    options: DownloadParameterValuesOptions = {},
+  ) {
+    const url = `${this.apiUrl}/archive/${instance}:exportParameterValues`;
+    return url + this.queryString(options);
+  }
+
+  async exportParameterValues(
+    instance: string,
+    options: ExportParameterValuesOptions,
+  ) {
+    const url = `${this.apiUrl}/archive/${instance}:exportParameterValues`;
+    const response = await this.doFetch(url, {
+      method: 'POST',
+      body: JSON.stringify(options),
+    });
+    return await response.text();
+  }
+
+  async setParameterValue(
+    instance: string,
+    processorName: string,
+    qualifiedName: string,
+    value: Value,
+  ) {
+    const encodedName = this.encodeParameterName(qualifiedName);
+    const url = `${this.apiUrl}/processors/${instance}/${processorName}/parameters${encodedName}`;
+    return this.doFetch(url, {
+      body: JSON.stringify(value),
+      method: 'PUT',
+    });
+  }
+
+  /**
+   * Returns a slash-prefixed parameter name for concatenating in a raw url path.
+   * The path segments are as pretty as we can make it, while also covering special
+   * characters.
+   */
+  private encodeParameterName(parameter: string) {
+    if (parameter.startsWith('/')) {
+      return parameter
+        .split('/')
+        .map((part) =&gt; encodeURIComponent(part))
+        .join('/');
+    } else {
+      const idx = parameter.indexOf('/');
+      if (idx !== -1) {
+        const namespace = parameter.substring(0, idx);
+        const name = parameter.substring(idx + 1);
+        return (
+          '/' + encodeURIComponent(namespace) + '/' + encodeURIComponent(name)
+        );
+      } else {
+        // Not expected, let the server handle it
+        return '/' + encodeURIComponent(parameter);
+      }
+    }
+  }
+
+  async getAlgorithmStatus(
+    instance: string,
+    processorName: string,
+    qualifiedName: string,
+  ) {
+    const url = `${this.apiUrl}/processors/${instance}/${processorName}/algorithms${qualifiedName}/status`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as AlgorithmStatus;
+  }
+
+  async getAlgorithmTrace(
+    instance: string,
+    processorName: string,
+    qualifiedName: string,
+  ) {
+    const url = `${this.apiUrl}/processors/${instance}/${processorName}/algorithms${qualifiedName}/trace`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as AlgorithmTrace;
+  }
+
+  async startAlgorithmTrace(
+    instance: string,
+    processorName: string,
+    qualifiedName: string,
+  ) {
+    const url = `${this.apiUrl}/processors/${instance}/${processorName}/algorithms${qualifiedName}/trace`;
+    return this.doFetch(url, {
+      body: JSON.stringify({ state: 'enabled' }),
+      method: 'PATCH',
+    });
+  }
+
+  async stopAlgorithmTrace(
+    instance: string,
+    processorName: string,
+    qualifiedName: string,
+  ) {
+    const url = `${this.apiUrl}/processors/${instance}/${processorName}/algorithms${qualifiedName}/trace`;
+    return this.doFetch(url, {
+      body: JSON.stringify({ state: 'disabled' }),
+      method: 'PATCH',
+    });
+  }
+
+  async updateAlgorithmText(
+    instance: string,
+    processorName: string,
+    qualifiedName: string,
+    text: string,
+  ) {
+    const url = `${this.apiUrl}/mdb/${instance}/${processorName}/algorithms${qualifiedName}`;
+    return this.doFetch(url, {
+      body: JSON.stringify({
+        action: 'SET',
+        algorithm: { text },
+      }),
+      method: 'PATCH',
+    });
+  }
+
+  async getAlgorithmOverrides(
+    instance: string,
+    processorName: string,
+    qualifiedName: string,
+  ) {
+    const url = `${this.apiUrl}/mdb-overrides/${instance}/${processorName}/algorithms${qualifiedName}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as AlgorithmOverrides;
+  }
+
+  async revertAlgorithmText(
+    instance: string,
+    processorName: string,
+    qualifiedName: string,
+  ) {
+    const url = `${this.apiUrl}/mdb/${instance}/${processorName}/algorithms${qualifiedName}`;
+    return this.doFetch(url, {
+      body: JSON.stringify({
+        action: 'RESET',
+      }),
+      method: 'PATCH',
+    });
+  }
+
+  async getParameterSamples(
+    instance: string,
+    qualifiedName: string,
+    options: GetParameterSamplesOptions = {},
+  ): Promise&lt;Sample[]&gt; {
+    const url = `${this.apiUrl}/archive/${instance}/parameters${qualifiedName}/samples`;
+    const response = await this.doFetch(url + this.queryString(options));
+    const wrapper = (await response.json()) as SamplesWrapper;
+    return wrapper.sample || [];
+  }
+
+  async getParameterRanges(
+    instance: string,
+    qualifiedName: string,
+    options: GetParameterRangesOptions = {},
+  ): Promise&lt;Range[]&gt; {
+    const url = `${this.apiUrl}/archive/${instance}/parameters${qualifiedName}/ranges`;
+    const response = await this.doFetch(url + this.queryString(options));
+    const wrapper = (await response.json()) as RangesWrapper;
+    return wrapper.range || [];
+  }
+
+  async getCommands(instance: string, options: GetCommandsOptions = {}) {
+    const url = `${this.apiUrl}/mdb/${instance}/commands`;
+    const response = await this.doFetch(url + this.queryString(options));
+    return (await response.json()) as CommandsPage;
+  }
+
+  async getCommand(instance: string, qualifiedName: string) {
+    return this.getCommandForNamespace(instance, null, qualifiedName);
+  }
+
+  async getCommandForNamespace(
+    instance: string,
+    namespace: string | null,
+    name: string,
+  ) {
+    const fullName = namespace ? namespace + '/' + name : name;
+    const encodedName = encodeURIComponent(fullName);
+    const url = `${this.apiUrl}/mdb/${instance}/commands/${encodedName}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as Command;
+  }
+
+  async getContainers(instance: string, options: GetContainersOptions = {}) {
+    const url = `${this.apiUrl}/mdb/${instance}/containers`;
+    const response = await this.doFetch(url + this.queryString(options));
+    return (await response.json()) as ContainersPage;
+  }
+
+  async getContainer(instance: string, qualifiedName: string) {
+    const url = `${this.apiUrl}/mdb/${instance}/containers${qualifiedName}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as Container;
+  }
+
+  async getActivities(instance: string, options: GetActivitiesOptions = {}) {
+    const url = `${this.apiUrl}/activities/${instance}/activities`;
+    const response = await this.doFetch(url + this.queryString(options));
+    return (await response.json()) as ActivitiesPage;
+  }
+
+  async getActivity(instance: string, activityId: string) {
+    const url = `${this.apiUrl}/activities/${instance}/activities/${activityId}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as Activity;
+  }
+
+  async getActivityLog(instance: string, activityId: string) {
+    const url = `${this.apiUrl}/activities/${instance}/activities/${activityId}/log`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as GetActivityLogResponse;
+    return wrapper.logs || [];
+  }
+
+  async startActivity(instance: string, options: StartActivityOptions) {
+    const url = `${this.apiUrl}/activities/${instance}/activities`;
+    const body = JSON.stringify(options);
+    const response = await this.doFetch(url, {
+      body,
+      method: 'POST',
+    });
+    return (await response.json()) as Activity;
+  }
+
+  async cancelActivity(instance: string, activity: string) {
+    const url = `${this.apiUrl}/activities/${instance}/activities/${activity}:cancel`;
+    const response = await this.doFetch(url, {
+      method: 'POST',
+    });
+    return (await response.json()) as Activity;
+  }
+
+  async completeManualActivity(
+    instance: string,
+    activity: string,
+    options: CompleteManualActivityOptions = {},
+  ) {
+    const url = `${this.apiUrl}/activities/${instance}/activities/${activity}:complete`;
+    const body = JSON.stringify(options);
+    const response = await this.doFetch(url, {
+      body,
+      method: 'POST',
+    });
+    return (await response.json()) as Activity;
+  }
+
+  async getExecutors(instance: string) {
+    const url = `${this.apiUrl}/activities/${instance}/executors`;
+    const response = await this.doFetch(url);
+    const wrapper = (await response.json()) as ExecutorsWrapper;
+    return wrapper.executors || [];
+  }
+
+  async getActivityScripts(instance: string) {
+    const url = `${this.apiUrl}/activities/${instance}/scripts`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as ActivityScriptsPage;
+  }
+
+  async getAlgorithms(instance: string, options: GetAlgorithmsOptions = {}) {
+    const url = `${this.apiUrl}/mdb/${instance}/algorithms`;
+    const response = await this.doFetch(url + this.queryString(options));
+    return (await response.json()) as AlgorithmsPage;
+  }
+
+  async getAlgorithm(instance: string, qualifiedName: string) {
+    const url = `${this.apiUrl}/mdb/${instance}/algorithms${qualifiedName}`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as Algorithm;
+  }
+
+  async getFileTransferServices(instance: string) {
+    const url = `${this.apiUrl}/filetransfer/${instance}/services`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as ServicesPage;
+  }
+
+  async getFileTransfers(
+    instance: string,
+    service: string,
+    options: GetFileTransfersOptions = {},
+  ) {
+    const url = `${this.apiUrl}/filetransfer/${instance}/${service}/transfers`;
+    const response = await this.doFetch(url + this.queryString(options));
+    return (await response.json()) as TransfersPage;
+  }
+
+  async createFileTransfer(
+    instance: string,
+    service: string,
+    request: CreateTransferRequest,
+  ) {
+    const url = `${this.apiUrl}/filetransfer/${instance}/${service}/transfers`;
+    const body = JSON.stringify(request);
+    const response = await this.doFetch(url, {
+      body,
+      method: 'POST',
+    });
+    return (await response.json()) as Transfer;
+  }
+
+  async pauseFileTransfer(instance: string, service: string, id: number) {
+    const url = `${this.apiUrl}/filetransfer/${instance}/${service}/transfers/${id}:pause`;
+    return this.doFetch(url, { method: 'POST' });
+  }
+
+  async resumeFileTransfer(instance: string, service: string, id: number) {
+    const url = `${this.apiUrl}/filetransfer/${instance}/${service}/transfers/${id}:resume`;
+    return this.doFetch(url, { method: 'POST' });
+  }
+
+  async cancelFileTransfer(instance: string, service: string, id: number) {
+    const url = `${this.apiUrl}/filetransfer/${instance}/${service}/transfers/${id}:cancel`;
+    return this.doFetch(url, { method: 'POST' });
+  }
+
+  async requestFileList(
+    instance: string,
+    service: string,
+    request: ListFilesRequest,
+  ) {
+    const url = `${this.apiUrl}/filetransfer/${instance}/${service}/files:sync`;
+    const body = JSON.stringify(request);
+    return this.doFetch(url, { body, method: 'POST' });
+  }
+
+  async getFileList(
+    instance: string,
+    service: string,
+    request: ListFilesRequest,
+  ) {
+    const url = `${this.apiUrl}/filetransfer/${instance}/${service}/files`;
+    var indexedRequest: { [key: string]: any } = request;
+    const url2 =
+      url +
+      this.queryString(
+        Object.keys(indexedRequest)
+          .filter((key) =&gt; key !== 'options')
+          .reduce(
+            (res: { [key: string]: any }, key) =&gt; (
+              (res[key] = indexedRequest[key]),
+              res
+            ),
+            {},
+          ),
+      ) +
+      (request.options ? '&amp;options=' + JSON.stringify(request.options) : '');
+    const response = await this.doFetch(url2);
+    return (await response.json()) as ListFilesResponse;
+  }
+
+  async runFileAction(
+    instance: string,
+    service: string,
+    request: RunFileActionRequest,
+  ) {
+    return this.doFetch(
+      `${this.apiUrl}/filetransfer/${instance}/${service}/files:runFileAction`,
+      {
+        method: 'POST',
+        body: JSON.stringify(request),
+      },
+    );
+  }
+
+  async getCop1Config(instance: string, link: string) {
+    const url = `${this.apiUrl}/cop1/${instance}/${link}/config`;
+    const response = await this.doFetch(url);
+    return (await response.json()) as Cop1Config;
+  }
+
+  async initiateCop1(
+    instance: string,
+    link: string,
+    options: InitiateCop1Request,
+  ) {
+    const url = `${this.apiUrl}/cop1/${instance}/${link}:initialize`;
+    const body = JSON.stringify(options);
+    return this.doFetch(url, { body, method: 'POST' });
+  }
+
+  async disableCop1(
+    instance: string,
+    link: string,
+    options: DisableCop1Request = {},
+  ) {
+    const url = `${this.apiUrl}/cop1/${instance}/${link}:disable`;
+    const body = JSON.stringify(options);
+    return this.doFetch(url, { body, method: 'POST' });
+  }
+
+  async resumeCop1(instance: string, link: string) {
+    const url = `${this.apiUrl}/cop1/${instance}/${link}:resume`;
+    return await this.doFetch(url, { method: 'POST' });
+  }
+
+  async doFetch(url: string, init?: RequestInit) {
+    if (this.accessToken) {
+      if (!init) {
+        init = { headers: new Headers() };
+      } else if (!init.headers) {
+        init.headers = new Headers();
+      }
+      const headers = new Headers(init.headers);
+      headers.append('Authorization', `Bearer ${this.accessToken}`);
+    }
+
+    let response: Response;
+    try {
+      if (this.interceptor) {
+        response = await this.interceptor(this, url, init);
+      } else {
+        response = await this.handle(url, init);
+      }
+    } catch (err) {
+      // NOTE: Fetch fails with "TypeError" on network or CORS failures.
+      return Promise.reject(err);
+    }
+
+    // Make non 2xx responses available to clients via 'catch' instead of 'then'.
+    if (response.ok) {
+      return Promise.resolve(response);
+    } else {
+      return new Promise&lt;Response&gt;((resolve, reject) =&gt; {
+        response
+          .json()
+          .then((json) =&gt; {
+            if (json.hasOwnProperty('detail')) {
+              reject(new HttpError(response, json['msg'], json['detail']));
+            } else {
+              reject(new HttpError(response, json['msg']));
+            }
+          })
+          .catch((err) =&gt; {
+            console.error('Failure while handling server error', err);
+            reject(new HttpError(response));
+          });
+      });
+    }
+  }
+
+  handle(url: string, init?: RequestInit) {
+    // Our handler uses Fetch API
+    return fetch(url, init);
+  }
+
+  prepareWebSocketClient() {
+    if (!this.webSocketClient) {
+      this.webSocketClient = new WebSocketClient(
+        this.apiUrl,
+        this.frameLossListener,
+      );
+      // Copy connection updates from the WebSocketConnection to the subject in
+      // this class. Our local subject must always be available even when the
+      // WebSocket was not yet set up (for example because auth is still
+      // required).
+      this.webSocketClient.connected$.subscribe((connected) =&gt; {
+        if (connected) {
+          this.createSessionSubscription((evt) =&gt; {
+            this.sessionListener.onSessionEnd(evt.endReason);
+          });
+        }
+        this.connected$.next(connected);
+      });
+    }
+  }
+
+  getWebSocketClient() {
+    return this.webSocketClient;
+  }
+
+  closeWebSocketClient() {
+    if (this.webSocketClient) {
+      this.webSocketClient.close();
+      this.webSocketClient = undefined;
+    }
+  }
+
+  queryString(options: { [key: string]: any }) {
+    const qs = Object.keys(options)
+      .filter((k) =&gt; options[k] !== undefined)
+      .map((k) =&gt; `${k}=${options[k]}`)
+      .join('&amp;');
+    return qs === '' ? qs : '?' + qs;
+  }
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../abc/index.html" class="btn btn-neutral float-left" title="abc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="types/index.html" class="btn btn-neutral float-right" title="types" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,3422 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>timeline &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../../search.html" />
+    <link rel="next" title="utils" href="../utils/index.html" />
+    <link rel="prev" title="time" href="../time/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../../index.html">gsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">gsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">yamcs-core</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">main</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">java</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">org</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">yamcs</a></li>
+      <li class="breadcrumb-item active">timeline</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../../_sources/project_inventory/gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="timeline">
+<h1>timeline<a class="headerlink" href="#timeline" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="activitygroup-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ActivityGroup.java</span></code><a class="headerlink" href="#activitygroup-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ActivityGroup.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import java.util.UUID;
+
+import org.yamcs.protobuf.TimelineItemType;
+import org.yamcs.yarch.Tuple;
+
+public class ActivityGroup extends TimelineActivity {
+
+    public ActivityGroup(UUID id) {
+        super(TimelineItemType.ACTIVITY_GROUP, id);
+    }
+
+    ActivityGroup(Tuple tuple) {
+        super(TimelineItemType.ACTIVITY_GROUP, tuple);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="activityscheduler-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ActivityScheduler.java</span></code><a class="headerlink" href="#activityscheduler-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ActivityScheduler.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import static org.yamcs.timeline.TimelineItemDb.CNAME_START;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_TYPE;
+import static org.yamcs.timeline.TimelineItemDb.TABLE_NAME;
+
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.UUID;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.locks.ReentrantLock;
+
+import org.yamcs.Spec;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.activities.Activity;
+import org.yamcs.activities.ActivityListener;
+import org.yamcs.activities.ActivityService;
+import org.yamcs.http.api.GpbWellKnownHelper;
+import org.yamcs.http.api.StreamFactory;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.ExecutionStatus;
+import org.yamcs.protobuf.TimelineItemType;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+
+import com.google.common.util.concurrent.AbstractExecutionThreadService;
+
+/**
+ * Schedules activities in the timeline
+ */
+public class ActivityScheduler extends AbstractExecutionThreadService implements ItemListener, ActivityListener {
+
+    private static final long CHECK_INTERVAL = 500;
+    private static final TimelineActivity POISON = new TimelineActivity(UUID.randomUUID());
+    private Log log;
+
+    private String yamcsInstance;
+    private ActivityService activityService;
+    private TimelineItemDb timelineItemDb;
+
+    // Contains all planned activities that have a calculated execution date
+    private PriorityQueue&lt;TimelineActivity&gt; planned = new PriorityQueue&lt;&gt;();
+
+    private ReentrantLock planningLock = new ReentrantLock();
+    private Thread dispatcher;
+
+    // Contains the activities that are ready to be provided to the ActivityService
+    private BlockingQueue&lt;TimelineActivity&gt; forDispatch = new LinkedBlockingQueue&lt;&gt;(200);
+
+    // Keep track of ongoing timeline activities, for the purpose of copying the activity result
+    private ConcurrentMap&lt;UUID, TimelineActivity&gt; ongoingItemsByRunId = new ConcurrentHashMap&lt;&gt;();
+
+    public Spec getSpec() {
+        return new Spec();
+    }
+
+    public void init(TimelineService timelineService, YConfiguration config) {
+        this.yamcsInstance = timelineService.getYamcsInstance();
+        this.activityService = timelineService.getActivityService();
+        this.timelineItemDb = timelineService.getTimelineItemDb();
+        log = new Log(getClass(), yamcsInstance);
+    }
+
+    @Override
+    protected void startUp() throws Exception {
+        timelineItemDb.addItemListener(this);
+        activityService.addActivityListener(this);
+    }
+
+    @Override
+    protected void run() throws Exception {
+        try {
+            replan();
+        } catch (Exception e) {
+            log.error("Failed to perform initial planning", e);
+            throw e;
+        }
+
+        var systemUser = YamcsServer.getServer().getSecurityStore().getSystemUser();
+
+        TimelineActivity item;
+        while ((item = forDispatch.take()) != POISON) {
+            Activity activity;
+            var def = item.getActivityDefinition();
+            if (def == null) {
+                activity = activityService.prepareActivity(
+                        ActivityService.ACTIVITY_TYPE_MANUAL,
+                        Map.of("name", item.getName()),
+                        systemUser, null);
+            } else {
+                var executorType = def.getType();
+                var executorArgs = GpbWellKnownHelper.toJava(def.getArgs());
+                activity = activityService.prepareActivity(executorType, executorArgs, systemUser, null);
+            }
+            ongoingItemsByRunId.put(activity.getId(), item);
+
+            item.setStatus(ExecutionStatus.IN_PROGRESS);
+            item.addRun(activity.getId());
+            timelineItemDb.updateItem(item);
+
+            activityService.startActivity(activity, systemUser);
+        }
+    }
+
+    @Override
+    protected void triggerShutdown() {
+        timelineItemDb.removeItemListener(this);
+        activityService.removeActivityListener(this);
+        stopDispatcher();
+        forDispatch.offer(POISON);
+    }
+
+    @Override
+    public void onItemCreated(TimelineItem item) {
+        if (item instanceof TimelineActivity) {
+            replan();
+        }
+    }
+
+    @Override
+    public void onItemUpdated(TimelineItem item) {
+        if (item instanceof TimelineActivity) {
+            replan();
+        }
+    }
+
+    @Override
+    public void onItemDeleted(TimelineItem item) {
+        if (item instanceof TimelineActivity) {
+            replan();
+        }
+    }
+
+    @Override
+    public void onActivityUpdated(Activity activity) {
+        var item = ongoingItemsByRunId.get(activity.getId());
+        if (item != null &amp;&amp; activity.isStopped()) {
+            ongoingItemsByRunId.remove(activity.getId());
+
+            switch (activity.getStatus()) {
+            case SUCCESSFUL:
+                item.setStatus(ExecutionStatus.COMPLETED);
+                break;
+            case CANCELLED:
+                item.setStatus(ExecutionStatus.ABORTED);
+                item.setFailureReason(activity.getFailureReason());
+                break;
+            case FAILED:
+                item.setStatus(ExecutionStatus.FAILED);
+                item.setFailureReason(activity.getFailureReason());
+                break;
+            default:
+                throw new IllegalStateException("Unexpected terminal state " + activity.getStatus());
+            }
+            timelineItemDb.updateItem(item);
+        }
+    }
+
+    private void replan() {
+        try {
+            planningLock.lock();
+
+            stopDispatcher();
+            planned.clear();
+
+            var sqlb = new SqlBuilder(TABLE_NAME);
+            sqlb.whereColAfterOrEqual(CNAME_START, TimeEncoding.getWallclockTime());
+            sqlb.where(CNAME_TYPE + " = '" + TimelineItemType.ACTIVITY.name() + "'");
+
+            var latch = new CountDownLatch(1);
+            StreamFactory.stream(yamcsInstance, sqlb.toString(), sqlb.getQueryArguments(), new StreamSubscriber() {
+
+                @Override
+                public void onTuple(Stream stream, Tuple tuple) {
+                    var activity = new TimelineActivity(TimelineItemType.ACTIVITY, tuple);
+                    planned.add(activity);
+                }
+
+                @Override
+                public void streamClosed(Stream stream) {
+                    if (!planned.isEmpty()) {
+                        log.info("Upcoming:");
+                        for (var activity : planned) {
+                            log.info("- " + activity);
+                        }
+                        startDispatcher();
+                    }
+
+                    latch.countDown();
+                }
+            });
+
+            latch.await();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            planningLock.unlock();
+        }
+    }
+
+    private void startDispatcher() {
+        // Dispatcher runs on a special thread, because then we can respond faster
+        // to Guava service termination.
+        dispatcher = new Thread(() -&gt; {
+            try {
+                while (true) {
+                    var nextActivity = planned.poll();
+                    if (nextActivity != null) {
+                        var now = TimeEncoding.getWallclockTime();
+                        if (now &lt; nextActivity.start) {
+                            Thread.sleep(nextActivity.start - now);
+                        }
+                        if (!forDispatch.offer(nextActivity)) {
+                            log.error("Failed to dispatch activity " + nextActivity + " (queue full)");
+                        }
+                    } else {
+                        Thread.sleep(CHECK_INTERVAL);
+                    }
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        });
+        dispatcher.start();
+    }
+
+    private void stopDispatcher() {
+        var lDispatcher = dispatcher;
+        if (lDispatcher != null) {
+            lDispatcher.interrupt();
+            dispatcher = null;
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="bandlistener-java">
+<h2><code class="docutils literal notranslate"><span class="pre">BandListener.java</span></code><a class="headerlink" href="#bandlistener-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/BandListener.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+public interface BandListener {
+    void next(TimelineBand band);
+
+    /**
+     * 
+     * If a paged request has been performed, the token can be used to retrieve the next chunk.
+     * &lt;p&gt;
+     * token is null if there was no limit or there were less items than the specified limit
+     */
+    void complete(String token);
+
+    void completeExceptionally(Throwable t);
+}
+</pre></div>
+</div>
+</section>
+<section id="commanditemprovider-java">
+<h2><code class="docutils literal notranslate"><span class="pre">CommandItemProvider.java</span></code><a class="headerlink" href="#commanditemprovider-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/CommandItemProvider.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.archive.CommandHistoryRecorder;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.ItemFilter;
+import org.yamcs.protobuf.ItemFilter.FilterCriterion;
+import org.yamcs.protobuf.TimelineSourceCapabilities;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.ResultListener;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+
+/**
+ * Implements the "commands" timeline source providing items derived from the command history.
+ * &lt;p&gt;
+ * The filtering criteria which can be applied is based on the command name patterns (regular expressions matching
+ * command names)
+ *
+ */
+public class CommandItemProvider implements ItemProvider {
+    public final static String CRIT_KEY_CMD_NAME_PATTERN = "cmdNamePattern";
+    private Log log;
+    private YarchDatabaseInstance ydb;
+    TupleMatcher matcher;
+
+    public CommandItemProvider(String yamcsInstance) {
+        log = new Log(getClass(), yamcsInstance);
+        ydb = YarchDatabase.getInstance(yamcsInstance);
+        matcher = new TupleMatcher();
+    }
+
+    @Override
+    public TimelineItem getItem(String id) {
+        return null;
+    }
+
+    @Override
+    public void getItems(int limit, String next, RetrievalFilter filter, ItemReceiver consumer) {
+
+        SqlBuilder sqlb = new SqlBuilder(CommandHistoryRecorder.TABLE_NAME);
+        TimeInterval interval = filter.getTimeInterval();
+        if (interval.hasEnd()) {
+            sqlb.where("gentime &lt; ?", interval.getEnd());
+        }
+        if (interval.hasStart()) {
+            sqlb.where("gentime &gt;= ?", interval.getStart());
+        }
+
+        sqlb.limit(limit + 1);
+
+        try {
+            StreamSqlStatement stmt = ydb.createStatement(sqlb.toString(),
+                    sqlb.getQueryArguments().toArray());
+            ydb.execute(stmt, new ResultListener() {
+
+                @Override
+                public void next(Tuple tuple) {
+                    if (matcher.matches(filter, tuple)) {
+                        consumer.next(toItem(tuple));
+                    }
+                }
+
+                @Override
+                public void completeExceptionally(Throwable t) {
+                    consumer.completeExceptionally(t);
+                }
+
+                @Override
+                public void complete() {
+                    consumer.complete(null);
+                }
+            });
+        } catch (StreamSqlException | ParseException e) {
+            log.error("Exception when executing query", e);
+        }
+    }
+
+    @Override
+    public void validateFilters(List&lt;ItemFilter&gt; filters) throws BadRequestException {
+        for (var filter : filters) {
+            for (var c : filter.getCriteriaList()) {
+                if (!CRIT_KEY_CMD_NAME_PATTERN.equals(c.getKey())) {
+                    throw new BadRequestException(
+                            "Unknonw criteria key " + c.getKey() + ". Supported key: " + CRIT_KEY_CMD_NAME_PATTERN);
+                }
+            }
+        }
+    }
+
+    @Override
+    public TimelineItem addItem(TimelineItem item) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public TimelineItem updateItem(TimelineItem item) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public TimelineItem deleteItem(UUID uuid) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public TimelineItem deleteTimelineGroup(UUID uuid) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public TimelineSourceCapabilities getCapabilities() {
+        return TimelineSourceCapabilities.newBuilder()
+                .setReadOnly(true)
+                .build();
+    }
+
+    private static TimelineEvent toItem(Tuple tuple) {
+        long gentime = (Long) tuple.getColumn(PreparedCommand.CNAME_GENTIME);
+        String origin = (String) tuple.getColumn(PreparedCommand.CNAME_ORIGIN);
+        int sequenceNumber = (Integer) tuple.getColumn(PreparedCommand.CNAME_SEQNUM);
+        String id = gentime + "-" + origin + "-" + sequenceNumber;
+
+        TimelineEvent event = new TimelineEvent(id);
+        event.setStart(gentime);
+        event.setName(tuple.getColumn(PreparedCommand.CNAME_CMDNAME));
+        return event;
+    }
+
+    private static class TupleMatcher extends FilterMatcher&lt;Tuple&gt; {
+        @Override
+        protected boolean criterionMatch(FilterCriterion c, Tuple tuple) {
+            String cmdName = tuple.getColumn(StandardTupleDefinitions.CMDHIST_TUPLE_COL_CMDNAME);
+            if (cmdName == null) {
+                return false;
+            }
+            if (CRIT_KEY_CMD_NAME_PATTERN.equals(c.getKey())) {
+                return cmdName.matches(c.getValue());
+            } else {
+                return false;
+            }
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="filtermatcher-java">
+<h2><code class="docutils literal notranslate"><span class="pre">FilterMatcher.java</span></code><a class="headerlink" href="#filtermatcher-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/FilterMatcher.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import org.yamcs.protobuf.ItemFilter;
+import org.yamcs.protobuf.ItemFilter.FilterCriterion;
+
+public abstract class FilterMatcher&lt;T&gt; {
+    boolean matches(RetrievalFilter filter, T item) {
+        var itemFilters = filter.getItemFilters();
+
+        if (itemFilters == null || itemFilters.isEmpty()) {
+            return true;
+        }
+        
+        for (ItemFilter f : itemFilters) {
+            if (!match(f, item)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean match(ItemFilter f, T item) {
+        for (var c : f.getCriteriaList()) {
+            if (criterionMatch(c, item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected abstract boolean criterionMatch(FilterCriterion criterion, T item);
+}
+</pre></div>
+</div>
+</section>
+<section id="itemgroup-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ItemGroup.java</span></code><a class="headerlink" href="#itemgroup-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ItemGroup.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import java.util.UUID;
+
+import org.yamcs.protobuf.TimelineItem.Builder;
+import org.yamcs.protobuf.TimelineItemType;
+import org.yamcs.yarch.Tuple;
+
+public class ItemGroup extends TimelineItem {
+
+    public ItemGroup(UUID id) {
+        super(TimelineItemType.ITEM_GROUP, id.toString());
+    }
+
+    public ItemGroup(Tuple tuple) {
+        super(TimelineItemType.ITEM_GROUP, tuple);
+    }
+
+    @Override
+    protected void addToProto(boolean detail, Builder protob) {
+    }
+
+    @Override
+    protected void addToTuple(Tuple tuple) {
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="itemlistener-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ItemListener.java</span></code><a class="headerlink" href="#itemlistener-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ItemListener.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+public interface ItemListener {
+
+    /**
+     * An item was created
+     */
+    void onItemCreated(TimelineItem item);
+
+    /**
+     * An item was updated
+     */
+    void onItemUpdated(TimelineItem item);
+
+    /**
+     * An item was deleted
+     */
+    void onItemDeleted(TimelineItem item);
+}
+</pre></div>
+</div>
+</section>
+<section id="itemprovider-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ItemProvider.java</span></code><a class="headerlink" href="#itemprovider-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ItemProvider.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.yamcs.filetransfer.InvalidRequestException;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.protobuf.ItemFilter;
+import org.yamcs.protobuf.LogEntry;
+import org.yamcs.protobuf.TimelineItemLog;
+import org.yamcs.protobuf.TimelineSourceCapabilities;
+
+public interface ItemProvider {
+
+    public TimelineItem getItem(String id);
+
+    public void getItems(int limit, String next, RetrievalFilter filter, ItemReceiver consumer);
+
+    /**
+     * Add an item and return the added item.
+     * &lt;p&gt;
+     * The returned value should have defaults (if any) filled in, also if the item has a relative time, the start time
+     * of the returned value will be computed from the relative time and the start of
+     * {@link TimelineItem#relativeItemUuid}
+     */
+    public TimelineItem addItem(TimelineItem item);
+
+    /**
+     * Update an item and return the updated item.
+     * &lt;p&gt;
+     * The item parameter should have the uuid set and at least the start time or relative time
+     * 
+     * @return the updated item
+     * @throws InvalidRequestException
+     *             if the item does not exist, if the groupUuuid or relatimeTimeUuid properties create a circular
+     *             dependency or other source specific error conditions
+     */
+    public TimelineItem updateItem(TimelineItem item);
+
+    /**
+     * Delete the item with the given uuid and return the deleted item.
+     * &lt;p&gt;
+     * If the item does not exist, return null
+     */
+    public TimelineItem deleteItem(UUID id);
+
+    public TimelineItem deleteTimelineGroup(UUID id);
+
+    public TimelineSourceCapabilities getCapabilities();
+
+    /**
+     * Checks that the source can filter based on the criteria specified
+     */
+    public void validateFilters(List&lt;ItemFilter&gt; filters) throws BadRequestException;
+
+    /**
+     * Returns the item log or null if the item does not exist
+     */
+    default TimelineItemLog getItemLog(String id) {
+        return TimelineItemLog.newBuilder().setId(id).build();
+    }
+
+    /**
+     * Adds an entry to the log table
+     */
+    default LogEntry addItemLog(String id, LogEntry entry) {
+        throw new UnsupportedOperationException();
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="itemreceiver-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ItemReceiver.java</span></code><a class="headerlink" href="#itemreceiver-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ItemReceiver.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+public interface ItemReceiver {
+
+    void next(TimelineItem item);
+
+    /**
+     * If a paged request has been performed, the token can be used to retrieve the next chunk.
+     * &lt;p&gt;
+     * token is null if there was no limit or there were less items than the specified limit
+     */
+    void complete(String token);
+
+    void completeExceptionally(Throwable t);
+}
+</pre></div>
+</div>
+</section>
+<section id="retrievalfilter-java">
+<h2><code class="docutils literal notranslate"><span class="pre">RetrievalFilter.java</span></code><a class="headerlink" href="#retrievalfilter-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/RetrievalFilter.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import java.util.List;
+
+import org.yamcs.protobuf.ItemFilter;
+import org.yamcs.utils.TimeInterval;
+
+public class RetrievalFilter {
+    final TimeInterval interval;
+    final List&lt;ItemFilter&gt; itemFilters;
+
+    @Deprecated
+    List&lt;String&gt; tags;
+
+    public RetrievalFilter(TimeInterval interval, List&lt;ItemFilter&gt; itemFilters) {
+        this.interval = interval;
+        this.itemFilters = itemFilters;
+    }
+
+    TimeInterval getTimeInterval() {
+        return interval;
+    }
+
+    public List&lt;ItemFilter&gt; getItemFilters() {
+        return itemFilters;
+    }
+
+    @Deprecated
+    public List&lt;String&gt; getTags() {
+        return tags;
+    }
+
+    @Deprecated
+    public void setTags(List&lt;String&gt; tags) {
+        this.tags = tags;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="timelineactivity-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimelineActivity.java</span></code><a class="headerlink" href="#timelineactivity-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineActivity.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import static org.yamcs.timeline.TimelineItemDb.CNAME_ACTIVITY_DEFINITION;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_FAILURE_REASON;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_RUNS;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_STATUS;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.yamcs.activities.protobuf.ActivityDefinition;
+import org.yamcs.protobuf.ExecutionStatus;
+import org.yamcs.protobuf.TimelineItem.Builder;
+import org.yamcs.protobuf.TimelineItemType;
+import org.yamcs.protobuf.activities.ActivityDefinitionInfo;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+
+public class TimelineActivity extends TimelineItem implements Comparable&lt;TimelineActivity&gt; {
+
+    protected List&lt;Dependence&gt; dependsOn;
+    protected ExecutionStatus status = ExecutionStatus.PLANNED;
+    protected String failureReason;
+    protected List&lt;UUID&gt; runs = new ArrayList&lt;&gt;();
+    protected ActivityDefinition activityDefinition;
+
+    public TimelineActivity(UUID id) {
+        super(TimelineItemType.ACTIVITY, id.toString());
+    }
+
+    protected TimelineActivity(TimelineItemType type, UUID id) {
+        super(type, id.toString());
+    }
+
+    public TimelineActivity(TimelineItemType type, Tuple tuple) {
+        super(type, tuple);
+        String dbstatus = tuple.getColumn(CNAME_STATUS);
+        this.status = ExecutionStatus.valueOf(dbstatus);
+
+        if (tuple.hasColumn(CNAME_FAILURE_REASON)) {
+            this.failureReason = tuple.getColumn(CNAME_FAILURE_REASON);
+        }
+        if (tuple.hasColumn(CNAME_RUNS)) {
+            this.runs = tuple.getColumn(CNAME_RUNS);
+        }
+        if (tuple.hasColumn(CNAME_ACTIVITY_DEFINITION)) {
+            this.activityDefinition = tuple.getColumn(CNAME_ACTIVITY_DEFINITION);
+        }
+    }
+
+    public void setStatus(ExecutionStatus status) {
+        this.status = status;
+    }
+
+    public ExecutionStatus getStatus() {
+        return status;
+    }
+
+    public String getFailureReason() {
+        return failureReason;
+    }
+
+    public void setFailureReason(String failureReason) {
+        this.failureReason = failureReason;
+    }
+
+    public void setActivityDefinition(ActivityDefinition activityDefinition) {
+        this.activityDefinition = activityDefinition;
+    }
+
+    public ActivityDefinition getActivityDefinition() {
+        return activityDefinition;
+    }
+
+    public List&lt;UUID&gt; getRuns() {
+        return runs;
+    }
+
+    public void addRun(UUID runId) {
+        runs.add(runId);
+    }
+
+    @Override
+    protected void addToProto(boolean detail, Builder protob) {
+        protob.setStatus(status);
+        if (failureReason != null) {
+            protob.setFailureReason(failureReason);
+        }
+        if (activityDefinition != null) {
+            var b = ActivityDefinitionInfo.newBuilder()
+                    .setType(activityDefinition.getType())
+                    .setArgs(activityDefinition.getArgs());
+            protob.setActivityDefinition(b);
+        }
+        runs.forEach(runId -&gt; protob.addRuns(runId.toString()));
+    }
+
+    @Override
+    protected void addToTuple(Tuple tuple) {
+        tuple.addEnumColumn(CNAME_STATUS, status.name());
+        if (failureReason != null) {
+            tuple.addColumn(CNAME_FAILURE_REASON, failureReason);
+        }
+        if (activityDefinition != null) {
+            tuple.addColumn(CNAME_ACTIVITY_DEFINITION, DataType.protobuf(ActivityDefinition.class), activityDefinition);
+        }
+
+        if (runs.isEmpty()) {
+            tuple.addColumn(CNAME_RUNS, DataType.array(DataType.UUID), null);
+        } else {
+            tuple.addColumn(CNAME_RUNS, DataType.array(DataType.UUID), runs);
+        }
+    }
+
+    @Override
+    public int compareTo(TimelineActivity other) {
+        if (this == other) {
+            return 0;
+        }
+
+        var rc = Long.compareUnsigned(start, other.start);
+        // Fallback to something unique, to make it deterministic
+        return (rc != 0) ? rc : id.compareTo(other.getId());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof TimelineActivity)) {
+            return false;
+        }
+        var other = (TimelineActivity) obj;
+        return id.equals(other.id);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[id=%s, start=%s]", id, TimeEncoding.toString(start));
+    }
+
+    static class Dependence {
+        UUID id;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="timelineband-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimelineBand.java</span></code><a class="headerlink" href="#timelineband-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineBand.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import static org.yamcs.timeline.TimelineBandDb.CNAME_DESCRIPTION;
+import static org.yamcs.timeline.TimelineBandDb.CNAME_FILTER;
+import static org.yamcs.timeline.TimelineBandDb.CNAME_ID;
+import static org.yamcs.timeline.TimelineBandDb.CNAME_NAME;
+import static org.yamcs.timeline.TimelineBandDb.CNAME_SHARED;
+import static org.yamcs.timeline.TimelineBandDb.CNAME_SOURCE;
+import static org.yamcs.timeline.TimelineBandDb.CNAME_TAGS;
+import static org.yamcs.timeline.TimelineBandDb.CNAME_TYPE;
+import static org.yamcs.timeline.TimelineBandDb.CNAME_USERNAME;
+import static org.yamcs.timeline.TimelineBandDb.PROP_PREFIX;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.yamcs.protobuf.ItemFilter;
+import org.yamcs.protobuf.ItemFilter.FilterCriterion;
+import org.yamcs.protobuf.TimelineBandType;
+import org.yamcs.timeline.protobuf.BandFilter;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+
+public class TimelineBand {
+
+    private final UUID id;
+
+    private String name;
+    private String description;
+    private TimelineBandType type;
+    private boolean shared;
+    private String username;
+    @Deprecated
+    private List&lt;String&gt; tags = new ArrayList&lt;&gt;();
+    private BandFilter filter;
+    private Map&lt;String, String&gt; properties = new HashMap&lt;&gt;();
+    private String source;
+
+    public TimelineBand(UUID id) {
+        this.id = id;
+    }
+
+    TimelineBand(Tuple tuple) {
+        id = tuple.getColumn(CNAME_ID);
+        name = tuple.getColumn(CNAME_NAME);
+        description = tuple.getColumn(CNAME_DESCRIPTION);
+        type = TimelineBandType.valueOf(tuple.&lt;String&gt; getColumn(CNAME_TYPE));
+        shared = tuple.getColumn(CNAME_SHARED);
+        username = tuple.getColumn(CNAME_USERNAME);
+        source = tuple.getColumn(CNAME_SOURCE);
+        filter = tuple.getColumn(CNAME_FILTER);
+
+        for (int i = 0; i &lt; tuple.size(); i++) {
+            ColumnDefinition column = tuple.getColumnDefinition(i);
+            if (column.getName().startsWith(PROP_PREFIX)) {
+                String columnName = column.getName().substring(PROP_PREFIX.length());
+                properties.put(columnName, tuple.getColumn(column.getName()));
+            }
+        }
+
+        if (tuple.getColumn(CNAME_TAGS) != null) {
+            tags.addAll(tuple.getColumn(CNAME_TAGS));
+        }
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setType(TimelineBandType type) {
+        this.type = type;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setShared(boolean shared) {
+        this.shared = shared;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public List&lt;String&gt; getTags() {
+        return tags;
+    }
+
+    public void setTags(List&lt;String&gt; tags) {
+        this.tags.clear();
+        this.tags.addAll(tags);
+    }
+
+    public void setProperties(Map&lt;String, String&gt; properties) {
+        this.properties.clear();
+        this.properties.putAll(properties);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public org.yamcs.protobuf.TimelineBand toProtobuf() {
+        var b = org.yamcs.protobuf.TimelineBand.newBuilder()
+                .setId(id.toString())
+                .setType(type)
+                .setShared(shared)
+                .setUsername(username)
+                .putAllProperties(properties)
+                .addAllFilters(getItemFilters())
+                .addAllTags(tags);
+        if (name != null) {
+            b.setName(name);
+        }
+        if (description != null) {
+            b.setDescription(description);
+        }
+        return b.build();
+    }
+
+    public Tuple toTuple() {
+        Tuple tuple = new Tuple();
+        tuple.addColumn(CNAME_ID, DataType.UUID, id);
+        tuple.addColumn(CNAME_TYPE, type.toString());
+        tuple.addColumn(CNAME_NAME, name);
+        tuple.addColumn(CNAME_DESCRIPTION, description);
+        tuple.addColumn(CNAME_SHARED, shared);
+        tuple.addColumn(CNAME_USERNAME, username);
+        tuple.addColumn(CNAME_SOURCE, source);
+        tuple.addColumn(CNAME_FILTER, DataType.protobuf(BandFilter.class), filter);
+        for (var entry : properties.entrySet()) {
+            tuple.addColumn(PROP_PREFIX + entry.getKey(), entry.getValue());
+        }
+        if (!tags.isEmpty()) {
+            tuple.addColumn(CNAME_TAGS, DataType.array(DataType.ENUM), tags);
+        }
+
+        return tuple;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public void setItemFilters(List&lt;ItemFilter&gt; filters) {
+        BandFilter.Builder b = BandFilter.newBuilder();
+        filters.stream().map(TimelineBand::fromApi).forEach(f -&gt; b.addFilters(f));
+
+        filter = b.build();
+    }
+
+    public List&lt;ItemFilter&gt; getItemFilters() {
+        if (filter == null) {
+            return Collections.emptyList();
+        } else {
+            return filter.getFiltersList().stream().map(TimelineBand::toApi).collect(Collectors.toList());
+        }
+    }
+
+    static private ItemFilter toApi(BandFilter.ItemFilter f) {
+        ItemFilter.Builder ifb = ItemFilter.newBuilder();
+        f.getCriteriaList().stream().map(TimelineBand::toApi).forEach(fc -&gt; ifb.addCriteria(fc));
+        return ifb.build();
+    }
+
+    static private FilterCriterion toApi(BandFilter.FilterCriterion fc) {
+        return FilterCriterion.newBuilder().setKey(fc.getKey()).setValue(fc.getValue()).build();
+    }
+
+    static private BandFilter.ItemFilter fromApi(ItemFilter f) {
+        var ifb = BandFilter.ItemFilter.newBuilder();
+        f.getCriteriaList().stream().map(TimelineBand::fromApi).forEach(fc -&gt; ifb.addCriteria(fc));
+        return ifb.build();
+    }
+
+    static private BandFilter.FilterCriterion fromApi(FilterCriterion fc) {
+        return BandFilter.FilterCriterion.newBuilder().setKey(fc.getKey()).setValue(fc.getValue()).build();
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="timelinebanddb-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimelineBandDb.java</span></code><a class="headerlink" href="#timelinebanddb-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineBandDb.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.yamcs.InitException;
+import org.yamcs.logging.Log;
+import org.yamcs.timeline.protobuf.BandFilter;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.TableColumnDefinition;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.ResultListener;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.UncheckedExecutionException;
+
+public class TimelineBandDb {
+    public static final TupleDefinition TIMELINE_DEF = new TupleDefinition();
+    public static final String CNAME_ID = "uuid";
+    public static final String CNAME_NAME = "name";
+    public static final String CNAME_DESCRIPTION = "description";
+    public static final String CNAME_TYPE = "type";
+    public static final String CNAME_SHARED = "shared";
+    public static final String CNAME_USERNAME = "username";
+    public static final String CNAME_TAGS = "tags";
+    public static final String CNAME_SOURCE = "source";
+    public static final String CNAME_FILTER = "filter";
+
+    protected static final String PROP_PREFIX = "prop_";
+
+    static {
+        TIMELINE_DEF.addColumn(CNAME_ID, DataType.UUID);
+        TIMELINE_DEF.addColumn(CNAME_NAME, DataType.STRING);
+        TIMELINE_DEF.addColumn(CNAME_DESCRIPTION, DataType.STRING);
+        TIMELINE_DEF.addColumn(CNAME_SHARED, DataType.BOOLEAN);
+        TIMELINE_DEF.addColumn(CNAME_USERNAME, DataType.STRING);
+        TIMELINE_DEF.addColumn(CNAME_TYPE, DataType.ENUM);
+        TIMELINE_DEF.addColumn(CNAME_TAGS, DataType.array(DataType.ENUM));
+        TIMELINE_DEF.addColumn(CNAME_SOURCE, DataType.ENUM);
+        TIMELINE_DEF.addColumn(CNAME_FILTER, DataType.protobuf(BandFilter.class));
+    }
+
+    final Log log;
+    final private ReadWriteLock rwlock = new ReentrantReadWriteLock();
+    final static String TABLE_NAME = "timeline_band";
+
+    final YarchDatabaseInstance ydb;
+    final Stream bandStream;
+
+    LoadingCache&lt;UUID, TimelineBand&gt; bandCache = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .build(new CacheLoader&lt;UUID, TimelineBand&gt;() {
+                @Override
+                public TimelineBand load(UUID uuid) {
+                    return doGetBand(uuid);
+                }
+            });
+
+    public TimelineBandDb(String yamcsInstance) throws InitException {
+        log = new Log(getClass(), yamcsInstance);
+
+        ydb = YarchDatabase.getInstance(yamcsInstance);
+        try {
+            bandStream = setupTimelineRecording();
+        } catch (ParseException | StreamSqlException e) {
+            throw new InitException(e);
+        }
+
+    }
+
+    public TimelineBand deleteBand(UUID uuid) {
+        rwlock.writeLock().lock();
+        try {
+            TimelineBand band = doGetBand(uuid);
+            if (band == null) {
+                return null;
+            }
+
+            doDeleteBand(uuid);
+
+            return band;
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    private Stream setupTimelineRecording() throws StreamSqlException, ParseException {
+        String streamName = TABLE_NAME + "_in";
+        if (ydb.getTable(TABLE_NAME) == null) {
+            String query = "create table " + TABLE_NAME + "(" + TIMELINE_DEF.getStringDefinition1()
+                    + ", primary key(uuid))";
+            ydb.execute(query);
+        }
+        if (ydb.getStream(streamName) == null) {
+            ydb.execute("create stream " + streamName + TIMELINE_DEF.getStringDefinition());
+        }
+        ydb.execute("upsert into " + TABLE_NAME + " select * from " + streamName);
+        return ydb.getStream(streamName);
+    }
+
+    private TimelineBand doGetBand(UUID uuid) {
+        StreamSqlResult r = ydb.executeUnchecked("select * from " + TABLE_NAME + " where uuid = ?", uuid);
+        try {
+            if (r.hasNext()) {
+                Tuple tuple = r.next();
+                try {
+                    TimelineBand band = new TimelineBand(tuple);
+                    log.trace("Read band from db {}", band);
+                    return band;
+                } catch (Exception e) {
+                    log.error("Cannot decode tuple {} to band", tuple);
+                }
+            }
+        } finally {
+            r.close();
+        }
+        throw new NoSuchItemException();
+    }
+
+    private void doDeleteBand(UUID uuid) {
+        bandCache.invalidate(uuid);
+        StreamSqlResult r = ydb.executeUnchecked("delete from " + TABLE_NAME + " where uuid = ?", uuid);
+        r.close();
+    }
+
+    public Collection&lt;String&gt; getTags() {
+        rwlock.readLock().lock();
+        try {
+            TableColumnDefinition tcd = ydb.getTable(TABLE_NAME).getColumnDefinition(CNAME_TAGS);
+            return Collections.unmodifiableSet(tcd.getEnumValues().keySet());
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    // returns null if uuid does not exist
+    private TimelineBand bandFromCache(UUID uuid) {
+        try {
+            return bandCache.getUnchecked(uuid);
+        } catch (UncheckedExecutionException e) {
+            if (e.getCause() instanceof NoSuchItemException) {
+                return null;
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    @SuppressWarnings("serial")
+    static class NoSuchItemException extends RuntimeException {
+    }
+
+    public TimelineBand addBand(TimelineBand band) {
+        rwlock.writeLock().lock();
+        try {
+            Tuple tuple = band.toTuple();
+            log.debug("Adding timeline band to RDB: {}", tuple);
+            bandStream.emitTuple(tuple);
+            return band;
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public TimelineBand updateBand(TimelineBand band) {
+        rwlock.writeLock().lock();
+        try {
+            doDeleteBand(band.getId());
+
+            Tuple tuple = band.toTuple();
+            log.debug("Updating timeline band in RDB: {}", tuple);
+            bandStream.emitTuple(tuple);
+            return band;
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public TimelineBand getBand(UUID uuid) {
+        rwlock.readLock().lock();
+        try {
+            return bandFromCache(uuid);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    public void listBands(String user, BandListener consumer) {
+        rwlock.readLock().lock();
+        try {
+            StreamSqlStatement stmt = ydb.createStatement(
+                    "select * from " + TABLE_NAME + " where shared or username = ?", user);
+
+            ydb.execute(stmt, new ResultListener() {
+                @Override
+                public void next(Tuple tuple) {
+                    consumer.next(new TimelineBand(tuple));
+                }
+
+                @Override
+                public void completeExceptionally(Throwable t) {
+                    consumer.completeExceptionally(t);
+                }
+
+                @Override
+                public void complete() {
+                    consumer.complete(null);
+                }
+            });
+
+        } catch (StreamSqlException | ParseException e) {
+            log.error("Exception when executing query", e);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="timelineevent-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimelineEvent.java</span></code><a class="headerlink" href="#timelineevent-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineEvent.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import org.yamcs.protobuf.TimelineItem.Builder;
+import org.yamcs.protobuf.TimelineItemType;
+import org.yamcs.yarch.Tuple;
+
+/**
+ * Used for displaying day/night, TDRS, GS visibility, milestones (e.g. launch, a deadline), general items covering
+ * large time intervals for which no specific action is taken (e.g. mission phase).
+ * &lt;p&gt;
+ * In the timeline widget also enumerated telemetry (e.g. ON/OFF, NOMINAL/STAND_BY) and packet histograms are displayed
+ * as events.
+ * 
+ *
+ */
+public class TimelineEvent extends TimelineItem {
+
+    public TimelineEvent(String id) {
+        super(TimelineItemType.EVENT, id);
+    }
+
+    public TimelineEvent(Tuple tuple) {
+        super(TimelineItemType.EVENT, tuple);
+    }
+
+    @Override
+    protected void addToProto(boolean detail, Builder protob) {
+    }
+
+    @Override
+    protected void addToTuple(Tuple tuple) {
+    }
+
+    @Override
+    public String toString() {
+        return "TimelineEvent [id=" + id + ", start=" + start + ", duration=" + duration + ", relativeItemUuid="
+                + relativeItemUuid + ", relativeStart=" + relativeStart + ", groupUuid=" + groupUuid + ", source="
+                + source + ", name=" + name + ", tooltip=" + tooltip + ", description=" + description + ", tags=" + tags
+                + "]";
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="timelineitem-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimelineItem.java</span></code><a class="headerlink" href="#timelineitem-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineItem.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import static org.yamcs.timeline.TimelineBandDb.PROP_PREFIX;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_DESCRIPTION;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_DURATION;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_GROUP_ID;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_ID;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_NAME;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_RELTIME_ID;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_RELTIME_START;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_START;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_TAGS;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_TYPE;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.yamcs.protobuf.RelativeTime;
+import org.yamcs.protobuf.TimelineItemType;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+
+import com.google.protobuf.util.Durations;
+
+/**
+ * A timeline item is the entity that appears in the timeline bars.
+ * &lt;p&gt;
+ * They can be events or activities.
+ * &lt;p&gt;
+ * Each item is identified by an id (UUID).
+ * 
+ * @author nm
+ *
+ */
+public abstract class TimelineItem {
+    protected final String id;
+    protected final TimelineItemType type;
+
+    protected long start;
+    protected long duration;
+
+    // if relativeItemUuid!= null -&gt; the item start is relative to another item
+    protected UUID relativeItemUuid;
+    protected long relativeStart;
+
+    // if the item is part of a group
+    protected UUID groupUuid;
+
+    protected String source;
+
+    protected String name;
+    protected String tooltip;
+    protected String description;
+    protected List&lt;String&gt; tags;
+    protected Map&lt;String, String&gt; properties = new HashMap&lt;&gt;();
+
+    protected TimelineItem(TimelineItemType type, Tuple tuple) {
+        this.id = ((UUID) tuple.getColumn(CNAME_ID)).toString();
+        this.type = type;
+        this.start = tuple.getTimestampColumn(CNAME_START);
+        this.duration = tuple.getLongColumn(CNAME_DURATION);
+
+        if (tuple.hasColumn(CNAME_NAME)) {
+            this.name = tuple.getColumn(CNAME_NAME);
+        }
+        if (tuple.hasColumn(CNAME_TAGS)) {
+            this.tags = tuple.getColumn(CNAME_TAGS);
+        }
+        if (tuple.hasColumn(CNAME_DESCRIPTION)) {
+            this.description = tuple.getColumn(CNAME_DESCRIPTION);
+        }
+
+        for (int i = 0; i &lt; tuple.size(); i++) {
+            ColumnDefinition column = tuple.getColumnDefinition(i);
+            if (column.getName().startsWith(PROP_PREFIX)) {
+                String columnName = column.getName().substring(PROP_PREFIX.length());
+                properties.put(columnName, tuple.getColumn(column.getName()));
+            }
+        }
+    }
+
+    public TimelineItem(TimelineItemType type, String id) {
+        this.id = id;
+        this.type = type;
+    }
+
+    public long getStart() {
+        return start;
+    }
+
+    public void setStart(long start) {
+        this.start = start;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public List&lt;String&gt; getTags() {
+        return tags;
+    }
+
+    public UUID getRelativeItemUuid() {
+        return relativeItemUuid;
+    }
+
+    public void setRelativeItemUuid(UUID relativeItemUuid) {
+        this.relativeItemUuid = relativeItemUuid;
+    }
+
+    public long getRelativeStart() {
+        return relativeStart;
+    }
+
+    public void setRelativeStart(long relativeStart) {
+        this.relativeStart = relativeStart;
+    }
+
+    public UUID getGroupUuid() {
+        return groupUuid;
+    }
+
+    public void setGroupUuid(UUID groupUuid) {
+        this.groupUuid = groupUuid;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTooltip() {
+        return tooltip;
+    }
+
+    public void setTooltip(String tooltip) {
+        this.tooltip = tooltip;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public TimelineItemType getType() {
+        return type;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public void setTags(List&lt;String&gt; tags) {
+        this.tags = tags;
+    }
+
+    public Map&lt;String, String&gt; getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map&lt;String, String&gt; properties) {
+        this.properties.clear();
+        this.properties.putAll(properties);
+    }
+
+    protected abstract void addToProto(boolean detail, org.yamcs.protobuf.TimelineItem.Builder protob);
+
+    public org.yamcs.protobuf.TimelineItem toProtoBuf(boolean detail) {
+        var protob = org.yamcs.protobuf.TimelineItem.newBuilder()
+                .setType(type)
+                .setId(id.toString())
+                .setStart(TimeEncoding.toProtobufTimestamp(start))
+                .setDuration(Durations.fromMillis(duration))
+                .putAllProperties(properties);
+        if (name != null) {
+            protob.setName(name);
+        }
+
+        if (relativeItemUuid != null) {
+            RelativeTime relTime = RelativeTime.newBuilder()
+                    .setRelto(relativeItemUuid.toString())
+                    .setRelativeStart(Durations.fromMillis(relativeStart))
+                    .build();
+            protob.setRelativeTime(relTime);
+        }
+        if (tags != null) {
+            protob.addAllTags(tags);
+        }
+
+        if (detail) {
+            if (description != null) {
+                protob.setDescription(description);
+            }
+        }
+
+        addToProto(detail, protob);
+        return protob.build();
+    }
+
+    public Tuple toTuple() {
+        Tuple tuple = new Tuple();
+
+        tuple.addColumn(CNAME_ID, DataType.UUID, UUID.fromString(id));
+        tuple.addEnumColumn(CNAME_TYPE, type.name());
+        tuple.addTimestampColumn(CNAME_START, start);
+        tuple.addColumn(CNAME_DURATION, duration);
+        if (name != null) {
+            tuple.addColumn(CNAME_NAME, name);
+        }
+        for (var entry : properties.entrySet()) {
+            tuple.addColumn(PROP_PREFIX + entry.getKey(), entry.getValue());
+        }
+        if (tags != null) {
+            tuple.addColumn(CNAME_TAGS, DataType.array(DataType.ENUM), tags);
+        }
+        if (relativeItemUuid != null) {
+            tuple.addColumn(CNAME_RELTIME_ID, DataType.UUID, relativeItemUuid);
+            tuple.addColumn(CNAME_RELTIME_START, DataType.LONG, relativeStart);
+        }
+        if (groupUuid != null) {
+            tuple.addColumn(CNAME_GROUP_ID, DataType.UUID, groupUuid);
+        }
+        if (description != null) {
+            tuple.addColumn(CNAME_DESCRIPTION, DataType.STRING, description);
+        }
+
+        addToTuple(tuple);
+        return tuple;
+    }
+
+    protected abstract void addToTuple(Tuple tuple);
+
+    public static TimelineItem fromTuple(Tuple tuple) {
+        String types = tuple.getColumn("type");
+        TimelineItemType type = TimelineItemType.valueOf(types);
+        switch (type) {
+        case ACTIVITY_GROUP:
+            return new ActivityGroup(tuple);
+        case ACTIVITY:
+            return new TimelineActivity(TimelineItemType.ACTIVITY, tuple);
+        case EVENT:
+            return new TimelineEvent(tuple);
+        case ITEM_GROUP:
+            return new ItemGroup(tuple);
+        }
+        return null;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="timelineitemdb-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimelineItemDb.java</span></code><a class="headerlink" href="#timelineitemdb-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineItemDb.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.yamcs.InitException;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.activities.protobuf.ActivityDefinition;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.ItemFilter;
+import org.yamcs.protobuf.ItemFilter.FilterCriterion;
+import org.yamcs.protobuf.LogEntry;
+import org.yamcs.protobuf.TimelineItemLog;
+import org.yamcs.protobuf.TimelineSourceCapabilities;
+import org.yamcs.utils.DatabaseCorruptionException;
+import org.yamcs.utils.InvalidRequestException;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.TableColumnDefinition;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.ResultListener;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.UncheckedExecutionException;
+
+public class TimelineItemDb implements ItemProvider {
+    static final Random random = new Random();
+    public static final TupleDefinition TIMELINE_DEF = new TupleDefinition();
+    public static final String CNAME_START = "start";
+    public static final String CNAME_DURATION = "duration";
+    public static final String CNAME_ID = "uuid";
+    public static final String CNAME_NAME = "name";
+    public static final String CNAME_TYPE = "type";
+    public static final String CNAME_STATUS = "status";
+    public static final String CNAME_TAGS = "tags";
+    public static final String CNAME_GROUP_ID = "group_id";
+    public static final String CNAME_RELTIME_ID = "reltime_id";
+    public static final String CNAME_RELTIME_START = "reltime_start";
+    public static final String CNAME_DESCRIPTION = "description";
+    public static final String CNAME_FAILURE_REASON = "failure_reason";
+    public static final String CNAME_ACTIVITY_DEFINITION = "activity_definition";
+    public static final String CNAME_RUNS = "runs";
+    public static final String CRIT_KEY_TAG = "tag";
+
+    static {
+        TIMELINE_DEF.addColumn(CNAME_START, DataType.TIMESTAMP);
+        TIMELINE_DEF.addColumn(CNAME_DURATION, DataType.LONG);
+        TIMELINE_DEF.addColumn(CNAME_ID, DataType.UUID);
+        TIMELINE_DEF.addColumn(CNAME_NAME, DataType.STRING);
+        TIMELINE_DEF.addColumn(CNAME_TYPE, DataType.ENUM);
+        TIMELINE_DEF.addColumn(CNAME_TAGS, DataType.array(DataType.ENUM));
+        TIMELINE_DEF.addColumn(CNAME_GROUP_ID, DataType.UUID);
+        TIMELINE_DEF.addColumn(CNAME_RELTIME_ID, DataType.UUID);
+        TIMELINE_DEF.addColumn(CNAME_RELTIME_START, DataType.LONG);
+        TIMELINE_DEF.addColumn(CNAME_ACTIVITY_DEFINITION, DataType.protobuf(ActivityDefinition.class));
+        TIMELINE_DEF.addColumn(CNAME_RUNS, DataType.array(DataType.UUID));
+    }
+    final Log log;
+    final private ReadWriteLock rwlock = new ReentrantReadWriteLock();
+    final static String TABLE_NAME = "timeline";
+
+    final YarchDatabaseInstance ydb;
+    final Stream timelineStream;
+    final TupleMatcher matcher;
+    final TimelineItemLogDb logDb;
+    private Set&lt;ItemListener&gt; itemListeners = new CopyOnWriteArraySet&lt;&gt;();
+
+    LoadingCache&lt;UUID, TimelineItem&gt; itemCache = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .build(
+                    new CacheLoader&lt;UUID, TimelineItem&gt;() {
+                        @Override
+                        public TimelineItem load(UUID uuid) {
+                            return doGetItem(uuid);
+                        }
+                    });
+
+    public TimelineItemDb(String yamcsInstance) throws InitException {
+        log = new Log(getClass(), yamcsInstance);
+
+        ydb = YarchDatabase.getInstance(yamcsInstance);
+        try {
+            timelineStream = setupTimelineRecording();
+        } catch (ParseException | StreamSqlException e) {
+            throw new InitException(e);
+        }
+
+        logDb = new TimelineItemLogDb(yamcsInstance);
+        matcher = new TupleMatcher();
+    }
+
+    private Stream setupTimelineRecording() throws StreamSqlException, ParseException {
+        String streamName = TABLE_NAME + "_in";
+        if (ydb.getTable(TABLE_NAME) == null) {
+            String query = "create table " + TABLE_NAME + "(" + TIMELINE_DEF.getStringDefinition1()
+                    + ", primary key(start, uuid), index(reltime_id))";
+            ydb.execute(query);
+        }
+        if (ydb.getStream(streamName) == null) {
+            ydb.execute("create stream " + streamName + TIMELINE_DEF.getStringDefinition());
+        }
+        ydb.execute("upsert into " + TABLE_NAME + " select * from " + streamName);
+        return ydb.getStream(streamName);
+    }
+
+    @Override
+    public TimelineItem addItem(TimelineItem item) {
+        rwlock.writeLock().lock();
+        try {
+            if (item.getRelativeItemUuid() != null) {
+                TimelineItem relItem = fromCache(item.getRelativeItemUuid());
+                if (relItem == null) {
+                    throw new InvalidRequestException(
+                            "Referenced relative item uuid " + item.getRelativeItemUuid() + " does not exist");
+                }
+                item.setStart(relItem.getStart() + item.getRelativeStart());
+            }
+            if (item.getGroupUuid() != null) {
+                TimelineItem groupItem = fromCache(item.getGroupUuid());
+                if (groupItem == null) {
+                    throw new InvalidRequestException(
+                            "Referenced group item uuid " + item.getGroupUuid() + " does not exist");
+                }
+                if (!(groupItem instanceof ActivityGroup || groupItem instanceof ItemGroup)) {
+                    throw new InvalidRequestException(
+                            "Assigned group " + groupItem.getId() + " is not a real group");
+                }
+                if (groupItem instanceof ActivityGroup &amp;&amp; !(item instanceof TimelineActivity)) {
+                    throw new InvalidRequestException(
+                            "An activity group " + groupItem.getId() + " can only contain activity items");
+                }
+            }
+            Tuple tuple = item.toTuple();
+            log.debug("Adding timeline item to RDB: {}", tuple);
+            timelineStream.emitTuple(tuple);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+
+        itemListeners.forEach(l -&gt; l.onItemCreated(item));
+        return item;
+    }
+
+    @Override
+    public TimelineItem updateItem(TimelineItem item) {
+        rwlock.writeLock().lock();
+        UUID itemId = UUID.fromString(item.getId());
+        try {
+            if (item.getRelativeItemUuid() != null) {
+                TimelineItem relItem = fromCache(item.getRelativeItemUuid());
+                if (relItem == null) {
+                    throw new InvalidRequestException(
+                            "Referenced relative item uuid " + item.getRelativeItemUuid() + " does not exist");
+                }
+                verifyRelTimeCircularity(itemId, relItem);
+                item.setStart(relItem.getStart() + item.getRelativeStart());
+            }
+
+            if (item.getGroupUuid() != null) {
+                TimelineItem groupItem = fromCache(item.getGroupUuid());
+                if (groupItem == null) {
+                    throw new InvalidRequestException(
+                            "Referenced group item uuid " + item.getGroupUuid() + " does not exist");
+                }
+                if (!(groupItem instanceof ActivityGroup || groupItem instanceof ItemGroup)) {
+                    throw new InvalidRequestException(
+                            "Assigned group " + groupItem.getId() + " is not a real group");
+                }
+                if (groupItem instanceof ActivityGroup &amp;&amp; !(item instanceof TimelineActivity)) {
+                    throw new InvalidRequestException(
+                            "An activity group " + groupItem.getId() + " can only contain activity items");
+                }
+                verifyGroupCircularity(itemId, groupItem);
+            }
+            doDeleteItem(itemId);
+
+            Tuple tuple = item.toTuple();
+            log.debug("Updating timeline item in RDB: {}", tuple);
+            timelineStream.emitTuple(tuple);
+
+            updateDependentStart(item);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+
+        itemListeners.forEach(l -&gt; l.onItemUpdated(item));
+        return item;
+    }
+
+    // update the start time of all items having their time specified as relative to this
+    private void updateDependentStart(TimelineItem item) {
+        String query = "update " + TABLE_NAME + " set start = " + CNAME_RELTIME_START + " + ? where "
+                + CNAME_RELTIME_ID + " = ?";
+        StreamSqlResult r = ydb.executeUnchecked(query, item.getStart(), item.getId());
+        r.close();
+    }
+
+    private void verifyRelTimeCircularity(UUID uuid, TimelineItem relItem) {
+        if (uuid.toString().equals(relItem.getId())) {
+            throw new InvalidRequestException("Circular relative time reference for " + uuid);
+        }
+
+        if (relItem.getRelativeItemUuid() != null) {
+            TimelineItem relItem1 = fromCache(relItem.getRelativeItemUuid());
+            if (relItem1 == null) {
+                throw new DatabaseCorruptionException("timeline item " + relItem.getRelativeItemUuid()
+                        + " time referenced by " + relItem.getId() + " does not exist");
+            }
+            verifyRelTimeCircularity(uuid, relItem1);
+        }
+    }
+
+    private void verifyGroupCircularity(UUID uuid, TimelineItem groupItem) {
+        if (uuid.toString().equals(groupItem.getId())) {
+            throw new InvalidRequestException("Circular relative time reference for " + uuid);
+        }
+
+        if (groupItem.getGroupUuid() != null) {
+            TimelineItem groupItem1 = fromCache(groupItem.getGroupUuid());
+            if (groupItem1 == null) {
+                throw new DatabaseCorruptionException("timeline item " + groupItem.getGroupUuid()
+                        + " group referenced by " + groupItem.getId() + " does not exist");
+            }
+            verifyGroupCircularity(uuid, groupItem1);
+        }
+    }
+
+    private TimelineItem doGetItem(UUID uuid) {
+        StreamSqlResult r = ydb.executeUnchecked("select * from " + TABLE_NAME + " where uuid = ?", uuid);
+        try {
+            if (r.hasNext()) {
+                Tuple tuple = r.next();
+                try {
+                    TimelineItem item = TimelineItem.fromTuple(tuple);
+                    log.trace("Read item from db {}", item);
+                    return item;
+                } catch (Exception e) {
+                    log.error("Cannot decode tuple {} intro timeline item", tuple);
+                }
+            }
+        } finally {
+            r.close();
+        }
+
+        throw new NoSuchItemException();
+    }
+
+    @Override
+    public TimelineItem getItem(String id) {
+        UUID uuid = UUID.fromString(id);
+        rwlock.readLock().lock();
+        try {
+            return fromCache(uuid);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    @Override
+    public TimelineItem deleteItem(UUID uuid) {
+        TimelineItem item = null;
+        rwlock.writeLock().lock();
+        try {
+            item = doGetItem(uuid);
+            if (item == null) {
+                return null;
+            }
+
+            StreamSqlResult r = ydb.executeUnchecked(
+                    "select uuid from " + TABLE_NAME + " where " + CNAME_GROUP_ID + " = ?", uuid);
+            try {
+                if (r.hasNext()) {
+                    UUID id = r.next().getColumn(CNAME_ID);
+                    throw new InvalidRequestException(
+                            "Cannot delete " + uuid + " because it is considered as a group by item " + id);
+                }
+            } finally {
+                r.close();
+            }
+
+            r = ydb.executeUnchecked(
+                    "select uuid from " + TABLE_NAME + " where " + CNAME_RELTIME_ID + " = ?", uuid);
+            try {
+                if (r.hasNext()) {
+                    UUID id = r.next().getColumn(CNAME_ID);
+                    r.close();
+                    throw new InvalidRequestException(
+                            "Cannot delete " + uuid + " because item " + id + " time depends on it");
+                }
+            } finally {
+                r.close();
+            }
+            doDeleteItem(uuid);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+
+        var fItem = item;
+        itemListeners.forEach(l -&gt; l.onItemDeleted(fItem));
+        return item;
+    }
+
+    @Override
+    public TimelineItem deleteTimelineGroup(UUID uuid) {
+        rwlock.writeLock().lock();
+        try {
+            TimelineItem item = doGetItem(uuid);
+            if (item == null) {
+                return null;
+            }
+
+            // delete all events from the group
+            StreamSqlResult r = ydb.executeUnchecked(
+                    "select uuid from " + TABLE_NAME + " where " + CNAME_GROUP_ID + " = ?", uuid);
+            while (r.hasNext()) {
+                UUID id = r.next().getColumn(CNAME_ID);
+                deleteItem(id);
+            }
+            r.close();
+
+            // delete the group
+            deleteItem(uuid);
+            return item;
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    private void doDeleteItem(UUID uuid) {
+        itemCache.invalidate(uuid);
+        StreamSqlResult r = ydb.executeUnchecked("delete from " + TABLE_NAME + " where uuid = ?", uuid);
+        r.close();
+    }
+
+    @Override
+    public void getItems(int limit, String token, RetrievalFilter filter, ItemReceiver consumer) {
+        rwlock.readLock().lock();
+        try {
+            SqlBuilder sqlBuilder = new SqlBuilder(TABLE_NAME);
+            sqlBuilder.select("*");
+
+            TimeInterval interval = filter.getTimeInterval();
+            if (interval.hasEnd()) {
+                sqlBuilder.where("start &lt; ?", interval.getEnd());
+            }
+            if (interval.hasStart()) {
+                sqlBuilder.where("start+duration &gt; ?", interval.getStart());
+            }
+            List&lt;String&gt; tags = getTags(filter);
+
+            if (!tags.isEmpty()) {
+                sqlBuilder.where(" tags &amp;&amp; ?", tags);
+            }
+            sqlBuilder.limit(limit + 1);
+
+            StreamSqlStatement stmt = ydb.createStatement(sqlBuilder.toString(),
+                    sqlBuilder.getQueryArguments().toArray());
+            ydb.execute(stmt, new ResultListener() {
+                int count = 0;
+
+                @Override
+                public void next(Tuple tuple) {
+                    if (matcher.matches(filter, tuple)) {
+                        if (count &lt; limit) {
+                            consumer.next(TimelineItem.fromTuple(tuple));
+                        }
+                        count++;
+                    }
+                }
+
+                @Override
+                public void completeExceptionally(Throwable t) {
+                    consumer.completeExceptionally(t);
+                }
+
+                @Override
+                public void complete() {
+                    if (count == limit + 1) {
+                        consumer.complete(getRandomToken());
+                    } else {
+                        consumer.complete(null);
+                    }
+                }
+            });
+
+        } catch (StreamSqlException | ParseException e) {
+            log.error("Exception when executing query", e);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+
+    }
+
+    private List&lt;String&gt; getTags(RetrievalFilter filter) {
+        List&lt;String&gt; r = new ArrayList&lt;&gt;();
+        if (filter.getTags() != null) {
+            r.addAll(filter.getTags());
+        }
+        if (filter.getItemFilters() != null) {
+            for (ItemFilter f : filter.getItemFilters()) {
+                for (var c : f.getCriteriaList()) {
+                    if (CRIT_KEY_TAG.equals(c.getKey())) {
+                        r.add(c.getValue());
+                    }
+                }
+            }
+        }
+        return r;
+    }
+
+    public void addItemListener(ItemListener itemListener) {
+        itemListeners.add(itemListener);
+    }
+
+    public void removeItemListener(ItemListener itemListener) {
+        itemListeners.remove(itemListener);
+    }
+
+    private static String getRandomToken() {
+        byte[] b = new byte[16];
+        random.nextBytes(b);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(b);
+    }
+
+    public Collection&lt;String&gt; getTags() {
+        rwlock.readLock().lock();
+        try {
+            TableColumnDefinition tcd = ydb.getTable(TABLE_NAME).getColumnDefinition(CNAME_TAGS);
+            return Collections.unmodifiableSet(tcd.getEnumValues().keySet());
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    // returns null if uuid does not exist
+    private TimelineItem fromCache(UUID uuid) {
+        try {
+            return itemCache.getUnchecked(uuid);
+        } catch (UncheckedExecutionException e) {
+            if (e.getCause() instanceof NoSuchItemException) {
+                return null;
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    @Override
+    public TimelineSourceCapabilities getCapabilities() {
+        return TimelineSourceCapabilities.newBuilder()
+                .setReadOnly(false)
+                .setHasActivityGroups(true)
+                .setHasEventGroups(true)
+                .setHasManualActivities(true)
+                .setHasAutomatedActivities(true)
+                .build();
+    }
+
+    @Override
+    public void validateFilters(List&lt;ItemFilter&gt; filters) throws BadRequestException {
+        for (var filter : filters) {
+            for (var c : filter.getCriteriaList()) {
+                if (!CRIT_KEY_TAG.equals(c.getKey())) {
+                    throw new BadRequestException(
+                            "Unknonw criteria key " + c.getKey() + ". Supported key: " + CRIT_KEY_TAG);
+                }
+            }
+        }
+    }
+
+    private static class TupleMatcher extends FilterMatcher&lt;Tuple&gt; {
+        @Override
+        protected boolean criterionMatch(FilterCriterion c, Tuple tuple) {
+            String cmdName = tuple.getColumn(StandardTupleDefinitions.CMDHIST_TUPLE_COL_CMDNAME);
+            if (cmdName == null) {
+                return false;
+            }
+            if (CRIT_KEY_TAG.equals(c.getKey())) {
+                return cmdName.matches(c.getValue());
+            } else {
+                return false;
+            }
+        }
+    }
+
+    @Override
+    public TimelineItemLog getItemLog(String id) {
+        UUID uuid = UUID.fromString(id);
+        return logDb.getLog(uuid);
+    }
+
+    @Override
+    public LogEntry addItemLog(String id, LogEntry entry) {
+        UUID uuid = UUID.fromString(id);
+        return logDb.addLogEntry(uuid, entry);
+    }
+
+    @SuppressWarnings("serial")
+    static class NoSuchItemException extends RuntimeException {
+
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="timelineitemlogdb-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimelineItemLogDb.java</span></code><a class="headerlink" href="#timelineitemlogdb-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineItemLogDb.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import java.util.UUID;
+
+import org.yamcs.InitException;
+import org.yamcs.YamcsServer;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.LogEntry;
+import org.yamcs.protobuf.TimelineItemLog;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+public class TimelineItemLogDb {
+    public static final TupleDefinition LOG_DEF = new TupleDefinition();
+    public static final String CNAME_TIME = "logtime";
+    public static final String CNAME_ID = "uuid";
+    public static final String CNAME_USER = "user";
+    public static final String CNAME_TYPE = "type";
+    public static final String CNAME_MSG = "msg";
+
+    static {
+        LOG_DEF.addColumn(CNAME_TIME, DataType.TIMESTAMP);
+        LOG_DEF.addColumn(CNAME_ID, DataType.UUID);
+        LOG_DEF.addColumn(CNAME_USER, DataType.STRING);
+        LOG_DEF.addColumn(CNAME_TYPE, DataType.STRING);
+        LOG_DEF.addColumn(CNAME_MSG, DataType.STRING);
+    }
+
+    final Log log;
+    final static String TABLE_NAME = "timeline_log";
+
+    final YarchDatabaseInstance ydb;
+    final Stream logStream;
+
+    final TimeService timeService;
+
+    public TimelineItemLogDb(String yamcsInstance) throws InitException {
+        log = new Log(getClass(), yamcsInstance);
+
+        ydb = YarchDatabase.getInstance(yamcsInstance);
+        try {
+            logStream = setupLogRecording();
+        } catch (ParseException | StreamSqlException e) {
+            throw new InitException(e);
+        }
+        timeService = YamcsServer.getTimeService(yamcsInstance);
+    }
+
+    private Stream setupLogRecording() throws StreamSqlException, ParseException {
+        if (ydb.getTable(TABLE_NAME) == null) {
+            String query = "create table " + TABLE_NAME + "(" + LOG_DEF.getStringDefinition1()
+                    + ", seq long auto_increment, primary key(logtime, uuid, seq))";
+            ydb.execute(query);
+        }
+        String streamName = TABLE_NAME + "_in";
+
+        if (ydb.getStream(streamName) == null) {
+            ydb.execute("create stream " + streamName + LOG_DEF.getStringDefinition());
+        }
+        ydb.execute("upsert into " + TABLE_NAME + " select * from " + streamName);
+        return ydb.getStream(streamName);
+    }
+
+    public TimelineItemLog getLog(UUID uuid) {
+        TimelineItemLog.Builder logb = TimelineItemLog.newBuilder().setId(uuid.toString());
+        StreamSqlResult r = null;
+        try {
+            r = ydb.execute("select * from " + TABLE_NAME + " where uuid = ?", uuid);
+            while (r.hasNext()) {
+                logb.addEntries(fromTuple(r.next()));
+            }
+        } catch (StreamSqlException | ParseException e) {
+            log.error("Exception when executing query", e);
+        } finally {
+            if (r != null) {
+                r.close();
+            }
+        }
+
+        return logb.build();
+    }
+
+    public LogEntry addLogEntry(UUID uuid, LogEntry entry) {
+        Tuple tuple = toTuple(uuid, entry);
+        log.debug("Adding log {}", tuple);
+        logStream.emitTuple(tuple);
+
+        return fromTuple(tuple);
+    }
+
+    private LogEntry fromTuple(Tuple tuple) {
+        long time = tuple.getTimestampColumn(CNAME_TIME);
+        LogEntry.Builder logb = LogEntry.newBuilder().setTime(TimeEncoding.toProtobufTimestamp(time));
+
+        if (tuple.hasColumn(CNAME_USER)) {
+            logb.setUser(tuple.getColumn(CNAME_USER));
+        }
+        if (tuple.hasColumn(CNAME_TYPE)) {
+            logb.setType(tuple.getColumn(CNAME_TYPE));
+        }
+
+        if (tuple.hasColumn(CNAME_MSG)) {
+            logb.setMsg(tuple.getColumn(CNAME_MSG));
+        }
+
+        return logb.build();
+    }
+
+    private Tuple toTuple(UUID uuid, LogEntry entry) {
+        Tuple tuple = new Tuple();
+        long time = entry.hasTime() ? TimeEncoding.fromProtobufTimestamp(entry.getTime())
+                : timeService.getMissionTime();
+
+        tuple.addColumn(CNAME_TIME, DataType.TIMESTAMP, time);
+        tuple.addColumn(CNAME_ID, DataType.UUID, uuid);
+
+        if (entry.hasUser()) {
+            tuple.addColumn(CNAME_USER, entry.getUser());
+        }
+
+        if (entry.hasType()) {
+            tuple.addColumn(CNAME_TYPE, entry.getType());
+        }
+
+        if (entry.hasMsg()) {
+            tuple.addColumn(CNAME_MSG, entry.getMsg());
+        }
+
+        return tuple;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="timelineservice-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimelineService.java</span></code><a class="headerlink" href="#timelineservice-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineService.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.activities.ActivityService;
+import org.yamcs.protobuf.TimelineSourceCapabilities;
+
+import com.google.common.util.concurrent.ServiceManager;
+
+/**
+ * This service manages the Yamcs timeline.
+ * &lt;p&gt;
+ * The timeline is a collection of events or activities collectively called timeline items.
+ * 
+ * @author nm
+ */
+public class TimelineService extends AbstractYamcsService {
+
+    public static final String RDB_TIMELINE_SOURCE = "rdb";
+    public static final String COMMANDS_TIMELINE_SOURCE = "commands";
+
+    private static final String CONFIG_ACTIVITIES = "activities";
+    private static final String CONFIG_SCHEDULING = "scheduling";
+
+    private Map&lt;String, ItemProvider&gt; timelineSources = new HashMap&lt;&gt;();
+
+    private TimelineBandDb timelineBandDb;
+    private TimelineViewDb timelineViewDb;
+    private TimelineItemDb timelineItemDb;
+
+    // Guava manager for sub-services
+    private ServiceManager serviceManager;
+
+    private ActivityService activityService = new ActivityService();
+    private ActivityScheduler activityScheduler = new ActivityScheduler();
+
+    @Override
+    public Spec getSpec() {
+        var spec = new Spec();
+        spec.addOption(CONFIG_ACTIVITIES, OptionType.MAP)
+                .withSpec(activityService.getSpec())
+                .withApplySpecDefaults(true);
+        spec.addOption(CONFIG_SCHEDULING, OptionType.MAP)
+                .withSpec(activityScheduler.getSpec())
+                .withApplySpecDefaults(true);
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        timelineItemDb = new TimelineItemDb(yamcsInstance);
+        timelineSources.put(RDB_TIMELINE_SOURCE, timelineItemDb);
+        timelineSources.put(COMMANDS_TIMELINE_SOURCE, new CommandItemProvider(yamcsInstance));
+        timelineBandDb = new TimelineBandDb(yamcsInstance);
+        timelineViewDb = new TimelineViewDb(yamcsInstance);
+
+        var activityConfig = config.getConfigOrEmpty(CONFIG_ACTIVITIES);
+        activityService.init(yamcsInstance, activityConfig);
+
+        var schedulerConfig = config.getConfigOrEmpty(CONFIG_SCHEDULING);
+        activityScheduler.init(this, schedulerConfig);
+    }
+
+    public Map&lt;String, TimelineSourceCapabilities&gt; getSources() {
+        Map&lt;String, TimelineSourceCapabilities&gt; r = new HashMap&lt;&gt;();
+        for (var entry : timelineSources.entrySet()) {
+            r.put(entry.getKey(), entry.getValue().getCapabilities());
+        }
+        return r;
+    }
+
+    public ItemProvider getSource(String source) {
+        return timelineSources.get(source);
+    }
+
+    public TimelineBandDb getTimelineBandDb() {
+        return timelineBandDb;
+    }
+
+    public TimelineViewDb getTimelineViewDb() {
+        return timelineViewDb;
+    }
+
+    public TimelineItemDb getTimelineItemDb() {
+        return timelineItemDb;
+    }
+
+    public ActivityService getActivityService() {
+        return activityService;
+    }
+
+    public ActivityScheduler getActivityScheduler() {
+        return activityScheduler;
+    }
+
+    @Override
+    protected void doStart() {
+        serviceManager = new ServiceManager(Arrays.asList(activityService, activityScheduler));
+        try {
+            serviceManager.startAsync().awaitHealthy(10, TimeUnit.SECONDS);
+            notifyStarted();
+        } catch (TimeoutException e) {
+            notifyFailed(e);
+        }
+    }
+
+    @Override
+    protected void doStop() {
+        serviceManager.stopAsync();
+        try {
+            serviceManager.awaitStopped(5, TimeUnit.SECONDS);
+            notifyStopped();
+        } catch (TimeoutException e) {
+            notifyFailed(e);
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="timelineview-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimelineView.java</span></code><a class="headerlink" href="#timelineview-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineView.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import static org.yamcs.timeline.TimelineViewDb.CNAME_BANDS;
+import static org.yamcs.timeline.TimelineViewDb.CNAME_DESCRIPTION;
+import static org.yamcs.timeline.TimelineViewDb.CNAME_ID;
+import static org.yamcs.timeline.TimelineViewDb.CNAME_NAME;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+
+public class TimelineView {
+
+    private final UUID id;
+
+    private String name;
+    private String description;
+    private List&lt;UUID&gt; bands = new ArrayList&lt;&gt;();
+
+    public TimelineView(UUID id) {
+        this.id = id;
+    }
+
+    TimelineView(Tuple tuple) {
+        id = tuple.getColumn(CNAME_ID);
+        name = tuple.getColumn(CNAME_NAME);
+        description = tuple.getColumn(CNAME_DESCRIPTION);
+        if (tuple.getColumn(CNAME_BANDS) != null) {
+            bands.addAll(tuple.getColumn(CNAME_BANDS));
+        }
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List&lt;UUID&gt; getBands() {
+        return bands;
+    }
+
+    public void setBands(List&lt;UUID&gt; bands) {
+        this.bands.clear();
+        this.bands.addAll(bands);
+    }
+
+    public org.yamcs.protobuf.TimelineView toProtobuf() {
+        List&lt;org.yamcs.protobuf.TimelineBand&gt; bands = this.bands.stream()
+                .map(id -&gt; org.yamcs.protobuf.TimelineBand.newBuilder()
+                        .setId(id.toString())
+                        .build())
+                .collect(Collectors.toList());
+        org.yamcs.protobuf.TimelineView.Builder b = org.yamcs.protobuf.TimelineView.newBuilder()
+                .setId(id.toString())
+                .addAllBands(bands);
+        if (name != null) {
+            b.setName(name);
+        }
+        if (description != null) {
+            b.setDescription(description);
+        }
+        return b.build();
+    }
+
+    public Tuple toTuple() {
+        Tuple tuple = new Tuple();
+        tuple.addColumn(CNAME_ID, DataType.UUID, id);
+        tuple.addColumn(CNAME_NAME, name);
+        tuple.addColumn(CNAME_DESCRIPTION, description);
+        if (!bands.isEmpty()) {
+            tuple.addColumn(CNAME_BANDS, DataType.array(DataType.UUID), bands);
+        }
+        return tuple;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="timelineviewdb-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimelineViewDb.java</span></code><a class="headerlink" href="#timelineviewdb-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineViewDb.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.yamcs.InitException;
+import org.yamcs.logging.Log;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.ResultListener;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.UncheckedExecutionException;
+
+public class TimelineViewDb {
+    public static final TupleDefinition TIMELINE_DEF = new TupleDefinition();
+    public static final String CNAME_ID = "uuid";
+    public static final String CNAME_NAME = "name";
+    public static final String CNAME_DESCRIPTION = "description";
+    public static final String CNAME_BANDS = "bands";
+
+    static {
+        TIMELINE_DEF.addColumn(CNAME_ID, DataType.UUID);
+        TIMELINE_DEF.addColumn(CNAME_NAME, DataType.STRING);
+        TIMELINE_DEF.addColumn(CNAME_DESCRIPTION, DataType.STRING);
+        TIMELINE_DEF.addColumn(CNAME_BANDS, DataType.array(DataType.UUID));
+    }
+
+    final Log log;
+    final private ReadWriteLock rwlock = new ReentrantReadWriteLock();
+    final static String TABLE_NAME = "timeline_view";
+
+    final YarchDatabaseInstance ydb;
+    final Stream viewStream;
+
+    LoadingCache&lt;UUID, TimelineView&gt; viewCache = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .build(new CacheLoader&lt;UUID, TimelineView&gt;() {
+                @Override
+                public TimelineView load(UUID uuid) {
+                    return doGetview(uuid);
+                }
+            });
+
+    public TimelineViewDb(String yamcsInstance) throws InitException {
+        log = new Log(getClass(), yamcsInstance);
+
+        ydb = YarchDatabase.getInstance(yamcsInstance);
+        try {
+            viewStream = setupTimelineRecording();
+        } catch (ParseException | StreamSqlException e) {
+            throw new InitException(e);
+        }
+
+    }
+
+    public TimelineView deleteView(UUID uuid) {
+        rwlock.writeLock().lock();
+        try {
+            TimelineView view = doGetview(uuid);
+            if (view == null) {
+                return null;
+            }
+
+            doDeleteView(uuid);
+
+            return view;
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    private Stream setupTimelineRecording() throws StreamSqlException, ParseException {
+        String streamName = TABLE_NAME + "_in";
+        if (ydb.getTable(TABLE_NAME) == null) {
+            String query = "create table " + TABLE_NAME + "(" + TIMELINE_DEF.getStringDefinition1()
+                    + ", primary key(uuid))";
+            ydb.execute(query);
+        }
+        if (ydb.getStream(streamName) == null) {
+            ydb.execute("create stream " + streamName + TIMELINE_DEF.getStringDefinition());
+        }
+        ydb.execute("upsert into " + TABLE_NAME + " select * from " + streamName);
+        return ydb.getStream(streamName);
+    }
+
+    private TimelineView doGetview(UUID uuid) {
+        StreamSqlResult r = ydb.executeUnchecked("select * from " + TABLE_NAME + " where uuid = ?", uuid);
+        try {
+            if (r.hasNext()) {
+                Tuple tuple = r.next();
+                try {
+                    TimelineView view = new TimelineView(tuple);
+                    log.trace("Read view from db {}", view);
+                    return view;
+                } catch (Exception e) {
+                    log.error("Cannot decode tuple {} intro timeline view", tuple);
+                }
+            }
+        } finally {
+            r.close();
+        }
+        throw new NoSuchItemException();
+    }
+
+    private void doDeleteView(UUID uuid) {
+        viewCache.invalidate(uuid);
+        StreamSqlResult r = ydb.executeUnchecked("delete from " + TABLE_NAME + " where uuid = ?", uuid);
+        r.close();
+    }
+
+    // returns null if uuid does not exist
+    private TimelineView viewFromCache(UUID uuid) {
+        try {
+            return viewCache.getUnchecked(uuid);
+        } catch (UncheckedExecutionException e) {
+            if (e.getCause() instanceof NoSuchItemException) {
+                return null;
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    @SuppressWarnings("serial")
+    static class NoSuchItemException extends RuntimeException {
+    }
+
+    public TimelineView addView(TimelineView view) {
+        rwlock.writeLock().lock();
+        try {
+            Tuple tuple = view.toTuple();
+            log.debug("Adding timeline view to RDB: {}", tuple);
+            viewStream.emitTuple(tuple);
+            return view;
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public TimelineView updateView(TimelineView view) {
+        rwlock.writeLock().lock();
+        try {
+            doDeleteView(view.getId());
+
+            Tuple tuple = view.toTuple();
+            log.debug("Updating timeline view in RDB: {}", tuple);
+            viewStream.emitTuple(tuple);
+            return view;
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public TimelineView getView(UUID uuid) {
+        rwlock.readLock().lock();
+        try {
+            return viewFromCache(uuid);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    public void listViews(ViewListener consumer) {
+        rwlock.readLock().lock();
+        try {
+            // increase the limit to generate a token when the limit is reached
+            StreamSqlStatement stmt = ydb.createStatement(
+                    "select * from " + TABLE_NAME);
+
+            ydb.execute(stmt, new ResultListener() {
+                @Override
+                public void next(Tuple tuple) {
+                    consumer.next(new TimelineView(tuple));
+                }
+
+                @Override
+                public void completeExceptionally(Throwable t) {
+                    consumer.completeExceptionally(t);
+                }
+
+                @Override
+                public void complete() {
+                    consumer.complete(null);
+                }
+            });
+
+        } catch (StreamSqlException | ParseException e) {
+            log.error("Exception when executing query", e);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="viewlistener-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ViewListener.java</span></code><a class="headerlink" href="#viewlistener-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ViewListener.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.timeline;
+
+public interface ViewListener {
+
+    void next(TimelineView view);
+
+    /**
+     * 
+     * If a paged request has been performed, the token can be used to retrieve the next chunk.
+     * &lt;p&gt;
+     * token is null if there was no limit or there were less items than the specified limit
+     */
+    void complete(String token);
+
+    void completeExceptionally(Throwable t);
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../time/index.html" class="btn btn-neutral float-left" title="time" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../utils/index.html" class="btn btn-neutral float-right" title="utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

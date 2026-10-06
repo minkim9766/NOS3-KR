@@ -1,0 +1,2869 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>include &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../search.html" />
+    <link rel="next" title="src" href="../src/index.html" />
+    <link rel="prev" title="_static" href="../docs/wiki/_static/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html">components</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">components</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">cryptolib</a></li>
+      <li class="breadcrumb-item active">include</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/project_inventory/components/cryptolib/include/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="include">
+<h1>include<a class="headerlink" href="#include" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/cryptolib/include/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="crypto-h">
+<h2><code class="docutils literal notranslate"><span class="pre">crypto.h</span></code><a class="headerlink" href="#crypto-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/cryptolib/include/crypto.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&amp;V
+   jstar-development-team@mail.nasa.gov
+*/
+
+#ifndef CRYPTO_H
+#define CRYPTO_H
+
+/*
+** Crypto Includes
+*/
+#ifdef NOS3 // NOS3/cFS build is ready
+#include "cfe.h"
+#else // Assume build outside of NOS3/cFS infrastructure
+#include &lt;stdint.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#endif
+
+#include &lt;math.h&gt;
+#include &lt;string.h&gt;
+#include &lt;ctype.h&gt;
+#include "crypto_config.h"
+#include "crypto_config_structs.h"
+#include "crypto_error.h"
+#include "crypto_events.h"
+#include "crypto_print.h"
+#include "crypto_structs.h"
+#include "sa_interface.h"
+#include "cryptography_interface.h"
+#include "key_interface.h"
+#include "mc_interface.h"
+#include "sa_interface.h"
+#include "crypto.h"
+
+/*
+** Crypto Version
+*/
+#define CRYPTO_LIB_MAJOR_VERSION 1
+#define CRYPTO_LIB_MINOR_VERSION 4
+#define CRYPTO_LIB_REVISION      1
+#define CRYPTO_LIB_MISSION_REV   0
+
+#define GVCID_MAX_PARAM_SIZE 250
+#define CRC32TBL_SIZE        256
+#define CRC16TBL_SIZE        256
+
+/*
+** User Prototypes
+*/
+uint8_t Crypto_gf_mul(uint8_t a, uint8_t b);
+
+// Crypto Library Configuration functions
+extern int32_t Crypto_Config_CryptoLib(uint8_t key_type, uint8_t mc_type, uint8_t sa_type, uint8_t cryptography_type,
+                                       uint8_t iv_type, uint8_t crypto_create_fecf, uint8_t process_sdls_pdus,
+                                       uint8_t has_pus_hdr, uint8_t ignore_sa_state, uint8_t ignore_anti_replay,
+                                       uint8_t unique_sa_per_mapid, uint8_t crypto_check_fecf, uint8_t vcid_bitmask,
+                                       uint8_t crypto_increment_nontransmitted_iv);
+extern int32_t Crypto_Config_MariaDB(char *mysql_hostname, char *mysql_database, uint16_t mysql_port,
+                                     uint8_t mysql_require_secure_transport, uint8_t mysql_tls_verify_server,
+                                     char *mysql_tls_ca, char *mysql_tls_capath, char *mysql_mtls_cert,
+                                     char *mysql_mtls_key, char *mysql_mtls_client_key_password, char *mysql_username,
+                                     char *mysql_password);
+extern int32_t Crypto_Config_Kmc_Crypto_Service(char *protocol, char *kmc_crypto_hostname, uint16_t kmc_crypto_port,
+                                                char *kmc_crypto_app, char *kmc_tls_ca_bundle, char *kmc_tls_ca_path,
+                                                uint8_t kmc_ignore_ssl_hostname_validation, char *mtls_client_cert_path,
+                                                char *mtls_client_cert_type, char *mtls_client_key_path,
+                                                char *mtls_client_key_pass, char *mtls_issuer_cert);
+extern int32_t Crypto_Config_Cam(uint8_t cam_enabled, char *cookie_file_path, char *keytab_file_path,
+                                 uint8_t login_method, char *access_manager_uri, char *username, char *cam_home);
+extern int32_t Crypto_Config_Add_Gvcid_Managed_Parameters(GvcidManagedParameters_t mp_struct);
+// Initialization
+extern int32_t Crypto_Init(void); // Initialize CryptoLib After Configuration Calls
+extern int32_t Crypto_Init_With_Configs(
+    CryptoConfig_t *crypto_config_p, GvcidManagedParameters_t *gvcid_managed_parameters_p,
+    SadbMariaDBConfig_t *sa_mariadb_config_p,
+    CryptographyKmcCryptoServiceConfig_t
+        *cryptography_kmc_crypto_config_p);     // Initialize CryptoLib With Application Defined Configuration
+extern int32_t Crypto_SC_Init(void);            // Initialize CryptoLib with Spacecraft default Configurations
+extern int32_t Crypto_Init_TC_Unit_Test(void);  // Initialize CryptoLib with unit test default Configurations
+extern int32_t Crypto_Init_TM_Unit_Test(void);  // Initialize CryptoLib with unit test default Configurations
+extern int32_t Crypto_Init_AOS_Unit_Test(void); // Initialize CryptoLib with unit test default Configurations
+
+// Cleanup
+extern int32_t Crypto_Shutdown(void); // Free all allocated memory
+
+// Telecommand (TC)
+extern int32_t Crypto_TC_ApplySecurity(const uint8_t *p_in_frame, const uint16_t in_frame_length,
+                                       uint8_t **pp_enc_frame, uint16_t *p_enc_frame_len);
+extern int32_t Crypto_TC_ProcessSecurity(uint8_t *ingest, int *len_ingest, TC_t *tc_sdls_processed_frame);
+extern int32_t Crypto_TC_ApplySecurity_Cam(const uint8_t *p_in_frame, const uint16_t in_frame_length,
+                                           uint8_t **pp_enc_frame, uint16_t *p_enc_frame_len, char *cam_cookies);
+extern int32_t Crypto_TC_ProcessSecurity_Cam(uint8_t *ingest, int *len_ingest, TC_t *tc_sdls_processed_frame,
+                                             char *cam_cookies);
+
+int32_t  Crypto_TC_Get_SA_Service_Type(uint8_t *sa_service_type, SecurityAssociation_t *sa_ptr);
+int32_t  Crypto_TC_Parse_Check_FECF(uint8_t *ingest, int *len_ingest, TC_t *tc_sdls_processed_frame);
+int32_t  Crypto_TC_Nontransmitted_IV_Increment(SecurityAssociation_t *sa_ptr, TC_t *tc_sdls_processed_frame);
+int32_t  Crypto_TC_Nontransmitted_SN_Increment(SecurityAssociation_t *sa_ptr, TC_t *tc_sdls_processed_frame);
+int32_t  Crypto_TC_Check_ACS_Keylen(crypto_key_t *akp, SecurityAssociation_t *sa_ptr);
+int32_t  Crypto_TC_Check_ECS_Keylen(crypto_key_t *ekp, SecurityAssociation_t *sa_ptr);
+void     Crypto_TC_Safe_Free_Ptr(uint8_t *ptr);
+int32_t  Crypto_TC_Do_Decrypt(uint8_t sa_service_type, uint8_t ecs_is_aead_algorithm, crypto_key_t *ekp,
+                              SecurityAssociation_t *sa_ptr, uint8_t *aad, TC_t *tc_sdls_processed_frame,
+                              uint8_t *ingest, uint16_t tc_enc_payload_start_index, uint16_t aad_len, char *cam_cookies,
+                              crypto_key_t *akp, uint8_t segment_hdr_len);
+int32_t  Crypto_TC_Process_Sanity_Check(int *len_ingest);
+int32_t  Crypto_TC_Prep_AAD(TC_t *tc_sdls_processed_frame, uint8_t fecf_len, uint8_t sa_service_type,
+                            uint8_t ecs_is_aead_algorithm, uint16_t *aad_len, SecurityAssociation_t *sa_ptr,
+                            uint8_t segment_hdr_len, uint8_t *ingest, uint8_t **aad);
+int32_t  Crypto_TC_Get_Keys(crypto_key_t **ekp, crypto_key_t **akp, SecurityAssociation_t *sa_ptr);
+int32_t  Crypto_TC_Check_IV_ARSN(SecurityAssociation_t *sa_ptr, TC_t *tc_sdls_processed_frame);
+uint32_t Crypto_TC_Sanity_Validations(TC_t *tc_sdls_processed_frame, SecurityAssociation_t **sa_ptr);
+void Crypto_TC_Get_Ciper_Mode_TCP(uint8_t sa_service_type, uint32_t *encryption_cipher, uint8_t *ecs_is_aead_algorithm,
+                                  SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TC_Get_Ciper_Mode_TCA(uint8_t sa_service_type, uint32_t *encryption_cipher,
+                                     uint8_t *ecs_is_aead_algorithm, SecurityAssociation_t *sa_ptr);
+void    Crypto_TC_Calc_Lengths(uint8_t *fecf_len, uint8_t *segment_hdr_len, uint8_t *ocf_len);
+void    Crypto_TC_Set_Segment_Header(TC_t *tc_sdls_processed_frame, uint8_t *ingest, int *byte_idx);
+int32_t Crypto_TC_Check_CMD_Frame_Flag(uint8_t header_cc);
+int32_t Crypto_TC_Validate_SA_Service_Type(uint8_t sa_service_type);
+int32_t Crypto_TC_Handle_Enc_Padding(uint8_t sa_service_type, uint32_t *pkcs_padding, uint16_t *p_enc_frame_len,
+                                     uint16_t *new_enc_frame_header_field_length, uint16_t tf_payload_len,
+                                     SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TC_Frame_Validation(uint16_t *p_enc_frame_len);
+int32_t Crypto_TC_Accio_Buffer(uint8_t **p_new_enc_frame, uint16_t *p_enc_frame_len);
+int32_t Crypto_TC_ACS_Algo_Check(SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TC_Check_IV_Setup(SecurityAssociation_t *sa_ptr, uint8_t *p_new_enc_frame, uint16_t *index);
+int32_t Crypto_TC_Encrypt(uint8_t sa_service_type, SecurityAssociation_t *sa_ptr, uint16_t *mac_loc,
+                          uint16_t tf_payload_len, uint8_t segment_hdr_len, uint8_t *p_new_enc_frame, crypto_key_t *ekp,
+                          uint8_t **aad, uint8_t ecs_is_aead_algorithm, uint16_t *index_p, const uint8_t *p_in_frame,
+                          char *cam_cookies, uint32_t pkcs_padding);
+void    Crypto_TC_Increment_IV_ARSN(uint8_t sa_service_type, SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TC_Do_Encrypt(uint8_t sa_service_type, SecurityAssociation_t *sa_ptr, uint16_t *mac_loc,
+                             uint16_t tf_payload_len, uint8_t segment_hdr_len, uint8_t *p_new_enc_frame,
+                             crypto_key_t *ekp, uint8_t **aad, uint8_t ecs_is_aead_algorithm, uint16_t *index_p,
+                             const uint8_t *p_in_frame, char *cam_cookies, uint32_t pkcs_padding,
+                             uint16_t new_enc_frame_header_field_length, uint16_t *new_fecf);
+int32_t Crypto_TC_Check_Init_Setup(uint16_t in_frame_length);
+int32_t Crypto_TC_Sanity_Setup(const uint8_t *p_in_frame, const uint16_t in_frame_length);
+int32_t Crytpo_TC_Validate_TC_Temp_Header(const uint16_t in_frame_length, TC_FramePrimaryHeader_t temp_tc_header,
+                                          const uint8_t *p_in_frame, uint8_t *map_id, uint8_t *segmentation_hdr,
+                                          SecurityAssociation_t **sa_ptr);
+int32_t Crypto_TC_Finalize_Frame_Setup(uint8_t sa_service_type, uint32_t *pkcs_padding, uint16_t *p_enc_frame_len,
+                                       uint16_t *new_enc_frame_header_field_length, uint16_t tf_payload_len,
+                                       SecurityAssociation_t **sa_ptr, uint8_t **p_new_enc_frame);
+void    Crypto_TC_Handle_Padding(uint32_t pkcs_padding, SecurityAssociation_t *sa_ptr, uint8_t *p_new_enc_frame,
+                                 uint16_t *index);
+int32_t Crypto_TC_Set_IV(SecurityAssociation_t *sa_ptr, uint8_t *p_new_enc_frame, uint16_t *index);
+
+// OCF
+uint32_t Crypto_Get_FSR(void);
+void     Crypto_Set_FSR(uint8_t *p_ingest, uint16_t byte_idx, uint16_t pdu_len, SecurityAssociation_t *sa_ptr);
+
+// Telemetry (TM)
+extern int32_t Crypto_TM_ApplySecurity(uint8_t *pTfBuffer, uint16_t len_ingest);
+extern int32_t Crypto_TM_ProcessSecurity(uint8_t *p_ingest, uint16_t len_ingest, uint8_t **pp_processed_frame,
+                                         uint16_t *p_decrypted_length);
+
+// Advanced Orbiting Systems (AOS)
+extern int32_t Crypto_AOS_ApplySecurity(uint8_t *pTfBuffer, uint16_t len_ingest);
+extern int32_t Crypto_AOS_ProcessSecurity(uint8_t *p_ingest, uint16_t len_ingest, uint8_t **pp_processed_frame,
+                                          uint16_t *p_decrypted_length);
+
+// Crypo Error Support Functions
+extern char *Crypto_Get_Error_Code_Enum_String(int32_t crypto_error_code);
+
+/*
+** Internal Prototypes
+*/
+
+int32_t Crypto_Get_Security_Header_Length(SecurityAssociation_t *sa_ptr);
+int32_t Crypto_Get_Security_Trailer_Length(SecurityAssociation_t *sa_ptr);
+
+/*
+** Internal Prototypes
+*/
+// Telemetry (TM)
+int32_t Crypto_TM_Sanity_Check(uint8_t *pTfBuffer);
+int32_t Crypto_TM_Determine_SA_Service_Type(uint8_t *sa_service_type, SecurityAssociation_t *sa_ptr);
+void    Crypto_TM_Check_For_Secondary_Header(uint8_t *pTfBuffer, uint16_t *idx);
+int32_t Crypto_TM_IV_Sanity_Check(uint8_t *sa_service_type, SecurityAssociation_t *sa_ptr);
+void Crypto_TM_PKCS_Padding(uint32_t *pkcs_padding, SecurityAssociation_t *sa_ptr, uint8_t *pTfBuffer, uint16_t *idx_p);
+void Crypto_TM_Handle_Managed_Parameter_Flags(uint16_t *pdu_len);
+int32_t Crypto_TM_Get_Keys(crypto_key_t **ekp, crypto_key_t **akp, SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TM_Do_Encrypt_NONPLAINTEXT(uint8_t sa_service_type, uint16_t *aad_len, int *mac_loc, uint16_t *idx_p,
+                                          uint16_t pdu_len, uint8_t *pTfBuffer, uint8_t *aad,
+                                          SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TM_Do_Encrypt_NONPLAINTEXT_AEAD_Logic(uint8_t sa_service_type, uint8_t ecs_is_aead_algorithm,
+                                                     uint8_t *pTfBuffer, uint16_t pdu_len, uint16_t data_loc,
+                                                     crypto_key_t *ekp, crypto_key_t *akp, uint32_t pkcs_padding,
+                                                     int *mac_loc, uint16_t *aad_len, uint8_t *aad,
+                                                     SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TM_Do_Encrypt_Handle_Increment(uint8_t sa_service_type, SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TM_Do_Encrypt(uint8_t sa_service_type, SecurityAssociation_t *sa_ptr, uint16_t *aad_len, int *mac_loc,
+                             uint16_t *idx_p, uint16_t pdu_len, uint8_t *pTfBuffer, uint8_t *aad,
+                             uint8_t ecs_is_aead_algorithm, uint16_t data_loc, crypto_key_t *ekp, crypto_key_t *akp,
+                             uint32_t pkcs_padding, uint16_t *new_fecf);
+void    Crypto_TM_ApplySecurity_Debug_Print(uint16_t idx, uint16_t pdu_len, SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TM_Process_Setup(uint16_t len_ingest, uint16_t *byte_idx, uint8_t *p_ingest, uint8_t *secondary_hdr_len);
+int32_t Crypto_TM_Determine_Cipher_Mode(uint8_t sa_service_type, SecurityAssociation_t *sa_ptr,
+                                        uint32_t *encryption_cipher, uint8_t *ecs_is_aead_algorithm);
+int32_t Crypto_TM_FECF_Setup(uint8_t *p_ingest, uint16_t len_ingest);
+int32_t Crypto_TM_Parse_Mac_Prep_AAD(uint8_t sa_service_type, uint8_t *p_ingest, int mac_loc,
+                                     SecurityAssociation_t *sa_ptr, uint16_t *aad_len, uint16_t byte_idx, uint8_t *aad);
+int32_t Crypto_TM_Do_Decrypt_AEAD(uint8_t sa_service_type, uint8_t *p_ingest, uint8_t *p_new_dec_frame,
+                                  uint16_t byte_idx, uint16_t pdu_len, crypto_key_t *ekp, SecurityAssociation_t *sa_ptr,
+                                  uint8_t iv_loc, int mac_loc, uint16_t aad_len, uint8_t *aad);
+int32_t Crypto_TM_Do_Decrypt_NONAEAD(uint8_t sa_service_type, uint16_t pdu_len, uint8_t *p_new_dec_frame,
+                                     uint16_t byte_idx, uint8_t *p_ingest, crypto_key_t *akp, crypto_key_t *ekp,
+                                     SecurityAssociation_t *sa_ptr, uint8_t iv_loc, int mac_loc, uint16_t aad_len,
+                                     uint8_t *aad);
+void    Crypto_TM_Calc_PDU_MAC(uint16_t *pdu_len, uint16_t byte_idx, SecurityAssociation_t *sa_ptr, int *mac_loc);
+int32_t Crypto_TM_Do_Decrypt(uint8_t sa_service_type, SecurityAssociation_t *sa_ptr, uint8_t ecs_is_aead_algorithm,
+                             uint16_t byte_idx, uint8_t *p_new_dec_frame, uint16_t pdu_len, uint8_t *p_ingest,
+                             crypto_key_t *ekp, crypto_key_t *akp, uint8_t iv_loc, int mac_loc, uint16_t aad_len,
+                             uint8_t *aad, uint8_t **pp_processed_frame, uint16_t *p_decrypted_length);
+void    Crypto_TM_Process_Debug_Print(uint16_t byte_idx, uint16_t pdu_len, SecurityAssociation_t *sa_ptr);
+
+extern int32_t Crypto_increment(uint8_t *num, int length);
+int32_t        Crypto_Get_tmLength(int len);
+uint8_t        Crypto_Is_AEAD_Algorithm(uint32_t cipher_suite_id);
+void           Crypto_TM_updatePDU(uint8_t *ingest, int len_ingest);
+void           Crypto_TM_updateOCF(Telemetry_Frame_Ocf_Fsr_t *report, TM_t *tm_frame);
+uint8_t       *Crypto_Prepare_TC_AAD(const uint8_t *buffer, uint16_t len_aad, const uint8_t *abm_buffer);
+uint32_t       Crypto_Prepare_TM_AAD(const uint8_t *buffer, uint16_t len_aad, const uint8_t *abm_buffer, uint8_t *aad);
+uint32_t       Crypto_Prepare_AOS_AAD(const uint8_t *buffer, uint16_t len_aad, const uint8_t *abm_buffer, uint8_t *aad);
+int32_t        Crypto_Local_Config(void);
+int32_t        Crypto_Local_Init(void);
+int32_t        Crypto_window(uint8_t *actual, uint8_t *expected, int length, int window);
+uint16_t       Crypto_Calc_FECF(const uint8_t *ingest, int len_ingest);
+uint16_t       Crypto_Calc_FHECF(uint8_t *data);
+int32_t        Crypto_Calc_CRC_Init_Table(void);
+uint16_t       Crypto_Calc_CRC16(uint8_t *data, int size);
+int32_t        Crypto_Check_Anti_Replay(SecurityAssociation_t *sa_ptr, uint8_t *arsn, uint8_t *iv);
+int32_t        Crypto_Get_ECS_Algo_Keylen(uint8_t algo);
+int32_t        Crypto_Get_ACS_Algo_Keylen(uint8_t algo);
+uint8_t        Crypto_Is_ACS_Only_Algo(uint8_t algo);
+
+int32_t Crypto_Check_Anti_Replay_Verify_Pointers(SecurityAssociation_t *sa_ptr, uint8_t *arsn, uint8_t *iv);
+int32_t Crypto_Check_Anti_Replay_ARSNW(SecurityAssociation_t *sa_ptr, uint8_t *arsn, int8_t *arsn_valid);
+int32_t Crypto_Check_Anti_Replay_GCM(SecurityAssociation_t *sa_ptr, uint8_t *iv, int8_t *iv_valid);
+
+// SDLS Related Functions
+extern uint8_t Crypto_Prep_Reply(uint8_t *ingest, uint8_t appID);
+extern void    Crypto_Print_Sdls_Ep_Reply(void);
+extern int32_t Crypto_Get_Sdls_Ep_Reply(uint8_t *buffer, uint16_t *length);
+
+// Key Management Functions
+int32_t Crypto_Key_OTAR(void);
+int32_t Crypto_Key_update(uint8_t state);
+int32_t Crypto_Key_inventory(uint8_t *);
+int32_t Crypto_Key_verify(TC_t *tc_frame);
+
+// Security Monitoring &amp; Control Procedure
+int32_t Crypto_MC_ping(uint8_t *ingest);
+int32_t Crypto_MC_status(uint8_t *ingest);
+int32_t Crypto_MC_dump(uint8_t *ingest);
+int32_t Crypto_MC_erase(uint8_t *ingest);
+int32_t Crypto_MC_selftest(uint8_t *ingest);
+int32_t Crypto_SA_readARSN(uint8_t *ingest);
+int32_t Crypto_MC_resetalarm(void);
+
+// User Functions
+int32_t Crypto_User_IdleTrigger(uint8_t *ingest);
+int32_t Crypto_User_BadSPI(void);
+int32_t Crypto_User_BadIV(void);
+int32_t Crypto_User_BadMAC(void);
+int32_t Crypto_User_BadFECF(void);
+int32_t Crypto_User_ModifyKey(void);
+int32_t Crypto_User_ModifyActiveTM(void);
+int32_t Crypto_User_ModifyVCID(void);
+
+// SA Save Functions
+int32_t sa_perform_save(SecurityAssociation_t *sa);
+
+// Clean REF
+void clean_ekref(SecurityAssociation_t *sa);
+void clean_akref(SecurityAssociation_t *sa);
+
+// Determine Payload Data Unit
+int32_t Crypto_Process_Extended_Procedure_Pdu(TC_t *tc_sdls_processed_frame, uint8_t *ingest, uint16_t len_ingest);
+int32_t Crypto_PDU(uint8_t *ingest, TC_t *tc_frame);
+int32_t Crypto_SG_KEY_MGMT(uint8_t *ingest, TC_t *tc_frame);
+int32_t Crypto_SG_SA_MGMT(uint8_t *ingest, TC_t *tc_frame);
+int32_t Crypto_SEC_MON_CTRL(uint8_t *ingest);
+int32_t Crypto_USER_DEFINED_CMD(uint8_t *ingest);
+
+// Managed Parameter Functions
+int32_t Crypto_Get_Managed_Parameters_For_Gvcid(uint8_t tfvn, uint16_t scid, uint8_t vcid,
+                                                GvcidManagedParameters_t *managed_parameters_in,
+                                                GvcidManagedParameters_t *managed_parameters_out);
+// Project-wide support functions
+extern int32_t crypto_deep_copy_string(char *src_string, char **dst_string);
+
+// Path validation functions
+int32_t Crypto_is_safe_username(const char *s);
+int32_t Crypto_is_safe_path(const char *s);
+
+/*
+** Extern Global Variables
+*/
+// Data stores used in multiple components
+extern CCSDS_t          sdls_frame;
+extern SDLS_KEYV_RPLY_t sdls_ep_keyv_reply;
+extern uint8_t          sdls_ep_reply[TC_MAX_FRAME_SIZE];
+// extern TM_t tm_frame;
+extern uint8_t                  tm_frame[1786];
+extern TM_FramePrimaryHeader_t  tm_frame_pri_hdr;
+extern TM_FrameSecurityHeader_t tm_frame_sec_hdr; // Used to reduce bit math duplication
+// exterm AOS_t aos_frame
+extern AOS_FramePrimaryHeader_t  aos_frame_pri_hdr;
+extern AOS_FrameSecurityHeader_t aos_frame_sec_hdr; // Used to reduce bit math duplication
+extern uint8_t                   parity[4];         // Used in FHECF calc
+
+// Global configuration structs
+extern CryptoConfig_t                        crypto_config;
+extern SadbMariaDBConfig_t                  *sa_mariadb_config;
+extern CryptographyKmcCryptoServiceConfig_t *cryptography_kmc_crypto_config;
+extern CamConfig_t                          *cam_config;
+extern GvcidManagedParameters_t             *gvcid_managed_parameters;
+extern GvcidManagedParameters_t             *current_managed_parameters;
+extern GvcidManagedParameters_t              gvcid_managed_parameters_array[GVCID_MAX_PARAM_SIZE];
+extern GvcidManagedParameters_t              tc_current_managed_parameters_struct;
+extern GvcidManagedParameters_t              tm_current_managed_parameters_struct;
+extern GvcidManagedParameters_t              aos_current_managed_parameters_struct;
+extern int                                   gvcid_counter;
+extern KeyInterface                          key_if;
+extern McInterface                           mc_if;
+extern SaInterface                           sa_if;
+extern CryptographyInterface                 cryptography_if;
+
+// extern crypto_key_t ak_ring[NUM_KEYS];
+extern SadbMariaDBConfig_t      *sa_mariadb_config;
+extern GvcidManagedParameters_t *gvcid_managed_parameters;
+extern GvcidManagedParameters_t *current_managed_parameters;
+
+// OCF
+extern uint8_t                    ocf;
+extern Telemetry_Frame_Ocf_Fsr_t  report;
+extern Telemetry_Frame_Ocf_Clcw_t clcw;
+
+// Flags
+extern SDLS_MC_LOG_RPLY_t      log_summary;
+extern SDLS_MC_DUMP_BLK_RPLY_t mc_log;
+extern uint8_t                 log_count;
+extern uint16_t                tm_offset;
+// ESA Testing - 0 = disabled, 1 = enabled
+extern uint8_t badSPI;
+extern uint8_t badIV;
+extern uint8_t badMAC;
+extern uint8_t badFECF;
+//  CRC
+extern uint32_t crc32Table[CRC32TBL_SIZE];
+extern uint16_t crc16Table[CRC16TBL_SIZE];
+
+// GF(2^4) field and logarithm tables
+static const uint8_t crypto_gf_exp[15] = {1, 2, 4, 8, 3, 6, 12, 11, 5, 10, 7, 14, 15, 13, 9};
+
+static const uint8_t crypto_gf_log[GF_SIZE] = {0, 0, 1, 4, 2, 8, 5, 10, 3, 14, 9, 7, 6, 13, 11, 12};
+
+// Generator polynomial coefficients for g(x) = x^4 + a^3x^3 + ax^2 + a^3x + 1
+static const uint8_t crypto_gen_poly[RS_PARITY + 1] = {1, 8, 2, 8, 1};
+
+#endif // CRYPTO_H
+</pre></div>
+</div>
+</section>
+<section id="crypto-config-h">
+<h2><code class="docutils literal notranslate"><span class="pre">crypto_config.h</span></code><a class="headerlink" href="#crypto-config-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/cryptolib/include/crypto_config.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&amp;V
+   jstar-development-team@mail.nasa.gov
+*/
+#ifndef CRYPTO_CONFIG_H
+#define CRYPTO_CONFIG_H
+
+// Debug Colors
+#ifdef DEBUG
+#define CRYPTO_DEBUG printf("%s:%s: %d", __FILE__, __FUNCTION__, __LINE__);
+#define KRED         "\x1B[31m"
+#define KGRN         "\x1B[32m"
+#define KYEL         "\x1B[33m"
+#define KBLU         "\x1B[34m"
+#define KMAG         "\x1B[35m"
+#define KCYN         "\x1B[36m"
+#define RESET        "\033[0m"
+#else
+#define CRYPTO_DEBUG
+#define KRED
+#define RED
+#define KGRN
+#define GREEN
+#define KYEL
+#define KBLU
+#define KMAG
+#define KCYN
+#define RESET
+#endif
+
+// Managed Parameters Size
+#define GVCID_MAN_PARAM_SIZE 250
+
+// Max Frame Size
+#define TC_MAX_FRAME_SIZE  1024
+#define TC_MIN_FRAME_SIZE  5
+#define TM_MAX_FRAME_SIZE  1786
+#define AOS_MAX_FRAME_SIZE 1786
+
+// Spacecraft Defines
+#define SCID 0x0003
+
+// Functionality Defines
+#define INCREMENT
+#define FILL
+// TM Fill Types - select 1
+//#define TM_ZERO_FILL
+#define TM_IDLE_FILL
+
+// GVCID Defines
+#define NUM_GVCID 64
+#define TYPE_TC   0
+#define TYPE_MAP  1
+#define TYPE_TM   2
+#define TYPE_AOS  3
+
+// Specific to Authentication
+#define SA_NONE        0
+#define SA_UNKEYED     1
+#define SA_KEYED       2
+#define SA_OPERATIONAL 3
+// SA State Transitions
+#define SA_CREATE 5
+#define SA_REKEY  6
+#define SA_START  7
+#define SA_STOP   2
+#define SA_EXPIRE 1
+#define SA_DELETE 0
+// SA Additional Directives
+#define SA_STATUS   8
+#define SA_SETARSN  9
+#define SA_SETARSNW 10
+
+// Key State Defines
+#define KEY_PREACTIVE   0
+#define KEY_ACTIVE      1
+#define KEY_DEACTIVATED 2
+#define KEY_DESTROYED   3
+#define KEY_CORRUPTED   4
+
+// Key Length Defines
+// ECS
+#define AES256_GCM_KEYLEN     32
+#define AES256_GCM_SIV_KEYLEN 32
+#define AES256_CBC_KEYLEN     32
+#define AES256_CCM_KEYLEN     32
+// ACS
+#define CMAC_AES256_KEYLEN 32
+#define HMAC_SHA256_KEYLEN 32
+#define HMAC_SHA512_KEYLEN 64
+
+// SA Service Types
+#define SA_PLAINTEXT                0
+#define SA_AUTHENTICATION           1
+#define SA_ENCRYPTION               2
+#define SA_AUTHENTICATED_ENCRYPTION 3
+
+// Generic Defines
+#define SPI_LEN             2 /* bytes */
+#define SPI_MIN             0
+#define SPI_MAX             NUM_SA - 1
+#define KEY_SIZE            512 /* bytes */
+#define KEY_ID_SIZE         8
+#define MKID_MAX            128
+#define DISABLED            0
+#define ENABLED             1
+#define IV_SIZE_TC          4 /* TC IV size bytes */
+#define REF_SIZE            250
+#define OCF_SIZE            4
+#define FHECF_SIZE          2
+#define FECF_SIZE           2
+#define TC_SEGMENT_HDR_SIZE 1
+#define ECS_SIZE            4    /* bytes */
+#define ABM_SIZE            1786 /* bytes */
+#define ARSN_SIZE           20   /* total messages */
+#define ARSNW_SIZE          1    /* bytes */
+#define SN_SIZE             16   /* bytes */
+#define PAD_SIZE            32   /* bytes */
+#define CHALLENGE_SIZE      16   /* bytes */
+#define CHALLENGE_MAC_SIZE  16   /* bytes */
+#define BYTE_LEN            8    /* bits */
+#define CRYPTOLIB_APPID     128
+#define MAX_IV_LEN          32 /* bytes */
+
+// Configurable via build flags
+#ifndef NUM_SA
+#define NUM_SA 64
+#endif
+#ifndef MAC_SIZE
+#define MAC_SIZE 16 /* bytes */
+#endif
+#ifndef IV_SIZE
+#define IV_SIZE 16 /* TM IV size bytes */
+#endif
+#ifndef NUM_KEYS
+#define NUM_KEYS 256
+#endif
+
+// Monitoring and Control Defines
+#define EMV_SIZE 4  /* bytes */
+#define LOG_SIZE 50 /* packets */
+#define ST_OK    0x00
+#define ST_NOK   0xFF
+
+// Protocol Data Unit (PDU)
+// PDU Type
+#define PDU_TYPE_COMMAND 0
+#define PDU_TYPE_REPLY   1
+// PDU User Flag
+#define PDU_USER_FLAG_TRUE  1
+#define PDU_USER_FLAG_FALSE 0
+
+// Procedure Identification (PID) - CCSDS Defined Commands
+// Service Group - Key Management
+#define SG_KEY_MGMT          0x00 // 0b00
+#define PID_OTAR             0x01 // 0b0001
+#define PID_KEY_ACTIVATION   0x02 // 0b0010
+#define PID_KEY_DEACTIVATION 0x03 // 0b0011
+#define PID_KEY_VERIFICATION 0x04 // 0b0100
+#define PID_KEY_DESTRUCTION  0x06 // 0b0110
+#define PID_KEY_INVENTORY    0x07 // 0b0111
+// Service Group - Security Association Management
+#define SG_SA_MGMT    0x01 // 0b01
+#define PID_CREATE_SA 0x01 // 0b0001
+#define PID_REKEY_SA  0x06 // 0b0110
+#define PID_START_SA  0x0B // 0b1011
+#define PID_STOP_SA   0x0E // 0b1110
+#define PID_EXPIRE_SA 0x09 // 0b1001
+#define PID_DELETE_SA 0x04 // 0b0100
+#define PID_SET_ARSN  0x0A // 0b1010
+#define PID_SET_ARSNW 0x05 // 0b0101
+#define PID_READ_ARSN 0x00 // 0b0000
+#define PID_SA_STATUS 0x0F // 0b1111
+// Service Group - Security Monitoring &amp; Control
+#define SG_SEC_MON_CTRL 0x03 // 0b11
+#define PID_PING        0x01 // 0b0001
+#define PID_LOG_STATUS  0x02 // 0b0010
+#define PID_DUMP_LOG    0x03 // 0b0011
+#define PID_ERASE_LOG   0x04 // 0b0100
+#define PID_SELF_TEST   0x05 // 0b0101
+#define PID_ALARM_FLAG  0x07 // 0b0111
+
+// Procedure Identification (PID) - User Defined Commands
+#define PID_IDLE_FRAME_TRIGGER 0
+#define PID_TOGGLE_BAD_SPI     1
+#define PID_TOGGLE_BAD_IV      2
+#define PID_TOGGLE_BAD_MAC     3
+#define PID_TOGGLE_BAD_FECF    4
+#define PID_MODIFY_KEY         5
+#define PID_MODIFY_ACTIVE_TM   6
+#define PID_MODIFY_VCID        7
+
+// TC Defines
+#define TC_SH_SIZE         8 /* bits */
+#define TC_SN_SIZE         2
+#define TC_SN_WINDOW       10               /* +/- value */
+#define TC_FRAME_DATA_SIZE 1019 /* bytes */ // 1024 - 5byte header
+#define TC_CADU_ASM_SIZE   4
+
+// CCSDS PUS Defines
+#define TLV_DATA_SIZE 494 /* bytes */
+
+// TM Defines
+#define TM_FRAME_DATA_SIZE         1786 /* bytes */
+#define TM_FILL_SIZE               1145 /* bytes */
+#define TM_PAD_SIZE                2    /* bytes */
+#define TM_SECONDARY_HDR_MAX_VALUE 63
+
+// AOS Defines
+#define AOS_FRAME_DATA_SIZE 1786 /* bytes */
+#define AOS_FILL_SIZE       1145 /* bytes */
+
+// SDLS Behavior Defines
+#define SDLS_OTAR_IV_OFFSET     2
+#define SDLS_MAX_KEY_UPDATES    16 /* keys */
+#define SDLS_KEYV_MAX_KEYS      21 /* keys */
+#define SDLS_MAX_KEY_UPDATE_LEN 35 /* bytes */
+#define SDLS_IV_LEN             12 /* bytes */
+#define SDLS_KEYV_KEY_ID_LEN    2  /* bytes */
+#define SDLS_KEY_LEN            32 /* bytes */
+#define SDLS_KEYID_LEN          2  /* bytes */
+
+// TC Behavior Defines
+#define TC_SDLS_EP_VCID \
+    4 // VCID which has SDLS PDUs (JPL uses VCIDs to determine TC type, there is no space packet layer with APIDs). Set
+      // to -1 if uses SP APIDs.
+
+// TM Behavior Defines
+#define TM_CADU_HAS_ASM 1 // Skip 0x1acffc1d at beginning of each frame
+// TM CADU based on ASM, currently only holds non-turbo ASM
+#ifdef TM_CADU_HAS_ASM
+#define TM_CADU_SIZE (TM_FRAME_DATA_SIZE + TC_CADU_ASM_SIZE)
+#else
+#define TM_CADU_SIZE TM_FRAME_DATA_SIZE
+#endif
+
+// AOS Behavior Defines
+// FHECF Calculation
+#define RS_SYMS   10 // Total symbols in codeword
+#define RS_DATA   6  // Data symbols
+#define RS_PARITY 4  // Parity symbols
+#define GF_SIZE   16 // 2^4
+
+// Logic Behavior Defines
+#define CRYPTO_FALSE 0
+#define CRYPTO_TRUE  1
+
+/*
+** SAVE FILE NAME/LOCATION
+*/
+#define CRYPTO_SA_SAVE "sa_save_file.bin"
+
+/*
+** TC_BLOCK_SIZE
+*/
+#define TC_BLOCK_SIZE 16
+
+#endif // CRYPTO_CONFIG_H
+</pre></div>
+</div>
+</section>
+<section id="crypto-config-structs-h">
+<h2><code class="docutils literal notranslate"><span class="pre">crypto_config_structs.h</span></code><a class="headerlink" href="#crypto-config-structs-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/cryptolib/include/crypto_config_structs.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+documentation will conform to the program, or any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+out of the results of, or use of, the software, documentation or services provided hereunder
+
+ITC Team
+NASA IV&amp;V
+ivv-itc@lists.nasa.gov
+*/
+#ifndef CRYPTO_CONFIG_STRUCTS_H
+#define CRYPTO_CONFIG_STRUCTS_H
+
+#include "crypto_config.h"
+
+#ifdef NOS3 // NOS3/cFS build is ready
+#include "common_types.h"
+#else // Assume build outside of NOS3/cFS infrastructure
+#include &lt;stdint.h&gt;
+#endif
+
+// main config enums
+typedef enum
+{
+    UNITIALIZED = 0,
+    INITIALIZED
+} InitStatus;
+typedef enum
+{
+    KEY_TYPE_UNITIALIZED = 0,
+    KEY_TYPE_CUSTOM,
+    KEY_TYPE_INTERNAL,
+    KEY_TYPE_KMC
+} KeyType;
+typedef enum
+{
+    MC_TYPE_UNITIALIZED = 0,
+    MC_TYPE_CUSTOM,
+    MC_TYPE_DISABLED,
+    MC_TYPE_INTERNAL
+} McType;
+typedef enum
+{
+    SA_TYPE_UNITIALIZED = 0,
+    SA_TYPE_CUSTOM,
+    SA_TYPE_INMEMORY,
+    SA_TYPE_MARIADB
+} SadbType;
+typedef enum
+{
+    CRYPTOGRAPHY_TYPE_UNITIALIZED = 0,
+    CRYPTOGRAPHY_TYPE_LIBGCRYPT,
+    CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+    CRYPTOGRAPHY_TYPE_WOLFSSL,
+    CRYPTOGRAPHY_TYPE_CUSTOM
+} CryptographyType;
+/***************************************
+** GVCID Managed Parameter enums
+****************************************/
+typedef enum
+{
+    IV_INTERNAL,
+    IV_CRYPTO_MODULE
+} IvType;
+typedef enum
+{
+    TC_NO_FECF,
+    TC_HAS_FECF,
+    TM_NO_FECF,
+    TM_HAS_FECF,
+    AOS_NO_FECF,
+    AOS_HAS_FECF
+} FecfPresent;
+typedef enum
+{
+    CRYPTO_TC_CREATE_FECF_FALSE,
+    CRYPTO_TC_CREATE_FECF_TRUE,
+    CRYPTO_TM_CREATE_FECF_FALSE,
+    CRYPTO_TM_CREATE_FECF_TRUE,
+    CRYPTO_AOS_CREATE_FECF_FALSE,
+    CRYPTO_AOS_CREATE_FECF_TRUE
+} CreateFecfBool;
+typedef enum
+{
+    AOS_FHEC_NA = 0,
+    AOS_NO_FHEC,
+    AOS_HAS_FHEC
+} AosFhecPresent;
+typedef enum
+{
+    AOS_IZ_NA,
+    AOS_NO_IZ,
+    AOS_HAS_IZ
+} AosInsertZonePresent;
+typedef enum
+{
+    TC_CHECK_FECF_FALSE,
+    TC_CHECK_FECF_TRUE,
+    TM_CHECK_FECF_FALSE,
+    TM_CHECK_FECF_TRUE,
+    AOS_CHECK_FECF_FALSE,
+    AOS_CHECK_FECF_TRUE
+} CheckFecfBool;
+typedef enum
+{
+    AOS_NO_OCF,
+    AOS_HAS_OCF,
+    TC_OCF_NA,
+    TM_NO_OCF,
+    TM_HAS_OCF
+} OcfPresent;
+/***************************************
+** TC specific enums
+****************************************/
+typedef enum
+{
+    TC_NO_SEGMENT_HDRS,
+    TC_HAS_SEGMENT_HDRS,
+    TM_SEGMENT_HDRS_NA, // Invalid for TM
+    AOS_SEGMENT_HDRS_NA // Invalid for AOS
+} TcSegmentHdrsPresent;
+typedef enum
+{
+    TC_PROCESS_SDLS_PDUS_FALSE,
+    TC_PROCESS_SDLS_PDUS_TRUE
+} TcProcessSdlsPdus;
+typedef enum
+{
+    TC_NO_PUS_HDR,
+    TC_HAS_PUS_HDR
+} TcPusHdrPresent;
+typedef enum
+{
+    TC_IGNORE_SA_STATE_FALSE,
+    TC_IGNORE_SA_STATE_TRUE
+} TcIgnoreSaState;
+typedef enum
+{
+    TC_IGNORE_ANTI_REPLAY_FALSE,
+    TC_IGNORE_ANTI_REPLAY_TRUE
+} TcIgnoreAntiReplay;
+typedef enum
+{
+    TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+    TC_UNIQUE_SA_PER_MAP_ID_TRUE
+} TcUniqueSaPerMapId;
+typedef enum
+{
+    SA_INCREMENT_NONTRANSMITTED_IV_FALSE,
+    SA_INCREMENT_NONTRANSMITTED_IV_TRUE
+} SaIncrementNonTransmittedIvPortion;
+/***************************************
+** Telemetry specific enums
+****************************************/
+typedef enum
+{
+    TM_NO_SECONDARY_HDR,
+    TM_HAS_SECONDARY_HDR
+} TmSecondaryHdrPresent;
+typedef enum
+{
+    CAM_ENABLED_FALSE,
+    CAM_ENABLED_TRUE
+} CamEnabledBool;
+
+typedef enum
+{
+    CAM_LOGIN_NONE,       // Using already populated cam_cookie_file
+    CAM_LOGIN_KERBEROS,   // Using already logged-in Kerberos to generate CAM cookies
+    CAM_LOGIN_KEYTAB_FILE // using keytab file to login and generate CAM cookies
+} CamLoginMethod;
+/*
+**  Used for selecting supported algorithms
+*/
+typedef enum
+{
+    CRYPTO_MAC_NONE,
+    CRYPTO_MAC_CMAC_AES256,
+    CRYPTO_MAC_HMAC_SHA256,
+    CRYPTO_MAC_HMAC_SHA512,
+    CRYPTO_ACS_MAX = 3
+} AuthCipherSuite;
+typedef enum
+{
+    CRYPTO_CIPHER_NONE,
+    CRYPTO_CIPHER_AES256_GCM,
+    CRYPTO_CIPHER_AES256_CBC,
+    CRYPTO_CIPHER_AES256_CBC_MAC,
+    CRYPTO_CIPHER_AES256_CCM,
+    CRYPTO_CIPHER_AES256_GCM_SIV
+} EncCipherSuite;
+
+/*
+** Main Crypto Configuration Block
+*/
+typedef struct
+{
+    InitStatus       init_status;
+    KeyType          key_type;
+    McType           mc_type;
+    SadbType         sa_type;
+    CryptographyType cryptography_type;
+    IvType           iv_type;             // Whether or not CryptoLib should generate the IV
+    CreateFecfBool   crypto_create_fecf;  // Whether or not CryptoLib is expected to calculate TC FECFs and return
+                                          // payloads with the FECF
+    TcProcessSdlsPdus  process_sdls_pdus; // Config to process SDLS extended procedure PDUs in CryptoLib
+    TcPusHdrPresent    has_pus_hdr;
+    TcIgnoreSaState    ignore_sa_state; // TODO - add logic that uses this configuration
+    TcIgnoreAntiReplay ignore_anti_replay;
+    TcUniqueSaPerMapId unique_sa_per_mapid;
+    CheckFecfBool      crypto_check_fecf;
+    uint8_t            vcid_bitmask;
+    uint8_t crypto_increment_nontransmitted_iv; // Whether or not CryptoLib increments the non-transmitted portion of
+                                                // the IV field
+} CryptoConfig_t;
+#define CRYPTO_CONFIG_SIZE (sizeof(CryptoConfig_t))
+
+typedef struct _GvcidManagedParameters_t GvcidManagedParameters_t;
+struct _GvcidManagedParameters_t
+{
+    uint8_t              tfvn : 4;  // Transfer Frame Version Number
+    uint16_t             scid : 10; // SpacecraftID
+    uint8_t              vcid : 6;  // Virtual Channel ID
+    FecfPresent          has_fecf;
+    AosFhecPresent       aos_has_fhec;
+    AosInsertZonePresent aos_has_iz;
+    uint16_t             aos_iz_len;
+    TcSegmentHdrsPresent has_segmentation_hdr;
+    uint16_t             max_frame_size; // Maximum TC/TM Frame Length with headers
+    OcfPresent           has_ocf;
+    int                  set_flag;
+};
+#define GVCID_MANAGED_PARAMETERS_SIZE (sizeof(GvcidManagedParameters_t))
+
+/*
+** SaDB MariaDB Configuration Block
+*/
+typedef struct
+{
+    char    *mysql_username;
+    char    *mysql_password;
+    char    *mysql_hostname;
+    char    *mysql_database;
+    uint16_t mysql_port;
+    char    *mysql_mtls_cert;
+    char    *mysql_mtls_key;
+    char    *mysql_mtls_ca;
+    char    *mysql_mtls_capath;
+    uint8_t  mysql_tls_verify_server;
+    char    *mysql_mtls_client_key_password;
+    uint8_t  mysql_require_secure_transport;
+
+} SadbMariaDBConfig_t;
+#define SADB_MARIADB_CONFIG_SIZE (sizeof(SadbMariaDBConfig_t))
+
+/*
+** KMC Cryptography Service Configuration Block
+*/
+typedef struct
+{
+    char    *kmc_crypto_hostname;
+    char    *protocol;
+    uint16_t kmc_crypto_port;
+    char    *kmc_crypto_app_uri;
+    char    *mtls_client_cert_path;
+    char    *mtls_client_cert_type; // default "PEM", supports "P12" and "DER"
+    char    *mtls_client_key_path;
+    char    *mtls_client_key_pass;
+    char    *mtls_ca_bundle;
+    char    *mtls_ca_path;
+    char    *mtls_issuer_cert;
+    uint8_t  ignore_ssl_hostname_validation;
+
+} CryptographyKmcCryptoServiceConfig_t;
+#define CRYPTOGRAPHY_KMC_CRYPTO_SERVICE_CONFIG_SIZE (sizeof(CryptographyKmcCryptoServiceConfig_t))
+
+/*
+** Common Access Manager (CAM) Configuration Block
+*/
+typedef struct
+{
+    uint8_t cam_enabled;
+    char   *cookie_file_path;
+    char   *keytab_file_path;
+    char   *access_manager_uri;
+    char   *username;
+    char   *cam_home;
+    uint8_t login_method;
+
+} CamConfig_t;
+#define CAM_CONFIG_SIZE (sizeof(CamConfig_t))
+
+#endif // CRYPTO_CONFIG_STRUCTS_H
+</pre></div>
+</div>
+</section>
+<section id="crypto-error-h">
+<h2><code class="docutils literal notranslate"><span class="pre">crypto_error.h</span></code><a class="headerlink" href="#crypto-error-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/cryptolib/include/crypto_error.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&amp;V
+   jstar-development-team@mail.nasa.gov
+*/
+#ifndef CRYPTO_ERROR_H
+#define CRYPTO_ERROR_H
+
+/*
+ *  *** IMPORTANT READ ***
+ *  If error codes are added to this header file, their enum string must be added to the error lists (in crypto_error.c)
+ *  AND the appropriate _ERROR_CODE_MAX must be updated below!
+ */
+
+#define CRYPTO_CONFIGURATION_NOT_COMPLETE               100
+#define CRYPTO_MANAGED_PARAM_CONFIGURATION_NOT_COMPLETE 101
+#define CRYPTO_MARIADB_CONFIGURATION_NOT_COMPLETE       102
+#define MANAGED_PARAMETERS_FOR_GVCID_NOT_FOUND          103
+
+#define SADB_INVALID_SADB_TYPE 200
+#define SADB_NULL_SA_USED      201
+
+#define SADB_MARIADB_CONNECTION_FAILED 300
+#define SADB_QUERY_FAILED              301
+#define SADB_QUERY_EMPTY_RESULTS       302
+#define SADB_INSERT_FAILED             303
+#define SADB_INVALID_SA_FIELD_VALUE    304
+
+#define CRYPTOGRAPHY_INVALID_CRYPTO_INTERFACE_TYPE      400
+#define CRYPTOGRAPHY_UNSUPPORTED_OPERATION_FOR_KEY_RING 401
+#define CRYPTOGRAPHY_LIBRARY_INITIALIZIATION_ERROR      402
+
+#define CRYPTOGRAPHY_KMC_CRYPTO_SERVICE_CONFIGURATION_NOT_COMPLETE 500
+#define CRYPTOGRAPHY_KMC_CURL_INITIALIZATION_FAILURE               501
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_CONNECTION_ERROR           502
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_AEAD_ENCRYPT_ERROR         503
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_AEAD_DECRYPT_ERROR         504
+#define CRYPTOGRAHPY_KMC_CRYPTO_JSON_PARSE_ERROR                   505
+#define CRYPTOGRAHPY_KMC_CIPHER_TEXT_NOT_FOUND_IN_JSON_RESPONSE    506
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_GENERIC_FAILURE            507
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_AUTHENTICATION_ERROR       508
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_MAC_VALIDATION_ERROR       509
+#define CRYPTOGRAHPY_KMC_ICV_NOT_FOUND_IN_JSON_RESPONSE            510
+#define CRYPTOGRAHPY_KMC_NULL_ENCRYPTION_KEY_REFERENCE_IN_SA       511
+#define CRYPTOGRAHPY_KMC_NULL_AUTHENTICATION_KEY_REFERENCE_IN_SA   512
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_EMPTY_RESPONSE             513
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_DECRYPT_ERROR              514
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_ENCRYPT_ERROR              515
+
+#define CAM_CONFIG_NOT_SUPPORTED_ERROR                      600
+#define CAM_INVALID_COOKIE_FILE_CONFIGURATION_NULL          601
+#define CAM_AUTHENTICATION_FAILURE_REDIRECT                 602
+#define CAM_AUTHENTICATION_REQUIRED                         603
+#define CAM_GET_SSO_TOKEN_FAILURE                           604
+#define CAM_INVALID_CONFIGURATION_ACCESS_MANAGER_URI_NULL   605
+#define CAM_INVALID_CONFIGURATION_KEYTAB_FILE_PATH_NULL     606
+#define CAM_INVALID_CONFIGURATION_KEYTAB_FILE_USERNAME_NULL 607
+#define CAM_KEYTAB_FILE_KINIT_FAILURE                       608
+#define CAM_KERBEROS_REQUEST_TIME_OUT                       609
+#define CAM_MAX_AUTH_RETRIES_REACHED                        610
+
+#define CRYPTO_LIB_SUCCESS                                                  (0)
+#define CRYPTO_LIB_ERROR                                                    (-1)
+#define CRYPTO_LIB_ERR_NO_INIT                                              (-2)
+#define CRYPTO_LIB_ERR_INVALID_TFVN                                         (-3)
+#define CRYPTO_LIB_ERR_INVALID_SCID                                         (-4)
+#define CRYPTO_LIB_ERR_INVALID_VCID                                         (-5)
+#define CRYPTO_LIB_ERR_INVALID_MAPID                                        (-6)
+#define CRYPTO_LIB_ERR_INVALID_CC_FLAG                                      (-7)
+#define CRYPTO_LIB_ERR_NO_OPERATIONAL_SA                                    (-8)
+#define CRYPTO_LIB_ERR_NULL_BUFFER                                          (-9)
+#define CRYPTO_LIB_ERR_UT_BYTE_MISMATCH                                     (-10)
+#define CRYPTO_LIB_ERR_NO_CONFIG                                            (-11)
+#define CRYPTO_LIB_ERR_INVALID_FECF                                         (-12)
+#define CRYPTO_LIB_ERR_ARSN_OUTSIDE_WINDOW                                  (-13)
+#define CRYPTO_LIB_ERR_LIBGCRYPT_ERROR                                      (-14)
+#define CRYPTO_LIB_ERR_AUTHENTICATION_ERROR                                 (-15)
+#define CRYPTO_LIB_ERR_NULL_IV                                              (-16)
+#define CRYPTO_LIB_ERR_NULL_ABM                                             (-17)
+#define CRYPTO_LIB_ERR_DECRYPT_ERROR                                        (-18)
+#define CRYPTO_LIB_ERR_ABM_TOO_SHORT_FOR_AAD                                (-19)
+#define CRYPTO_LIB_ERR_MAC_RETRIEVAL_ERROR                                  (-20)
+#define CRYPTO_LIB_ERR_MAC_VALIDATION_ERROR                                 (-21)
+#define CRYPTO_LIB_ERR_INVALID_HEADER                                       (-22)
+#define CRYPTO_LIB_ERR_IV_OUTSIDE_WINDOW                                    (-23)
+#define CRYPTO_LIB_ERR_NULL_ARSN                                            (-24)
+#define CRYPTO_LIB_ERR_NULL_SA                                              (-25)
+#define CRYPTO_LIB_ERR_UNSUPPORTED_ACS                                      (-26)
+#define CRYPTO_LIB_ERR_ENCRYPTION_ERROR                                     (-27)
+#define CRYPTO_LIB_ERR_INVALID_SA_CONFIGURATION                             (-28)
+#define CRYPTO_LIB_ERR_TC_FRAME_SIZE_EXCEEDS_MANAGED_PARAM_MAX_LIMIT        (-29)
+#define CRYPTO_LIB_ERR_TC_FRAME_SIZE_EXCEEDS_SPEC_LIMIT                     (-30)
+#define CRYPTO_LIB_ERR_UNSUPPORTED_ECS                                      (-31)
+#define CRYPTO_LIB_ERR_KEY_LENGTH_ERROR                                     (-32)
+#define CRYPTO_LIB_ERR_NULL_ECS_PTR                                         (-33)
+#define CRYPTO_LIB_ERR_IV_NOT_SUPPORTED_FOR_ACS_ALGO                        (-34)
+#define CRYPTO_LIB_ERR_NULL_CIPHERS                                         (-35)
+#define CRYPTO_LIB_ERR_NO_ECS_SET_FOR_ENCRYPTION_MODE                       (-36)
+#define CRYPTO_LIB_ERR_IV_LEN_SHORTER_THAN_SEC_HEADER_LENGTH                (-37)
+#define CRYPTO_LIB_ERR_ARSN_LEN_SHORTER_THAN_SEC_HEADER_LENGTH              (-38)
+#define CRYPTO_LIB_ERR_FRAME_COUNTER_DOESNT_MATCH_SA                        (-39)
+#define CRYPTO_LIB_ERR_INPUT_FRAME_TOO_SHORT_FOR_TC_STANDARD                (-40)
+#define CRYPTO_LIB_ERR_INPUT_FRAME_LENGTH_SHORTER_THAN_FRAME_HEADERS_LENGTH (-41)
+#define CRYPTO_LIB_ERR_UNSUPPORTED_ECS_MODE                                 (-42)
+#define CRYPTO_LIB_ERR_NULL_MODE_PTR                                        (-43)
+#define CRYPTO_LIB_ERR_UNSUPPORTED_MODE                                     (-44)
+#define CRYPTO_LIB_ERR_INPUT_FRAME_TOO_SHORT_FOR_TM_STANDARD                (-45)
+#define CRYPTO_LIB_ERR_TC_ENUM_USED_FOR_TM_CONFIG                           (-46)
+#define CRYPTO_LIB_ERR_KEY_ID_ERROR                                         (-47)
+#define CRYPTO_LIB_ERR_MC_INIT                                              (-48)
+#define CRYPTO_LIB_ERR_INPUT_FRAME_TOO_SHORT_FOR_AOS_STANDARD               (-49)
+#define CRYPTO_LIB_ERR_TC_ENUM_USED_FOR_AOS_CONFIG                          (-50)
+#define CRYPTO_LIB_ERR_INVALID_SA_SERVICE_TYPE                              (-51)
+#define CRYPTO_LIB_ERR_FAIL_SA_SAVE                                         (-52)
+#define CRYPTO_LIB_ERR_FAIL_SA_LOAD                                         (-53)
+#define CRYPTO_LIB_ERR_EXCEEDS_MANAGED_PARAMETER_MAX_LIMIT                  (-54)
+#define CRYPTO_LIB_ERR_KEY_VALIDATION                                       (-55)
+#define CRYPTO_LIB_ERR_SPI_INDEX_OOB                                        (-56)
+#define CRYPTO_LIB_ERR_SA_NOT_OPERATIONAL                                   (-57)
+#define CRYPTO_LIB_ERR_IV_GREATER_THAN_MAX_LENGTH                           (-58)
+#define CRYPTO_LIB_ERR_KEY_STATE_TRANSITION_ERROR                           (-59)
+#define CRYPTO_LIB_ERR_SPI_INDEX_MISMATCH                                   (-60)
+#define CRYPTO_LIB_ERR_KEY_STATE_INVALID                                    (-61)
+#define CRYPTO_LIB_ERR_SDLS_EP_WRONG_SPI                                    (-62)
+#define CRYPTO_LIB_ERR_SDLS_EP_NOT_BUILT                                    (-63)
+#define CRYPTO_LIB_ERR_BAD_TLV_LENGTH                                       (-64)
+#define CRYPTO_LIB_ERR_OTAR_BAD_TLV_LENGTH                                  (-65)
+#define CRYPTO_LIB_ERR_SHIVF_LEN_GREATER_THAN_MAX_IV_SIZE                   (-66)
+#define CRYPTO_LIB_ERR_SHSNF_LEN_GREATER_THAN_MAX_ARSN_SIZE                 (-67)
+#define CRYPTO_LIB_ERR_ABM_LEN_GREATER_THAN_MAX_ABM_SIZE                    (-68)
+#define CRYPTO_LIB_ERR_STMACF_LEN_GREATER_THAN_MAX_MAC_SIZE                 (-69)
+#define CRYPTO_LIB_ERR_SHPLF_LEN_GREATER_THAN_MAX_PAD_SIZE                  (-70)
+#define CRYPTO_LIB_ERR_INVALID_SVC_TYPE_WITH_ARSN                           (-71)
+#define CRYPTO_LIB_ERR_ARSN_LT_SHSNF                                        (-72)
+#define CRYPTO_LIB_ERR_TC_FRAME_LENGTH_UNDERFLOW                            (-73)
+#define CRYPTO_LIB_ERR_IV_EXCEEDS_INCREMENT_SIZE                            (-74)
+#define CRYPTO_LIB_ERR_AOS_FRAME_LENGTH_UNDERFLOW                           (-75)
+#define CRYPTO_LIB_ERR_TM_FRAME_LENGTH_UNDERFLOW                            (-76)
+#define CRYPTO_LIB_ERR_AOS_FL_LT_MAX_FRAME_SIZE                             (-77)
+#define CRYPTO_LIB_ERR_TM_FL_LT_MAX_FRAME_SIZE                              (-78)
+#define CRYPTO_LIB_ERR_INVALID_FHECF                                        (-79)
+#define CRYPTO_LIB_ERR_TM_SECONDARY_HDR_SIZE                                (-80)
+#define CRYPTO_LIB_ERR_TM_SECONDARY_HDR_VN                                  (-81)
+#define CRYPTO_LIB_ERR_TC_FRAME_LENGTH_MISMATCH                             (-82)
+#define CRYPTO_LIB_ERR_SHPLF_LEN_LESS_THAN_MIN_PAD_SIZE                     (-83)
+#define CRYPTO_LIB_ERR_INVALID_AOS_IZ_LENGTH                                (-84)
+
+#define CRYPTO_CORE_ERROR_CODES_MAX -84
+
+// Define codes for returning MDB Strings, and determining error based on strings
+#define CAM_ERROR_CODES     600
+#define CAM_ERROR_CODES_MAX 610
+
+#define KMC_ERROR_CODES     500
+#define KMC_ERROR_CODES_MAX 515
+
+#define CRYPTO_INTERFACE_ERROR_CODES     400
+#define CRYPTO_INTERFACE_ERROR_CODES_MAX 402
+
+#define SADB_ERROR_CODES     300
+#define SADB_ERROR_CODES_MAX 304
+
+#define SADB_INTERFACE_ERROR_CODES     200
+#define SADB_INTERFACE_ERROR_CODES_MAX 201
+
+#define CONFIGURATION_ERROR_CODES     100
+#define CONFIGURATION_ERROR_CODES_MAX 103
+
+extern char *crypto_enum_errlist_core[];
+extern char *crypto_enum_errlist_config[];
+extern char *crypto_enum_errlist_sa_if[];
+extern char *crypto_enum_errlist_sa_mariadb[];
+extern char *crypto_enum_errlist_crypto_if[];
+extern char *crypto_enum_errlist_crypto_kmc[];
+extern char *crypto_enum_errlist_crypto_cam[];
+
+#endif // CRYPTO_ERROR_H
+</pre></div>
+</div>
+</section>
+<section id="crypto-events-h">
+<h2><code class="docutils literal notranslate"><span class="pre">crypto_events.h</span></code><a class="headerlink" href="#crypto-events-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/cryptolib/include/crypto_events.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&amp;V
+   jstar-development-team@mail.nasa.gov
+*/
+#ifndef CRYPTO_EVENTS_H
+#define CRYPTO_EVENTS_H
+
+#define FECF_ERR_EID           0
+#define MKID_INVALID_EID       1
+#define MKID_STATE_ERR_EID     2
+#define KEY_TRANSITION_ERR_EID 3
+#define SPI_INVALID_EID        4
+#define IV_WINDOW_ERR_EID      5
+#define IV_REPLAY_ERR_EID      6
+#define OTAR_MK_ERR_EID        7
+
+#define STARTUP_EID 10
+
+#endif // CRYPTO_EVENTS_H
+</pre></div>
+</div>
+</section>
+<section id="crypto-print-h">
+<h2><code class="docutils literal notranslate"><span class="pre">crypto_print.h</span></code><a class="headerlink" href="#crypto-print-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/cryptolib/include/crypto_print.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&amp;V
+   jstar-development-team@mail.nasa.gov
+*/
+
+#ifndef CRYPTO_PRINT_H
+#define CRYPTO_PRINT_H
+
+/*
+** Includes
+*/
+#include "crypto.h"
+#include "crypto_structs.h"
+
+/*
+** Prototypes
+*/
+
+/**
+ * @brief Function: Crypto_tcPrint
+ * @param tc_frame: TC_T*
+ * Prints the contents of the tc_frame
+ **/
+void Crypto_tcPrint(TC_t *tc_frame);
+
+/**
+ * @brief Function: Crypto_tmPrint
+ * @param tm_frame: TM_T*
+ * Prints the contents of the tm_frame
+ **/
+void Crypto_tmPrint(TM_t *tm_frame);
+
+/**
+ * @brief Function: Crypto_clcwPrint
+ * @param clcw: Telemetry_Frame_Clcw_t*
+ * Prints the contents of the clcw
+ **/
+void Crypto_clcwPrint(Telemetry_Frame_Ocf_Clcw_t *clcw);
+
+/**
+ * @brief Function: Crypto_fsrPrint
+ * @param report: SDLS_FSR_t*
+ * Prints the contents of current FSR in memory
+ **/
+void Crypto_fsrPrint(Telemetry_Frame_Ocf_Fsr_t *report);
+
+/**
+ * @brief Function: Crypto_ccsdsPrint
+ * @param sdls_frame: CCSDS_t*
+ * Prints the contents of current CCSDS in memory
+ **/
+void Crypto_ccsdsPrint(CCSDS_t *sdls_frame);
+
+/**
+ * @brief Function: Crypto_saPrint
+ * @param sa: SecurityAssociation_t*
+ * Prints the contents of SA
+ **/
+void Crypto_saPrint(SecurityAssociation_t *sa);
+
+/**
+ * @brief Function: Crypto_hexPrint
+ * Prints the array of hex characters.
+ * @param c: void*, The hex to be printed.
+ * @param n: size_t, The size of the array to be printed.
+ **/
+void Crypto_hexprint(const void *c, size_t n);
+
+/**
+ * @brief Function: Crypto_binprint
+ * Prints the array of binary data.
+ * @param c: void*, The binary array to be printed.
+ * @param n: size_t, The size of the array to be printed.
+ **/
+void Crypto_binprint(void *c, size_t n);
+
+/**
+ * @brief Function: Crypto_mpPrint
+ * Prints the array of Managed Parameters.
+ * @param managed_parameters: GvcidManagedParameters_t*, The binary array to be printed.
+ * @param print_children: uint8_t, The size of the array to be printed.
+ **/
+void Crypto_mpPrint(GvcidManagedParameters_t *managed_parameters, uint8_t print_children);
+
+#endif // CRYPTO_PRINT_H
+</pre></div>
+</div>
+</section>
+<section id="crypto-structs-h">
+<h2><code class="docutils literal notranslate"><span class="pre">crypto_structs.h</span></code><a class="headerlink" href="#crypto-structs-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/cryptolib/include/crypto_structs.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&amp;V
+   jstar-development-team@mail.nasa.gov
+*/
+
+#ifndef CRYPTO_STRUCTS_H
+#define CRYPTO_STRUCTS_H
+
+#define SDLS_CHALLENGED_SIZE     10
+#define SDLS_CMAC_SIZE           10
+#define SDLS_KEY_VERIFY_BLK_SIZE 29
+#define SDLS_KEY_ID_SIZE         98
+#define SDLS_EKB_LEN             30
+
+#include "crypto_config.h"
+
+#ifdef NOS3 // NOS3/cFS build is ready
+#include "common_types.h"
+#endif // Assume build outside of NOS3/cFS infrastructure
+
+#include &lt;stdlib.h&gt;
+#include &lt;stdint.h&gt;
+#include &lt;stdio.h&gt;
+
+/**
+ * CCSDS Compliance Reference:
+ * This file implements security features compliant with:
+ * - CCSDS 232.0-B-3 (TC Space Data Link Protocol)
+ * - CCSDS 132.0-B-3 (TM Space Data Link Protocol)
+ * - CCSDS 732.0-B-4 (AOS Space Data Link Protocol)
+ * - CCSDS 355.0-B-2 (Space Data Link Security Protocol)
+ */
+
+/*
+** Definitions
+*/
+/*
+** CCSDS Compliance: CCSDS 232.0-B-3, CCSDS 132.0-B-3, CCSDS 732.0-B-4
+** Global Virtual Channel ID / Global MAP ID structure
+*/
+typedef struct
+{                       // Global Virtual Channel ID / Global MAP ID
+    uint8_t  tfvn : 4;  // Transfer Frame Version Number
+    uint16_t scid : 16; // Spacecraft ID
+    uint16_t vcid : 6;  // Virtual Channel ID
+    uint8_t  mapid : 6; // Multiplexer Access Point ID
+} __attribute__((packed)) crypto_gvcid_t;
+#define CRYPTO_GVCID_SIZE (sizeof(crypto_gvcid_t))
+
+/*
+** Security Association
+** CCSDS Compliance: CCSDS 355.0-B-2 Table A6 (Security Association)
+*/
+typedef struct
+{
+    // Status
+    uint16_t spi;          // Security Parameter Index
+    uint16_t ekid;         // Encryption Key ID  (Used with numerically indexed keystores, EG inmemory keyring)
+    uint16_t akid;         // Authentication Key ID
+    char ek_ref[REF_SIZE]; // Encryption Key Reference (Used with string-referenced keystores,EG-PKCS12 keystores, KMC
+                           // crypto)
+    char ak_ref[REF_SIZE]; // Authentication Key Reference (Used with string-referenced keystores,EG-PKCS12 keystores,
+                           // KMC crypto)
+    uint8_t        sa_state : 2;
+    crypto_gvcid_t gvcid_blk;
+    uint8_t        lpid;
+
+    // Configuration
+    uint8_t  est : 1;         // Encryption Service Type
+    uint8_t  ast : 1;         // Authentication Service Type
+    uint8_t  shivf_len : 6;   // Sec. Header Transmitted IV Field Length
+    uint8_t  shsnf_len : 6;   // Sec. Header SN Field Length
+    uint8_t  shplf_len : 2;   // Sec. Header PL Field Length
+    uint8_t  stmacf_len : 8;  // Sec. Trailer MAC Field Length
+    uint8_t  ecs;             // Encryption Cipher Suite (algorithm / mode ID)
+    uint8_t  ecs_len : 8;     // Encryption Cipher Suite Length
+    uint8_t  iv[IV_SIZE];     // Initialization Vector
+    uint8_t  iv_len;          // Length of entire IV
+    uint8_t  acs_len : 8;     // Authentication Cipher Suite Length
+    uint8_t  acs;             // Authentication Cipher Suite (algorithm / mode ID)
+    uint16_t abm_len : 16;    // Authentication Bit Mask Length
+    uint8_t  abm[ABM_SIZE];   // Authentication Bit Mask (Primary Hdr. through Security Hdr.)
+    uint8_t  arsn_len : 8;    // Anti-Replay Seq Num Length
+    uint8_t  arsn[ARSN_SIZE]; // Anti-Replay Seq Num
+    uint8_t  arsnw_len : 8;   // Anti-Replay Seq Num Window Length
+    uint16_t arsnw;           // Anti-Replay Seq Num Window
+
+} __attribute__((packed)) SecurityAssociation_t;
+#define SA_SIZE (sizeof(SecurityAssociation_t))
+
+/*
+** SDLS Definitions
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 2.4 (Frame Security Report)
+*/
+typedef struct
+{
+    uint8_t  cwt : 1;    // Control Word Type
+    uint8_t  vnum : 3;   // FSR Version Number
+    uint8_t  af : 1;     // Alarm Field
+    uint8_t  bsnf : 1;   // Bad SN Flag
+    uint8_t  bmacf : 1;  // Bad MAC Flag
+    uint8_t  ispif : 1;  // Invalid SPI Flag
+    uint16_t lspiu : 16; // Last SPI Used
+    uint8_t  snval : 8;  // SN Value (LSB)
+} __attribute__((packed)) SDLS_FSR_t;
+#define SDLS_FSR_SIZE (sizeof(SDLS_FSR_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.5 (Security Protocol Procedures)
+*/
+typedef struct
+{
+    uint8_t  type : 1; // Procedure Type Flag
+    uint8_t  uf : 1;   // User Flag
+    uint8_t  sg : 2;   // Service Group Field
+    uint8_t  pid : 4;  // Procedure Identification Field
+    uint16_t pdu_len;  // EP Data Field Length - BITS
+} __attribute__((packed)) SDLS_TLV_Hdr_t;
+#define SDLS_TLV_HDR_SIZE (sizeof(SDLS_TLV_Hdr_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.5 (Security Protocol Procedures)
+*/
+typedef struct
+{
+    SDLS_TLV_Hdr_t hdr;
+    uint8_t        data[TLV_DATA_SIZE];
+} SDLS_TLV_t;
+#define SDLS_TLV_SIZE (sizeof(SDLS_TLV_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t ekid;         // Encrypted Key ID
+    uint8_t  ek[KEY_SIZE]; // Encrypted Key
+} SDLS_EKB_t;
+#define SDLS_EKB_SIZE (sizeof(SDLS_EKB_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t   mkid;              // Master Key ID
+    uint8_t    iv[IV_SIZE];       // Initialization Vector
+    SDLS_EKB_t EKB[SDLS_EKB_LEN]; // Encrypted Key Block
+    uint8_t    mac[MAC_SIZE];     // Message Authentication Code
+} SDLS_OTAR_t;
+#define SDLS_OTAR_SIZE (sizeof(SDLS_OTAR_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t kid : 16; // Key ID
+} SDLS_KEY_t;
+#define SDLS_KEY_SIZE (sizeof(SDLS_KEY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    SDLS_KEY_t kblk[SDLS_KEY_ID_SIZE]; // Key ID Block
+} SDLS_KEY_BLK_t;
+#define SDLS_KEY_BLK_SIZE (sizeof(SDLS_KEY_BLK_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t kid_first : 16; // First Key ID
+    uint16_t kid_last : 16;  // Last Key ID
+} SDLS_KEY_INVENTORY_CMD_t;
+#define SDLS_KEY_INVENTORY_CMD_SIZE (sizeof(SDLS_KEY_INVENTORY_CMD_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t kid : 16;      // Key ID
+    uint16_t key_state : 8; // Key state
+} __attribute__((packed)) SDLS_KEY_INVENTORY_RPLY_t;
+#define SDLS_KEY_INVENTORY_RPLY_SIZE (sizeof(SDLS_KEY_INVENTORY_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t kid : 16;                  // Key ID
+    uint8_t  challenge[CHALLENGE_SIZE]; // Key Challenge
+} SDLS_KEYV_CMD_BLK_t;
+#define SDLS_KEYV_CMD_BLK_SIZE (sizeof(SDLS_KEYV_CMD_BLK_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    SDLS_KEYV_CMD_BLK_t blk[SDLS_KEY_VERIFY_BLK_SIZE]; // Key Verification Command Block
+} SDLS_KEYV_CMD_t;
+#define SDLS_KEYV_CMD_SIZE (sizeof(SDLS_KEYV_CMD_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t kid : 16;                   // Key ID
+    uint8_t  iv[SDLS_IV_LEN];            // Key Initialization Vector
+    uint8_t  challenged[CHALLENGE_SIZE]; // Encrypted Challenge
+    uint8_t  mac[MAC_SIZE];              // Challenge Message Authentication Code
+} SDLS_KEYV_RPLY_BLK_t;
+#define SDLS_KEYV_RPLY_BLK_SIZE (sizeof(SDLS_KEYV_RPLY_BLK_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    SDLS_KEYV_RPLY_BLK_t blk[SDLS_KEY_VERIFY_BLK_SIZE]; // Key Verification Reply Block
+} SDLS_KEYV_RPLY_t;
+#define SDLS_KEYV_RPLY_SIZE (sizeof(SDLS_KEYV_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t kid : 16; // Key ID
+    uint8_t  challenged[SDLS_CHALLENGED_SIZE];
+} SDLS_KEYDB_CMD_t;
+#define SDLS_KEYDB_CMD_SIZE (sizeof(SDLS_KEYDB_CMD_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t kid : 16;                         // Key ID
+    uint8_t  iv[IV_SIZE];                      // Initialization Vector
+    uint8_t  challenged[SDLS_CHALLENGED_SIZE]; // Encrypted Challenge
+    uint8_t  cmac[SDLS_CMAC_SIZE];             // Challenge Message Authentication Code
+} SDLS_KEYDB_RPLY_t;
+#define SDLS_KEYDB_RPLY_SIZE (sizeof(SDLS_KEYDB_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.5 (SA Management)
+*/
+typedef struct
+{
+    uint16_t spi : 16; // Security Parameter Index
+    uint8_t  lpid : 8; // Procedure ID from Last State Transition or Current State
+} __attribute__((packed)) SDLS_SA_STATUS_RPLY_t;
+#define SDLS_SA_STATUS_RPLY_SIZE (sizeof(SDLS_SA_STATUS_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.5 (SA Management)
+*/
+typedef struct
+{
+    uint16_t spi : 16;        // Security Parameter Index
+    uint8_t  arsn[ARSN_SIZE]; // Anti-Replay Sequence Number
+} SDLS_SA_READ_ARSN_RPLY_t;
+#define SDLS_SA_READ_ARSN_RPLY_SIZE (sizeof(SDLS_SA_READ_ARSN_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.6 (Monitoring and Control)
+*/
+typedef struct
+{
+    uint16_t num_se; // Number of Security Events
+    uint16_t rs;     // Remaining Space
+} SDLS_MC_LOG_RPLY_t;
+#define SDLS_MC_LOG_RPLY_SIZE (sizeof(SDLS_MC_LOG_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.6 (Monitoring and Control)
+*/
+typedef struct
+{
+    uint8_t  emt : 8;       // Event Message Tag
+    uint16_t em_len : 16;   // Event Message Length
+    uint8_t  emv[EMV_SIZE]; // Event Message Value
+} __attribute__((packed)) SDLS_MC_DUMP_RPLY_t;
+#define SDLS_MC_DUMP_RPLY_SIZE (sizeof(SDLS_MC_DUMP_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.6 (Monitoring and Control)
+*/
+typedef struct
+{
+    SDLS_MC_DUMP_RPLY_t blk[LOG_SIZE]; // Dump Log PDU
+} SDLS_MC_DUMP_BLK_RPLY_t;
+#define SDLS_MC_DUMP_BLK_RPLY_SIZE (sizeof(SDLS_MC_DUMP_BLK_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.6 (Monitoring and Control)
+*/
+typedef struct
+{
+    uint8_t str : 8; // Self-Test Result
+} SDLS_MC_ST_RPLY_t;
+#define SDLS_MC_ST_RPLY_SIZE (sizeof(SDLS_MC_ST_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.6 (Monitoring and Control)
+*/
+typedef struct
+{
+    uint8_t snv[SN_SIZE]; // Sequence Number Value
+} SDLS_MC_SN_RPLY_t;
+#define SDLS_MC_SN_RPLY_SIZE (sizeof(SDLS_MC_SN_RPLY_t))
+
+/*
+** Telecommand (TC) Definitions
+*/
+/*
+** CCSDS Compliance: CCSDS 232.0-B-3 Section 4.1.2 (TC Primary Header)
+*/
+typedef struct
+{
+    uint8_t tfvn : 2;   // Transfer Frame Version Number
+    uint8_t bypass : 1; // Bypass
+                        // 0 = Type A: Sequence Check, Acknowledgement
+                        // 1 = Type B: Checks are bypassed
+    uint8_t cc : 1;     // Control Command
+                        // 0 = Type D: Transfer Frame is Data Unit
+                        // 1 = Type C: Contron Command (for COP)
+    uint8_t  spare : 2; // Reserved Spare - Shall be 00
+    uint16_t scid : 10; // Spacecraft ID
+                        // Master Channel ID (MCID) = TFVN + SCID
+    uint8_t  vcid : 6;  // Virtual Channel ID
+    uint16_t fl : 10;   // The whole transfer frame length (max 1024)
+    uint8_t  fsn : 8;   // Frame sequence number, also N(S), zeroed on Type-B frames
+} __attribute__((packed)) TC_FramePrimaryHeader_t;
+#define TC_FRAME_PRIMARYHEADER_STRUCT_SIZE (sizeof(TC_FramePrimaryHeader_t))
+#define TC_FRAME_HEADER_SIZE               5
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.2.1 (TC Security Header)
+*/
+typedef struct
+{
+    uint8_t  sh : TC_SH_SIZE; // Segment Header
+    uint16_t spi;             // Security Parameter Index
+    uint8_t  iv[IV_SIZE];     // Initialization Vector for encryption
+    uint8_t  iv_field_len;
+    uint8_t  sn[SN_SIZE]; // Sequence Number for anti-replay
+    uint8_t  sn_field_len;
+    uint8_t  pad[PAD_SIZE]; // Count of the used fill Bytes
+    uint8_t  pad_field_len;
+} __attribute__((packed)) TC_FrameSecurityHeader_t;
+#define TC_FRAME_SECHEADER_SIZE (sizeof(TC_FrameSecurityHeader_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.2.2 (TC Security Trailer)
+*/
+typedef struct
+{
+    uint8_t  mac[MAC_SIZE]; // Message Authentication Code
+    uint8_t  mac_field_len;
+    uint16_t fecf; // Frame Error Control Field
+} __attribute__((packed)) TC_FrameSecurityTrailer_t;
+#define TC_FRAME_SECTRAILER_SIZE (sizeof(TC_FrameSecurityTrailer_t))
+
+/*
+** CCSDS Compliance: CCSDS 232.0-B-3 (TC Space Data Link Protocol) and
+** CCSDS 355.0-B-2 (Space Data Link Security Protocol)
+*/
+typedef struct
+{
+    TC_FramePrimaryHeader_t   tc_header;
+    TC_FrameSecurityHeader_t  tc_sec_header;
+    uint8_t                   tc_pdu[TC_FRAME_DATA_SIZE];
+    uint16_t                  tc_pdu_len;
+    TC_FrameSecurityTrailer_t tc_sec_trailer;
+} __attribute__((packed)) TC_t;
+#define TC_SIZE (sizeof(TC_t))
+
+/*
+** ECSS Definitions
+** European Cooperation for Space Standardization
+** Note: Early CryptoLib Testing Utilized ECSS PUS Headers
+*/
+
+typedef struct
+{
+    uint8_t shf : 1;  // Secondary Header Flag
+    uint8_t pusv : 3; // TC Packet PUS Version Number
+    uint8_t ack : 4;  // Acknowledgement
+    uint8_t st : 8;   // Service Type
+    uint8_t sst : 8;  // Service Subtype
+    uint8_t sid : 4;  // Source ID
+    uint8_t spare : 4;
+} ECSS_PUS_t;
+#define ECSS_PUS_SIZE (sizeof(ECSS_PUS_t))
+
+/*
+** CCSDS Definitions
+*/
+/*
+** CCSDS Compliance: CCSDS 133.0-B-2 Section 4.1 (Packet Primary Header)
+*/
+typedef struct
+{
+    uint8_t  pvn : 3;         // Packet Version Number
+    uint8_t  type : 1;        // Type = 1
+    uint8_t  shdr : 1;        // Data Field Header Flag
+    uint16_t appID : 11;      // Application ID
+    uint8_t  seq : 2;         // Sequence Flags
+    uint16_t pktid : 14;      // Sequence Count
+    uint16_t pkt_length : 16; // Packet Length
+} CCSDS_SPP_HDR_t;
+#define CCSDS_HDR_SIZE (sizeof(CCSDS_SPP_HDR_t))
+
+/*
+** CCSDS Compliance: CCSDS 133.0-B-2 (Space Packet Protocol)
+*/
+typedef struct
+{
+    CCSDS_SPP_HDR_t hdr;
+    ECSS_PUS_t      pus;
+    SDLS_TLV_t      tlv_pdu;
+} __attribute__((packed)) CCSDS_t;
+#define CCSDS_SIZE (sizeof(CCSDS_t))
+
+/*
+** Operational Control Field definitions
+** Telemetry frames can reply with either of these in their OCF field:
+** 1) A Communications Control Link Word -or-
+** 2) A Frame Security Report
+*/
+
+/*
+** CCSDS Compliance: CCSDS 232.0-B-3 Section 4.1.4 (Communications Link Control Word)
+*/
+typedef struct
+{
+    uint8_t cwt : 1;    // Control Word Type "0"
+    uint8_t cvn : 2;    // CLCW Version Number "00"
+    uint8_t sf : 3;     // Status Field
+    uint8_t cie : 2;    // COP In Effect
+    uint8_t vci : 6;    // Virtual Channel Identification
+    uint8_t spare0 : 2; // Reserved Spare "00"
+    uint8_t nrfaf : 1;  // No RF Avaliable Flag
+    uint8_t nblf : 1;   // No Bit Lock Flag
+    uint8_t lof : 1;    // Lock-Out Flag
+    uint8_t waitf : 1;  // Wait Flag
+    uint8_t rtf : 1;    // Retransmit Flag
+    uint8_t fbc : 2;    // FARM-B Counter
+    uint8_t spare1 : 1; // Reserved Spare "0"
+    uint8_t rv : 8;     // Report Value
+} __attribute__((packed)) Telemetry_Frame_Ocf_Clcw_t;
+
+#define TELEMETRY_FRAME_OCF_CLCW_SIZE (sizeof(Telemetry_Frame_Ocf_Clcw_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.4 (Frame Security Report)
+*/
+typedef struct
+{
+    uint8_t  cwt : 1;   // Control Word Type "1"
+    uint8_t  fvn : 3;   // FSR Version Number "100"
+    uint8_t  af : 1;    // Alarm Flag
+    uint8_t  bsnf : 1;  // Bad Sequence Number Flag
+    uint8_t  bmacf : 1; // Bad Mac Flag
+    uint8_t  bsaf : 1;  // Bad Security Association Flag
+    uint16_t lspi : 16; // Last SPI Used
+    uint8_t  snval : 8; // Sequence Number Value (LSB)
+} __attribute__((packed)) Telemetry_Frame_Ocf_Fsr_t;
+
+#define TELEMETRY_FRAME_OCF_FSR_SIZE (sizeof(Telemetry_Frame_Ocf_Fsr_t))
+
+/*
+** Telemetry (TM) Definitions
+*/
+/*
+** CCSDS Compliance: CCSDS 132.0-B-3 Section 4.1.2 (TM Primary Header)
+*/
+typedef struct
+{
+    uint8_t  tfvn : 2;  // Transfer Frame Version Number
+    uint16_t scid : 10; // Spacecraft ID
+    uint8_t  vcid : 3;  // Virtual Channel ID
+    uint8_t  ocff : 1;  // Describes whether OCF is present or not
+    uint8_t  mcfc : 8;  // Master Channel Frame Count (modulo-256)
+    uint8_t  vcfc : 8;  // Virtual Channel Frame Count (modulo-256)
+    uint8_t  tfsh : 1;  // Transfer Frame Secondary Header
+    uint8_t  sf : 1;    // Sync Flag
+                        // 0 = Payload is either idle data or octet synchronized forward-ordered packets
+                        // 1 = Data is a virtual channel access data unit
+    uint8_t pof : 1;    // Packet Order Flag
+                        // 0 = Shall be set to 0
+                        // Sync Flag 1 = Undefined
+    uint8_t slid : 2;   // Segment Length ID
+                        // Sync Flag 0 = Shall be 11
+                        // Sync Flag 1 = Undefined
+    uint16_t fhp : 11;  // First Header Pointer
+                        // Sync Flag 0 = Contains position of the first byte of the first packet in the data field
+                        // Sync Flag 1 = undefined
+} TM_FramePrimaryHeader_t;
+#define TM_FRAME_PRIMARYHEADER_SIZE (sizeof(TM_FramePrimaryHeader_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.3.1 (TM Security Header)
+*/
+typedef struct
+{
+    uint16_t spi;         // Security Parameter Index
+    uint8_t  iv[IV_SIZE]; // Initialization Vector for encryption
+} TM_FrameSecurityHeader_t;
+#define TM_FRAME_SECHEADER_SIZE (sizeof(TM_FrameSecurityHeader_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.3.2 (TM Security Trailer)
+*/
+typedef struct
+{
+    uint8_t  mac[MAC_SIZE]; // Message Authentication Code
+    uint8_t  ocf[OCF_SIZE]; // Operational Control Field
+    uint16_t fecf;          // Frame Error Control Field
+} TM_FrameSecurityTrailer_t;
+#define TM_FRAME_SECTRAILER_SIZE (sizeof(TM_FrameSecurityTrailer_t))
+
+/*
+** CCSDS Compliance: CCSDS 132.0-B-3 (TM Space Data Link Protocol) and
+** CCSDS 355.0-B-2 (Space Data Link Security Protocol)
+*/
+typedef struct
+{
+    TM_FramePrimaryHeader_t   tm_header;
+    TM_FrameSecurityHeader_t  tm_sec_header;
+    uint8_t                   tm_pdu[TM_FRAME_DATA_SIZE];
+    TM_FrameSecurityTrailer_t tm_sec_trailer;
+} TM_t;
+#define TM_SIZE (sizeof(TM_t))
+
+#define TM_MIN_SIZE \
+    (TM_FRAME_PRIMARYHEADER_SIZE + TM_FRAME_SECHEADER_SIZE + TM_FRAME_SECTRAILER_SIZE + TM_FRAME_CLCW_SIZE)
+
+/*
+** Advanced Orbiting Systems (AOS) Definitions
+*/
+/*
+** CCSDS Compliance: CCSDS 732.0-B-4 Section 4.1.2 (AOS Primary Header)
+*/
+typedef struct
+{
+    uint8_t tfvn : 2;  // Transfer Frame Version Number
+                       // Shall be set to '01' (732.0b4 Section 4.1.2.2.2)
+    uint16_t scid : 8; // Spacecraft ID
+    uint8_t  vcid : 6; // Virtual Channel ID
+                       // To be all zeros if only one VC used (732.0b4 Section 4.1.2.3)
+    long vcfc : 24;    // Virtual Channel Frame Count (modulo-16,777,216)
+    /* Begin TF Signalling Field */
+    uint8_t rf : 1;    // Replay Flag
+    uint8_t sf : 1;    // VC Frame Count Usgae Flag
+                       // 0 = Payload is either idle data or octet synchronized forward-ordered packets
+                       // 1 = Data is a virtual channel access data unit
+    uint8_t spare : 2; // Reserved Spare
+                       // 0 = Shall be set to 0
+                       // Sync Flag 1 = Undefined
+    uint8_t vfcc : 4;  // VC Frame Count cycle
+                       // Sync Flag 0 = Shall be 11
+                       // Sync Flag 1 = Undefined
+    uint16_t fhp : 16; // First Header Pointer
+                       // Sync Flag 0 = Contains position of the first byte of the first packet in the data field
+                       // Sync Flag 1 = undefined
+} AOS_FramePrimaryHeader_t;
+#define AOS_FRAME_PRIMARYHEADER_SIZE (sizeof(AOS_FramePrimaryHeader_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.3.1 (Security Header)
+*/
+typedef struct
+{
+    uint16_t spi;         // Security Parameter Index
+    uint8_t  iv[IV_SIZE]; // Initialization Vector for encryption
+} AOS_FrameSecurityHeader_t;
+#define AOS_FRAME_SECHEADER_SIZE (sizeof(AOS_FrameSecurityHeader_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.3.2 (Security Trailer)
+*/
+typedef struct
+{
+    uint8_t  mac[MAC_SIZE]; // Message Authentication Code
+    uint8_t  ocf[OCF_SIZE]; // Operational Control Field
+    uint16_t fecf;          // Frame Error Control Field
+} AOS_FrameSecurityTrailer_t;
+#define AOS_FRAME_SECTRAILER_SIZE (sizeof(AOS_FrameSecurityTrailer_t))
+
+/*
+** CCSDS Compliance: CCSDS 732.0-B-4 (AOS Space Data Link Protocol) and
+** CCSDS 355.0-B-2 (Space Data Link Security Protocol)
+*/
+typedef struct
+{
+    AOS_FramePrimaryHeader_t   tm_header;
+    AOS_FrameSecurityHeader_t  tm_sec_header;
+    uint8_t                    aos_pdu[AOS_FRAME_DATA_SIZE];
+    AOS_FrameSecurityTrailer_t aos_sec_trailer;
+} __attribute__((packed)) AOS_t;
+#define AOS_SIZE (sizeof(AOS_t))
+
+#define AOS_MIN_SIZE \
+    (AOS_FRAME_PRIMARYHEADER_SIZE + AOS_FRAME_SECHEADER_SIZE + AOS_FRAME_SECTRAILER_SIZE + AOS_FRAME_OCF_SIZE)
+
+#endif // CRYPTO_STRUCTS_H
+</pre></div>
+</div>
+</section>
+<section id="cryptography-interface-h">
+<h2><code class="docutils literal notranslate"><span class="pre">cryptography_interface.h</span></code><a class="headerlink" href="#cryptography-interface-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/cryptolib/include/cryptography_interface.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * Copyright 2021, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * Transfer at the California Institute of Technology.
+ *
+ * This software may be subject to U.S. export control laws. By accepting
+ * this software, the user agrees to comply with all applicable U.S.
+ * export laws and regulations. User has the responsibility to obtain
+ * export licenses, or other export authority as may be required before
+ * exporting such information to foreign countries or providing access to
+ * foreign persons.
+ */
+
+#ifndef CRYPTOLIB_CRYPTOGRAPHY_INTERFACE_H
+#define CRYPTOLIB_CRYPTOGRAPHY_INTERFACE_H
+
+#ifdef NOS3 // NOS3/cFS build is ready
+#include "common_types.h"
+#include "osapi.h"
+#else // Assume build outside of NOS3/cFS infrastructure
+#include &lt;stdint.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#endif
+
+#include "crypto_structs.h"
+
+typedef struct
+{
+    // Cryptography Interface Initialization &amp; Management Functions
+    int32_t (*cryptography_config)(void);
+    int32_t (*cryptography_init)(void);
+    int32_t (*cryptography_shutdown)(void);
+    // Cryptography Interface Functions
+    int32_t (*cryptography_encrypt)(uint8_t *data_out, size_t len_data_out, uint8_t *data_in, size_t len_data_in,
+                                    uint8_t *key, uint32_t len_key, SecurityAssociation_t *sa_ptr, uint8_t *iv,
+                                    uint32_t iv_len, uint8_t *ecs, uint8_t padding, char *cam_cookies);
+    int32_t (*cryptography_decrypt)(uint8_t *data_out, size_t len_data_out, uint8_t *data_in, size_t len_data_in,
+                                    uint8_t *key, uint32_t len_key, SecurityAssociation_t *sa_ptr, uint8_t *iv,
+                                    uint32_t iv_len, uint8_t *ecs, uint8_t *acs, char *cam_cookies);
+    int32_t (*cryptography_authenticate)(uint8_t *data_out, size_t len_data_out, uint8_t *data_in, size_t len_data_in,
+                                         uint8_t *key, uint32_t len_key,
+                                         SecurityAssociation_t *sa_ptr, // For key index or key references (when key not
+                                                                        // passed in explicitly via key param)
+                                         uint8_t *iv, uint32_t iv_len, uint8_t *mac, uint32_t mac_size, uint8_t *aad,
+                                         uint32_t aad_len, uint8_t ecs, uint8_t acs, char *cam_cookies);
+    int32_t (*cryptography_validate_authentication)(uint8_t *data_out, size_t len_data_out, const uint8_t *data_in,
+                                                    const size_t len_data_in, uint8_t *key, uint32_t len_key,
+                                                    SecurityAssociation_t *sa_ptr, const uint8_t *iv, uint32_t iv_len,
+                                                    const uint8_t *mac, uint32_t mac_size, const uint8_t *aad,
+                                                    uint32_t aad_len, uint8_t ecs, uint8_t acs, char *cam_cookies);
+    int32_t (*cryptography_aead_encrypt)(uint8_t *data_out, size_t len_data_out, uint8_t *data_in, size_t len_data_in,
+                                         uint8_t *key, uint32_t len_key, SecurityAssociation_t *sa_ptr, uint8_t *iv,
+                                         uint32_t iv_len, uint8_t *mac, uint32_t mac_size, uint8_t *aad,
+                                         uint32_t aad_len, uint8_t encrypt_bool, uint8_t authenticate_bool,
+                                         uint8_t aad_bool, uint8_t *ecs, uint8_t *acs, char *cam_cookies);
+    int32_t (*cryptography_aead_decrypt)(uint8_t *data_out, size_t len_data_out, uint8_t *data_in, size_t len_data_in,
+                                         uint8_t *key, uint32_t len_key, SecurityAssociation_t *sa_ptr, uint8_t *iv,
+                                         uint32_t iv_len, uint8_t *aad, uint32_t aad_len, uint8_t *mac,
+                                         uint32_t mac_size, uint8_t decrypt_bool, uint8_t authenticate_bool,
+                                         uint8_t aad_bool, uint8_t *ecs, uint8_t *acs, char *cam_cookies);
+    int32_t (*cryptography_get_acs_algo)(int8_t algo_enum);
+    int32_t (*cryptography_get_ecs_algo)(int8_t algo_enum);
+
+} CryptographyInterfaceStruct, *CryptographyInterface;
+
+CryptographyInterface get_cryptography_interface_libgcrypt(void);
+CryptographyInterface get_cryptography_interface_kmc_crypto_service(void);
+CryptographyInterface get_cryptography_interface_wolfssl(void);
+CryptographyInterface get_cryptography_interface_custom(void);
+
+#endif // CRYPTOLIB_CRYPTOGRAPHY_INTERFACE_H
+</pre></div>
+</div>
+</section>
+<section id="key-interface-h">
+<h2><code class="docutils literal notranslate"><span class="pre">key_interface.h</span></code><a class="headerlink" href="#key-interface-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/cryptolib/include/key_interface.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&amp;V
+   jstar-development-team@mail.nasa.gov
+*/
+#ifndef KEY_INTERFACE_H
+#define KEY_INTERFACE_H
+
+#include "crypto_error.h"
+#include "crypto_structs.h"
+
+/* Structures */
+typedef struct
+{
+    uint8_t  value[KEY_SIZE];
+    uint32_t key_len;
+    uint8_t  key_state : 4;
+} crypto_key_t;
+#define CRYPTO_KEY_SIZE (sizeof(crypto_key_t))
+
+typedef struct
+{
+    /* Key Interface, SDLS */
+    crypto_key_t *(*get_key)(uint32_t key_id);
+    int32_t (*key_init)(void);
+    int32_t (*key_shutdown)(void);
+
+    /* Key Interface, SDLS-EP */
+
+} KeyInterfaceStruct, *KeyInterface;
+
+/* Prototypes */
+KeyInterface get_key_interface_custom(void);
+KeyInterface get_key_interface_internal(void);
+KeyInterface get_key_interface_kmc(void);
+
+#endif // KEY_INTERFACE_H
+</pre></div>
+</div>
+</section>
+<section id="mc-interface-h">
+<h2><code class="docutils literal notranslate"><span class="pre">mc_interface.h</span></code><a class="headerlink" href="#mc-interface-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/cryptolib/include/mc_interface.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&amp;V
+   jstar-development-team@mail.nasa.gov
+*/
+#ifndef MONITORING_AND_CONTROL_INTERFACE_H
+#define MONITORING_AND_CONTROL_INTERFACE_H
+
+#include "crypto_error.h"
+#include "crypto_structs.h"
+
+/* Structures */
+typedef struct
+{
+    /* MC Interface, SDLS */
+    int32_t (*mc_initialize)(void);
+    void (*mc_log)(int32_t error_code);
+    int32_t (*mc_shutdown)(void);
+
+    /* MC Interface, SDLS-EP */
+    /*
+    int32_t (*mc_ping)();
+    int32_t (*mc_log_status)(void);
+    int32_t (*mc_dump_log)(void);
+    int32_t (*mc_erase_log)(void);
+    int32_t (*mc_self_test)(void);
+    int32_t (*mc_alarm_reset_flag)(void);
+    */
+
+} McInterfaceStruct, *McInterface;
+
+/* Prototypes */
+McInterface get_mc_interface_custom(void);
+McInterface get_mc_interface_disabled(void);
+McInterface get_mc_interface_internal(void);
+
+#endif // MONITORING_AND_CONTROL_INTERFACE_H
+</pre></div>
+</div>
+</section>
+<section id="sa-interface-h">
+<h2><code class="docutils literal notranslate"><span class="pre">sa_interface.h</span></code><a class="headerlink" href="#sa-interface-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/cryptolib/include/sa_interface.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * Copyright 2021, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * Transfer at the California Institute of Technology.
+ *
+ * This software may be subject to U.S. export control laws. By accepting
+ * this software, the user agrees to comply with all applicable U.S.
+ * export laws and regulations. User has the responsibility to obtain
+ * export licenses, or other export authority as may be required before
+ * exporting such information to foreign countries or providing access to
+ * foreign persons.
+ */
+
+#ifndef CRYPTOLIB_SA_INTERFACE_H
+#define CRYPTOLIB_SA_INTERFACE_H
+
+#ifdef NOS3 // NOS3/cFS build is ready
+#include "common_types.h"
+#include "osapi.h"
+#else // Assume build outside of NOS3/cFS infrastructure
+#include &lt;stdint.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#endif
+
+#include "crypto_structs.h"
+
+typedef struct
+{
+    // Security Association Initialization &amp; Management Functions
+    int32_t (*sa_config)(void);
+    int32_t (*sa_init)(void);
+    int32_t (*sa_close)(void);
+    // Security Association Interaction Functions
+    int32_t (*sa_get_from_spi)(uint16_t, SecurityAssociation_t **);
+    int32_t (*sa_get_operational_sa_from_gvcid)(uint8_t, uint16_t, uint16_t, uint8_t, SecurityAssociation_t **);
+    int32_t (*sa_save_sa)(SecurityAssociation_t *);
+    int32_t (*sa_setIV)(uint16_t, char *);
+    // Security Association Utility Functions
+    int32_t (*sa_stop)(TC_t *tc_frame);
+    int32_t (*sa_start)(TC_t *tc_frame);
+    int32_t (*sa_expire)(TC_t *tc_frame);
+    int32_t (*sa_rekey)(TC_t *tc_frame);
+    int32_t (*sa_status)(uint8_t *);
+    int32_t (*sa_create)(TC_t *tc_frame);
+    int32_t (*sa_setARSN)(TC_t *tc_frame);
+    int32_t (*sa_setARSNW)(TC_t *tc_frame);
+    int32_t (*sa_delete)(TC_t *tc_frame);
+
+} SaInterfaceStruct, *SaInterface;
+
+SaInterface get_sa_interface_custom(void);
+SaInterface get_sa_interface_inmemory(void);
+SaInterface get_sa_interface_mariadb(void);
+
+#endif // CRYPTOLIB_SA_INTERFACE_H
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../docs/wiki/_static/index.html" class="btn btn-neutral float-left" title="_static" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../src/index.html" class="btn btn-neutral float-right" title="src" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

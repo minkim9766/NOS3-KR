@@ -1,0 +1,2949 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CmdSequencer &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../search.html" />
+    <link rel="next" title="docs" href="docs/index.html" />
+    <link rel="prev" title="ut" href="../CmdDispatcher/test/ut/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fprime-nos3</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">lib</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Svc</a></li>
+      <li class="breadcrumb-item active">CmdSequencer</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../_sources/project_inventory/fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="cmdsequencer">
+<h1>CmdSequencer<a class="headerlink" href="#cmdsequencer" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/</span></code></p>
+<section id="id1">
+<h2>하위 폴더<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="docs/index.html">docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="formats/index.html">formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test/index.html">test</a></li>
+</ul>
+</div>
+</section>
+<section id="id2">
+<h2>이 폴더의 파일<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+</section>
+<section id="gitignore">
+<h2><code class="docutils literal notranslate"><span class="pre">.gitignore</span></code><a class="headerlink" href="#gitignore" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/.gitignore</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#Ignore Test Outputs
+bin
+</pre></div>
+</div>
+</section>
+<section id="changed-symbols-txt">
+<h2><code class="docutils literal notranslate"><span class="pre">changed-symbols.txt</span></code><a class="headerlink" href="#changed-symbols-txt" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/changed-symbols.txt</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Old Symbol
+New Symbol
+
+Svc::CmdSequencerComponentBase::FileReadStage
+Svc::CmdSequencer_FileReadStage
+
+Svc::CmdSequencerComponentBase::SEQ_READ_HEADER
+Svc::CmdSequencer_FileReadStage::READ_HEADER
+
+Svc::CmdSequencerComponentBase::SEQ_READ_HEADER_SIZE
+Svc::CmdSequencer_FileReadStage::READ_HEADER_SIZE
+
+Svc::CmdSequencerComponentBase::SEQ_DESER_SIZE
+Svc::CmdSequencer_FileReadStage::DESER_SIZE
+
+Svc::CmdSequencerComponentBase::SEQ_DESER_NUM_RECORDS
+Svc::CmdSequencer_FileReadStage::DESER_NUM_RECORDS
+
+Svc::CmdSequencerComponentBase::SEQ_DESER_TIME_BASE
+Svc::CmdSequencer_FileReadStage::DESER_TIME_BASE
+
+Svc::CmdSequencerComponentBase::SEQ_DESER_TIME_CONTEXT
+Svc::CmdSequencer_FileReadStage::DESER_TIME_CONTEXT
+
+Svc::CmdSequencerComponentBase::SEQ_READ_SEQ_CRC
+Svc::CmdSequencer_FileReadStage::READ_SEQ_CRC
+
+Svc::CmdSequencerComponentBase::SEQ_READ_SEQ_DATA
+Svc::CmdSequencer_FileReadStage::READ_SEQ_DATA
+
+Svc::CmdSequencerComponentBase::SEQ_READ_SEQ_DATA_SIZE
+Svc::CmdSequencer_FileReadStage::READ_SEQ_DATA_SIZE
+
+Svc::CmdSequencerComponentBase::SeqMode
+Svc::CmdSequencer_SeqMode
+
+Svc::CmdSequencerComponentBase::SEQ_STEP_MODE
+Svc::CmdSequencer_SeqMode::STEP
+
+Svc::CmdSequencerComponentBase::SEQ_AUTO_MODE
+Svc::CmdSequencer_SeqMode::AUTO
+</pre></div>
+</div>
+</section>
+<section id="cmakelists-txt">
+<h2><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code><a class="headerlink" href="#cmakelists-txt" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/CMakeLists.txt</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+register_fprime_module(
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/CmdSequencer.fpp"
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/CmdSequencerImpl.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Events.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/FPrimeSequence.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Sequence.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/formats/AMPCSSequence.cpp"
+)
+# ## UTs ###
+register_fprime_ut(
+  AUTOCODER_INPUTS
+    "${FPRIME_FRAMEWORK_PATH}/Svc/CmdSequencer/CmdSequencer.fpp"
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/AMPCS.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/CommandBuffers.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Health.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/ImmediateBase.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Immediate.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/ImmediateEOS.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Interceptors.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/InvalidFiles.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Mixed.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/MixedRelativeBase.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/NoFiles.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/NoRecords.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Relative.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/AMPCS/CRCs.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/AMPCS/Headers.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/AMPCS/Records.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/BadCRCFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/BadDescriptorFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/NoRecordsFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/BadTimeBaseFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/BadTimeContextFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/Buffers.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/DataAfterRecordsFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/EmptyFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/File.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/FPrime/CRCs.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/FPrime/Headers.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/FPrime/Records.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/ImmediateEOSFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/ImmediateFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/MissingCRCFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/MissingFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/MixedFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/RelativeFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/SizeFieldTooLargeFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/SizeFieldTooSmallFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/TooLargeFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/USecFieldTooShortFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/JoinWait.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/CmdSequencerMain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/CmdSequencerTester.cpp"
+  DEPENDS
+    Os_File_Posix_Implementation
+  CHOOSES_IMPLEMENTATIONS
+    Os_File_None
+)
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+</pre></div>
+</div>
+</section>
+<section id="cmdsequencer-fpp">
+<h2><code class="docutils literal notranslate"><span class="pre">CmdSequencer.fpp</span></code><a class="headerlink" href="#cmdsequencer-fpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/CmdSequencer.fpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>module Svc {
+
+  @ A component for running command sequences
+  active component CmdSequencer {
+
+    # ----------------------------------------------------------------------
+    # Types
+    # ----------------------------------------------------------------------
+
+    @ The sequencer mode
+    enum SeqMode {
+      STEP = 0
+      AUTO = 1
+    }
+
+    @ Sequencer blocking state
+    enum BlockState {
+        BLOCK = 0
+        NO_BLOCK = 1
+    }
+
+    @ The stage of the file read operation
+    enum FileReadStage {
+      READ_HEADER
+      READ_HEADER_SIZE
+      DESER_SIZE
+      DESER_NUM_RECORDS
+      DESER_TIME_BASE
+      DESER_TIME_CONTEXT
+      READ_SEQ_CRC
+      READ_SEQ_DATA
+      READ_SEQ_DATA_SIZE
+    }
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Command receive port
+    command recv port cmdIn
+
+    @ Command registration port
+    command reg port cmdRegOut
+
+    @ Command response port
+    command resp port cmdResponseOut
+
+    @ Event port
+    event port logOut
+
+    @ Telemetry port
+    telemetry port tlmOut
+
+    @ Text event port
+    text event port LogText
+
+    @ Time get port
+    time get port timeCaller
+
+    # ----------------------------------------------------------------------
+    # General ports
+    # ----------------------------------------------------------------------
+
+    @ Sequence cancel port
+    async input port seqCancelIn: Svc.CmdSeqCancel
+
+    @ Command response in port
+    async input port cmdResponseIn: Fw.CmdResponse
+
+    @ Ping in port
+    async input port pingIn: Svc.Ping
+
+    @ Ping out port
+    output port pingOut: Svc.Ping
+
+    @ Port for indicating sequence done
+    output port seqDone: Fw.CmdResponse
+
+    @ Port for requests to run sequences
+    async input port seqRunIn: Svc.CmdSeqIn
+
+    @ Port for sending sequence commands
+    output port comCmdOut: Fw.Com
+
+    @ Schedule in port
+    async input port schedIn: Svc.Sched
+
+    @ Notifies that a sequence has started running
+    output port seqStartOut: Svc.CmdSeqIn
+
+    # ----------------------------------------------------------------------
+    # Commands
+    # ----------------------------------------------------------------------
+
+    include "Commands.fppi"
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    include "Telemetry.fppi"
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    include "Events.fppi"
+
+  }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="cmdsequencer-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">CmdSequencer.hpp</span></code><a class="headerlink" href="#cmdsequencer-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/CmdSequencer.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// CmdSequencer.hpp
+// Standardization header for CmdSequencer
+// ======================================================================
+
+#ifndef Svc_CmdSequencer_HPP
+#define Svc_CmdSequencer_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+
+namespace Svc {
+
+typedef CmdSequencerComponentImpl CmdSequencer;
+
+}
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="cmdsequencerimpl-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">CmdSequencerImpl.cpp</span></code><a class="headerlink" href="#cmdsequencerimpl-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/CmdSequencerImpl.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  CmdSequencerImpl.cpp
+// \author Bocchino/Canham
+// \brief  cpp file for CmdDispatcherComponentBase component implementation class
+//
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include &lt;Fw/Com/ComPacket.hpp&gt;
+#include &lt;Fw/Types/Assert.hpp&gt;
+#include &lt;Fw/Types/SerialBuffer.hpp&gt;
+#include &lt;Fw/Types/Serializable.hpp&gt;
+#include &lt;Svc/CmdSequencer/CmdSequencerImpl.hpp&gt;
+extern "C" {
+#include &lt;Utils/Hash/libcrc/lib_crc.h&gt;
+}
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+CmdSequencerComponentImpl::CmdSequencerComponentImpl(const char* name)
+    : CmdSequencerComponentBase(name),
+      m_FPrimeSequence(*this),
+      m_sequence(&amp;this-&gt;m_FPrimeSequence),
+      m_loadCmdCount(0),
+      m_cancelCmdCount(0),
+      m_errorCount(0),
+      m_runMode(STOPPED),
+      m_stepMode(AUTO),
+      m_executedCount(0),
+      m_totalExecutedCount(0),
+      m_sequencesCompletedCount(0),
+      m_timeout(0),
+      m_blockState(Svc::CmdSequencer_BlockState::NO_BLOCK),
+      m_opCode(0),
+      m_cmdSeq(0),
+      m_join_waiting(false) {}
+
+void CmdSequencerComponentImpl::setTimeout(const U32 timeout) {
+    this-&gt;m_timeout = timeout;
+}
+
+void CmdSequencerComponentImpl ::setSequenceFormat(Sequence&amp; sequence) {
+    this-&gt;m_sequence = &amp;sequence;
+}
+
+void CmdSequencerComponentImpl ::allocateBuffer(const FwEnumStoreType identifier,
+                                                Fw::MemAllocator&amp; allocator,
+                                                const FwSizeType bytes) {
+    this-&gt;m_sequence-&gt;allocateBuffer(identifier, allocator, bytes);
+}
+
+void CmdSequencerComponentImpl ::loadSequence(const Fw::StringBase&amp; fileName) {
+    FW_ASSERT(this-&gt;m_runMode == STOPPED, this-&gt;m_runMode);
+    if (not this-&gt;loadFile(fileName)) {
+        this-&gt;m_sequence-&gt;clear();
+    }
+}
+
+void CmdSequencerComponentImpl ::deallocateBuffer(Fw::MemAllocator&amp; allocator) {
+    this-&gt;m_sequence-&gt;deallocateBuffer(allocator);
+}
+
+CmdSequencerComponentImpl::~CmdSequencerComponentImpl() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations
+// ----------------------------------------------------------------------
+
+void CmdSequencerComponentImpl::CS_RUN_cmdHandler(FwOpcodeType opCode,
+                                                  U32 cmdSeq,
+                                                  const Fw::CmdStringArg&amp; fileName,
+                                                  Svc::CmdSequencer_BlockState block) {
+    if (not this-&gt;requireRunMode(STOPPED)) {
+        if (m_join_waiting) {
+            // Inform user previous seq file is not complete
+            this-&gt;log_WARNING_HI_CS_JoinWaitingNotComplete();
+        }
+        this-&gt;cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    this-&gt;m_blockState = block.e;
+    this-&gt;m_cmdSeq = cmdSeq;
+    this-&gt;m_opCode = opCode;
+
+    // load commands
+    if (not this-&gt;loadFile(fileName)) {
+        this-&gt;cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    this-&gt;m_executedCount = 0;
+
+    // Check the step mode. If it is auto, start the sequence
+    if (AUTO == this-&gt;m_stepMode) {
+        this-&gt;m_runMode = RUNNING;
+        if (this-&gt;isConnected_seqStartOut_OutputPort(0)) {
+            this-&gt;seqStartOut_out(0, this-&gt;m_sequence-&gt;getStringFileName());
+        }
+        this-&gt;performCmd_Step();
+    }
+
+    if (Svc::CmdSequencer_BlockState::NO_BLOCK == this-&gt;m_blockState) {
+        this-&gt;cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+    }
+}
+
+void CmdSequencerComponentImpl::CS_VALIDATE_cmdHandler(FwOpcodeType opCode,
+                                                       U32 cmdSeq,
+                                                       const Fw::CmdStringArg&amp; fileName) {
+    if (!this-&gt;requireRunMode(STOPPED)) {
+        this-&gt;cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    // load commands
+    if (not this-&gt;loadFile(fileName)) {
+        this-&gt;cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    // clear the buffer
+    this-&gt;m_sequence-&gt;clear();
+
+    this-&gt;log_ACTIVITY_HI_CS_SequenceValid(this-&gt;m_sequence-&gt;getLogFileName());
+
+    this-&gt;cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+//! Handler for input port seqRunIn
+void CmdSequencerComponentImpl::seqRunIn_handler(FwIndexType portNum, const Fw::StringBase&amp; filename) {
+    if (!this-&gt;requireRunMode(STOPPED)) {
+        this-&gt;seqDone_out(0, 0, 0, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    // If file name is non-empty, load a file.
+    // Empty file name means don't load.
+    if (filename != "") {
+        Fw::CmdStringArg cmdStr(filename);
+        const bool status = this-&gt;loadFile(cmdStr);
+        if (!status) {
+            this-&gt;seqDone_out(0, 0, 0, Fw::CmdResponse::EXECUTION_ERROR);
+            return;
+        }
+    } else if (not this-&gt;m_sequence-&gt;hasMoreRecords()) {
+        // No sequence loaded
+        this-&gt;log_WARNING_LO_CS_NoSequenceActive();
+        this-&gt;error();
+        this-&gt;seqDone_out(0, 0, 0, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    this-&gt;m_executedCount = 0;
+
+    // Check the step mode. If it is auto, start the sequence
+    if (AUTO == this-&gt;m_stepMode) {
+        this-&gt;m_runMode = RUNNING;
+        if (this-&gt;isConnected_seqStartOut_OutputPort(0)) {
+            this-&gt;seqStartOut_out(0, this-&gt;m_sequence-&gt;getStringFileName());
+        }
+        this-&gt;performCmd_Step();
+    }
+
+    this-&gt;log_ACTIVITY_HI_CS_PortSequenceStarted(this-&gt;m_sequence-&gt;getLogFileName());
+}
+
+void CmdSequencerComponentImpl ::seqCancelIn_handler(const FwIndexType portNum) {
+    if (RUNNING == this-&gt;m_runMode) {
+        this-&gt;performCmd_Cancel();
+        this-&gt;log_ACTIVITY_HI_CS_SequenceCanceled(this-&gt;m_sequence-&gt;getLogFileName());
+        ++this-&gt;m_cancelCmdCount;
+        this-&gt;tlmWrite_CS_CancelCommands(this-&gt;m_cancelCmdCount);
+    } else {
+        this-&gt;log_WARNING_LO_CS_NoSequenceActive();
+    }
+}
+
+void CmdSequencerComponentImpl::CS_CANCEL_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    if (RUNNING == this-&gt;m_runMode) {
+        this-&gt;performCmd_Cancel();
+        this-&gt;log_ACTIVITY_HI_CS_SequenceCanceled(this-&gt;m_sequence-&gt;getLogFileName());
+        ++this-&gt;m_cancelCmdCount;
+        this-&gt;tlmWrite_CS_CancelCommands(this-&gt;m_cancelCmdCount);
+    } else {
+        this-&gt;log_WARNING_LO_CS_NoSequenceActive();
+    }
+    this-&gt;cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void CmdSequencerComponentImpl::CS_JOIN_WAIT_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
+    // If there is no running sequence do not wait
+    if (m_runMode != RUNNING) {
+        this-&gt;log_WARNING_LO_CS_NoSequenceActive();
+        this-&gt;cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+        return;
+    } else {
+        m_join_waiting = true;
+        Fw::LogStringArg&amp; logFileName = this-&gt;m_sequence-&gt;getLogFileName();
+        this-&gt;log_ACTIVITY_HI_CS_JoinWaiting(logFileName, m_cmdSeq, m_opCode);
+        m_cmdSeq = cmdSeq;
+        m_opCode = opCode;
+    }
+}
+
+// ----------------------------------------------------------------------
+// Private helper methods
+// ----------------------------------------------------------------------
+
+bool CmdSequencerComponentImpl ::loadFile(const Fw::StringBase&amp; fileName) {
+    const bool status = this-&gt;m_sequence-&gt;loadFile(fileName);
+    if (status) {
+        Fw::LogStringArg&amp; logFileName = this-&gt;m_sequence-&gt;getLogFileName();
+        this-&gt;log_ACTIVITY_LO_CS_SequenceLoaded(logFileName);
+        ++this-&gt;m_loadCmdCount;
+        this-&gt;tlmWrite_CS_LoadCommands(this-&gt;m_loadCmdCount);
+    }
+    return status;
+}
+
+void CmdSequencerComponentImpl::error() {
+    ++this-&gt;m_errorCount;
+    this-&gt;tlmWrite_CS_Errors(m_errorCount);
+}
+
+void CmdSequencerComponentImpl::performCmd_Cancel() {
+    this-&gt;m_sequence-&gt;reset();
+    this-&gt;m_runMode = STOPPED;
+    this-&gt;m_cmdTimer.clear();
+    this-&gt;m_cmdTimeoutTimer.clear();
+    this-&gt;m_executedCount = 0;
+    // write sequence done port with error, if connected
+    if (this-&gt;isConnected_seqDone_OutputPort(0)) {
+        this-&gt;seqDone_out(0, 0, 0, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+
+    if (Svc::CmdSequencer_BlockState::BLOCK == this-&gt;m_blockState || m_join_waiting) {
+        // Do not wait if sequence was canceled or a cmd failed
+        this-&gt;m_join_waiting = false;
+        this-&gt;cmdResponse_out(this-&gt;m_opCode, this-&gt;m_cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+
+    this-&gt;m_blockState = Svc::CmdSequencer_BlockState::NO_BLOCK;
+}
+
+void CmdSequencerComponentImpl ::cmdResponseIn_handler(FwIndexType portNum,
+                                                       FwOpcodeType opcode,
+                                                       U32 cmdSeq,
+                                                       const Fw::CmdResponse&amp; response) {
+    if (this-&gt;m_runMode == STOPPED) {
+        // Sequencer is not running
+        this-&gt;log_WARNING_HI_CS_UnexpectedCompletion(opcode);
+    } else {
+        // clear command timeout
+        this-&gt;m_cmdTimeoutTimer.clear();
+        if (response != Fw::CmdResponse::OK) {
+            this-&gt;commandError(this-&gt;m_executedCount, opcode, response.e);
+            this-&gt;performCmd_Cancel();
+        } else if (this-&gt;m_runMode == RUNNING &amp;&amp; this-&gt;m_stepMode == AUTO) {
+            // Auto mode
+            this-&gt;commandComplete(opcode);
+            if (not this-&gt;m_sequence-&gt;hasMoreRecords()) {
+                // No data left
+                this-&gt;m_runMode = STOPPED;
+                this-&gt;sequenceComplete();
+            } else {
+                this-&gt;performCmd_Step();
+            }
+        } else {
+            // Manual step mode
+            this-&gt;commandComplete(opcode);
+            if (not this-&gt;m_sequence-&gt;hasMoreRecords()) {
+                this-&gt;m_runMode = STOPPED;
+                this-&gt;sequenceComplete();
+            }
+        }
+    }
+}
+
+void CmdSequencerComponentImpl ::schedIn_handler(FwIndexType portNum, U32 order) {
+    Fw::Time currTime = this-&gt;getTime();
+    // check to see if a command time is pending
+    if (this-&gt;m_cmdTimer.isExpiredAt(currTime)) {
+        this-&gt;comCmdOut_out(0, m_record.m_command, 0);
+        this-&gt;m_cmdTimer.clear();
+        // start command timeout timer
+        this-&gt;setCmdTimeout(currTime);
+    } else if (this-&gt;m_cmdTimeoutTimer.isExpiredAt(this-&gt;getTime())) {  // check for command timeout
+        this-&gt;log_WARNING_HI_CS_SequenceTimeout(m_sequence-&gt;getLogFileName(), this-&gt;m_executedCount);
+        // If there is a command timeout, cancel the sequence
+        this-&gt;performCmd_Cancel();
+    }
+}
+
+void CmdSequencerComponentImpl ::CS_START_cmdHandler(FwOpcodeType opcode, U32 cmdSeq) {
+    if (not this-&gt;m_sequence-&gt;hasMoreRecords()) {
+        // No sequence loaded
+        this-&gt;log_WARNING_LO_CS_NoSequenceActive();
+        this-&gt;cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+    if (!this-&gt;requireRunMode(STOPPED)) {
+        this-&gt;cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    this-&gt;m_blockState = Svc::CmdSequencer_BlockState::NO_BLOCK;
+    this-&gt;m_runMode = RUNNING;
+    this-&gt;performCmd_Step();
+    this-&gt;log_ACTIVITY_HI_CS_CmdStarted(this-&gt;m_sequence-&gt;getLogFileName());
+    if (this-&gt;isConnected_seqStartOut_OutputPort(0)) {
+        this-&gt;seqStartOut_out(0, this-&gt;m_sequence-&gt;getStringFileName());
+    }
+    this-&gt;cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void CmdSequencerComponentImpl ::CS_STEP_cmdHandler(FwOpcodeType opcode, U32 cmdSeq) {
+    if (this-&gt;requireRunMode(RUNNING)) {
+        this-&gt;performCmd_Step();
+        // check for special case where end of sequence entry was encountered
+        if (this-&gt;m_runMode != STOPPED) {
+            this-&gt;log_ACTIVITY_HI_CS_CmdStepped(this-&gt;m_sequence-&gt;getLogFileName(), this-&gt;m_executedCount);
+        }
+        this-&gt;cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::OK);
+    } else {
+        this-&gt;cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+}
+
+void CmdSequencerComponentImpl ::CS_AUTO_cmdHandler(FwOpcodeType opcode, U32 cmdSeq) {
+    if (this-&gt;requireRunMode(STOPPED)) {
+        this-&gt;m_stepMode = AUTO;
+        this-&gt;log_ACTIVITY_HI_CS_ModeSwitched(CmdSequencer_SeqMode::AUTO);
+        this-&gt;cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::OK);
+    } else {
+        this-&gt;cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+}
+
+void CmdSequencerComponentImpl ::CS_MANUAL_cmdHandler(FwOpcodeType opcode, U32 cmdSeq) {
+    if (this-&gt;requireRunMode(STOPPED)) {
+        this-&gt;m_stepMode = MANUAL;
+        this-&gt;log_ACTIVITY_HI_CS_ModeSwitched(CmdSequencer_SeqMode::STEP);
+        this-&gt;cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::OK);
+    } else {
+        this-&gt;cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+}
+
+// ----------------------------------------------------------------------
+// Helper methods
+// ----------------------------------------------------------------------
+
+bool CmdSequencerComponentImpl::requireRunMode(RunMode mode) {
+    if (this-&gt;m_runMode == mode) {
+        return true;
+    } else {
+        this-&gt;log_WARNING_HI_CS_InvalidMode();
+        return false;
+    }
+}
+
+void CmdSequencerComponentImpl ::commandError(const U32 number, const FwOpcodeType opCode, const U32 error) {
+    this-&gt;log_WARNING_HI_CS_CommandError(this-&gt;m_sequence-&gt;getLogFileName(), number, opCode, error);
+    this-&gt;error();
+}
+
+void CmdSequencerComponentImpl::performCmd_Step() {
+    this-&gt;m_sequence-&gt;nextRecord(m_record);
+    // set clock time base and context from value set when sequence was loaded
+    const Sequence::Header&amp; header = this-&gt;m_sequence-&gt;getHeader();
+    this-&gt;m_record.m_timeTag.setTimeBase(header.m_timeBase);
+    this-&gt;m_record.m_timeTag.setTimeContext(header.m_timeContext);
+
+    Fw::Time currentTime = this-&gt;getTime();
+    switch (this-&gt;m_record.m_descriptor) {
+        case Sequence::Record::END_OF_SEQUENCE:
+            this-&gt;m_runMode = STOPPED;
+            this-&gt;sequenceComplete();
+            break;
+        case Sequence::Record::RELATIVE:
+            this-&gt;performCmd_Step_RELATIVE(currentTime);
+            break;
+        case Sequence::Record::ABSOLUTE:
+            this-&gt;performCmd_Step_ABSOLUTE(currentTime);
+            break;
+        default:
+            FW_ASSERT(0, m_record.m_descriptor);
+    }
+}
+
+void CmdSequencerComponentImpl::sequenceComplete() {
+    ++this-&gt;m_sequencesCompletedCount;
+    // reset buffer
+    this-&gt;m_sequence-&gt;clear();
+    this-&gt;log_ACTIVITY_HI_CS_SequenceComplete(this-&gt;m_sequence-&gt;getLogFileName());
+    this-&gt;tlmWrite_CS_SequencesCompleted(this-&gt;m_sequencesCompletedCount);
+    this-&gt;m_executedCount = 0;
+    // write sequence done port, if connected
+    if (this-&gt;isConnected_seqDone_OutputPort(0)) {
+        this-&gt;seqDone_out(0, 0, 0, Fw::CmdResponse::OK);
+    }
+
+    if (Svc::CmdSequencer_BlockState::BLOCK == this-&gt;m_blockState || m_join_waiting) {
+        this-&gt;cmdResponse_out(this-&gt;m_opCode, this-&gt;m_cmdSeq, Fw::CmdResponse::OK);
+    }
+
+    m_join_waiting = false;
+    this-&gt;m_blockState = Svc::CmdSequencer_BlockState::NO_BLOCK;
+}
+
+void CmdSequencerComponentImpl::commandComplete(const FwOpcodeType opcode) {
+    this-&gt;log_ACTIVITY_LO_CS_CommandComplete(this-&gt;m_sequence-&gt;getLogFileName(), this-&gt;m_executedCount, opcode);
+    ++this-&gt;m_executedCount;
+    ++this-&gt;m_totalExecutedCount;
+    this-&gt;tlmWrite_CS_CommandsExecuted(this-&gt;m_totalExecutedCount);
+}
+
+void CmdSequencerComponentImpl ::performCmd_Step_RELATIVE(Fw::Time&amp; currentTime) {
+    this-&gt;m_record.m_timeTag.add(currentTime.getSeconds(), currentTime.getUSeconds());
+    this-&gt;performCmd_Step_ABSOLUTE(currentTime);
+}
+
+void CmdSequencerComponentImpl ::performCmd_Step_ABSOLUTE(Fw::Time&amp; currentTime) {
+    if (currentTime &gt;= this-&gt;m_record.m_timeTag) {
+        this-&gt;comCmdOut_out(0, m_record.m_command, 0);
+        this-&gt;setCmdTimeout(currentTime);
+    } else {
+        this-&gt;m_cmdTimer.set(this-&gt;m_record.m_timeTag);
+    }
+}
+
+void CmdSequencerComponentImpl ::pingIn_handler(FwIndexType portNum, /*!&lt; The port number*/
+                                                U32 key              /*!&lt; Value to return to pinger*/
+) {
+    // send ping response
+    this-&gt;pingOut_out(0, key);
+}
+
+void CmdSequencerComponentImpl ::setCmdTimeout(const Fw::Time&amp; currentTime) {
+    // start timeout timer if enabled and not in step mode
+    if ((this-&gt;m_timeout &gt; 0) and (AUTO == this-&gt;m_stepMode)) {
+        Fw::Time expTime = currentTime;
+        expTime.add(this-&gt;m_timeout, 0);
+        this-&gt;m_cmdTimeoutTimer.set(expTime);
+    }
+}
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="cmdsequencerimpl-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">CmdSequencerImpl.hpp</span></code><a class="headerlink" href="#cmdsequencerimpl-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/CmdSequencerImpl.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  CmdSequencerImpl.hpp
+// \author Bocchino/Canham
+// \brief  hpp file for CmdSequencer component implementation class
+//
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_CmdSequencerImpl_HPP
+#define Svc_CmdSequencerImpl_HPP
+
+#include "Fw/Com/ComBuffer.hpp"
+#include "Fw/Types/MemAllocator.hpp"
+#include "Os/File.hpp"
+#include "Os/ValidateFile.hpp"
+#include "Svc/CmdSequencer/CmdSequencerComponentAc.hpp"
+
+namespace Svc {
+
+// Forward declaration for UTs
+namespace ImmediateBase {
+class CmdSequencerTester;
+}
+namespace Immediate {
+class CmdSequencerTester;
+}
+namespace ImmediateEOS {
+class CmdSequencerTester;
+}
+namespace Mixed {
+class CmdSequencerTester;
+}
+namespace MixedRelativeBase {
+class CmdSequencerTester;
+}
+namespace Relative {
+class CmdSequencerTester;
+}
+namespace JoinWait {
+class CmdSequencerTester;
+}
+
+class CmdSequencerComponentImpl final : public CmdSequencerComponentBase {
+    friend class CmdSequencerTester;
+    friend class Svc::ImmediateBase::CmdSequencerTester;
+    friend class Svc::Immediate::CmdSequencerTester;
+    friend class Svc::ImmediateEOS::CmdSequencerTester;
+    friend class Svc::Mixed::CmdSequencerTester;
+    friend class Svc::MixedRelativeBase::CmdSequencerTester;
+    friend class Svc::Relative::CmdSequencerTester;
+    friend class Svc::JoinWait::CmdSequencerTester;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private enumerations
+    // ----------------------------------------------------------------------
+
+    //! The run mode
+    enum RunMode { STOPPED, RUNNING };
+
+    //! The step mode
+    enum StepMode { AUTO, MANUAL };
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public classes
+    // ----------------------------------------------------------------------
+
+    //! \class Sequence
+    //! \brief A sequence with unspecified binary format
+    class Sequence {
+      public:
+        //! \class Events
+        //! \brief Sequence event reporting
+        class Events {
+          public:
+            //! Construct an Events object
+            Events(Sequence&amp; sequence  //!&lt; The enclosing sequence
+            );
+
+          public:
+            //! File CRC failure
+            void fileCRCFailure(const U32 storedCRC,   //!&lt; The CRC stored in the file
+                                const U32 computedCRC  //!&lt; The CRC computed over the file
+            );
+
+            //! File invalid
+            void fileInvalid(const CmdSequencer_FileReadStage::t stage,  //!&lt; The file read stage
+                             const I32 error                             //!&lt; The error
+            );
+
+            //! File not found
+            void fileNotFound();
+
+            //! File read error
+            void fileReadError();
+
+            //! File size error
+            void fileSizeError(const U32 size  //!&lt; The size
+            );
+
+            //! Record invalid
+            void recordInvalid(const U32 recordNumber,  //!&lt; The record number
+                               const I32 error          //!&lt; The error
+            );
+
+            //! Record mismatch
+            void recordMismatch(const U32 numRecords,  //!&lt; The number of records in the header
+                                const U32 extraBytes   //!&lt; The number of bytes beyond last record
+            );
+
+            //! Time base mismatch
+            void timeBaseMismatch(const TimeBase currTimeBase,  //!&lt; The current time base
+                                  const TimeBase seqTimeBase    //!&lt; The sequence file time base
+            );
+
+            //! Time context mismatch
+            void timeContextMismatch(const FwTimeContextStoreType currTimeContext,  //!&lt; The current time context
+                                     const FwTimeContextStoreType seqTimeContext    //!&lt; The sequence file time context
+            );
+
+            // No Records
+            void noRecords();
+
+          private:
+            //! The enclosing component
+            Sequence&amp; m_sequence;
+        };
+
+      public:
+        //! Construct a Sequence object
+        Sequence(CmdSequencerComponentImpl&amp; component  //!&lt; The enclosing component
+        );
+
+        //! Destroy a Sequence object
+        virtual ~Sequence();
+
+      public:
+        //! \class Header
+        //! \brief A sequence header
+        class Header {
+          public:
+            enum Constants {
+                //! Serialized size of header
+                SERIALIZED_SIZE =
+                    sizeof(U32) + sizeof(U32) + sizeof(FwTimeBaseStoreType) + sizeof(FwTimeContextStoreType)
+            };
+
+          public:
+            //! Construct a Header object
+            Header();
+
+          public:
+            //! Validate the time field of the sequence header
+            //! \return Success or failure
+            bool validateTime(CmdSequencerComponentImpl&amp; component  //!&lt; Component for time and events
+            );
+
+          public:
+            //! The file size
+            U32 m_fileSize;
+
+            //! The number of records in the sequence
+            U32 m_numRecords;
+
+            //! The time base of the sequence
+            TimeBase m_timeBase;
+
+            //! The context of the sequence
+            FwTimeContextStoreType m_timeContext;
+        };
+
+      public:
+        //! \class Record
+        //! \brief A sequence record
+        class Record {
+          public:
+            enum Descriptor {
+                ABSOLUTE,        //!&lt; Absolute time
+                RELATIVE,        //!&lt; Relative time
+                END_OF_SEQUENCE  //!&lt; end of sequence
+            };
+
+          public:
+            //! Construct a Record object
+            Record() : m_descriptor(END_OF_SEQUENCE) {}
+
+          public:
+            //! The descriptor
+            Descriptor m_descriptor;
+
+            //! The time tag. NOTE: timeBase and context not filled in
+            Fw::Time m_timeTag;
+
+            //! The command
+            Fw::ComBuffer m_command;
+        };
+
+      public:
+        //! Give the sequence representation a memory buffer
+        void allocateBuffer(FwEnumStoreType identifier,   //!&lt; The identifier
+                            Fw::MemAllocator&amp; allocator,  //!&lt; The allocator
+                            FwSizeType bytes              //!&lt; The number of bytes
+        );
+
+        //! Deallocate the buffer
+        void deallocateBuffer(Fw::MemAllocator&amp; allocator  //!&lt; The allocator
+        );
+
+        //! Set the file name. Also sets the log file name.
+        void setFileName(const Fw::StringBase&amp; fileName);
+
+        //! Get the file name
+        //! \return The file name
+        Fw::CmdStringArg&amp; getFileName();
+
+        //! Get the log file name
+        //! \return The log file name
+        Fw::LogStringArg&amp; getLogFileName();
+
+        //! Get the normal string file name
+        //! \return The normal string file name
+        Fw::String&amp; getStringFileName();
+
+        //! Get the sequence header
+        const Header&amp; getHeader() const;
+
+        //! Load a sequence file
+        //! \return Success or failure
+        virtual bool loadFile(const Fw::StringBase&amp; fileName  //!&lt; The file name
+                              ) = 0;
+
+        //! Query whether the sequence has any more records
+        //! \return Yes or no
+        virtual bool hasMoreRecords() const = 0;
+
+        //! Get the next record in the sequence
+        //! Asserts on failure
+        virtual void nextRecord(Record&amp; record  //!&lt; The returned record
+                                ) = 0;
+
+        //! Reset the sequence to the beginning.
+        //! After calling this, hasMoreRecords should return true,
+        //! unless the sequence has no records
+        virtual void reset() = 0;
+
+        //! Clear the sequence records.
+        //! After calling this, hasMoreRecords should return false
+        virtual void clear() = 0;
+
+      protected:
+        //! The enclosing component
+        CmdSequencerComponentImpl&amp; m_component;
+
+        //! Event reporting
+        Events m_events;
+
+        //! The sequence file name
+        Fw::CmdStringArg m_fileName;
+
+        //! Copy of file name for events
+        Fw::LogStringArg m_logFileName;
+
+        //! Copy of file name for ports
+        Fw::String m_stringFileName;
+
+        //! Serialize buffer to hold the binary sequence data
+        Fw::ExternalSerializeBuffer m_buffer;
+
+        //! The allocator ID
+        FwEnumStoreType m_allocatorId;
+
+        //! The sequence header
+        Header m_header;
+    };
+
+    //! \class FPrimeSequence
+    //! \brief A sequence that uses the F Prime binary format
+    class FPrimeSequence : public Sequence {
+      private:
+        enum Constants { INITIAL_COMPUTED_VALUE = 0xFFFFFFFFU };
+
+      public:
+        //! \class CRC
+        //! \brief Container for computed and stored CRC values
+        struct CRC {
+            //! Construct a CRC
+            CRC();
+
+            //! Initialize computed CRC
+            void init();
+
+            //! Update computed CRC
+            void update(const BYTE* buffer,    //!&lt; The buffer
+                        FwSizeType bufferSize  //!&lt; The buffer size
+            );
+
+            //! Finalize computed CRC
+            void finalize();
+
+            //! Computed CRC
+            U32 m_computed;
+
+            //! Stored CRC
+            U32 m_stored;
+        };
+
+      public:
+        //! Construct an FPrimeSequence
+        FPrimeSequence(CmdSequencerComponentImpl&amp; component  //!&lt; The enclosing component
+        );
+
+      public:
+        //! Load a sequence file
+        //! \return Success or failure
+        bool loadFile(const Fw::StringBase&amp; fileName  //!&lt; The file name
+        );
+
+        //! Query whether the sequence has any more records
+        //! \return Yes or no
+        bool hasMoreRecords() const;
+
+        //! Get the next record in the sequence.
+        //! Asserts on failure
+        void nextRecord(Record&amp; record  //!&lt; The returned record
+        );
+
+        //! Reset the sequence to the beginning.
+        //! After calling this, hasMoreRecords should return true, unless
+        //! the sequence has no records.
+        void reset();
+
+        //! Clear the sequence records.
+        //! After calling this, hasMoreRecords should return false.
+        void clear();
+
+      private:
+        //! Read a sequence file
+        //! \return Success or failure
+        bool readFile();
+
+        //! Read an open sequence file
+        //! \return Success or failure
+        bool readOpenFile();
+
+        //! Read a binary sequence header from the sequence file
+        //! into the buffer
+        //! \return Success or failure
+        bool readHeader();
+
+        //! Deserialize the binary sequence header from the buffer
+        //! \return Success or failure
+        bool deserializeHeader();
+
+        //! Read records and CRC into buffer
+        //! \return Success or failure
+        bool readRecordsAndCRC();
+
+        //! Extract CRC from record data
+        //! \return Success or failure
+        bool extractCRC();
+
+        //! Validate the CRC
+        //! \return Success or failure
+        bool validateCRC();
+
+        //! Deserialize a record from a buffer
+        //! \return Serialize status
+        Fw::SerializeStatus deserializeRecord(Record&amp; record  //!&lt; The record
+        );
+
+        //! Deserialize a record descriptor
+        //! \return Serialize status
+        Fw::SerializeStatus deserializeDescriptor(Record::Descriptor&amp; descriptor  //!&lt; The descriptor
+        );
+
+        //! Deserialize a time tag
+        //! \return Serialize status
+        Fw::SerializeStatus deserializeTimeTag(Fw::Time&amp; timeTag  //!&lt; The time tag
+        );
+
+        //! Deserialize the record size
+        //! \return Serialize status
+        Fw::SerializeStatus deserializeRecordSize(U32&amp; recordSize  //!&lt; The record size
+        );
+
+        //! Copy the serialized command into a com buffer
+        //! \return Serialize status
+        Fw::SerializeStatus copyCommand(Fw::ComBuffer&amp; comBuffer,  //!&lt; The com buffer
+                                        const U32 recordSize       //!&lt; The record size
+        );
+
+        //! Validate the sequence records in the buffer
+        //! \return Success or failure
+        bool validateRecords();
+
+      private:
+        //! The CRC values
+        CRC m_crc;
+
+        //! The sequence file
+        Os::File m_sequenceFile;
+    };
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private classes
+    // ----------------------------------------------------------------------
+
+    //! \class Timer
+    //! \brief A class representing a timer
+    class Timer {
+        friend class CmdSequencerTester;
+        friend class Svc::ImmediateBase::CmdSequencerTester;
+        friend class Svc::Immediate::CmdSequencerTester;
+        friend class Svc::ImmediateEOS::CmdSequencerTester;
+        friend class Svc::Mixed::CmdSequencerTester;
+        friend class Svc::MixedRelativeBase::CmdSequencerTester;
+        friend class Svc::Relative::CmdSequencerTester;
+        friend class Svc::JoinWait::CmdSequencerTester;
+
+      private:
+        //! The timer state
+        typedef enum { SET, CLEAR } State;
+
+      public:
+        //! Construct a Timer object
+        Timer() : m_state(CLEAR) {}
+
+        //! Set the expiration time
+        void set(Fw::Time time  //!&lt; The time
+        ) {
+            this-&gt;m_state = SET;
+            this-&gt;expirationTime = time;
+        }
+
+        //! Clear the timer
+        void clear() { this-&gt;m_state = CLEAR; }
+
+        //! Determine whether the timer is expired at a given time
+        //! \return Yes or no
+        bool isExpiredAt(Fw::Time time  //!&lt; The time
+        ) {
+            if (this-&gt;m_state == CLEAR) {
+                return false;
+            } else if (Fw::Time::compare(this-&gt;expirationTime, time) == Fw::Time::GT) {
+                return false;
+            }
+            return true;
+        }
+
+      private:
+        //! The timer state
+        State m_state;
+
+        //! The expiration time
+        Fw::Time expirationTime;
+    };
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct a CmdSequencer
+    CmdSequencerComponentImpl(const char* compName  //!&lt; The component name
+    );
+
+    //! (Optional) Set a timeout.
+    //! Sequence will quit if a command takes longer than the number of
+    //! seconds in the timeout value.
+    void setTimeout(const U32 seconds  //!&lt; The number of seconds
+    );
+
+    //! (Optional) Set the sequence format.
+    //! CmdSequencer will use the sequence object you pass in
+    //! to load and run sequences. By default, it uses an FPrimeSequence
+    //! object.
+    void setSequenceFormat(Sequence&amp; sequence  //!&lt; The sequence object
+    );
+
+    //! Give the sequence a memory buffer.
+    //! Call this after constructor and init, and after setting
+    //! the sequence format, but before task is spawned.
+    void allocateBuffer(const FwEnumStoreType identifier,  //!&lt; The identifier
+                        Fw::MemAllocator&amp; allocator,       //!&lt; The allocator
+                        const FwSizeType bytes             //!&lt; The number of bytes
+    );
+
+    //! (Optional) Load a sequence to run later.
+    //! When you call this function, the event ports must be connected.
+    void loadSequence(const Fw::StringBase&amp; fileName  //!&lt; The file name
+    );
+
+    //! Return allocated buffer. Call during shutdown.
+    void deallocateBuffer(Fw::MemAllocator&amp; allocator  //!&lt; The allocator
+    );
+
+    //! Destroy a CmdDispatcherComponentBase
+    ~CmdSequencerComponentImpl();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler for input port cmdResponseIn
+    void cmdResponseIn_handler(FwIndexType portNum,             //!&lt; The port number
+                               FwOpcodeType opcode,             //!&lt; The command opcode
+                               U32 cmdSeq,                      //!&lt; The command sequence number
+                               const Fw::CmdResponse&amp; response  //!&lt; The command response
+    );
+
+    //! Handler for input port schedIn
+    void schedIn_handler(FwIndexType portNum,  //!&lt; The port number
+                         U32 order             //!&lt; The call order
+    );
+
+    //! Handler for input port seqRunIn
+    void seqRunIn_handler(FwIndexType portNum,            //!&lt; The port number
+                          const Fw::StringBase&amp; filename  //!&lt; The sequence file
+    );
+
+    //! Handler for ping port
+    void pingIn_handler(FwIndexType portNum,  //!&lt; The port number
+                        U32 key               //!&lt; Value to return to pinger
+    );
+
+    //! Handler implementation for seqCancelIn
+    //!
+    void seqCancelIn_handler(const FwIndexType portNum /*!&lt; The port number*/
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Command handler implementations
+    // ----------------------------------------------------------------------
+
+    //! Handler for command CS_AUTO
+    //! Set the run mode to AUTO.
+    void CS_AUTO_cmdHandler(FwOpcodeType opcode,  //!&lt; The opcode
+                            U32 cmdSeq            //!&lt; The command sequence number
+    );
+
+    //! Handler for command CS_CANCEL
+    //! Validate a command sequence file
+    void CS_CANCEL_cmdHandler(FwOpcodeType opCode,  //!&lt; The opcode
+                              U32 cmdSeq            //!&lt; The command sequence number
+    );
+
+    //! Handler for command CS_MANUAL
+    //! Set the run mode to MANUAL.
+    void CS_MANUAL_cmdHandler(FwOpcodeType opcode,  //!&lt; The opcode
+                              U32 cmdSeq            //!&lt; The command sequence number
+    );
+
+    //! Handler for command CS_RUN
+    void CS_RUN_cmdHandler(FwOpcodeType opCode,               //!&lt; The opcode
+                           U32 cmdSeq,                        //!&lt; The command sequence number
+                           const Fw::CmdStringArg&amp; fileName,  //!&lt; The file name
+                           Svc::CmdSequencer_BlockState block /*!&lt; Return command status when complete or not*/
+    );
+
+    //! Handler for command CS_START
+    //! Start running a command sequence
+    void CS_START_cmdHandler(FwOpcodeType opcode,  //!&lt; The opcode
+                             U32 cmdSeq            //!&lt; The command sequence number
+    );
+
+    //! Handler for command CS_STEP
+    //! Perform one step in a command sequence.
+    //! Valid only if SequenceRunner is in MANUAL run mode.
+    void CS_STEP_cmdHandler(FwOpcodeType opcode,  //!&lt; The opcode
+                            U32 cmdSeq            //!&lt; The command sequence number
+    );
+
+    //! Handler for command CS_VALIDATE
+    //! Run a command sequence file
+    void CS_VALIDATE_cmdHandler(FwOpcodeType opCode,              //!&lt; The opcode
+                                U32 cmdSeq,                       //!&lt; The command sequence number
+                                const Fw::CmdStringArg&amp; fileName  //!&lt; The name of the sequence file
+    );
+
+    //! Implementation for CS_JOIN command handler
+    //! Wait for sequences that are running to finish.
+    //! Allow user to run multiple seq files in SEQ_NO_BLOCK mode
+    //! then wait for them to finish before allowing more seq run request.
+    void CS_JOIN_WAIT_cmdHandler(const FwOpcodeType opCode, /*!&lt; The opcode*/
+                                 const U32 cmdSeq           /*!&lt; The command sequence number*/
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private helper methods
+    // ----------------------------------------------------------------------
+
+    //! Load a sequence file
+    //! \return Success or failure
+    bool loadFile(const Fw::StringBase&amp; fileName  //!&lt; The file name
+    );
+
+    //! Perform a Cancel command
+    void performCmd_Cancel();
+
+    //! Perform a Step command
+    void performCmd_Step();
+
+    //! Perform a Step command with a relative time
+    void performCmd_Step_RELATIVE(Fw::Time&amp; currentTime  //!&lt; The time
+    );
+
+    //! Perform a Step command with an absolute time
+    void performCmd_Step_ABSOLUTE(Fw::Time&amp; currentTime  //!&lt; The time
+    );
+
+    //! Record a completed command
+    void commandComplete(const FwOpcodeType opCode  //!&lt; The opcode
+    );
+
+    //! Record a sequence complete event
+    void sequenceComplete();
+
+    //! Record an error
+    void error();
+
+    //! Record an error in executing a sequence command
+    void commandError(const U32 number,           //!&lt; The command number
+                      const FwOpcodeType opCode,  //!&lt; The command opcode
+                      const U32 error             //!&lt; The error code
+    );
+
+    //! Require a run mode
+    //! \return Whether we are in the correct mode
+    bool requireRunMode(RunMode mode  //!&lt; The required mode
+    );
+
+    //! Set command timeout timer
+    void setCmdTimeout(const Fw::Time&amp; currentTime  //!&lt; The current time
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private member variables
+    // ----------------------------------------------------------------------
+
+    //! The F Prime sequence
+    FPrimeSequence m_FPrimeSequence;
+
+    //! The abstract sequence
+    Sequence* m_sequence;
+
+    //! The number of Load commands executed
+    U32 m_loadCmdCount;
+
+    //! The number of Cancel commands executed
+    U32 m_cancelCmdCount;
+
+    //! The number of errors
+    U32 m_errorCount;
+
+    //! The run mode
+    RunMode m_runMode;
+
+    //! The step mode
+    StepMode m_stepMode;
+
+    //! The sequence record currently being processed
+    Sequence::Record m_record;
+
+    //! The command time timer
+    Timer m_cmdTimer;
+
+    //! The number of commands executed in this sequence
+    U32 m_executedCount;
+
+    //! The total number of commands executed across all sequences
+    U32 m_totalExecutedCount;
+
+    //! The total number of sequences completed
+    U32 m_sequencesCompletedCount;
+
+    //! timeout value
+    U32 m_timeout;
+
+    //! timeout timer
+    Timer m_cmdTimeoutTimer;
+
+    //! Block mode for command status
+    Svc::CmdSequencer_BlockState::t m_blockState;
+    FwOpcodeType m_opCode;
+    U32 m_cmdSeq;
+    bool m_join_waiting;
+};
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="commands-fppi">
+<h2><code class="docutils literal notranslate"><span class="pre">Commands.fppi</span></code><a class="headerlink" href="#commands-fppi" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/Commands.fppi</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>@ Run a command sequence file
+async command CS_RUN(
+                      fileName: string size 240 @&lt; The name of the sequence file
+                      $block: BlockState @&lt; Return command status when complete or not
+                    ) \
+  opcode 0
+
+@ Validate a command sequence file
+async command CS_VALIDATE(
+                           fileName: string size 240 @&lt; The name of the sequence file
+                         ) \
+  opcode 1
+
+@ Cancel a command sequence
+async command CS_CANCEL \
+  opcode 2
+
+@ Start running a command sequence
+async command CS_START \
+  opcode 3
+
+@ Perform one step in a command sequence. Valid only if CmdSequencer is in MANUAL run mode.
+async command CS_STEP \
+  opcode 4
+
+@ Set the run mode to AUTO.
+async command CS_AUTO \
+  opcode 5
+
+@ Set the run mode to MANUAL.
+async command CS_MANUAL \
+  opcode 6
+
+@ Wait for sequences that are running to finish. Allow user to run multiple seq files in SEQ_NO_BLOCK mode then wait for them to finish before allowing more seq run request.
+async command CS_JOIN_WAIT \
+  opcode 7
+</pre></div>
+</div>
+</section>
+<section id="events-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Events.cpp</span></code><a class="headerlink" href="#events-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/Events.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  Events.cpp
+// \author Bocchino
+// \brief  Implementation for CmdSequencerComponentImpl::Sequence::Events
+//
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Fw/Types/Assert.hpp"
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+
+namespace Svc {
+
+CmdSequencerComponentImpl::Sequence::Events ::Events(Sequence&amp; sequence) : m_sequence(sequence) {}
+
+void CmdSequencerComponentImpl::Sequence::Events ::fileCRCFailure(const U32 storedCRC, const U32 computedCRC) {
+    Fw::LogStringArg&amp; logFileName = this-&gt;m_sequence.getLogFileName();
+    CmdSequencerComponentImpl&amp; component = this-&gt;m_sequence.m_component;
+    component.log_WARNING_HI_CS_FileCrcFailure(logFileName, storedCRC, computedCRC);
+    component.error();
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::fileInvalid(const CmdSequencer_FileReadStage::t stage,
+                                                               const I32 error) {
+    Fw::LogStringArg&amp; logFileName = this-&gt;m_sequence.getLogFileName();
+    CmdSequencerComponentImpl&amp; component = this-&gt;m_sequence.m_component;
+    component.log_WARNING_HI_CS_FileInvalid(logFileName, stage, error);
+    component.error();
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::fileNotFound() {
+    Fw::LogStringArg&amp; logFileName = this-&gt;m_sequence.getLogFileName();
+    CmdSequencerComponentImpl&amp; component = this-&gt;m_sequence.m_component;
+    component.log_WARNING_HI_CS_FileNotFound(logFileName);
+    component.error();
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::fileReadError() {
+    Fw::LogStringArg&amp; logFileName = this-&gt;m_sequence.getLogFileName();
+    CmdSequencerComponentImpl&amp; component = this-&gt;m_sequence.m_component;
+    component.log_WARNING_HI_CS_FileReadError(logFileName);
+    component.error();
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::fileSizeError(const U32 size) {
+    Fw::LogStringArg&amp; logFileName = this-&gt;m_sequence.getLogFileName();
+    CmdSequencerComponentImpl&amp; component = this-&gt;m_sequence.m_component;
+    component.log_WARNING_HI_CS_FileSizeError(logFileName, size);
+    component.error();
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::recordInvalid(const U32 recordNumber, const I32 error) {
+    Fw::LogStringArg&amp; logFileName = this-&gt;m_sequence.getLogFileName();
+    CmdSequencerComponentImpl&amp; component = this-&gt;m_sequence.m_component;
+    component.log_WARNING_HI_CS_RecordInvalid(logFileName, recordNumber, error);
+    component.error();
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::recordMismatch(const U32 numRecords, const U32 extraBytes) {
+    Fw::LogStringArg&amp; logFileName = this-&gt;m_sequence.getLogFileName();
+    CmdSequencerComponentImpl&amp; component = this-&gt;m_sequence.m_component;
+    component.log_WARNING_HI_CS_RecordMismatch(logFileName, numRecords, extraBytes);
+    // TODO: Should this be an error?
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::timeBaseMismatch(const TimeBase currTimeBase,
+                                                                    const TimeBase seqTimeBase) {
+    Fw::LogStringArg&amp; logFileName = this-&gt;m_sequence.getLogFileName();
+    CmdSequencerComponentImpl&amp; component = this-&gt;m_sequence.m_component;
+    component.log_WARNING_HI_CS_TimeBaseMismatch(logFileName, currTimeBase, seqTimeBase);
+    component.error();
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::timeContextMismatch(const FwTimeContextStoreType currTimeContext,
+                                                                       const FwTimeContextStoreType seqTimeContext) {
+    Fw::LogStringArg&amp; logFileName = this-&gt;m_sequence.getLogFileName();
+    CmdSequencerComponentImpl&amp; component = this-&gt;m_sequence.m_component;
+    component.log_WARNING_HI_CS_TimeContextMismatch(logFileName, currTimeContext, seqTimeContext);
+    component.error();
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::noRecords() {
+    Fw::LogStringArg&amp; logFileName = this-&gt;m_sequence.getLogFileName();
+    CmdSequencerComponentImpl&amp; component = this-&gt;m_sequence.m_component;
+    component.log_WARNING_LO_CS_NoRecords(logFileName);
+    component.error();
+}
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="events-fppi">
+<h2><code class="docutils literal notranslate"><span class="pre">Events.fppi</span></code><a class="headerlink" href="#events-fppi" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/Events.fppi</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>@ Sequence file was successfully loaded.
+event CS_SequenceLoaded(
+                         fileName: string size 60 @&lt; The name of the sequence file
+                       ) \
+  severity activity low \
+  id 0 \
+  format "Loaded sequence {}"
+
+@ A command sequence was successfully canceled.
+event CS_SequenceCanceled(
+                           fileName: string size 60 @&lt; The name of the sequence file
+                         ) \
+  severity activity high \
+  id 1 \
+  format "Sequence file {} canceled"
+
+@ The Sequence File Loader could not read the sequence file.
+event CS_FileReadError(
+                        fileName: string size 60 @&lt; The name of the sequence file
+                      ) \
+  severity warning high \
+  id 2 \
+  format "Error reading sequence file {}"
+
+@ The sequence file format was invalid.
+event CS_FileInvalid(
+                      fileName: string size 60 @&lt; The name of the sequence file
+                      stage: FileReadStage @&lt; The read stage
+                      error: I32 @&lt; The error code
+                    ) \
+  severity warning high \
+  id 3 \
+  format "Sequence file {} invalid. Stage: {} Error: {}"
+
+@ The format of a command record was invalid.
+event CS_RecordInvalid(
+                        fileName: string size 60 @&lt; The name of the sequence file
+                        recordNumber: U32 @&lt; The record number
+                        error: I32 @&lt; The error code
+                      ) \
+  severity warning high \
+  id 4 \
+  format "Sequence file {}: Record {} invalid. Err: {}"
+
+@ The sequence file was too large.
+event CS_FileSizeError(
+                        fileName: string size 60 @&lt; The name of the sequence file
+                        $size: U32 @&lt; Invalid size
+                      ) \
+  severity warning high \
+  id 5 \
+  format "Sequence file {} too large. Size: {}"
+
+@ The sequence file was not found
+event CS_FileNotFound(
+                       fileName: string size 60 @&lt; The sequence file
+                     ) \
+  severity warning high \
+  id 6 \
+  format "Sequence file {} not found."
+
+
+@ The sequence file validation failed
+event CS_FileCrcFailure(
+                         fileName: string size 60 @&lt; The sequence file
+                         storedCRC: U32 @&lt; The CRC stored in the file
+                         computedCRC: U32 @&lt; The CRC computed over the file
+                       ) \
+  severity warning high \
+  id 7 \
+  format "Sequence file {} had invalid CRC. Stored 0x{x}, Computed 0x{x}."
+
+@ The Command Sequencer issued a command and received a success status in return.
+event CS_CommandComplete(
+                          fileName: string size 60 @&lt; The name of the sequence file
+                          recordNumber: U32 @&lt; The record number of the command
+                          opCode: FwOpcodeType @&lt; The command opcode
+                        ) \
+  severity activity low \
+  id 8 \
+  format "Sequence file {}: Command {} (opcode {}) complete"
+
+@ A command sequence successfully completed.
+event CS_SequenceComplete(
+                           fileName: string size 60 @&lt; The name of the sequence file
+                         ) \
+  severity activity high \
+  id 9 \
+  format "Sequence file {} complete"
+
+@ The Command Sequencer issued a command and received an error status in return.
+event CS_CommandError(
+                       fileName: string size 60 @&lt; The name of the sequence file
+                       recordNumber: U32 @&lt; The record number
+                       opCode: FwOpcodeType @&lt; The opcode
+                       errorStatus: U32 @&lt; The error status
+                     ) \
+  severity warning high \
+  id 10 \
+  format "Sequence file {}: Command {} (opcode {}) completed with error {}"
+
+@ The Command Sequencer received a command that was invalid for its current mode.
+event CS_InvalidMode \
+  severity warning high \
+  id 11 \
+  format "Invalid mode"
+
+@ Number of records in header doesn't match number in file
+event CS_RecordMismatch(
+                         fileName: string size 60 @&lt; The name of the sequence file
+                         header_records: U32 @&lt; The number of records in the header
+                         extra_bytes: U32 @&lt; The number of bytes beyond last record
+                       ) \
+  severity warning high \
+  id 12 \
+  format "Sequence file {} header records mismatch: {} in header, found {} extra bytes."
+
+@ The running time base doesn't match the time base in the sequence files
+event CS_TimeBaseMismatch(
+                           fileName: string size 60 @&lt; The name of the sequence file
+                           time_base: U16 @&lt; The current time
+                           seq_time_base: U16 @&lt; The sequence time base
+                         ) \
+  severity warning high \
+  id 13 \
+  format "Sequence file {}: Current time base doesn't match sequence time: base: {} seq: {}"
+
+@ The running time base doesn't match the time base in the sequence files
+event CS_TimeContextMismatch(
+                              fileName: string size 60 @&lt; The name of the sequence file
+                              currTimeBase: U8 @&lt; The current time base
+                              seqTimeBase: U8 @&lt; The sequence time base
+                            ) \
+  severity warning high \
+  id 14 \
+  format "Sequence file {}: Current time context doesn't match sequence context: base: {} seq: {}"
+
+@ A local port request to run a sequence was started
+event CS_PortSequenceStarted(
+                              filename: string size 60 @&lt; The sequence file
+                            ) \
+  severity activity high \
+  id 15 \
+  format "Local request for sequence {} started."
+
+@ A command status came back when no sequence was running
+event CS_UnexpectedCompletion(
+                               $opcode: FwOpcodeType @&lt; The reported opcode
+                             ) \
+  severity warning high \
+  id 16 \
+  format "Command complete status received while no sequences active. Opcode: {}"
+
+@ Switched step mode
+event CS_ModeSwitched(
+                       mode: SeqMode @&lt; The new mode
+                     ) \
+  severity activity high \
+  id 17 \
+  format "Sequencer switched to {} step mode"
+
+@ A sequence related command came with no active sequence
+event CS_NoSequenceActive \
+  severity warning low \
+  id 18 \
+  format "No sequence active."
+
+@ A sequence passed validation
+event CS_SequenceValid(
+                        filename: string size 60 @&lt; The sequence file
+                      ) \
+  severity activity high \
+  id 19 \
+  format "Sequence {} is valid."
+
+@ A sequence passed validation
+event CS_SequenceTimeout(
+                          filename: string size 60 @&lt; The sequence file
+                          $command: U32 @&lt; The command that timed out
+                        ) \
+  severity warning high \
+  id 20 \
+  format "Sequence {} timed out on command {}"
+
+@ A command in a sequence was stepped through
+event CS_CmdStepped(
+                     filename: string size 60 @&lt; The sequence file
+                     $command: U32 @&lt; The command that was stepped
+                   ) \
+  severity activity high \
+  id 21 \
+  format "Sequence {} command {} stepped"
+
+@ A manual sequence was started
+event CS_CmdStarted(
+                     filename: string size 60 @&lt; The sequence file
+                   ) \
+  severity activity high \
+  id 22 \
+  format "Sequence {} started"
+
+@ Wait for the current running sequence file complete
+event CS_JoinWaiting(
+                      filename: string size 60 @&lt; The sequence file
+                      recordNumber: U32 @&lt; The record number
+                      opCode: FwOpcodeType @&lt; The opcode
+                    ) \
+  severity activity high \
+  id 23 \
+  format "Start waiting for sequence file {}: Command {} (opcode {}) to complete"
+
+@ Cannot run new sequence when current sequence file is still running.
+event CS_JoinWaitingNotComplete() \
+  severity warning high \
+  id 24 \
+  format "Still waiting for sequence file to complete"
+
+event CS_NoRecords(
+                      fileName: string size 60 @&lt; The name of the sequence file
+                    ) \
+  severity warning low \
+  id 25 \
+  format "Sequence file {} has no records. Ignoring."
+</pre></div>
+</div>
+</section>
+<section id="fprimesequence-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">FPrimeSequence.cpp</span></code><a class="headerlink" href="#fprimesequence-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/FPrimeSequence.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  FPrimeSequence.cpp
+// \author Bocchino/Canham
+// \brief  CmdSequencerComponentImpl::FPrimeSequence implementation
+//
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Fw/Types/Assert.hpp"
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+extern "C" {
+#include "Utils/Hash/libcrc/lib_crc.h"
+}
+
+namespace Svc {
+
+CmdSequencerComponentImpl::FPrimeSequence::CRC ::CRC() : m_computed(INITIAL_COMPUTED_VALUE), m_stored(0) {}
+
+void CmdSequencerComponentImpl::FPrimeSequence::CRC ::init() {
+    this-&gt;m_computed = INITIAL_COMPUTED_VALUE;
+}
+
+void CmdSequencerComponentImpl::FPrimeSequence::CRC ::update(const BYTE* buffer, FwSizeType bufferSize) {
+    FW_ASSERT(buffer);
+    for (FwSizeType index = 0; index &lt; bufferSize; index++) {
+        this-&gt;m_computed = static_cast&lt;U32&gt;(update_crc_32(this-&gt;m_computed, static_cast&lt;char&gt;(buffer[index])));
+    }
+}
+
+void CmdSequencerComponentImpl::FPrimeSequence::CRC ::finalize() {
+    this-&gt;m_computed = ~this-&gt;m_computed;
+}
+
+CmdSequencerComponentImpl::FPrimeSequence ::FPrimeSequence(CmdSequencerComponentImpl&amp; component)
+    : Sequence(component) {}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::validateCRC() {
+    bool result = true;
+    if (this-&gt;m_crc.m_stored != this-&gt;m_crc.m_computed) {
+        this-&gt;m_events.fileCRCFailure(this-&gt;m_crc.m_stored, this-&gt;m_crc.m_computed);
+        result = false;
+    }
+    return result;
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::loadFile(const Fw::StringBase&amp; fileName) {
+    // make sure there is a buffer allocated
+    FW_ASSERT(this-&gt;m_buffer.getBuffAddr());
+
+    this-&gt;setFileName(fileName);
+
+    const bool status = this-&gt;readFile() and this-&gt;validateCRC() and this-&gt;m_header.validateTime(this-&gt;m_component) and
+                        this-&gt;validateRecords();
+
+    return status;
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::hasMoreRecords() const {
+    return this-&gt;m_buffer.getBuffLeft() &gt; 0;
+}
+
+void CmdSequencerComponentImpl::FPrimeSequence ::nextRecord(Record&amp; record) {
+    Fw::SerializeStatus status = this-&gt;deserializeRecord(record);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+}
+
+void CmdSequencerComponentImpl::FPrimeSequence ::reset() {
+    this-&gt;m_buffer.resetDeser();
+}
+
+void CmdSequencerComponentImpl::FPrimeSequence ::clear() {
+    this-&gt;m_buffer.resetSer();
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::readFile() {
+    bool result;
+
+    Os::File::Status status = this-&gt;m_sequenceFile.open(this-&gt;m_fileName.toChar(), Os::File::OPEN_READ);
+
+    if (status == Os::File::OP_OK) {
+        result = this-&gt;readOpenFile();
+    } else if (status == Os::File::DOESNT_EXIST) {
+        this-&gt;m_events.fileNotFound();
+        result = false;
+    } else {
+        this-&gt;m_events.fileReadError();
+        result = false;
+    }
+
+    this-&gt;m_sequenceFile.close();
+    return result;
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::readOpenFile() {
+    U8* const buffAddr = this-&gt;m_buffer.getBuffAddr();
+    this-&gt;m_crc.init();
+    bool status = this-&gt;readHeader();
+    if (status) {
+        this-&gt;m_crc.update(buffAddr, Sequence::Header::SERIALIZED_SIZE);
+        status = this-&gt;deserializeHeader() and this-&gt;readRecordsAndCRC() and this-&gt;extractCRC();
+    }
+    if (status) {
+        const FwSizeType buffLen = this-&gt;m_buffer.getBuffLength();
+        this-&gt;m_crc.update(buffAddr, buffLen);
+        this-&gt;m_crc.finalize();
+    }
+    return status;
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::readHeader() {
+    Os::File&amp; file = this-&gt;m_sequenceFile;
+    Fw::SerializeBufferBase&amp; buffer = this-&gt;m_buffer;
+    bool status = true;
+
+    FwSizeType readLen = Sequence::Header::SERIALIZED_SIZE;
+
+    const FwSizeType capacity = buffer.getBuffCapacity();
+    FW_ASSERT(capacity &gt;= readLen, static_cast&lt;FwAssertArgType&gt;(capacity), static_cast&lt;FwAssertArgType&gt;(readLen));
+    Os::File::Status fileStatus = file.read(buffer.getBuffAddr(), readLen);
+
+    if (fileStatus != Os::File::OP_OK) {
+        this-&gt;m_events.fileInvalid(CmdSequencer_FileReadStage::READ_HEADER, fileStatus);
+        status = false;
+    }
+
+    if (status and readLen != Sequence::Header::SERIALIZED_SIZE) {
+        this-&gt;m_events.fileInvalid(CmdSequencer_FileReadStage::READ_HEADER_SIZE, static_cast&lt;I32&gt;(readLen));
+        status = false;
+    }
+
+    if (status) {
+        const Fw::SerializeStatus serializeStatus = buffer.setBuffLen(static_cast&lt;Fw::Serializable::SizeType&gt;(readLen));
+        FW_ASSERT(serializeStatus == Fw::FW_SERIALIZE_OK, serializeStatus);
+    }
+
+    return status;
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::deserializeHeader() {
+    Fw::SerializeBufferBase&amp; buffer = this-&gt;m_buffer;
+    Header&amp; header = this-&gt;m_header;
+
+    // File size
+    Fw::SerializeStatus serializeStatus = buffer.deserialize(header.m_fileSize);
+    if (serializeStatus != Fw::FW_SERIALIZE_OK) {
+        this-&gt;m_events.fileInvalid(CmdSequencer_FileReadStage::DESER_SIZE, serializeStatus);
+        return false;
+    }
+    if (header.m_fileSize &gt; buffer.getBuffCapacity()) {
+        this-&gt;m_events.fileSizeError(header.m_fileSize);
+        return false;
+    }
+    // Number of records
+    serializeStatus = buffer.deserialize(header.m_numRecords);
+    if (serializeStatus != Fw::FW_SERIALIZE_OK) {
+        this-&gt;m_events.fileInvalid(CmdSequencer_FileReadStage::DESER_NUM_RECORDS, serializeStatus);
+        return false;
+    }
+    // Time base
+    TimeBase tbase;
+    serializeStatus = buffer.deserialize(tbase);
+    if (serializeStatus != Fw::FW_SERIALIZE_OK) {
+        this-&gt;m_events.fileInvalid(CmdSequencer_FileReadStage::DESER_TIME_BASE, serializeStatus);
+        return false;
+    }
+    header.m_timeBase = (tbase);
+    // Time context
+    serializeStatus = buffer.deserialize(header.m_timeContext);
+    if (serializeStatus != Fw::FW_SERIALIZE_OK) {
+        this-&gt;m_events.fileInvalid(CmdSequencer_FileReadStage::DESER_TIME_CONTEXT, serializeStatus);
+        return false;
+    }
+    return true;
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::readRecordsAndCRC() {
+    Os::File&amp; file = this-&gt;m_sequenceFile;
+    const FwSizeType size = this-&gt;m_header.m_fileSize;
+    Fw::SerializeBufferBase&amp; buffer = this-&gt;m_buffer;
+
+    FwSizeType readLen = size;
+    Os::File::Status fileStatus = file.read(buffer.getBuffAddr(), readLen);
+    // check read status
+    if (fileStatus != Os::File::OP_OK) {
+        this-&gt;m_events.fileInvalid(CmdSequencer_FileReadStage::READ_SEQ_DATA, fileStatus);
+        return false;
+    }
+    // check read size
+    if (size != static_cast&lt;FwSizeType&gt;(readLen)) {
+        this-&gt;m_events.fileInvalid(CmdSequencer_FileReadStage::READ_SEQ_DATA_SIZE, static_cast&lt;I32&gt;(readLen));
+        return false;
+    }
+    // set buffer size
+    Fw::SerializeStatus serializeStatus = buffer.setBuffLen(size);
+    FW_ASSERT(serializeStatus == Fw::FW_SERIALIZE_OK, serializeStatus);
+    return true;
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::extractCRC() {
+    Fw::SerializeBufferBase&amp; buffer = this-&gt;m_buffer;
+    U32&amp; crc = this-&gt;m_crc.m_stored;
+
+    // Compute the data size
+    const FwSizeType buffSize = buffer.getBuffLength();
+    const FwSizeType crcSize = sizeof(crc);
+    U8* const buffAddr = buffer.getBuffAddr();
+    if (buffSize &lt; crcSize) {
+        this-&gt;m_events.fileInvalid(CmdSequencer_FileReadStage::READ_SEQ_CRC, static_cast&lt;I32&gt;(buffSize));
+        return false;
+    }
+    FW_ASSERT(buffSize &gt;= crcSize, static_cast&lt;FwAssertArgType&gt;(buffSize), crcSize);
+    const FwSizeType dataSize = buffSize - crcSize;
+    // Create a CRC buffer pointing at the CRC in the main buffer, after the data
+    Fw::ExternalSerializeBuffer crcBuff(&amp;buffAddr[dataSize], crcSize);
+    Fw::SerializeStatus status = crcBuff.setBuffLen(crcSize);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    // Deserialize the CRC from the CRC buffer
+    status = crcBuff.deserialize(crc);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    // Set the main buffer size to the data size
+    status = buffer.setBuffLen(dataSize);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    return true;
+}
+
+Fw::SerializeStatus CmdSequencerComponentImpl::FPrimeSequence ::deserializeRecord(Record&amp; record) {
+    U32 recordSize;
+
+    Fw::SerializeStatus status = this-&gt;deserializeDescriptor(record.m_descriptor);
+
+    if (status == Fw::FW_SERIALIZE_OK and record.m_descriptor == Record::END_OF_SEQUENCE) {
+        return Fw::FW_SERIALIZE_OK;
+    }
+
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = this-&gt;deserializeTimeTag(record.m_timeTag);
+    }
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = this-&gt;deserializeRecordSize(recordSize);
+    }
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = this-&gt;copyCommand(record.m_command, recordSize);
+    }
+
+    return status;
+}
+
+Fw::SerializeStatus CmdSequencerComponentImpl::FPrimeSequence ::deserializeDescriptor(Record::Descriptor&amp; descriptor) {
+    Fw::SerializeBufferBase&amp; buffer = this-&gt;m_buffer;
+    U8 descEntry;
+
+    Fw::SerializeStatus status = buffer.deserialize(descEntry);
+    if (status != Fw::FW_SERIALIZE_OK) {
+        return status;
+    }
+
+    if (descEntry &gt; Sequence::Record::END_OF_SEQUENCE) {
+        return Fw::FW_DESERIALIZE_FORMAT_ERROR;
+    }
+
+    descriptor = static_cast&lt;Record::Descriptor&gt;(descEntry);
+    return Fw::FW_SERIALIZE_OK;
+}
+
+Fw::SerializeStatus CmdSequencerComponentImpl::FPrimeSequence ::deserializeTimeTag(Fw::Time&amp; timeTag) {
+    Fw::SerializeBufferBase&amp; buffer = this-&gt;m_buffer;
+    U32 seconds, useconds;
+    Fw::SerializeStatus status = buffer.deserialize(seconds);
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = buffer.deserialize(useconds);
+    }
+    if (status == Fw::FW_SERIALIZE_OK) {
+        timeTag.set(seconds, useconds);
+    }
+    return status;
+}
+
+Fw::SerializeStatus CmdSequencerComponentImpl::FPrimeSequence ::deserializeRecordSize(U32&amp; recordSize) {
+    Fw::SerializeBufferBase&amp; buffer = this-&gt;m_buffer;
+    Fw::SerializeStatus status = buffer.deserialize(recordSize);
+    if (status == Fw::FW_SERIALIZE_OK and recordSize &gt; buffer.getBuffLeft()) {
+        // Not enough data left
+        status = Fw::FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+    if (status == Fw::FW_SERIALIZE_OK and
+        recordSize + sizeof(FwPacketDescriptorType) &gt; Fw::ComBuffer::SERIALIZED_SIZE) {
+        // Record size is too big for com buffer
+        status = Fw::FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+    return status;
+}
+
+Fw::SerializeStatus CmdSequencerComponentImpl::FPrimeSequence ::copyCommand(Fw::ComBuffer&amp; comBuffer,
+                                                                            const U32 recordSize) {
+    Fw::SerializeBufferBase&amp; buffer = this-&gt;m_buffer;
+    comBuffer.resetSer();
+    FwSizeType size = recordSize;
+    Fw::SerializeStatus status = comBuffer.setBuffLen(recordSize);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    status = buffer.deserialize(comBuffer.getBuffAddr(), size, Fw::Serialization::OMIT_LENGTH);
+    return status;
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::validateRecords() {
+    Fw::SerializeBufferBase&amp; buffer = this-&gt;m_buffer;
+    const U32 numRecords = this-&gt;m_header.m_numRecords;
+    Sequence::Record record;
+
+    if (numRecords == 0) {
+        this-&gt;m_events.noRecords();
+        return false;
+    }
+
+    // Deserialize all records
+    for (U32 recordNumber = 0; recordNumber &lt; numRecords; recordNumber++) {
+        Fw::SerializeStatus status = this-&gt;deserializeRecord(record);
+        if (status != Fw::FW_SERIALIZE_OK) {
+            this-&gt;m_events.recordInvalid(recordNumber, status);
+            return false;
+        }
+    }
+    // Check there is no data left
+    const FwSizeType buffLeftSize = buffer.getBuffLeft();
+    if (buffLeftSize &gt; 0) {
+        this-&gt;m_events.recordMismatch(numRecords, static_cast&lt;U32&gt;(buffLeftSize));
+        return false;
+    }
+    // Rewind deserialization
+    buffer.resetDeser();
+
+    return true;
+}
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="sequence-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Sequence.cpp</span></code><a class="headerlink" href="#sequence-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/Sequence.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  Sequence.cpp
+// \author Bocchino/Canham
+// \brief  Implementation file for CmdSequencer::Sequence
+//
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include &lt;Fw/Types/Assert.hpp&gt;
+#include &lt;Svc/CmdSequencer/CmdSequencerImpl.hpp&gt;
+
+namespace Svc {
+
+CmdSequencerComponentImpl::Sequence ::Sequence(CmdSequencerComponentImpl&amp; component)
+    : m_component(component), m_events(*this), m_allocatorId(0) {}
+
+CmdSequencerComponentImpl::Sequence ::~Sequence() {}
+
+CmdSequencerComponentImpl::Sequence::Header ::Header()
+    : m_fileSize(0), m_numRecords(0), m_timeBase(TimeBase::TB_DONT_CARE), m_timeContext(FW_CONTEXT_DONT_CARE) {}
+
+bool CmdSequencerComponentImpl::Sequence::Header ::validateTime(CmdSequencerComponentImpl&amp; component) {
+    Fw::Time validTime = component.getTime();
+    Events&amp; events = component.m_sequence-&gt;m_events;
+    // Time base
+    const TimeBase validTimeBase = validTime.getTimeBase();
+    if ((this-&gt;m_timeBase != validTimeBase) and (this-&gt;m_timeBase != TimeBase::TB_DONT_CARE)) {
+        events.timeBaseMismatch(validTimeBase, this-&gt;m_timeBase);
+        return false;
+    }
+    // Time context
+    const FwTimeContextStoreType validContext = validTime.getContext();
+    if ((this-&gt;m_timeContext != validContext) and (this-&gt;m_timeContext != FW_CONTEXT_DONT_CARE)) {
+        events.timeContextMismatch(validContext, this-&gt;m_timeContext);
+        return false;
+    }
+    // Canonicalize time
+    this-&gt;m_timeBase = validTimeBase;
+    this-&gt;m_timeContext = validContext;
+    return true;
+}
+
+void CmdSequencerComponentImpl::Sequence ::allocateBuffer(FwEnumStoreType identifier,
+                                                          Fw::MemAllocator&amp; allocator,
+                                                          FwSizeType bytes) {
+    // has to be at least as big as a header
+    FW_ASSERT(bytes &gt;= Sequence::Header::SERIALIZED_SIZE);
+    bool recoverable;
+    this-&gt;m_allocatorId = identifier;
+    this-&gt;m_buffer.setExtBuffer(static_cast&lt;U8*&gt;(allocator.allocate(identifier, bytes, recoverable)), bytes);
+}
+
+void CmdSequencerComponentImpl::Sequence ::deallocateBuffer(Fw::MemAllocator&amp; allocator) {
+    allocator.deallocate(this-&gt;m_allocatorId, this-&gt;m_buffer.getBuffAddr());
+    this-&gt;m_buffer.clear();
+}
+
+const CmdSequencerComponentImpl::Sequence::Header&amp; CmdSequencerComponentImpl::Sequence ::getHeader() const {
+    return this-&gt;m_header;
+}
+
+void CmdSequencerComponentImpl::Sequence ::setFileName(const Fw::StringBase&amp; fileName) {
+    this-&gt;m_fileName = fileName;
+    this-&gt;m_logFileName = fileName;
+    this-&gt;m_stringFileName = fileName;
+}
+
+Fw::CmdStringArg&amp; CmdSequencerComponentImpl::Sequence ::getFileName() {
+    return this-&gt;m_fileName;
+}
+
+Fw::LogStringArg&amp; CmdSequencerComponentImpl::Sequence ::getLogFileName() {
+    return this-&gt;m_logFileName;
+}
+
+Fw::String&amp; CmdSequencerComponentImpl::Sequence ::getStringFileName() {
+    return this-&gt;m_stringFileName;
+}
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="telemetry-fppi">
+<h2><code class="docutils literal notranslate"><span class="pre">Telemetry.fppi</span></code><a class="headerlink" href="#telemetry-fppi" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/Telemetry.fppi</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>@ The number of Load commands executed
+telemetry CS_LoadCommands: U32 id 0
+
+@ The number of Cancel commands executed
+telemetry CS_CancelCommands: U32 id 1
+
+@ The number of errors that have occurred
+telemetry CS_Errors: U32 id 2
+
+@ The number of commands executed across all sequences.
+telemetry CS_CommandsExecuted: U32 id 3
+
+@ The number of sequences completed.
+telemetry CS_SequencesCompleted: U32 id 4
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../CmdDispatcher/test/ut/index.html" class="btn btn-neutral float-left" title="ut" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docs/index.html" class="btn btn-neutral float-right" title="docs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

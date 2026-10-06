@@ -1,0 +1,3149 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>osal &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../search.html" />
+    <link rel="next" title="docs" href="docs/index.html" />
+    <link rel="prev" title="Sequences" href="../fprime/fprime-nos3/Sequences/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">fsw</a></li>
+      <li class="breadcrumb-item active">osal</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/project_inventory/fsw/osal/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="osal">
+<h1>osal<a class="headerlink" href="#osal" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/</span></code></p>
+<section id="id1">
+<h2>하위 폴더<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="docs/index.html">docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/index.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ut_assert/index.html">ut_assert</a></li>
+</ul>
+</div>
+</section>
+<section id="id2">
+<h2>이 폴더의 파일<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+</section>
+<section id="git">
+<h2><code class="docutils literal notranslate"><span class="pre">.git</span></code><a class="headerlink" href="#git" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/.git</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>gitdir: ../../.git/modules/fsw/osal
+</pre></div>
+</div>
+</section>
+<section id="gitattributes">
+<h2><code class="docutils literal notranslate"><span class="pre">.gitattributes</span></code><a class="headerlink" href="#gitattributes" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/.gitattributes</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>*.h linguist-language=c
+
+*.css linguist-documentation=true
+*.htm linguist-documentation=true
+*.html linguist-documentation=true
+*.prc linguist-documentation=true
+</pre></div>
+</div>
+</section>
+<section id="gitignore">
+<h2><code class="docutils literal notranslate"><span class="pre">.gitignore</span></code><a class="headerlink" href="#gitignore" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/.gitignore</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>build
+Makefile
+</pre></div>
+</div>
+</section>
+<section id="changelog-md">
+<h2><code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code><a class="headerlink" href="#changelog-md" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/CHANGELOG.md</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Changelog
+
+## Development Build: v6.0.0-rc4+dev223
+- 'Fix #1396, do not use intmax_t/uintmax_t types'
+- 'Fix #1398, separate bind and listen calls for streams'
+- See: &lt;https://github.com/nasa/cFE/pull/1397&gt; &lt;https://github.com/nasa/cFE/pull/1399&gt;
+
+
+## Development Build: v6.0.0-rc4+dev217
+- Add additional counters to test summary
+- See &lt;https://github.com/nasa/osal/pull/1393&gt;
+
+## Development Build: v6.0.0-rc4+dev213
+- Create Workflow for IC Bundle Generation
+- See &lt;https://github.com/nasa/osal/pull/1383&gt;
+
+## Development Build: v6.0.0-rc4+dev209
+- add assert macros for other data types
+- See &lt;https://github.com/nasa/osal/pull/1375&gt;
+
+## Development Build: v6.0.0-rc4+dev205
+- fixup API headers for C++
+- workflow to validate OSAL API
+- See &lt;https://github.com/nasa/osal/pull/1371&gt; and &lt;https://github.com/nasa/osal/pull/1372&gt;
+
+## Development Build: v6.0.0-rc4+dev199
+- Modify unreachable branch in OS_ObjectIdAllocateNew
+- See &lt;https://github.com/nasa/osal/pull/1327&gt;
+
+## Development Build: v6.0.0-rc4+dev195
+- removed cast that hid bug at compile time
+- See &lt;https://github.com/nasa/osal/pull/1367&gt;
+
+## Development Build: v6.0.0-rc4+dev191
+- add doxygen for UT_ConfigureGenericStubReturnValue
+- See &lt;https://github.com/nasa/osal/pull/1362&gt;
+
+## Development Build: v6.0.0-rc4+dev187
+- UT assert stub return values
+- See &lt;https://github.com/nasa/osal/pull/1352&gt;
+
+## Development Build: v6.0.0-rc4+dev184
+- separate append on volume_name to system_mountpt
+- See &lt;https://github.com/nasa/osal/pull/1355&gt;
+
+## Development Build: v6.0.0-rc4+dev179
+- Remove obsolete _USING_RTEMS_INCLUDES_
+- Support adding default flags at task creation
+- See &lt;https://github.com/nasa/osal/pull/1348&gt; and &lt;https://github.com/nasa/osal/pull/1347&gt;
+
+## Development Build: v6.0.0-rc4+dev173
+- Update action versions
+- add doc-prebuild dependency
+- Update incorrect function header comment
+- See &lt;https://github.com/nasa/osal/pull/1342&gt;, &lt;https://github.com/nasa/osal/pull/1341&gt;, and &lt;https://github.com/nasa/osal/pull/1321&gt;
+
+## Development Build: v6.0.0-rc4+dev165
+- Update CI to use Ubuntu 20.04
+- See &lt;https://github.com/nasa/osal/pull/1334&gt;
+
+## Development Build: v6.0.0-rc4+dev161
+- Truncate symbol name if &gt; OS_MAX_SYM_LEN
+- always provide UT stub library
+- cppcheck updates
+- See &lt;https://github.com/nasa/osal/pull/1335&gt;, &lt;https://github.com/nasa/osal/pull/1329&gt;, and &lt;https://github.com/nasa/osal/pull/1336&gt;
+
+## Development Build: v6.0.0-rc4+dev151
+- add BUGCHECK_VOID macro
+- See &lt;https://github.com/nasa/osal/pull/1323&gt;
+
+## Development Build: v6.0.0-rc4+dev147
+- adjust timing on condvar tests
+- See &lt;https://github.com/nasa/osal/pull/1319&gt;
+
+## Development Build: v6.0.0-rc4+dev143
+- locks for condvar objects on rtems/vxworks
+- Add time conversion reciprocal functions
+- add export targets and package script
+- Stop empty function catching CI workflow format checks
+- Remove redundant/inconsistent comments (/* end of function */, /* end if */ etc.) and clean up empty lines.
+- See &lt;https://github.com/nasa/osal/pull/1311&gt;, &lt;https://github.com/nasa/osal/pull/1310&gt;, &lt;https://github.com/nasa/osal/pull/1313&gt;, &lt;https://github.com/nasa/osal/pull/1306&gt;, and &lt;https://github.com/nasa/osal/pull/1309&gt;
+
+## Development Build: v6.0.0-rc4+dev131
+- rtems queue multi-size, mimic posix logic
+- cmake script modernization
+- Create CHANGELOG.md
+- See &lt;https://github.com/nasa/osal/pull/1283&gt;, &lt;https://github.com/nasa/osal/pull/1291&gt;, and &lt;https://github.com/nasa/osal/pull/1298&gt;
+
+## Development Build: v6.0.0-rc4+dev120
+- Fix #1300, do not set file permissions on UT assert outputs
+- See &lt;https://github.com/nasa/osal/pull/1301&gt;
+
+## Development Build: v6.0.0-rc4+dev116
+- Use fstat and fchmod for TOCTOU Bug
+- Remove 'return;' from last line of void functions.
+- Remove unnecessary parentheses around return values.
+- See &lt;https://github.com/nasa/osal/pull/1181&gt;, &lt;https://github.com/nasa/osal/pull/1294&gt;, and &lt;https://github.com/nasa/osal/pull/1292&gt;
+
+## Development Build: v6.0.0-rc4+dev108
+- condition variable API for OSAL
+- See &lt;https://github.com/nasa/osal/issues/1252&gt;
+
+## Development Build: v6.0.0-rc4+dev103
+- Remove stray terminators
+- Add RTEMS timebase callback wrapper
+- See &lt;https://github.com/nasa/osal/pull/1274&gt; and &lt;https://github.com/nasa/osal/pull/1276&gt;
+
+## Development Build: v6.0.0-rc4+dev97
+- Ensure address alignment of TCB for VxWorks 7
+- See &lt;https://github.com/nasa/osal/pull/1272&gt;
+
+## Development Build: v6.0.0-rc4+dev93
+- Update cmake mimimum required to something more recent (or remove)
+- Set OSAL Loader unit test number of modules to OSAL_CONFIG_MAX_MODULES
+- See &lt;https://github.com/nasa/osal/pull/1267&gt; and &lt;https://github.com/nasa/osal/pull/1265&gt;
+
+## Development Build: v6.0.0-rc4+dev87
+- Add OS_StatusToString API
+- See &lt;https://github.com/nasa/cFS/pull/505&gt; 
+
+## Development Build: v6.0.0-rc4+dev83
+- Resolve UT uninit vars static analysis warnings
+- Remove redundant checks in UT
+- Resolve UT uninit vars static analysis warnings
+- Add RTEMS 6 Support  
+- See https://github.com/nasa/osal/pull/1260 and &lt;https://github.com/nasa/cFS/pull/492&gt;
+
+## Development Build: v6.0.0-rc4+dev74
+- Update codeql workflows for reusable update
+- add os-impl-no-select.c for RTEMS
+- See &lt;https://github.com/nasa/osal/pull/1251&gt; and &lt;https://github.com/nasa/cFS/pull/471&gt;
+
+## Development Build: v6.0.0-rc4+dev66
+- Fix UtAssert_StringBufCompare SEGV when -1 for size passed in (on CentOS 7)
+- Enable format check workflow on push to all branches
+- Update Copyright Headers
+- Standardize version.h 
+- See &lt;https://github.com/nasa/osal/pull/1239&gt; and &lt;https://github.com/nasa/cFS/445&gt;
+
+## Development Build: v6.0.0-rc4+dev54
+- Revert development version identifier to 99 for revision number
+- Fix cFS-build CodeQL reusable worfklow
+- Implement OS_ModuleGetInfo_Impl for RTEMS
+- Doxygen strip path and expose common config
+- Refactor doxygen and remove mainpage
+- See &lt;https://github.com/nasa/osal/pull/1233&gt; and &lt;https://github.com/nasa/cFS/pull/443&gt;
+
+## Development Build: v6.0.0-rc4+dev42
+- Resolve UT uninitialized variable warnings
+- Add ut_assert to doxygen and fix warnings
+- Protect if OS_FDGetInfo called on socket
+- See &lt;https://github.com/nasa/osal/pull/1226&gt; and &lt;https://github.com/nasa/cFS/pull/432&gt;
+
+## Development Build: v6.0.0-rc4+dev32
+- Typesafe definition of osal_id_t
+- See &lt;https://github.com/nasa/osal/pull/1209&gt; and &lt;https://github.com/nasa/cFS/pull/414&gt;
+
+## Development Build: v6.0.0-rc4+dev29
+- Search global and local symbol tables
+- Add missing space to UtAssert_STUB_COUNT
+- Add UINT8 and UINT16 equivalents for UtAssert_UINT32_ macros
+- correct warnings on gcc11
+- Set output in OS_stat handler
+- Reuse CodeQL, Static Analysis, Format Check
+- See &lt;https://github.com/nasa/osal/pull/1212&gt; and &lt;https://github.com/nasa/cFS/pull/410&gt;
+
+## Development Build: v6.0.0-rc4+dev15
+- Add Duplicate Check to Local Unit Test
+- Rename OS_XXXTime to OS_XXXLocalTime in comments
+- Fix vxWorks intLib stub aliasing issue
+- Recognize ifdef __cplusplus
+- Remove extern in stub prototypes
+- Add typedef for OSAL status codes
+- Set new build baseline for cFS-Caelum-rc4: v6.0.0-rc4
+- See &lt;https://github.com/nasa/osal/pull/1191&gt; and &lt;https://github.com/nasa/cFS/pull/390&gt;
+
+## Development Build: v5.1.0-rc1+dev619
+- Enable symbol api test and MIR dump too large
+- MIR symbol too long or table to long for osloader test
+- Add bsp-specific configuration flag registry 
+- Add os-specifc socket flag function 
+- See &lt;https://github.com/nasa/osal/pull/1158&gt; and &lt;https://github.com/nasa/cFS/pull/359&gt;
+
+## Development Build: v5.1.0-rc1+dev604
+- Add typecast to memchr call
+- Regex update in coverage enforcement to match `.0`
+- See &lt;https://github.com/nasa/osal/pull/1145&gt; and &lt;https://github.com/nasa/cFS/pull/351&gt;
+
+## Development Build: v5.1.0-rc1+dev598
+- Add UTAssert macros that help test bit field storage
+- See &lt;https://github.com/nasa/osal/pull/1138&gt; and &lt;https://github.com/nasa/cFS/pull/348&gt;
+
+## Development Build: v5.1.0-rc1+dev594
+- Add test case types similar to NA
+- See &lt;https://github.com/nasa/osal/pull/1132&gt; and &lt;https://github.com/nasa/cFS/pull/340&gt;
+
+## Development Build: v5.1.0-rc1+dev590
+- Add absolute branch coverage check 
+- See &lt;https://github.com/nasa/osal/pull/1127&gt; and &lt;https://github.com/nasa/cFS/pull/333&gt;
+
+## Development Build: v5.1.0-rc1+dev586
+- Add UtAssert_MIR macro
+- Add generic asserts from CFE coverage testing 
+- Add osapi-shell-stubs.c to OSAL stub library
+- See &lt;https://github.com/nasa/osal/pull/1126&gt; and &lt;https://github.com/nasa/cFS/pull/328&gt;
+
+## Development Build: v5.1.0-rc1+dev578
+- Add unit test branch coverage
+- See &lt;https://github.com/nasa/osal/pull/1116&gt; and &lt;https://github.com/nasa/cfs/pull/313&gt;
+
+## Development Build: v5.1.0-rc1+dev573
+- Add independent OS_rename functional test parameter checks
+- See &lt;https://github.com/nasa/osal/pull/1113&gt; and &lt;https://github.com/nasa/cfs/pull/311&gt;
+
+## Development Build: v5.1.0-rc1+dev569
+- Skip these "timer reconfig" unit tests on non-POSIX platforms. Add documentation clearly indicating that the API must not be called from a timer context.
+- See &lt;https://github.com/nasa/osal/pull/1100&gt; and &lt;https://github.com/nasa/cFS/pull/297&gt;
+
+## Development Build: v5.1.0-rc1+dev564
+- Add range to OS_TaskDelay checks
+- Return `OS_OBJECT_ID_UNDEFINED` for root task ID on RTEMS
+- Increase timeout in network-api-test
+- Avoid task delete during UtPrintf
+- Increase UT symbol dump size limit
+- Do not register RTOS timer for external sync
+- Add osal# prefix to Network API group
+- Increase timeout in network-api-test
+- See &lt;https://github.com/nasa/osal/pull/1098&gt; and &lt;https://github.com/nasa/cfs/pull/287&gt;
+
+## Development Build: v5.1.0-rc1+dev548
+- implement missing parameter/retcode test permutations
+- See &lt;https://github.com/nasa/osal/pull/1079&gt; and &lt;https://github.com/nasa/cFS/pull/270&gt;
+
+## Development Build: v5.1.0-rc1+dev530
+- Implement Coding Standard Rules in CodeQL
+- rename doc to docs
+- add mutex lock around UtAssert globals
+- resolve discrepancies between file API and unit tests
+- resolve discrepancies between filesys API and unit tests
+- resolve discrepancies between idmap API and unit tests
+- resolve discrepancies between select API and unit tests
+- resolve discrepancies between socket API and unit tests
+- const correct OS_SelectFdIsSet
+- Add missing OS_Select param doc
+- Add Workflow to build and verify OSAL API Guide
+- add detail design template
+- Update error codes and documentation
+- Increase UT object limit for testing
+- See &lt;https://github.com/nasa/osal/pull/1076&gt; and &lt;https://github.com/nasa/cFS/pull/265&gt;
+
+## Development Build: v5.1.0-rc1+dev501
+- include doxygen targets locally
+- resolve discrepancies between timer API and unit tests
+- Ensure correlation between the test cases and documented return values for the OSAL timer API.
+- resolve discrepancies between binsem API and unit tests
+- add missing clock retcode tests
+- resolve discrepancies between common API and unit tests
+- resolve discrepancies between countsem API and unit tests
+- resolve discrepancies between dir API and unit tests
+- resolve discrepancies between module API and unit tests
+- resolve discrepancies between mutex API and unit tests
+- resolve discrepancies between queue API and unit tests
+- resolve discrepancies between task API and unit tests
+- resolve discrepancies between timebase API and unit tests
+- check misc API return codes
+- Rename CodeQL cFE Build and add Duplicate Job
+- filter only whole words for keyword match
+- update OSAL Config Guide link
+- See &lt;https://github.com/nasa/osal/pull/1058&gt; and &lt;https://github.com/nasa/cFS/pull/263&gt;
+
+## Development Build: v5.1.0-rc1+dev458
+- Adds Counting Semaphore Test with timeouts
+- Removes chance of deadlock by ensuring OS_TaskGetId returns the task ID it knows about, regardless of whether the task is pending cancellation or not. Defers cancellation of the task while the BSP is locked, ensure it reaches the unlock, then restores the previous cancel state.
+- Fixes a bogus debug message about unlocking from the wrong task if the task is pending delete.
+See &lt;https://github.com/nasa/osal/pull/1050&gt; and &lt;https://github.com/nasa/cFS/pull/260&gt;
+
+## Development Build: v5.1.0-rc1+dev452
+- Makes filenames better match terms used in implementation.
+- Propagates return code from the caller in low-level implementations when status is not `OS_SUCCESS`.
+- The status returned from `OS_rmdir()` should now be correct if the implementation failed.
+- Adds details to log file and can be cross referenced back to documentation.
+- Updates most of the conditions in the "unit tests" to use the support macros whenever possible.
+- The macros display the function being called as well as the return value being checked for and enables that documented return codes are being tested. Removes repetition in the test programs.
+- Removes blank lines in test log while preserving extra newlines in the event that the test case was intentionally adding whitespace.
+- Adds tests for object id inline functions: `OS_ObjectIdToInteger`, `OS_ObjectIdFromInteger`, `OS_ObjectIdEqual`, `OS_ObjectIdDefined`
+- Changes tests to use valid inputs for all `OS_mkdir` calls.
+- [docs] Improves config guide documentation issues referenced in #384, #640, #672
+- [continuous-integration] Adds new workflow to display CodeQL alerts preview
+
+## Development Build: v5.1.0-rc1+dev434
+- Updates the configuration guide to reflect cmake build system and the currently provided set of OS/BSP layers. Removes obsolete items from guide.
+- Converts UtAssert API documentation to doxygen and corrects stale and incorrect references.
+- Clarifies use of the stack_size parameter, and that it should not be 0.
+- Ensures consistency between the return values generated by each OSAL API and the doxygen documentation.
+- Fixes missing or incorrect explicitly-returned status code in the coverage tests.
+- Corrects one argument name mismatch in QueueCreate where it was prototyped as "data_size" but implemented as "max_size".
+- See &lt;https://github.com/nasa/osal/pull/996&gt; and &lt;https://github.com/nasa/cfs/pull/256&gt;
+
+## Development Build: v5.1.0-rc1+dev417
+- Fixes infinite loop  in `UtPrintx()`. Adds the data's memory address to output. Note, UtPrintf displays the file/line of the `UtPrintx` function, **not the actual test location**; it is better to call `UT_BSP_DoText` directly.
+- Adds `OS_SocketShutdown()` API wrapper around BSD's socket shutdown() API. This allows a data transfer of a stream socket to be gracefully shut down prior to socket closure.
+- See osal &lt;https://github.com/nasa/osal/pull/979&gt; and &lt;https://github.com/nasa/cFS/pull/252&gt;
+
+## Development Build: v5.1.0-rc1+dev411
+- [docs] Clarifies that zero will be returned on EOF condition in the API documentation for OS_read/write/TimedRead/TimedWrite. In the case of the timed API calls, the `OS_ERR_TIMEOUT` status code will be returned if the timeout expired without the handle becoming readable/writable during that time.
+- Addresses shortcomings in the UT Assert hook functions. Namely the assumed return type of int32 which is not always the case.
+- Adds the concept of a "handler" function to UT assert to replace hard-coded custom logic in UT assert. A handler is the custom logic that exists between the hook function and the return to the stub caller. The handler is directly responsible for setting all outputs.
+- Adds a script to auto-generate stub functions that match this pattern. Given an API header file, the script extracts
+the declarations, and generates a source file with stub definitions that rely on a separate handler to deal with the needed outputs.
+- Refactors `os-shared-printf.h`) into two parts to improve the compatibility with the script method.
+- Updates all existing stubs in OSAL to use the auto-generated stub logic from the script, created directly from the C header. This ensures that stubs will match the FSW implementation.
+- [continuous-integration] Adds a local osal-specific makefile to help build unit tests. Adds a new github workflow that runs the unit tests in both the context of the bundle configuration and the local OSAL config. Verifies 100% line coverage.
+- Fixes incorrect token use in `OS_SocketAccept`. Enables the `network-api-test` to handle multiple connections that re-use the same acceptor socket between them.
+- Promotes the `OS_CONFIG_CONSOLE_ASYNC` option into the shared layer to remove duplicate implementation code and add more coverage testing.
+- Adds an osconfig option to allow the user to elect this mode at configuration time.
+
+## Development Build: v5.1.0-rc1+dev393
+- Changes parameter names to avoid collisions. Renames `access` as `access_mode` in `osapi-file.h`. Renames `time` as `TimeSp` in `os-impl-posix-gettime.c`.
+- Deletes the broken RTEMS `os-impl-shell.c` file so OSAL builds with `OSAL_CONFIG_INCLUDE_SHELL=true`. RTEMS will always report `OS_ERR_NOT_IMPLEMENTED`.
+- See &lt;https://github.com/nasa/osal/pull/967&gt; and &lt;https://github.com/nasa/cFS/pull/248&gt;
+
+## Development Build: v5.1.0-rc1+dev387
+- Replaces the separate "Initialized" and "Shutdown" flags with a single state flag. Creates a global single source of truth for the OSAL state. This enables users to run tests and OS_API_Init() multiple times without a reboot in the middle to reset the state.
+  - Multiple invocations of OS_API_Init() are allowed - subsequent calls can be ignored
+  - Deleting of any internal objects that did get created if OS_API_Init() fails (this leaves system in same state as when it started)
+  - Allows Re-initialization of OSAL after OS_ApplicationShutdown() - may be relevant when running unit tests several times without rebooting.
+- Adds OS_API_Teardown to complement OS_API_Init. This cleans up all OSAL resources ideally leaving the system in a state where `OS_API_Init()` may be invoked again.
+- Reworks the shell unit test which was probably not working. Note this requires modifying the osal config to enable shell, otherwise test is skipped.
+- See &lt;https://github.com/nasa/osal/pull/956&gt; and &lt;https://github.com/nasa/cFS/pull/242&gt;
+
+## Development Build: v5.1.0-rc1+dev378
+- Replaces nonstandard header file block comments and include guards. No behavior changes
+- Removes `CLOCK_MONOTONIC` as the osal clock source since PSP no longer needs it. `OS_GetLocalTime()` and `OS_SetLocalTime()` will work as described.
+- Replaces `shellName` with a specific `localShellName` that can be polled safely and changes its type to a char of `OS_MAX_API_NAME` length for safety.
+- See &lt;https://github.com/nasa/osal/pull/951&gt; and &lt;https://github.com/nasa/cFS/pull/238&gt;
+
+## Development Build: v5.1.0-rc1+dev367
+- Removes `SOFTWARE_BIG_BIT_ORDER` and `SOFTWARE_LITTLE_BIT_ORDER` macros from `common_types.h`. These are not needed by OSAL and cannot handle all cases.  Application code with endianness dependency that was relying on these symbols may break. Users should leverage code in cFE: `cfe_endian.h`. See &lt;https://github.com/nasa/cFE/pull/1218&gt; for more details.
+- Applies minor code and documentation cleanup: white space, typos, etc.
+- Adds test to get full coverage of vxworks in `os-impl-bsd-socket.c` resulting in full line coverage for OSAL
+- Adds more descriptive return codes if `OS_SymbolTableDump_Impl` does not do what is expected. Adds a new error `OS_ERR_OUTPUT_TOO_LARGE` if the size limit was insufficient. Return `OS_ERROR` if an empty file was written - this likely indicates some fundamental issue with the VxWorks symbol table. Returns `OS_ERR_NAME_TOO_LONG` if one of the symbol names was too long. Improves unit test to check for/verify these responses.
+- Removes the unneeded `OS_TaskRegister()` and all references to it in code, tests, and documentation. No impact to behavior, but does affect API and has dependencies
+- Removes unused `-SCRIPT_MODE` flag in cmake
+- Remove comparison between `osal_id_t` and `integers` to use the provided comparison function, `OS_ObjectIdDefined()`. System builds and runs again when using a type-safe/non-integer osal_id_t type.
+- See &lt;https://github.com/nasa/osal/pull/927&gt;
+
+## Development Build: v5.1.0-rc1+dev350
+- Moves copyblock size to a macro and add comments. Defines `OS_CP_BLOCK_SIZE` and adds clear documentation that it could be adjusted for page size, performance, etc.
+- Removes while loop
+- Replaces all #includes of &lt;os and &lt;OSC_ matches with " to match coding standard.
+- Consolidates the duplicated switch in `OS_SocketOpen_Impl`
+- Add const to input pointers for `OS_FdSet_ConvertIn_Impl` and `OS_ObjectIdTransactionFinish`
+- Removes network prototypes defined in `osapi_sockets.h` that are also in `osapi_network.h`
+- Removes `NULL` redefine from `common_types.h`
+- Adds `Contributing.md` that points to bundle-level contribution guide
+- Reports test cases that "fail" as "not implemented" with new `UtAssert_NA` macro instead of `UtPrintf`
+- Calls to `OS_SelectSingle` and `OS_SelectMultiple` will fail if an FD within the set is outside the range of the underlying `FD_SETSIZE` from the C library.
+- Fixes calculation used for the relative time interval in the `select()` call. Also adds a UT case that specifically exercises the carryover described. Fixes delay when this carry condition is hit
+- Documents algorithm that provides application-controlled timeout on the connection initiation. Also adds a debug statement if the connect fails for a reason other than `EINPROGRESS`. No impact to normal behavior.
+- Adds check for `EAGAIN` if the system fails to allocate kernel-internal resources.
+- Adds a `CompileTimeAssert` to confirm that the size of the abstract buffer for socket addresses is large enough to store any of the enabled address types thereby removing the need for runtime tests.
+- With this change, if `OS_SOCKADDR_MAX_LENis` not large enough for the address type, osal will fail to compile. This enforces that the abstract size is large enough for any/all enabled address types, regardless of what is actually used.
+- Adds missing functional test for `OS_ShellOutputToFile`
+- Add test for `fcntl()` error return of -1 and report errno. If setting `O_NONBLOCK` fails, then debug message is printed and blocking mode is used and timeouts will not work as a result.
+- Improves error codes when attempting to seek on a pipe/socket. Translates the `OS_ERR_OPERATION_NOT_SUPPORTED` error rather than "not implemented". The `ESPIPE` errno means that seeking is not supported on the given file handle.
+- Renames `OS_U32ValueWrapper_t` as `OS_VoidPtrValueWrapper_t` to better indicate its purpose. The point is to pass a value through a `void*`. Adds a compile-time assert to check that this is only used to directly pass values which have a size of less than or equal to sizeof(void*).
+- Refactors the return statement for `OS_FileSys_FindVirtMountPoint()` so it is easier to read and adds some informational comments.
+- Reports an error if calling `timer_gettime` after `timer_settime` fails.
+- Returns `OS_ERROR` status to caller after an error on moduleInfoGet()
+- Removes an extraneous/unreachable OS_ObjectIdDefined check and its accompanying debug statement. The only way this check could have been reached would be if the normal unlock process was bypassed such that the underlying OS mutex was unlocked but OSAL state still had it owned by a task. This condition never happens at runtime.
+- Updates documentation for `OS_MAX_MODULE`
+- See &lt;https://github.com/nasa/osal/pull/917&gt;
+
+## Development Build: v5.1.0-rc1+dev297
+- Add Testing Tools to the Security Policy
+- See &lt;https://github.com/nasa/osal/pull/838&gt;
+
+## Development Build: v5.1.0-rc1+dev293
+- Avoids various "possible uninitialized variable" warnings for routines that utilize this API.
+- Renames `sockaddr*` structures to `sa*` to deconflict from structure name in `os-impl-bsd-sockets.c`. Adds `OS_NETWORK_SUPPORTS_IPV6` to `os-impl-bsd-sockets.c` compilation. Renames `bsd-select-stubs.c` to `sys-select-stubs.c`. Coverage now includes all currently possible files in VxWorks build
+- Resolves CodeQL security warning by restricting permissions on file create.
+- Changes comments using "cpp" comment style to "c" style
+- Adds _new_ accessor functions APIs to get version strings and return the values of string macros defined in `osapi-version.h`.
+  - The "simple" version currently `OS_VERSION` macro - this is the semantic version without any extra detail.  This is returned by `OS_GetVersion()`.
+  - The "descriptive" version in `OS_VERSION_STRING` macro - this has extra detail like the most recent official release.  This is returned by `OS_GetVersionDescription()`.
+  - The release code name, now returned by `OS_GetVersionDescription()`.
+- These accessor functions are the preferred way to get the OSAL version string, from now on users should avoid using the macro definitions as it is evaluated at OSAL library compile time, rather than application compile time, and thus will remain correct in the event that OSAL is relinked without recompiling the application.
+Adds `osapi-version.c` to implement these 3 calls and associated coverage test. This allows the version.c file to be auto-generated in the future.
+- See &lt;https://github.com/nasa/osal/pull/835&gt;
+
+## Development Build: v5.1.0-rc1+dev280
+- Makes tests skip after getting their first not implemented error.
+- Updates stub helpers to match the behavior of calling the default implementation stub macro (NULL VA list)
+- Removes redundant logic and assignment to fix static analysis warnings
+- Truncates at the end of the logic flow for socket name as opposed to possibly 3 different locations. Fixes static analysis warning.
+- Renames `timer_id` in unit tests to `local_timer_id` to avoid conflicts
+- Removes all deprecated elements
+- No behavior change. Renames `UT_Stub_CheckForceFail` to `UT_Stub_CheckDefaultReturnValue`, also only sets `Value` if not `NULL` (can pass in NULL value doesn't matter)
+- See &lt;https://github.com/nasa/osal/pull/830&gt;
+
+## Development Build: v5.1.0-rc1+dev262
+- Adds test cases for `OS_ObjectIdFinalizeDelete`, `OS_DeleteAllObjects`, and others to get 100% line and function coverage on VxWorks and shared/portable layers.
+- Ensures APIs check for `NULL` inputs or have documentation stating that a null value is allowed.
+- Adds timeout to static analysis check and adds format check. Removes old .travis.yml and updates badges in readme.
+- Adds Code QL analysis on push to main and pull requests (to main)
+- Cleans commented-out code in tests to address static analysis warnings
+- Initializes local variables to avoid returning uninitialized values from stubs and address static-analysis findings
+- Replaces two local return codes defined as `uint32` with `int32` to resolve static-analysis warnings
+- Simplifies switch statements based on previous checks. Removes unreachable, dead code to resolve static-analysis warnings
+- Terminates  unit test macros variadic lists with `NULL` to address CWE-121 CodeQL warning
+- Adds a check to send the semaphore to avoid unreachable code
+- Adds a status return to `OS_ConsoleAPI_Init` so debug warnings will get reported correctly on errors.
+- Declares `DummyVec` as static to avoid warning and returning stack allocated memory when returning `VecTbl` in `OSC_INUM_TO_IVEC` stub
+- Updates types in `os-impl-no-symtab.c` to match latest APIs
+- Updates types in `os-impl-no-symtab.c` to match latest APIs
+- Fixes missing `NULL` terminations and applies the standard "sizeof" pattern where appropriate. No longer truncates filename in `OS_ModuleInfo`.
+- Fixes `%u` conversion in RTEMS so to address build warning
+- Create a wrapper around `memchr()` that mimics the non-C99 function `strnlen()` defined in POSIX-2008. Use this instead of `strlen()` whenever the string being checked either originates in or will be copied into a fixed-length array buffer. No behavior changes except if a bug causes strings to be unterminated.
+- No behavior change, applies the standard formatting using `clang-format`
+- See &lt;https://github.com/nasa/osal/pull/774&gt;
+
+## Development Build: v5.1.0-rc1+dev221
+- Fixes `printf` format to correctly build in RTEMS-5.
+- **Deprecates `OS_fsBlocksFree()` and `OS_fsBytesFree()`** in favor of `OS_FileSysStatVolume()`.
+- Adds `Security.md` with instructions to report vulnerabilities.
+- Add `UtDebug` in `OS_printf` stub. Output the `OS_printf` input as a debug message from stub.
+- Documentation: Add note on `UtTest_Add` API. Nesting `UtTest_Add` from within an added test fails without error.
+- Unit Test: No more garbage characters written to test report log
+- Fix typo in `osapi.h` affecting C++ build. No other functional change
+- Unit Test: Rename `UT_ClearForceFail` as `UT_ClearDefaultValue`. Update the comments of `UT_SetDefaultReturnValue` to match the more general function.
+- Unit Test: Add test teardown failures to the test summary and changed the printout to use the same style as startup failures.
+- Unit Test: Removes no longer applicable `UT_CheckForOpenSockets` since the UT framework resets the state for each unit test.
+- Changes the file-create operation to read-write permissions to work on RTEMS
+- Unit Test: Fixes incorrect assertions in `network-api-test` to correctly check return values.
+- Unit Test: Generalizes queue timeout test to also test message queue functionality to validate settings and permissions to work with mqueues.
+- Implements `OS_time_t` with a single 64-bit tick counter rather than a split 32 bit seconds + 32 bit microseconds counter.
+- Unit Test: Installs the modules used in unit testing and adds removal of post-test, left-over files.
+- See &lt;https://github.com/nasa/osal/pulls/767&gt;
+
+## Development Build: v5.1.0-rc1+dev184
+- Address issues with OSAL global table management:
+  - use iterators whenever possible
+  - use an unlock key rather than task ID so OS_TaskExit() doesn't trigger a warning
+  - general cleanup of lock/unlock impl and remove redundant logic
+  - unlock global tables during create/delete
+  - keep threads "attached" in POSIX, so they can be joined when deleted.
+- No longer triggers warning with OS_TaskExit() on VxWorks (see #645)
+- `OS_TaskDelete()` on POSIX does not return until the task has actually exited (see #642)
+- The chmod test is now skipped on VxWorks rather than failing. The `OS_FileChmod_Impl()` function now returns `OS_ERR_NOT_IMPLEMENTED` when run on a file system that does not have permissions, which in turn causes the unit test to be skipped rather than fail.
+- Corrects a file handle leak.
+-  Add parameter check to `OS_SocketSendTo` and adjust coverage test to validate.
+- Replace `OS_fsBytesFree` and `OS_fsBlocksFree` with `OS_FileSysStatVolume`. This new API for getting stats on file system. Uses existing `OS_FileSysStatVolume_Impl` call and exposes it in the public API.
+- When cleaning up for shutdown, delete resources that have a task/thread first, followed by other resource types. This helps avoid possible dependencies as running threads might be using the other resources. No detectable external impact; internally, the tasks are deleted first during shutdown, which only has an impact if/when tasks are actively using other OSAL resources.
+- The mount/unmount *VxWorks* implementation was not adequately checking for and handling the `FS_BASED` pass -through mapping type - which should be mostly a no-op. Create a mount point directory if it does not already exist when using this mapping type for consistency with POSIX.
+- Adds a documentation note to `OS_FileSysAddFixedMap()`: The virtual mount point cannot be empty - so `OS_FileSysAddFixedMap(.., "/", "/")` does not work but `OS_FileSysAddFixedMap(.., "/", "/root")` does work and allows one to open files in the root as `"/root/"` from OSAL applications. Mount-point directories do not need to previously exist when using OS_FileSysAddFixedMap
+- store `taskTCB` return in a `void *`, then cast to `OS_impl_task_internal_record_t *` to avoid a strict alignment compiler error
+- Removes the non-portable `OS_PACK` and `OS_ALIGNED` macros.
+- Uses the POSIX dir implementation on VxWorks 6.9. The only incompatibility is the prototype for `mkdir()`which is missing the second argument; this is worked around with a compatibility macro for VxWorks 6.x builds.
+- Translate and convert the VxWorks coverage test cases to the portable dir implementation, which benefits VxWorks7, RTEMS, and POSIX.
+- Fixes prototypes so they run on RTEMS by replacing uint32 with size_t
+- Adds` OS_CHECK_POINTER` macros to `OS_ConvertToArrayIndex` and `OS_TimeBaseGetFreeRun` so they can handle NULL pointers and return the correct error.
+- Adds access functions to convert/extract different units from an OS_time_t value - so that other code in CFE/PSP/Apps can be updated to use the access functions and thereby not break when the internal time definition changes. Replaces the `int32` with `OS_time_t` in the "stat" structure used by the file module. Updates the pointer argument to `OS_SetLocalTime()` to be `const`. Prototype change of `OS_SetLocalTime()` should be backward compatible.
+- See &lt;https://github.com/nasa/osal/pulls/750&gt;
+
+## Development Build: v5.1.0-rc1+dev149
+- Document UtAssert_Message parameters, also adds "see also" note for helper macros.
+- Fix doxygen typo
+- Replace `OS_BinSemFlush` with `OS_BinSemGive` to prevent a rare race condition. Change the port numbers to be different from network test for when tests are run in parallel.
+- Fix doxygen format errors. Usersguide now builds without warnings.
+- Suppress invalid cppcheck warning in `OS_WaitForStateChange`
+- Add cppcheck static analysis workflow to osal CI
+- See &lt;https://github.com/nasa/osal/pull/744&gt;
+
+## Development Build: v5.1.0-rc1+dev132
+- Convert the OSAL Configuration Guide from docx and pdf to a markdown file.
+- Test Tasks do not run at 100%. Move all definitions and instantiations out of the core-test header file and reuse the already-existing single task definition.
+- Break up `osapi-os-*.h` files into units that correspond to the implementation units. Kept old header file names for compatibility.
+- Reworks the POSIX global lock implementation. Does not change the POSIX signal mask when locking/unlocking the global.
+  - Fixes a race condition.
+  - Adds a condition variable to the global lock structure. improves handling of tasks competing for access to the same object.
+  - No longer changing signal masks repeatedly/unexpectedly. May be relevant to some BSP/driver developers.
+- Checks return of sysconf for error and reports them. Only sets PageSize on success. If sysconf fails it provides a mechanism to avoid error propagation.
+- Uses `errno` instead of status return from `clock_getres` with `strerror` reporting.
+- Adds support for VxWorks 7
+- See &lt;https://github.com/nasa/osal/pull/690&gt;
+
+## Development Build: v5.1.0-rc1+dev109
+- Add support for RTEMS 5.1 in the OSAL and provides defines and necessary ifdefs so RTEMS 4.11 can continue to be supported.
+- Adds functional test for OS_chmod
+- Refactor the table array access across OSAL. Use a token concept in combination with a macro to obtain the table entry instead of indexing arrays directly. All access is then done through this table pointer. Use the full object ID in the timer call back list. Update the timer sync callback prototype. Pass the entire OSAL ID to the sync function, not just the index. This is technically an API change.
+- Replaces condition on forever loops to end on shutdown. Loops now exit on shutdown.
+- Removes obsolete printf tests that didn't work
+- See &lt;https://github.com/nasa/osal/pull/680&gt;
+
+## Development Build: v5.1.0-rc1+dev91
+- Rename `UT_SetForceFail` to `UT_SetDefaultReturnValue` since some functions that retain more than 1 value are not necessarily failing
+- Add a 5th timer to TimerTest functional to test the one shot (zero-length time interval) case.
+- Ensure all APIs use the proper type. Sizes are now size_t; these will now be 64 bits on a 64 bit platform.
+- Fix build issue on VxWorks 6.9 by using the 3 argument form of `open()`. Passing `0` as the mode solves the build issue. This parameter is ignored when not creating a file.
+-  The address calculations now use `unsigned long` instead of `long` to ensure that all rounding and base address adjustments behave the same way in the event that the addresses lie in the upper half of memory (i.e. start with a 1 bit) which would put it in the negative range of a long type.
+- See &lt;https://github.com/nasa/osal/pull/662&gt;
+
+## Development Build: v5.1.0-rc1+dev75
+- Ensure that the handle is not NULL before invoking dlclose(). In particular the handle will be NULL for static modules. Shutdown after CTRL+C occurs normally (no segfault).
+- Add a "flags" parameter to OS_ModuleLoad() to indicate the desired symbol visibility:
+    - GLOBAL (0, the default, and matches current behavior)
+    - LOCAL which hides from other modules and prevents other modules from binding to symbols in this module, thereby ensuring/preserving the ability to unload in the future
+  - CFE should use LOCAL flag for apps, and GLOBAL flags for libraries.
+- See &lt;https://github.com/nasa/osal/pull/652&gt;
+
+## Development Build: v5.1.0-rc1+dev68
+
+- When `OS_DEBUG` is enabled, this adds a message if mutex give/take actions occur outside the expected sequence. This informs the user (via the debug console) if a lock is taken more than once or if a lock is given by a different task than the one that originally took it:
+```
+OS_MutSemTake():216:WARNING: Task 65547 taking mutex 327685 while owned by task 65547
+```
+- Removes all FIXME comments
+- Resolves security/filename race issue by opening file and acting on descriptor by adding fstat stub
+- Squashed the minor recommended bugs
+- UtAssert macros now accept variable string arguments.The `UtAssert_True` wrapper around call is no longer needed to accommodate dynamic string output, thus removing the double assert. UtAssert macros will now be able to offer more information by themselves.
+- See &lt;https://github.com/nasa/osal/pull/639&gt;
+
+## Development Build: v5.1.0-rc1+dev60
+- Apply standard formatting, whitespace-only changes
+- See &lt;https://github.com/nasa/osal/pull/627&gt;
+
+## Development Build: v5.1.0-rc1+dev55
+- Deprecate `OS_open` and `OS_creat` to and replaced them with by `OS_OpenCreate`, which implements both functions via flags, and follows the correct OSAL API patterns.
+- Change use of uint32 for ID to the correct typedef. Also use ObjectIdFromInteger/ObjectIdToInteger where it is intended to convert these values to integers e.g. for the "name" fields in RTEMS.
+- See &lt;https://github.com/nasa/osal/pull/621&gt;
+
+## Development Build: v5.1.0-rc1+dev49
+- Adds an event callback mechanism to certain state changes in OSAL. This allows the CFE PSP to be notified at these points, and therefore it can add platform-specific functionality.
+- Correct issues involving recent OS_Milli2Ticks change.
+- See &lt;https://github.com/nasa/osal/pull/612&gt;
+
+## Development Build: v5.1.0-rc1+dev44
+- Removes OS_Tick2Micros and internalize OS_Milli2Ticks.
+- Adds ut_assert address equal macro.
+- See &lt;https://github.com/nasa/osal/pull/607&gt;
+
+## Development Build: v5.1.0-rc1+dev38
+- Sets Revision to 99 for development builds
+- See &lt;https://github.com/nasa/osal/pull/600&gt;
+
+## Development Build: v5.1.0-rc1+dev34
+- Move this existing function into the public API, as it performs more verification than the OS_ConvertToArrayIndex function.
+- The C library type is signed, and this makes the result check work as intended.
+- See &lt;https://github.com/nasa/osal/pull/596&gt;
+
+
+## Development Build: v5.1.0-rc1+dev16
+ - In the next major OSAL release, this code will be no longer supported at all. It should be removed early in the cycle to avoid needing to maintain this compatibility code. This code was already conditional on the OSAL_OMIT_DEPRECATED flag and as such the CCB has already tested/verified running the code in this configuration as part of CI scripts. After this change, the build should be equivalent to the result of building with OMIT_DEPRECATED=true.
+- See &lt;https://github.com/nasa/osal/pull/582&gt;
+
+## Development Build: v5.1.0-rc1+dev12
+- Removes internal functions that are no longer used or defined but whose prototypes and stubs were still present in OS_ObjectIdMap
+- Removes repetitive clearing of the global ID and unlocking global table and replaces these with common implementation in the idmap source file. This moves deleting tables to be similar to creating tables and provides
+a common location for additional table-deletion-related logic.
+- Propagates return code from OS_TaskRegister_Impl(). If this routine fails then return the error to the caller, which also prevents the task from starting.
+- See &lt;https://github.com/nasa/osal/pull/576&gt;
+
+## Development Build: v5.1.0-rc1+dev5
+- Adds OSAL network APIs missing functional tests as well as tests for OS_TimedRead and OS_TimedWrite
+- Allows separate, dynamic registration of test setup and teardown routines which are executed before and after the normal test routine, which can create and delete any global/common test prerequisites.
+- Adds FileSysAddFixedMap missing functional API test
+- See &lt;https://github.com/nasa/osal/pull/563&gt;
+
+
+## Development Build: 5.0.0+dev247
+- `OS_SocketOpen()` sets `sock_id` and returns a status when successful.
+- Changed timer-test to be able to use OS_MAX_TIMERS value on top of the hard-coded NUMBER_OF_TIMERS value. This will allow the test to be functional even if the OS_MAX_TIMERS value is reconfigured.
+- Ensures that
+  - All stub routines register their arguments in the context, so that the values will be available to hook functions.
+  - The argument names used in stubs match the name in the prototype/documentation so the value can be retrieved by name.
+- Adds back rounding up to PTHREAD_STACK_MIN and also adds rounding up to a system page size. Keeps check for zero stack at the shared level; attempts to create a task with zero stack will fail. Allows internal helper threads to be created with a default minimum stack size.
+- Avoids a possible truncation in snprintf call. No buffer size/truncation warning when building with optimization enabled.
+- Added new macros to `osapi-version` to report baseline and build number
+- The coverage binaries are now correctly installed for CPU1 and CPU2 as opposed to installed twice to CPU2 but not at all for CPU1.
+- Fixes a typo in ut_assert README and clarifies stub documentation.
+- See &lt;https://github.com/nasa/osal/pull/529&gt;
+
+## Development Build: 5.0.21
+- Command line options in Linux are no longer ignored/dropped.
+- No impact to current unit testing which runs UT assert as a standalone app. Add a position independent code (PIC) variant of the ut_assert library, which can be dynamically loaded into other applications rather than running as a standalone OSAL application. This enables loading
+UT assert as a CFE library.
+- Unit tests pass on RTEMS.
+- Resolve inconsistency in how the stack size is treated across different OS implementations. With this change the user-requested size is passed through to the underlying OS without an enforced minimum. An additional sanity check is added at the shared layer to ensure that the stack size is never passed as 0.
+- Update Licenses for Apache 2.0
+- See &lt;https://github.com/nasa/osal/pull/521&gt;
+
+## Development Build: 5.0.20
+-  Add "non-zero" to the out variable description for OS_Create (and related) API's.
+- Increases the buffer for context info from 128 to 256 bytes and the total report buffer to 320 bytes.
+- Add stub functions for `OS_TaskFindIdBySystemData()`, `OS_FileSysAddFixedMap()`, `OS_TimedRead()`, `OS_TimedWrite()`, and `OS_FileSysAddFixedMap()`
+- Added the following wrappers macros around `UtAssert_True` for commonly-used asserts:
+  - `UtAssert_INT32_EQ` - check equality as 32 bit signed int
+  - `UtAssert_UINT32_EQ` - check equality as 32 bit unsigned int
+  - `UtAssert_NOT_NULL` - check pointer not null
+  - `UtAssert_NULL` - check pointer is null
+  - `UtAssert_NONZERO` - check integer is nonzero
+  - `UtAssert_ZERO` - check integer is zero
+  - `UtAssert_STUB_COUNT` - check stub count
+-  Using `unsigned long` instead of `uintmax_t` to fix support for VxWorks
+
+- See &lt;https://github.com/nasa/osal/pull/511&gt; and &lt;https://github.com/nasa/osal/pull/513&gt;
+
+## Development Build: 5.0.19
+- Rename BSPs that can be used on multiple platforms.
+`mcp750-vxworks` becomes `generic-vxworks`
+`pc-linux` becomes `generic-linux`
+- New features only, does not change existing behavior.
+UT Hook functions now have the capability to get argument values by name, which is more future proof than assuming a numeric index.
+- Add functional test for `OS_TimerAdd`
+- Added functional tests for `OS_TimeBase Api` on `OS_TimeBaseCreate`, `OS_TimeBaseSet`, `OS_TimeBaseDelete`, `OS_TimeBaseGetIdByName`, `OS_TimeBaseGetInfo`, `OS_TimeBaseGetFreeRun`
+- See &lt;https://github.com/nasa/osal/pull/487&gt; for details
+
+## Development Build: 5.0.18
+- Add functional tests for `OS_IdentifyObject`, `OS_ConvertToArrayIndex` and `OS_ForEachObject` functions.
+- Fix doxygen warnings
+- Unit test cases which use `OS_statfs` and run on an `RTEMS IMFS` volume will be skipped and categorized as "NA" due to `OS_ERR_NOT_IMPLEMENTED` response, rather than a failure.
+- The device_name field was using the wrong length, it should be of `OS_FS_DEV_NAME_LEN` Also correct another length check on the local path name.
+- For RTEMS, will not shutdown the kernel if test abort occurs.
+- Unit tests work on RTEMS without BSP preallocating ramdisks
+- If `OSAL_EXT_SOURCE_DIR` cache variable is set, this location will be checked first for a BSP/OS implementation layer.
+- Implement `OS_GetResourceName()` and `OS_ForEachObjectOfType()`, which are new functions that allow for additional query capabilities. No impact to current behavior as the FSW does not currently use any of these new APIs.
+- A functional test enhancement to `bin-sem-test` which replicates the specific conditions for the observed bug to occur. Deletes the task calling `OS_BinSemTake()` and then attempts to use the semaphore after this.
+- Employ a `pthread` "cleanup handler" to handle the situation where a task is canceled during the `pthread_cond_wait()` call. This ensures that the `mutex` is unlocked as part of the cleanup, so other tasks may continue using the semaphore.
+- Change all initial `mutex` locking to be a finite "timed" wait rather than an infinite wait. In all cases, the condition variable is only held for brief periods of time and should be readily available. If a task blocks for a long time, this considers the mutex "broken" and aborts, thereby avoiding deadlock. This is a "contingency" fix in that if an exception or signal or other unknown/unhandled async event occurs that leaves the mutex permanently locked.
+- Adds the mutex to protect the timer callback `timecb` resource table.
+- See &lt;https://github.com/nasa/osal/pull/482&gt;
+
+## Development Build: 5.0.17
+-  `OS_QueueCreate()` will return an error code if the depth parameter is larger than the configured `OS_MAX_QUEUE_DEPTH`.
+- See &lt;https://github.com/nasa/osal/pull/477&gt;
+
+## Development Build: 5.0.16
+- Resized buffers and added explicit termination to string copies. No warnings on GCC9 with strict settings and optimization enabled.
+- New API to reverse lookup an OS-provided thread/task identifier back to an OSAL ID. Any use of existing OStask_id field within the task property structure is now deprecated.
+- See &lt;https://github.com/nasa/osal/pull/458&gt;
+
+## Development Build: 5.0.15
+- Changes the build system.
+- No more user-maintained osconfig.h file, this is now replaced by a cmake configuration file.
+- Breaks up low-level implementation into small, separate subsystem units, with a separate header file for each one.
+- See &lt;https://github.com/nasa/osal/pull/444&gt;
+
+## Development Build: 5.0.14
+- Adds library build, functional, and coverage test to CI
+- Deprecates `OS_FS_SUCCESS, OS_FS_ERROR , OS_FS_ERR_INVALID_POINTER, OS_FS_ERR_NO_FREE_FDS , OS_FS_ERR_INVALID_FD, and OS_FS_UNIMPLEMENTED` from from `osapi-os-filesys.h`
+- Individual directory names now limited to OS_MAX_FILE_NAME
+- Fix tautology, local_idx1 is now compared with local_idx2
+- Module files are generated when the `osal_loader_UT` test is built and run
+- Consistent osal-core-test execution status
+- See &lt;https://github.com/nasa/osal/pull/440&gt; for more details
+
+## Development Build: 5.0.13
+- Added coverage test to `OS_TimerCreate` for `OS_ERR_NAME_TOO_LONG`.
+- Externalize enum for `SelectSingle`, ensures that pointers passed to `SelectFd...()` APIs are not null, ensures that pointer to `SelectSingle` is not null.
+- Command to run in shell and output to fill will fail with default (not implemented) setting.
+- Builds successfully using the inferred OS when only `OSAL_SYSTEM_BSPTYPE` is set. Generates a warning when `OSAL_SYSTEM_BSPTYPE` and `OSAL_SYSTEM_OSTYPE` are both set but are mismatched.
+- See &lt;https://github.com/nasa/osal/pull/433&gt; for more details
+
+## Development Build: 5.0.12
+- Use the target_include_directories and target_compile_definitions functions from CMake to manage the build flags per target.
+- Build implementation components using a separate CMakeLists.txt file rather than aux_source_directory.
+- Provide sufficient framework for combining the OSAL BSP, UT BSP, and the CFE PSP and eliminating the duplication/overlap between these items.
+- Minor updates (see &lt;https://github.com/nasa/osal/pull/417&gt;)
+
+## Development Build: 5.0.11
+- The more descriptive return value OS_ERR_NAME_NOT_FOUND (instead of OS_FS_ERROR) will now be returned from the following functions (): OS_rmfs, OS_mount, OS_unmount, OS_FS_GetPhysDriveName
+- Wraps OS_ShMem* prototype and unit test wrapper additions in OSAL_OMIT_DEPRECATED
+- Minor updates (see &lt;https://github.com/nasa/osal/pull/408&gt;)
+
+## Development Build: 5.0.10
+- Minor updates (see &lt;https://github.com/nasa/osal/pull/401&gt;)
+
+  - 5.0.9: DEVELOPMENT
+
+- Documentation updates (see &lt;https://github.com/nasa/osal/pull/375&gt;)
+
+## Development Build: 5.0.8
+- Minor updates (see &lt;https://github.com/nasa/osal/pull/369&gt;)
+
+## Development Build: 5.0.7
+- Fixes memset bug
+- Minor updates (see &lt;https://github.com/nasa/osal/pull/361&gt;)
+
+## Development Build: 5.0.6
+- Minor updates (see &lt;https://github.com/nasa/osal/pull/355&gt;)
+
+## Development Build: 5.0.5
+- Fixed osal_timer_UT test failure case
+- Minor updates (see &lt;https://github.com/nasa/osal/pull/350&gt;)
+
+## Development Build: 5.0.4
+- Minor updates (see &lt;https://github.com/nasa/osal/pull/334&gt;)
+
+## Development Build: 5.0.3
+- Minor updates (see &lt;https://github.com/nasa/osal/pull/292&gt;)
+
+## Development Build: 5.0.2
+- Bug fixes and minor updates (see &lt;https://github.com/nasa/osal/pull/281&gt;)
+
+## Development Build: 5.0.1
+- Minor updates (see &lt;https://github.com/nasa/osal/pull/264&gt;)
+
+## **_OFFICIAL RELEASE: 5.0.0 - Aquila_**
+- Changes are detailed in [cFS repo](https://github.com/nasa/cFS) release 6.7.0 documentation
+- Released under the Apache 2.0 license
+
+## **_OFFICIAL RELEASE: 4.2.1a_**
+- Released under the [NOSA license](https://github.com/nasa/osal/blob/osal-4.2.1a/LICENSE)
+- See [version description document](https://github.com/nasa/osal/blob/osal-4.2.1a/OSAL%204.2.1.0%20Version%20Description%20Document.pdf)
+- This is a point release from an internal repository
+
+## Known issues
+See all open issues and closed to milestones later than this version.
+
+## Getting Help
+For best results, submit issues:questions or issues:help wanted requests at &lt;https://github.com/nasa/cFS&gt;.
+
+Official cFS page: &lt;http://cfs.gsfc.nasa.gov&gt;
+</pre></div>
+</div>
+</section>
+<section id="check-header-c-in">
+<h2><code class="docutils literal notranslate"><span class="pre">check_header.c.in</span></code><a class="headerlink" href="#check-header-c-in" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/check_header.c.in</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#include "@HDR@"
+
+/* A no-op function so this compilation unit is not empty */
+void CheckHeader_@HDR_ID@(void) {}
+</pre></div>
+</div>
+</section>
+<section id="check-header-cpp-in">
+<h2><code class="docutils literal notranslate"><span class="pre">check_header.cpp.in</span></code><a class="headerlink" href="#check-header-cpp-in" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/check_header.cpp.in</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>extern "C"
+{
+#include "@HDR@"
+}
+
+/* An empty class */
+class CheckHeader_@HDR_ID@ {};
+</pre></div>
+</div>
+</section>
+<section id="cmakelists-txt">
+<h2><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code><a class="headerlink" href="#cmakelists-txt" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/CMakeLists.txt</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>######################################################################
+#
+# CMAKE build recipe for Operating System Abstraction Layer (OSAL)
+#
+######################################################################
+#
+# This defines the following target(s):
+#
+# osal_public_api : Interface library that refers to the OSAL public API only.
+#                   This may be used for applications that need to use the
+#                   OSAL-provided types (such as common-types.h) but do not
+#                   make any OSAL API calls.
+#
+#         osal   : The main library containing the OSAL binary code.  This is
+#                  the normal library that applications should link to.
+#                  This is built based off the OSAL_SYSTEM_OSTYPE selection
+#
+#     osal_bsp   : The board support library containing the system-
+#                  specific entry point function (e.g. main) and the
+#                  file system volume table for the target board.
+#                  This is based off the OSAL_SYSTEM_BSPTYPE selection
+#
+#    ut_assert   : The unit test support library.  This implements
+#                  an application entry point (OS_Application_Startup)
+#                  that contains a unit test subsystem.  This uses
+#                  the OSAL BSP to provide system-specific entry point.
+#                  Linking with this library also links with osal_bsp,
+#                  but not necessarily the osal library itself.
+#
+# ut_coverage_compile : an interface target that contains the
+#                       compiler options/definitions to enable coverage
+#                       instrumentation in the generated objects.  It should
+#                       be specified on files compiled for coverage analysis.
+#
+# ut_coverage_link    : an interface target that contains options/definitions
+#                       and any link libraries to enable coverage instrumentation in
+#                       the final executable.   It should be specified on coverage
+#                       test executable targets.
+#
+#
+# The following options and variables will customize the build:
+#
+# OSAL_SYSTEM_BSPTYPE: Should be set by the caller to indicate the type of
+#                  BSP to build.  This is a minimal platform-specific shim
+#                  layer to aid with startup and shutdown.  This implies a
+#                  value for OSTYPE (see below).
+#
+# OSAL_SYSTEM_OSTYPE: The selected OS abstraction type (posix, vxworks, rtems).
+#                  Normally this setting is not needed to be configured as it is
+#                  inferred from the BSP type.
+#
+# OSAL_INSTALL_LIBRARIES : Boolean, enables "install" of targets listed above such
+#                  that libraries and public API header files are copied into the system
+#                  location specified by CMAKE_INSTALL_PREFIX.  This set of headers
+#                  and link libraries can then be used to compile other applications
+#                  separately from OSAL.  Default is "ON" when OSAL is being compiled
+#                  standalone (i.e. cmake called directly on the OSAL source dir).
+#                  Default is "OFF" when OSAL is included via 'add_subdirectory' in
+#                  a parent application project such as CFE/CFS.
+#
+# ENABLE_UNIT_TESTS : Boolean, enables build of the unit tests (coverage and functional)
+#
+# OSAL_OMIT_DEPRECATED : Boolean, Compile without deprecated or obsolete features for
+#                  forward compatibility testing.  Any features marked as deprecated
+#                  will be disabled, allowing developers to test software based
+#                  only on currently-supported software features and patterns.
+#
+# OSAL_EXT_SOURCE_DIR : External source directory to check for BSP/OS implementation
+#
+# Additionally the following target is defined if ENABLE_UNIT_TESTS
+# is set TRUE:
+#
+# ut_osapi_stubs : Stub library correlating to the OSAL public API
+#                  This is for unit testing OSAL-based applications
+#                  It operates in conjunction with the ut_assert library.
+#
+# For backward compatibility with previous versions, this also exports the following
+# variables.  Code which is depending on these values should migrate to using the
+# interfaces of the provide ut_coverage_compile/link targets instead.
+#
+#  UT_COVERAGE_COMPILE_FLAGS : Compiler flags that must be used to
+#                  instrument code for coverage testing
+#  UT_COVERAGE_LINK_FLAGS : Linker flags that must be used to
+#                  instrument code for coverage testing
+#
+# The ENABLE_UNIT_TESTS option also builds a set of test applications from
+# that demonstrate the usage and validate the runtime behavior of various
+# OSAL resources.
+#
+######################################################################
+cmake_minimum_required(VERSION 3.5)
+
+# Set the policy dictating use of target_link_libraries across directories
+# Either OLD or NEW should work here but setting it to something avoids a
+# warning when using newer versions of the tool.
+if (CMAKE_VERSION VERSION_GREATER 3.13)
+    cmake_policy(SET CMP0079 NEW)
+endif()
+
+option(OSAL_VALIDATE_API "Validate the OSAL API headers as part of the build" OFF)
+
+# If validation is selected, this requires a C++ compiler
+set(OSAL_LANG C)
+if (OSAL_VALIDATE_API)
+    list(APPEND OSAL_LANG CXX)
+endif()
+
+project(OSAL ${OSAL_LANG})
+
+# define a custom property to track relationship between BSP and OS
+# this should be set on BSP "impl" targets to indicate the correct OS impl to go with it
+define_property(TARGET PROPERTY OSAL_EXPECTED_OSTYPE
+    BRIEF_DOCS
+        "The expected OS type for an OSAL BSP implementation"
+    FULL_DOCS
+        "This property is used to indicate the OS implementation layer that is intended to be paired with the BSP implementation"
+)
+
+# If this build is being performed as a subdirectory within a larger project,
+# then the static libraries and header files will _not_ be installed by default,
+# as in those cases one would typically just use the "osal" target directly.
+# This behavior can be explicitly controlled via the OSAL_INSTALL_LIBRARIES option.
+get_directory_property(HAS_PARENT PARENT_DIRECTORY)
+if (HAS_PARENT)
+    set(OSAL_DEFAULT_INSTALL_LIBRARIES OFF)
+else()
+    set(OSAL_DEFAULT_INSTALL_LIBRARIES ON)
+endif()
+
+option(OSAL_INSTALL_LIBRARIES "Whether or not to install static libraries and headers" ${OSAL_DEFAULT_INSTALL_LIBRARIES})
+option(OSAL_OMIT_DEPRECATED   "Compile without deprecated or obsolete features for backward compatibility testing" OFF)
+
+if (OSAL_INSTALL_LIBRARIES)
+    include(CMakePackageConfigHelpers)
+endif()
+
+# The "OSAL_EXT_SOURCE_DIR" cache variable may be set to a path
+# on the host containing extra OS/BSP implementations which are not
+# part of the open source release.
+# CAUTION: The API between the OSAL and the low level implementation and/or BSP
+# is not stabilized, and may change with every OSAL release.  No attempt is made
+# to provide backward compatibility with external sources.
+set(OSAL_EXT_SOURCE_DIR "$ENV{OSAL_EXT_SOURCE_DIR}"
+    CACHE PATH "External source directory to check for additional OS/BSP implementations")
+
+# Read the default compile-time configuration, and update with
+# any mission/project specific options in the OSAL_CONFIGURATION_FILE
+include("${OSAL_SOURCE_DIR}/default_config.cmake")
+
+# The user-specified file is optional, but in case the value is defined but the
+# file does not exist, this should be treated as an error.
+foreach(CONFIG ${OSAL_CONFIGURATION_FILE})
+    include(${CONFIG})
+endforeach(CONFIG OSAL_CONFIGURATION_FILE)
+
+# Use the supplied configuration to generate the osconfig.h file
+# which can be referenced by the code.  This will be stored in the top level
+# "inc" directory of the binary output directory
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/inc")
+configure_file(
+    "${OSAL_SOURCE_DIR}/osconfig.h.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/osconfig.gen"
+    @ONLY
+)
+
+# Only copy the osconfig.h into place if different from the existing file
+# This avoids unnecessarily rebuilding all code in case cmake was re-run
+# and but generated the same file.
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_BINARY_DIR}/osconfig.gen"
+    "${CMAKE_CURRENT_BINARY_DIR}/inc/osconfig.h"
+)
+
+# The "osal_public_api" is an interface target that will always be defined by this script,
+# and refers to the complete set of public API header files for OSAL
+add_library(osal_public_api INTERFACE)
+
+# The initial set of directories that define the OSAL API
+# This is used to initialize the interface include directory property of external targets
+target_include_directories(osal_public_api INTERFACE
+    $&lt;BUILD_INTERFACE:${OSAL_SOURCE_DIR}/src/os/inc&gt;
+    $&lt;BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/inc&gt;
+    $&lt;INSTALL_INTERFACE:include/osal&gt;
+)
+if (OSAL_OMIT_DEPRECATED)
+    target_compile_definitions(osal_public_api INTERFACE OSAL_OMIT_DEPRECATED)
+endif (OSAL_OMIT_DEPRECATED)
+
+
+# OSAL_SYSTEM_BSPTYPE indicate which of the BSP packages
+# to build.  If not defined then no OSAL implementation will be built, however
+# the api interface target (osal_public_api) is still usable.  Therefore
+# this is not considered a fatal error for that reason.  If called with no BSP type,
+# then only the osal_public_api interface target will be defined, and the script ends here.
+if (NOT DEFINED OSAL_SYSTEM_BSPTYPE)
+  message(STATUS "OSAL_SYSTEM_BSPTYPE not defined, no OSAL implementation will be compiled")
+  return()
+endif ()
+
+# The initial set of directories that define the OSAL API
+# This is used to initialize the interface include directory property of external targets
+set(OSAL_API_INCLUDE_DIRECTORIES
+    "${OSAL_SOURCE_DIR}/src/os/inc"
+    "${CMAKE_CURRENT_BINARY_DIR}/inc"
+)
+include_directories(${OSAL_API_INCLUDE_DIRECTORIES})
+
+# In case the OSAL_USER_C_FLAGS was specified, use them
+add_definitions(${OSAL_USER_C_FLAGS})
+
+#
+# Build UT assert -
+# the basic ut_assert library target is always defined regardless of "ENABLE_UNIT_TESTS",
+# This is because the library is usable with functional tests, not just unit (coverage) tests.
+# This is done early, so that other targets may reference UT_ASSERT_SOURCE_DIR if needed
+# Note that UT assert is only usable with an OSAL BSP implementation, thus this target
+# cannot be compiled unless a specific BSP is selected.
+add_subdirectory(ut_assert)
+
+# The "ut_osapi_stubs" library contains stub functions of the OSAL API calls, used for
+# testing _other_ application code that uses OSAL.  Like UT Assert, this is also
+# provided independently of the local ENABLE_UNIT_TESTS switch, because it mainly affects
+# testing of other components.  That is, even if OSAL itself is not being tested in this
+# build, a dependent application may still be built with testing enabled.
+add_subdirectory(src/ut-stubs ut-stubs)
+
+#
+# Step 1:
+# Build the BSP layer
+#
+
+if (OSAL_EXT_SOURCE_DIR AND IS_DIRECTORY "${OSAL_EXT_SOURCE_DIR}/${OSAL_SYSTEM_BSPTYPE}")
+    set(OSAL_BSP_SOURCE_DIR "${OSAL_EXT_SOURCE_DIR}/${OSAL_SYSTEM_BSPTYPE}")
+elseif(IS_DIRECTORY "${OSAL_SOURCE_DIR}/src/bsp/${OSAL_SYSTEM_BSPTYPE}")
+    set(OSAL_BSP_SOURCE_DIR "${OSAL_SOURCE_DIR}/src/bsp/${OSAL_SYSTEM_BSPTYPE}")
+else()
+  # It is an error if the indicated BSPTYPE does not correspond to a subdirectory
+  # If this is not caught here then a more obfuscated error will occur later.
+  message(FATAL_ERROR "Error: No source directory found for \"${OSAL_SYSTEM_BSPTYPE}\" BSP type")
+endif()
+
+message(STATUS "BSP Selection: ${OSAL_SYSTEM_BSPTYPE} at ${OSAL_BSP_SOURCE_DIR}")
+
+
+# The BSP library is a separate target from OSAL and can be used
+# independently of the OSAL library and/or in combination with
+# UT assert and the OSAL stub library for unit testing.
+#
+# The Implementation-Specific BSP subdirectory should define
+# an OBJECT target named "osal_${OSAL_SYSTEM_BSPTYPE}_impl"
+add_subdirectory(${OSAL_BSP_SOURCE_DIR} ${OSAL_SYSTEM_BSPTYPE}_impl)
+
+target_compile_definitions(osal_${OSAL_SYSTEM_BSPTYPE}_impl PRIVATE
+    $&lt;TARGET_PROPERTY:osal_public_api,INTERFACE_COMPILE_DEFINITIONS&gt;
+)
+target_compile_options(osal_${OSAL_SYSTEM_BSPTYPE}_impl PRIVATE
+    $&lt;TARGET_PROPERTY:osal_public_api,INTERFACE_COMPILE_OPTIONS&gt;
+)
+target_include_directories(osal_${OSAL_SYSTEM_BSPTYPE}_impl PRIVATE
+    ${OSAL_SOURCE_DIR}/src/bsp/shared/inc
+)
+
+# Confirm that the selected OS is compatible with the selected BSP.
+get_target_property(OSAL_EXPECTED_OSTYPE osal_${OSAL_SYSTEM_BSPTYPE}_impl OSAL_EXPECTED_OSTYPE)
+if (OSAL_EXPECTED_OSTYPE)
+    if (NOT DEFINED OSAL_SYSTEM_OSTYPE)
+        # In the event that OSAL_SYSTEM_OSTYPE was not specified at all,
+        # implicitly assume the expected OSTYPE.
+        set(OSAL_SYSTEM_OSTYPE ${OSAL_EXPECTED_OSTYPE})
+    elseif(NOT OSAL_SYSTEM_OSTYPE STREQUAL OSAL_EXPECTED_OSTYPE)
+        # Generate a warning about the OSTYPE not being expected.
+        # Not calling this a fatal error because it could possibly be intended during development
+        message(WARNING "Mismatched BSP/OS: ${OSAL_SYSTEM_BSPTYPE} implies ${OSAL_EXPECTED_OSTYPE}, but ${OSAL_SYSTEM_OSTYPE} is configured")
+    endif(NOT DEFINED OSAL_SYSTEM_OSTYPE)
+endif (OSAL_EXPECTED_OSTYPE)
+
+set(BSP_SRCLIST
+    src/bsp/shared/src/osapi-bsp.c
+    src/bsp/shared/src/bsp_default_app_run.c
+    src/bsp/shared/src/bsp_default_app_startup.c
+    src/bsp/shared/src/bsp_default_symtab.c
+    src/bsp/shared/src/bsp_default_resourcecfg.c
+)
+
+# Define the external "osal_bsp" static library target
+add_library(osal_bsp STATIC
+    ${BSP_SRCLIST}
+    $&lt;TARGET_OBJECTS:osal_${OSAL_SYSTEM_BSPTYPE}_impl&gt;
+)
+
+target_link_libraries(osal_bsp PUBLIC
+    osal_public_api
+)
+
+target_include_directories(osal_bsp PRIVATE
+    ${OSAL_SOURCE_DIR}/src/bsp/shared/inc
+)
+
+
+#
+# Step 2:
+# Build the OSAL layer
+#
+
+# OSAL_SYSTEM_OSTYPE indicates which of the OS packages
+# to build.  If not defined, this may be inferred by the BSP type.
+if (NOT DEFINED OSAL_SYSTEM_OSTYPE)
+  message(FATAL_ERROR "OSAL_SYSTEM_OSTYPE must be set to the appropriate OS")
+endif ()
+if (OSAL_EXT_SOURCE_DIR AND IS_DIRECTORY "${OSAL_EXT_SOURCE_DIR}/${OSAL_SYSTEM_OSTYPE}")
+    set(OSAL_OS_SOURCE_DIR "${OSAL_EXT_SOURCE_DIR}/${OSAL_SYSTEM_OSTYPE}")
+elseif(IS_DIRECTORY "${OSAL_SOURCE_DIR}/src/os/${OSAL_SYSTEM_OSTYPE}")
+    set(OSAL_OS_SOURCE_DIR "${OSAL_SOURCE_DIR}/src/os/${OSAL_SYSTEM_OSTYPE}")
+else()
+  # It is an error if the indicated OSTYPE does not correspond to a subdirectory
+  # If this is not caught here then a more obfuscated error will occur later.
+  message(FATAL_ERROR  "Error: No source directory found for \"${OSAL_SYSTEM_OSTYPE}\" OS type")
+endif()
+
+
+message(STATUS "OSAL Selection: ${OSAL_SYSTEM_OSTYPE} at ${OSAL_OS_SOURCE_DIR}")
+
+# The implementation-specific OSAL subdirectory should define
+# an OBJECT target named "osal_${OSAL_SYSTEM_OSTYPE}_impl"
+add_subdirectory(${OSAL_OS_SOURCE_DIR} ${OSAL_SYSTEM_OSTYPE}_impl)
+
+target_compile_definitions(osal_${OSAL_SYSTEM_OSTYPE}_impl PRIVATE
+    $&lt;TARGET_PROPERTY:osal_public_api,INTERFACE_COMPILE_DEFINITIONS&gt;
+)
+target_compile_options(osal_${OSAL_SYSTEM_OSTYPE}_impl PRIVATE
+    $&lt;TARGET_PROPERTY:osal_public_api,INTERFACE_COMPILE_OPTIONS&gt;
+)
+# The "shared" directory contains internal components which
+# are referenced in implementation OSAL modules, but should _NOT_
+# be referenced outside the OSAL code
+target_include_directories(osal_${OSAL_SYSTEM_OSTYPE}_impl PRIVATE
+    ${OSAL_SOURCE_DIR}/src/os/shared/inc
+    ${OSAL_SOURCE_DIR}/src/bsp/shared/inc
+)
+
+set(OSAL_SRCLIST
+    src/os/shared/src/osapi-binsem.c
+    src/os/shared/src/osapi-clock.c
+    src/os/shared/src/osapi-common.c
+    src/os/shared/src/osapi-condvar.c
+    src/os/shared/src/osapi-countsem.c
+    src/os/shared/src/osapi-dir.c
+    src/os/shared/src/osapi-errors.c
+    src/os/shared/src/osapi-file.c
+    src/os/shared/src/osapi-filesys.c
+    src/os/shared/src/osapi-heap.c
+    src/os/shared/src/osapi-idmap.c
+    src/os/shared/src/osapi-module.c
+    src/os/shared/src/osapi-mutex.c
+    src/os/shared/src/osapi-network.c
+    src/os/shared/src/osapi-printf.c
+    src/os/shared/src/osapi-queue.c
+    src/os/shared/src/osapi-select.c
+    src/os/shared/src/osapi-shell.c
+    src/os/shared/src/osapi-sockets.c
+    src/os/shared/src/osapi-task.c
+    src/os/shared/src/osapi-timebase.c
+    src/os/shared/src/osapi-time.c
+    src/os/shared/src/osapi-version.c
+)
+
+if (OSAL_CONFIG_DEBUG_PRINTF)
+    list(APPEND OSAL_SRCLIST
+        src/os/shared/src/osapi-debug.c
+    )
+endif (OSAL_CONFIG_DEBUG_PRINTF)
+
+
+# Define the external "osal" static library target
+# This is a combination of the generic parts with the low level
+# system-specific parts
+add_library(osal STATIC
+    ${OSAL_SRCLIST}
+    $&lt;TARGET_OBJECTS:osal_${OSAL_SYSTEM_OSTYPE}_impl&gt;
+)
+
+target_include_directories(osal PRIVATE
+    ${OSAL_SOURCE_DIR}/src/os/shared/inc
+    ${OSAL_SOURCE_DIR}/src/bsp/shared/inc
+)
+
+# Link the OSAL with the BSP
+target_link_libraries(osal PUBLIC
+    osal_public_api
+    osal_bsp
+)
+
+# The "build_options.cmake" file within each component may
+# fine-tune the library for this particular build.  This is included
+# AFTER The basic targets are defined, so it may set properties
+# on the defined targets and/or use target-specific commands.
+include("${OSAL_BSP_SOURCE_DIR}/build_options.cmake" OPTIONAL)
+include("${OSAL_OS_SOURCE_DIR}/build_options.cmake" OPTIONAL)
+
+# Report the full set of compile definitions after processing all modules
+get_target_property(OSAL_PUBLIC_API_COMPILE_DEFINITIONS osal_public_api INTERFACE_COMPILE_DEFINITIONS)
+message(STATUS "OSAL Compile Definitions: ${OSAL_PUBLIC_API_COMPILE_DEFINITIONS}")
+
+
+
+#
+# UNIT TEST SUPPORT
+#
+if (ENABLE_UNIT_TESTS)
+
+    enable_testing()
+
+    # Generic function for consistent definition of a unit testing target
+    # This is defined here in the top-level OSAL CMakeLists so it can be used
+    # in both the "tests" and "unit-tests" subdirectories.
+    function(add_osal_ut_exe TGTNAME)
+
+      add_executable(${TGTNAME} ${ARGN})
+      target_link_libraries(${TGTNAME} PUBLIC ut_assert osal)
+      add_test(${TGTNAME} ${TGTNAME})
+      foreach(TGT ${INSTALL_TARGET_LIST})
+        install(TARGETS ${TGTNAME} DESTINATION ${TGT}/${UT_INSTALL_SUBDIR})
+      endforeach()
+
+    endfunction(add_osal_ut_exe)
+
+    # The "unit-test-coverage" is a white-box line coverage test.
+    # It re-compiles each source unit for coverage analysis and links
+    # with stub dependencies and a test sequence designed to execute
+    # every line of source code within OSAL.
+    add_subdirectory(src/unit-test-coverage unit-test-coverage)
+
+    # The "tests" and "unit-tests" subdirectories implement examples and verification tests
+    # of the OSAL library.  Note that these are both black box tests that link with the full
+    # OSAL (not a stub/coverage test).
+    add_subdirectory(src/tests tests)
+    add_subdirectory(src/unit-tests unit-tests)
+
+endif (ENABLE_UNIT_TESTS)
+
+# If this build is being performed as a subdirectory within a larger project,
+# then export the important data regarding compile flags/dirs to that parent
+# This is conditional to avoid warnings in a standalone build.
+if (HAS_PARENT)
+    # Export the UT coverage compiler/linker flags to the parent build.
+    # These flags are based on the target system type and should be used
+    # when building code intended for coverage analysis.
+    if (NOT OSAL_OMIT_DEPRECATED)
+        set(UT_COVERAGE_COMPILE_FLAGS "${UT_COVERAGE_COMPILE_FLAGS}" PARENT_SCOPE)
+        set(UT_COVERAGE_LINK_FLAGS "${UT_COVERAGE_LINK_FLAGS}" PARENT_SCOPE)
+    endif()
+else(HAS_PARENT)
+    # In a standalone build, also add the documentation target(s)
+    # Note that in a CFE/integrated build, it is expected this will be built separately.
+    add_subdirectory(docs/src docs)
+endif(HAS_PARENT)
+
+if (OSAL_INSTALL_LIBRARIES)
+
+    # Install and also export this library, so it can be found via
+    # "find_package()" from some other CMake build
+    install(
+        TARGETS osal_public_api osal_bsp osal
+        EXPORT nasa-osal-export
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        PUBLIC_HEADER DESTINATION include/osal
+        INCLUDES DESTINATION include/osal
+    )
+    install(DIRECTORY
+        ${OSAL_SOURCE_DIR}/src/os/inc/
+        ${CMAKE_CURRENT_BINARY_DIR}/inc/
+      DESTINATION include/osal
+    )
+    install(EXPORT nasa-osal-export
+      FILE NasaOsalTargets.cmake
+      DESTINATION lib/cmake
+    )
+    configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/NasaOsalConfig.cmake.in
+        "${CMAKE_CURRENT_BINARY_DIR}/NasaOsalConfig.cmake"
+        INSTALL_DESTINATION lib/cmake
+    )
+    install(FILES
+          "${CMAKE_CURRENT_BINARY_DIR}/NasaOsalConfig.cmake"
+        DESTINATION lib/cmake
+    )
+
+endif()
+
+if (OSAL_VALIDATE_API)
+
+    # Validate the API header files individually
+    file(GLOB OSAL_API_HEADERS ${OSAL_SOURCE_DIR}/src/os/inc/*.h)
+    set(OSAL_APICHECK_SOURCES)
+    set(OSAL_APICHECK_DIR "${CMAKE_CURRENT_BINARY_DIR}/apicheck")
+
+    foreach(HDR_FILE ${OSAL_API_HEADERS})
+        get_filename_component(HDR "${HDR_FILE}" NAME)
+        string(MAKE_C_IDENTIFIER "${HDR}" HDR_ID)
+        configure_file(${OSAL_SOURCE_DIR}/check_header.c.in ${OSAL_APICHECK_DIR}/check_${HDR_ID}.c)
+        list(APPEND OSAL_APICHECK_SOURCES_C ${OSAL_APICHECK_DIR}/check_${HDR_ID}.c)
+        configure_file(${OSAL_SOURCE_DIR}/check_header.cpp.in ${OSAL_APICHECK_DIR}/check_${HDR_ID}.cpp)
+        list(APPEND OSAL_APICHECK_SOURCES_CXX ${OSAL_APICHECK_DIR}/check_${HDR_ID}.cpp)
+    endforeach(HDR_FILE ${OSAL_API_HEADERS})
+    add_library(osal_apicheck_C STATIC EXCLUDE_FROM_ALL ${OSAL_APICHECK_SOURCES_C})
+    add_library(osal_apicheck_CXX STATIC EXCLUDE_FROM_ALL ${OSAL_APICHECK_SOURCES_CXX})
+    if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
+        target_compile_options(osal_apicheck_C PUBLIC -std=c99 -pedantic -Wall -Werror)
+    endif()
+    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+        target_compile_options(osal_apicheck_CXX PUBLIC -std=c++03 -pedantic -Wall -Werror)
+    endif()
+
+    # This causes the check to compile with the same set of defines and include dirs as specified
+    # in the "INTERFACE" properties of the actual module
+    target_link_libraries(osal_apicheck_C PUBLIC
+        osal_public_api
+    )
+    target_link_libraries(osal_apicheck_CXX PUBLIC
+        osal_public_api
+    )
+
+    add_custom_target(osal_apicheck)
+    add_dependencies(osal_apicheck osal_apicheck_C)
+    add_dependencies(osal_apicheck osal_apicheck_CXX)
+
+endif()
+</pre></div>
+</div>
+</section>
+<section id="contributing-md">
+<h2><code class="docutils literal notranslate"><span class="pre">CONTRIBUTING.md</span></code><a class="headerlink" href="#contributing-md" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/CONTRIBUTING.md</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Contributing Guide
+
+Please see our [top-level contributing guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md) for more information on how to contribute. 
+</pre></div>
+</div>
+</section>
+<section id="default-config-cmake">
+<h2><code class="docutils literal notranslate"><span class="pre">default_config.cmake</span></code><a class="headerlink" href="#default-config-cmake" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/default_config.cmake</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>##########################################################################
+#
+# Default configuration options for OSAL
+#
+# This file specifies the default values for various compile-time options
+# supported by OSAL.  These options can be further tuned by the specific
+# OSAL and BSP selection, as well as the user application.
+#
+# NOTE:
+# The defaults in this file should _not_ be directly modified for tuning.
+#
+# Instead, use the "OSAL_CONFIGURATION_FILE" CMake variable to define
+# a custom file which can override/modify the configuration for the items
+# which require tuning.
+#
+##########################################################################
+
+##############################################################
+# Argument/Bug-checking options
+##############################################################
+
+# OSAL_CONFIG_BUGCHECK_DISABLE
+# ----------------------------------
+#
+# Disable/compile-out the "bugcheck" macro
+#
+# The bugcheck macro is used to validate the inputs to functions and/or
+# assert on other conditions that should _always_ be true.  If any of these
+# conditions ever evaluate as false, it indicates a bug in the code -
+# either in the OSAL or the application which invoked OSAL.
+#
+# If set FALSE (default), then the OSAL bugcheck macro will evaluate its
+# boolean conditional and generate an action if that conditional evaluates
+# false.  (The specific action to take is configured via a different
+# directive -- see OSAL_CONFIG_BUGCHECK_STRICT).
+#
+# These extra bug checks do consume a slight bit of code+data space as
+# well as some runtime CPU cycles on every call, depending on the conditions
+# being tested.
+#
+# Once the application has reached a sufficient level of stability and
+# confidence is obtained that these bug checks are not possible to be
+# triggered, this directive may be set TRUE which disables the bug checks
+# completely - rendering these statements as no-ops.
+#
+set(OSAL_CONFIG_BUGCHECK_DISABLE                FALSE)
+
+
+# OSAL_CONFIG_BUGCHECK_STRICT
+# ----------------------------------
+#
+# Select a strict implementation for the "bugcheck" macro
+#
+# If set FALSE (default), then the OSAL bugcheck macro will generate a
+# debug message and return an error code if the conditional evaluates
+# as false.  This is a soft error - the application will get the
+# error code and keep running.
+#
+# If set to TRUE, then any failure of any bugcheck macro is considered
+# fatal and will trigger an abort().  On many platforms this will
+# generate an abnormal application exit with a core file for debugging.
+#
+set(OSAL_CONFIG_BUGCHECK_STRICT                  FALSE)
+
+
+##############################################################
+# Code/Feature Selection Options for the OSAL implementation
+##############################################################
+
+
+# OSAL_CONFIG_INCLUDE_NETWORK
+# ----------------------------------
+#
+# Whether to include the Network API
+#
+# If set TRUE, the socket abstraction (if applicable on the platform)
+# will be included.  If set FALSE, then all calls to the network API will
+# return OS_ERR_NOT_IMPLEMENTED.
+#
+# This can be set FALSE for platforms which do not have a network or
+# IP stack available, or to save code space if the application does
+# not use network resources.
+#
+set(OSAL_CONFIG_INCLUDE_NETWORK                 TRUE
+    CACHE BOOL "Whether to include the Network API"
+)
+
+
+#
+# OSAL_CONFIG_INCLUDE_DYNAMIC_LOADER
+# ----------------------------------
+#
+# Whether to include the capability of loading dynamic code objects
+#
+# This is normally set TRUE to support modularized applications on
+# platforms which have this capability.
+#
+# For deployments which are always statically linked, this may be set
+# FALSE for a smaller library size and reduced linking requirements.
+#
+set(OSAL_CONFIG_INCLUDE_DYNAMIC_LOADER          TRUE
+    CACHE BOOL "Whether to include the Dynamic Loader feature"
+)
+
+
+#
+# OSAL_CONFIG_INCLUDE_STATIC_LOADER
+# ----------------------------------
+#
+# Whether to include a compatibility "loader" for statically-linked objects
+#
+# This feature allows applications normally written for dynamic module loading
+# operate transparently in a static link environment.  If this is set TRUE,
+# then the application must supply an object named "OS_STATIC_SYMBOL_TABLE" that
+# contains the names and addresses of statically-linked symbols that should
+# be known to the lookup/load functions.
+#
+# Note that modules "loaded" using this abstraction are still assigned a
+# module ID and still require a slot in the module table even though
+# no actual runtime loading is performed (see OSAL_CONFIG_MAX_MODULES).
+#
+set(OSAL_CONFIG_INCLUDE_STATIC_LOADER           TRUE
+    CACHE BOOL "Whether to include the Static Loader feature"
+)
+
+#
+# OSAL_CONFIG_INCLUDE_SHELL
+# ----------------------------------
+#
+# Whether to include features which utilize the operating system shell.
+#
+# Remote Shell commands can be very powerful tool for remotely diagnosing
+# and mitigating runtime issues in the field, but also have significant
+# security implications.  If this is set to "false" then shell functionality
+# is disabled and OSAL functions which invoke the shell will return
+# OS_ERR_NOT_IMPLEMENTED.
+#
+set(OSAL_CONFIG_INCLUDE_SHELL                   FALSE
+    CACHE BOOL "Whether to include the Shell API"
+)
+
+
+#
+# OSAL_CONFIG_DEBUG_PERMISSIVE_MODE
+# ----------------------------------
+#
+# The OSAL_CONFIG_DEBUG_PERMISSIVE_MODE option controls how privileged operations
+# are handled by the OSAL in the event that the user does not have sufficient permission.
+# In particular this applies to task priorities and message queues.
+#
+# If set FALSE, then all permissions are enforced, and a failure due to lack of permission
+# will cause a failure of the overall operation, which is passed back to the application.
+#
+# If set to TRUE, this will treat some errors non-fatal and enable a graceful fallback,
+# allowing the overall operation to complete in a reduced form.  This makes the
+# OSAL library compatible with a non-root (normal user mode) environment.
+#
+# In the PC-Linux/Posix build, this means:
+#  - A message queue deeper than the maximum system limit will be silently truncated
+#    to the maximum system limit (no error).
+#  - If the user does not have permission to create elevated priority tasks, then the tasks will
+#    be created at the default priority (no error).
+#
+set(OSAL_CONFIG_DEBUG_PERMISSIVE_MODE           FALSE
+    CACHE BOOL "Disable enforcement of privileged operations"
+)
+
+#
+# OSAL_CONFIG_DEBUG_PRINTF
+# ----------------------------------
+#
+# Controls inclusion of OS_DEBUG statements in the code
+#
+# If set FALSE, all OS_DEBUG statements are compiled out.
+#
+# If set TRUE, all the "OS_DEBUG" statements will be compiled in and displayed
+# on the debug console.  The statements may still be suppressed at runtime.
+#
+set(OSAL_CONFIG_DEBUG_PRINTF                    FALSE
+    CACHE BOOL "Controls inclusion of OS_DEBUG statements in the code"
+)
+
+#
+# OS_CONFIG_CONSOLE_ASYNC
+# ----------------------------------
+#
+# Controls whether the console device writes (OS_printf) will be deferred
+# to a separate utility task or handled directly by the calling task.
+#
+# If set FALSE, the utility task WILL NOT be spawned, and all OS_printf()
+# calls will be synchronously written to the console device.
+#
+# If set TRUE, an extra utility task WILL be spawned, and the data from
+# all OS_printf() calls will be written to an output queue which is then
+# transferred to the console device by the utility task.
+#
+# When this is TRUE (default), it may improve real time performance by not
+# requiring the caller to delay on a potentially slow console device output.
+#
+# However decoupling in this manner requires creation of an extra task and
+# stack to handle the output, and a side effect is that the OS_printf() output
+# can become decoupled from the event/task where it actually occurred, or
+# messages might appear in a different order than they originally occurred.
+#
+set(OSAL_CONFIG_CONSOLE_ASYNC                   TRUE
+    CACHE BOOL "Controls spawning of a separate utility task for OS_printf"
+)
+
+#############################################
+# Resource Limits for the OS API
+#############################################
+
+# Note that CMake does not have a cache type for integers;
+# although they are defined as strings the values should be integer numbers.
+
+# The maximum number of concurrently-running tasks to support
+set(OSAL_CONFIG_MAX_TASKS               64
+    CACHE STRING "Maximum Number of Tasks to support"
+)
+
+# The maximum number of queues to support
+set(OSAL_CONFIG_MAX_QUEUES              64
+    CACHE STRING "Maximum Number of Queues to support"
+)
+
+# The maximum number of counting semaphores to support
+set(OSAL_CONFIG_MAX_COUNT_SEMAPHORES    20
+    CACHE STRING "Maximum Number of Counting Semaphores to support"
+)
+
+# The maximum number of binary semaphores to support
+set(OSAL_CONFIG_MAX_BIN_SEMAPHORES      20
+    CACHE STRING "Maximum Number of Binary Semaphores to support"
+)
+
+# The maximum number of mutexes to support
+set(OSAL_CONFIG_MAX_MUTEXES             20
+    CACHE STRING "Maximum Number of Mutexes to support"
+)
+
+# The maximum number of condition variables to support
+set(OSAL_CONFIG_MAX_CONDVARS             4
+    CACHE STRING "Maximum Number of Condition Variables to support"
+)
+
+# The maximum number of loadable modules to support
+# Note that emulating module loading for statically-linked objects also
+# requires a slot in this table, as it still assigns an OSAL ID.
+set(OSAL_CONFIG_MAX_MODULES             20
+    CACHE STRING "Maximum Number of Modules to support"
+)
+
+# The maximum number of time base objects (reference for timers)
+set(OSAL_CONFIG_MAX_TIMEBASES           5
+    CACHE STRING "Maximum Number of Timebases to support"
+)
+
+# The maximum number of user timers / app callbacks that can be registered
+set(OSAL_CONFIG_MAX_TIMERS              10
+    CACHE STRING "Maximum Number of Timers to support"
+)
+
+# The maximum number of concurrently open file descriptors to support
+set(OSAL_CONFIG_MAX_NUM_OPEN_FILES      50
+    CACHE STRING "Maximum Number of Open Files to support"
+)
+
+# The maximum number of concurrently open directory descriptors to support
+set(OSAL_CONFIG_MAX_NUM_OPEN_DIRS       4
+    CACHE STRING "Maximum Number of Open Directories to support"
+)
+
+# The maximum number of file systems that can be managed by OSAL
+set(OSAL_CONFIG_MAX_FILE_SYSTEMS        14
+    CACHE STRING "Maximum Number of File Systems to support"
+)
+
+# The maximum length for a file name, including any extension
+# (This does not include the directory part)
+set(OSAL_CONFIG_MAX_FILE_NAME           20
+    CACHE STRING "Maximum Length of file names"
+)
+
+# Maximum length for a virtual path name (virtual directory + file)
+set(OSAL_CONFIG_MAX_PATH_LEN            64
+    CACHE STRING "Maximum Length of path names"
+)
+
+# Maximum length allowed for an object (task,queue....) name
+set(OSAL_CONFIG_MAX_API_NAME            20
+    CACHE STRING "Maximum Length of resource names"
+)
+
+# Maximum length of a symbol name for OS_SymbolLookup()
+set(OSAL_CONFIG_MAX_SYM_LEN             64
+    CACHE STRING "Maximum Length of symbol names"
+)
+
+# Maximum length of a network socket address
+# This is only relevant if network support is included, and the
+# required length depends on the address families in use
+set(OSAL_CONFIG_SOCKADDR_MAX_LEN        28
+    CACHE STRING "Maximum Size of network socket addresses"
+)
+
+# Maximum length of a single message produced by OS_printf()
+set(OSAL_CONFIG_PRINTF_BUFFER_SIZE      172
+    CACHE STRING "Maximum Length of single printf message"
+)
+
+# Maximum number of OS_printf() messages that will be buffered
+set(OSAL_CONFIG_PRINTF_BUFFER_DEPTH     100
+    CACHE STRING "Maximum Number of printf messages to buffer"
+)
+
+# Priority level of a console output helper task
+#
+# Set logically low (high number) to maximize performance.
+#   - Messages from OS_printf() may show on the console with some delay
+#     but should have minimal impact to real time tasks.
+#
+# Set logically high (low number) for debugging
+#   - Messages from OS_printf() will have more timely output, but may
+#     adversely impact real time tasks.
+set(OSAL_CONFIG_UTILITYTASK_PRIORITY    245
+    CACHE STRING "Priority level for the background utility task"
+)
+
+# Stack size of console output task.
+#
+# This applies to RTOS layers with precise stack control,
+# normally not necessary to change this unless the task implementation
+# changes.
+set(OSAL_CONFIG_UTILITYTASK_STACK_SIZE  2048
+    CACHE STRING "Stack size for the background utility task"
+)
+
+# The size of a command that can be passed to the underlying OS
+# Only applicable when shell feature is enabled
+set(OSAL_CONFIG_MAX_CMD_LEN             1000
+    CACHE STRING "Maximum Length of shell command"
+)
+
+# The maximum depth of an OSAL message queue.
+# On some implementations this may affect the overall OSAL memory footprint
+# so it may be beneficial to set this limit accordingly.
+set(OSAL_CONFIG_QUEUE_MAX_DEPTH         50
+    CACHE STRING "Maximum depth of message queue"
+)
+
+# Flags added to all tasks on creation
+#
+# Some OS's use floating point under the hood, this supports
+# adding the floating point flag on creation of all tasks instead of
+# just when OS_FP_ENABLED flag is passed in to OS_TaskCreate
+#
+# Set to 0 to not add any
+set(OSAL_CONFIG_ADD_TASK_FLAGS              0
+    CACHE STRING "Flags added to all tasks"
+)
+</pre></div>
+</div>
+</section>
+<section id="license">
+<h2><code class="docutils literal notranslate"><span class="pre">LICENSE</span></code><a class="headerlink" href="#license" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/LICENSE</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+</pre></div>
+</div>
+</section>
+<section id="makefile-sample">
+<h2><code class="docutils literal notranslate"><span class="pre">Makefile.sample</span></code><a class="headerlink" href="#makefile-sample" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/Makefile.sample</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#
+# Operating System Abstraction Layer CMake / GNU make wrapper
+#
+# ABOUT THIS MAKEFILE:
+# It is a GNU-make wrapper that calls the CMake tools appropriately
+# so that setting up a new build is fast and easy with no need to
+# learn the CMake commands.  It also makes it easier to integrate
+# the build with IDE tools such as Eclipse by providing a default
+# makefile that has the common targets such as all/clean/etc.
+#
+# Use of this file is optional.
+#
+# For _ALL_ targets defined in this file the build tree location may
+# be specified via the "O" variable (i.e. make O=&lt;my-build-dir&gt; all).
+# If not specified then the "build" subdirectory will be assumed.
+#
+# This wrapper defines the following major targets:
+#  prep -- Runs CMake to create a new or re-configure an existing build tree
+#    Note that multiple build trees can exist from a single source
+#    Other control options may be passed to CMake via
+#    make variables depending on the mission build scripts.  These will be
+#    cached in the build tree so they do not need to be set again thereafter.
+#
+#  all -- Build all targets in the CMake build tree
+#
+#  install -- Copy all files to the installation tree and run packaging scripts
+#     The "DESTDIR" and "INSTALLPREFIX" environment variables control where the
+#     files are copied
+#
+#  clean -- Clean all targets in the CMake build tree, but not the build tree itself.
+#
+#  distclean -- Entirely remove the build directory specified by "O"
+#      Note that after this the "prep" step must be run again in order to build.
+#      Use caution with this as it does an rm -rf - don't set O to your home dir!
+#
+#  test -- Run all unit tests defined in the build on the host.  This will not
+#      work if the BSPTYPE selection is not compatible with the host.
+#      In that case it is up to the user to copy the executables to the target
+#      and run them.
+#
+#  lcov -- Runs the "lcov" tool on the build tree to collect all code coverage
+#      analysis data and build the reports.  Code coverage data may be created by
+#      the "make test" target above.
+#
+
+# Establish default values for critical variables.  Any of these may be overridden
+# on the command line or via the make environment configuration in an IDE
+O ?= build
+BSPTYPE ?= generic-linux
+BUILDTYPE ?= debug
+INSTALLPREFIX ?= /exe
+DESTDIR ?= $(O)
+
+# The "DESTDIR" variable is a bit more complicated because it should be an absolute
+# path for CMake, but we want to accept either absolute or relative paths.  So if
+# the path does NOT start with "/", prepend it with the current directory.
+ifeq ($(filter /%, $(DESTDIR)),)
+DESTDIR := $(CURDIR)/$(DESTDIR)
+endif
+
+# The "LOCALTGTS" defines the top-level targets that are implemented in this makefile
+# Any other target may also be given, in that case it will simply be passed through.
+LOCALTGTS := prep all clean install distclean test lcov
+OTHERTGTS := $(filter-out $(LOCALTGTS),$(MAKECMDGOALS))
+
+# As this makefile does not build any real files, treat everything as a PHONY target
+# This ensures that the rule gets executed even if a file by that name does exist
+.PHONY: $(LOCALTGTS) $(OTHERTGTS)
+
+# If the target name appears to be a directory (ends in /), do a make all in that directory
+DIRTGTS := $(filter %/,$(OTHERTGTS))
+ifneq ($(DIRTGTS),)
+$(DIRTGTS):
+	$(MAKE) -C $(O)/$(patsubst $(O)/%,%,$(@)) all
+endif
+
+# For any other goal that is not one of the known local targets, pass it to the build
+# as there might be a target by that name.  For example, this is useful for rebuilding
+# single unit test executable files while debugging from the IDE
+FILETGTS := $(filter-out $(DIRTGTS),$(OTHERTGTS))
+ifneq ($(FILETGTS),)
+$(FILETGTS):
+	$(MAKE) -C $(O) $(@)
+endif
+
+# The "prep" step requires extra options that are specified via environment variables.
+# Certain special ones should be passed via cache (-D) options to CMake.
+# These are only needed for the "prep" target but they are computed globally anyway.
+#
+# Note this simple makefile just builds for one target, could trivially manage
+# multiple targets by changing build directory.  More complex target
+# list examples are provided by cFE.
+PREP_OPTS := -DOSAL_SYSTEM_BSPTYPE=$(BSPTYPE) -DINSTALL_TARGET_LIST=.
+
+ifneq ($(INSTALLPREFIX),)
+PREP_OPTS += -DCMAKE_INSTALL_PREFIX=$(INSTALLPREFIX)
+endif
+
+ifneq ($(VERBOSE),)
+PREP_OPTS += --trace
+endif
+
+ifneq ($(OMIT_DEPRECATED),)
+PREP_OPTS += -DOSAL_OMIT_DEPRECATED=$(OMIT_DEPRECATED)
+endif
+
+ifneq ($(BUILDTYPE),)
+PREP_OPTS += -DCMAKE_BUILD_TYPE=$(BUILDTYPE)
+endif
+
+ifneq ($(ENABLE_UNIT_TESTS),)
+PREP_OPTS += -DENABLE_UNIT_TESTS=$(ENABLE_UNIT_TESTS)
+endif
+
+ifneq ($(PERMISSIVE_MODE),)
+PREP_OPTS += -DOSAL_CONFIG_DEBUG_PERMISSIVE_MODE=$(PERMISSIVE_MODE)
+endif
+
+all:
+	$(MAKE) --no-print-directory -C "$(O)" all
+
+install:
+	$(MAKE) --no-print-directory -C "$(O)" DESTDIR="${DESTDIR}" install
+
+prep $(O)/.prep:
+	mkdir -p "$(O)"
+	(cd "$(O)" &amp;&amp; cmake $(PREP_OPTS) "$(CURDIR)")
+	echo "$(PREP_OPTS)" &gt; "$(O)/.prep"
+
+clean:
+	$(MAKE) --no-print-directory -C "$(O)" clean
+
+distclean:
+	rm -rf "$(O)"
+
+# Grab lcov baseline before running tests
+test:
+	lcov --capture --initial --directory $(O) --output-file $(O)/coverage_base.info
+	$(MAKE) --no-print-directory -C "$(O)" test
+
+lcov:
+	lcov --capture --rc lcov_branch_coverage=1 --directory $(O) --output-file $(O)/coverage_test.info
+	lcov --rc lcov_branch_coverage=1 --add-tracefile $(O)/coverage_base.info --add-tracefile $(O)/coverage_test.info --output-file $(O)/coverage_total.info
+	genhtml $(O)/coverage_total.info --branch-coverage --output-directory $(O)/lcov
+	@/bin/echo -e "\n\nCoverage Report Link: file:$(CURDIR)/$(O)/lcov/index.html\n"
+
+
+# Make all the commands that use the build tree depend on a flag file
+# that is used to indicate the prep step has been done.  This way
+# the prep step does not need to be done explicitly by the user
+# as long as the default options are sufficient.
+$(filter-out prep distclean,$(LOCALTGTS)): $(O)/.prep
+</pre></div>
+</div>
+</section>
+<section id="nasaosalconfig-cmake-in">
+<h2><code class="docutils literal notranslate"><span class="pre">NasaOsalConfig.cmake.in</span></code><a class="headerlink" href="#nasaosalconfig-cmake-in" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/NasaOsalConfig.cmake.in</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/NasaOsalTargets.cmake")
+
+check_required_components(NasaOsal)
+</pre></div>
+</div>
+</section>
+<section id="osconfig-h-in">
+<h2><code class="docutils literal notranslate"><span class="pre">osconfig.h.in</span></code><a class="headerlink" href="#osconfig-h-in" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/osconfig.h.in</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/**
+ * \brief Configuration file Operating System Abstraction Layer
+ *
+ * The specific definitions in this file may only be modified
+ * by setting the respective OSAL configuration options in the CMake
+ * build.
+ *
+ * Any direct modifications to the generated copy will
+ * be overwritten each time CMake executes.
+ *
+ * \note This file was automatically generated by CMake from
+ *  @CMAKE_CURRENT_SOURCE_DIR@/default_config.cmake
+ */
+
+#ifndef OSCONFIG_H
+#define OSCONFIG_H
+
+/*
+ * OSAL feature selection options from build config
+ */
+#cmakedefine OSAL_CONFIG_INCLUDE_DYNAMIC_LOADER
+#cmakedefine OSAL_CONFIG_INCLUDE_NETWORK
+#cmakedefine OSAL_CONFIG_INCLUDE_STATIC_LOADER
+#cmakedefine OSAL_CONFIG_INCLUDE_SHELL
+#cmakedefine OSAL_CONFIG_DEBUG_PRINTF
+#cmakedefine OSAL_CONFIG_DEBUG_PERMISSIVE_MODE
+#cmakedefine OSAL_CONFIG_CONSOLE_ASYNC
+
+#cmakedefine OSAL_CONFIG_BUGCHECK_DISABLE
+#cmakedefine OSAL_CONFIG_BUGCHECK_STRICT
+
+/*
+ * OSAL resource limits from build config
+ *
+ * (These are prefixed with OS_ for compatibility
+ * with existing code referencing these symbols)
+ */
+
+ /**
+  * \brief The maximum number of  to support
+  *
+  * Based on the OSAL_CONFIG_MAX_TASKS configuration option
+  */
+#define OS_MAX_TASKS                    @OSAL_CONFIG_MAX_TASKS@
+
+ /**
+  * \brief The maximum number of queues to support
+  *
+  * Based on the OSAL_CONFIG_MAX_QUEUES configuration option
+  */
+#define OS_MAX_QUEUES                   @OSAL_CONFIG_MAX_QUEUES@
+
+ /**
+  * \brief The maximum number of counting semaphores to support
+  *
+  * Based on the OSAL_CONFIG_MAX_COUNT_SEMAPHORES configuration option
+  */
+#define OS_MAX_COUNT_SEMAPHORES         @OSAL_CONFIG_MAX_COUNT_SEMAPHORES@
+
+ /**
+  * \brief The maximum number of binary semaphores to support
+  *
+  * Based on the OSAL_CONFIG_MAX_BIN_SEMAPHORES configuration option
+  */
+#define OS_MAX_BIN_SEMAPHORES           @OSAL_CONFIG_MAX_BIN_SEMAPHORES@
+
+ /**
+  * \brief The maximum number of mutexes to support
+  *
+  * Based on the OSAL_CONFIG_MAX_MUTEXES configuration option
+  */
+#define OS_MAX_MUTEXES                  @OSAL_CONFIG_MAX_MUTEXES@
+
+/**
+  * \brief The maximum number of condition variables to support
+  *
+  * Based on the OSAL_CONFIG_MAX_CONDVARS configuration option
+  */
+#define OS_MAX_CONDVARS                  @OSAL_CONFIG_MAX_CONDVARS@
+
+  /**
+  * \brief The maximum number of modules to support
+  *
+  * Based on the OSAL_CONFIG_MAX_MODULES configuration option
+  */
+#define OS_MAX_MODULES                  @OSAL_CONFIG_MAX_MODULES@
+
+ /**
+  * \brief The maximum number of timebases to support
+  *
+  * Based on the OSAL_CONFIG_MAX_TIMEBASES configuration option
+  */
+#define OS_MAX_TIMEBASES                @OSAL_CONFIG_MAX_TIMEBASES@
+
+ /**
+  * \brief The maximum number of timer callbacks to support
+  *
+  * Based on the OSAL_CONFIG_MAX_TIMERS configuration option
+  */
+#define OS_MAX_TIMERS                   @OSAL_CONFIG_MAX_TIMERS@
+
+ /**
+  * \brief The maximum number of concurrently open files to support
+  *
+  * Based on the OSAL_CONFIG_MAX_NUM_OPEN_FILES configuration option
+  */
+#define OS_MAX_NUM_OPEN_FILES           @OSAL_CONFIG_MAX_NUM_OPEN_FILES@
+
+ /**
+  * \brief The maximum number of concurrently open directories to support
+  *
+  * Based on the OSAL_CONFIG_MAX_NUM_OPEN_DIRS configuration option
+  */
+#define OS_MAX_NUM_OPEN_DIRS            @OSAL_CONFIG_MAX_NUM_OPEN_DIRS@
+
+ /**
+  * \brief The maximum number of file systems to support
+  *
+  * Based on the OSAL_CONFIG_MAX_FILE_SYSTEMS configuration option
+  */
+#define OS_MAX_FILE_SYSTEMS             @OSAL_CONFIG_MAX_FILE_SYSTEMS@
+
+ /**
+  * \brief The maximum length of symbols
+  *
+  * Based on the OSAL_CONFIG_MAX_SYM_LEN configuration option
+  *
+  * \note This value must include a terminating NUL character
+  */
+#define OS_MAX_SYM_LEN                  @OSAL_CONFIG_MAX_SYM_LEN@
+
+ /**
+  * \brief The maximum length of OSAL file names
+  *
+  * This limit applies specifically to the file name portion, not the
+  * directory portion, of a path name.
+  *
+  * Based on the OSAL_CONFIG_MAX_FILE_NAME configuration option
+  *
+  * \note This value must include a terminating NUL character
+  */
+#define OS_MAX_FILE_NAME                @OSAL_CONFIG_MAX_FILE_NAME@
+
+ /**
+  * \brief The maximum length of OSAL path names
+  *
+  * This limit applies to the overall length of a path name, including the
+  * file name and directory portions.
+  *
+  * Based on the OSAL_CONFIG_MAX_PATH_LEN configuration option
+  *
+  * \note This value must include a terminating NUL character
+  */
+#define OS_MAX_PATH_LEN                 @OSAL_CONFIG_MAX_PATH_LEN@
+
+ /**
+  * \brief The maximum length of OSAL resource names
+  *
+  * Based on the OSAL_CONFIG_MAX_API_NAME configuration option
+  *
+  * \note This value must include a terminating NUL character
+  */
+#define OS_MAX_API_NAME                 @OSAL_CONFIG_MAX_API_NAME@
+
+ /**
+  * \brief The maximum size of the socket address structure
+  *
+  * This is part of the Socket API, and should be set large enough to hold
+  * the largest address type in use on the target system.
+  *
+  * Based on the OSAL_CONFIG_SOCKADDR_MAX_LEN configuration option
+  */
+#define OS_SOCKADDR_MAX_LEN             @OSAL_CONFIG_SOCKADDR_MAX_LEN@
+
+ /**
+  * \brief The maximum size of output produced by a single OS_printf()
+  *
+  * Based on the OSAL_CONFIG_PRINTF_BUFFER_SIZE configuration option
+  */
+#define OS_BUFFER_SIZE                  @OSAL_CONFIG_PRINTF_BUFFER_SIZE@
+
+ /**
+  * \brief The maximum number of OS_printf() output strings to buffer
+  *
+  * Based on the OSAL_CONFIG_PRINTF_BUFFER_DEPTH configuration option
+  */
+#define OS_BUFFER_MSG_DEPTH             @OSAL_CONFIG_PRINTF_BUFFER_DEPTH@
+
+ /**
+  * \brief Priority level of the background utility task
+  *
+  * This task is responsible for writing buffered output of OS_printf to the actual
+  * console device, and any other future maintenance task.
+  *
+  * Based on the OSAL_CONFIG_UTILITYTASK_PRIORITY configuration option
+  */
+#define OS_UTILITYTASK_PRIORITY         @OSAL_CONFIG_UTILITYTASK_PRIORITY@
+
+ /**
+  * \brief The stack size of the background utility task
+  *
+  * This task is responsible for writing buffered output of OS_printf to the actual
+  * console device, and any other future maintenance task.
+  *
+  * Based on the OSAL_CONFIG_UTILITYTASK_STACK_SIZE configuration option
+  */
+#define OS_UTILITYTASK_STACK_SIZE       @OSAL_CONFIG_UTILITYTASK_STACK_SIZE@
+
+ /**
+  * \brief The maximum size of a shell command
+  *
+  * This limit is only applicable if shell support is enabled.
+  *
+  * Based on the OSAL_CONFIG_MAX_CMD_LEN configuration option
+  *
+  * \note This value must include a terminating NUL character
+  */
+#define OS_MAX_CMD_LEN                  @OSAL_CONFIG_MAX_CMD_LEN@
+
+ /**
+  * \brief The maximum depth of OSAL queues
+  *
+  * Based on the OSAL_CONFIG_QUEUE_MAX_DEPTH configuration option
+  */
+#define OS_QUEUE_MAX_DEPTH              @OSAL_CONFIG_QUEUE_MAX_DEPTH@
+
+ /**
+  * \brief The name of the temporary file used to store shell commands
+  *
+  * This configuration is only applicable if shell support is enabled, and
+  * only necessary/relevant on some OS implementations.
+  *
+  * Based on the OSAL_CONFIG_SHELL_CMD_INPUT_FILE_NAME configuration option
+  */
+#define OS_SHELL_CMD_INPUT_FILE_NAME    "@OSAL_CONFIG_SHELL_CMD_INPUT_FILE_NAME@"
+
+ /**
+  * \brief The name of the primary console device
+  *
+  * This is the device to which OS_printf() output is written.  The output
+  * may be configured to tag each line with this prefix for identification.
+  *
+  * Based on the OSAL_CONFIG_PRINTF_CONSOLE_NAME configuration option
+  */
+#define OS_PRINTF_CONSOLE_NAME          "@OSAL_CONFIG_PRINTF_CONSOLE_NAME@"
+
+ /**
+  * \brief Flags added to all tasks on creation
+  *
+  * Added to the task flags on creation
+  *
+  * Supports adding floating point support for all tasks when the OS requires it
+  */
+#define OS_ADD_TASK_FLAGS               @OSAL_CONFIG_ADD_TASK_FLAGS@
+
+/*
+ * OSAL fixed resource limits
+ *
+ * The resource limits here are not user-configurable, but
+ * may be changed in a future revision of OSAL, so it is
+ * still present in osconfig.h along with the others.
+ */
+
+ /**
+  * \brief The maximum number of console devices to support
+  *
+  * Fixed value based on current OSAL implementation, not user configurable.
+  */
+#define OS_MAX_CONSOLES                 1
+
+/**
+  * \brief The system-specific file extension used on loadable module files
+  *
+  * Fixed value based on system selection, not user configurable.
+  */
+#define OS_MODULE_FILE_EXTENSION        "@CMAKE_SHARED_LIBRARY_SUFFIX@"
+
+/*
+** Length of a Device and Volume name
+*/
+#define OS_FS_DEV_NAME_LEN  32 /**&lt; Device name length */
+#define OS_FS_PHYS_NAME_LEN 64 /**&lt; Physical drive name length */
+#define OS_FS_VOL_NAME_LEN  32 /**&lt; Volume name length */
+
+
+#endif      /* OSCONFIG_H */
+</pre></div>
+</div>
+</section>
+<section id="readme-md">
+<h2><code class="docutils literal notranslate"><span class="pre">README.md</span></code><a class="headerlink" href="#readme-md" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/README.md</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>![Static Analysis](https://github.com/nasa/osal/workflows/Static%20Analysis/badge.svg)
+![Format Check](https://github.com/nasa/osal/workflows/Format%20Check/badge.svg)
+
+# Core Flight System : Framework : Operating System Abstraction Layer
+
+This repository contains NASA's Operating System Abstraction Layer (OSAL), which is a framework component of the Core Flight System.
+
+This is a collection of abstraction APIs and associated framework to be located in the `osal` subdirectory of a cFS Mission Tree. The Core Flight System is bundled at &lt;https://github.com/nasa/cFS&gt;, which includes build and execution instructions.
+
+The autogenerated OSAL user's guide can be viewed at &lt;https://github.com/nasa/cFS/blob/gh-pages/OSAL_Users_Guide.pdf&gt;.
+
+# Quick Start:
+
+Typically OSAL is built and tested as part of cFS as detailed in: [cFS repo](https://github.com/nasa/cFS)
+
+OSAL library build pc-linux example (from the base osal directory):
+```
+mkdir build_osal
+cd build_osal
+cmake -DOSAL_SYSTEM_BSPTYPE=generic-linux ..
+make
+```
+
+OSAL permissive build with tests example (see also [CI](https://github.com/nasa/osal/blob/master/.travis.yml))
+```
+mkdir build_osal_test
+cd build_osal_test
+cmake -DENABLE_UNIT_TESTS=true -DOSAL_SYSTEM_BSPTYPE=generic-linux -DOSAL_CONFIG_DEBUG_PERMISSIVE_MODE=TRUE ..
+make
+make test
+```
+
+See the [Configuration Guide](https://github.com/nasa/osal/blob/main/docs/OSAL-Configuration-Guide.md) for more information.
+
+See also the autogenerated user's guide: &lt;https://github.com/nasa/cFS/blob/gh-pages/OSAL_Users_Guide.pdf&gt;
+
+## Known issues
+
+See all open issues and closed to milestones later than this version.
+
+## Getting Help
+
+For best results, submit issues:questions or issues:help wanted requests at &lt;https://github.com/nasa/cFS&gt;.
+
+Official cFS page: &lt;http://cfs.gsfc.nasa.gov&gt;
+</pre></div>
+</div>
+</section>
+<section id="security-md">
+<h2><code class="docutils literal notranslate"><span class="pre">SECURITY.md</span></code><a class="headerlink" href="#security-md" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/SECURITY.md</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Security Policy
+
+## Reporting a Vulnerability
+
+To report a vulnerability for the OSAL subsystem please [submit an issue](https://github.com/nasa/osal/issues/new/choose).
+
+For general cFS vulnerabilities please [open a cFS framework issue](https://github.com/nasa/cfs/issues/new/choose) and see our [top-level security policy](https://github.com/nasa/cFS/security/policy) for additional information.
+
+In either case please use the "Bug Report" template and provide as much information as possible. Apply appropriate labels for each report. For security related reports, tag the issue with the "security" label.
+
+## Testing
+
+**Disclaimer: nasa/OSAL is not responsible for any liability incurred under the [Apache License 2.0](https://github.com/nasa/osal/blob/main/LICENSE).**
+
+Testing is an important aspect our team values to improve OSAL. 
+
+To view tools used for the cFS bundle, see our [top-level security policy](https://github.com/nasa/cFS/security/policy). 
+
+### CodeQL
+
+The [OSAL CodeQL GitHub Actions workflow](https://github.com/nasa/osal/actions/workflows/codeql-build.yml) is available to the public. To review the results, fork the OSAL repository and run the CodeQL workflow. 
+
+CodeQL is ran for every push and pull-request on all branches of OSAL in GitHub Actions. 
+
+For the CodeQL GitHub Actions setup, visit https://github.com/github/codeql-action. 
+
+### Cppcheck
+
+The [OSAL Cppcheck GitHub Actions workflow and results](https://github.com/nasa/osal/actions/workflows/static-analysis.yml) are available to the public. To view the results, select a workflow and download the artifacts. 
+
+Cppcheck is ran for every push on the main branch and every pull request on all branches of OSAL in Github Actions. 
+
+For more information about Cppcheck, visit http://cppcheck.sourceforge.net/.
+
+## Additional Support
+
+For additional support, submit a GitHub issue. You can also email the cfs community at cfs-community@lists.nasa.gov. 
+
+You can subscribe to the mailing list [here](https://lists.nasa.gov/mailman/listinfo/cfs-community) that includes all the community members/users of the NASA core Flight Software (cFS) product line. The mailing list is used to communicate any information related to the cFS product such as current releases, bug findings and fixes, enhancement requests, community meeting notifications, sending out meeting minutes, etc.
+
+If you wish to report a cybersecurity incident or concern, please contact the NASA Security Operations Center either by phone at 1-877-627-2732 or via email address soc@nasa.gov.
+</pre></div>
+</div>
+</section>
+<section id="version-info-cmake">
+<h2><code class="docutils literal notranslate"><span class="pre">version_info.cmake</span></code><a class="headerlink" href="#version-info-cmake" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/version_info.cmake</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># This indicates the git tag/branch name in the repository that corresponds to this module
+# this will be supplied to commands such as "git describe" to get a user-friendly version string. 
+set(NAME "osal")
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../fprime/fprime-nos3/Sequences/index.html" class="btn btn-neutral float-left" title="Sequences" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docs/index.html" class="btn btn-neutral float-right" title="docs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

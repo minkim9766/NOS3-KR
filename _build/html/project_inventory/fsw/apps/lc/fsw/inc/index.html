@@ -1,0 +1,3066 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>inc &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="src" href="../src/index.html" />
+    <link rel="prev" title="fsw" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">apps</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">lc</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">fsw</a></li>
+      <li class="breadcrumb-item active">inc</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/fsw/apps/lc/fsw/inc/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="inc">
+<h1>inc<a class="headerlink" href="#inc" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/lc/fsw/inc/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="lc-events-h">
+<h2><code class="docutils literal notranslate"><span class="pre">lc_events.h</span></code><a class="headerlink" href="#lc-events-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/lc/fsw/inc/lc_events.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS Limit Checker (LC) event identifers.
+ */
+#ifndef LC_EVENTS_H
+#define LC_EVENTS_H
+
+/**
+ * \defgroup cfslcevents CFS Limit Checker Event IDs
+ * \{
+ */
+
+#define LC_RESERVED_EID 0 /**&lt; \brief Reserved EID */
+
+/**
+ * \brief LC Application Fatal Termination Event ID
+ *
+ *  \par Type: CRITICAL
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the CFS Limit Checker
+ *  exits due to a fatal error condition.
+ */
+#define LC_TASK_EXIT_EID 1
+
+/**
+ * \brief LC Initialization Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the CFS Limit Checker has
+ *  completed initialization.
+ */
+#define LC_INIT_INF_EID 2
+
+/**
+ * \brief LC Create Command Pipe Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the CFS Limit Checker
+ *  is unable to create its command pipe via the #CFE_SB_CreatePipe
+ *  API
+ */
+#define LC_CR_PIPE_ERR_EID 3
+
+/**
+ * \brief LC Subscribe To Housekeeping Request Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the CFS Limit Checker
+ *  is unable to subscribe to its Housekeeping Request message
+ *  via the #CFE_SB_Subscribe API
+ */
+#define LC_SUB_HK_REQ_ERR_EID 4
+
+/**
+ * \brief LC Subscribe To Ground Command Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the CFS Limit Checker
+ *  is unable to subscribe to its ground commands via the
+ *  #CFE_SB_Subscribe API
+ */
+#define LC_SUB_GND_CMD_ERR_EID 5
+
+/**
+ * \brief LC Subscribe To Actionpoint Sample Command Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the CFS Limit Checker
+ *  is unable to subscribe to its actionpoint sample command via the
+ *  #CFE_SB_Subscribe API
+ */
+#define LC_SUB_SAMPLE_CMD_ERR_EID 6
+
+/**
+ * \brief LC Watchpoint Definition Table Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the watchpoint definition
+ *  table (WDT) could not be registered.
+ */
+#define LC_WDT_REGISTER_ERR_EID 7
+
+/**
+ * \brief LC Watchpoint Definition Table Reregistration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the watchpoint definition
+ *  table (WDT) could not be registered non-critical after first
+ *  registering and then unregistering the table as critical.
+ *  This sequence can only occur when the WDT succeeds and the
+ *  ADT fails the attempt to register as a critical table. This
+ *  error is extremely unlikely to occur.
+ */
+#define LC_WDT_REREGISTER_ERR_EID 8
+
+/**
+ * \brief LC Actionpoint Definition Table Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the actionpoint definition
+ *  table (ADT) could not be registered.
+ */
+#define LC_ADT_REGISTER_ERR_EID 9
+
+/**
+ * \brief LC Watchpoint Results Table Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the watchpoint results
+ *  table (WRT) could not be registered.
+ */
+#define LC_WRT_REGISTER_ERR_EID 10
+
+/**
+ * \brief LC Actionpoint Results Table Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the actionpoint results
+ *  table (ART) could not be registered.
+ */
+#define LC_ART_REGISTER_ERR_EID 11
+
+/**
+ * \brief LC Watchpoint Result Table CDS Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the CDS area for the
+ *  watchpoint restuls table (WRT) data could not be registered.
+ */
+#define LC_WRT_CDS_REGISTER_ERR_EID 12
+
+/**
+ * \brief LC Actionpoint Result Table CDS Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the CDS area for the
+ *  actionpont restuls table (ART) data could not be registered.
+ */
+#define LC_ART_CDS_REGISTER_ERR_EID 13
+
+/**
+ * \brief LC Application Data CDS Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the CDS area for the
+ *  LC application data could not be registered.
+ */
+#define LC_APP_CDS_REGISTER_ERR_EID 14
+
+/**
+ * \brief LC Watchpoint Defintion Table Load From File Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when an error is encountered
+ *  loading the watchpoint definition table (WDT) from the default
+ *  file image
+ */
+#define LC_WDT_LOAD_ERR_EID 15
+
+/**
+ * \brief LC Actionpoint Definition Table Load From File Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when an error is encountered
+ *  loading the actionpoint definition table (ADT) from the default
+ *  file image
+ */
+#define LC_ADT_LOAD_ERR_EID 16
+
+/**
+ * \brief LC Watchpoint Result Table Get Address Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the address can't be obtained
+ *  from table services for the watchpoint results table (WRT).
+ */
+#define LC_WRT_GETADDR_ERR_EID 17
+
+/**
+ * \brief LC Actionpoint Result Table Get Address Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the address can't be obtained
+ *  from table services for the actionpoint results table (ART).
+ */
+#define LC_ART_GETADDR_ERR_EID 18
+
+/**
+ * \brief LC Watchpoint Definition Table Get Address Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the address can't be obtained
+ *  from table services for the watchpoint definition table (WDT).
+ */
+#define LC_WDT_GETADDR_ERR_EID 19
+
+/**
+ * \brief LC Actionpoint Definition Table Get Address Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the address can't be obtained
+ *  from table services for the actionpoint definition table (ADT).
+ */
+#define LC_ADT_GETADDR_ERR_EID 20
+
+/**
+ * \brief LC State Restored From CDS Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued following a processor reset when the
+ *  entire LC execution state has been successfully restored from the
+ *  Critical Data Store (CDS). Application global data, actionpoint
+ *  results data and watchpoint results data were restored from CDS
+ *  areas managed directly by LC. Actionpoint definition table data
+ *  and watchpoint definition table data were restored from the CDS
+ *  area managed by cFE Table Services.
+ *
+ *  Note that an attempt to use CDS is only made when the appropriate
+ *  parameter is enabled in the LC platform configuration header file.
+ *
+ *  \sa LC_SAVE_TO_CDS, #LC_CDS_UPDATED_INF_EID, #LC_CDS_DISABLED_INF_EID
+ */
+#define LC_CDS_RESTORED_INF_EID 21
+
+/**
+ * \brief LC Default State Initialized and Stored to CDS Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued following LC startup initialization
+ *  when the entire LC execution state has been set to default values
+ *  successfully stored to the Critical Data Store (CDS). Application
+ *  global data, actionpoint results data and watchpoint results data
+ *  were stored to CDS areas managed directly by LC. Actionpoint and
+ *  watchpoint definition table data are stored to the CDS area
+ *  managed by cFE Table Services.
+ *
+ *  This event implies that the CDS areas were created successfully.
+ *  The reason that previous data was not restored may be due to the
+ *  reset type (warm vs cold) or to a failure to restore the entire
+ *  set of data described above. If data from any CDS area cannot be
+ *  restored, then all data is set to defaults and written to CDS.
+ *
+ *  Note that an attempt to use CDS is only made when the appropriate
+ *  parameter is enabled in the LC platform configuration header file.
+ *
+ *  \sa LC_SAVE_TO_CDS, #LC_CDS_RESTORED_INF_EID, #LC_CDS_DISABLED_INF_EID
+ */
+#define LC_CDS_UPDATED_INF_EID 22
+
+/**
+ * \brief LC Use Of CDS Disabled Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued following LC startup initialization
+ *  when the entire LC execution state has been set to default values
+ *  successfully stored to the Critical Data Store (CDS). Application
+ *  global data, actionpoint results data and watchpoint results data
+ *  were stored to CDS areas managed directly by LC. Actionpoint and
+ *  watchpoint definition table data are stored to the CDS area
+ *  managed by cFE Table Services.
+ *
+ *  This event implies that the CDS areas were not created successfully
+ *  or that LC was unable to write the default values to CDS.
+ *
+ *  Note that an attempt to use CDS is only made when the appropriate
+ *  parameter is enabled in the LC platform configuration header file.
+ *
+ *  \sa LC_SAVE_TO_CDS, #LC_CDS_RESTORED_INF_EID, #LC_CDS_UPDATED_INF_EID
+ */
+#define LC_CDS_DISABLED_INF_EID 23
+
+/**
+ * \brief LC Command Code Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when a software bus message is received
+ *  with an invalid command code.
+ */
+#define LC_CC_ERR_EID 24
+
+/**
+ * \brief LC Sample Actionpoint Message Start Or End Number Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the #LC_SAMPLE_AP_MID message
+ *  has been received with an invalid actionpoint start or end number specified
+ */
+#define LC_APSAMPLE_APNUM_ERR_EID 25
+
+/**
+ * \brief LC No-op Command Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when a NOOP command has been received.
+ */
+#define LC_NOOP_INF_EID 26
+
+/**
+ * \brief LC Reset Counters Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when a reset counters command has
+ *  been received.
+ */
+#define LC_RESET_DBG_EID 27
+
+/**
+ * \brief LC Set Limit Checker State Command Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the #LC_SET_LC_STATE_CC command
+ *  has been successfully executed
+ */
+#define LC_LCSTATE_INF_EID 28
+
+/**
+ * \brief LC Set Limit Checker State, State Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the #LC_SET_LC_STATE_CC command
+ *  has been received with an invalid state argument specified
+ */
+#define LC_LCSTATE_ERR_EID 29
+
+/**
+ * \brief LC Set Actionpoint State New State Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the #LC_SET_AP_STATE_CC command
+ *  has been received with an invalid state argument specified
+ */
+#define LC_APSTATE_NEW_ERR_EID 30
+
+/**
+ * \brief LC Set Actionpoint State Current State Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the #LC_SET_AP_STATE_CC command
+ *  has been received and the current actionpoint state is either
+ *  #LC_ACTION_NOT_USED or #LC_APSTATE_PERMOFF which can only be changed
+ *  with a table load.
+ */
+#define LC_APSTATE_CURR_ERR_EID 31
+
+/**
+ * \brief LC Set Actionpoint State Actionpoint Number Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the #LC_SET_AP_STATE_CC command
+ *  has been received with an invalid actionpoint number specified
+ */
+#define LC_APSTATE_APNUM_ERR_EID 32
+
+/**
+ * \brief LC Set Actionpoint State Command Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the #LC_SET_AP_STATE_CC command
+ *  has been successfully executed
+ */
+#define LC_APSTATE_INF_EID 33
+
+/**
+ * \brief LC Set Actionpoint Permanently Off Actionpoint Number Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the #LC_SET_AP_PERMOFF_CC command
+ *  has been received with an invalid actionpoint number specified
+ */
+#define LC_APOFF_APNUM_ERR_EID 34
+
+/**
+ * \brief LC Set Actionpoint Permanently Off Actionpoint Not Disabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the #LC_SET_AP_PERMOFF_CC command
+ *  has been received and the current actionpoint state is not
+ *  #LC_APSTATE_DISABLED
+ */
+#define LC_APOFF_CURR_ERR_EID 35
+
+/**
+ * \brief LC Set Actionpoint Permanently Off Command Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the #LC_SET_AP_PERMOFF_CC command
+ *  has been successfully executed
+ */
+#define LC_APOFF_INF_EID 36
+
+/**
+ * \brief LC Reset Actionpoint Stats Actionpoint Number Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the #LC_RESET_AP_STATS_CC command
+ *  has been received with an invalid actionpoint number specified
+ */
+#define LC_APSTATS_APNUM_ERR_EID 37
+
+/**
+ * \brief LC Reset Actionpoint Stats Command Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the #LC_RESET_AP_STATS_CC command
+ *  has been successfully executed
+ */
+#define LC_APSTATS_INF_EID 38
+
+/**
+ * \brief LC Reset Watchpoint Stats Watchpoint Number Invalid Evnt ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the #LC_RESET_WP_STATS_CC command
+ *  has been received with an invalid watchpoint number specified
+ */
+#define LC_WPSTATS_WPNUM_ERR_EID 39
+
+/**
+ * \brief LC Reset Watchpoint Stats Command Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the #LC_RESET_WP_STATS_CC command
+ *  has been successfully executed
+ */
+#define LC_WPSTATS_INF_EID 40
+
+/**
+ * \brief LC Housekeeping Request Message Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when a housekeeping request is received
+ *  with a message length that doesn't match the expected value.
+ */
+#define LC_HKREQ_LEN_ERR_EID 41
+
+/**
+ * \brief LC Actionpoint Sample Message Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when a actionpoint sample request is received
+ *  with a message length that doesn't match the expected value.
+ */
+#define LC_APSAMPLE_LEN_ERR_EID 42
+
+/**
+ * \brief LC Command Message Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when a ground command message is received
+ *  with a message length that doesn't match the expected value.
+ */
+#define LC_LEN_ERR_EID 43
+
+/**
+ * \brief LC Watchpoint Message Unsubscribe Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when an error is encountered
+ *  unsubscribing to a watchpoint message ID
+ */
+#define LC_UNSUB_WP_ERR_EID 44
+
+/**
+ * \brief LC Watchpoint Message Subscribe Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when an error is encountered
+ *  when subscribing to a watchpoint message iD
+ */
+#define LC_SUB_WP_ERR_EID 45
+
+/**
+ * \brief LC Watchpoint Results Table Not Saved To CDS On Exit Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the watchpoint results
+ *  table (WRT) data could not be saved to the CDS on application
+ *  exit.
+ */
+#define LC_WRT_NO_SAVE_ERR_EID 46
+
+/**
+ * \brief LC Actionpoint Results Table Not Saved To CDS On Exit Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the actionpoint results
+ *  table (ART) data could not be saved to the CDS on application
+ *  exit.
+ */
+#define LC_ART_NO_SAVE_ERR_EID 47
+
+/**
+ * \brief LC Application Data Not Saved To CDS On Startup Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the LC application data
+ *  could not be saved to the CDS on application startup.
+ */
+#define LC_APP_NO_SAVE_START_ERR_EID 48
+
+/**
+ * \brief LC Unreferenced Message ID Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when a software bus message has
+ *  been received that isn't a recognized LC message and has no
+ *  defined watchpoints referencing it's message ID
+ */
+#define LC_MID_INF_EID 49
+
+/**
+ * \brief LC Watchpoint Data Type Undefined Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued whenever an undefined watchpoint data type
+ *  identifier is detected
+ */
+#define LC_WP_DATATYPE_ERR_EID 50
+
+/**
+ * \brief LC Watchpoint Operatior ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued whenever an undefined watchpoint
+ *  operator identifier is detected
+ */
+#define LC_WP_OPERID_ERR_EID 51
+
+/**
+ * \brief LC Watchpoint Data Value Is Float NAN Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when a watchpoint is defined as a float
+ *  type, but the extracted value would equate to a floating point
+ *  NAN (not-a-number) value
+ */
+#define LC_WP_NAN_ERR_EID 52
+
+/**
+ * \brief LC Watchpoint Offset Value Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when a watchpoint offset value extends past
+ *  the end of the message as reported by the #CFE_MSG_GetSize
+ *  function
+ */
+#define LC_WP_OFFSET_ERR_EID 53
+
+/**
+ * \brief LC Watchpoint Defintion Table Validation Floating Point Check Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued on the first error when a table validation
+ *  fails for a watchpoint definition table (WDT) load and the error is
+ *  a failed floating point check. This error is caused when the data type
+ *  for a wachpoint definition is floating point and the comparison value
+ *  equates to a floating point NAN (not-a-number) or infinite value.
+ */
+#define LC_WDTVAL_FPERR_EID 54
+
+/**
+ * \brief LC Watchpoint Definition Table Validation Failed (Not Floating Point Check) Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued on the first error when a table validation
+ *  fails for a watchpoint definition table (WDT) load and the error is
+ *  NOT a failed floating point check.
+ */
+#define LC_WDTVAL_ERR_EID 55
+
+/**
+ * \brief LC Watchpoint Defintion Table Validation Results Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when a table validation has been
+ *  completed for a watchpoint definition table (WDT) load
+ */
+#define LC_WDTVAL_INF_EID 56
+
+/**
+ * \brief LC Sample Actionpoint Current Actionpoint State Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the #LC_SAMPLE_AP_MID message
+ *  has been received and the current state for the specified
+ *  actionpoint state is either #LC_ACTION_NOT_USED or #LC_APSTATE_PERMOFF.
+ */
+#define LC_APSAMPLE_CURR_ERR_EID 57
+
+/**
+ * \brief LC Actionpoint State Change From PASS To FAIL Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when an actionpoint evaluation transitions
+ *  from #LC_ACTION_PASS to #LC_ACTION_FAIL
+ */
+#define LC_AP_PASSTOFAIL_INF_EID 58
+
+/**
+ * \brief LC Actionpoint Failed While Limit Checker State Passive Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when an actionpoint fails evaluation while
+ *  the LC task operating state is #LC_STATE_PASSIVE
+ */
+#define LC_PASSIVE_FAIL_DBG_EID 59
+
+/**
+ * \brief LC Actionpoint Failed While Actionpoint State Passive Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when an actionpoint fails evaluation while
+ *  the actionpoint state is #LC_APSTATE_PASSIVE
+ */
+#define LC_AP_PASSIVE_FAIL_INF_EID 60
+
+/**
+ * \brief LC Actionpoint State Change From FAIL To PASS Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when an actionpoint evaluation transitions
+ *  from #LC_ACTION_FAIL to #LC_ACTION_PASS
+ */
+#define LC_AP_FAILTOPASS_INF_EID 61
+
+/**
+ * \brief LC Actionpoint Evaluated To Error Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when an actionpoint evaluation
+ *  results in #LC_ACTION_ERROR
+ */
+#define LC_ACTION_ERROR_ERR_EID 62
+
+/**
+ * \brief LC Actionpoint RPN Expression Illegal Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when an illegal Reverse Polish Notation
+ *  (RPN) expression is detected during an actionpoint evaluation
+ */
+#define LC_INVALID_RPN_ERR_EID 63
+
+/**
+ * \brief LC Actionpoint Definition Table Validation RPN Equation Check Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued on the first error when a table validation
+ *  fails for a actionpoint definition table (ADT) load and the error is
+ *  a failed RPN equation check.
+ */
+#define LC_ADTVAL_RPNERR_EID 64
+
+/**
+ * \brief LC Actionpoint Definition Table Validation Failed (Not RPN Equation Check) Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued on the first error when a table validation
+ *  fails for an actioinpoint definition table (ADT) load and the error is
+ *  NOT a failed RPN equation check.
+ */
+#define LC_ADTVAL_ERR_EID 65
+
+/**
+ * \brief LC Actionpoint Defintion Table Validation Result Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when a table validation has been
+ *  completed for an actionpoint definition table (ADT) load
+ */
+#define LC_ADTVAL_INF_EID 66
+
+/**
+ * \brief LC LC_CustomFunction Called With Unexpected Watchpoint ID Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the mission specific custom
+ *  function #LC_CustomFunction is called with an unexpected
+ *  watchpoint ID
+ */
+#define LC_CFCALL_ERR_EID 67
+
+/**
+ * \brief LC Watchdog Definition Table Critical Table Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the watchpoint definition
+ *  table (WDT) could not be registered as a critical table.
+ */
+#define LC_WDT_REGISTER_CRIT_ERR_EID 68
+
+/**
+ * \brief LC Actionpoint Definition Table Critical Table Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the actionpoint definition
+ *  table (ADT) could not be registered as a critical table.
+ */
+#define LC_ADT_REGISTER_CRIT_ERR_EID 69
+
+/**
+ * \brief LC Actionpoint Definition Table Base ID
+ *
+ *  \par Type: User defined in Actionpoint Definition Table
+ *
+ *  \par Cause:
+ *
+ *  The actionpoint base event ID is designed to avoid conflicts
+ *  between the event ID's defined above for use by the LC application
+ *  and the user defined event ID's in the actionpoint table.
+ *
+ *  These events are generated when the evaluation of an actionpoint
+ *  results in sending a command to the stored command (SC) processor
+ *  to start a real time command sequence (RTS).  The event text is
+ *  user defined and specific to the particular actionpoint.
+ *
+ *  Note that user defined event ID's can be easily recognized if the
+ *  base number is easily recognizable.  For example, using the value
+ *  1000 for the base event ID and using the actionpoint table index as
+ *  the offset portion creates an obvious correlation.  Thus, if an LC
+ *  event ID is 1025 then it is immediately apparent that the event is
+ *  the user defined event for actionpoint table index 25.
+ */
+#define LC_BASE_AP_EID 1000
+
+/**\}*/
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="lc-extern-typedefs-h">
+<h2><code class="docutils literal notranslate"><span class="pre">lc_extern_typedefs.h</span></code><a class="headerlink" href="#lc-extern-typedefs-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/lc/fsw/inc/lc_extern_typedefs.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Declarations and prototypes for fm_extern_typedefs module
+ */
+
+#ifndef LC_EXTERN_TYPEDEFS_H
+#define LC_EXTERN_TYPEDEFS_H
+
+#include &lt;cfe.h&gt;
+
+/**
+ * \name LC Table Name Strings
+ * \{
+ */
+#define LC_WDT_TABLENAME "LC_WDT"
+#define LC_ADT_TABLENAME "LC_ADT"
+#define LC_WRT_TABLENAME "LC_WRT"
+#define LC_ART_TABLENAME "LC_ART"
+/**\}*/
+
+/**
+ *  \brief Actionpoint Definition Table (ADT) Entry
+ */
+typedef struct
+{
+    uint8 DefaultState;       /**&lt; \brief Default state for this AP (enumerated)
+                                          States are defined in lc_msgdefs.h        */
+    uint8 MaxPassiveEvents;   /**&lt; \brief Max number of events before filter
+                                          - RTS not started because AP is passive   */
+    uint8 MaxPassFailEvents;  /**&lt; \brief Max number of events before filter
+                                          - AP result transition from pass to fail  */
+    uint8 MaxFailPassEvents;  /**&lt; \brief Max number of events before filter
+                                          - AP result transition from fail to pass  */
+    uint16 RTSId;             /**&lt; \brief RTS to request if this AP fails           */
+    uint16 MaxFailsBeforeRTS; /**&lt; \brief How may consecutive failures before
+                                          an RTS request is issued                  */
+
+    uint16 RPNEquation[LC_MAX_RPN_EQU_SIZE]; /**&lt; \brief Reverse Polish Equation that
+                                                         specifies when this actionpoint
+                                                         should fail                     */
+
+    uint16 EventType; /**&lt; \brief Event type used for event msg if AP fails:
+                                  #CFE_EVS_EventType_INFORMATION,
+                                  #CFE_EVS_EventType_DEBUG,
+                                  #CFE_EVS_EventType_ERROR,
+                                  or #CFE_EVS_EventType_CRITICAL      */
+
+    uint16 EventID; /**&lt; \brief Event ID used for event msg if AP fails
+                                See lc_events.h for those already in use  */
+
+    char EventText[LC_MAX_ACTION_TEXT]; /**&lt; \brief Text used for the event msg when
+                                                    this AP fails                   */
+} LC_ADTEntry_t;
+
+/**
+ * \brief Alignment union
+ *
+ * A union type provides a way to have many different data types occupy
+ * the same memory and legally alias each other.
+ *
+ * This is used to store the watch data points, as they may be 8, 16, or 32
+ * bits and this is defined in the table / not known until runtime.
+ */
+typedef union
+{
+    uint32 Unsigned32;
+    int32  Signed32;
+    float  Float32;
+    uint16 Unsigned16;
+    int16  Signed16;
+    uint8  Unsigned8;
+    int8   Signed8;
+    uint8  RawByte[4];
+} LC_MultiType_t;
+
+/**
+ *  \brief Watchpoint Definition Table (WDT) Entry
+ */
+typedef struct
+{
+    uint8          DataType;        /**&lt; \brief Watchpoint Data Type (enumerated)     */
+    uint8          OperatorID;      /**&lt; \brief Comparison type (enumerated)          */
+    CFE_SB_MsgId_t MessageID;       /**&lt; \brief Message ID for the message containing
+                                                the watchpoint                        */
+    uint32 WatchpointOffset;        /**&lt; \brief Byte offset from the beginning of
+                                                the message (including any headers)
+                                                to the watchpoint                     */
+    uint32 BitMask;                 /**&lt; \brief Value to be masked with watchpoint
+                                                data prior to comparison              */
+    LC_MultiType_t ComparisonValue; /**&lt; \brief Value watchpoint data is compared
+                                                against                               */
+    uint32 ResultAgeWhenStale;      /**&lt; \brief Number of LC Sample Actionpoint
+                                                commands that must be processed after
+                                                comparison before result goes stale   */
+    uint32 CustomFuncArgument;      /**&lt; \brief Data passed to the custom function
+                                                when Operator_ID is set to
+                                                #LC_OPER_CUSTOM                       */
+} LC_WDTEntry_t;
+
+#endif /* LC_EXTERN_TYPEDEFS_H */
+</pre></div>
+</div>
+</section>
+<section id="lc-mission-cfg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">lc_mission_cfg.h</span></code><a class="headerlink" href="#lc-mission-cfg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/lc/fsw/inc/lc_mission_cfg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Limit Checker (LC) Application Mission Configuration Header File
+ */
+#ifndef LC_MISSION_CFG_H
+#define LC_MISSION_CFG_H
+
+/**
+ * \defgroup cfslcmissioncfg CFS Limit Checker Mission Configuration
+ * \{
+ */
+
+/**
+ * \brief RTS Request Message ID
+ *
+ *  \par Description:
+ *       Message ID that will be used by the #LC_ExecuteRTS function
+ *       to construct the RTS request message.
+ *
+ *       We define this here to allow the LC application to be built
+ *       without including headers from the application (e.g. SC) that
+ *       will receive the command.  Obviously, this definition must
+ *       match the message ID expectyed by the receiving application.
+ *
+ *       A mission may choose to modify the #LC_ExecuteRTS function not
+ *       to use this or define it using a message ID constant that is
+ *       defined numerically elsewhere.
+ *
+ *  \par Limits:
+ *       This parameter shouldn't be larger than the value set for
+ *       #CFE_PLATFORM_SB_HIGHEST_VALID_MSGID.
+ */
+#define LC_RTS_REQ_MID 0x18A9
+
+/**
+ * \brief RTS Request Command Code
+ *
+ *  \par Description:
+ *       Command code that will be used by the #LC_ExecuteRTS function
+ *       to construct the RTS request message.
+ *
+ *       We define this here to allow the LC application to be built
+ *       without including headers from the application (e.g. SC) that
+ *       will receive the command.  Obviously, this definition must
+ *       match the command code expected by the receiving application.
+ *
+ *  \par Limits:
+ *       This parameter can't be larger than 127 (the maximum value of
+ *       7-bit number).
+ */
+#define LC_RTS_REQ_CC 4
+
+/**\}*/
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="lc-msg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">lc_msg.h</span></code><a class="headerlink" href="#lc-msg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/lc/fsw/inc/lc_msg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS Limit Checker (LC) command and telemetry
+ *   message data types.
+ *
+ * @note
+ *   Constants and enumerated types related to these message structures
+ *   are defined in lc_msgdefs.h. They are kept separate to allow easy
+ *   integration with ASIST RDL files which can't handle typedef
+ *   declarations (see the main comment block in lc_msgdefs.h for more
+ *   info).
+ */
+#ifndef LC_MSG_H
+#define LC_MSG_H
+
+/************************************************************************
+ * Includes
+ ************************************************************************/
+#include &lt;cfe.h&gt;
+#include &lt;lc_msgdefs.h&gt;
+
+/************************************************************************
+ * Type Definitions
+ ************************************************************************/
+
+/**
+ * \defgroup cfslccmdstructs CFS Limit Checker Command Structures
+ * \{
+ */
+
+/**
+ *  \brief No Arguments Command
+ *
+ *  For command details see #LC_NOOP_CC, #LC_RESET_CC
+ *  Also see #LC_SEND_HK_MID
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**&lt; \brief Command Header */
+} LC_NoArgsCmd_t;
+
+/**
+ *  \brief Set LC Application State Command
+ *
+ *  For command details see #LC_SET_LC_STATE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**&lt; \brief Command Header */
+
+    uint16 NewLCState; /**&lt; \brief New LC application state    */
+    uint16 Padding;    /**&lt; \brief Structure padding           */
+} LC_SetLCState_t;
+
+/**
+ *  \brief Set AP (Actionpoint) State Command
+ *
+ *  For command details see #LC_SET_AP_STATE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**&lt; \brief Command Header */
+
+    uint16 APNumber;   /**&lt; \brief Which actionpoint(s) to change */
+    uint16 NewAPState; /**&lt; \brief New actionpoint state          */
+} LC_SetAPState_t;
+
+/**
+ *  \brief Set AP (Actionpoint) Permanently Off
+ *
+ *  For command details see #LC_SET_AP_PERMOFF_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**&lt; \brief Command Header */
+
+    uint16 APNumber; /**&lt; \brief Which actionpoint to change */
+    uint16 Padding;  /**&lt; \brief Structure padding           */
+} LC_SetAPPermOff_t;
+
+/**
+ *  \brief Reset AP (Actionpoint) Statistics
+ *
+ *  For command details see #LC_RESET_AP_STATS_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**&lt; \brief Command Header */
+
+    uint16 APNumber; /**&lt; \brief Which actionpoint(s) to change */
+    uint16 Padding;  /**&lt; \brief Structure padding              */
+} LC_ResetAPStats_t;
+
+/**
+ *  \brief Reset WP (Watchpoint) Statistics
+ *
+ *  For command details see #LC_RESET_WP_STATS_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**&lt; \brief Command Header */
+
+    uint16 WPNumber; /**&lt; \brief Which watchpoint(s) to change */
+    uint16 Padding;  /**&lt; \brief Structure padding             */
+} LC_ResetWPStats_t;
+
+/**
+ *  \brief Sample AP (Actionpoint) Request
+ *
+ *  See #LC_SAMPLE_AP_MID
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**&lt; \brief Command Header */
+
+    uint16 StartIndex; /**&lt; \brief Start actionpoint to sample */
+    uint16 EndIndex;   /**&lt; \brief End actionpoint to sample */
+
+    uint16 UpdateAge; /**&lt; \brief Update WP results age (T or F) */
+    uint16 Padding;   /**&lt; \brief Structure padding              */
+} LC_SampleAP_t;
+
+/**
+ * \brief Send Command to Start a Stored Command RTS
+ *
+ * This is a local declaration of the command message structure
+ * to initiate an RTS and has been placed here to allow the
+ * the LC application to be built without including headers from
+ * any other applications (like Stored Commanding).
+ * A mission may choose to remove this and use a message
+ * structure declared elsewhere instead.
+ *
+ * This also applies to the LC_RTS_REQ_MID and LC_RTS_REQ_CC
+ * constants (see lc_mission_cfg.h).
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**&lt; \brief Command Header */
+
+    uint16 RTSId; /**&lt; \brief RTS Id to start */
+    uint16 Padding; /**&lt; \brief Structure padding */
+} LC_RTSRequest_t;
+
+/**\}*/
+
+/**
+ * \defgroup cfslctlm CFS Limit Checker Telemetry
+ * \{
+ */
+
+/**
+ *  \brief Housekeeping Packet Structure
+ */
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**&lt; \brief Telemetry Header */
+
+    uint8 CmdCount;       /**&lt; \brief LC Application Command Counter */
+    uint8 CmdErrCount;    /**&lt; \brief LC Application Command Error Counter */
+    uint8 CurrentLCState; /**&lt; \brief Current LC application operating state */
+
+    uint8 Pad8; /**&lt; \brief Structure padding */
+
+    uint8 WPResults[LC_HKWR_NUM_BYTES]; /**&lt; \brief Packed watchpoint results data, 2 bits per watchpoint */
+    uint8 APResults[LC_HKAR_NUM_BYTES]; /**&lt; \brief Packed actionpoint results data, 4 bits per actionpoint */
+
+    uint16 PassiveRTSExecCount; /**&lt; \brief Total count of RTS sequences not initiated because the LC state is
+                                 *          set to #LC_STATE_PASSIVE or the state of the actionpoint that failed
+                                 *          is set to #LC_APSTATE_PASSIVE
+                                 */
+
+    uint16 WPsInUse;  /**&lt; \brief How many watchpoints are currently in effect */
+    uint16 ActiveAPs; /**&lt; \brief How many actionpoints are currently active */
+
+    uint16 Pad16; /**&lt; \brief Structure padding */
+
+    uint32 APSampleCount;     /**&lt; \brief Total count of Actionpoints sampled */
+    uint32 MonitoredMsgCount; /**&lt; \brief Total count of messages monitored for watchpoints */
+    uint32 RTSExecCount;      /**&lt; \brief Total count of RTS sequences initiated */
+} LC_HkPacket_t;
+
+/**\}*/
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="lc-msgdefs-h">
+<h2><code class="docutils literal notranslate"><span class="pre">lc_msgdefs.h</span></code><a class="headerlink" href="#lc-msgdefs-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/lc/fsw/inc/lc_msgdefs.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS Limit Checker (LC) command and telemetry
+ *   message constant definitions.
+ *
+ * @note
+ *   These Macro definitions have been put in this file (instead of
+ *   lc_msg.h) so this file can be included directly into ASIST build
+ *   test scripts. ASIST RDL files can accept C language \#defines but
+ *   can't handle type definitions. As a result: DO NOT PUT ANY
+ *   TYPEDEFS OR STRUCTURE DEFINITIONS IN THIS FILE!
+ *   ADD THEM TO lc_msg.h IF NEEDED!
+ */
+#ifndef LC_MSGDEFS_H
+#define LC_MSGDEFS_H
+
+/************************************************************************
+ * Includes
+ ************************************************************************/
+#include &lt;lc_platform_cfg.h&gt;
+
+/************************************************************************
+ * Macro Definitions
+ ************************************************************************/
+
+/**
+ * \name LC Application States
+ * \{
+ */
+#define LC_STATE_ACTIVE   1 /**&lt; \brief LC Application State Active */
+#define LC_STATE_PASSIVE  2 /**&lt; \brief LC Application State Pasive */
+#define LC_STATE_DISABLED 3 /**&lt; \brief LC Application State Disabled */
+#define LC_STATE_FROM_CDS 4 /**&lt; \brief Used for reset processing, not valid state */
+/**\}*/
+
+/**
+ * \name Actionpoint States
+ * \{
+ */
+#define LC_ACTION_NOT_USED  0xFF /**&lt; \brief Actionpoint unused, not valid command argument */
+#define LC_APSTATE_ACTIVE   1    /**&lt; \brief Actionpoint state active */
+#define LC_APSTATE_PASSIVE  2    /**&lt; \brief Actionpoint state passive */
+#define LC_APSTATE_DISABLED 3    /**&lt; \brief Actionpoint state disabled */
+#define LC_APSTATE_PERMOFF  4    /**&lt; \brief Actionpoint state permanently off, see #LC_SET_AP_PERMOFF_CC */
+/**\}*/
+
+/**
+ * \name Special Values for Commands
+ * \{
+ */
+#define LC_ALL_ACTIONPOINTS 0xFFFF /**&lt; \brief Special number indicating all actionpoints */
+#define LC_ALL_WATCHPOINTS  0xFFFF /**&lt; \brief Special number indicating all watchpoints */
+/**\}*/
+
+/**
+ * \name Housekeeping Packed Watch Results
+ * \{
+ */
+#define LC_HKWR_FALSE 0x00 /**&lt; \brief Two bit value used for FALSE        */
+#define LC_HKWR_TRUE  0x01 /**&lt; \brief Two bit value used for TRUE         */
+#define LC_HKWR_ERROR 0x02 /**&lt; \brief Two bit value used for ERROR        */
+#define LC_HKWR_STALE 0x03 /**&lt; \brief Two bit value used for STALE        */
+/**\}*/
+
+/**
+ * \name Housekeeping Packed Action Results
+ * \{
+ */
+#define LC_HKAR_PASS  0x00 /**&lt; \brief Two bit value used for PASS         */
+#define LC_HKAR_FAIL  0x01 /**&lt; \brief Two bit value used for FAIL         */
+#define LC_HKAR_ERROR 0x02 /**&lt; \brief Two bit value used for ERROR        */
+#define LC_HKAR_STALE 0x03 /**&lt; \brief Two bit value used for STALE        */
+/**\}*/
+
+/**
+ * \name Housekeeping Packed Action Results, State Identifiers
+ * \{
+ */
+#define LC_HKAR_STATE_NOT_USED 0x00 /**&lt; \brief Two bit value used for NOT USED and PERMOFF */
+#define LC_HKAR_STATE_ACTIVE   0x01 /**&lt; \brief Two bit value used for ACTIVE       */
+#define LC_HKAR_STATE_PASSIVE  0x02 /**&lt; \brief Two bit value used for PASSIVE      */
+#define LC_HKAR_STATE_DISABLED 0x03 /**&lt; \brief Two bit value used for DISABLED     */
+/**\}*/
+
+/**
+ * \name Housekeeping Packed Results, Array Sizes
+ * \{
+ */
+#define LC_HKWR_NUM_BYTES                                                         \
+    (((LC_MAX_WATCHPOINTS + 15) / 16) * 4) /**&lt; \brief 2 bits per WP and keeping  \
+                                            *          array on longword boundary \
+                                            */
+
+#define LC_HKAR_NUM_BYTES                                                        \
+    (((LC_MAX_ACTIONPOINTS + 7) / 8) * 4) /**&lt; \brief 4 bits per AP and keeping  \
+                                           *          array on longword boundary \
+                                           */
+/**\}*/
+
+/**
+ * \defgroup cfslccmdcodes CFS Limit Checker Command Codes
+ * \{
+ */
+
+/**
+ * \brief Noop
+ *
+ *  \par Description
+ *       Implements the Noop command that insures the LC task is alive
+ *
+ *  \par Command Structure
+ *       #LC_NoArgsCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #LC_HkPacket_t.CmdCount will increment
+ *       - The #LC_NOOP_INF_EID informational event message will be
+ *         generated when the command is received
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #LC_HkPacket_t.CmdErrCount will increment
+ *       - Error specific event message #LC_LEN_ERR_EID
+ *
+ *  \par Criticality
+ *       None
+ *
+ *  \sa #LC_RESET_CC
+ */
+#define LC_NOOP_CC 0
+
+/**
+ * \brief Reset Counters
+ *
+ *  \par Description
+ *       Resets the LC housekeeping counters
+ *
+ *  \par Command Structure
+ *       #LC_NoArgsCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #LC_HkPacket_t.CmdCount will be cleared
+ *       - The #LC_RESET_DBG_EID debug event message will be
+ *         generated when the command is executed
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #LC_HkPacket_t.CmdErrCount will increment
+ *       - Error specific event message #LC_LEN_ERR_EID
+ *
+ *  \par Criticality
+ *       None
+ *
+ *  \sa #LC_NOOP_CC
+ */
+#define LC_RESET_CC 1
+
+/**
+ * \brief Set LC Application State
+ *
+ *  \par Description
+ *       Sets the operational state of the LC application
+ *
+ *  \par Command Structure
+ *       #LC_SetLCState_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #LC_HkPacket_t.CmdCount will increment
+ *       - #LC_HkPacket_t.CurrentLCState will be set to the new state
+ *       - The #LC_LCSTATE_INF_EID informational event message will be
+ *         generated when the command is executed
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - Invalid new state specified in command message
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #LC_HkPacket_t.CmdErrCount will increment
+ *       - Error specific event message #LC_LEN_ERR_EID
+ *       - Error specific event message #LC_LCSTATE_ERR_EID
+ *
+ *  \par Criticality
+ *       None
+ *
+ */
+#define LC_SET_LC_STATE_CC 2
+
+/**
+ * \brief Set AP State
+ *
+ *  \par Description
+ *       Set actionpoint state
+ *
+ *  \par Command Structure
+ *       #LC_SetAPState_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #LC_HkPacket_t.CmdCount will increment
+ *       - The #LC_APSTATE_INF_EID informational event message will be
+ *         generated when the command is executed
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - Invalid actionpoint state specified in command message
+ *       - Actionpoint number specified in command message is
+ *         out of range
+ *       - Actionpoint current state is either #LC_ACTION_NOT_USED
+ *         or #LC_APSTATE_PERMOFF
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #LC_HkPacket_t.CmdErrCount will increment
+ *       - Error specific event message #LC_LEN_ERR_EID
+ *       - Error specific event message #LC_APSTATE_NEW_ERR_EID
+ *       - Error specific event message #LC_APSTATE_APNUM_ERR_EID
+ *       - Error specific event message #LC_APSTATE_CURR_ERR_EID
+ *
+ *  \par Criticality
+ *       None
+ *
+ */
+#define LC_SET_AP_STATE_CC 3
+
+/**
+ * \brief Set AP Permanently Off
+ *
+ *  \par Description
+ *       Set the specified actionpoint's state to #LC_APSTATE_PERMOFF
+ *
+ *  \par Command Structure
+ *       #LC_SetAPPermOff_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #LC_HkPacket_t.CmdCount will increment
+ *       - The #LC_APOFF_INF_EID informational event message will be
+ *         generated when the command is executed
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - Actionpoint number specified in command message is
+ *         out of range
+ *       - Actionpoint current state is not #LC_APSTATE_DISABLED
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #LC_HkPacket_t.CmdErrCount will increment
+ *       - Error specific event message #LC_LEN_ERR_EID
+ *       - Error specific event message #LC_APOFF_APNUM_ERR_EID
+ *       - Error specific event message #LC_APOFF_CURR_ERR_EID
+ *
+ *  \par Criticality
+ *       None
+ *
+ */
+#define LC_SET_AP_PERMOFF_CC 4
+
+/**
+ * \brief Reset AP Statistics
+ *
+ *  \par Description
+ *       Resets actionpoint statistics
+ *
+ *  \par Command Structure
+ *       #LC_ResetAPStats_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #LC_HkPacket_t.CmdCount will increment
+ *       - The #LC_APSTATS_INF_EID informational event message will be
+ *         generated when the command is executed
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - Actionpoint number specified in command message is
+ *         out of range
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #LC_HkPacket_t.CmdErrCount will increment
+ *       - Error specific event message #LC_LEN_ERR_EID
+ *       - Error specific event message #LC_APSTATS_APNUM_ERR_EID
+ *
+ *  \par Criticality
+ *       None
+ *
+ *  \sa #LC_RESET_WP_STATS_CC
+ */
+#define LC_RESET_AP_STATS_CC 5
+
+/**
+ * \brief Reset WP Statistics
+ *
+ *  \par Description
+ *       Resets watchpoint statistics
+ *
+ *  \par Command Structure
+ *       #LC_ResetWPStats_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #LC_HkPacket_t.CmdCount will increment
+ *       - The #LC_WPSTATS_INF_EID informational event message will be
+ *         generated when the command is executed
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - Watchpoint number specified in command message is
+ *         out of range
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #LC_HkPacket_t.CmdErrCount will increment
+ *       - Error specific event message #LC_LEN_ERR_EID
+ *       - Error specific event message #LC_WPSTATS_WPNUM_ERR_EID
+ *
+ *  \par Criticality
+ *       None
+ *
+ *  \sa #LC_RESET_AP_STATS_CC
+ */
+#define LC_RESET_WP_STATS_CC 6
+
+/**\}*/
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="lc-msgids-h">
+<h2><code class="docutils literal notranslate"><span class="pre">lc_msgids.h</span></code><a class="headerlink" href="#lc-msgids-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/lc/fsw/inc/lc_msgids.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Limit Checker (LC) Application Message IDs
+ */
+#ifndef LC_MSGIDS_H
+#define LC_MSGIDS_H
+
+/**
+ * \defgroup cfslccmdmid CFS Limit Checker Command Message IDs
+ * \{
+ */
+
+#define LC_CMD_MID       0x18A4 /**&lt; \brief Msg ID for cmds to LC                */
+#define LC_SEND_HK_MID   0x18A5 /**&lt; \brief Msg ID to request LC housekeeping    */
+#define LC_SAMPLE_AP_MID 0x18A6 /**&lt; \brief Msg ID to request actionpoint sample */
+
+/**\}*/
+
+/**
+ * \defgroup cfslctlmmid CFS Limit Checker Telemetry Message IDs
+ * \{
+ */
+
+#define LC_HK_TLM_MID 0x08A7 /**&lt; \brief LC Housekeeping Telemetry */
+
+/**\}*/
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="lc-perfids-h">
+<h2><code class="docutils literal notranslate"><span class="pre">lc_perfids.h</span></code><a class="headerlink" href="#lc-perfids-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/lc/fsw/inc/lc_perfids.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Limit Checker (LC) Application Performance IDs
+ */
+#ifndef LC_PERFIDS_H
+#define LC_PERFIDS_H
+
+/**
+ * \ingroup cfslcmissioncfg
+ * \{
+ */
+#define LC_APPMAIN_PERF_ID    28 /**&lt; \brief Main task performance ID */
+#define LC_WDT_SEARCH_PERF_ID 43 /**&lt; \brief Watchpoing definition table search performance ID */
+/**\}*/
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="lc-platform-cfg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">lc_platform_cfg.h</span></code><a class="headerlink" href="#lc-platform-cfg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/lc/fsw/inc/lc_platform_cfg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Limit Checker (LC) Application Platform Configuration Header File
+ */
+#ifndef LC_PLATFORM_CFG_H
+#define LC_PLATFORM_CFG_H
+
+#include &lt;lc_msgdefs.h&gt;
+
+/**
+ * \defgroup cfslcplatformcfg CFS Limit Checker Platform Configuration
+ * \{
+ */
+
+/**
+ * \brief Application Name
+ *
+ *  \par Description:
+ *       This definition must match the name used at startup by the cFE
+ *       Executive Services when creating the LC application.  Note that
+ *       application names are also an argument to certain cFE commands.
+ *       For example, the application name is needed to access tables
+ *       via cFE Table Services commands.
+ *
+ *  \par Limits:
+ *       LC requires that this name be defined, but otherwise places
+ *       no limits on the definition.  Refer to CFE Executive Services
+ *       for specific information on limits related to application names.
+ */
+#define LC_APP_NAME "LC"
+
+/**
+ * \brief Command Pipe Depth
+ *
+ *  \par Description:
+ *       Maximum number of messages that will be allowed in the
+ *       LC command pipe at one time. Used during initialization
+ *       in the call to #CFE_SB_CreatePipe
+ *
+ *  \par Limits:
+ *       This parameter can't be larger than an unsigned 16 bit
+ *       integer (65535).
+ */
+#define LC_PIPE_DEPTH 12
+
+/**
+ * \brief Maximum number of watchpoints
+ *
+ *  \par Description:
+ *       Maximum number of watchpoints that can be defined in the
+ *       Watchpoint Definition Table (WDT)
+ *
+ *  \par Limits:
+ *       This parameter can't be larger than 65520 (0xFFF0) because
+ *       higher values are reserved for use as Reverse Polish
+ *       operators. It must be a multiple of 4 to avoid
+ *       indexing past the end of the array as LC indexes
+ *       ahead to build the packed status bytes.
+ *
+ *       This parameter will dictate the size of the Watchpoint
+ *       Definition Table:
+ *
+ *       WDT Size = LC_MAX_WATCHPOINTS * sizeof(#LC_WDTEntry_t)
+ *
+ *       The total size of this table should not exceed the
+ *       cFE size limit for a single buffered table set by the
+ *       #CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE parameter
+ */
+#define LC_MAX_WATCHPOINTS 176
+
+/**
+ * \brief Maximum number of actionpoints
+ *
+ *  \par Description:
+ *       Maximum number of actionpoints that can be defined in the
+ *       Actionpoint Definition Table (ADT)
+ *
+ *  \par Limits:
+ *       This parameter can't be larger than an unsigned 16 bit
+ *       integer (65535). It must be a multiple of 2 to avoid
+ *       indexing past the end of the array as LC indexes
+ *       ahead to build the packed status bytes.
+ *
+ *       This parameter will dictate the size of the Actionpoint
+ *       Definition Table:
+ *
+ *       ADT Size = LC_MAX_ACTIONPOINTS * sizeof(#LC_ADTEntry_t)
+ *
+ *       The total size of this table should not exceed the
+ *       cFE size limit for a single buffered table set by the
+ *       #CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE parameter
+ */
+#define LC_MAX_ACTIONPOINTS 176
+
+/**
+ * \brief LC state after power-on reset
+ *
+ *  \par Description:
+ *       What operating state LC should initialize to after a power-on
+ *       reset.
+ *
+ *  \par Limits:
+ *       This parameter must be one of the following:
+ *       #LC_STATE_ACTIVE
+ *       #LC_STATE_PASSIVE
+ *       #LC_STATE_DISABLED
+ */
+#define LC_STATE_POWER_ON_RESET LC_STATE_DISABLED
+
+/**
+ * \brief Save data to CDS compiler switch
+ *
+ *  \par Description:
+ *       Compile switch that tells LC that we should save data
+ *       over a processor or application reset by using the
+ *       Critical Data Store (CDS).
+ *       Comment out or \#undef to force LC to do a default (power-on)
+ *       initialization sequence on all restarts (this is the
+ *       default case).
+ *
+ *  \par Limits:
+ *       n/a
+ */
+/* #define LC_SAVE_TO_CDS */
+
+/**
+ * \brief LC state when CDS is restored
+ *
+ *  \par Description:
+ *       What operating state LC should initialize to after successfully
+ *       restoring information from the CDS after a processor or
+ *       application reset. This is only used when LC_SAVE_TO_CDS
+ *       is set to true, and provides a way to override any state LC
+ *       may have been operating in prior to the reset occurring.
+ *
+ *       If this is set to LC_STATE_FROM_CDS and LC_SAVE_TO_CDS is set
+ *       to true, then the LC state will be preserved across resets and
+ *       restored.  If this is not set to LC_STATE_FROM_CDS, the state
+ *       saved in the CDS is overwritten by the state assigned here.
+ *
+ *  \par Limits:
+ *       This parameter must be one of the following:
+ *       #LC_STATE_ACTIVE
+ *       #LC_STATE_PASSIVE
+ *       #LC_STATE_DISABLED
+ *       #LC_STATE_FROM_CDS
+ */
+#define LC_STATE_WHEN_CDS_RESTORED LC_STATE_FROM_CDS
+
+/**
+ * \brief Watchpoint Definition Table (WDT) filename
+ *
+ *  \par Description:
+ *       Default file to load the watchpoint definition table from
+ *       during a power-on reset sequence
+ *
+ *  \par Limits:
+ *       This string shouldn't be longer than #OS_MAX_PATH_LEN for the
+ *       target platform in question
+ */
+#define LC_WDT_FILENAME "/cf/lc_def_wdt.tbl"
+
+/**
+ * \brief Actionpoint Definition Table (ADT) filename
+ *
+ *  \par Description:
+ *       Default file to load the actionpoint definition table from
+ *       during a power-on reset sequence
+ *
+ *  \par Limits:
+ *       This string shouldn't be longer than #OS_MAX_PATH_LEN for the
+ *       target platform in question
+ */
+#define LC_ADT_FILENAME "/cf/lc_def_adt.tbl"
+
+/**
+ * \brief Maximum reverse polish (RPN) equation size
+ *
+ *  \par Description:
+ *       Maximum combined number of operators and operands that may
+ *       exist in an actionpoint definition's reverse polish equation
+ *
+ *  \par Limits:
+ *       The LC app limits this parameter to 32.
+ *       Increasing this value will increase the size of the
+ *       Actionpoint Definition Table (ADT)
+ */
+#define LC_MAX_RPN_EQU_SIZE 20
+
+/**
+ * \brief Maximum actionpoint event text string size
+ *
+ *  \par Description:
+ *       Maximum length of the event message string that can specified
+ *       in an actionpoint definition (including NUL terminator)
+ *
+ *  \par Limits:
+ *       LC appends the trailer text #LC_AP_EVENT_TAIL_STR to this
+ *       string when reporting actionpoint failures. The size of this
+ *       string is #LC_AP_EVENT_TAIL_LEN
+ *
+ *       The total value of LC_MAX_ACTION_TEXT + #LC_AP_EVENT_TAIL_LEN
+ *       should be less than #CFE_MISSION_EVS_MAX_MESSAGE_LENGTH to avoid
+ *       event message truncation
+ *
+ *       Raising this value will also increase the size of the
+ *       Actionpoint Definition Table (ADT)
+ */
+#define LC_MAX_ACTION_TEXT 32
+
+/**
+ * \brief Maximum valid ADT RTS ID
+ *
+ *  \par Description:
+ *       The maximum RTS ID that LC will allow during table
+ *       validation in a Actionpoint Definition Table (ADT) entry
+ *
+ *  \par Limits:
+ *       This parameter can't be larger than an unsigned 16 bit
+ *       integer (65535).
+ */
+#define LC_MAX_VALID_ADT_RTSID 0xFFF0
+
+/**
+ * \brief Floating Point Compare Tolerance
+ *
+ *  \par Description:
+ *       Difference between 2 floats that will still compare as
+ *       equal. The default value of (1.0e-25) was taken from
+ *       the GNC file mathconstants.h
+ *
+ *  \par Limits:
+ *       The LC app does not place a limit on this parameter.
+ */
+#define LC_FLOAT_TOLERANCE (1.0e-25)
+
+/**
+ * \brief Mission specific version number for LC application
+ *
+ *  \par Description:
+ *       An application version number consists of four parts:
+ *       major version number, minor version number, revision
+ *       number and mission specific revision number. The mission
+ *       specific revision number is defined here and the other
+ *       parts are defined in "lc_version.h".
+ *
+ *  \par Limits:
+ *       Must be defined as a numeric value that is greater than
+ *       or equal to zero.
+ */
+#define LC_MISSION_REV 0
+
+/**\}*/
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="lc-tbl-h">
+<h2><code class="docutils literal notranslate"><span class="pre">lc_tbl.h</span></code><a class="headerlink" href="#lc-tbl-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/lc/fsw/inc/lc_tbl.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS Limit Checker (LC) table related data
+ *   structures
+ *
+ * @note
+ *   Constants and enumerated types related to these table structures
+ *   are defined in lc_tbldefs.h.
+ */
+#ifndef LC_TBL_H
+#define LC_TBL_H
+
+/*************************************************************************
+ * Includes
+ *************************************************************************/
+#include &lt;cfe.h&gt;
+#include &lt;lc_platform_cfg.h&gt;
+#include &lt;lc_tbldefs.h&gt;
+#include &lt;lc_extern_typedefs.h&gt;
+
+/*************************************************************************
+ * Type Definitions
+ *************************************************************************/
+
+/**
+ *  \brief Watchpoint Transition Structure
+ */
+typedef struct
+{
+    uint32 Value;   /**&lt; \brief Watchpoint value at comparison that caused
+                                the transition                               */
+    uint8 DataType; /**&lt; \brief Same as Watchpoint Data Type (enumerated)    */
+
+    uint8 Padding[3]; /**&lt; \brief Structure padding */
+
+    CFE_TIME_SysTime_t Timestamp; /**&lt; \brief Timstamp when the transition was detected    */
+} LC_WRTTransition_t;
+
+/**
+ *  \brief Watchpoint Results Table (WRT) Entry
+ */
+typedef struct
+{
+    uint8 WatchResult; /**&lt; \brief Result for the last evaluation of this
+                                   watchpoint (enumerated)                */
+
+    uint8 Padding[3]; /**&lt; \brief Structure padding */
+
+    uint32 CountdownToStale;            /**&lt; \brief Number of LC Sample Actionpoint
+                                                    commands still to be processed
+                                                    before WatchResult becomes stale        */
+    uint32 EvaluationCount;             /**&lt; \brief How many times this watchpoint has
+                                                    been evaluated                         */
+    uint32 FalseToTrueCount;            /**&lt; \brief How many times this watchpoint has
+                                                    transitioned from FALSE to TRUE        */
+    uint32 ConsecutiveTrueCount;        /**&lt; \brief Number of consecutive times this
+                                                    watchpoint has evaluated to TRUE       */
+    uint32 CumulativeTrueCount;         /**&lt; \brief Total number of times this watchpoint
+                                                    has evaluated to TRUE                  */
+    LC_WRTTransition_t LastFalseToTrue; /**&lt; \brief Last transition from FALSE to TRUE     */
+    LC_WRTTransition_t LastTrueToFalse; /**&lt; \brief Last transition from TRUE to FALSE     */
+} LC_WRTEntry_t;
+
+/**
+ *  \brief Actionpoint Results Table (ART) Entry
+ */
+typedef struct
+{
+    uint8 ActionResult; /**&lt; \brief Result for the last sample of this
+                                    actionpoint                            */
+    uint8 CurrentState; /**&lt; \brief Current state of this actionpoint      */
+
+    uint16 Padding; /**&lt; \brief Structure padding */
+
+    uint32 PassiveAPCount;          /**&lt; \brief Total number of times RTS not invoked
+                                                because this AP was passive            */
+    uint32 FailToPassCount;         /**&lt; \brief How many times this actionpoint has
+                                                transitioned from Fail to Pass         */
+    uint32 PassToFailCount;         /**&lt; \brief How many times this actionpoint has
+                                                transitioned from Pass to Fail         */
+    uint32 ConsecutiveFailCount;    /**&lt; \brief Number of consecutive times this
+                                                actionpoint has evaluated to Fail      */
+    uint32 CumulativeFailCount;     /**&lt; \brief Total number of times this actionpoint
+                                                has evaluated to Fail                  */
+    uint32 CumulativeRTSExecCount;  /**&lt; \brief Total number of times an RTS request
+                                                has been sent for this actionpoint     */
+    uint32 CumulativeEventMsgsSent; /**&lt; \brief Total number of event messages sent    */
+} LC_ARTEntry_t;
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="lc-tbldefs-h">
+<h2><code class="docutils literal notranslate"><span class="pre">lc_tbldefs.h</span></code><a class="headerlink" href="#lc-tbldefs-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/lc/fsw/inc/lc_tbldefs.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS Limit Checker (LC) table related
+ *   constant definitions.
+ *
+ * @note
+ *   These Macro definitions have been put in this file (instead of
+ *   lc_tbl.h) so this file can be included directly into ASIST build
+ *   test scripts. ASIST RDL files can accept C language \#defines but
+ *   can't handle type definitions. As a result: DO NOT PUT ANY
+ *   TYPEDEFS OR STRUCTURE DEFINITIONS IN THIS FILE!
+ *   ADD THEM TO lc_tbl.h IF NEEDED!
+ */
+#ifndef LC_TBLDEFS_H
+#define LC_TBLDEFS_H
+
+/************************************************************************
+ * Macro Definitions
+ ************************************************************************/
+
+/**
+ * \name LC CDS Saved on Exit Identifiers
+ * \{
+ */
+#define LC_CDS_SAVED     0xF0F0 /**&lt; \brief CDS saved on exit */
+#define LC_CDS_NOT_SAVED 0x0F0F /**&lt; \brief CDS not saved on exit */
+/**\}*/
+
+/**
+ * \name Watchpoint Definition Table (WDT) DataType Enumerated Types
+ * \{
+ */
+#define LC_WATCH_NOT_USED 0xFF /**&lt; \brief Use for empty entries */
+#define LC_DATA_BYTE      1    /**&lt; \brief 8 bit signed byte */
+#define LC_DATA_UBYTE     2    /**&lt; \brief 8 bit unsigned byte */
+#define LC_DATA_WORD_BE   3    /**&lt; \brief 16 bit signed word big endian byte order */
+#define LC_DATA_WORD_LE   4    /**&lt; \brief 16 bit signed word little endian byte order */
+#define LC_DATA_UWORD_BE  5    /**&lt; \brief 16 bit unsigned word big endian byte order */
+#define LC_DATA_UWORD_LE  6    /**&lt; \brief 16 bit unsigned word little endian byte order */
+#define LC_DATA_DWORD_BE  7    /**&lt; \brief 32 bit signed double word big endian byte order */
+#define LC_DATA_DWORD_LE  8    /**&lt; \brief 32 bit signed double word little endian byte order */
+#define LC_DATA_UDWORD_BE 9    /**&lt; \brief 32 bit unsigned double word big endian byte order */
+#define LC_DATA_UDWORD_LE 10   /**&lt; \brief 32 bit unsigned double word little endian byte order */
+#define LC_DATA_FLOAT_BE                                                   \
+    11 /**&lt; \brief 32 bit single precision IEEE-754 floating point number, \
+        *          big endian byte order                                   \
+        */
+#define LC_DATA_FLOAT_LE                                                   \
+    12 /**&lt; \brief 32 bit single precision IEEE-754 floating point number, \
+        *          little endian byte order                                \
+        */
+/**\}*/
+
+/**
+ * \name Watchpoint Definition Table (WDT) OperatorID Enumerated Types
+ * \{
+ */
+#define LC_NO_OPER     0xFF /**&lt; \brief Use for empty entries         */
+#define LC_OPER_LT     1    /**&lt; \brief Less Than (&lt;)                 */
+#define LC_OPER_LE     2    /**&lt; \brief Less Than or Equal To (&lt;=)    */
+#define LC_OPER_NE     3    /**&lt; \brief Not Equal (!=)                */
+#define LC_OPER_EQ     4    /**&lt; \brief Equal (==)                    */
+#define LC_OPER_GE     5    /**&lt; \brief Greater Than or Equal To (&gt;=) */
+#define LC_OPER_GT     6    /**&lt; \brief Greater Than (&gt;)              */
+#define LC_OPER_CUSTOM 7    /**&lt; \brief Use custom function           */
+/**\}*/
+
+/**
+ * \name Watchpoint Definition Table (WDT) BitMask Enumerated Types
+ * \{
+ */
+#define LC_NO_BITMASK 0xFFFFFFFF /**&lt; \brief Use for no masking       */
+/**\}*/
+
+/**
+ * \name Actionpoint Definition Table (ADT) Reverse Polish Operators
+ * \{
+ */
+#define LC_RPN_AND   0xFFF1 /**&lt; \brief RPN and operator */
+#define LC_RPN_OR    0xFFF2 /**&lt; \brief RPN or operator */
+#define LC_RPN_XOR   0xFFF3 /**&lt; \brief RPN xor operator */
+#define LC_RPN_NOT   0xFFF4 /**&lt; \brief RPN not operator */
+#define LC_RPN_EQUAL 0xFFF5 /**&lt; \brief RPN equal operator */
+/**\}*/
+
+/**
+ * \name Watchpoint Results Table (WRT) WatchResult Enumerated Types
+ * \{
+ */
+#define LC_WATCH_STALE 0xFF /**&lt; \brief Watchpoint stale */
+#define LC_WATCH_FALSE 0    /**&lt; \brief Watchpoint false, must be zero for RPN evaluation */
+#define LC_WATCH_TRUE  1    /**&lt; \brief Watchpoint true, must be one for RPN evaluation */
+#define LC_WATCH_ERROR 2    /**&lt; \brief Watchpoint error */
+/**\}*/
+
+/**
+ * \name Actionpoint Results Table (ART) ActionResult Enumerated Types
+ * \{
+ */
+#define LC_ACTION_STALE 0xFF /**&lt; \brief Actionpoint stale */
+#define LC_ACTION_PASS  0    /**&lt; \brief Actionpoint pass */
+#define LC_ACTION_FAIL  1    /**&lt; \brief Actionpoint fail */
+#define LC_ACTION_ERROR 2    /**&lt; \brief Actionpoint error */
+/**\}*/
+
+/**
+ * \name Watchpoint Definition Table (WDT) Validation Error Enumerated Types
+ * \{
+ */
+#define LC_WDTVAL_NO_ERR       0 /**&lt; \brief No error                          */
+#define LC_WDTVAL_ERR_DATATYPE 1 /**&lt; \brief Invalid DataType                  */
+#define LC_WDTVAL_ERR_OPER     2 /**&lt; \brief Invalid OperatorID                */
+#define LC_WDTVAL_ERR_MID      3 /**&lt; \brief Invalid MessageID                 */
+#define LC_WDTVAL_ERR_FPNAN    4 /**&lt; \brief ComparisonValue is NAN float      */
+#define LC_WDTVAL_ERR_FPINF    5 /**&lt; \brief ComparisonValue is infinite float */
+/**\}*/
+
+/**
+ * \name Actionpoint Definition Table (ADT) Validation Error Enumerated Types
+ * \{
+ */
+#define LC_ADTVAL_NO_ERR       0 /**&lt; \brief No error                          */
+#define LC_ADTVAL_ERR_DEFSTATE 1 /**&lt; \brief Invalid DefaultState              */
+#define LC_ADTVAL_ERR_RTSID    2 /**&lt; \brief Invalid RTSId                     */
+#define LC_ADTVAL_ERR_FAILCNT  3 /**&lt; \brief MaxFailsBeforeRTS is zero         */
+#define LC_ADTVAL_ERR_EVTTYPE  4 /**&lt; \brief Invalid EventType                 */
+#define LC_ADTVAL_ERR_RPN      5 /**&lt; \brief Invalid Reverse Polish Expression */
+/**\}*/
+
+#endif
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="fsw" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../src/index.html" class="btn btn-neutral float-right" title="src" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

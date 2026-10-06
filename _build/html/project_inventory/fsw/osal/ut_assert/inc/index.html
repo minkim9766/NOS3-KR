@@ -1,0 +1,3134 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>inc &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../search.html" />
+    <link rel="next" title="scripts" href="../scripts/index.html" />
+    <link rel="prev" title="ut_assert" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">osal</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">ut_assert</a></li>
+      <li class="breadcrumb-item active">inc</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/project_inventory/fsw/osal/ut_assert/inc/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="inc">
+<h1>inc<a class="headerlink" href="#inc" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/ut_assert/inc/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="utassert-h">
+<h2><code class="docutils literal notranslate"><span class="pre">utassert.h</span></code><a class="headerlink" href="#utassert-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/ut_assert/inc/utassert.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Purpose: This code implements a standard set of asserts for use in unit tests.
+ *
+ * Design Notes:
+ *    - All asserts evaluate an expression as true or false to determine if a unit test has
+ *      passed or failed.  true means the test passed, false means the test failed.
+ *    - All asserts return a boolean result to indicate the pass fail status.
+ *    - All asserts are implemented as macros to hide the __LINE__ and __FILE__ macros.
+ *    - All asserts must call the function UtAssert.
+ */
+
+#ifndef UTASSERT_H
+#define UTASSERT_H
+
+/*
+ * Includes
+ */
+
+#include "common_types.h"
+#include "uttools.h"
+#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+
+/**
+ * @brief Flag for use with UtAssert_STRINGBUF_EQ when the string is known to be NULL terminated
+ *
+ * The UtAssert_STRINGBUF_EQ is provided to facilitate checking fixed-length strings, which do not
+ * require NULL termination.
+ *
+ * If this macro is used to compare against a standard C string that is guaranteed to be NULL
+ * terminated, this constant may be passed to the UtAssert_STRINGBUF_EQ macro in place of the
+ * size parameter for that string.
+ */
+#define UTASSERT_STRINGBUF_NULL_TERM SIZE_MAX
+
+/**
+ * Type for generic integer assert checks
+ *
+ * By using the C99 "ptrdiff_t" type, this should be large enough to also
+ * store pointer values on the target system, in addition to all normal
+ * integer values.
+ */
+typedef ptrdiff_t UT_IntCheck_t;
+
+/**
+ * Define various types of messages that can be generated by a test.
+ *
+ * The order is significant for filtering; BSP's may elect to filter
+ * messages based on the position within this list.  They should
+ * be ordered in terms of relative importance from most to least severe.
+ */
+typedef enum
+{
+    UTASSERT_CASETYPE_NONE,    /**&lt; Reserved value, No messages should be used with this */
+    UTASSERT_CASETYPE_ABORT,   /**&lt; Test sequence abort (major failure, cannot continue) */
+    UTASSERT_CASETYPE_FAILURE, /**&lt; Test case failure status messages */
+    UTASSERT_CASETYPE_TSF,     /**&lt; Test Setup Failure (TSF) status messages */
+    UTASSERT_CASETYPE_TTF,     /**&lt; Test Teardown Failure (TTF) status messages */
+    UTASSERT_CASETYPE_MIR,     /**&lt; Manual Inspection Required (MIR) status messages */
+    UTASSERT_CASETYPE_WARN,    /**&lt; Test was unable to run (WARN) status messages (e.g. initial condition wrong) */
+    UTASSERT_CASETYPE_NA,      /**&lt; Test Not Applicable (NA) status messages */
+    UTASSERT_CASETYPE_BEGIN,   /**&lt; Beginning of test status messages */
+    UTASSERT_CASETYPE_END,     /**&lt; End of test status messages */
+    UTASSERT_CASETYPE_INFO,    /**&lt; All other informational status messages */
+    UTASSERT_CASETYPE_PASS,    /**&lt; Test case passed (normal) status messages */
+    UTASSERT_CASETYPE_FLOW,    /**&lt; Other condition checks/messages that record test flow, but are not assertions */
+    UTASSERT_CASETYPE_DEBUG,   /**&lt; Debugging messages */
+    UTASSERT_CASETYPE_MAX      /**&lt; Reserved value, No messages should be used with this */
+} UtAssert_CaseType_t;
+
+/**
+ * \brief Comparison types for generic value asserts
+ *
+ * These constants are used with the generic value assert functions
+ * and indicate the type of comparison to perform
+ *
+ * \sa UtAssert_GenericSignedCompare
+ * \sa UtAssert_GenericUnsignedCompare
+ */
+typedef enum
+{
+    UtAssert_Compare_NONE,          /**&lt; invalid/not used, always false */
+    UtAssert_Compare_EQ,            /**&lt; actual equals reference value */
+    UtAssert_Compare_NEQ,           /**&lt; actual does not non equal reference value */
+    UtAssert_Compare_LT,            /**&lt; actual less than reference (exclusive) */
+    UtAssert_Compare_GT,            /**&lt; actual greater than reference (exclusive)  */
+    UtAssert_Compare_LTEQ,          /**&lt; actual less than or equal to reference (inclusive) */
+    UtAssert_Compare_GTEQ,          /**&lt; actual greater than reference (inclusive) */
+    UtAssert_Compare_BITMASK_SET,   /**&lt; actual equals reference value */
+    UtAssert_Compare_BITMASK_UNSET, /**&lt; actual equals reference value */
+    UtAssert_Compare_MAX            /**&lt; placeholder, not used */
+} UtAssert_Compare_t;
+
+/**
+ * \brief Preferred print radix for generic value asserts
+ *
+ * These constants are used with the generic value assert functions
+ * and indicate the preferred format for printing integers in assert messages
+ *
+ * \sa UtAssert_GenericSignedCompare
+ * \sa UtAssert_GenericUnsignedCompare
+ */
+typedef enum
+{
+    UtAssert_Radix_DEFAULT = 0,  /**&lt; no preference, use default */
+    UtAssert_Radix_BOOLEAN = 1,  /**&lt; log integers as logical true (1) / false (0) */
+    UtAssert_Radix_OCTAL   = 8,  /**&lt; log integers as octal, base 8 */
+    UtAssert_Radix_DECIMAL = 10, /**&lt; log integers as decimal, base 10 */
+    UtAssert_Radix_HEX     = 16  /**&lt; log integers as hexadecimal, base 16 */
+} UtAssert_Radix_t;
+
+/**
+ * Test Counter object
+ * Summarizes counters for all case types
+ */
+typedef struct
+{
+    uint32 TestSegmentCount;
+    uint32 TotalTestCases;
+    uint32 CaseCount[UTASSERT_CASETYPE_MAX];
+} UtAssert_TestCounter_t;
+
+/*
+ * Macro Definitions
+ */
+
+/**
+ * \brief A simplified UtAssert that uses the expression itself as the description
+ */
+#define UtAssert_Simple(Expression) UtAssert(Expression, #Expression, __FILE__, __LINE__)
+
+/**
+ * \brief Evaluates an expression as either true or false.
+ *
+ * true means the test passed, false means the test failed.
+ */
+#define UtAssert_True(Expression, ...) UtAssertEx(Expression, UtAssert_GetContext(), __FILE__, __LINE__, __VA_ARGS__)
+
+/**
+ * \copydoc UtAssert_True
+ */
+#define UtAssert_Bool(Expression, ...) UtAssertEx(Expression, UtAssert_GetContext(), __FILE__, __LINE__, __VA_ARGS__)
+
+/**
+ * \brief Asserts a test failure
+ */
+#define UtAssert_Failed(...) UtAssertEx(false, UtAssert_GetContext(), __FILE__, __LINE__, __VA_ARGS__)
+
+/**
+ * \brief Assert a test Not Applicable
+ */
+#define UtAssert_NA(...) UtAssertEx(false, UTASSERT_CASETYPE_NA, __FILE__, __LINE__, __VA_ARGS__)
+
+/**
+ * \brief Assert a test MIR (Manual Inspection Required)
+ */
+#define UtAssert_MIR(...) UtAssertEx(false, UTASSERT_CASETYPE_MIR, __FILE__, __LINE__, __VA_ARGS__)
+
+/**
+ * \brief Skip a test due to improper setup (Manual Intervention Required)
+ */
+#define UtAssert_WARN(...) UtAssertEx(false, UTASSERT_CASETYPE_WARN, __FILE__, __LINE__, __VA_ARGS__)
+
+/**
+ * \brief Compares two integers and determines if they are equal within a specified absolute tolerance.
+ */
+#define UtAssert_IntegerCmpAbs(x, y, Tolerance, ...) \
+    UtAssertEx((abs((x) - (y)) &lt;= (Tolerance)), UtAssert_GetContext(), __FILE__, __LINE__, __VA_ARGS__)
+
+/**
+ * \brief Compares two floating point numbers and determines if they are equal within a specified absolute tolerance.
+ */
+#define UtAssert_DoubleCmpAbs(x, y, Tolerance, ...) \
+    UtAssertEx((fabs((x) - (y)) &lt;= (Tolerance)), UtAssert_GetContext(), __FILE__, __LINE__, __VA_ARGS__)
+
+/**
+ * \brief Compares two floating point numbers and determines if they are equal within a specified relative tolerance.
+ */
+#define UtAssert_DoubleCmpRel(x, y, Ratio, ...) \
+    UtAssertEx((fabs((x) - (y)) / (x) &lt;= (Ratio)), UtAssert_GetContext(), __FILE__, __LINE__, __VA_ARGS__)
+
+/**
+ * \brief  Compares two strings and determines if they are equal.
+ */
+#define UtAssert_StrCmp(String1, String2, ...) \
+    UtAssertEx((strcmp(String1, String2) == 0), UtAssert_GetContext(), __FILE__, __LINE__, __VA_ARGS__)
+
+/**
+ * \brief Compares at most Length characters of two strings and determines if they are equal.
+ */
+#define UtAssert_StrnCmp(String1, String2, Length, ...) \
+    UtAssertEx((strncmp(String1, String2, Length) == 0), UtAssert_GetContext(), __FILE__, __LINE__, __VA_ARGS__)
+
+/**
+ * \brief Compares two regions of memory and determines if they are equal.
+ */
+#define UtAssert_MemCmp(Memory1, Memory2, Length, ...) \
+    UtAssertEx((memcmp(Memory1, Memory2, Length) == 0), UtAssert_GetContext(), __FILE__, __LINE__, __VA_ARGS__)
+
+/**
+ * \brief Compares a region of memory to a static pattern and determines if they are equal.
+ *
+ * \note Use standard memset() to fill a region of memory with a static pattern.
+ */
+#define UtAssert_MemCmpValue(Memory, Value, Length, ...) \
+    UtAssertEx((UtMemCmpValue(Memory, Value, Length)), UtAssert_GetContext(), __FILE__, __LINE__, __VA_ARGS__)
+
+/**
+ * \brief Compares a region of memory to a byte count pattern and determines if they are equal.
+ *
+ * \note Use UtMemFill() to fill a region of memory with a byte count pattern.
+ * \sa UtMemFill
+ */
+#define UtAssert_MemCmpCount(Memory, Length, ...) \
+    UtAssertEx((UtMemCmpCount(Memory, Length)), UtAssert_GetContext(), __FILE__, __LINE__, __VA_ARGS__)
+
+/**
+ * \brief Compares a region of memory with the contents of a binary file and determines if they are equal.
+ *
+ * \note Use UtMem2BinFile() to copy a region of memory to a binary file.
+ * \sa UtMem2BinFile
+ */
+#define UtAssert_Mem2BinFileCmp(Memory, Filename, ...) \
+    UtAssertEx((UtMem2BinFileCmp(Memory, Filename)), UtAssert_GetContext(), __FILE__, __LINE__, __VA_ARGS__)
+
+/**
+ * \brief A wrapper around UtAssertEx that allows the user to specify the failure type and a more descriptive message
+ */
+#define UtAssert_Type(Type, Expression, ...) \
+    UtAssertEx(Expression, UTASSERT_CASETYPE_##Type, __FILE__, __LINE__, __VA_ARGS__)
+
+/**
+ * \brief Asserts on any integer value, in the context of the specified type
+ *
+ * \par Description
+ *        The actual and reference values are interpreted as the specified data type, which
+ *        may be any integer data type or typedef, signed or unsigned.
+ *
+ *        "op" must be one of EQ, NEQ, LT, GT, LTEQ, or GTEQ (see #UtAssert_Compare_t)
+ *          and indicates the type of logical comparison to perform
+ *
+ *        "radix" must be one of DEFAULT, BOOLEAN, OCTAL, HEX, or DECIMAL (see #UtAssert_Radix_t)
+ *          and is used as a hint to display the value in a more human-readable form
+ *
+ * \par Assumptions, External Events, and Notes:
+ *        None
+ */
+#define UtAssert_INTVAL(type, actual, op, ref, radix)                                                                \
+    UtAssert_GenericIntegerCompare(((type)(-1)) &gt; ((type)(0)), (UT_IntCheck_t)(type)(actual), UtAssert_Compare_##op, \
+                                   (UT_IntCheck_t)(type)(ref), __FILE__, __LINE__, UtAssert_Radix_##radix, #type,    \
+                                   #actual, #ref)
+
+/**
+ * \brief Asserts the expression/function evaluates as logically true
+ *
+ * \par Description
+ *        The core of each unit test is the execution of the function being tested.
+ *        This function and macro should be used to test for a function or value/expression
+ *        that should evaluate as logically true
+ *
+ * \par Assumptions, External Events, and Notes:
+ *        None
+ */
+#define UtAssert_BOOL_TRUE(expr)                                                                               \
+    UtAssert_GenericUnsignedCompare((bool)(expr), UtAssert_Compare_EQ, true, UtAssert_Radix_DECIMAL, __FILE__, \
+                                    __LINE__, "", #expr, "true")
+
+/**
+ * \brief Asserts the expression/function evaluates as logically false
+ *
+ * \par Description
+ *        The core of each unit test is the execution of the function being tested.
+ *        This function and macro should be used to test for a function or value/expression
+ *        that should evaluate as logically false
+ *
+ * \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ */
+#define UtAssert_BOOL_FALSE(expr)                                                                               \
+    UtAssert_GenericUnsignedCompare((bool)(expr), UtAssert_Compare_EQ, false, UtAssert_Radix_DECIMAL, __FILE__, \
+                                    __LINE__, "", #expr, "false")
+
+/**
+ * \brief Compare two values for equality with an auto-generated description message
+ *
+ * This macro confirms that the given expression is equal to the reference value
+ * The generated log message will include the actual and reference values in decimal notation
+ *
+ * \param type   The data type to use when doing the comparison
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_EQ(type, actual, ref)                                                                           \
+    UtAssert_GenericIntegerCompare(((type)(-1)) &gt; ((type)(0)), (type)(actual), UtAssert_Compare_EQ, (type)(ref), \
+                                   __FILE__, __LINE__, UtAssert_Radix_DECIMAL, #type, #actual, #ref)
+
+/**
+ * \brief Compare two values for inequality with an auto-generated description message
+ *
+ * This macro confirms that the given expression is _not_ equal to the reference value
+ * The generated log message will include the actual and reference values in decimal notation
+ *
+ * \param type   The data type to use when doing the comparison
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_NEQ(type, actual, ref)                                                                           \
+    UtAssert_GenericIntegerCompare(((type)(-1)) &gt; ((type)(0)), (type)(actual), UtAssert_Compare_NEQ, (type)(ref), \
+                                   __FILE__, __LINE__, UtAssert_Radix_DECIMAL, #type, #actual, #ref)
+
+/**
+ * \brief Asserts the minimum value of a given function or expression
+ *
+ * This macro confirms that the given expression is at least the minimum value (inclusive)
+ * The generated log message will include the actual and reference values in decimal notation
+ *
+ * \param type   The data type to use when doing the comparison
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_GTEQ(type, actual, ref)                                                                           \
+    UtAssert_GenericIntegerCompare(((type)(-1)) &gt; ((type)(0)), (type)(actual), UtAssert_Compare_GTEQ, (type)(ref), \
+                                   __FILE__, __LINE__, UtAssert_Radix_DECIMAL, #type, #actual, #ref)
+
+/**
+ * \brief Asserts the maximum value of a given function or expression
+ *
+ * This macro confirms that the given expression is at most the maximum value (inclusive)
+ * The generated log message will include the actual and reference values in decimal notation
+ *
+ * \param type   The data type to use when doing the comparison
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_LTEQ(type, actual, ref)                                                                           \
+    UtAssert_GenericIntegerCompare(((type)(-1)) &gt; ((type)(0)), (type)(actual), UtAssert_Compare_LTEQ, (type)(ref), \
+                                   __FILE__, __LINE__, UtAssert_Radix_DECIMAL, #type, #actual, #ref)
+
+/**
+ * \brief Asserts the value of a given function or expression is less than the reference value
+ *
+ * This macro confirms that the given expression is less than the maximum value (exclusive)
+ * The generated log message will include the actual and reference values in decimal notation
+ *
+ * \param type   The data type to use when doing the comparison
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_LT(type, actual, ref)                                                                           \
+    UtAssert_GenericIntegerCompare(((type)(-1)) &gt; ((type)(0)), (type)(actual), UtAssert_Compare_LT, (type)(ref), \
+                                   __FILE__, __LINE__, UtAssert_Radix_DECIMAL, #type, #actual, #ref)
+
+/**
+ * \brief Asserts the value of a given function or expression is greater than the reference value
+ *
+ * This macro confirms that the given expression is greater than the minimum value (exclusive)
+ * The generated log message will include the actual and reference values in decimal notation
+ *
+ * \param type   The data type to use when doing the comparison
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_GT(type, actual, ref)                                                                           \
+    UtAssert_GenericIntegerCompare(((type)(-1)) &gt; ((type)(0)), (type)(actual), UtAssert_Compare_GT, (type)(ref), \
+                                   __FILE__, __LINE__, UtAssert_Radix_DECIMAL, #type, #actual, #ref)
+
+/**
+ * \brief Compare two values for equality with an auto-generated description message
+ *
+ * This macro confirms that the given expression is equal to the reference value
+ * The generated log message will include the actual and reference values in decimal notation
+ * Values will be compared in an "int32" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_INT32_EQ(actual, ref)                                                                        \
+    UtAssert_GenericSignedCompare((int32)(actual), UtAssert_Compare_EQ, (int32)(ref), UtAssert_Radix_DECIMAL, \
+                                  __FILE__, __LINE__, "", #actual, #ref)
+
+/**
+ * \brief Compare two values for inequality with an auto-generated description message
+ *
+ * This macro confirms that the given expression is _not_ equal to the reference value
+ * The generated log message will include the actual and reference values in decimal notation
+ * Values will be compared in an "int32" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_INT32_NEQ(actual, ref)                                                                        \
+    UtAssert_GenericSignedCompare((int32)(actual), UtAssert_Compare_NEQ, (int32)(ref), UtAssert_Radix_DECIMAL, \
+                                  __FILE__, __LINE__, "", #actual, #ref)
+
+/**
+ * \brief Asserts the minimum value of a given function or expression
+ *
+ * This macro confirms that the given expression is at least the minimum value (inclusive)
+ * The generated log message will include the actual and reference values in decimal notation
+ * Values will be compared in an "int32" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_INT32_GTEQ(actual, ref)                                                                        \
+    UtAssert_GenericSignedCompare((int32)(actual), UtAssert_Compare_GTEQ, (int32)(ref), UtAssert_Radix_DECIMAL, \
+                                  __FILE__, __LINE__, "", #actual, #ref)
+
+/**
+ * \brief Asserts the maximum value of a given function or expression
+ *
+ * This macro confirms that the given expression is at most the maximum value (inclusive)
+ * The generated log message will include the actual and reference values in decimal notation
+ * Values will be compared in an "int32" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_INT32_LTEQ(actual, ref)                                                                        \
+    UtAssert_GenericSignedCompare((int32)(actual), UtAssert_Compare_LTEQ, (int32)(ref), UtAssert_Radix_DECIMAL, \
+                                  __FILE__, __LINE__, "", #actual, #ref)
+
+/**
+ * \brief Asserts the value of a given function or expression is less than the reference value
+ *
+ * This macro confirms that the given expression is less than the maximum value (exclusive)
+ * The generated log message will include the actual and reference values in decimal notation
+ * Values will be compared in an "int32" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_INT32_LT(actual, ref)                                                                        \
+    UtAssert_GenericSignedCompare((int32)(actual), UtAssert_Compare_LT, (int32)(ref), UtAssert_Radix_DECIMAL, \
+                                  __FILE__, __LINE__, "", #actual, #ref)
+
+/**
+ * \brief Asserts the value of a given function or expression is greater than the reference value
+ *
+ * This macro confirms that the given expression is greater than the minimum value (exclusive)
+ * The generated log message will include the actual and reference values in decimal notation
+ * Values will be compared in an "int32" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_INT32_GT(actual, ref)                                                                        \
+    UtAssert_GenericSignedCompare((int32)(actual), UtAssert_Compare_GT, (int32)(ref), UtAssert_Radix_DECIMAL, \
+                                  __FILE__, __LINE__, "", #actual, #ref)
+
+/**
+ * \brief Compare two values for equality with an auto-generated description message
+ *
+ * This macro confirms that the given expression is equal to the reference value
+ * The generated log message will include the actual and reference values in decimal notation
+ * Values will be compared in an "uint32" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT32_EQ(actual, ref)                                                                           \
+    UtAssert_GenericUnsignedCompare((uint32)(actual), UtAssert_Compare_EQ, (uint32)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "", #actual, #ref)
+
+/**
+ * \brief Compare two values for inequality with an auto-generated description message
+ *
+ * This macro confirms that the given expression is _not_ equal to the reference value
+ * The generated log message will include the actual and reference values in decimal notation
+ * Values will be compared in an "uint32" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT32_NEQ(actual, ref)                                                                           \
+    UtAssert_GenericUnsignedCompare((uint32)(actual), UtAssert_Compare_NEQ, (uint32)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "", #actual, #ref)
+
+/**
+ * \brief Asserts the minimum value of a given function or expression
+ *
+ * This macro confirms that the given expression is at least the minimum value (inclusive)
+ * Values will be compared in an "uint32" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT32_GTEQ(actual, ref)                                                                           \
+    UtAssert_GenericUnsignedCompare((uint32)(actual), UtAssert_Compare_GTEQ, (uint32)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "", #actual, #ref)
+
+/**
+ * \brief Asserts the maximum value of a given function or expression
+ *
+ * This macro confirms that the given expression is at most the maximum value (inclusive)
+ * Values will be compared in an "uint32" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT32_LTEQ(actual, ref)                                                                           \
+    UtAssert_GenericUnsignedCompare((uint32)(actual), UtAssert_Compare_LTEQ, (uint32)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "", #actual, #ref)
+
+/**
+ * \brief Asserts the value of a given function or expression is less than the reference value
+ *
+ * This macro confirms that the given expression is less than the maximum value (exclusive)
+ * Values will be compared in an "uint32" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT32_LT(actual, ref)                                                                           \
+    UtAssert_GenericUnsignedCompare((uint32)(actual), UtAssert_Compare_LT, (uint32)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "", #actual, #ref)
+
+/**
+ * \brief Asserts the value of a given function or expression is greater than the reference value
+ *
+ * This macro confirms that the given expression is greater than the minimum value (exclusive)
+ * Values will be compared in an "uint32" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT32_GT(actual, ref)                                                                           \
+    UtAssert_GenericUnsignedCompare((uint32)(actual), UtAssert_Compare_GT, (uint32)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "", #actual, #ref)
+
+/**
+ * \brief Compare two 16-bit values for equality with an auto-generated description message
+ *
+ * This macro confirms that the given expression is equal to the reference value
+ * The generated log message will include the actual and reference values in decimal notation
+ * Values will be compared in an "uint16" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT16_EQ(actual, ref)                                                                           \
+    UtAssert_GenericUnsignedCompare((uint16)(actual), UtAssert_Compare_EQ, (uint16)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "uint16", #actual, #ref)
+
+/**
+ * \brief Compare two 16-bit values for inequality with an auto-generated description message
+ *
+ * This macro confirms that the given expression is _not_ equal to the reference value
+ * The generated log message will include the actual and reference values in decimal notation
+ * Values will be compared in an "uint16" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT16_NEQ(actual, ref)                                                                           \
+    UtAssert_GenericUnsignedCompare((uint16)(actual), UtAssert_Compare_NEQ, (uint16)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "uint16", #actual, #ref)
+
+/**
+ * \brief Asserts the minimum 16-bit value of a given function or expression
+ *
+ * This macro confirms that the given expression is at least the minimum 16-bit value (inclusive)
+ * Values will be compared in an "uint16" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT16_GTEQ(actual, ref)                                                                           \
+    UtAssert_GenericUnsignedCompare((uint16)(actual), UtAssert_Compare_GTEQ, (uint16)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "uint16", #actual, #ref)
+
+/**
+ * \brief Asserts the maximum 16-bit value of a given function or expression
+ *
+ * This macro confirms that the given expression is at most the maximum 16-bit value (inclusive)
+ * Values will be compared in an "uint16" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT16_LTEQ(actual, ref)                                                                           \
+    UtAssert_GenericUnsignedCompare((uint16)(actual), UtAssert_Compare_LTEQ, (uint16)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "uint16", #actual, #ref)
+
+/**
+ * \brief Asserts the 16-bit value of a given function or expression is less than the 16-bit reference value
+ *
+ * This macro confirms that the given expression is less than the maximum 16-bit value (exclusive)
+ * Values will be compared in an "uint16" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT16_LT(actual, ref)                                                                           \
+    UtAssert_GenericUnsignedCompare((uint16)(actual), UtAssert_Compare_LT, (uint16)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "uint16", #actual, #ref)
+
+/**
+ * \brief Asserts the 16-bit value of a given function or expression is greater than the 16-bit reference value
+ *
+ * This macro confirms that the given expression is greater than the minimum 16-bit value (exclusive)
+ * Values will be compared in an "uint16" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT16_GT(actual, ref)                                                                           \
+    UtAssert_GenericUnsignedCompare((uint16)(actual), UtAssert_Compare_GT, (uint16)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "uint16", #actual, #ref)
+
+/**
+ * \brief Compare two 8-bit values for equality with an auto-generated description message
+ *
+ * This macro confirms that the given expression is equal to the reference value
+ * The generated log message will include the actual and reference values in decimal notation
+ * Values will be compared in an "uint8" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT8_EQ(actual, ref)                                                                          \
+    UtAssert_GenericUnsignedCompare((uint8)(actual), UtAssert_Compare_EQ, (uint8)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "uint8", #actual, #ref)
+
+/**
+ * \brief Compare two 8-bit values for inequality with an auto-generated description message
+ *
+ * This macro confirms that the given expression is _not_ equal to the reference value
+ * The generated log message will include the actual and reference values in decimal notation
+ * Values will be compared in an "uint8" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT8_NEQ(actual, ref)                                                                          \
+    UtAssert_GenericUnsignedCompare((uint8)(actual), UtAssert_Compare_NEQ, (uint8)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "uint8", #actual, #ref)
+
+/**
+ * \brief Asserts the minimum 8-bit value of a given function or expression
+ *
+ * This macro confirms that the given expression is at least the minimum 8-bit value (inclusive)
+ * Values will be compared in an "uint8" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT8_GTEQ(actual, ref)                                                                          \
+    UtAssert_GenericUnsignedCompare((uint8)(actual), UtAssert_Compare_GTEQ, (uint8)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "uint8", #actual, #ref)
+
+/**
+ * \brief Asserts the maximum 8-bit value of a given function or expression
+ *
+ * This macro confirms that the given expression is at most the maximum 8-bit value (inclusive)
+ * Values will be compared in an "uint8" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT8_LTEQ(actual, ref)                                                                          \
+    UtAssert_GenericUnsignedCompare((uint8)(actual), UtAssert_Compare_LTEQ, (uint8)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "uint8", #actual, #ref)
+
+/**
+ * \brief Asserts the 8-bit value of a given function or expression is less than the 8-bit reference value
+ *
+ * This macro confirms that the given expression is less than the maximum 8-bit value (exclusive)
+ * Values will be compared in an "uint8" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT8_LT(actual, ref)                                                                          \
+    UtAssert_GenericUnsignedCompare((uint8)(actual), UtAssert_Compare_LT, (uint8)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "uint8", #actual, #ref)
+
+/**
+ * \brief Asserts the 8-bit value of a given function or expression is greater than the 8-bit reference value
+ *
+ * This macro confirms that the given expression is greater than the minimum 8-bit value (exclusive)
+ * Values will be compared in an "uint8" type context.
+ *
+ * \param actual The value from the unit under test
+ * \param ref    The expected value from the unit under test
+ */
+#define UtAssert_UINT8_GT(actual, ref)                                                                          \
+    UtAssert_GenericUnsignedCompare((uint8)(actual), UtAssert_Compare_GT, (uint8)(ref), UtAssert_Radix_DECIMAL, \
+                                    __FILE__, __LINE__, "uint8", #actual, #ref)
+
+/**
+ * \brief Macro for checking that bits in a bit field are set
+ *
+ * Test Passes if all the bits specified in "mask" are set in "rawval"
+ */
+#define UtAssert_BITMASK_SET(rawval, mask)                                                          \
+    UtAssert_GenericUnsignedCompare((uint32)(rawval), UtAssert_Compare_BITMASK_SET, (uint32)(mask), \
+                                    UtAssert_Radix_HEX, __FILE__, __LINE__, "", #rawval, #mask)
+
+/**
+ * \brief Macro for checking that bits in a bit field are unset
+ *
+ * Test Passes if none of the bits specified in "mask" are set in "rawval"
+ */
+#define UtAssert_BITMASK_UNSET(rawval, mask)                                                          \
+    UtAssert_GenericUnsignedCompare((uint32)(rawval), UtAssert_Compare_BITMASK_UNSET, (uint32)(mask), \
+                                    UtAssert_Radix_HEX, __FILE__, __LINE__, "", #rawval, #mask)
+
+/**
+ * \brief Macro for logging calls to a "void" function
+ *
+ * \par Description
+ *        A macro that invokes a function with no return value.  This should be used when
+ *        no actual condition/result to check for/assert on, but the call should still be
+ *        logged to the output to record the fact that the function was invoked.
+ *
+ * \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ */
+#define UtAssert_VOIDCALL(func) (func, UtAssert(true, #func, __FILE__, __LINE__))
+
+/**
+ * \brief Macro to check string buffers for equality
+ *
+ * \par Description
+ *        A macro that checks two string buffers for equality.  Both buffer maximum sizes are explicitly
+ *        specified, so that strings may reside in a fixed length buffer.  The function will never
+ *        check beyond the specified length, regardless of termination.
+ *
+ * \par Assumptions, External Events, and Notes:
+ *        The generic #UtAssert_StrCmp macro requires both arguments to be NULL terminated.  This also
+ *        includes the actual string in the log, but filters embedded newlines to keep the log clean.
+ *
+ *        If the string arguments are guaranteed to be NULL terminated and/or the max size is
+ *        not known, then the UTASSERT_STRINGBUF_NULL_TERM constant may be passed as the size for
+ *        that string.  This mechanism allows this check to be used with normal, terminated C strings,
+ *        as well as fixed-length, unterminated strings.
+ *
+ */
+#define UtAssert_STRINGBUF_EQ(str1, size1, str2, size2) \
+    UtAssert_StringBufCompare(str1, size1, str2, size2, UtAssert_Compare_EQ, __FILE__, __LINE__)
+
+/**
+ * \brief Compare addresses for equality with an auto-generated description message
+ */
+#define UtAssert_ADDRESS_EQ(actual, expect)                                                                      \
+    UtAssert_GenericUnsignedCompare((unsigned long)(void *)(actual), UtAssert_Compare_EQ,                        \
+                                    (unsigned long)(void *)(expect), UtAssert_Radix_HEX, __FILE__, __LINE__, "", \
+                                    #actual, #expect)
+
+/**
+ * \brief Confirm a pointer value is not NULL
+ */
+#define UtAssert_NOT_NULL(actual)                                                                                 \
+    UtAssert_GenericUnsignedCompare((unsigned long)(void *)(actual), UtAssert_Compare_NEQ, 0, UtAssert_Radix_HEX, \
+                                    __FILE__, __LINE__, "", #actual, "NULL")
+
+/**
+ * \brief Confirm a pointer value is NULL
+ */
+#define UtAssert_NULL(actual)                                                                                    \
+    UtAssert_GenericUnsignedCompare((unsigned long)(void *)(actual), UtAssert_Compare_EQ, 0, UtAssert_Radix_HEX, \
+                                    __FILE__, __LINE__, "", #actual, "NULL")
+
+/**
+ * \brief Confirm an integer value is nonzero
+ */
+#define UtAssert_NONZERO(actual)                                                                                   \
+    UtAssert_GenericSignedCompare(actual, UtAssert_Compare_NEQ, 0, UtAssert_Radix_DECIMAL, __FILE__, __LINE__, "", \
+                                  #actual, "ZERO")
+
+/**
+ * \brief Confirm an integer value is zero
+ */
+#define UtAssert_ZERO(actual)                                                                                     \
+    UtAssert_GenericSignedCompare(actual, UtAssert_Compare_EQ, 0, UtAssert_Radix_DECIMAL, __FILE__, __LINE__, "", \
+                                  #actual, "ZERO")
+
+/**
+ * \brief Confirm that a stub function has been invoked the expected number of times
+ */
+#define UtAssert_STUB_COUNT(stub, expected)                                                     \
+    UtAssert_GenericSignedCompare(UT_GetStubCount(UT_KEY(stub)), UtAssert_Compare_EQ, expected, \
+                                  UtAssert_Radix_DECIMAL, __FILE__, __LINE__, "CallCount", #stub "()", #expected)
+
+/*
+ * Exported Functions
+ */
+
+/**
+ * \brief Returns the number of asserts that have passed.
+ *
+ * \returns Number of tests that have passed
+ */
+uint32 UtAssert_GetPassCount(void);
+
+/**
+ * \brief Returns the number of asserts that have failed.
+ *
+ * \returns Number of tests that have failed
+ */
+uint32 UtAssert_GetFailCount(void);
+
+/**
+ * \brief Returns the full status of UtAssert counters
+ *
+ * \returns Pointer to structure with all the current test counter values
+ */
+const UtAssert_TestCounter_t *UtAssert_GetCounters(void);
+
+/**
+ * \brief Begins a test Segment
+ *
+ * \param SegmentName the name of the test segment, for logging/output classification
+ */
+void UtAssert_BeginTest(const char *SegmentName);
+
+/**
+ * \brief Completes a test Segment
+ *
+ * Segment name and counters will be printed to the console
+ */
+void UtAssert_EndTest(void);
+
+/**
+ * \brief Sets the context of the current test, which is the default message type for UtAssert calls
+ *
+ * General assert statements for which do not directly specify a case type will inherit this case type
+ * if an assert fails.  The framework automatically sets this to #UTASSERT_CASETYPE_TSF during setup
+ * and #UTASSERT_CASETYPE_TTF during teardown.
+ *
+ * \sa UtAssert_GetContext
+ *
+ * \param Context the case type to use for general assert failures
+ */
+void UtAssert_SetContext(UtAssert_CaseType_t Context);
+
+/**
+ * \brief Sets the context of the current test, which is the default message type for UtAssert calls
+ *
+ * \sa UtAssert_SetContext
+ *
+ * \returns Case type that was set previously via UtAssert_SetContext
+ */
+UtAssert_CaseType_t UtAssert_GetContext(void);
+
+/**
+ * \brief Gets the segment name of the current test
+ *
+ * This is the name that was previously set via UtAssert_BeginTest()
+ *
+ * \note the application should not store this pointer, it may become
+ * invalid after the next call to UtAssert_EndTest()
+ *
+ * \returns pointer to current segment name
+ */
+const char *UtAssert_GetSegmentName(void);
+
+/**
+ * \brief Base assert function
+ *
+ * This basic function is provided for backward compatibility with older
+ * versions of Ut Assert.  It generates an assert case using the current
+ * default context.
+ *
+ * Users should preferentially use one of the more type-specific assert macros,
+ * if available.
+ *
+ * \param Expression  a boolean value which evaluates "true" if the test passes
+ * \param Description a free form string describing the test case
+ * \param File          The source file name in which the test case appears
+ * \param Line          The source line number in which the test case appears
+ */
+bool UtAssert(bool Expression, const char *Description, const char *File, uint32 Line);
+
+/**
+ * \brief Assert function with specific CaseType (supports MIR, TSF, NA in addition to FAIL).
+ *
+ * This assert routine allows more concise description of the test case, as it supports
+ * printf-style message strings to allow dynamic content in the messages.
+ *
+ * \param Expression    a boolean value which evaluates "true" if the test passes
+ * \param CaseType      the case type to report if expression is "false" (TSF, TTF, FAIL, DEBUG, etc)
+ * \param File          The source file name in which the test case appears
+ * \param Line          The source line number in which the test case appears
+ * \param MessageFormat a free form printf-style format string describing the test case
+ */
+bool UtAssertEx(bool Expression, UtAssert_CaseType_t CaseType, const char *File, uint32 Line, const char *MessageFormat,
+                ...) OS_PRINTF(5, 6);
+
+/**
+ * \brief Aborts the entire test
+ *
+ * This may be used for fundamental failures, after which going on becomes meaningless or impossible.
+ *
+ * \param Message a free form string describing the failure
+ */
+void UtAssert_Abort(const char *Message);
+
+/**
+ * \brief Gets the short/abbreviated name for a UtAssert case type
+ *
+ * For tagging lines in the output log file, this returns a short string
+ * representing the human-readable name of the UtAssert case type.
+ *
+ * The returned string is 5 characters or less in length.
+ *
+ * \note This function does not return NULL, such that it can be
+ * used directly inside a printf()-style call.
+ *
+ * \param CaseType Message case type
+ * \returns String representation of case type
+ */
+const char *UtAssert_GetCaseTypeAbbrev(UtAssert_CaseType_t CaseType);
+
+/**
+ * \brief Output an informational message to the console/log file
+ *
+ * Just like the standard printf except it will output to the given status channel (see utassert.h)
+ *
+ * This calls into the UT BSP function to actually write the message
+ * to the current output device.  This may be the console or a log file
+ * or something else depending on what BSP is in use.
+ *
+ * \param MessageType Message case type
+ * \param File        File name containing the message
+ * \param Line        Line number containing the message
+ * \param Spec        printf style format followed by args of message
+ *
+ * \sa Helper macros: UtPrintf(), UtDebug()
+ */
+void UtAssert_Message(uint8 MessageType, const char *File, uint32 Line, const char *Spec, ...) OS_PRINTF(4, 5);
+
+/**
+ * The BSP single test case reporting function.
+ *
+ * Invokes the BSP-specific pass/fail reporting mechanism based on the MessageType.
+ *
+ * This is typically output as a message to the test log but may be fancier if the BSP requires it.
+ * One example might be to toggle a GPIO bit or LED if the test is running on a separate processor board.
+ *
+ * \param File         File containing the test case
+ * \param LineNum      Line number containing the test case
+ * \param MessageType  Message case type
+ * \param SubsysName   The subsystem under test (abbreviated name)
+ * \param ShortDesc    Short description of the test case
+ * \param SegmentNum   Sequence among the overall/global test Segments
+ * \param SegmentSeq   Sequence within the current test Segment
+ */
+void UtAssert_DoReport(const char *File, uint32 LineNum, uint32 SegmentNum, uint32 SegmentSeq, uint8 MessageType,
+                       const char *SubsysName, const char *ShortDesc);
+
+/**
+ * The BSP overall test reporting function.
+ *
+ * Invokes the BSP-specific overall pass/fail reporting mechanism based on the subsystem pass/fail counters.
+ *
+ * Like the UtAssert_DoReport() function, this is typically done as a message on the console/log however
+ * it might be different for embedded targets.
+ *
+ * \param SegmentName   The segment under test
+ * \param TestCounters  Counter object for the completed test
+ */
+void UtAssert_DoTestSegmentReport(const char *SegmentName, const UtAssert_TestCounter_t *TestCounters);
+
+/**
+ * \brief Helper function for string buffer check verifications
+ *
+ * \par Description
+ *        This helper function wraps the normal UtAssert function, intended for verifying
+ *        the contents of string buffer(s).  This also includes the actual message in the log,
+ *        but scrubs it for newlines and other items that may affect the ability to parse
+ *        the log file via a script.
+ *
+ * \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ * \returns Test pass status, returns true if status was successful, false if it failed.
+ *
+ */
+bool UtAssert_StringBufCompare(const char *String1, size_t String1Max, const char *String2, size_t String2Max,
+                               UtAssert_Compare_t CompareType, const char *File, uint32 Line);
+
+/**
+ * \brief Helper function for generic integer value checks
+ *
+ * \par Description
+ *        This helper function wraps the normal UtAssertEx() function, to compare two
+ *        integer values in a signed or unsigned context.  The comparison is performed as two
+ *        "UT_IntCheck_t" integers and the numeric values are printed to the test log
+ *        in the notation specified by RadixType.
+ *
+ * \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ * \param IsUnsigned     Should be passed as true to check in an unsigned context, or false for a signed context
+ * \param ActualValue    Integer Value from the unit under test
+ * \param CompareType    Type of comparison to perform
+ * \param ReferenceValue Integer Value that was expected from the unit
+ * \param File           File where test is taking place (typically __FILE__)
+ * \param Line           Line number where test is taking place (typically __LINE__)
+ * \param RadixType      How to display the result
+ * \param Typename       Data type name as a string (for logging)
+ * \param ActualText     Actual value as a string (for logging)
+ * \param ReferenceText  Expected value as a string (for logging)
+ *
+ * \returns Test pass status, returns true if status was successful, false if it failed.
+ *
+ */
+bool UtAssert_GenericIntegerCompare(bool IsUnsigned, UT_IntCheck_t ActualValue, UtAssert_Compare_t CompareType,
+                                    UT_IntCheck_t ReferenceValue, const char *File, uint32 Line,
+                                    UtAssert_Radix_t RadixType, const char *Typename, const char *ActualText,
+                                    const char *ReferenceText);
+
+/**
+ * \brief Helper function for generic unsigned integer value checks
+ *
+ * \par Description
+ *        This helper function wraps the normal UtAssertEx() function, to compare two
+ *        integer values in an unsigned context.  The comparison is performed as two
+ *        unsigned long integers and the numeric values are printed to the test log
+ *        in hexadecimal notation (base-16).
+ *
+ * \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ * \returns Test pass status, returns true if status was successful, false if it failed.
+ *
+ */
+bool UtAssert_GenericUnsignedCompare(unsigned long ActualValue, UtAssert_Compare_t CompareType,
+                                     unsigned long ReferenceValue, UtAssert_Radix_t RadixType, const char *File,
+                                     uint32 Line, const char *Desc, const char *ActualText, const char *ReferenceText);
+
+/**
+ * \brief Helper function for generic signed integer value checks
+ *
+ * \par Description
+ *        This helper function wraps the normal UtAssertEx() function, to compare two
+ *        integer values in a signed context.  The comparison is performed as two
+ *        signed long integers and the numeric values are printed to the test log
+ *        in standard decimal notation (base-10).
+ *
+ * \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ * \returns Test pass status, returns true if status was successful, false if it failed.
+ *
+ */
+bool UtAssert_GenericSignedCompare(long ActualValue, UtAssert_Compare_t CompareType, long ReferenceValue,
+                                   UtAssert_Radix_t RadixType, const char *File, uint32 Line, const char *Desc,
+                                   const char *ActualText, const char *ReferenceText);
+
+#endif /* UTASSERT_H */
+</pre></div>
+</div>
+</section>
+<section id="utbsp-h">
+<h2><code class="docutils literal notranslate"><span class="pre">utbsp.h</span></code><a class="headerlink" href="#utbsp-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/ut_assert/inc/utbsp.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Types and definitions for the generic Unit Test BSP interface implemented
+ * as part of OSAL.
+ *
+ * When the OSAL BSP is used to start the tests, the same BSP can also be used to output
+ * test status, this way alternate output resources can be used whenever needed.
+ *
+ * Provides a means to abstract the test start/stop and pass/fail reporting
+ * to a board-specific function.  This allows tests to be better utilized on
+ * embedded targets that may not have a visible printf() function.
+ *
+ * (We should not assume a working "printf" anywhere in UT-assert)
+ *
+ * It also provides for BSP customizations to the way tests are launched
+ * and the way pass/fail determinations are made.
+ */
+
+#ifndef UTBSP_H
+#define UTBSP_H
+
+#include "common_types.h"
+#include "utassert.h"
+
+/**************************************************************
+ * Functions implemented by the UT-specific BSP
+ **************************************************************/
+
+/*
+ * Note - functions here are not typically directly called by UT code, they
+ * are used by the framework to implement the common functions.
+ *
+ * In general, these should all be stateless in order to keep the implementation
+ * on the BSP side as simple as possible.
+ */
+
+/**
+ * Initialize the BSP for unit test.
+ *
+ * This is just a hook for the BSP to be informed of the start-of-test event and may be a no-op.
+ */
+void UT_BSP_Setup(void);
+
+/**
+ * Initialize the unit test at the BSP layer.
+ *
+ * This is just a hook for the BSP to be informed of the start-of-test event and may be a no-op.
+ *
+ * \param[in] SegmentNumber Number of current test segment
+ * \param[in] SegmentName   Name of current test segment
+ */
+void UT_BSP_StartTestSegment(uint32 SegmentNumber, const char *SegmentName);
+
+/**
+ * The BSP text-output function for unit test messages.
+ *
+ * This is used by the unit test code, typically for progress messages.  The destination is BSP-dependent
+ * and may or may not go to the same place that OS_printf() does.  The BSP may choose to send this
+ * to a special/separate log file to separate the test progress messages from the OS_printf() messages
+ * produced by the application/function under test.
+ *
+ * \param MessageType  The nature (verbosity) of the message.  The BSP may allow the operator to select
+ *    the maximum message verbosity at runtime to select what should go into the log file.
+ *
+ * \param OutputMessage The message text.
+ */
+void UT_BSP_DoText(uint8 MessageType, const char *OutputMessage);
+
+/**
+ * The BSP overall test end function.
+ *
+ * Invokes the BSP-specific global pass/fail reporting mechanism based on the global overall pass/fail counters.
+ *
+ * This function ends the current test process and returns to the controlling process.
+ *
+ * \param TestCounters  Counter object for the completed test
+ */
+void UT_BSP_EndTest(const UtAssert_TestCounter_t *TestCounters);
+
+/**
+ * UT mutex lock for multi-threaded test support
+ *
+ * Lock that should be acquired before modifying any global test state variables
+ */
+void UT_BSP_Lock(void);
+
+/**
+ * UT mutex unlock for multi-threaded test support
+ *
+ * Must be called after UT_BSP_Lock to allow other threads access to the global
+ */
+void UT_BSP_Unlock(void);
+
+#endif /* UTBSP_H */
+</pre></div>
+</div>
+</section>
+<section id="utgenstub-h">
+<h2><code class="docutils literal notranslate"><span class="pre">utgenstub.h</span></code><a class="headerlink" href="#utgenstub-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/ut_assert/inc/utgenstub.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Provides a set of macros to facilitate generating stub code
+ *
+ * These macros are primarily used in the code generated by the "generate_stubs.pl" script
+ */
+
+#ifndef UTGENSTUB_H
+#define UTGENSTUB_H
+
+#include "common_types.h"
+#include "utstubs.h"
+
+/**
+ * Helper macro to set up a return buffer in a generated stub
+ *
+ * Registers a buffer that the hook/handler can fill.  This works
+ * with any return data type, not just int32.
+ *
+ * \param FuncName   The name of the function
+ * \param ReturnType The type of return value
+ */
+#define UT_GenStub_SetupReturnBuffer(FuncName, ReturnType) \
+    UT_Stub_RegisterReturnType(UT_KEY(FuncName), sizeof(ReturnType), #ReturnType)
+
+/**
+ * Helper macro to get the return value from the handler
+ *
+ * Gets the value exported from the hook/handler
+ *
+ * \param FuncName   The name of the function
+ * \param ReturnType The type of return value
+ */
+#define UT_GenStub_GetReturnValue(FuncName, ReturnType) \
+    (*(ReturnType *)UT_Stub_GetReturnValuePtr(UT_KEY(FuncName), sizeof(ReturnType), #ReturnType))
+
+/**
+ * Helper macro to add a local parameter to the current context
+ *
+ * This makes the parameter accessible from hook/handler functions
+ *
+ * \param FuncName   The name of the function
+ * \param ParamType  The type of the parameter
+ * \param ParamName  The name of the parameter
+ */
+#define UT_GenStub_AddParam(FuncName, ParamType, ParamName)                                                           \
+    UT_Stub_RegisterContextWithMetaData(UT_KEY(FuncName), #ParamName, UT_STUBCONTEXT_ARG_TYPE_INDIRECT, &amp;(ParamName), \
+                                        sizeof(ParamType))
+
+/**
+ * Helper macro to execute the actual stub handler
+ *
+ * Additional arguments are passed through
+ *
+ * \param FuncName   The name of the function
+ * \param Type       The type of handler to execute (Va or Basic)
+ */
+#define UT_GenStub_Execute(FuncName, Type, ...) UT_Execute##Type##Handler(UT_KEY(FuncName), #FuncName, __VA_ARGS__);
+
+#endif /* UTGENSTUB_H */
+</pre></div>
+</div>
+</section>
+<section id="utlist-h">
+<h2><code class="docutils literal notranslate"><span class="pre">utlist.h</span></code><a class="headerlink" href="#utlist-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/ut_assert/inc/utlist.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Purpose: This file contains functions to implement a generic linked list data structure.
+ */
+
+#ifndef UTLIST_H
+#define UTLIST_H
+
+/*
+ * Includes
+ */
+
+#include "common_types.h"
+
+/*
+ * Macro Definitions
+ */
+
+/* Macros to redefine list functions to look like stack and queue functions */
+#define UtStack_Push    UtList_Add
+#define UtStack_Pop     UtList_RemoveLast
+#define UtStack_IsEmpty UtList_IsEmpty
+#define UtStack_Depth   UtList_Depth
+
+#define UtQueue_Add     UtList_Add
+#define UtQueue_Get     UtList_RemoveFirst
+#define UtQueue_Look    UtList_First
+#define UtQueue_Delete  UtList_DeleteFirst
+#define UtQueue_IsEmpty UtList_IsEmpty
+#define UtQueue_Depth   UtList_Depth
+
+/*
+ * Type Definitions
+ */
+
+typedef struct UtListNodeTag
+{
+    struct UtListNodeTag *Next;
+    struct UtListNodeTag *Prev;
+    void *                Data;
+    uint32                DataSize;
+    uint32                Tag;
+} UtListNode_t;
+
+typedef struct
+{
+    UtListNode_t *Tags;
+    uint32        NumberOfTags;
+} UtListHead_t;
+
+/*
+ * Exported Functions
+ */
+
+/* Dynamically allocates a new list head.  A list head could also just be declared, this function is useful
+ * if you need to dynamically allocate memory for a new list head.  Note always free list heads allocated by
+ * this function by calling UtList_Destroy. */
+UtListHead_t *UtList_Create(uint32 NumTags);
+
+/* Frees a list head created by UtList_Create. */
+void UtList_Destroy(UtListHead_t *ListHead);
+
+/* Deletes all nodes on the list. */
+void UtList_Reset(UtListNode_t *TagHead);
+
+/* Merge two lists heads together */
+void UtList_Merge(UtListNode_t *TagHead1, UtListNode_t *TagHead2);
+
+/* Dynamically adds a new node to the list.  Nodes are always added to the end of the list.  Memory is dynamically
+ * allocated for the new node and to hold the data pointed to by Data.  A Tag field is also provided to be used to
+ * store user defined information with the node. */
+void UtList_Add(UtListHead_t *ListHead, void *Data, uint32 DataSize, uint32 Tag);
+
+/* Deletes the specified node from the list, this will screw up if you do not pass in a valid DeleteNode.  I do not
+ * verify that DeleteNode is a member of the list. */
+void UtList_DeleteNode(UtListNode_t *DeleteNode);
+
+/* Returns true if the list is empty.  This is the same as (UtListHead-&gt;NumberOfEntries == 0). */
+bool UtList_IsEmpty(UtListNode_t *TagHead);
+
+/* Returns the head node of a list for the given tag */
+UtListNode_t *UtList_GetHead(UtListHead_t *ListHead, uint32 Tag);
+
+/* Returns the next node in the list, given the current node */
+UtListNode_t *UtList_GetNext(UtListNode_t *ListNode);
+
+/* Returns the data object associated with the current node */
+void *UtList_GetObject(UtListNode_t *ListNode);
+
+/* Check if the current node marks the end of the list */
+bool UtList_IsEnd(UtListNode_t *TagHead, UtListNode_t *ListNode);
+
+#endif /* UTLIST_H */
+</pre></div>
+</div>
+</section>
+<section id="utstubs-h">
+<h2><code class="docutils literal notranslate"><span class="pre">utstubs.h</span></code><a class="headerlink" href="#utstubs-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/ut_assert/inc/utstubs.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Types and definitions for the generic Unit Test Stub framework implemented
+ * as part of OSAL.
+ *
+ * Provides a means to implement stub functions WITHOUT needing any specific
+ * headers or knowledge about the real implementations of those functions.
+ *
+ * This is a major key difference between this implementation and the other stub
+ * implementations that have existed before this, as all other hook/stub implementations
+ * ultimately use the prototypes or are somehow tied to the functions they are stubbing out.
+ *
+ */
+
+#ifndef UTSTUBS_H
+#define UTSTUBS_H
+
+#include &lt;stdarg.h&gt;
+#include "common_types.h"
+
+/**
+ * Using a generic memory address as a key into table -
+ * this should allow the function name (with a cast) to be used as the key,
+ * but allows a fancier hash algorithm if needed.
+ * Note - in pedantic mode using a "void *" here triggers a warning
+ * if used with a function address, but no warning is generated if using
+ * an integer memory address type.
+ */
+typedef cpuaddr UT_EntryKey_t;
+
+/**
+ * Type for generic integer value return codes
+ *
+ * By using the C99 "ptrdiff_t" type, this should be large enough to also
+ * store pointer values on the target system, in addition to all normal
+ * integer values.
+ */
+typedef ptrdiff_t UT_IntReturn_t;
+
+/**
+ * Macro to obtain a UT_EntryKey_t value from any function name
+ */
+#define UT_KEY(Func) ((UT_EntryKey_t)&amp;Func)
+
+/**
+ * Maximum size of a callback hook context list
+ *
+ * This is the maximum number of function arguments that can be passed to a hook
+ * Note that OS_TaskCreate() has (possibly) the highest parameter count in OSAL with 7 parameters
+ */
+#define UT_STUBCONTEXT_MAXSIZE 8
+
+/**
+ * Identifies the type of value stored in the ArgPtr field of a UT_StubContext_t object
+ */
+typedef enum
+{
+    UT_STUBCONTEXT_ARG_TYPE_UNSPECIFIED = 0,
+    UT_STUBCONTEXT_ARG_TYPE_DIRECT,  /**&lt; Indicates "ArgPtr" is a direct copy of the actual parameter value */
+    UT_STUBCONTEXT_ARG_TYPE_INDIRECT /**&lt; Indicates "ArgPtr" is a pointer to the argument value on the stack */
+} UT_StubContext_Arg_Type_t;
+
+/**
+ * Identifies different genres of return values.  This serves as a hint to determine how to adapt
+ * or convert a return value if the stub has a different return size.
+ */
+typedef enum UT_ValueGenre
+{
+    UT_ValueGenre_OPAQUE  = 0, /**&lt; The nature of the value is opaque, reference is stored directly (NOT copied!) */
+    UT_ValueGenre_INTEGER = 1, /**&lt; The value is an integer and may be converted to integers of other sizes */
+    UT_ValueGenre_FLOAT   = 2, /**&lt; The value is a floating point and may be converted to floats of other sizes */
+    UT_ValueGenre_POINTER = 3  /**&lt; The value is a pointer and should only be used to fulfill a pointer return */
+} UT_ValueGenre_t;
+
+/**
+ * Complete Metadata associated with a context argument
+ */
+typedef struct
+{
+    UT_StubContext_Arg_Type_t Type;
+    const char *              Name;
+    size_t                    Size;
+} UT_StubArgMetaData_t;
+
+/**
+ * Structure to hold context data for callback hooks
+ */
+typedef struct
+{
+    int32                Int32StatusCode;
+    bool                 Int32StatusIsSet;
+    uint32               ArgCount;
+    const void *         ArgPtr[UT_STUBCONTEXT_MAXSIZE];
+    UT_StubArgMetaData_t Meta[UT_STUBCONTEXT_MAXSIZE];
+} UT_StubContext_t;
+
+/**
+ * Function pointer for user-specified hook callbacks
+ *
+ * Hook functions provide a user-specified supplement to the handler
+ * function.  They are invoked prior to the actual stub handler, and can
+ * perform any additional test-specific logic necessary.
+ *
+ * \sa UT_HandlerFunc_t
+ */
+typedef int32 (*UT_HookFunc_t)(void *UserObj, int32 StubRetcode, uint32 CallCount, const UT_StubContext_t *Context);
+
+/**
+ * Function pointer for user-specified variable-argument callbacks
+ *
+ * \copydoc UT_HookFunc_t
+ */
+typedef int32 (*UT_VaHookFunc_t)(void *UserObj, int32 StubRetcode, uint32 CallCount, const UT_StubContext_t *Context,
+                                 va_list va);
+
+/**
+ * Function pointer for user-specified stub handlers
+ *
+ * Handler functions are the final logic associated with a stub
+ *
+ * Handlers must perform the role of generating the actual
+ * return code to be sent to the caller, and must also output
+ * any required output parameters.
+ *
+ * \note Stubs should no longer have any "assumed" logic.  Any
+ *       additional outputs or return code translation is now
+ *       dealt with only in the handler function.
+ *
+ * \param[inout] UserObj  Opaque object from original registration
+ * \param[in]    FuncKey  UT key of function currently being handled
+ * \param[in]    Context  Context information for current handler
+ */
+typedef void (*UT_HandlerFunc_t)(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context);
+
+/**
+ * Function pointer for user-specified variable-argument stub handlers
+ *
+ * \copydoc UT_HandlerFunc_t
+ * \param[in]    va  Variable argument list from initial stub call
+ */
+typedef void (*UT_VaHandlerFunc_t)(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context, va_list va);
+
+/**************************************************************
+ * Functions for use within test code implementation
+ **************************************************************/
+
+/**
+ * Reset the Unit test framework for a given function, or all functions
+ *
+ * Any return code or data buffer records for the given function key
+ * are cleared.
+ *
+ * \param FuncKey The stub function to reset.  If zero, all functions
+ *      are reset.
+ */
+void UT_ResetState(UT_EntryKey_t FuncKey);
+
+/**
+ * Add a deferred return code entry for the given stub function
+ *
+ * A deferred ("count down") return code for the stub function will be
+ * installed.  The specific implementation depends on the stub function,
+ * but typically it will return its default code until it is called "Count"
+ * times, where it will return the given Retcode, then return to
+ * its default return code again.
+ *
+ * Multiple deferred entries for a single function are allowed.  These
+ * will be done in the order they were added.
+ *
+ * It is recommended to call UT_ResetState() at the beginning of the test case
+ * to ensure that any old entries for the stub functions are cleared out.
+ *
+ * \param FuncKey The stub function to add the return code to.
+ * \param Count   The number of times after which the Retcode should be triggered
+ * \param Retcode The signed integer value to return after Count calls.
+ */
+void UT_SetDeferredRetcode(UT_EntryKey_t FuncKey, int32 Count, UT_IntReturn_t Retcode);
+
+/**
+ * Add a type-agnostic return code entry for the given stub function
+ *
+ * This allocates a return value entry in the UT Assert state table and associates it with the
+ * specified stub function.  The DeferCount parameter determines how many times the stub must
+ * be invoked before the return value is used.  If this is passed in as 0, the value will be used
+ * for all stub invocations, and will be retained until the state is reset.  For nonzero defer counts,
+ * the value acts as a decrement counter, and will be used once the counter reaches 0.  In these cases,
+ * the value will be discarded/forgotten once it has been used by the stub.
+ *
+ * The handling of the value depends on the ValueGenre:
+ *
+ *   #UT_ValueGenre_OPAQUE -  The object will be used directly as the return value from the stub, and no
+ *                            conversion of any type will be attempted.
+ *   #UT_ValueGenre_INTEGER - The object is an integer, and thus may be converted to numbers of other sizes/types
+ *                            using integer value semantics.
+ *   #UT_ValueGenre_FLOAT   - The object is a floating point, and thus may be converted to numbers of other
+ *                            sizes/types using floating point value semantics.
+ *   #UT_ValueGenre_POINTER - The object is a pointer, no conversions will be attempted, and the size must be
+ *                            equal to sizeof(void*)
+ *
+ * \note for OPAQUE values, the passed-in pointer value is held directly, and will be dereferenced at the
+ * time when the called stub returns the value.  Notably, the content is NOT cached in the UtAssert internal
+ * storage structures, so the caller must ensure that the pointed-to object remains valid and does not go
+ * out of scope for the remainder of the test case, or until UT_ResetState is called.  Conversely, for INTEGER,
+ * FLOAT, or POINTER value genres, the content will be copied into the internal storage structures, so in
+ * these cases, the pointed-to value may be immediately reused or freed by the caller.
+ *
+ * \param FuncKey    The stub function to add the return code to.
+ * \param ValuePtr   Pointer to the value to return
+ * \param ValueSize  Size of the object referred to by ValuePtr
+ * \param ValueGenre Genre of the object referred to by ValuePtr
+ * \param DeferCount Number of times the stub needs to be called until this value is used
+ * \param TypeName   Data type as an ASCII string, for possible type matching (may be set from a preprocessor macro)
+ */
+void UT_ConfigureGenericStubReturnValue(UT_EntryKey_t FuncKey, const void *ValuePtr, size_t ValueSize,
+                                        UT_ValueGenre_t ValueGenre, int32 DeferCount, const char *TypeName);
+
+/**
+ * Add a data buffer for a given stub function
+ *
+ * Some stub functions (i.e. read/write calls) may need to work with actual
+ * test data supplied by the test function.  This specifies a data buffer
+ * that the read/write call copy to or from.  Its specific usage is dependent
+ * on the implementation of the stub function itself.
+ *
+ * Multiple buffer entries for a single function are allowed.  These
+ * will be used in the order they were added.
+ *
+ * It is recommended to call UT_ResetState(0) at the beginning of the test case
+ * to ensure that any old entries for the stub functions are cleared out.
+ *
+ * \param FuncKey The stub function to add the data buffer to.
+ * \param DataBuffer Pointer to data buffer that should be associated with the stub function
+ * \param BufferSize Size of data buffer
+ * \param AllocateCopy If true then malloc() will be used to allocate a copy of the buffer
+ *      and the supplied DataBuffer will be copied into it via memcpy() before returning.  The
+ *      buffer will be freed after the test code reads it or the test state is reset.  If this
+ *      is false then the DataBuffer pointer is used directly, and must remain valid for the duration
+ *      of the current test case.
+ */
+void UT_SetDataBuffer(UT_EntryKey_t FuncKey, void *DataBuffer, size_t BufferSize, bool AllocateCopy);
+
+/**
+ * Gets the data buffer for a given stub function
+ *
+ * This is the complement to UT_SetDataBuffer() and it can be useful in stub functions
+ * where the buffer needs to be checked but not necessarily consumed.
+ *
+ * In case there is no associated buffer the pointer will be set NULL and the size will be
+ * set to 0.
+ *
+ * \param FuncKey The stub function to reference.
+ * \param DataBuffer Set to Pointer to data buffer that is associated with the stub function (output)
+ * \param MaxSize Set to Maximum Size of data buffer (output)
+ * \param Position Set to current position in data buffer (output)
+ */
+void UT_GetDataBuffer(UT_EntryKey_t FuncKey, void **DataBuffer, size_t *MaxSize, size_t *Position);
+
+/**
+ * Set the default return value for the given stub function.
+ * User needs to use UT_ClearDefaultReturnValue to clear the value.
+ *
+ * \param FuncKey The stub function to add the return code to.
+ * \param Value Arbitrary signed integer return value (may or may not be used by the stub)
+ */
+void UT_SetDefaultReturnValue(UT_EntryKey_t FuncKey, UT_IntReturn_t Value);
+
+/**
+ * Disable the default return for the given stub function
+ *
+ * This undoes the action of UT_SetDefaultReturnValue()
+ *
+ * \param FuncKey The stub function entry to clear.
+ */
+void UT_ClearDefaultReturnValue(UT_EntryKey_t FuncKey);
+
+/**
+ * Set a Hook function for a particular call
+ *
+ * This triggers a callback to a user-defined function when the stub is invoked.
+ * The callback may optionally pass back context data, depending on the stub
+ * implementation.
+ *
+ * In UT assert, hook functions supplement the handler functions, and will
+ * be called prior to the handler to add additional logic.  This facility should
+ * be used in cases where the default handling logic is acceptable, but needs some
+ * extensions or additional work performed at the time the stub is invoked, such
+ * as setting a state variable in the parent test program.
+ *
+ *
+ * \param FuncKey  The stub function to add the hook to.
+ * \param HookFunc User defined hook function.  Set NULL to delete/clear an entry.
+ * \param UserObj  Arbitrary user data object to pass to the hook function
+ */
+void UT_SetHookFunction(UT_EntryKey_t FuncKey, UT_HookFunc_t HookFunc, void *UserObj);
+
+/**
+ * Set a Handler function for a particular call
+ *
+ * This allows the user to completely replace the handler for a given function.
+ *
+ * The handler assumes all responsibility for the final behavior of the stub,
+ * including translating return values, and any outputs/side effects the stub
+ * function should have.  The default handler for the stub is NOT used.
+ *
+ * \param FuncKey  The stub function to add the hook to.
+ * \param HandlerFunc User defined hook function.  Set NULL to delete/clear an entry.
+ * \param UserObj  Arbitrary user data object to pass to the hook function
+ */
+void UT_SetHandlerFunction(UT_EntryKey_t FuncKey, UT_HandlerFunc_t HandlerFunc, void *UserObj);
+
+/**
+ * Set a variable-argument Hook function for a particular call
+ *
+ * Identical to UT_SetHookFunction() except that it includes a va_list argument
+ * such that it can be used with a variable-argument stub function.
+ *
+ * This can be important for printf-like stubs where correctness might depend on the
+ * contents of the arguments but the types of arguments aren't known.
+ *
+ * However, some systems have limited support for va_list, so this might not be
+ * available on those systems.  Tests should use the generic (non-va) hook function
+ * unless the arguments are truly necessary.
+ *
+ * \sa UT_SetHookFunction
+ *
+ * \param FuncKey  The stub function to add the hook to.
+ * \param HookFunc User defined hook function.  Set NULL to delete/clear an entry.
+ * \param UserObj  Arbitrary user data object to pass to the hook function
+ */
+void UT_SetVaHookFunction(UT_EntryKey_t FuncKey, UT_VaHookFunc_t HookFunc, void *UserObj);
+
+/**
+ * Set a variable-argument Handler function for a particular call
+ *
+ * This allows the user to completely replace the handler for a given function.
+ *
+ * The handler assumes all responsibility for the final behavior of the stub,
+ * including translating return values, and any outputs/side effects the stub
+ * function should have.  The default handler for the stub is NOT used.
+ *
+ * This is identical to UT_SetHandlerFunction() but the function includes a va_list
+ * argument to allow use with variadic functions.
+ *
+ * \param FuncKey  The stub function to add the hook to.
+ * \param HandlerFunc User defined hook function.  Set NULL to delete/clear an entry.
+ * \param UserObj  Arbitrary user data object to pass to the hook function
+ */
+void UT_SetVaHandlerFunction(UT_EntryKey_t FuncKey, UT_VaHandlerFunc_t HandlerFunc, void *UserObj);
+
+/**
+ * Get a count for the number of times a stub was invoked, at its most recent return value
+ *
+ * Test cases may check this to determine if a particular stub was called during the test.
+ *
+ * \param FuncKey The stub function to check.
+ * \param Retcode Buffer to store the most recent return code from the stub
+ * \param Count   Buffer to store the number of times the stub was invoked
+ */
+bool UT_GetStubRetcodeAndCount(UT_EntryKey_t FuncKey, int32 *Retcode, int32 *Count);
+
+/**
+ * Get a count for the number of times a stub was invoked
+ *
+ * Test cases may check this to determine if a particular stub was called during the test.
+ *
+ * \param FuncKey The stub function to check.
+ * \return The number of times the stub was invoked
+ */
+uint32 UT_GetStubCount(UT_EntryKey_t FuncKey);
+
+/**************************************************************
+ * Functions for use within stub function implementation
+ **************************************************************/
+
+/**
+ * Registers a function to be called once per test case
+ *
+ * This can be used for initialization purposes to preserve state
+ * across stub calls.  The first time this is encountered after a
+ * reset, the function will be called.  For all subsequent encounters,
+ * it will be ignored.
+ *
+ * \param Func      A function to call once per test case.
+ */
+void UT_Stub_CallOnce(void (*Func)(void));
+
+/**
+ * Copies data from a test-supplied buffer to the local buffer
+ *
+ * If a UT_SetDataBuffer() option is in place for the given function this
+ * will return nonzero and increment the internal usage counter.
+ *
+ * \param FuncKey The stub function to entry to use.
+ * \param LocalBuffer The local (destination) buffer
+ * \param MaxSize The maximum size of data to copy
+ * \returns The actual size of data copied.  If no data buffer is
+ *      supplied by the test harness this will return 0.
+ */
+size_t UT_Stub_CopyToLocal(UT_EntryKey_t FuncKey, void *LocalBuffer, size_t MaxSize);
+
+/**
+ * Copies data from a local buffer to the test-supplied buffer
+ *
+ * If a UT_SetDataBuffer() option is in place for the given function this
+ * will return nonzero and increment the internal usage counter.
+ *
+ * \param FuncKey The stub function to entry to use.
+ * \param LocalBuffer The local (source) buffer
+ * \param MaxSize The maximum size of data to copy
+ * \returns The actual size of data copied.  If no data buffer is
+ *      supplied by the test harness this will return 0.
+ */
+size_t UT_Stub_CopyFromLocal(UT_EntryKey_t FuncKey, const void *LocalBuffer, size_t MaxSize);
+
+/**
+ * Registers a single context element for the hook callback
+ *
+ * Stubs may pass up to UT_STUBCONTEXT_MAXSIZE arguments to a user-defined
+ * hook function.  These arguments are opaque to the stub function and generally
+ * passed as "void *" pointers to the actual stack values.  The user code must
+ * then cast them to the right type again.
+ *
+ * This is now implemented as a macro which calls UT_Stub_RegisterContextWithMetaData
+ * to associate the name of the argument as well as the pointer.
+ *
+ * \param FuncKey   The stub function to entry to use.
+ * \param Parameter Arbitrary parameter to pass.
+ */
+#define UT_Stub_RegisterContext(FuncKey, Parameter) \
+    UT_Stub_RegisterContextWithMetaData(FuncKey, #Parameter, UT_STUBCONTEXT_ARG_TYPE_UNSPECIFIED, Parameter, 0)
+
+/**
+ * Registers a single value argument into the context for the hook callback
+ *
+ * A pointer to the stack value is actually stored into the context,
+ * which can be dereferenced in the hook.
+ */
+#define UT_Stub_RegisterContextGenericArg(FuncKey, Parameter)                                              \
+    UT_Stub_RegisterContextWithMetaData(FuncKey, #Parameter, UT_STUBCONTEXT_ARG_TYPE_INDIRECT, &amp;Parameter, \
+                                        sizeof(Parameter))
+
+/**
+ * Set a stub return value from the handler function
+ *
+ * This sets/copies the specified value to the buffer that will be
+ * returned from the original stub call back to the caller.  This
+ * provides the actual return value and it will override/replace
+ * any assumed or default return value.
+ *
+ * The passed-in buffer should be a pointer to the same data type
+ * that the stub returns.  Any type mismatch is considered an error.
+ *
+ * The handler function must call this routine for any stub which
+ * returns a data type other than int32.
+ *
+ * @note If there is no handler function or the handler does not call
+ * this routine to set a return value, the implementation will use the
+ * "Int32StatusCode" value as a return if the size matches sizeof(int32).
+ *
+ * \param FuncKey    The stub function associated with the buffer
+ * \param BufferPtr  Pointer to the local return value
+ * \param BufferSize Size of the local return value
+ */
+void UT_Stub_SetReturnValue(UT_EntryKey_t FuncKey, const void *BufferPtr, size_t BufferSize);
+
+/**
+ * Creates a buffer to hold the return value for the stub
+ *
+ * \param FuncKey    The stub function associated with the buffer
+ * \param ReturnSize Size of the return value
+ * \param TypeName   Expected return value type, as a string
+ */
+void UT_Stub_RegisterReturnType(UT_EntryKey_t FuncKey, size_t ReturnSize, const char *TypeName);
+
+/**
+ * Obtains direct pointer to buffer for stub return value
+ *
+ * This is a helper routine and not intended to be invoked directly
+ * by handler/hook routines.  Use UT_Stub_CopyToReturnValue() to
+ * set the return value from a local variable.
+ *
+ * \sa UT_Stub_CopyToReturnValue()
+ *
+ * \param FuncKey    The stub function associated with the buffer
+ * \param ReturnSize Size of the return value
+ * \param TypeName   Expected return value type, as a string
+ */
+void *UT_Stub_GetReturnValuePtr(UT_EntryKey_t FuncKey, size_t ReturnSize, const char *TypeName);
+
+/**
+ * Exports a value from a hook/handler and stages it to be returned to the caller.
+ *
+ * This is the preferred alternative to using "int32" type returns, since not all
+ * functions return int32 status codes.  This method works with any return type.
+ *
+ * \param FuncKey    The stub function associated with the buffer
+ * \param ReturnPtr  Pointer to return value data
+ * \param ReturnSize Size of the return value data
+ */
+void UT_Stub_CopyToReturnValue(UT_EntryKey_t FuncKey, const void *ReturnPtr, size_t ReturnSize);
+
+/**
+ * Macro to simplify use of the UT_Stub_CopyToReturnValue() in a hook/handler context.
+ * This returns the value stored in the specified variable
+ *
+ * \param FuncKey     The stub function identifier
+ * \param ReturnValue The value to return
+ */
+#define UT_Stub_SetReturnValue(FuncKey, ReturnValue) \
+    UT_Stub_CopyToReturnValue(FuncKey, &amp;ReturnValue, sizeof(ReturnValue))
+
+/**
+ * Checks if the int32 status code is set, and optionally gets its value
+ *
+ * The UT framework is optimized to handle functions that return an int32 status
+ * code, as this is a very common pattern in CFE, OSAL, and related applications.
+ *
+ * In the context of a hook or handler function, this retrieves the value of an
+ * int32 status code configured by the test case, either via the "deferred" or
+ * the fixed/forced status code APIs, or generated by a previous hook function.
+ *
+ * This returns whether or not a status code was explicitly set by the test case.
+ * If no status code was set, the value will be set to a default (0).
+ *
+ * \param[in]  Context           The context object that was passed to the hook
+ * \param[out] StatusCodeBuffer  If non-NULL, this will be set to the actual status code value
+ *                 If status code was not unset, this will be set to the default code value
+ *
+ * \returns true if code was explicitly set, false if it is not set (and has default value)
+ *
+ * \note The return value allows a hook/handler function to differentiate between a default
+ * status code value that was explicitly set vs. implicitly set.  That is, if the test case
+ * explicitly sets a status code of "0", this will return "true", even if the default value
+ * is also "0".
+ */
+bool UT_Stub_GetInt32StatusCode(const UT_StubContext_t *Context, int32 *StatusCodeBuffer);
+
+/**
+ * Registers a single context element for the hook callback
+ *
+ * Stubs may pass up to UT_STUBCONTEXT_MAXSIZE arguments to a user-defined
+ * hook function.  These arguments are opaque to the stub function and generally
+ * passed as "void *" pointers to the actual stack values.  The user code must
+ * then cast them to the right type again.
+ *
+ * \param FuncKey   The stub function to entry to use.
+ * \param Name      Argument name to associate with the pointer
+ * \param ParamType The type of parameter (direct, indirect, or unknown)
+ * \param ParamPtr  Pointer to argument data
+ * \param ParamSize The size of the object pointed to, or zero if not known
+ */
+void UT_Stub_RegisterContextWithMetaData(UT_EntryKey_t FuncKey, const char *Name, UT_StubContext_Arg_Type_t ParamType,
+                                         const void *ParamPtr, size_t ParamSize);
+
+/**
+ * Retrieve a context argument value by name
+ *
+ * This returns a pointer to a buffer containing the value, rather than the
+ * value itself, even if the argument was registered originally as a direct value.
+ *
+ * If the name is not found, this logs a UT assert failure message, as it
+ * indicates a mismatch between the hook and stub functions with respect to argument
+ * names and (possibly) types that needs to be corrected.  If possible, a buffer
+ * containing all zeros may be used as a substitute.
+ *
+ * This does not return NULL, such that the returned value can always be dereferenced.
+ *
+ * \param ContextPtr       The context structure containing arguments
+ * \param Name             Argument name to find
+ * \param ExpectedTypeSize The size of the expected object type
+ *
+ * \returns Pointer to buffer containing the value.
+ */
+const void *UT_Hook_GetArgPtr(const UT_StubContext_t *ContextPtr, const char *Name, size_t ExpectedTypeSize);
+
+/**
+ * Macro which retrieves a value argument by name.
+ *
+ * This is a convenience method to easily use UT_Hook_GetArgPtr() to get the value
+ * associated with an argument as the correct/expected type.
+ *
+ */
+#define UT_Hook_GetArgValueByName(ContextPtr, Name, Type) \
+    (*(Type const *)UT_Hook_GetArgPtr(ContextPtr, Name, sizeof(Type)))
+
+/**
+ * Default implementation for a stub function that takes a va_list of arguments.
+ *
+ * Checks first for a deferred retcode, then for a constant retcode, and a default (0) if neither is present.
+ * Optionally also prints a debug level status message to show that the function was called.
+ *
+ * If a hook function is registered, then it will be called with the stub context
+ *
+ * Finally, the handler function will be invoked, if one is associated with the stub.  The handler
+ * assumes final responsibility for any output parameters or return values.
+ *
+ * \param FunctionName  The printable name of the actual function called, for the debug message.  If
+ *    NULL then no debug message will be generated.
+ * \param FuncKey       The Key to look up in the table
+ * \param DefaultRc     Default return code
+ * \param ArgList       Argument list
+ */
+int32 UT_DefaultStubImplWithArgs(const char *FunctionName, UT_EntryKey_t FuncKey, int32 DefaultRc, va_list ArgList);
+
+/**
+ * Handles a stub call for a variadic function
+ *
+ * Implements the complete sequence of a stub for a "bare" stub function (i.e. a stub that has no
+ * built-in/assumed logic).  This is the preferred stub architecture as it allows a complete override
+ * of any and all output behavior / side effects by the test program.
+ *
+ * The DefaultHandler will be invoked unless the parent program has registered a replacement handler.
+ *
+ * \note The "generate_stubs.pl" tool can be used to auto-generate bare stub functions that are
+ *       compatible with this pattern.
+ *
+ * \sa UT_DefaultStubImplWithArgs()
+ *
+ * \param FuncKey        The key of the stub being executed
+ * \param FunctionName   The printable name of the actual function called, for the debug message.
+ * \param DefaultHandler The default handler
+ * \param VaList         Argument list
+ */
+void UT_ExecuteVaHandler(UT_EntryKey_t FuncKey, const char *FunctionName, UT_VaHandlerFunc_t DefaultHandler,
+                         va_list VaList);
+
+/**
+ * Default implementation for a stub function that should be useful for most cases.
+ *
+ * This is a wrapper around UT_DefaultStubImplWithArgs() with a variable argument prototype.
+ *
+ * \param FunctionName  The printable name of the actual function called, for the debug message.  If
+ *    NULL then no debug message will be generated.
+ * \param FuncKey       The Key to look up in the table
+ * \param DefaultRc     The default code to be returned when no code is registered in the UT state
+ */
+int32 UT_DefaultStubImpl(const char *FunctionName, UT_EntryKey_t FuncKey, int32 DefaultRc, ...);
+
+/**
+ * Handles a stub call for a normal (non-variadic) function
+ *
+ * Implements the complete sequence of a stub for a "bare" stub function (i.e. a stub that has no
+ * built-in/assumed logic).  This is the preferred stub architecture as it allows a complete override
+ * of any and all output behavior / side effects by the test program.
+ *
+ * The DefaultHandler will be invoked unless the parent program has registered a replacement handler.
+ *
+ * \note The "generate_stubs.pl" tool can be used to auto-generate bare stub functions that are
+ *       compatible with this pattern.
+ *
+ * \sa UT_DefaultStubImplWithArgs()
+ *
+ * \param FuncKey        The key of the stub being executed
+ * \param FunctionName   The printable name of the actual function called, for the debug message.
+ * \param DefaultHandler The default handler
+ */
+void UT_ExecuteBasicHandler(UT_EntryKey_t FuncKey, const char *FunctionName, UT_HandlerFunc_t DefaultHandler);
+
+/**
+ * Macro to simplify usage of the UT_DefaultStubImpl() function
+ *
+ * The UT_DEFAULT_IMPL can be used as part of a larger implementation
+ * where the default items of deferred return codes / force fails are
+ * checked first, then additional functionality is added.
+ *
+ * This version should be used on stubs that take no arguments
+ * and are expected to return 0 in the nominal case
+ *
+ * NOTE - Adding a NULL to the va list is only done for the
+ *        two macros that do not have a va list passed in by the
+ *        caller and is NOT a general pattern. Hooks that handle
+ *        va lists should utilize the UT_KEY to process
+ *        va lists correctly based on the implementation (no
+ *        general pattern should be assumed).
+ */
+#define UT_DEFAULT_IMPL(FuncName) UT_DefaultStubImpl(#FuncName, UT_KEY(FuncName), 0, NULL)
+
+/**
+ * Macro to simplify usage of the UT_DefaultStubImpl() function
+ *
+ * The UT_DEFAULT_IMPL_RC can be used as part of a larger implementation
+ * where the default items of deferred return codes / force fails are
+ * checked first, then additional functionality is added.
+ *
+ * This version should be used on stubs that take no arguments
+ * and are expected to return nonzero in the nominal case
+ *
+ * NOTE - Adding a NULL to the va list is only done for the
+ *        two macros that do not have a va list passed in by the
+ *        caller and is NOT a general pattern. Hooks that handle
+ *        va lists should utilize the UT_KEY to process
+ *        va lists correctly based on the implementation (no
+ *        general pattern should be assumed).
+ */
+#define UT_DEFAULT_IMPL_RC(FuncName, Rc) UT_DefaultStubImpl(#FuncName, UT_KEY(FuncName), Rc, NULL)
+
+/**
+ * Macro to simplify usage of the UT_DefaultStubImpl() function
+ *
+ * The UT_DEFAULT_IMPL_ARGS can be used as part of a larger implementation
+ * where the default items of deferred return codes / force fails are
+ * checked first, then additional functionality is added.
+ *
+ * This version should be used on stubs that do take arguments
+ * and are expected to return 0 in the nominal case
+ */
+#define UT_DEFAULT_IMPL_ARGS(FuncName, ...) UT_DefaultStubImpl(#FuncName, UT_KEY(FuncName), 0, __VA_ARGS__)
+
+/**
+ * Macro to simplify usage of the UT_DefaultStubImpl() function
+ *
+ * The UT_DEFAULT_IMPL_RC_ARGS can be used as part of a larger implementation
+ * where the default items of deferred return codes / force fails are
+ * checked first, then additional functionality is added.
+ */
+#define UT_DEFAULT_IMPL_RC_ARGS(FuncName, Rc, ...) UT_DefaultStubImpl(#FuncName, UT_KEY(FuncName), Rc, __VA_ARGS__)
+
+/**
+ * Macro to simplify usage of the UT_DefaultStubImplWithArgs() function
+ *
+ * This function accepts a list of arguments as a va_list
+ */
+#define UT_DEFAULT_IMPL_VARARGS(FuncName, va) UT_DefaultStubImplWithArgs(#FuncName, UT_KEY(FuncName), 0, va)
+
+/**
+ * Macro to simplify usage of the UT_DefaultStubImplWithArgs() function
+ *
+ * This function accepts a list of arguments as a va_list and
+ * a nonzero default return code
+ */
+#define UT_DEFAULT_IMPL_RC_VARARGS(FuncName, Rc, va) UT_DefaultStubImplWithArgs(#FuncName, UT_KEY(FuncName), Rc, va)
+
+/**
+ * Macro to simplify usage of the UT_DefaultStubImpl() function
+ *
+ * The UT_DEFAULT_STUB can be used as a complete stub implementation
+ * when only deferred return codes / force fails are in use.
+ */
+#define UT_DEFAULT_STUB(FuncName, Args)   \
+    int32 FuncName Args                   \
+    {                                     \
+        return UT_DEFAULT_IMPL(FuncName); \
+    }
+
+#endif /* UTSTUBS_H */
+</pre></div>
+</div>
+</section>
+<section id="uttest-h">
+<h2><code class="docutils literal notranslate"><span class="pre">uttest.h</span></code><a class="headerlink" href="#uttest-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/ut_assert/inc/uttest.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Purpose: This file contains functions to implement a standard way to execute unit tests.
+ *
+ * Design Notes:
+ *    By default the only output that is printed to the console is assert failures
+ *    and a summary of the test results after all tests have executed.  To enable additional
+ *    test output define the macro UT_VERBOSE.
+ */
+
+#ifndef UTTEST_H
+#define UTTEST_H
+
+#include &lt;stdbool.h&gt;
+
+/*
+ * Exported Functions
+ */
+
+/**
+ * \brief Adds a new unit test to the test database.
+ *
+ * Called by the user to register a new test case with the library.
+ *
+ * Note: Nested addition of tests is not supported.  Calling
+ *       UtTest_Add from within a test function added using UtTest_Add
+ *       will not cause the nested test to execute, and will be
+ *       silently ignored.
+ *
+ * \param Test     Main test function to call.
+ * \param Setup    Setup function, called before the test function
+ * \param Teardown Cleanup function, called after the test function
+ * \param TestName Name of test for logging purposes
+ */
+void UtTest_Add(void (*Test)(void), void (*Setup)(void), void (*Teardown)(void), const char *TestName);
+
+/**
+ * \brief Registers a setup function
+ *
+ * This group of functions are invoked BEFORE normal test routines added with UtTest_Add.
+ * Within the group, functions are executed in the order registered.
+ *
+ * \param Setup        Setup function, called before the test function
+ * \param SequenceName Name of sequence for logging purposes
+ */
+void UtTest_AddSetup(void (*Setup)(void), const char *SequenceName);
+
+/**
+ * \brief Registers a teardown function
+ *
+ * This group of functions is invoked AFTER normal test routines added with UtTest_Add.
+ * Within the group, functions are executed in the order registered.
+ *
+ * \param Teardown     Teardown function, called before the test function
+ * \param SequenceName Name of sequence for logging purposes
+ */
+void UtTest_AddTeardown(void (*Teardown)(void), const char *SequenceName);
+
+/**
+ * \brief Add a test as a member of a subgroup.
+ *
+ * Allow tests to be grouped together
+ *
+ * This is just a wrapper around UtTest_Add() that registers
+ * a test with a "GroupName.TestName" convention.  Purely an
+ * organizational/identification helper for units which have
+ * lots of tests.
+ *
+ * \param Test     Main test function to call.
+ * \param Setup    Setup function, called before the test function
+ * \param Teardown Cleanup function, called after the test function
+ * \param GroupName Name of group for logging purposes
+ * \param TestName Name of test for logging purposes
+ */
+void UtTest_AddSubTest(void (*Test)(void), void (*Setup)(void), void (*Teardown)(void), const char *GroupName,
+                       const char *TestName);
+
+/**
+ * \brief Early initialization function
+ *
+ * Reset the global data to a safe state for initial start-up.
+ * This should be called before any other API.
+ */
+void UtTest_EarlyInit(void);
+
+/**
+ * \brief Execute all registered tests
+ *
+ * All test functions that were registered with UtTest_Add will be executed in order.
+ */
+void UtTest_Run(void);
+
+/*
+ * \brief Set up function for UT-Assert based test routines
+ *
+ * This function must be provided by the user to set up test cases.
+ * This should call UtTest_Add() for each test case.
+ */
+void UtTest_Setup(void);
+
+#endif /* UTTEST_H */
+</pre></div>
+</div>
+</section>
+<section id="uttools-h">
+<h2><code class="docutils literal notranslate"><span class="pre">uttools.h</span></code><a class="headerlink" href="#uttools-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/ut_assert/inc/uttools.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Purpose: This file contains functions to implement a set of tools for use in unit testing.
+ */
+
+#ifndef UTTOOLS_H
+#define UTTOOLS_H
+
+/*
+ * Includes
+ */
+
+#include "common_types.h"
+#include "utassert.h"
+
+/*
+ * Exported Functions
+ */
+
+/**
+ * \brief Copies a region of memory to a binary file.
+ *
+ * This file can be reloaded by calling UtBinFile2Mem or it can be
+ * used to verify test results by calling UtMem2BinFileCmp.
+ *
+ * \sa UtBinFile2Mem, UtMem2BinFileCmp
+ *
+ * \param Memory    pointer to memory region
+ * \param Filename  file name to use
+ * \param Length    size of memory region
+ *
+ * \returns true if copy was successful
+ */
+bool UtMem2BinFile(const void *Memory, const char *Filename, uint32 Length);
+
+/**
+ * \brief Copies a binary file to a region of memory.
+ *
+ * \param Memory    pointer to memory region
+ * \param Filename  file name to use
+ * \param Length    size of memory region
+ *
+ * \returns true if copy was successful
+ */
+bool UtBinFile2Mem(void *Memory, const char *Filename, uint32 Length);
+
+/**
+ * \brief Copies a region of memory to a hex file
+ *
+ * \param Memory    pointer to memory region
+ * \param Filename  file name to use
+ * \param Length    size of memory region
+ *
+ * \returns true if copy was successful
+ */
+bool UtMem2HexFile(const void *Memory, const char *Filename, uint32 Length);
+
+/**
+ * \brief Fills a region of memory with a byte count pattern.
+ *
+ * \param Memory pointer to memory region
+ * \param Length size of memory region
+ */
+void UtMemFill(void *Memory, uint32 Length);
+
+/**
+ * \brief Just like the standard sprintf except it returns a pointer to the result string.
+ *
+ * The result string cannot be larger than 256 bytes, and will be truncated if the output
+ * would exceed that length
+ *
+ * \param Spec Printf-style format string
+ *
+ * \returns pointer to result string
+ */
+char *UtSprintf(const char *Spec, ...);
+
+/**
+ * \brief print a range of memory as hex bytes.
+ *
+ * \param Memory pointer to memory region
+ * \param Length size of memory region
+ */
+void UtPrintx(const void *Memory, uint32 Length);
+
+/**
+ * \brief Compares a region of memory to a static pattern and determines if they are equal.
+ *
+ * \note Use standard memset() to fill a region of memory with a static value.
+ *
+ * \param Memory pointer to memory region
+ * \param Value  static fill value to check for
+ * \param Length size of memory region
+ *
+ * \returns true if check was successful
+ */
+bool UtMemCmpValue(const void *Memory, uint8 Value, uint32 Length);
+
+/**
+ * \brief Compares a region of memory to a byte count pattern and determines if they are equal.
+ *
+ * \note Use UtMemFill() to fill a region of memory with a byte count pattern.
+ *
+ * \param Memory pointer to memory region
+ * \param Length size of memory region
+ *
+ * \returns true if check was successful
+ */
+bool UtMemCmpCount(const void *Memory, uint32 Length);
+
+/**
+ * \brief Compares a region of memory with the contents of a binary file and determines if they are equal.
+ *
+ * \note Use UtMem2BinFile to copy a region of memory to a binary file.
+ *
+ * The size of the file determines the size of the memory region to check.  The memory region must be
+ * at least the size of the file.
+ *
+ * \param Memory pointer to memory region
+ * \param Filename  file name to use
+ *
+ * \returns true if check was successful
+ */
+bool UtMem2BinFileCmp(const void *Memory, const char *Filename);
+
+/* Macros to implement simple printf-like functions for unit testing */
+#define UtPrintf(...) UtAssert_Message(UTASSERT_CASETYPE_INFO, __FILE__, __LINE__, __VA_ARGS__)
+#define UtDebug(...)  UtAssert_Message(UTASSERT_CASETYPE_DEBUG, __FILE__, __LINE__, __VA_ARGS__)
+
+#endif /* UTTOOLS_H */
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="ut_assert" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../scripts/index.html" class="btn btn-neutral float-right" title="scripts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

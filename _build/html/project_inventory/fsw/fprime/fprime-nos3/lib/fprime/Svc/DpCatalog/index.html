@@ -1,0 +1,2247 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DpCatalog &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../search.html" />
+    <link rel="next" title="docs" href="docs/index.html" />
+    <link rel="prev" title="img" href="../Cycle/docs/img/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fprime-nos3</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">lib</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Svc</a></li>
+      <li class="breadcrumb-item active">DpCatalog</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../_sources/project_inventory/fsw/fprime/fprime-nos3/lib/fprime/Svc/DpCatalog/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="dpcatalog">
+<h1>DpCatalog<a class="headerlink" href="#dpcatalog" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/DpCatalog/</span></code></p>
+<section id="id1">
+<h2>하위 폴더<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="docs/index.html">docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test/index.html">test</a></li>
+</ul>
+</div>
+</section>
+<section id="id2">
+<h2>이 폴더의 파일<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+</section>
+<section id="cmakelists-txt">
+<h2><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code><a class="headerlink" href="#cmakelists-txt" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/DpCatalog/CMakeLists.txt</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/DpCatalog.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/DpCatalog.cpp"
+)
+
+set(HEADER_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/DpCatalog.hpp"
+)
+
+
+register_fprime_module()
+### UTs ###
+set(UT_MOD_DEPS
+    STest
+)
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/DpCatalog.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/DpCatalogTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/DpCatalogTesterHelpers.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/DpCatalogTestMain.cpp"
+)
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+</pre></div>
+</div>
+</section>
+<section id="dpcatalog-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">DpCatalog.cpp</span></code><a class="headerlink" href="#dpcatalog-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/DpCatalog/DpCatalog.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  DpCatalog.cpp
+// \author tcanham
+// \brief  cpp file for DpCatalog component implementation class
+// ======================================================================
+
+#include "Svc/DpCatalog/DpCatalog.hpp"
+#include "Fw/Dp/DpContainer.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+
+#include &lt;new&gt;  // placement new
+#include "Fw/Types/StringUtils.hpp"
+#include "Os/File.hpp"
+#include "Os/FileSystem.hpp"
+
+namespace Svc {
+static_assert(DP_MAX_DIRECTORIES &gt; 0, "Configuration DP_MAX_DIRECTORIES must be positive");
+static_assert(DP_MAX_FILES &gt; 0, "Configuration DP_MAX_FILES must be positive");
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+DpCatalog ::DpCatalog(const char* const compName)
+    : DpCatalogComponentBase(compName),
+      m_initialized(false),
+      m_dpTree(nullptr),
+      m_freeListHead(nullptr),
+      m_freeListFoot(nullptr),
+      m_traverseStack(nullptr),
+      m_currentNode(nullptr),
+      m_currentXmitNode(nullptr),
+      m_numDpRecords(0),
+      m_numDpSlots(0),
+      m_numDirectories(0),
+      m_stateFileData(nullptr),
+      m_stateFileEntries(0),
+      m_memSize(0),
+      m_memPtr(nullptr),
+      m_allocatorId(0),
+      m_allocator(nullptr),
+      m_xmitInProgress(false),
+      m_xmitCmdWait(false),
+      m_xmitBytes(0),
+      m_xmitOpCode(0),
+      m_xmitCmdSeq(0) {}
+
+DpCatalog ::~DpCatalog() {}
+
+void DpCatalog::configure(Fw::FileNameString directories[DP_MAX_DIRECTORIES],
+                          FwSizeType numDirs,
+                          Fw::FileNameString&amp; stateFile,
+                          FwEnumStoreType memId,
+                          Fw::MemAllocator&amp; allocator) {
+    // Do some assertion checks
+    FW_ASSERT(numDirs &lt;= DP_MAX_DIRECTORIES, static_cast&lt;FwAssertArgType&gt;(numDirs));
+    FW_ASSERT(stateFile.length());
+    this-&gt;m_stateFile = stateFile;
+
+    // request memory for catalog which is DP_MAX_FILES * slot size.
+    //
+    // A "slot" consists of a set of three memory locations for each data product consisting
+    // an entry in the binary tree, an entry in the binary tree traversal stack, and
+    // an entry in the state file data. These may not be fully used in a given
+    // situation based on the number of actual data products, but this provides room for the
+    // maximum possible.
+    static const FwSizeType slotSize = sizeof(DpBtreeNode) + sizeof(DpBtreeNode**) + sizeof(DpDstateFileEntry);
+    this-&gt;m_memSize = DP_MAX_FILES * slotSize;
+    bool notUsed;  // we don't need to recover the catalog.
+    // request memory. this-&gt;m_memSize will be modified if there is less than we requested
+    this-&gt;m_memPtr = allocator.allocate(memId, this-&gt;m_memSize, notUsed);
+    // adjust to actual size if less allocated and only initialize
+    // if there is enough room for at least one record and memory
+    // was allocated.
+
+    // Since we are given a monolithic block of memory, the data structures
+    // are interspersed in the memory using the following method:
+    //
+    // 1) Recompute how many slots can fit in the provided memory if we
+    // don't get the full amount requested. This allows for graceful degradation
+    // if there are memory issues.
+    //
+    // 2) Place the binary tree free list at the beginning of the memory.
+    //
+    // 3) Place the binary tree traverse stack in memory just after the binary
+    // tree free list by indexing the free list as an array one element past the
+    // end of the free list.
+    //
+    // 4) Place the state file data in memory after the binary tree traverse
+    // stack by indexing the traverse stack to one element past the end of
+    // the traverse tree.
+
+    if ((this-&gt;m_memSize &gt;= sizeof(DpBtreeNode)) and (this-&gt;m_memPtr != nullptr)) {
+        // set the number of available record slots based on how much memory we actually got
+        this-&gt;m_numDpSlots = this-&gt;m_memSize / slotSize;  // Step 1.
+        this-&gt;resetBinaryTree();                          // Step 2
+        // assign pointer for the stack - Step 3
+        this-&gt;m_traverseStack = reinterpret_cast&lt;DpBtreeNode**&gt;(&amp;this-&gt;m_freeListHead[this-&gt;m_numDpSlots]);
+        this-&gt;resetTreeStack();
+        // assign pointer for the state file storage - Step 4
+        this-&gt;m_stateFileData = reinterpret_cast&lt;DpDstateFileEntry*&gt;(&amp;this-&gt;m_traverseStack[this-&gt;m_numDpSlots]);
+    } else {
+        // if we don't have enough memory, set the number of records
+        // to zero for later detection
+        this-&gt;m_numDpSlots = 0;
+    }
+
+    // assign directory names
+    for (FwSizeType dir = 0; dir &lt; numDirs; dir++) {
+        this-&gt;m_directories[dir] = directories[dir];
+    }
+    this-&gt;m_numDirectories = numDirs;
+
+    // store allocator
+    this-&gt;m_allocator = &amp;allocator;
+    this-&gt;m_allocatorId = memId;
+    this-&gt;m_initialized = true;
+}
+
+void DpCatalog::resetBinaryTree() {
+    // initialize data structures in the free list
+    // Step 2 in memory partition (see configure() comments)
+    FW_ASSERT(this-&gt;m_memPtr);
+    this-&gt;m_freeListHead = static_cast&lt;DpBtreeNode*&gt;(this-&gt;m_memPtr);
+    for (FwSizeType slot = 0; slot &lt; this-&gt;m_numDpSlots; slot++) {
+        // overlay new instance of the DpState entry on the memory
+        (void)new (&amp;this-&gt;m_freeListHead[slot]) DpBtreeNode();
+        this-&gt;m_freeListHead[slot].left = nullptr;
+        this-&gt;m_freeListHead[slot].right = nullptr;
+        // link the free list
+        if (slot &gt; 0) {
+            this-&gt;m_freeListHead[slot - 1].left = &amp;this-&gt;m_freeListHead[slot];
+        }
+    }
+    // set the foot of the free list
+    this-&gt;m_freeListFoot = &amp;this-&gt;m_freeListHead[this-&gt;m_numDpSlots - 1];
+    // clear binary tree
+    this-&gt;m_dpTree = nullptr;
+    // reset number of records
+    this-&gt;m_numDpRecords = 0;
+}
+
+void DpCatalog::resetStateFileData() {
+    // clear state file data
+    for (FwSizeType slot = 0; slot &lt; this-&gt;m_numDpSlots; slot++) {
+        this-&gt;m_stateFileData[slot].used = false;
+        this-&gt;m_stateFileData[slot].visited = false;
+        (void)new (&amp;this-&gt;m_stateFileData[slot].entry.record) DpRecord();
+    }
+    this-&gt;m_stateFileEntries = 0;
+}
+
+Fw::CmdResponse DpCatalog::loadStateFile() {
+    FW_ASSERT(this-&gt;m_stateFileData);
+
+    // Make sure that a file was specified
+    if (this-&gt;m_stateFile.length() == 0) {
+        this-&gt;log_WARNING_LO_NoStateFileSpecified();
+        return Fw::CmdResponse::OK;
+    }
+
+    // buffer for reading entries
+
+    BYTE buffer[sizeof(FwIndexType) + DpRecord::SERIALIZED_SIZE];
+    Fw::ExternalSerializeBuffer entryBuffer(buffer, sizeof(buffer));
+
+    // open the state file
+    Os::File stateFile;
+    Os::File::Status stat = stateFile.open(this-&gt;m_stateFile.toChar(), Os::File::OPEN_READ);
+    if (stat != Os::File::OP_OK) {
+        this-&gt;log_WARNING_HI_StateFileOpenError(this-&gt;m_stateFile, stat);
+        return Fw::CmdResponse::EXECUTION_ERROR;
+    }
+
+    FwSizeType fileLoc = 0;
+    this-&gt;m_stateFileEntries = 0;
+
+    // read entries from the state file
+    for (FwSizeType entry = 0; entry &lt; this-&gt;m_numDpSlots; entry++) {
+        FwSizeType size = static_cast&lt;FwSizeType&gt;(sizeof(buffer));
+        // read the directory index
+        stat = stateFile.read(buffer, size);
+        if (stat != Os::File::OP_OK) {
+            this-&gt;log_WARNING_HI_StateFileReadError(this-&gt;m_stateFile, stat, static_cast&lt;I32&gt;(fileLoc));
+            return Fw::CmdResponse::EXECUTION_ERROR;
+        }
+
+        if (0 == size) {
+            // no more entries
+            break;
+        }
+
+        // check to see if the full entry was read. If not,
+        // abandon it and finish. We can at least operate on
+        // the entries that were read.
+        if (size != sizeof(buffer)) {
+            this-&gt;log_WARNING_HI_StateFileTruncated(this-&gt;m_stateFile, static_cast&lt;I32&gt;(fileLoc),
+                                                    static_cast&lt;I32&gt;(size));
+            return Fw::CmdResponse::OK;
+        }
+
+        // reset the buffer for deserializing the entry
+        Fw::SerializeStatus serStat = entryBuffer.setBuffLen(static_cast&lt;Fw::Serializable::SizeType&gt;(size));
+        // should always fit
+        FW_ASSERT(Fw::FW_SERIALIZE_OK == serStat, serStat);
+        entryBuffer.resetDeser();
+
+        // deserialization after this point should always work, since
+        // the source buffer was specifically sized to hold the data
+
+        // Deserialize the file directory index
+        Fw::SerializeStatus status = entryBuffer.deserialize(this-&gt;m_stateFileData[entry].entry.dir);
+        FW_ASSERT(Fw::FW_SERIALIZE_OK == status, status);
+        status = entryBuffer.deserialize(this-&gt;m_stateFileData[entry].entry.record);
+        FW_ASSERT(Fw::FW_SERIALIZE_OK == status, status);
+        this-&gt;m_stateFileData[entry].used = true;
+        this-&gt;m_stateFileData[entry].visited = false;
+
+        // increment the file location
+        fileLoc += size;
+        this-&gt;m_stateFileEntries++;
+    }
+
+    return Fw::CmdResponse::OK;
+}
+
+void DpCatalog::getFileState(DpStateEntry&amp; entry) {
+    FW_ASSERT(this-&gt;m_stateFileData);
+    // search the file state data for the entry
+    for (FwSizeType line = 0; line &lt; this-&gt;m_stateFileEntries; line++) {
+        // check for a match
+        if ((this-&gt;m_stateFileData[line].entry.dir == entry.dir) and
+            (this-&gt;m_stateFileData[line].entry.record.get_id() == entry.record.get_id()) and
+            (this-&gt;m_stateFileData[line].entry.record.get_tSec() == entry.record.get_tSec()) and
+            (this-&gt;m_stateFileData[line].entry.record.get_tSub() == entry.record.get_tSub()) and
+            (this-&gt;m_stateFileData[line].entry.record.get_priority() == entry.record.get_priority())) {
+            // update the transmitted state
+            entry.record.set_state(this-&gt;m_stateFileData[line].entry.record.get_state());
+            entry.record.set_blocks(this-&gt;m_stateFileData[line].entry.record.get_blocks());
+            // mark it as visited for later pruning if necessary
+            this-&gt;m_stateFileData[line].visited = true;
+            return;
+        }
+    }
+}
+
+void DpCatalog::pruneAndWriteStateFile() {
+    FW_ASSERT(this-&gt;m_stateFileData);
+
+    // There is a chance that a data product file can disappear after
+    // the state file is written from the last catalog build and transmit.
+    // This function will walk the state file data and write back only
+    // the entries that were visited during the last catalog build. This will
+    // remove any entries that are no longer valid.
+
+    // open the state file
+    Os::File stateFile;
+    // we open it as a new file so we don't accumulate invalid entries
+    Os::File::Status stat =
+        stateFile.open(this-&gt;m_stateFile.toChar(), Os::File::OPEN_CREATE, Os::FileInterface::OVERWRITE);
+
+    if (stat != Os::File::OP_OK) {
+        this-&gt;log_WARNING_HI_StateFileOpenError(this-&gt;m_stateFile, stat);
+        return;
+    }
+
+    // buffer for writing entries
+    BYTE buffer[sizeof(FwIndexType) + DpRecord::SERIALIZED_SIZE];
+    Fw::ExternalSerializeBuffer entryBuffer(buffer, sizeof(buffer));
+
+    // write entries to the state file
+    for (FwSizeType entry = 0; entry &lt; this-&gt;m_numDpSlots; entry++) {
+        // only write entries that were used
+        if ((this-&gt;m_stateFileData[entry].used) and (this-&gt;m_stateFileData[entry].visited)) {
+            // reset the buffer for serializing the entry
+            entryBuffer.resetSer();
+            // serialize the file directory index
+            Fw::SerializeStatus serStat = entryBuffer.serialize(this-&gt;m_stateFileData[entry].entry.dir);
+            // Should always fit
+            FW_ASSERT(Fw::FW_SERIALIZE_OK == serStat, serStat);
+            serStat = entryBuffer.serialize(this-&gt;m_stateFileData[entry].entry.record);
+            // Should always fit
+            FW_ASSERT(Fw::FW_SERIALIZE_OK == serStat, serStat);
+            // write the entry
+            FwSizeType size = entryBuffer.getBuffLength();
+            // Protect against overflow
+            stat = stateFile.write(buffer, size);
+            if (stat != Os::File::OP_OK) {
+                this-&gt;log_WARNING_HI_StateFileWriteError(this-&gt;m_stateFile, stat);
+                return;
+            }
+        }
+    }
+
+    // close the state file
+    stateFile.close();
+}
+
+void DpCatalog::appendFileState(const DpStateEntry&amp; entry) {
+    FW_ASSERT(this-&gt;m_stateFileData);
+    FW_ASSERT(entry.dir &lt; static_cast&lt;FwIndexType&gt;(this-&gt;m_numDirectories), static_cast&lt;FwAssertArgType&gt;(entry.dir),
+              static_cast&lt;FwAssertArgType&gt;(this-&gt;m_numDirectories));
+
+    // We will append state to the existing state file
+    // TODO: Have to handle case where state file has partially transmitted
+    // state already
+
+    // open the state file
+    Os::File stateFile;
+    // we open it as a new file so we don't accumulate invalid entries
+    Os::File::Status stat = stateFile.open(this-&gt;m_stateFile.toChar(), Os::File::OPEN_APPEND);
+    if (stat != Os::File::OP_OK) {
+        this-&gt;log_WARNING_HI_StateFileOpenError(this-&gt;m_stateFile, stat);
+        return;
+    }
+
+    // buffer for writing entries
+    BYTE buffer[sizeof(entry.dir) + sizeof(entry.record)];
+    Fw::ExternalSerializeBuffer entryBuffer(buffer, sizeof(buffer));
+    // reset the buffer for serializing the entry
+    entryBuffer.resetSer();
+    // serialize the file directory index
+    Fw::SerializeStatus serStat = entryBuffer.serialize(entry.dir);
+    // should fit
+    FW_ASSERT(serStat == Fw::FW_SERIALIZE_OK, serStat);
+    serStat = entryBuffer.serialize(entry.record);
+    // should fit
+    FW_ASSERT(serStat == Fw::FW_SERIALIZE_OK, serStat);
+    // write the entry
+    FwSizeType size = entryBuffer.getBuffLength();
+    stat = stateFile.write(buffer, size);
+    if (stat != Os::File::OP_OK) {
+        this-&gt;log_WARNING_HI_StateFileWriteError(this-&gt;m_stateFile, stat);
+        return;
+    }
+
+    // close the state file
+    stateFile.close();
+}
+
+Fw::CmdResponse DpCatalog::doCatalogBuild() {
+    // check initialization
+    if (not this-&gt;checkInit()) {
+        this-&gt;log_WARNING_HI_NotInitialized();
+        return Fw::CmdResponse::EXECUTION_ERROR;
+    }
+
+    // check that initialization got memory
+    if (0 == this-&gt;m_numDpSlots) {
+        this-&gt;log_WARNING_HI_NoDpMemory();
+        return Fw::CmdResponse::EXECUTION_ERROR;
+    }
+
+    // make sure a downlink is not in progress
+    if (this-&gt;m_xmitInProgress) {
+        this-&gt;log_WARNING_LO_DpXmitInProgress();
+        return Fw::CmdResponse::EXECUTION_ERROR;
+    }
+
+    // reset state file data
+    this-&gt;resetStateFileData();
+
+    // load state data from file
+    Fw::CmdResponse response = this-&gt;loadStateFile();
+
+    // reset free list for entries
+    this-&gt;resetBinaryTree();
+
+    // fill the binary tree with DP files
+    response = this-&gt;fillBinaryTree();
+    if (response != Fw::CmdResponse::OK) {
+        // clean up the binary tree
+        this-&gt;resetBinaryTree();
+        this-&gt;resetStateFileData();
+        return response;
+    }
+
+    // prune and rewrite the state file
+    this-&gt;pruneAndWriteStateFile();
+
+    this-&gt;log_ACTIVITY_HI_CatalogBuildComplete();
+
+    return Fw::CmdResponse::OK;
+}
+
+Fw::CmdResponse DpCatalog::fillBinaryTree() {
+    // keep cumulative number of files
+    FwSizeType totalFiles = 0;
+
+    // file class instance for processing files
+    Os::File dpFile;
+    // Working buffer for DP headers
+    U8 dpBuff[Fw::DpContainer::MIN_PACKET_SIZE];  // Header buffer
+    Fw::Buffer hdrBuff(dpBuff, sizeof(dpBuff));   // buffer for container header decoding
+    Fw::DpContainer container;                    // container object for extracting header fields
+
+    // get file listings from file system
+    for (FwSizeType dir = 0; dir &lt; this-&gt;m_numDirectories; dir++) {
+        // read in each directory and keep track of total
+        this-&gt;log_ACTIVITY_LO_ProcessingDirectory(this-&gt;m_directories[dir]);
+        FwSizeType filesRead = 0;
+        U32 pendingFiles = 0;
+        U64 pendingDpBytes = 0;
+        U32 filesProcessed = 0;
+
+        Os::Directory dpDir;
+        Os::Directory::Status status = dpDir.open(this-&gt;m_directories[dir].toChar(), Os::Directory::OpenMode::READ);
+        if (status != Os::Directory::OP_OK) {
+            this-&gt;log_WARNING_HI_DirectoryOpenError(this-&gt;m_directories[dir], status);
+            return Fw::CmdResponse::EXECUTION_ERROR;
+        }
+        status = dpDir.readDirectory(this-&gt;m_fileList, (this-&gt;m_numDpSlots - totalFiles), filesRead);
+
+        if (status != Os::Directory::OP_OK) {
+            this-&gt;log_WARNING_HI_DirectoryOpenError(this-&gt;m_directories[dir], status);
+            return Fw::CmdResponse::EXECUTION_ERROR;
+        }
+
+        // Assert number of files isn't more than asked
+        FW_ASSERT(filesRead &lt;= this-&gt;m_numDpSlots - totalFiles, static_cast&lt;FwAssertArgType&gt;(filesRead),
+                  static_cast&lt;FwAssertArgType&gt;(this-&gt;m_numDpSlots - totalFiles));
+
+        // extract metadata for each file
+        for (FwSizeType file = 0; file &lt; filesRead; file++) {
+            // only consider files with the DP extension
+
+            FwSignedSizeType loc =
+                Fw::StringUtils::substring_find(this-&gt;m_fileList[file].toChar(), this-&gt;m_fileList[file].length(),
+                                                DP_EXT, Fw::StringUtils::string_length(DP_EXT, sizeof(DP_EXT)));
+
+            if (-1 == loc) {
+                continue;
+            }
+
+            Fw::String fullFile;
+            fullFile.format("%s/%s", this-&gt;m_directories[dir].toChar(), this-&gt;m_fileList[file].toChar());
+
+            this-&gt;log_ACTIVITY_LO_ProcessingFile(fullFile);
+
+            // get file size
+            FwSizeType fileSize = 0;
+            Os::FileSystem::Status sizeStat = Os::FileSystem::getFileSize(fullFile.toChar(), fileSize);
+            if (sizeStat != Os::FileSystem::OP_OK) {
+                this-&gt;log_WARNING_HI_FileSizeError(fullFile, sizeStat);
+                continue;
+            }
+
+            Os::File::Status stat = dpFile.open(fullFile.toChar(), Os::File::OPEN_READ);
+            if (stat != Os::File::OP_OK) {
+                this-&gt;log_WARNING_HI_FileOpenError(fullFile, stat);
+                continue;
+            }
+
+            // Read DP header
+            FwSizeType size = Fw::DpContainer::Header::SIZE;
+
+            stat = dpFile.read(dpBuff, size);
+            if (stat != Os::File::OP_OK) {
+                this-&gt;log_WARNING_HI_FileReadError(fullFile, stat);
+                dpFile.close();
+                continue;  // maybe next file is fine
+            }
+
+            // if full header isn't read, something's wrong with the file, so skip
+            if (size != Fw::DpContainer::Header::SIZE) {
+                this-&gt;log_WARNING_HI_FileReadError(fullFile, Os::File::BAD_SIZE);
+                dpFile.close();
+                continue;  // maybe next file is fine
+            }
+
+            // if all is well, don't need the file any more
+            dpFile.close();
+
+            // give buffer to container instance
+            container.setBuffer(hdrBuff);
+
+            // reset header deserialization in the container
+            Fw::SerializeStatus desStat = container.deserializeHeader();
+            if (desStat != Fw::FW_SERIALIZE_OK) {
+                this-&gt;log_WARNING_HI_FileHdrDesError(fullFile, desStat);
+            }
+
+            // add entry to catalog.
+            DpStateEntry entry;
+            entry.dir = static_cast&lt;FwIndexType&gt;(dir);
+            entry.record.set_id(container.getId());
+            entry.record.set_priority(container.getPriority());
+            entry.record.set_state(container.getState());
+            entry.record.set_tSec(container.getTimeTag().getSeconds());
+            entry.record.set_tSub(container.getTimeTag().getUSeconds());
+            entry.record.set_size(static_cast&lt;U64&gt;(fileSize));
+
+            // check the state file to see if there is transmit state
+            this-&gt;getFileState(entry);
+
+            // insert entry into sorted list. if can't insert, quit
+            bool insertedOk = this-&gt;insertEntry(entry);
+            if (not insertedOk) {
+                this-&gt;log_WARNING_HI_DpInsertError(entry.record);
+                // clean up and return
+                this-&gt;resetBinaryTree();
+                this-&gt;resetStateFileData();
+                break;
+            }
+
+            if (entry.record.get_state() == Fw::DpState::UNTRANSMITTED) {
+                pendingFiles++;
+                pendingDpBytes += entry.record.get_size();
+            }
+
+            // make sure we haven't exceeded the limit
+            if (this-&gt;m_numDpRecords &gt; this-&gt;m_numDpSlots) {
+                this-&gt;log_WARNING_HI_DpCatalogFull(entry.record);
+                break;
+            }
+
+            filesProcessed++;
+
+        }  // end for each file in a directory
+
+        totalFiles += filesProcessed;
+
+        this-&gt;log_ACTIVITY_HI_ProcessingDirectoryComplete(this-&gt;m_directories[dir], static_cast&lt;U32&gt;(totalFiles),
+                                                          pendingFiles, pendingDpBytes);
+
+        // check to see if catalog is full
+        // that means generated products exceed the catalog size
+        if (totalFiles == this-&gt;m_numDpSlots) {
+            this-&gt;log_WARNING_HI_CatalogFull(this-&gt;m_directories[dir]);
+            break;
+        }
+    }  // end for each directory
+
+    return Fw::CmdResponse::OK;
+
+}  // end fillBinaryTree()
+
+bool DpCatalog::insertEntry(DpStateEntry&amp; entry) {
+    // the tree is filled in the following priority order:
+    // 1. DP priority - lower number is higher priority
+    // 2. DP time - older is higher priority
+    // 3. DP ID - lower number is higher priority
+
+    // Higher priority is to the left of the tree
+
+    // if the tree is empty, add the first entry
+    if (this-&gt;m_dpTree == nullptr) {
+        bool goodInsert = this-&gt;allocateNode(this-&gt;m_dpTree, entry);
+        if (not goodInsert) {
+            return false;
+        }
+        // otherwise, search depth-first to sort the entry
+    } else {
+        // to avoid recursion, loop through a max of the number of available records
+        DpBtreeNode* node = this-&gt;m_dpTree;
+        for (FwSizeType record = 0; record &lt; this-&gt;m_numDpSlots; record++) {
+            CheckStat stat = CheckStat::CHECK_CONT;
+            // check priority. Lower is higher priority
+            if (entry.record.get_priority() == node-&gt;entry.record.get_priority()) {
+                // check time. Older is higher priority
+                if (entry.record.get_tSec() == node-&gt;entry.record.get_tSec()) {
+                    // check ID. Lower is higher priority
+                    stat = this-&gt;checkLeftRight(entry.record.get_id() &lt; node-&gt;entry.record.get_id(), node, entry);
+                } else {  // if seconds are not equal. Older is higher priority
+                    stat = this-&gt;checkLeftRight(entry.record.get_tSec() &lt; node-&gt;entry.record.get_tSec(), node, entry);
+                }
+            } else {  // if priority is not equal. Lower is higher priority.
+                stat =
+                    this-&gt;checkLeftRight(entry.record.get_priority() &lt; node-&gt;entry.record.get_priority(), node, entry);
+            }  // end checking for left/right insertion
+
+            // act on status
+            if (stat == CheckStat::CHECK_ERROR) {
+                return false;
+            } else if (stat == CheckStat::CHECK_OK) {
+                break;
+            }
+        }  // end for each possible record
+    }
+
+    // increment the number of records
+
+    this-&gt;m_numDpRecords++;
+
+    return true;
+}
+
+DpCatalog::CheckStat DpCatalog::checkLeftRight(bool condition, DpBtreeNode*&amp; node, const DpStateEntry&amp; newEntry) {
+    if (condition) {
+        if (node-&gt;left == nullptr) {
+            bool allocated = this-&gt;allocateNode(node-&gt;left, newEntry);
+            if (not allocated) {
+                return CheckStat::CHECK_ERROR;
+            }
+            return CheckStat::CHECK_OK;
+        } else {
+            node = node-&gt;left;
+            return CheckStat::CHECK_CONT;
+        }
+    } else {
+        if (node-&gt;right == nullptr) {
+            bool allocated = this-&gt;allocateNode(node-&gt;right, newEntry);
+            if (not allocated) {
+                return CheckStat::CHECK_ERROR;
+            }
+            return CheckStat::CHECK_OK;
+        } else {
+            node = node-&gt;right;
+            return CheckStat::CHECK_CONT;
+        }
+    }
+}
+
+bool DpCatalog::allocateNode(DpBtreeNode*&amp; newNode, const DpStateEntry&amp; newEntry) {
+    // should always be null since we are allocating an empty slot
+    FW_ASSERT(newNode == nullptr);
+    // make sure there is an entry from the free list
+    if (this-&gt;m_freeListHead == nullptr) {
+        this-&gt;log_WARNING_HI_DpCatalogFull(newEntry.record);
+        return false;
+    }
+    // get a new node from the free list
+    newNode = this-&gt;m_freeListHead;
+    // move the head of the free list to the next node
+    this-&gt;m_freeListHead = this-&gt;m_freeListHead-&gt;left;
+
+    // initialize the new node
+    newNode-&gt;left = nullptr;
+    newNode-&gt;right = nullptr;
+    newNode-&gt;entry = newEntry;
+
+    // we got one, so return success
+    return true;
+}
+
+void DpCatalog::deleteEntry(DpStateEntry&amp; entry) {}
+
+void DpCatalog::sendNextEntry() {
+    // check some asserts
+    FW_ASSERT(this-&gt;m_dpTree);
+    FW_ASSERT(this-&gt;m_xmitInProgress);
+    FW_ASSERT(this-&gt;m_traverseStack);
+
+    // look in the tree for the next entry to send
+    this-&gt;m_currentXmitNode = this-&gt;findNextTreeNode();
+
+    if (this-&gt;m_currentXmitNode == nullptr) {
+        // if no entry found, we are done
+        this-&gt;m_xmitInProgress = false;
+        this-&gt;log_ACTIVITY_HI_CatalogXmitCompleted(this-&gt;m_xmitBytes);
+        if (this-&gt;m_xmitCmdWait) {
+            this-&gt;cmdResponse_out(this-&gt;m_xmitOpCode, this-&gt;m_xmitCmdSeq, Fw::CmdResponse::OK);
+        }
+        return;
+    } else {
+        // build file name based on the found entry
+        this-&gt;m_currXmitFileName.format(
+            DP_FILENAME_FORMAT, this-&gt;m_directories[this-&gt;m_currentXmitNode-&gt;entry.dir].toChar(),
+            this-&gt;m_currentXmitNode-&gt;entry.record.get_id(), this-&gt;m_currentXmitNode-&gt;entry.record.get_tSec(),
+            this-&gt;m_currentXmitNode-&gt;entry.record.get_tSub());
+        this-&gt;log_ACTIVITY_LO_SendingProduct(this-&gt;m_currXmitFileName,
+                                             static_cast&lt;U32&gt;(this-&gt;m_currentXmitNode-&gt;entry.record.get_size()),
+                                             this-&gt;m_currentXmitNode-&gt;entry.record.get_priority());
+        Svc::SendFileResponse resp = this-&gt;fileOut_out(0, this-&gt;m_currXmitFileName, this-&gt;m_currXmitFileName, 0, 0);
+        if (resp.get_status() != Svc::SendFileStatus::STATUS_OK) {
+            // warn, but keep going since it may be an issue with this file but others could
+            // make it
+            this-&gt;log_WARNING_HI_DpFileSendError(this-&gt;m_currXmitFileName, resp.get_status());
+        }
+    }
+
+}  // end sendNextEntry()
+
+DpCatalog::DpBtreeNode* DpCatalog::findNextTreeNode() {
+    // check some asserts
+    FW_ASSERT(this-&gt;m_dpTree);
+    FW_ASSERT(this-&gt;m_xmitInProgress);
+    FW_ASSERT(this-&gt;m_traverseStack);
+
+    DpBtreeNode* found = nullptr;
+
+    // traverse the tree, finding nodes in order. Max iteration of the loop
+    // would be the number of records in the tree
+    for (FwSizeType record = 0; record &lt; this-&gt;m_numDpRecords; record++) {
+        // initialize found entry to nullptr
+        found = nullptr;
+        // check for current node to be null
+        if (this-&gt;m_currentNode == nullptr) {
+            // see if we fully traversed the tree
+            if (this-&gt;m_currStackEntry &lt; 0) {
+                // Step 5 - we are done
+                return nullptr;
+            } else {
+                // Step 4 - if the current node is null, pop back up the stack
+                this-&gt;m_currentNode = this-&gt;m_traverseStack[this-&gt;m_currStackEntry--];
+                if (this-&gt;m_currentNode-&gt;entry.record.get_state() != Fw::DpState::TRANSMITTED) {
+                    found = this-&gt;m_currentNode;
+                }  // check if transmitted
+                this-&gt;m_currentNode = this-&gt;m_currentNode-&gt;right;
+                if (found != nullptr) {
+                    return found;
+                }
+            }
+            break;
+        } else {
+            if (this-&gt;m_currentNode-&gt;left != nullptr) {
+                // Step 3 - push current entry on the stack
+                this-&gt;m_traverseStack[++this-&gt;m_currStackEntry] = this-&gt;m_currentNode;
+                this-&gt;m_currentNode = this-&gt;m_currentNode-&gt;left;
+            } else {
+                // Step 4 - check to see if this node has already been transmitted, if so, pop back up the stack
+                if (this-&gt;m_currentNode-&gt;entry.record.get_state() != Fw::DpState::TRANSMITTED) {
+                    // we found an entry, so set the return to the current node
+                    found = this-&gt;m_currentNode;
+                }  // check if transmitted
+                // go to the right node
+                this-&gt;m_currentNode = this-&gt;m_currentNode-&gt;right;
+                // if a node was found, return it
+                if (found != nullptr) {
+                    return found;
+                }
+            }  // check if left is null
+        }  // end else current node is not null
+    }  // end for each possible node in the tree
+
+    return found;
+}
+
+bool DpCatalog::checkInit() {
+    if (not this-&gt;m_initialized) {
+        this-&gt;log_WARNING_HI_ComponentNotInitialized();
+        return false;
+    } else if (0 == this-&gt;m_numDpSlots) {
+        this-&gt;log_WARNING_HI_ComponentNoMemory();
+        return false;
+    }
+
+    return true;
+}
+
+void DpCatalog::shutdown() {
+    // only try to deallocate if both pointers are non-zero
+    // it's a way to more gracefully shut down if there are missing
+    // pointers
+    if ((this-&gt;m_allocator != nullptr) and (this-&gt;m_memPtr != nullptr)) {
+        this-&gt;m_allocator-&gt;deallocate(this-&gt;m_allocatorId, this-&gt;m_memPtr);
+    }
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void DpCatalog ::fileDone_handler(FwIndexType portNum, const Svc::SendFileResponse&amp; resp) {
+    // check some asserts
+    FW_ASSERT(this-&gt;m_dpTree);
+    FW_ASSERT(this-&gt;m_traverseStack);
+
+    // check file status
+    if (resp.get_status() != Svc::SendFileStatus::STATUS_OK) {
+        this-&gt;log_WARNING_HI_DpFileXmitError(this-&gt;m_currXmitFileName, resp.get_status());
+        this-&gt;m_xmitInProgress = false;
+        this-&gt;cmdResponse_out(this-&gt;m_xmitOpCode, this-&gt;m_xmitCmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+
+    this-&gt;log_ACTIVITY_LO_ProductComplete(this-&gt;m_currXmitFileName);
+
+    // mark the entry as transmitted
+    this-&gt;m_currentXmitNode-&gt;entry.record.set_state(Fw::DpState::TRANSMITTED);
+    // update the transmitted state in the state file
+    this-&gt;appendFileState(this-&gt;m_currentXmitNode-&gt;entry);
+    // add the size
+    this-&gt;m_xmitBytes += this-&gt;m_currentXmitNode-&gt;entry.record.get_size();
+    // send the next entry, if it exists
+    this-&gt;sendNextEntry();
+}
+
+void DpCatalog ::pingIn_handler(FwIndexType portNum, U32 key) {
+    // return code for health ping
+    this-&gt;pingOut_out(0, key);
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for commands
+// ----------------------------------------------------------------------
+
+void DpCatalog ::BUILD_CATALOG_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    // invoke helper
+    this-&gt;cmdResponse_out(opCode, cmdSeq, this-&gt;doCatalogBuild());
+}
+
+void DpCatalog ::START_XMIT_CATALOG_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, Fw::Wait wait) {
+    Fw::CmdResponse resp = this-&gt;doCatalogXmit();
+
+    if (resp != Fw::CmdResponse::OK) {
+        this-&gt;cmdResponse_out(opCode, cmdSeq, resp);
+    } else {
+        if (Fw::Wait::NO_WAIT == wait) {
+            this-&gt;cmdResponse_out(opCode, cmdSeq, resp);
+            this-&gt;m_xmitCmdWait = false;
+            this-&gt;m_xmitOpCode = 0;
+            this-&gt;m_xmitCmdSeq = 0;
+        } else {
+            this-&gt;m_xmitCmdWait = true;
+            this-&gt;m_xmitOpCode = opCode;
+            this-&gt;m_xmitCmdSeq = cmdSeq;
+        }
+    }
+}
+
+Fw::CmdResponse DpCatalog::doCatalogXmit() {
+    // check initialization
+    if (not this-&gt;checkInit()) {
+        this-&gt;log_WARNING_HI_NotInitialized();
+        return Fw::CmdResponse::EXECUTION_ERROR;
+    }
+
+    // check that initialization got memory
+    if (0 == this-&gt;m_numDpSlots) {
+        this-&gt;log_WARNING_HI_NoDpMemory();
+        return Fw::CmdResponse::EXECUTION_ERROR;
+    }
+
+    // make sure a downlink is not in progress
+    if (this-&gt;m_xmitInProgress) {
+        this-&gt;log_WARNING_LO_DpXmitInProgress();
+        return Fw::CmdResponse::EXECUTION_ERROR;
+    }
+
+    // start transmission
+    this-&gt;m_xmitBytes = 0;
+
+    // make sure we have valid pointers
+    FW_ASSERT(this-&gt;m_dpTree);
+    FW_ASSERT(this-&gt;m_traverseStack);
+
+    // Traverse the tree using a stack to avoid recursion
+    // https://codestandard.net/articles/binary-tree-inorder-traversal/
+
+    this-&gt;resetTreeStack();
+    this-&gt;m_xmitInProgress = true;
+    // Step 3b - search for and send first entry
+    this-&gt;sendNextEntry();
+    return Fw::CmdResponse::OK;
+}
+
+void DpCatalog::resetTreeStack() {
+    // See URL above
+    // Step 1 - reset the stack
+    this-&gt;m_currStackEntry = -1;
+    // Step 2 - assign root of the tree to the current entry
+    this-&gt;m_currentNode = this-&gt;m_dpTree;
+}
+
+void DpCatalog ::STOP_XMIT_CATALOG_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    if (not this-&gt;m_xmitInProgress) {
+        this-&gt;log_WARNING_LO_XmitNotActive();
+        // benign error, so don't fail the command
+        this-&gt;cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+    } else {
+        this-&gt;cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+    }
+}
+
+void DpCatalog ::CLEAR_CATALOG_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    // TODO
+    this-&gt;cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="dpcatalog-fpp">
+<h2><code class="docutils literal notranslate"><span class="pre">DpCatalog.fpp</span></code><a class="headerlink" href="#dpcatalog-fpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/DpCatalog/DpCatalog.fpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>module Svc {
+
+
+  # This structure will use to store the state
+  # in the component and to generate a catalog
+  # data product
+
+  @ Header validation error
+  enum DpHdrField {
+    DESCRIPTOR,
+    ID,
+    PRIORITY,
+    CRC
+  }
+
+  @ Data structure representing a data product.
+  struct DpRecord {
+    $id: FwDpIdType # The ID of the data product
+    tSec: U32 # Generation time in seconds
+    tSub: U32 # Generation time in subseconds
+    $priority: U32 # Priority of the data product
+    $size: U64 # Overall size of the data product
+    blocks: U32 # Number of blocks transmitted
+    $state: Fw.DpState # Transmission state of the data product
+  }
+
+
+  @ A component for managing downlink of data products
+  active component DpCatalog {
+
+    # Component specific ports
+
+    @ Ping input port
+    async input port pingIn: Svc.Ping
+
+    @ Ping output port
+    output port pingOut: Svc.Ping
+
+    @ File Downlink send port
+    output port fileOut: Svc.SendFileRequest
+
+    @ File Downlink send complete port
+    async input port fileDone: SendFileComplete
+
+    # ----------------------------------------------------------------------
+    # F Prime infrastructure ports
+    # ----------------------------------------------------------------------
+
+    @ Command receive port
+    command recv port CmdDisp
+
+    @ Command registration port
+    command reg port CmdReg
+
+    @ Command response port
+    command resp port CmdStatus
+
+    @ Event port
+    event port Log
+
+    @ Text event port
+    text event port LogText
+
+    @ Time get port
+    time get port Time
+
+    @ Telemetry port
+    telemetry port Tlm
+
+    # ----------------------------------------------------------------------
+    # Commands
+    # ----------------------------------------------------------------------
+
+    @ Build catalog from data product directory. Will block until complete
+    async command BUILD_CATALOG \
+      opcode 0
+
+    @ Start transmitting catalog
+    async command START_XMIT_CATALOG (
+                                    wait: Fw.Wait @&lt; have START_XMIT command complete wait for catalog to complete transmitting
+                                  ) \    
+      opcode 1
+
+    @ Stop transmitting catalog
+    async command STOP_XMIT_CATALOG \
+      opcode 2
+
+    @ clear existing catalog
+    async command CLEAR_CATALOG \
+      opcode 3
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    @ Error opening directory
+    event DirectoryOpenError(
+                            loc: string size 80 @&lt; The directory
+                            stat: I32 @&lt; status
+                          ) \
+      severity warning high \
+      id 0 \
+      format "Unable to process directory {} status {}"
+
+    @ Processing directory
+    event ProcessingDirectory (
+                            directory: string size 80 @&lt; The directory 
+                          ) \
+      severity activity low \
+      id 1 \
+      format "Processing directory {}"
+
+    @ Processing directory
+    event ProcessingFile (
+                            file: string size 80 @&lt; The file 
+                          ) \
+      severity activity low \
+      id 2 \
+      format "Processing file {}"
+
+
+    @ Directory Processing complete
+    event ProcessingDirectoryComplete (
+                            loc: string size 80 @&lt; The directory 
+                            total: U32 @&lt; total data products
+                            pending: U32 @&lt; pending data products
+                            pending_bytes: U64 @&lt; pending data product volume
+                          ) \
+      severity activity high \
+      id 3 \
+      format "Completed processing directory {}. Total products: {} Pending products: {} Pending bytes: {}"
+
+    @ Catalog processing complete
+    event CatalogBuildComplete \
+      severity activity high \
+      id 4 \
+      format "Catalog build complete"
+
+    @ Catalog transmission started
+    event CatalogXmitStarted \
+      severity activity high \
+      id 10 \
+      format "Catalog transmission started"
+
+    @ Catalog transmission stopped
+    event CatalogXmitStopped (
+                            bytes: U32 @&lt; data transmitted
+                          ) \
+      severity activity high \
+      id 11 \
+      format "Catalog transmission stopped. {} bytes transmitted."
+
+    @ Catalog transmission completed
+    event CatalogXmitCompleted (
+                            bytes: U64 @&lt; data transmitted
+                          ) \
+      severity activity high \
+      id 12 \
+      format "Catalog transmission completed.  {} bytes transmitted."
+
+    @ Sending product
+    event SendingProduct (
+                            file: string size 80 @&lt; The file 
+                            bytes: U32 @&lt; file size
+                            prio: U32 @&lt; DP priority
+                          ) \
+      severity activity low \
+      id 13 \
+      format "Sending product {} of size {} priority {}"
+
+    @ Product send complete
+    event ProductComplete (
+                            file: string size 80 @&lt; The file 
+                          ) \
+      severity activity low \
+      id 14 \
+      format "Product {} complete"
+
+    @ Component not initialized error
+    event ComponentNotInitialized \
+      severity warning high \
+      id 20 \
+      format "DpCatalog not initialized!" \
+      throttle 10
+
+    @ Component didn't get memory error
+    event ComponentNoMemory \
+      severity warning high \
+      id 21 \
+      format "DpCatalog couldn't get memory" \
+      throttle 10
+
+    @ Catalog is full
+    event CatalogFull (
+                            dir: string size 80 @&lt; last directory read 
+                          ) \
+      severity warning high \
+      id 22 \
+      format "DpCatalog full during directory {}" \
+      throttle 10
+
+    @ Error opening file
+    event FileOpenError(
+                            loc: string size 80 @&lt; The directory
+                            stat: I32 @&lt; status
+                          ) \
+      severity warning high \
+      id 23 \
+      format "Unable to open DP file {} status {}" \
+      throttle 10
+
+    @ Error opening file
+    event FileReadError(
+                            file: string size 80 @&lt; The file
+                            stat: I32 @&lt; status
+                          ) \
+      severity warning high \
+      id 24 \
+      format "Error reading DP file {} status {}" \
+      throttle 10
+
+    @ Error reading header data from DP file
+    event FileHdrError(
+                            file: string size 80 @&lt; The file
+                            field: DpHdrField, @&lt; incorrect value
+                            exp: U32 @&lt; expected value
+                            act: U32 @&lt; expected value
+                          ) \
+      severity warning high \
+      id 25 \
+      format "Error reading DP {} header {} field. Expected: {} Actual: {}" \
+      throttle 10
+
+    @ Error deserializing header data
+    event FileHdrDesError(
+                            file: string size 80 @&lt; The file
+                            stat: I32
+                          ) \
+      severity warning high \
+      id 26 \
+      format "Error deserializing DP {} header stat: {}" \
+      throttle 10
+
+    @ Error inserting entry into list
+    event DpInsertError(
+                            dp: DpRecord @&lt; The DP
+                          ) \
+      severity warning high \
+      id 27 \
+      format "Error deserializing DP {}" \
+      throttle 10
+
+    @ Error inserting entry into list
+    event DpDuplicate(
+                            dp: DpRecord @&lt; The DP
+                          ) \
+      severity diagnostic \
+      id 28 \
+      format "DP {} already in catalog" \
+      throttle 10
+
+    @ Error inserting entry into list
+    event DpCatalogFull(
+                            dp: DpRecord @&lt; The DP
+                          ) \
+      severity warning high \
+      id 29 \
+      format "Catalog full trying to insert DP {}" \
+      throttle 10
+
+    @ Tried to build catalog while downlink process active
+    event DpXmitInProgress \
+      severity warning low \
+      id 30 \
+      format "Cannot build new catalog while DPs are being transmitted" \
+      throttle 10
+
+    @ Error getting file size
+    event FileSizeError(
+                            file: string size 80 @&lt; The file
+                            stat: I32
+                          ) \
+      severity warning high \
+      id 31 \
+      format "Error getting file {} size. stat: {}" \
+      throttle 10
+
+    event NoDpMemory \
+      severity warning high \
+      id 32 \
+      format "No memory for DP"
+
+    event NotInitialized \
+      severity warning high \
+      id 33 \
+      format "DpCatalog not initialized"
+
+    event XmitNotActive \
+      severity warning low \
+      id 34 \
+      format "DpCatalog transmit not active"
+
+    event StateFileOpenError(
+                            file: string size 80 @&lt; The file
+                            stat: I32
+                          ) \
+      severity warning high \
+      id 35 \
+      format "Error opening state file {}, stat: {}"
+    
+    event StateFileReadError(
+                            file: string size 80 @&lt; The file
+                            stat: I32
+                            offset: I32
+                          ) \
+      severity warning high \
+      id 36 \
+      format "Error reading state file {}, stat {}, offset: {}"
+
+    event StateFileTruncated(
+                            file: string size 80 @&lt; The file
+                            offset: I32
+                            $size: I32
+                          ) \
+      severity warning high \
+      id 37 \
+      format "Truncated state file {} size. offset: {} size: {}"
+
+    event NoStateFileSpecified \
+      severity warning low \
+      id 38 \
+      format "No specified state file"
+
+    event StateFileWriteError(
+                            file: string size 80 @&lt; The file
+                            stat: I32
+                          ) \
+      severity warning high \
+      id 39 \
+      format "Error writing state file {}, stat {}"
+
+    event NoStateFile(
+                            file: string size 80 @&lt; The file
+                          ) \
+      severity warning low \
+      id 40 \
+      format "State file {} doesn't exist"
+
+    event DpFileXmitError(
+                            file: string size 80 @&lt; The file
+                            stat: Svc.SendFileStatus
+                          ) \
+      severity warning high \
+      id 41 \
+      format "Error transmitting DP file {}, stat {}. Halting xmit." \
+      throttle 10
+
+    event DpFileSendError(
+                            file: string size 80 @&lt; The file
+                            stat: Svc.SendFileStatus
+                          ) \
+      severity warning high \
+      id 42 \
+      format "Error sending DP file {}, stat {}. Halting xmit." \
+      throttle 10
+
+
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    @ Number of data products in catalog
+    telemetry CatalogDps: U32 id 0 
+
+    @ Number of data products sent
+    telemetry DpsSent: U32 id 1
+
+
+
+  }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="dpcatalog-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">DpCatalog.hpp</span></code><a class="headerlink" href="#dpcatalog-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/DpCatalog/DpCatalog.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  DpCatalog.hpp
+// \author tcanham
+// \brief  hpp file for DpCatalog component implementation class
+// ======================================================================
+
+#ifndef Svc_DpCatalog_HPP
+#define Svc_DpCatalog_HPP
+
+#include "Svc/DpCatalog/DpCatalogComponentAc.hpp"
+#include "Svc/DpCatalog/DpRecordSerializableAc.hpp"
+
+#include &lt;Fw/Types/MemAllocator.hpp&gt;
+
+#include &lt;Fw/Types/FileNameString.hpp&gt;
+#include &lt;config/DpCatalogCfg.hpp&gt;
+#include &lt;config/DpCfg.hpp&gt;
+
+namespace Svc {
+
+class DpCatalog final : public DpCatalogComponentBase {
+    friend class DpCatalogTester;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    /// @brief DpCatalog constructor
+    /// @param compName component name
+    DpCatalog(const char* const compName  //!&lt; The component name
+    );
+
+    /// @brief DpCatalog destructor
+    ~DpCatalog();
+
+    /// @brief Configure the DpCatalog
+    /// @param maxDpFiles The max number of data product files to track
+    /// @param directories list of directories to scan
+    /// @param numDirs number of supplied directories
+    /// @param stateFile file to store transmit state. Provide a zero-length string if no state tracking
+    /// @param memId  memory ID for allocator
+    /// @param allocator Allocator to supply memory for catalog.
+    ///        Instance must survive for shutdown to use for reclaiming memory
+    void configure(Fw::FileNameString directories[DP_MAX_DIRECTORIES],
+                   FwSizeType numDirs,
+                   Fw::FileNameString&amp; stateFile,
+                   FwEnumStoreType memId,
+                   Fw::MemAllocator&amp; allocator);
+
+    // @brief clean up component.
+    // Deallocates memory.
+    void shutdown();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for fileDone
+    //!
+    //! File Downlink send complete port
+    void fileDone_handler(FwIndexType portNum,  //!&lt; The port number
+                          const Svc::SendFileResponse&amp; resp) override;
+
+    //! Handler implementation for pingIn
+    //!
+    //! Ping input port
+    void pingIn_handler(FwIndexType portNum,  //!&lt; The port number
+                        U32 key               //!&lt; Value to return to pinger
+                        ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for commands
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for command BUILD_CATALOG
+    //!
+    //! Build catalog from data product directory
+    void BUILD_CATALOG_cmdHandler(FwOpcodeType opCode,  //!&lt; The opcode
+                                  U32 cmdSeq            //!&lt; The command sequence number
+                                  ) override;
+
+    //! Handler implementation for command START_XMIT_CATALOG
+    //!
+    //! Start transmitting catalog
+    void START_XMIT_CATALOG_cmdHandler(
+        FwOpcodeType opCode,  //!&lt; The opcode
+        U32 cmdSeq,           //!&lt; The command sequence number
+        Fw::Wait wait         //!&lt; have START_XMIT command wait for catalog to complete transmitting
+        ) override;
+
+    //! Handler implementation for command STOP_XMIT_CATALOG
+    //!
+    //! Stop transmitting catalog
+    void STOP_XMIT_CATALOG_cmdHandler(FwOpcodeType opCode,  //!&lt; The opcode
+                                      U32 cmdSeq            //!&lt; The command sequence number
+                                      ) override;
+
+    //! Handler implementation for command CLEAR_CATALOG
+    //!
+    //! clear existing catalog
+    void CLEAR_CATALOG_cmdHandler(FwOpcodeType opCode,  //!&lt; The opcode
+                                  U32 cmdSeq            //!&lt; The command sequence number
+                                  ) override;
+
+    // ----------------------------------
+    // Private data structures
+    // ----------------------------------
+
+    struct DpStateEntry {
+        friend class DpCatalogTester;
+        FwIndexType dir;  //!&lt; index to m_directories entry that has directory name where DP exists
+        DpRecord record;  //!&lt; data product metadata
+    };
+
+    struct DpDstateFileEntry {
+        bool used;     //!&lt; if the entry is used
+        bool visited;  //!&lt; used for state file state; indicates that the entry was found in the search of current data
+                       //!&lt; products
+        DpStateEntry entry;  //!&lt; state entry from file
+    };
+
+    /// @brief A list sorted in priority order for downlink
+    struct DpBtreeNode {
+        DpStateEntry entry;  //!&lt; pointer to DP record
+        DpBtreeNode* left;   //!&lt; left child. Also used for free list
+        DpBtreeNode* right;  //!&lt; right child
+    };
+
+    // ----------------------------------
+    // Private helpers
+    // ----------------------------------
+
+    /// @brief insert an entry into the sorted list; if it exists, update the metadata
+    /// @param entry new entry
+    /// @return failed if couldn't find a slot FIXME: Should we just assert? We should never run out.
+    bool insertEntry(DpStateEntry&amp; entry);
+
+    /// @brief delete an entry from the sorted list
+    /// @param entry new entry
+    void deleteEntry(DpStateEntry&amp; entry);
+
+    /// @brief enumeration for check and insert function
+    enum CheckStat {
+        CHECK_OK,     //!&lt; check passed and inserted. Can break loop
+        CHECK_CONT,   //!&lt; check passed and find another node to check
+        CHECK_ERROR,  //!&lt; check failed to allocate an entry. Quit function
+    };
+
+    /// @brief check for left/right insertion
+    CheckStat checkLeftRight(bool condition, DpBtreeNode*&amp; node, const DpStateEntry&amp; newEntry);
+
+    /// @brief reset the free list
+    void resetBinaryTree();
+
+    /// #brief fill  the binary tree from DP files
+    Fw::CmdResponse fillBinaryTree();
+
+    /// @brief reset the tree stack
+    void resetTreeStack();
+
+    /// @brief reset the state file data
+    void resetStateFileData();
+
+    /// @brief get file state from the stored state file
+    /// @param entry entry to update from file state
+    void getFileState(DpStateEntry&amp; entry);
+
+    /// @brief prune the state file data and write the remaining entries back
+    void pruneAndWriteStateFile();
+
+    /// @brief load state data from file
+    Fw::CmdResponse loadStateFile();
+
+    /// @brief get file state from the stored state file
+    /// @param entry entry to add to state file
+    void appendFileState(const DpStateEntry&amp; entry);
+
+    /// @brief add an entry to the tree
+    /// @param entry entry to add
+    /// @return true if a node could be allocated
+    bool allocateNode(DpBtreeNode*&amp; newNode, const DpStateEntry&amp; newEntry);
+
+    /// @brief send the next entry to file downlink
+    void sendNextEntry();
+
+    /// @brief find the next entry in the tree
+    /// @return pointer if an entry was found, nullptr if no more entries
+    /// @param entry entry to return
+    DpBtreeNode* findNextTreeNode();
+
+    /// @brief check to see if component successfully initialized
+    /// @return bool if it was initialized
+    bool checkInit();
+
+    /// @brief build catalog. Shared between command and port
+    /// @return command response for pass/fail
+    Fw::CmdResponse doCatalogBuild();
+
+    /// @brief start transmitting catalog. Shared between command and port
+    /// @return command response for pass/fail
+    Fw::CmdResponse doCatalogXmit();
+
+    // ----------------------------------
+    // Private data
+    // ----------------------------------
+    bool m_initialized;  //!&lt; set when the component has been initialized
+
+    DpBtreeNode* m_dpTree;           //!&lt; The head of the binary tree
+    DpBtreeNode* m_freeListHead;     //!&lt; The head of the free list
+    DpBtreeNode* m_freeListFoot;     //!&lt; The foot of the free list
+    DpBtreeNode** m_traverseStack;   //!&lt; pointer to memory for stack for traversing tree
+    DpBtreeNode* m_currentNode;      //!&lt; current node for traversing tree
+    DpBtreeNode* m_currentXmitNode;  //!&lt; node being currently transmitted
+
+    FwSizeType m_numDpRecords;  //!&lt; Stores the actual number of records.
+    FwSizeType m_numDpSlots;    //!&lt; Stores the available number of record slots.
+
+    Fw::FileNameString m_directories[DP_MAX_DIRECTORIES];  //!&lt; List of supplied DP directories
+    FwSizeType m_numDirectories;                           //!&lt; number of supplied directories
+    Fw::String m_fileList[DP_MAX_FILES];                   //!&lt; working array of files/directory
+
+    Fw::FileNameString m_stateFile;      //!&lt; file to store transmit state
+    DpDstateFileEntry* m_stateFileData;  //!&lt; DP state loaded from file
+    FwSizeType m_stateFileEntries;       //!&lt; size of state file data
+
+    FwSizeType m_memSize;           //!&lt; size of allocated buffer
+    void* m_memPtr;                 //!&lt; stored for shutdown
+    FwEnumStoreType m_allocatorId;  //!&lt; stored for shutdown
+    Fw::MemAllocator* m_allocator;  //!&lt; stored for shutdown
+
+    bool m_xmitInProgress;                  //!&lt; set if DP files are in the process of being sent
+    FwIndexType m_currStackEntry;           //!&lt; current stack entry for traversing tree
+    Fw::FileNameString m_currXmitFileName;  //!&lt; current file being transmitted
+    bool m_xmitCmdWait;                     //!&lt; true if waiting for transmission complete to complete xmit command
+    U64 m_xmitBytes;                        //!&lt; bytes transmitted for downlink session
+    FwOpcodeType m_xmitOpCode;              //!&lt; stored xmit command opcode
+    U32 m_xmitCmdSeq;                       //!&lt; stored command sequence id
+};
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../Cycle/docs/img/index.html" class="btn btn-neutral float-left" title="img" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docs/index.html" class="btn btn-neutral float-right" title="docs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

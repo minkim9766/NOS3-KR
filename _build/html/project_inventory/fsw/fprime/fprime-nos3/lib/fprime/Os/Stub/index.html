@@ -1,0 +1,2421 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stub &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../search.html" />
+    <link rel="next" title="test" href="test/index.html" />
+    <link rel="prev" title="ut" href="../Posix/test/ut/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fprime-nos3</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">lib</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Os</a></li>
+      <li class="breadcrumb-item active">Stub</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../_sources/project_inventory/fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="stub">
+<h1>Stub<a class="headerlink" href="#stub" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/</span></code></p>
+<section id="id1">
+<h2>하위 폴더<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="test/index.html">test</a></li>
+</ul>
+</div>
+</section>
+<section id="id2">
+<h2>이 폴더의 파일<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+</section>
+<section id="cmakelists-txt">
+<h2><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code><a class="headerlink" href="#cmakelists-txt" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/CMakeLists.txt</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+add_custom_target("${FPRIME_CURRENT_MODULE}")
+
+register_os_implementation("File;FileSystem;Directory" Stub)
+register_os_implementation(Console Stub)
+register_os_implementation(Task Stub)
+register_os_implementation("Mutex;ConditionVariable" Stub)
+register_os_implementation(Cpu Stub)
+register_os_implementation(Memory Stub)
+register_os_implementation(Queue Stub)
+register_os_implementation(RawTime Stub)
+
+register_fprime_implementation(
+    Os_File_None
+  IMPLEMENTS
+    Os_File
+  INTERFACE
+)
+
+# Remainder of file is specific to UTs
+if (NOT BUILD_TESTING)
+    return()
+endif ()
+
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/test")
+
+## Stubs test: checks that all the no-op stubs can be selected and compile ##
+register_fprime_ut(
+    StubTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/StubTests.cpp"
+  DEPENDS
+    Fw_Types
+    Fw_Time
+    Os
+    Os_Models
+  CHOOSES_IMPLEMENTATIONS
+    Os_Task_Stub
+    Os_Mutex_Stub
+    Os_File_Stub
+    Os_Console_Stub
+    Os_Cpu_Stub
+    Os_Memory_Stub
+    Os_RawTime_Stub
+)
+if (TARGET StubTest)
+    target_compile_options(StubTest PRIVATE -Wno-conversion)
+endif()
+</pre></div>
+</div>
+</section>
+<section id="conditionvariable-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">ConditionVariable.cpp</span></code><a class="headerlink" href="#conditionvariable-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/ConditionVariable.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/ConditionVariable.cpp
+// \brief Stub implementations for Os::ConditionVariable
+// ======================================================================
+#include "Os/Stub/ConditionVariable.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace Os {
+namespace Stub {
+namespace Mutex {
+
+StubConditionVariable::Status StubConditionVariable::pend(Os::Mutex&amp; mutex) {
+    // This stub implementation can only be used in deployments that never need to wait on any ConditionVariable.
+    // Return error if anyone ever tries to wait.
+    return StubConditionVariable::Status::ERROR_NOT_IMPLEMENTED;
+}
+void StubConditionVariable::notify() {
+    // Nobody is waiting, because we assert if anyone tries to wait.
+    // Therefore, we can notify all waiters by doing nothing.
+}
+void StubConditionVariable::notifyAll() {
+    // Nobody is waiting, because we assert if anyone tries to wait.
+    // Therefore, we can notify all waiters by doing nothing.
+}
+
+ConditionVariableHandle* StubConditionVariable::getHandle() {
+    return &amp;m_handle;
+}
+
+}  // namespace Mutex
+}  // namespace Stub
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="conditionvariable-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">ConditionVariable.hpp</span></code><a class="headerlink" href="#conditionvariable-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/ConditionVariable.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/ConditionVariable.hpp
+// \brief Stub definitions for Os::ConditionVariable
+// ======================================================================
+#ifndef OS_STUB_CONDITION_VARIABLE_HPP
+#define OS_STUB_CONDITION_VARIABLE_HPP
+#include &lt;Os/Condition.hpp&gt;
+
+namespace Os {
+namespace Stub {
+namespace Mutex {
+
+struct StubConditionVariableHandle : public ConditionVariableHandle {};
+
+//! \brief Stub implementation of Os::ConditionVariable
+//!
+//! Stub implementation of `ConditionVariable` for use as a delegate class handling error-only file operations.
+//!
+class StubConditionVariable : public ConditionVariableInterface {
+  public:
+    //! \brief constructor
+    //!
+    StubConditionVariable() = default;
+
+    //! \brief destructor
+    //!
+    ~StubConditionVariable() override = default;
+
+    //! \brief assignment operator is forbidden
+    ConditionVariableInterface&amp; operator=(const ConditionVariableInterface&amp; other) override = delete;
+
+    //! \brief wait releasing mutex
+    StubConditionVariable::Status pend(Os::Mutex&amp; mutex) override;
+
+    //! \brief notify a single waiter
+    void notify() override;
+
+    //! \brief notify all current waiters
+    void notifyAll() override;
+
+    //! \brief get handle
+    ConditionVariableHandle* getHandle() override;
+
+  private:
+    //! Handle for PosixMutex
+    StubConditionVariableHandle m_handle;
+};
+
+}  // namespace Mutex
+}  // namespace Stub
+}  // namespace Os
+#endif  // OS_STUB_CONDITION_VARIABLE_HPP
+</pre></div>
+</div>
+</section>
+<section id="console-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Console.cpp</span></code><a class="headerlink" href="#console-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Console.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/Console.cpp
+// \brief stub implementation for Os::Console
+// ======================================================================
+#include &lt;Os/Stub/Console.hpp&gt;
+
+namespace Os {
+namespace Stub {
+namespace Console {
+
+void StubConsole::writeMessage(const CHAR* message, const FwSizeType size) {}
+
+ConsoleHandle* StubConsole::getHandle() {
+    return &amp;this-&gt;m_handle;
+}
+
+}  // namespace Console
+}  // namespace Stub
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="console-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Console.hpp</span></code><a class="headerlink" href="#console-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Console.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/Console.hpp
+// \brief stub implementation for Os::Console, header and test definitions
+// ======================================================================
+#include &lt;Os/Console.hpp&gt;
+#include &lt;cstdio&gt;
+#ifndef OS_Stub_Console_HPP
+#define OS_Stub_Console_HPP
+
+namespace Os {
+namespace Stub {
+namespace Console {
+
+//! ConsoleHandle class definition for stub implementations.
+//!
+struct StubConsoleHandle : public ConsoleHandle {};
+
+//! \brief stub implementation of Os::ConsoleInterface
+//!
+//! Stub implementation of `ConsoleInterface` for use as a delegate class handling stub console operations.
+//!
+class StubConsole : public ConsoleInterface {
+  public:
+    //! \brief constructor
+    //!
+    StubConsole() = default;
+
+    //! \brief copy constructor
+    StubConsole(const StubConsole&amp; other) = default;
+
+    //! \brief default copy assignment
+    StubConsole&amp; operator=(const StubConsole&amp; other) = default;
+
+    //! \brief destructor
+    //!
+    ~StubConsole() override = default;
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+
+    //! \brief write message to console
+    //!
+    //! Write a message to the console with a bounded size. This will use the active file descriptor as the output
+    //! destination.
+    //!
+    //! \param message: raw message to write
+    //! \param size: size of the message to write to the console
+    void writeMessage(const CHAR* message, const FwSizeType size) override;
+
+    //! \brief returns the raw console handle
+    //!
+    //! Gets the raw console handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw console handle
+    //!
+    ConsoleHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    StubConsoleHandle m_handle;
+};
+}  // namespace Console
+}  // namespace Stub
+}  // namespace Os
+
+#endif  // OS_Stub_Console_HPP
+</pre></div>
+</div>
+</section>
+<section id="cpu-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Cpu.cpp</span></code><a class="headerlink" href="#cpu-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Cpu.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/Cpu.cpp
+// \brief stub implementation for Os::Cpu
+// ======================================================================
+#include &lt;Os/Stub/Cpu.hpp&gt;
+
+namespace Os {
+namespace Stub {
+namespace Cpu {
+
+CpuInterface::Status StubCpu::_getCount(FwSizeType&amp; cpu_count) {
+    cpu_count = 0;
+    return Status::ERROR;
+}
+
+CpuInterface::Status StubCpu::_getTicks(Os::Cpu::Ticks&amp; ticks, FwSizeType cpu_index) {
+    ticks.total = 1;
+    ticks.used = 1;
+    return Status::ERROR;
+}
+
+CpuHandle* StubCpu::getHandle() {
+    return &amp;this-&gt;m_handle;
+}
+
+}  // namespace Cpu
+}  // namespace Stub
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="cpu-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Cpu.hpp</span></code><a class="headerlink" href="#cpu-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Cpu.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/Cpu.hpp
+// \brief stub implementation for Os::Cpu, header and test definitions
+// ======================================================================
+#include &lt;Os/Cpu.hpp&gt;
+#include &lt;cstdio&gt;
+#ifndef OS_Stub_Cpu_HPP
+#define OS_Stub_Cpu_HPP
+
+namespace Os {
+namespace Stub {
+namespace Cpu {
+
+//! CpuHandle class definition for stub implementations.
+//!
+struct StubCpuHandle : public CpuHandle {};
+
+//! \brief stub implementation of Os::CpuInterface
+//!
+//! Stub implementation of `CpuInterface` for use as a delegate class handling stub console operations.
+//!
+class StubCpu : public CpuInterface {
+  public:
+    //! \brief constructor
+    //!
+    StubCpu() = default;
+
+    //! \brief copy constructor
+    StubCpu(const StubCpu&amp; other) = delete;
+
+    //! \brief default copy assignment
+    CpuInterface&amp; operator=(const CpuInterface&amp; other) override = delete;
+
+    //! \brief destructor
+    //!
+    ~StubCpu() override = default;
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+  public:
+    //! \brief Request the count of the CPUs detected by the system
+    //!
+    //! This method wraps delegates to the underlying implementation.
+    //!
+    //! \param cpu_count: (output) filled with CPU count on system
+    //! \return: OP_OK with valid CPU count, ERROR when error occurs
+    //!
+    Status _getCount(FwSizeType&amp; cpu_count) override;
+
+    //! \brief Get the CPU tick information for a given CPU
+    //!
+    //! CPU ticks represent a small time slice of processor time. This will retrieve the used CPU ticks and total
+    //! ticks for a given CPU. This information in a running accumulation and thus a sample-to-sample
+    //! differencing is needed to see the 'realtime' changing load. This shall be done by the caller. This method wraps
+    //! delegates to the underlying implementation.
+    //!
+    //! \param ticks: (output) filled with the tick information for the given CPU
+    //! \param cpu_index: index for CPU to read. Default: 0
+    //! \return:  ERROR when error occurs, OK otherwise.
+    //!
+    Status _getTicks(Ticks&amp; ticks, FwSizeType cpu_index) override;
+
+    //! \brief returns the raw console handle
+    //!
+    //! Gets the raw console handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw console handle
+    //!
+    CpuHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    StubCpuHandle m_handle;
+};
+}  // namespace Cpu
+}  // namespace Stub
+}  // namespace Os
+
+#endif  // OS_Stub_Cpu_HPP
+</pre></div>
+</div>
+</section>
+<section id="defaultconsole-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">DefaultConsole.cpp</span></code><a class="headerlink" href="#defaultconsole-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultConsole.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/DefaultConsole.cpp
+// \brief sets default Os::Console to stub implementation via linker
+// ======================================================================
+#include "Os/Console.hpp"
+#include "Os/Delegate.hpp"
+#include "Os/Stub/Console.hpp"
+
+namespace Os {
+ConsoleInterface* ConsoleInterface::getDelegate(ConsoleHandleStorage&amp; aligned_new_memory,
+                                                const ConsoleInterface* to_copy) {
+    return Os::Delegate::makeDelegate&lt;ConsoleInterface, Os::Stub::Console::StubConsole&gt;(aligned_new_memory, to_copy);
+}
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="defaultcpu-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">DefaultCpu.cpp</span></code><a class="headerlink" href="#defaultcpu-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultCpu.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/DefaultCpu.cpp
+// \brief sets default Os::Cpu to stub implementation via linker
+// ======================================================================
+#include "Os/Cpu.hpp"
+#include "Os/Delegate.hpp"
+#include "Os/Stub/Cpu.hpp"
+
+namespace Os {
+CpuInterface* CpuInterface::getDelegate(CpuHandleStorage&amp; aligned_new_memory) {
+    return Os::Delegate::makeDelegate&lt;CpuInterface, Os::Stub::Cpu::StubCpu&gt;(aligned_new_memory);
+}
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="defaultfile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">DefaultFile.cpp</span></code><a class="headerlink" href="#defaultfile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/DefaultFile.cpp
+// \brief sets default Os::File to no-op stub implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Stub/Directory.hpp"
+#include "Os/Stub/File.hpp"
+#include "Os/Stub/FileSystem.hpp"
+namespace Os {
+
+//! \brief get a delegate for FileInterface that intercepts calls for stub file usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \param to_copy: pointer to copy-constructor input
+//! \return: pointer to delegate
+FileInterface* FileInterface::getDelegate(FileHandleStorage&amp; aligned_placement_new_memory,
+                                          const FileInterface* to_copy) {
+    return Os::Delegate::makeDelegate&lt;FileInterface, Os::Stub::File::StubFile&gt;(aligned_placement_new_memory, to_copy);
+}
+
+//! \brief get a delegate for FileSystemInterface that intercepts calls for stub fileSystem usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \param to_copy: pointer to copy-constructor input
+//! \return: pointer to delegate
+FileSystemInterface* FileSystemInterface::getDelegate(FileSystemHandleStorage&amp; aligned_placement_new_memory) {
+    return Os::Delegate::makeDelegate&lt;FileSystemInterface, Os::Stub::FileSystem::StubFileSystem&gt;(
+        aligned_placement_new_memory);
+}
+
+//! \brief get a delegate for DirectoryInterface that intercepts calls for stub Directory usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \return: pointer to delegate
+DirectoryInterface* DirectoryInterface::getDelegate(DirectoryHandleStorage&amp; aligned_placement_new_memory) {
+    return Os::Delegate::makeDelegate&lt;DirectoryInterface, Os::Stub::Directory::StubDirectory&gt;(
+        aligned_placement_new_memory);
+}
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="defaultmemory-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">DefaultMemory.cpp</span></code><a class="headerlink" href="#defaultmemory-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultMemory.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/DefaultMemory.cpp
+// \brief sets default Os::Memory to stub implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Memory.hpp"
+#include "Os/Stub/Memory.hpp"
+
+namespace Os {
+MemoryInterface* MemoryInterface::getDelegate(MemoryHandleStorage&amp; aligned_new_memory) {
+    return Os::Delegate::makeDelegate&lt;MemoryInterface, Os::Stub::Memory::StubMemory&gt;(aligned_new_memory);
+}
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="defaultmutex-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">DefaultMutex.cpp</span></code><a class="headerlink" href="#defaultmutex-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultMutex.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/DefaultMutex.cpp
+// \brief sets default Os::Mutex to no-op stub implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Stub/ConditionVariable.hpp"
+#include "Os/Stub/Mutex.hpp"
+namespace Os {
+
+//! \brief get a delegate for MutexInterface that intercepts calls for stub file usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \param to_copy: pointer to copy-constructor input
+//! \return: pointer to delegate
+MutexInterface* MutexInterface::getDelegate(MutexHandleStorage&amp; aligned_new_memory) {
+    return Os::Delegate::makeDelegate&lt;MutexInterface, Os::Stub::Mutex::StubMutex&gt;(aligned_new_memory);
+}
+
+//! \brief get a delegate for condition variable
+//! \param aligned_new_memory: aligned memory to fill
+//! \return: pointer to delegate
+ConditionVariableInterface* ConditionVariableInterface::getDelegate(
+    ConditionVariableHandleStorage&amp; aligned_new_memory) {
+    return Os::Delegate::makeDelegate&lt;ConditionVariableInterface, Os::Stub::Mutex::StubConditionVariable,
+                                      ConditionVariableHandleStorage&gt;(aligned_new_memory);
+}
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="defaultqueue-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">DefaultQueue.cpp</span></code><a class="headerlink" href="#defaultqueue-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultQueue.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/DefaultQueue.cpp
+// \brief sets default Os::Queue to stub implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Queue.hpp"
+#include "Os/Stub/Queue.hpp"
+
+namespace Os {
+QueueInterface* QueueInterface::getDelegate(QueueHandleStorage&amp; aligned_new_memory) {
+    return Os::Delegate::makeDelegate&lt;QueueInterface, Os::Stub::Queue::StubQueue&gt;(aligned_new_memory);
+}
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="defaultrawtime-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">DefaultRawTime.cpp</span></code><a class="headerlink" href="#defaultrawtime-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultRawTime.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/DefaultRawTime.cpp
+// \brief sets default Os::RawTime to no-op stub implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Stub/RawTime.hpp"
+
+namespace Os {
+
+//! \brief get a delegate for RawTimeInterface that intercepts calls for stub RawTime usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \param to_copy: pointer to copy-constructor input
+//! \return: pointer to delegate
+RawTimeInterface* RawTimeInterface::getDelegate(RawTimeHandleStorage&amp; aligned_placement_new_memory,
+                                                const RawTimeInterface* to_copy) {
+    return Os::Delegate::makeDelegate&lt;RawTimeInterface, Os::Stub::RawTime::StubRawTime, RawTimeHandleStorage&gt;(
+        aligned_placement_new_memory, to_copy);
+}
+
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="defaulttask-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">DefaultTask.cpp</span></code><a class="headerlink" href="#defaulttask-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultTask.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/test/DefaultTask.cpp
+// \brief sets default Os::Task to test stub implementation via linker
+// ======================================================================
+#include &lt;sys/time.h&gt;
+#include &lt;cerrno&gt;
+#include "Os/Delegate.hpp"
+#include "Os/Stub/Task.hpp"
+#include "Os/Task.hpp"
+
+namespace Os {
+TaskInterface* TaskInterface::getDelegate(TaskHandleStorage&amp; aligned_new_memory) {
+    return Os::Delegate::makeDelegate&lt;TaskInterface, Os::Stub::Task::StubTask&gt;(aligned_new_memory);
+}
+
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="directory-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Directory.cpp</span></code><a class="headerlink" href="#directory-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Directory.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/Directory.cpp
+// \brief stub implementation for Os::Directory
+// ======================================================================
+#include "Os/Stub/Directory.hpp"
+
+namespace Os {
+namespace Stub {
+namespace Directory {
+
+StubDirectory::Status StubDirectory::open(const char* path, OpenMode mode) {
+    return Status::NOT_SUPPORTED;
+}
+
+StubDirectory::Status StubDirectory::rewind() {
+    return Status::NOT_SUPPORTED;
+}
+
+StubDirectory::Status StubDirectory::read(char* fileNameBuffer, FwSizeType bufSize) {
+    return Status::NOT_SUPPORTED;
+}
+
+void StubDirectory::close() {
+    // no-op
+}
+
+DirectoryHandle* StubDirectory::getHandle() {
+    return &amp;this-&gt;m_handle;
+}
+
+}  // namespace Directory
+}  // namespace Stub
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="directory-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Directory.hpp</span></code><a class="headerlink" href="#directory-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Directory.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/Directory.hpp
+// \brief stub definitions for Os::Directory
+// ======================================================================
+#ifndef OS_STUB_DIRECTORY_HPP
+#define OS_STUB_DIRECTORY_HPP
+
+#include "Os/Directory.hpp"
+namespace Os {
+namespace Stub {
+namespace Directory {
+
+struct StubDirectoryHandle : public DirectoryHandle {};
+
+//! \brief stub implementation of Os::Directory
+//!
+//! Stub implementation of `DirectoryInterface` for use as a delegate class handling error-only file operations.
+//!
+class StubDirectory : public DirectoryInterface {
+  public:
+    //! \brief constructor
+    StubDirectory() = default;
+
+    //! \brief destructor
+    ~StubDirectory() override = default;
+
+    //! \brief return the underlying Directory handle (implementation specific)
+    //! \return internal Directory handle representation
+    DirectoryHandle* getHandle() override;
+
+    // ------------------------------------------------------------
+    // Implementation-specific Directory member functions
+    // ------------------------------------------------------------
+
+    //! \brief Open or create a directory
+    //!
+    //! Using the path provided, this function will open or create a directory.
+    //! Use OpenMode::READ to open an existing directory and error if the directory is not found
+    //! Use OpenMode::CREATE_IF_MISSING to open a directory, creating the directory if it doesn't exist
+    //! Use OpenMode::CREATE_EXCLUSIVE to open a directory, creating the directory and erroring if it already exists
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //! It is invalid to supply `mode` as a non-enumerated value.
+    //!
+    //! \param path: path of directory to open
+    //! \param mode: enum (READ, CREATE_IF_MISSING, CREATE_EXCLUSIVE). See notes above for more information
+    //! \return status of the operation
+    Status open(const char* path, OpenMode mode) override;
+
+    //! \brief Check if Directory is open or not
+    //! \return true if Directory is open, false otherwise
+    bool isOpen();
+
+    //! \brief Rewind directory stream
+    //!
+    //! Each read operation moves the seek position forward. This function resets the seek position to the beginning.
+    //!
+    //! \return status of the operation
+    Status rewind() override;
+
+    //! \brief Get next filename from directory stream
+    //!
+    //! Writes at most buffSize characters of the file name to fileNameBuffer.
+    //! This function skips the current directory (.) and parent directory (..) entries.
+    //! Returns NO_MORE_FILES if there are no more files to read from the buffer.
+    //!
+    //! It is invalid to pass `nullptr` as fileNameBuffer.
+    //!
+    //! \param fileNameBuffer: buffer to store filename
+    //! \param buffSize: size of fileNameBuffer
+    //! \return status of the operation
+    Status read(char* fileNameBuffer, FwSizeType buffSize) override;
+
+    //! \brief Close directory
+    void close() override;
+
+  private:
+    //! Handle for StubDirectory
+    StubDirectoryHandle m_handle;
+};
+
+}  // namespace Directory
+}  // namespace Stub
+}  // namespace Os
+#endif  // OS_STUB_DIRECTORY_HPP
+</pre></div>
+</div>
+</section>
+<section id="file-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">File.cpp</span></code><a class="headerlink" href="#file-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/File.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/File.cpp
+// \brief stub implementation for Os::File
+// ======================================================================
+#include "Os/Stub/File.hpp"
+
+namespace Os {
+namespace Stub {
+namespace File {
+
+StubFile::Status StubFile::open(const char* filepath, StubFile::Mode open_mode, OverwriteType overwrite) {
+    Status status = Status::NOT_SUPPORTED;
+    return status;
+}
+
+void StubFile::close() {}
+
+StubFile::Status StubFile::size(FwSizeType&amp; size_result) {
+    Status status = Status::NOT_SUPPORTED;
+    return status;
+}
+
+StubFile::Status StubFile::position(FwSizeType&amp; position_result) {
+    Status status = Status::NOT_SUPPORTED;
+    return status;
+}
+
+StubFile::Status StubFile::preallocate(FwSizeType offset, FwSizeType length) {
+    Status status = Status::NOT_SUPPORTED;
+    return status;
+}
+
+StubFile::Status StubFile::seek(FwSignedSizeType offset, SeekType seekType) {
+    Status status = Status::NOT_SUPPORTED;
+    return status;
+}
+
+StubFile::Status StubFile::flush() {
+    Status status = Status::NOT_SUPPORTED;
+    return status;
+}
+
+StubFile::Status StubFile::read(U8* buffer, FwSizeType&amp; size, StubFile::WaitType wait) {
+    Status status = Status::NOT_SUPPORTED;
+    return status;
+}
+
+StubFile::Status StubFile::write(const U8* buffer, FwSizeType&amp; size, StubFile::WaitType wait) {
+    Status status = Status::NOT_SUPPORTED;
+    return status;
+}
+
+FileHandle* StubFile::getHandle() {
+    return &amp;this-&gt;m_handle;
+}
+
+}  // namespace File
+}  // namespace Stub
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="file-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">File.hpp</span></code><a class="headerlink" href="#file-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/File.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/File.hpp
+// \brief stub file definitions for Os::File
+// ======================================================================
+#include "Os/File.hpp"
+
+#ifndef OS_STUB_FILE_HPP
+#define OS_STUB_FILE_HPP
+namespace Os {
+namespace Stub {
+namespace File {
+
+struct StubFileHandle : public FileHandle {};
+
+//! \brief stub implementation of Os::File
+//!
+//! Stub implementation of `FileInterface` for use as a delegate class handling error-only file operations.
+//!
+class StubFile : public FileInterface {
+  public:
+    //! \brief constructor
+    //!
+    StubFile() = default;
+
+    //! \brief destructor
+    //!
+    ~StubFile() override = default;
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+
+    //! \brief open file with supplied path and mode
+    //!
+    //! This implementation does nothing but return NOT_IMPLEMENTED.
+    //!
+    //! It is invalid to send `nullptr` as the path.
+    //! It is invalid to supply `mode` as a non-enumerated value.
+    //! It is invalid to supply `overwrite` as a non-enumerated value.
+    //!
+    //! \param path: c-string of path to open
+    //! \param mode: file operation mode
+    //! \param overwrite: overwrite existing file on create
+    //! \return: NOT_IMPLEMENTED
+    //!
+    Os::FileInterface::Status open(const char* path, Mode mode, OverwriteType overwrite) override;
+
+    //! \brief close the file, if not opened then do nothing
+    //!
+    //! This implementation does nothing.
+    //!
+    void close() override;
+
+    //! \brief get size of currently open file
+    //!
+    //! This implementation does nothing but return NOT_IMPLEMENTED.
+    //! \param size: output parameter for size.
+    //! \return NOT_IMPLEMENTED
+    //!
+    Status size(FwSizeType&amp; size_result) override;
+
+    //! \brief get file pointer position of the currently open file
+    //!
+    //! This implementation does nothing but return NOT_IMPLEMENTED.
+    //! \param position: output parameter for size.
+    //! \return NOT_IMPLEMENTED
+    //!
+    Status position(FwSizeType&amp; position_result) override;
+
+    //! \brief pre-allocate file storage
+    //!
+    //! This implementation does nothing but return NOT_IMPLEMENTED.
+    //!
+    //! It is invalid to pass a negative `offset`.
+    //! It is invalid to pass a negative `length`.
+    //!
+    //! \param offset: offset into file
+    //! \param length: length after offset to preallocate
+    //! \return NOT_IMPLEMENTED
+    //!
+    Status preallocate(FwSizeType offset, FwSizeType length) override;
+
+    //! \brief seek the file pointer to the given offset
+    //!
+    //! This implementation does nothing but return NOT_IMPLEMENTED.
+    //!
+    //! \param offset: offset to seek to
+    //! \param seekType: `ABSOLUTE` for seeking from beginning of file, `RELATIVE` to use current position.
+    //! \return NOT_IMPLEMENTED
+    //!
+    Status seek(FwSignedSizeType offset, SeekType seekType) override;
+
+    //! \brief flush file contents to storage
+    //!
+    //! This implementation does nothing but return NOT_IMPLEMENTED.
+    //!
+    //! \return NOT_IMPLEMENTED
+    //!
+    Status flush() override;
+
+    //! \brief read data from this file into supplied buffer bounded by size
+    //!
+    //! This implementation does nothing but return NOT_IMPLEMENTED.
+    //!
+    //! It is invalid to pass `nullptr` to this function call.
+    //! It is invalid to pass a negative `size`.
+    //! It is invalid to supply wait as a non-enumerated value.
+    //!
+    //! \param buffer: memory location to store data read from file
+    //! \param size: size of data to read
+    //! \param wait: `WAIT` to wait for data, `NO_WAIT` to return what is currently available
+    //! \return NOT_IMPLEMENTED
+    //!
+    Status read(U8* buffer, FwSizeType&amp; size, WaitType wait) override;
+
+    //! \brief read data from this file into supplied buffer bounded by size
+    //!
+    //! This implementation does nothing but return NOT_IMPLEMENTED.
+    //!
+    //! It is invalid to pass `nullptr` to this function call.
+    //! It is invalid to pass a negative `size`.
+    //! It is invalid to supply wait as a non-enumerated value.
+    //!
+    //! \param buffer: memory location to store data read from file
+    //! \param size: size of data to read
+    //! \param wait: `WAIT` to wait for data to write to disk, `NO_WAIT` to return what is currently available
+    //! \return NOT_IMPLEMENTED
+    //!
+    Status write(const U8* buffer, FwSizeType&amp; size, WaitType wait) override;
+
+    //! \brief returns the raw file handle
+    //!
+    //! Gets the raw file handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it//!must* be passed as an opaque type.
+    //!
+    //! \return raw file handle
+    //!
+    FileHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    StubFileHandle m_handle;
+};
+
+}  // namespace File
+}  // namespace Stub
+}  // namespace Os
+#endif  // OS_STUB_FILE_HPP
+</pre></div>
+</div>
+</section>
+<section id="filesystem-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">FileSystem.cpp</span></code><a class="headerlink" href="#filesystem-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/FileSystem.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/File.cpp
+// \brief stub implementation for Os::File
+// ======================================================================
+#include "Os/Stub/FileSystem.hpp"
+
+namespace Os {
+namespace Stub {
+namespace FileSystem {
+
+StubFileSystem::Status StubFileSystem::_removeDirectory(const char* path) {
+    return Status::NOT_SUPPORTED;
+}
+
+StubFileSystem::Status StubFileSystem::_removeFile(const char* path) {
+    return Status::NOT_SUPPORTED;
+}
+
+StubFileSystem::Status StubFileSystem::_rename(const char* originPath, const char* destPath) {
+    return Status::NOT_SUPPORTED;
+}
+
+StubFileSystem::Status StubFileSystem::_getWorkingDirectory(char* path, FwSizeType bufferSize) {
+    return Status::NOT_SUPPORTED;
+}
+
+StubFileSystem::Status StubFileSystem::_changeWorkingDirectory(const char* path) {
+    return Status::NOT_SUPPORTED;
+}
+
+StubFileSystem::Status StubFileSystem::_getFreeSpace(const char* path, FwSizeType&amp; totalBytes, FwSizeType&amp; freeBytes) {
+    return Status::NOT_SUPPORTED;
+}
+
+FileSystemHandle* StubFileSystem::getHandle() {
+    return &amp;this-&gt;m_handle;
+}
+
+StubFileSystem::Status StubFileSystem::_getPathType(const char* path, PathType&amp; pathType) {
+    return Status::NOT_SUPPORTED;
+}
+
+}  // namespace FileSystem
+}  // namespace Stub
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="filesystem-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">FileSystem.hpp</span></code><a class="headerlink" href="#filesystem-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/FileSystem.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/FileSystem.hpp
+// \brief stub fileSystem definitions for Os::FileSystem
+// ======================================================================
+#ifndef OS_STUB_FILESYSTEM_HPP
+#define OS_STUB_FILESYSTEM_HPP
+
+#include "Os/FileSystem.hpp"
+
+namespace Os {
+namespace Stub {
+namespace FileSystem {
+
+struct StubFileSystemHandle : public FileSystemHandle {};
+
+//! \brief stub implementation of Os::FileSystem
+//!
+//! Stub implementation of `FileSystemInterface` for use as a delegate class handling error-only fileSystem operations.
+//!
+class StubFileSystem : public FileSystemInterface {
+  public:
+    //! \brief constructor
+    StubFileSystem() = default;
+
+    //! \brief destructor
+    ~StubFileSystem() override = default;
+
+    // ------------------------------------------------------------
+    // Implementation-specific FileSystem member functions
+    // ------------------------------------------------------------
+
+    //! \brief Remove a directory at the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the directory to remove
+    //! \return Status of the operation
+    Status _removeDirectory(const char* path) override;
+
+    //! \brief Remove a file at the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the file to remove
+    //! \return Status of the operation
+    Status _removeFile(const char* path) override;
+
+    //! \brief Rename a file from source to destination
+    //!
+    //! If the rename fails due to a cross-device operation, this function should return EXDEV_ERROR
+    //! and moveFile can be used instead to force a copy-and-remove.
+    //!
+    //! It is invalid to pass `nullptr` as sourcePath or destPath.
+    //!
+    //! \param sourcePath The path of the source file
+    //! \param destPath The path of the destination file
+    //! \return Status of the operation
+    Status _rename(const char* sourcePath, const char* destPath) override;
+
+    //! \brief Get filesystem free and total space in bytes on the filesystem containing the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path on the filesystem to query
+    //! \param totalBytes Reference to store the total bytes on the filesystem
+    //! \param freeBytes Reference to store the free bytes on the filesystem
+    //! \return Status of the operation
+    Status _getFreeSpace(const char* path, FwSizeType&amp; totalBytes, FwSizeType&amp; freeBytes) override;
+
+    //! \brief Get the current working directory
+    //!
+    //! Writes the current working directory path to the provided buffer of size bufferSize.
+    //! If the buffer is too small to hold the full path, the function will return BUFFER_TOO_SMALL.
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //! It is invalid to pass a bufferSize of 0.
+    //!
+    //! \param path Buffer to store the current working directory path
+    //! \param bufferSize Size of the buffer
+    //! \return Status of the operation
+    Status _getWorkingDirectory(char* path, FwSizeType bufferSize) override;
+
+    //! \brief Change the current working directory to the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the new working directory
+    //! \return Status of the operation
+    Status _changeWorkingDirectory(const char* path) override;
+
+    //! \brief returns the raw fileSystem handle
+    //!
+    //! Gets the raw fileSystem handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it//!must* be passed as an opaque type.
+    //!
+    //! \return raw fileSystem handle
+    //!
+    FileSystemHandle* getHandle() override;
+
+    //! \brief Get the type of the path (file, directory, etc.)
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path to check
+    //! \param pathType Reference to store the path type
+    //! \return Status of the operation
+    Status _getPathType(const char* path, PathType&amp; pathType) override;
+
+  private:
+    //! FileSystem handle for PosixFileSystem
+    StubFileSystemHandle m_handle;
+};
+
+}  // namespace FileSystem
+}  // namespace Stub
+}  // namespace Os
+#endif  // OS_STUB_FILESYSTEM_HPP
+</pre></div>
+</div>
+</section>
+<section id="memory-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Memory.cpp</span></code><a class="headerlink" href="#memory-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Memory.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/Memory.cpp
+// \brief stub implementation for Os::Memory
+// ======================================================================
+#include &lt;Os/Stub/Memory.hpp&gt;
+
+namespace Os {
+namespace Stub {
+namespace Memory {
+
+MemoryInterface::Status StubMemory::_getUsage(Os::Memory::Usage&amp; memory_usage) {
+    memory_usage.used = 0;
+    memory_usage.total = 0;
+    return Status::ERROR;
+}
+
+MemoryHandle* StubMemory::getHandle() {
+    return &amp;this-&gt;m_handle;
+}
+
+}  // namespace Memory
+}  // namespace Stub
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="memory-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Memory.hpp</span></code><a class="headerlink" href="#memory-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Memory.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/Memory.hpp
+// \brief stub implementation for Os::Memory, header and test definitions
+// ======================================================================
+#include &lt;Os/Memory.hpp&gt;
+#include &lt;cstdio&gt;
+#ifndef OS_Stub_Memory_HPP
+#define OS_Stub_Memory_HPP
+
+namespace Os {
+namespace Stub {
+namespace Memory {
+
+//! MemoryHandle class definition for stub implementations.
+//!
+struct StubMemoryHandle : public MemoryHandle {};
+
+//! \brief stub implementation of Os::MemoryInterface
+//!
+//! Stub implementation of `MemoryInterface` for use as a delegate class handling stub console operations.
+//!
+class StubMemory : public MemoryInterface {
+  public:
+    //! \brief constructor
+    //!
+    StubMemory() = default;
+
+    //! \brief copy constructor
+    StubMemory(const StubMemory&amp; other) = delete;
+
+    //! \brief default copy assignment
+    MemoryInterface&amp; operator=(const MemoryInterface&amp; other) override = delete;
+
+    //! \brief destructor
+    //!
+    ~StubMemory() override = default;
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+
+    //! \brief get system memory usage
+    //!
+    //! This method delegates to the underlying implementation.
+    //!
+    //! \param memory_usage: (output) data structure used to store memory usage
+    //! \return:  ERROR when error occurs, OK otherwise.
+    Status _getUsage(Usage&amp; memory_usage) override;
+
+    //! \brief returns the raw console handle
+    //!
+    //! Gets the raw console handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw console handle
+    //!
+    MemoryHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    StubMemoryHandle m_handle;
+};
+}  // namespace Memory
+}  // namespace Stub
+}  // namespace Os
+
+#endif  // OS_Stub_Memory_HPP
+</pre></div>
+</div>
+</section>
+<section id="mutex-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Mutex.cpp</span></code><a class="headerlink" href="#mutex-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Mutex.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/Mutex.cpp
+// \brief stub implementation for Os::Mutex
+// ======================================================================
+#include "Os/Stub/Mutex.hpp"
+
+namespace Os {
+namespace Stub {
+namespace Mutex {
+
+StubMutex::Status StubMutex::take() {
+    // Attempt to mark the mutex as taken.
+    if (this-&gt;m_handle.m_mutex_taken.exchange(true)) {
+        // The mutex was already taken, so fail the operation.
+        // (This stub is for platforms without the ability to block.)
+        return Status::ERROR_BUSY;
+    }
+    // The mutex was not already taken.
+    // Now that it has been marked as taken, we have successfully entered the critical section.
+    return Status::OP_OK;
+}
+
+StubMutex::Status StubMutex::release() {
+    // Attempt to mark the mutex as not taken.
+    if (!this-&gt;m_handle.m_mutex_taken.exchange(false)) {
+        // The mutex was already not taken, which indicates a coding defect.
+        return Status::ERROR_OTHER;
+    }
+    // The mutex was taken.
+    // Now that it has been marked as not taken, we have successfully exited the critical section.
+    return Status::OP_OK;
+}
+
+MutexHandle* StubMutex::getHandle() {
+    return &amp;this-&gt;m_handle;
+}
+}  // namespace Mutex
+}  // namespace Stub
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="mutex-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Mutex.hpp</span></code><a class="headerlink" href="#mutex-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Mutex.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/Mutex.hpp
+// \brief stub definitions for Os::Mutex
+// ======================================================================
+#include "Os/Mutex.hpp"
+
+#include &lt;atomic&gt;
+
+#ifndef OS_STUB_MUTEX_HPP
+#define OS_STUB_MUTEX_HPP
+namespace Os {
+namespace Stub {
+namespace Mutex {
+
+struct StubMutexHandle : public MutexHandle {
+    //! True if the mutex has been acquired without being released.
+    std::atomic&lt;bool&gt; m_mutex_taken = {false};
+};
+
+//! \brief Nonblocking stub implementation of Os::Mutex
+//!
+//! Stub implementation of `MutexInterface` for use as a delegate class.
+//!
+//! This mutex will never block, which allows it to be used on any platform without OS dependencies.
+//! It is unsuitable for use in environments where threads need to contend over mutexes.
+//! However, it is appropriate for use in environments with multiple threads that are not intended to
+//! contend over mutexes, and where contention would indicate a coding defect worthy of an assertion.
+//!
+class StubMutex : public MutexInterface {
+  public:
+    //! \brief constructor
+    //!
+    StubMutex() = default;
+
+    //! \brief destructor
+    //!
+    ~StubMutex() override = default;
+
+    //! \brief return the underlying mutex handle (implementation specific)
+    //! \return internal mutex handle representation
+    MutexHandle* getHandle() override;
+
+    Status take() override;     //!&lt;  lock the mutex and get return status
+    Status release() override;  //!&lt;  unlock the mutex and get return status
+
+  private:
+    //! Handle for StubMutex
+    StubMutexHandle m_handle;
+};
+
+}  // namespace Mutex
+}  // namespace Stub
+}  // namespace Os
+#endif  // OS_STUB_MUTEX_HPP
+</pre></div>
+</div>
+</section>
+<section id="queue-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Queue.cpp</span></code><a class="headerlink" href="#queue-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Queue.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/Queue.cpp
+// \brief stub implementation for Os::Queue
+// ======================================================================
+#include "Queue.hpp"
+
+namespace Os {
+namespace Stub {
+namespace Queue {
+
+QueueInterface::Status StubQueue::create(const Fw::StringBase&amp; name, FwSizeType depth, FwSizeType messageSize) {
+    return QueueInterface::Status::UNKNOWN_ERROR;
+}
+
+QueueInterface::Status StubQueue::send(const U8* buffer,
+                                       FwSizeType size,
+                                       FwQueuePriorityType priority,
+                                       QueueInterface::BlockingType blockType) {
+    return QueueInterface::Status::UNINITIALIZED;
+}
+
+QueueInterface::Status StubQueue::receive(U8* destination,
+                                          FwSizeType capacity,
+                                          QueueInterface::BlockingType blockType,
+                                          FwSizeType&amp; actualSize,
+                                          FwQueuePriorityType&amp; priority) {
+    return QueueInterface::Status::UNINITIALIZED;
+}
+
+FwSizeType StubQueue::getMessagesAvailable() const {
+    return 0;
+}
+
+FwSizeType StubQueue::getMessageHighWaterMark() const {
+    return 0;
+}
+
+QueueHandle* StubQueue::getHandle() {
+    return &amp;this-&gt;m_handle;
+}
+
+}  // namespace Queue
+}  // namespace Stub
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="queue-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Queue.hpp</span></code><a class="headerlink" href="#queue-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Queue.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/Queue.hpp
+// \brief stub definitions for Os::Queue
+// ======================================================================
+#ifndef OS_STUB_QUEUE_HPP
+#define OS_STUB_QUEUE_HPP
+#include "Os/Queue.hpp"
+
+namespace Os {
+namespace Stub {
+namespace Queue {
+
+struct StubQueueHandle : public QueueHandle {};
+
+//! \brief stub queue implementation with injectable statuses
+class StubQueue : public QueueInterface {
+  public:
+    //! \brief default queue interface constructor
+    StubQueue() = default;
+
+    //! \brief default queue destructor
+    virtual ~StubQueue() = default;
+
+    //! \brief copy constructor is forbidden
+    StubQueue(const QueueInterface&amp; other) = delete;
+
+    //! \brief copy constructor is forbidden
+    StubQueue(const QueueInterface* other) = delete;
+
+    //! \brief assignment operator is forbidden
+    StubQueue&amp; operator=(const QueueInterface&amp; other) override = delete;
+
+    //! \brief create queue storage
+    //!
+    //! Creates a queue ensuring sufficient storage to hold `depth` messages of `messageSize` size each.
+    //! \param name: name of queue
+    //! \param depth: depth of queue in number of messages
+    //! \param messageSize: size of an individual message
+    //! \return: status of the creation
+    Status create(const Fw::StringBase&amp; name, FwSizeType depth, FwSizeType messageSize) override;
+
+    //! \brief send a message into the queue
+    //!
+    //! Send a message into the queue, providing the message data, size, priority, and blocking type. When
+    //! `blockType` is set to BLOCKING, this call will block on queue full. Otherwise, this will return an error
+    //! status on queue full.
+    //!
+    //! \param buffer: message data
+    //! \param size: size of message data
+    //! \param priority: priority of the message
+    //! \param blockType: BLOCKING to block for space or NONBLOCKING to return error when queue is full
+    //! \return: status of the send
+    Status send(const U8* buffer, FwSizeType size, FwQueuePriorityType priority, BlockingType blockType) override;
+
+    //! \brief receive a message from the queue
+    //!
+    //! Receive a message from the queue, providing the message destination, capacity, priority, and blocking type.
+    //! When `blockType` is set to BLOCKING, this call will block on queue empty. Otherwise, this will return an
+    //! error status on queue empty. Actual size received and priority of message is set on success status.
+    //!
+    //! \param destination: destination for message data
+    //! \param capacity: maximum size of message data
+    //! \param blockType: BLOCKING to wait for message or NONBLOCKING to return error when queue is empty
+    //! \param actualSize: (output) actual size of message read
+    //! \param priority: (output) priority of message read
+    //! \return: status of the send
+    Status receive(U8* destination,
+                   FwSizeType capacity,
+                   BlockingType blockType,
+                   FwSizeType&amp; actualSize,
+                   FwQueuePriorityType&amp; priority) override;
+
+    //! \brief get number of messages available
+    //!
+    //! \return number of messages available
+    FwSizeType getMessagesAvailable() const override;
+
+    //! \brief get maximum messages stored at any given time
+    //!
+    //! Returns the maximum number of messages in this queue at any given time. This is the high-water mark for this
+    //! queue.
+    //! \return queue message high-water mark
+    FwSizeType getMessageHighWaterMark() const override;
+
+    QueueHandle* getHandle() override;
+
+    StubQueueHandle m_handle;
+};
+
+}  // namespace Queue
+}  // namespace Stub
+}  // namespace Os
+
+#endif  // OS_STUB_QUEUE_HPP
+</pre></div>
+</div>
+</section>
+<section id="rawtime-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">RawTime.cpp</span></code><a class="headerlink" href="#rawtime-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/RawTime.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/RawTime.cpp
+// \brief stub implementation for Os::RawTime
+// ======================================================================
+#include "Os/Stub/RawTime.hpp"
+
+namespace Os {
+namespace Stub {
+namespace RawTime {
+
+RawTimeHandle* StubRawTime::getHandle() {
+    return &amp;this-&gt;m_handle;
+}
+
+StubRawTime::Status StubRawTime::now() {
+    return Status::OP_OK;
+}
+
+StubRawTime::Status StubRawTime::getTimeInterval(const Os::RawTime&amp; other, Fw::TimeInterval&amp; interval) const {
+    interval.set(0, 0);
+    return Status::OP_OK;
+}
+
+Fw::SerializeStatus StubRawTime::serializeTo(Fw::SerializeBufferBase&amp; buffer) const {
+    return Fw::FW_SERIALIZE_OK;
+}
+
+Fw::SerializeStatus StubRawTime::deserializeFrom(Fw::SerializeBufferBase&amp; buffer) {
+    return Fw::FW_SERIALIZE_OK;
+}
+
+}  // namespace RawTime
+}  // namespace Stub
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="rawtime-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">RawTime.hpp</span></code><a class="headerlink" href="#rawtime-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/RawTime.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/RawTime.hpp
+// \brief stub definitions for Os::RawTime
+// ======================================================================
+#ifndef OS_STUB_RAWTIME_HPP
+#define OS_STUB_RAWTIME_HPP
+
+#include "Os/RawTime.hpp"
+
+namespace Os {
+namespace Stub {
+namespace RawTime {
+
+struct StubRawTimeHandle : public RawTimeHandle {};
+
+//! \brief stub implementation of Os::RawTime
+//!
+//! Stub implementation of `RawTimeInterface`.
+//!
+class StubRawTime : public RawTimeInterface {
+  public:
+    //! \brief constructor
+    //!
+    StubRawTime() = default;
+
+    //! \brief destructor
+    //!
+    ~StubRawTime() override = default;
+
+    //! \brief return the underlying RawTime handle (implementation specific)
+    //! \return internal RawTime handle representation
+    RawTimeHandle* getHandle() override;
+
+    // ------------------------------------------------------------
+    // Implementation-specific RawTime overrides
+    // ------------------------------------------------------------
+    //! \brief Get the current time.
+    //!
+    //! This function retrieves the current time and stores it in the RawTime object.
+    //! Each implementation should define its RawTimeHandle type for storing the time.
+    //!
+    //! \return Status indicating the result of the operation.
+    Status now() override;
+
+    //! \brief Calculate the time interval between this and another raw time.
+    //!
+    //! This function calculates the time interval between the current raw time and another
+    //! specified raw time. The result is stored in the provided (output) interval object.
+    //!
+    //! \param other The other RawTimeHandle to compare against.
+    //! \param interval Output parameter to store the calculated time interval.
+    //! \return Status indicating the result of the operation.
+    Status getTimeInterval(const Os::RawTime&amp; other, Fw::TimeInterval&amp; interval) const override;
+
+    //! \brief Serialize the contents of the RawTimeInterface object into a buffer.
+    //!
+    //! This function serializes the contents of the RawTimeInterface object into the provided
+    //! buffer.
+    //!
+    //! \note The serialization must fit within `FW_RAW_TIME_SERIALIZATION_MAX_SIZE` bytes. This value is
+    //! defined in FpConfig.h. For example, Posix systems use a pair of U32 (sec, nanosec) and can therefore
+    //! serialize in 8 bytes. Should an OSAL implementation require more than this, the project must increase
+    //! that value in its config/ folder.
+    //!
+    //! \param buffer The buffer to serialize the contents into.
+    //! \return Fw::SerializeStatus indicating the result of the serialization.
+    Fw::SerializeStatus serializeTo(Fw::SerializeBufferBase&amp; buffer) const override;
+
+    //! \brief Deserialize the contents of the RawTimeInterface object from a buffer.
+    //!
+    //! This function deserializes the contents of the RawTimeInterface object from the provided
+    //! buffer.
+    //!
+    //! \note The serialization must fit within `FW_RAW_TIME_SERIALIZATION_MAX_SIZE` bytes. This value is
+    //! defined in FpConfig.h. For example, Posix systems use a pair of U32 (sec, nanosec) and can therefore
+    //! serialize in 8 bytes. Should an OSAL implementation require more than this, the project must increase
+    //! that value in its config/ folder.
+    //!
+    //! \param buffer The buffer to deserialize the contents from.
+    //! \return Fw::SerializeStatus indicating the result of the deserialization.
+    Fw::SerializeStatus deserializeFrom(Fw::SerializeBufferBase&amp; buffer) override;
+
+  private:
+    //! Handle for StubRawTime
+    StubRawTimeHandle m_handle;
+};
+
+}  // namespace RawTime
+}  // namespace Stub
+}  // namespace Os
+#endif  // OS_STUB_RAWTIME_HPP
+</pre></div>
+</div>
+</section>
+<section id="task-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Task.cpp</span></code><a class="headerlink" href="#task-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Task.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/Task.cpp
+// \brief stub implementations for Os::Task
+// ======================================================================
+#include "Os/Stub/Task.hpp"
+namespace Os {
+namespace Stub {
+namespace Task {
+
+void StubTask::onStart() {}
+
+Os::TaskInterface::Status StubTask::join() {
+    return Os::TaskInterface::Status::UNKNOWN_ERROR;
+}
+
+void StubTask::suspend(Os::TaskInterface::SuspensionType suspensionType) {}
+
+void StubTask::resume() {}
+
+Os::TaskHandle* StubTask::getHandle() {
+    return nullptr;
+}
+
+Os::TaskInterface::Status StubTask::start(const Os::TaskInterface::Arguments&amp; arguments) {
+    return Os::TaskInterface::Status::UNKNOWN_ERROR;
+}
+
+bool StubTask::isCooperative() {
+    return true;
+}
+
+Os::Task::Status StubTask::_delay(Fw::TimeInterval interval) {
+    FW_ASSERT(0);
+    return Os::Task::Status::UNKNOWN_ERROR;
+}
+
+}  // namespace Task
+}  // namespace Stub
+}  // namespace Os
+</pre></div>
+</div>
+</section>
+<section id="task-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Task.hpp</span></code><a class="headerlink" href="#task-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Task.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title Os/Stub/Task.hpp
+// \brief stub definitions for Os::Task
+// ======================================================================
+#include "Os/Task.hpp"
+
+#ifndef OS_STUB_TASK_HPP
+#define OS_STUB_TASK_HPP
+namespace Os {
+namespace Stub {
+namespace Task {
+
+//! Test task handle
+class StubTaskHandle : public TaskHandle {};
+
+//! Implementation of task
+class StubTask : public TaskInterface {
+  public:
+    //! Constructor
+    StubTask() = default;
+
+    //! Destructor
+    ~StubTask() override = default;
+
+    //! \brief perform required task start actions
+    void onStart() override;
+
+    //! \brief block until the task has ended
+    //!
+    //! Blocks the current (calling) task until this task execution has ended. Callers should ensure that any
+    //! signals required to stop this task have already been emitted or will be emitted by another task.
+    //!
+    //! \return status of the block
+    Status join() override;
+
+    //! \brief suspend the task given the suspension type
+    //!
+    //! Suspends the task. Some implementations track if the suspension of a task was intentional or
+    //! unintentional. The supplied `suspensionType` parameter indicates that this was intentional or
+    //! unintentional. The type of suspension is also returned when calling `isSuspended`.
+    //!
+    //! \param suspensionType intentionality of the suspension
+    void suspend(SuspensionType suspensionType) override;
+
+    //! \brief resume a suspended task
+    //!
+    //! Resumes this task. Not started, running, and exited tasks take no action.
+    //!
+    void resume() override;
+
+    //! \brief delay the current task
+    //!
+    //! Delays, or sleeps, the current task by the supplied time interval. In non-preempting os implementations
+    //! the task will resume no earlier than expected but an exact wake-up time is not guaranteed.
+    //!
+    //! \param interval: delay time
+    //! \return status of the delay
+    Status _delay(Fw::TimeInterval interval) override;
+
+    //! \brief return the underlying task handle (implementation specific)
+    //! \return internal task handle representation
+    TaskHandle* getHandle() override;
+
+    //! \brief determine if the task requires cooperative multitasking
+    //!
+    //! Some task implementations require cooperative multitasking where the task execution is run by a user
+    //! defined task scheduler and not the operating system task scheduler. These tasks cooperatively on
+    //! multitask by doing one unit of work and return from the function.
+    //!
+    //! This function indicates if the task requires cooperative support.
+    //! The default implementation returns false.
+    //!
+    //! \return true when the task expects cooperation, false otherwise
+    bool isCooperative() override;
+
+    //! \brief start the task
+    //!
+    //! Starts the task given the supplied arguments.
+    //!
+    //! \param arguments: arguments supplied to the task start call
+    //! \return status of the task start
+    Status start(const Arguments&amp; arguments) override;
+};
+
+}  // namespace Task
+}  // namespace Stub
+}  // namespace Os
+#endif  // End OS_STUB_TASK_HPP
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../Posix/test/ut/index.html" class="btn btn-neutral float-left" title="ut" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="test/index.html" class="btn btn-neutral float-right" title="test" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

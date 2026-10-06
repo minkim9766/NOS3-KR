@@ -1,0 +1,4406 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="tables" href="../tables/index.html" />
+    <link rel="prev" title="platform_inc" href="../platform_inc/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">apps</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">sbn</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">fsw</a></li>
+      <li class="breadcrumb-item active">src</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/fsw/apps/sbn/fsw/src/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="src">
+<h1>src<a class="headerlink" href="#src" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sbn/fsw/src/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="sbn-app-c">
+<h2><code class="docutils literal notranslate"><span class="pre">sbn_app.c</span></code><a class="headerlink" href="#sbn-app-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sbn/fsw/src/sbn_app.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/******************************************************************************
+ ** \file sbn_app.c
+ **
+ **      Copyright (c) 2004-2006, United States government as represented by the
+ **      administrator of the National Aeronautics Space Administration.
+ **      All rights reserved. This software(cFE) was created at NASA's Goddard
+ **      Space Flight Center pursuant to government contracts.
+ **
+ **      This software may be used only pursuant to a United States government
+ **      sponsored project and the United States government may not be charged
+ **      for use thereof.
+ **
+ ** Purpose:
+ **      This file contains source code for the Software Bus Network
+ **      Application.
+ **
+ ** Authors:   J. Wilmot/GSFC Code582
+ **            R. McGraw/SSI
+ **            C. Knight/ARC Code TI
+ ******************************************************************************/
+
+/*
+ ** Include Files
+ */
+#include &lt;fcntl.h&gt;
+
+#include "sbn_pack.h"
+#include "sbn_app.h"
+#include "cfe_sb_eventids.h" /* For event message IDs */
+#include "cfe_es.h"        /* PerfLog */
+#include "cfe_platform_cfg.h"
+#include "cfe_msgids.h"
+#include "cfe_version.h"
+
+/** \brief SBN global application data, indexed by AppID. */
+SBN_App_t SBN;
+
+#include &lt;string.h&gt;
+#include "sbn_app.h"
+
+// Subscriptions to App Data:
+// #include "sample_msgids.h"
+
+static SBN_Status_t UnloadNets(void);
+
+static SBN_Status_t UnloadModules(void)
+{
+    SBN_ModuleIdx_t i = 0;
+
+    for (i = 0; i &lt; SBN_MAX_MOD_CNT; i++)
+    {
+        if (SBN.ProtocolModules[i] == 0)
+        {
+            continue; /* this module may have been loaded by ES, so continue in case there are any I loaded. */
+        }             /* end if */
+
+        if (OS_ModuleUnload(SBN.ProtocolModules[i]) != OS_SUCCESS)
+        {
+            EVSSendCrit(SBN_TBL_EID, "unable to unload protocol module ID %d", i);
+            return SBN_ERROR;
+        } /* end if */
+    }     /* end for */
+
+    for (i = 0; i &lt; SBN_MAX_MOD_CNT; i++)
+    {
+        if (SBN.FilterModules[i] == 0)
+        {
+            continue; /* this module may have been loaded by ES, so continue in case there are any I loaded. */
+        }             /* end if */
+
+        if (OS_ModuleUnload(SBN.FilterModules[i]) != OS_SUCCESS)
+        {
+            EVSSendCrit(SBN_TBL_EID, "unable to unload filter module ID %d", i);
+            return SBN_ERROR;
+        } /* end if */
+    }     /* end for */
+
+    return SBN_SUCCESS;
+} /* end UnloadModules() */
+
+/**
+ * Packs a CCSDS message with an SBN message header.
+ *
+ * \note Ensures the SBN fields (CPU ID, MsgSz) and CCSDS message headers
+ *       are in network (big-endian) byte order.
+ * \param SBNBuf[out] The buffer to pack into.
+ * \param MsgSz[in] The size of the payload.
+ * \param MsgType[in] The SBN message type.
+ * \param ProcessorID[in] The ProcessorID of the sender (should be CFE_CPU_ID)
+ * \param SpacecraftID[in] The SpacecraftID of the sender
+ * \param Msg[in] The payload (CCSDS message or SBN sub/unsub.)
+ */
+void SBN_PackMsg(void *SBNBuf, SBN_MsgSz_t MsgSz, SBN_MsgType_t MsgType, CFE_ProcessorID_t ProcessorID,  CFE_ProcessorID_t SpacecraftID,void *Msg)
+{
+    Pack_t Pack;
+    Pack_Init(&amp;Pack, SBNBuf, MsgSz + SBN_PACKED_HDR_SZ, false);
+
+    Pack_Int16(&amp;Pack, MsgSz);
+    Pack_UInt8(&amp;Pack, MsgType);
+    Pack_UInt32(&amp;Pack, ProcessorID);
+    Pack_UInt32(&amp;Pack, SpacecraftID);
+
+    if (!Msg || !MsgSz)
+    {
+        /* valid to have a NULL pointer/empty size payload */
+        return;
+    } /* end if */
+
+    Pack_Data(&amp;Pack, Msg, MsgSz);
+} /* end SBN_PackMsg */
+
+/**
+ * Unpacks a CCSDS message with an SBN message header.
+ *
+ * \param SBNBuf[in] The buffer to unpack.
+ * \param MsgTypePtr[out] The SBN message type.
+ * \param MsgSzPtr[out] The payload size.
+ * \param ProcessorID[out] The ProcessorID of the sender.
+ * \param Msg[out] The payload (a CCSDS message, or SBN sub/unsub).
+ * \return true if we were able to unpack the message.
+ *
+ * \note Ensures the SBN fields (CPU ID, MsgSz) and CCSDS message headers
+ *       are in platform byte order.
+ * \todo Use a type for SBNBuf.
+ */
+bool SBN_UnpackMsg(void *SBNBuf, SBN_MsgSz_t *MsgSzPtr, SBN_MsgType_t *MsgTypePtr,
+                   CFE_ProcessorID_t *ProcessorIDPtr, CFE_SpacecraftID_t *SpacecraftIDPtr,
+                   void *Msg)
+{
+    uint8  t = 0;
+    Pack_t Pack;
+    Pack_Init(&amp;Pack, SBNBuf, SBN_MAX_PACKED_MSG_SZ, false);
+    Unpack_Int16(&amp;Pack, MsgSzPtr);
+    Unpack_UInt8(&amp;Pack, &amp;t);
+    *MsgTypePtr = t;
+    Unpack_UInt32(&amp;Pack, ProcessorIDPtr);
+    Unpack_UInt32(&amp;Pack, SpacecraftIDPtr);
+
+    if (!*MsgSzPtr)
+    {
+        return true;
+    } /* end if */
+
+    if (*MsgSzPtr &lt; 0 || *MsgSzPtr &gt; CFE_MISSION_SB_MAX_SB_MSG_SIZE)
+    {
+        return false;
+    } /* end if */
+
+    Unpack_Data(&amp;Pack, Msg, *MsgSzPtr);
+
+    return true;
+} /* end SBN_UnpackMsg */
+
+/**
+ * Called by a protocol module to signal that a peer has been connected.
+ *
+ * @param Peer[in] The peer that has been connected.
+ * @return SBN_SUCCESS or SBN_ERROR if there was an issue.
+ */
+SBN_Status_t SBN_Connected(SBN_PeerInterface_t *Peer)
+{
+    static const char FAIL_PREFIX[] = "ERROR: could not disconnect peer:";
+    SBN_Status_t SBN_Status = SBN_SUCCESS;
+    CFE_Status_t CFE_Status;
+
+    if (Peer-&gt;Connected != 0)
+    {
+        EVSSendErr(SBN_PEER_EID, "%s peer %d:%d already connected", FAIL_PREFIX, Peer-&gt;SpacecraftID, (int)(Peer-&gt;ProcessorID));
+        return SBN_ERROR;
+    } /* end if */
+
+    char PipeName[OS_MAX_API_NAME];
+
+    /* create a pipe name string similar to SBN_0_Pipe */
+    snprintf(PipeName, OS_MAX_API_NAME, "SBN_%d_%d_Pipe", (int)(Peer-&gt;ProcessorID), (int)(Peer-&gt;SpacecraftID));
+    CFE_Status = CFE_SB_CreatePipe(&amp;(Peer-&gt;Pipe), SBN_PEER_PIPE_DEPTH, PipeName);
+
+    if (CFE_Status != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_PEER_EID, "%s: could not create peer pipe '%s'", FAIL_PREFIX, PipeName);
+
+        return SBN_ERROR;
+    } /* end if */
+
+    EVSSendInfo(SBN_PEER_EID, "Created peer pipe '%s', ID '%d'", PipeName, Peer-&gt;Pipe);
+
+    CFE_Status = CFE_SB_SetPipeOpts(Peer-&gt;Pipe, CFE_SB_PIPEOPTS_IGNOREMINE);
+    if (CFE_Status != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_PEER_EID, "%s: could not set pipe options '%s'", FAIL_PREFIX, PipeName);
+
+        return SBN_ERROR;
+    } /* end if */
+
+    EVSSendInfo(SBN_PEER_EID, "Peer %d:%d connected.", Peer-&gt;SpacecraftID, (int)(Peer-&gt;ProcessorID));
+
+    uint8 ProtocolVer = SBN_PROTO_VER;
+    SBN_Status        = SBN_SendNetMsg(SBN_PROTO_MSG, sizeof(ProtocolVer), &amp;ProtocolVer, Peer);
+    if (SBN_Status != SBN_SUCCESS)
+    {
+        return SBN_Status;
+    } /* end if */
+
+    /* set this to current time so we don't think we've already timed out */
+    OS_GetLocalTime(&amp;Peer-&gt;LastRecv);
+
+    SBN_Status = SBN_SendLocalSubsToPeer(Peer);
+
+    Peer-&gt;Connected = 1;
+
+    return SBN_Status;
+} /* end SBN_Connected() */
+
+/**
+ * Called by a protocol module to signal that a peer has been disconnected.
+ *
+ * @param Peer[in] The peer that has been disconnected.
+ * @return SBN_SUCCESS or SBN_ERROR if there was an issue.
+ */
+SBN_Status_t SBN_Disconnected(SBN_PeerInterface_t *Peer)
+{
+    static const char FAIL_PREFIX[] = "ERROR: could not disconnect peer:";
+    CFE_Status_t Status;
+
+    if (Peer-&gt;Connected == 0)
+    {
+        EVSSendErr(SBN_PEER_EID, "%s already not connected to peer %d:%d", FAIL_PREFIX, Peer-&gt;SpacecraftID, (int)(Peer-&gt;ProcessorID));
+        return SBN_ERROR;
+    }
+
+    Peer-&gt;Connected = 0; /**&lt; mark as disconnected before deleting pipe */
+
+    if((Status = CFE_SB_DeletePipe(Peer-&gt;Pipe)) != CFE_SUCCESS) {
+      EVSSendErr(SBN_PEER_EID, "%s could not delete pipe when disconnecting peer %d:%d: 0x%08x", 
+          FAIL_PREFIX,
+          Peer-&gt;SpacecraftID,
+          Peer-&gt;ProcessorID,
+          Status);
+    }
+    Peer-&gt;Pipe = 0;
+
+    Peer-&gt;SendCnt = 0;
+    Peer-&gt;RecvCnt = 0;
+    Peer-&gt;SendErrCnt = 0;
+    Peer-&gt;RecvErrCnt = 0;
+
+    Peer-&gt;SubCnt = 0; /* reset sub count, in case this is a reconnection */
+
+    EVSSendInfo(SBN_PEER_EID, "Disconnected from peer %d:%d.", Peer-&gt;SpacecraftID, (int)(Peer-&gt;ProcessorID));
+
+    return SBN_SUCCESS;
+} /* end SBN_Disconnected() */
+
+/* Use a struct for all local variables in the task so we can specify exactly
+ * how large of a stack we need for the task.
+ */
+
+typedef struct
+{
+    SBN_Status_t         Status;
+    OS_TaskID_t          RecvTaskID;
+    SBN_PeerIdx_t        PeerIdx;
+    SBN_NetIdx_t         NetIdx;
+    SBN_PeerInterface_t *Peer;
+    SBN_NetInterface_t * Net;
+    CFE_ProcessorID_t    ProcessorID;
+    CFE_SpacecraftID_t   SpacecraftID;
+    SBN_MsgType_t        MsgType;
+    SBN_MsgSz_t          MsgSz;
+    uint8                Msg[CFE_MISSION_SB_MAX_SB_MSG_SIZE];
+} RecvPeerTaskData_t;
+
+/**
+ * \brief Receive task created for each direct peer-based connection.
+ * Spanwed from PeerPoll()
+ */
+void SBN_RecvPeerTask(void)
+{
+    RecvPeerTaskData_t D;
+    memset(&amp;D, 0, sizeof(D));
+
+    D.RecvTaskID = OS_TaskGetId();
+
+    for (D.NetIdx = 0; D.NetIdx &lt; SBN.NetCnt; D.NetIdx++)
+    {
+        D.Net = &amp;SBN.Nets[D.NetIdx];
+        if (!D.Net-&gt;Configured)
+        {
+            continue;
+        }
+
+        for (D.PeerIdx = 0; D.PeerIdx &lt; D.Net-&gt;PeerCnt; D.PeerIdx++)
+        {
+            D.Peer = &amp;D.Net-&gt;Peers[D.PeerIdx];
+            if (D.Peer-&gt;RecvTaskID == D.RecvTaskID)
+            {
+                break;
+            } /* end if */
+        }     /* end for */
+
+        if (D.PeerIdx &lt; D.Net-&gt;PeerCnt)
+        {
+            break;
+        } /* end if */
+    }     /* end for */
+
+    if (D.NetIdx == SBN.NetCnt)
+    {
+        EVSSendErr(SBN_PEERTASK_EID, "unable to connect task to peer struct");
+        return;
+    } /* end if */
+
+    while (1)
+    {
+        D.Status = D.Net-&gt;IfOps-&gt;RecvFromPeer(D.Net, D.Peer, &amp;D.MsgType, &amp;D.MsgSz, &amp;D.ProcessorID, &amp;D.SpacecraftID, &amp;D.Msg);
+
+        if (D.Status == SBN_IF_EMPTY)
+        {
+            continue; /* no (more) messages */
+        }             /* end if */
+
+        if (D.Status == SBN_SUCCESS)
+        {
+            OS_GetLocalTime(&amp;D.Peer-&gt;LastRecv);
+
+            D.Status = SBN_ProcessNetMsg(D.Net, D.MsgType, D.ProcessorID, D.SpacecraftID, D.MsgSz, &amp;D.Msg);
+
+            if (D.Status != SBN_SUCCESS)
+            {
+                D.Peer-&gt;RecvTaskID = 0;
+                return;
+            } /* end if */
+        }
+        else
+        {
+            EVSSendErr(SBN_PEER_EID, "recv error (%d)", D.Status);
+            D.Peer-&gt;RecvErrCnt++;
+            D.Peer-&gt;RecvTaskID = 0;
+            return;
+        } /* end if */
+    }     /* end while */
+} /* end SBN_RecvPeerTask() */
+
+typedef struct RecvNetTaskData_s
+{
+    SBN_NetIdx_t         NetIdx;
+    SBN_NetInterface_t * Net;
+    SBN_PeerInterface_t *Peer;
+    SBN_Status_t         Status;
+    OS_TaskID_t          RecvTaskID;
+    CFE_ProcessorID_t    ProcessorID;
+    CFE_SpacecraftID_t   SpacecraftID;
+    SBN_MsgType_t        MsgType;
+    SBN_MsgSz_t          MsgSz;
+    uint8                Msg[CFE_MISSION_SB_MAX_SB_MSG_SIZE];
+} RecvNetTaskData_t;
+
+/**
+ * \brief Receive task created for each net-based connection.
+ * Spanwed from PeerPoll()
+ */
+void SBN_RecvNetTask(void)
+{
+    static const char FAIL_PREFIX_STARTUP[] = "ERROR: could not start SBN Receive Net Task:";
+    static const char FAIL_PREFIX_RUNNING[] = "ERROR: during SBN Receive Net Task:";
+    RecvNetTaskData_t D;
+    memset(&amp;D, 0, sizeof(D));
+
+    D.RecvTaskID = OS_TaskGetId();
+
+    for (D.NetIdx = 0; D.NetIdx &lt; SBN.NetCnt; D.NetIdx++)
+    {
+        D.Net = &amp;SBN.Nets[D.NetIdx];
+        if (D.Net-&gt;RecvTaskID == D.RecvTaskID)
+        {
+            break;
+        } /* end if */
+    }     /* end for */
+
+    if (D.NetIdx == SBN.NetCnt)
+    {
+        EVSSendErr(SBN_PEERTASK_EID, "%s unable to connect task to net struct", FAIL_PREFIX_STARTUP);
+        return;
+    } /* end if */
+
+    while (1)
+    {
+        EVSSendDbg(SBN_PEERTASK_EID,"Try to receive from net...");
+        D.Status = D.Net-&gt;IfOps-&gt;RecvFromNet(D.Net, &amp;D.MsgType, &amp;D.MsgSz, &amp;D.ProcessorID, &amp;D.SpacecraftID, &amp;D.Msg);
+
+        if (D.Status == SBN_IF_EMPTY)
+        {
+            continue; /* no (more) messages */
+        }             /* end if */
+
+        if (D.Status != SBN_SUCCESS)
+        {
+            EVSSendErr(SBN_PEERTASK_EID, "%s RecvFromNet failed for net %d: status=0x%08X", FAIL_PREFIX_RUNNING, D.NetIdx, D.Status);
+            break;
+        } /* end if */
+
+        D.Peer = SBN_GetPeer(D.Net, D.ProcessorID, D.SpacecraftID);
+        if (!D.Peer)
+        {
+            EVSSendErr(SBN_PEERTASK_EID, "SBN RecvNetTask: unknown peer (ProcessorID=%d)", D.ProcessorID);
+            break;
+        } /* end if */
+
+        OS_GetLocalTime(&amp;D.Peer-&gt;LastRecv);
+
+        D.Status = SBN_ProcessNetMsg(D.Net, D.MsgType, D.ProcessorID, D.SpacecraftID, D.MsgSz, &amp;D.Msg);
+
+        if (D.Status != SBN_SUCCESS)
+        {
+            EVSSendErr(SBN_PEERTASK_EID, "SBN_ProcessNetMsg failed: 0x%08X", D.Status);
+            break;
+        } /* end if */
+    }     /* end while */
+
+    /* Unset the task id so that it can be created if necessary */
+    D.Net-&gt;RecvTaskID = 0;
+} /* end SBN_RecvNetTask() */
+
+/**
+ * Checks all interfaces for messages from peers.
+ * Receive messages from the specified peer, injecting them onto the local
+ * software bus.
+ */
+SBN_Status_t SBN_RecvNetMsgs(void)
+{
+    SBN_Status_t SBN_Status = 0;
+
+    SBN_NetIdx_t NetIdx = 0;
+    for (NetIdx = 0; NetIdx &lt; SBN.NetCnt; NetIdx++)
+    {
+        SBN_NetInterface_t *Net = &amp;SBN.Nets[NetIdx];
+        SBN_MsgType_t       MsgType;
+        SBN_MsgSz_t         MsgSz;
+        CFE_ProcessorID_t   ProcessorID;
+        CFE_SpacecraftID_t  SpacecraftID;
+
+        if (Net-&gt;TaskFlags &amp; SBN_TASK_RECV)
+        {
+            continue; /* separate task handles receiving from a net */
+        }             /* end if */
+
+        if (Net-&gt;IfOps-&gt;RecvFromNet)
+        {
+            int MsgCnt = 0;
+            // TODO: make configurable
+            for (MsgCnt = 0; MsgCnt &lt; 100; MsgCnt++) /* read at most 100 messages from the net */
+            {
+                /*memset(SBN.MsgBuffer, 0, sizeof(SBN.MsgBuffer));*/
+
+                SBN_Status = Net-&gt;IfOps-&gt;RecvFromNet(Net, &amp;MsgType, &amp;MsgSz, &amp;ProcessorID, &amp;SpacecraftID, SBN.MsgBuffer);
+
+                if (SBN_Status == SBN_IF_EMPTY)
+                {
+                    break; /* no (more) messages for this net, continue to next net */
+                }          /* end if */
+
+                /* for UDP, the message received may not be from the peer
+                 * expected.
+                 */
+                SBN_PeerInterface_t *Peer = SBN_GetPeer(Net, ProcessorID, SpacecraftID);
+
+                // printf("sbn_app: RecvNetMsgs: ProcessorID: %lu; SCID: %lu, MsgType: %u, MsgSz: %d, Msg: 0x", ProcessorID, SpacecraftID, MsgType, MsgSz);
+                // for(size_t i = 0; i &lt; MsgSz; i++)
+                // {
+                //     printf("%02x", (uint8_t*) SBN.MsgBuffer[i]);
+                // }
+                // printf("\n");
+
+                if (!Peer)
+                {
+                    EVSSendInfo(SBN_PEERTASK_EID, "SBN RecvNetMsgs: unknown peer (ProcessorID=%d)", ProcessorID);
+                    /* may be a misconfiguration on my part...? continue processing msgs... */
+                    continue;
+                } /* end if */
+
+                OS_GetLocalTime(&amp;Peer-&gt;LastRecv);
+                SBN_ProcessNetMsg(Net, MsgType, ProcessorID, SpacecraftID, MsgSz, SBN.MsgBuffer); /* ignore errors */
+            }                                                             /* end for */
+        }
+        else if (Net-&gt;IfOps-&gt;RecvFromPeer)
+        {
+            SBN_PeerIdx_t PeerIdx = 0;
+            for (PeerIdx = 0; PeerIdx &lt; Net-&gt;PeerCnt; PeerIdx++)
+            {
+                SBN_PeerInterface_t *Peer = &amp;Net-&gt;Peers[PeerIdx];
+
+                int MsgCnt = 0;
+                // TODO: make configurable
+                for (MsgCnt = 0; MsgCnt &lt; 100; MsgCnt++) /* read at most 100 messages from peer */
+                {
+                    CFE_ProcessorID_t ProcessorID = 0;
+                    CFE_SpacecraftID_t SpacecraftID = 0;
+                    SBN_MsgType_t     MsgType     = 0;
+                    SBN_MsgSz_t       MsgSz       = 0;
+
+                    memset(SBN.MsgBuffer, 0, sizeof(SBN.MsgBuffer));
+
+                    SBN_Status = Net-&gt;IfOps-&gt;RecvFromPeer(Net, Peer, &amp;MsgType, &amp;MsgSz, &amp;ProcessorID, &amp;SpacecraftID, SBN.MsgBuffer);
+
+                    if (SBN_Status == SBN_IF_EMPTY)
+                    {
+                        break; /* no (more) messages for this peer, continue to next peer */
+                    }          /* end if */
+
+                    OS_GetLocalTime(&amp;Peer-&gt;LastRecv);
+
+                    SBN_Status = SBN_ProcessNetMsg(Net, MsgType, ProcessorID, SpacecraftID, MsgSz, SBN.MsgBuffer);
+
+                    if (SBN_Status != SBN_SUCCESS)
+                    {
+                        break; /* continue to next peer */
+                    }          /* end if */
+                }              /* end for */
+            }                  /* end for */
+        }
+        else
+        {
+            EVSSendErr(SBN_PEER_EID, "neither RecvFromPeer nor RecvFromNet defined for net #%d", (int)NetIdx);
+
+            /* meanwhile, continue to next net... */
+        } /* end if */
+    }     /* end for */
+
+    return SBN_SUCCESS;
+} /* end SBN_RecvNetMsgs */
+
+/**
+ * Sends a message to a peer using the module's send API.
+ *
+ * @param MsgType SBN type of the message
+ * @param MsgSz Size of the message
+ * @param Msg Message to send
+ * @param Peer The peer to send the message to.
+ * @return Number of characters sent on success, -1 on error.
+ *
+ */
+SBN_Status_t SBN_SendNetMsg(SBN_MsgType_t MsgType, SBN_MsgSz_t MsgSz, void *Msg, SBN_PeerInterface_t *Peer)
+{
+    SBN_NetInterface_t *Net        = Peer-&gt;Net;
+    SBN_Status_t        SBN_Status = SBN_SUCCESS;
+
+    if (Peer-&gt;SendTaskID)
+    {
+        if (OS_MutSemTake(SBN.SendMutex) != OS_SUCCESS)
+        {
+            EVSSendErr(SBN_PEER_EID, "unable to take send mutex");
+            return SBN_ERROR;
+        } /* end if */
+    }     /* end if */
+
+    SBN_Status = Net-&gt;IfOps-&gt;Send(Peer, MsgType, MsgSz, Msg);
+
+    if (SBN_Status != SBN_SUCCESS)
+    {
+        Peer-&gt;SendErrCnt++;
+    } else {
+        Peer-&gt;SendCnt++;
+    } /* end if */
+
+    /* for clients that need a poll or heartbeat, update time even when failing */
+    OS_GetLocalTime(&amp;Peer-&gt;LastSend);
+
+    if (Peer-&gt;SendTaskID)
+    {
+        if (OS_MutSemGive(SBN.SendMutex) != OS_SUCCESS)
+        {
+            EVSSendErr(SBN_PEER_EID, "unable to give send mutex");
+            return SBN_ERROR;
+        } /* end if */
+    }     /* end if */
+
+    return SBN_Status;
+} /* end SBN_SendNetMsg */
+
+typedef struct
+{
+    SBN_Status_t         Status;
+    SBN_NetIdx_t         NetIdx;
+    SBN_PeerIdx_t        PeerIdx;
+    OS_TaskID_t          SendTaskID;
+    CFE_MSG_Message_t   *MsgPtr;
+    CFE_SB_MsgId_t       MsgID;
+    SBN_NetInterface_t  *Net;
+    SBN_PeerInterface_t *Peer;
+} SendTaskData_t;
+
+/**
+ * \brief When a peer is connected, a task is created to listen to the relevant
+ * pipe for messages to send to that peer.
+ */
+void SBN_SendTask(void)
+{
+    SendTaskData_t   D;
+    SBN_Filter_Ctx_t Filter_Context;
+    CFE_MSG_Size_t   MsgSz = 0;
+
+    Filter_Context.MyProcessorID  = CFE_PSP_GetProcessorId();
+    Filter_Context.MySpacecraftID = CFE_PSP_GetSpacecraftId();
+
+    memset(&amp;D, 0, sizeof(D));
+
+    D.SendTaskID = OS_TaskGetId();
+
+    for (D.NetIdx = 0; D.NetIdx &lt; SBN.NetCnt; D.NetIdx++)
+    {
+        D.Net = &amp;SBN.Nets[D.NetIdx];
+        for (D.PeerIdx = 0; D.PeerIdx &lt; D.Net-&gt;PeerCnt; D.PeerIdx++)
+        {
+            D.Peer = &amp;D.Net-&gt;Peers[D.PeerIdx];
+            if (D.Peer-&gt;SendTaskID == D.SendTaskID)
+            {
+                break;
+            } /* end if */
+        }     /* end for */
+
+        if (D.PeerIdx &lt; D.Net-&gt;PeerCnt)
+        {
+            break; /* found a ringer */
+        }          /* end if */
+    }              /* end for */
+
+    if (D.NetIdx == SBN.NetCnt)
+    {
+        EVSSendErr(SBN_PEER_EID, "error connecting send task");
+        return;
+    } /* end if */
+
+    while (1)
+    {
+        SBN_ModuleIdx_t FilterIdx = 0;
+
+        if (!D.Peer-&gt;Connected)
+        {
+            OS_TaskDelay(SBN_MAIN_LOOP_DELAY);
+            continue;
+        } /* end if */
+
+        if (CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&amp;D.MsgPtr, D.Peer-&gt;Pipe, CFE_SB_PEND_FOREVER) != CFE_SUCCESS)
+        {
+            break;
+        } /* end if */
+
+        Filter_Context.PeerProcessorID  = D.Peer-&gt;ProcessorID;
+        Filter_Context.PeerSpacecraftID = D.Peer-&gt;SpacecraftID;
+
+        for (FilterIdx = 0; FilterIdx &lt; D.Peer-&gt;FilterCnt; FilterIdx++)
+        {
+            if (D.Peer-&gt;Filters[FilterIdx]-&gt;FilterSend == NULL)
+            {
+                continue;
+            } /* end if */
+
+            D.Status = (D.Peer-&gt;Filters[FilterIdx]-&gt;FilterSend)(D.MsgPtr, &amp;Filter_Context);
+            if (D.Status == SBN_IF_EMPTY) /* filter requests not sending this msg, see below for loop */
+            {
+                break;
+            } /* end if */
+
+            if (D.Status != SBN_SUCCESS)
+            {
+                break;
+            } /* end if */
+        }     /* end for */
+
+        if (FilterIdx &lt; D.Peer-&gt;FilterCnt)
+        {
+            /* one of the above filters suggested rejecting this message */
+            continue;
+        } /* end if */
+
+        if(CFE_MSG_GetSize(D.MsgPtr, &amp;MsgSz) != CFE_SUCCESS)
+        {
+            continue;
+        } /* end if */
+
+        D.Status = SBN_SendNetMsg(SBN_APP_MSG, MsgSz, D.MsgPtr, D.Peer);
+
+        if (D.Status == SBN_ERROR)
+        {
+            break;
+        } /* end if */
+    }     /* end while */
+
+    /* mark peer as not having a task so that sending will create a new one */
+    D.Peer-&gt;SendTaskID = 0;
+} /* end SBN_SendTask() */
+
+/**
+ * Iterate through all peers, examining the pipe to see if there are messages
+ * I need to send to that peer.
+ */
+static SBN_Status_t CheckPeerPipes(void)
+{
+    CFE_Status_t       CFE_Status;
+    int                ReceivedFlag = 0, iter = 0;
+    CFE_MSG_Message_t *MsgPtr = NULL;
+    CFE_MSG_Size_t     MsgSz = 0;
+    SBN_Filter_Ctx_t   Filter_Context;
+
+    Filter_Context.MyProcessorID  = CFE_PSP_GetProcessorId();
+    Filter_Context.MySpacecraftID = CFE_PSP_GetSpacecraftId();
+
+    /**
+     * \note This processes one message per peer, then start again until no
+     * peers have pending messages. At max only process SBN_MAX_MSG_PER_WAKEUP
+     * per peer per wakeup otherwise I will starve other processing.
+     */
+    for (iter = 0; iter &lt; SBN_MAX_MSG_PER_WAKEUP; iter++)
+    {
+        ReceivedFlag = 0;
+
+        SBN_NetIdx_t NetIdx = 0;
+        for (NetIdx = 0; NetIdx &lt; SBN.NetCnt; NetIdx++)
+        {
+            SBN_NetInterface_t *Net = &amp;SBN.Nets[NetIdx];
+
+            SBN_PeerIdx_t PeerIdx = 0;
+            for (PeerIdx = 0; PeerIdx &lt; Net-&gt;PeerCnt; PeerIdx++)
+            {
+                SBN_ModuleIdx_t      FilterIdx = 0;
+                SBN_PeerInterface_t *Peer      = &amp;Net-&gt;Peers[PeerIdx];
+
+                // Poll peer here to detect disconnections and to reconnect
+                if(Net-&gt;IfOps-&gt;PollPeer(Peer) != SBN_SUCCESS) {
+                  EVSSendErr(SBN_PEERTASK_EID, "failed to poll peer %d:%d", Peer-&gt;SpacecraftID, Peer-&gt;ProcessorID);
+                }
+
+                if (Peer-&gt;Connected == 0)
+                {
+                    EVSSendDbg(SBN_PEERTASK_EID, "not connected to peer %d:%d", Peer-&gt;SpacecraftID, Peer-&gt;ProcessorID);
+                    continue;
+                } /* end if */
+
+                EVSSendDbg(SBN_PEERTASK_EID, "SBN connected to peer %d:%d", Peer-&gt;SpacecraftID, Peer-&gt;ProcessorID);
+
+                if (Peer-&gt;TaskFlags &amp; SBN_TASK_SEND)
+                {
+                    if (!Peer-&gt;SendTaskID)
+                    {
+                        /* TODO: logic/controls to prevent hammering? */
+                        char SendTaskName[32];
+
+                        snprintf(SendTaskName, 32, "sendT_%d_%d_%d", (int)NetIdx, (int)(Peer-&gt;ProcessorID), (int)(Peer-&gt;SpacecraftID));
+                        CFE_Status = CFE_ES_CreateChildTask(
+                            &amp;(Peer-&gt;SendTaskID), SendTaskName, (CFE_ES_ChildTaskMainFuncPtr_t)&amp;SBN_SendTask, NULL,
+                            CFE_PLATFORM_ES_DEFAULT_STACK_SIZE + 2 * sizeof(SendTaskData_t), 0, 0);
+
+                        if (CFE_Status != CFE_SUCCESS)
+                        {
+                            EVSSendErr(SBN_PEER_EID, "error creating send task for peer %d:%d", Peer-&gt;SpacecraftID, Peer-&gt;ProcessorID);
+                            return SBN_ERROR;
+                        } /* end if */
+                    }     /* end if */
+
+                    continue;
+                } /* end if */
+
+                /* if peer data is not in use, go to next peer */
+                if (CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&amp;MsgPtr, Peer-&gt;Pipe, CFE_SB_POLL) != CFE_SUCCESS)
+                {
+                    continue;
+                } /* end if */
+
+                ReceivedFlag = 1;
+
+                Filter_Context.PeerProcessorID  = Peer-&gt;ProcessorID;
+                Filter_Context.PeerSpacecraftID = Peer-&gt;SpacecraftID;
+
+                for (FilterIdx = 0; FilterIdx &lt; Peer-&gt;FilterCnt; FilterIdx++)
+                {
+                    SBN_Status_t SBN_Status;
+
+                    if (Peer-&gt;Filters[FilterIdx]-&gt;FilterSend == NULL)
+                    {
+                        continue;
+                    } /* end if */
+
+                    SBN_Status = (Peer-&gt;Filters[FilterIdx]-&gt;FilterSend)(MsgPtr, &amp;Filter_Context);
+
+                    if (SBN_Status == SBN_IF_EMPTY) /* filter requests not sending this msg, see below for loop */
+                    {
+                        break;
+                    } /* end if */
+
+                    if (SBN_Status != SBN_SUCCESS)
+                    {
+                        /* something fatal happened, exit */
+                        return SBN_Status;
+                    } /* end if */
+                }     /* end for */
+
+                if (FilterIdx &lt; Peer-&gt;FilterCnt)
+                {
+                    /* one of the above filters suggested rejecting this message */
+                    continue;
+                } /* end if */
+
+                if (CFE_MSG_GetSize(MsgPtr, &amp;MsgSz) != CFE_SUCCESS)
+                {
+                    continue;
+                } /* end if */
+
+                SBN_SendNetMsg(SBN_APP_MSG, MsgSz, MsgPtr, Peer);
+            } /* end for */
+        }     /* end for */
+
+        if (!ReceivedFlag)
+        {
+            break;
+        } /* end if */
+    }     /* end for */
+    return SBN_SUCCESS;
+} /* end CheckPeerPipes */
+
+/**
+ * Iterate through all nets and create receive tasks if they do not yet exist.
+ */
+static SBN_Status_t PeerPoll(void)
+{
+    CFE_Status_t CFE_Status;
+    SBN_NetIdx_t NetIdx = 0;
+    for (NetIdx = 0; NetIdx &lt; SBN.NetCnt; NetIdx++)
+    {
+        SBN_NetInterface_t *Net = &amp;SBN.Nets[NetIdx];
+
+        if (Net-&gt;IfOps-&gt;RecvFromNet &amp;&amp; Net-&gt;TaskFlags &amp; SBN_TASK_RECV)
+        {
+            if (!Net-&gt;RecvTaskID)
+            {
+                EVSSendInfo(SBN_PEER_EID, "Creating recv task for net %d", (int)NetIdx);
+
+                /* TODO: add logic/controls to prevent hammering */
+                char RecvTaskName[32];
+                snprintf(RecvTaskName, OS_MAX_API_NAME, "sbn_rs_%d", (int)NetIdx);
+                CFE_Status = CFE_ES_CreateChildTask(
+                    &amp;(Net-&gt;RecvTaskID), RecvTaskName, (CFE_ES_ChildTaskMainFuncPtr_t)&amp;SBN_RecvNetTask, NULL,
+                    CFE_PLATFORM_ES_DEFAULT_STACK_SIZE + 2 * sizeof(RecvNetTaskData_t), 0, 0);
+
+                if (CFE_Status != CFE_SUCCESS)
+                {
+                    EVSSendErr(SBN_PEER_EID, "error creating task for net %d",(int)NetIdx);
+                    return SBN_ERROR;
+                } /* end if */
+            }     /* end if */
+        }
+        else
+        {
+            SBN_PeerIdx_t PeerIdx = 0;
+            for (PeerIdx = 0; PeerIdx &lt; Net-&gt;PeerCnt; PeerIdx++)
+            {
+                SBN_PeerInterface_t *Peer = &amp;Net-&gt;Peers[PeerIdx];
+
+                if (Net-&gt;IfOps-&gt;RecvFromPeer &amp;&amp; Peer-&gt;TaskFlags &amp; SBN_TASK_RECV)
+                {
+                    if (!Peer-&gt;RecvTaskID)
+                    {
+                        /* TODO: add logic/controls to prevent hammering */
+                        char RecvTaskName[32];
+                        snprintf(RecvTaskName, OS_MAX_API_NAME, "sbn_recv_%d", (int)PeerIdx);
+                        CFE_Status = CFE_ES_CreateChildTask(
+                            &amp;(Peer-&gt;RecvTaskID), RecvTaskName, (CFE_ES_ChildTaskMainFuncPtr_t)&amp;SBN_RecvPeerTask, NULL,
+                            CFE_PLATFORM_ES_DEFAULT_STACK_SIZE + 2 * sizeof(RecvPeerTaskData_t), 0, 0);
+                        /* TODO: more accurate stack size required */
+
+                        if (CFE_Status != CFE_SUCCESS)
+                        {
+                            EVSSendErr(SBN_PEER_EID, "error creating task for %d", (int)(Peer-&gt;ProcessorID));
+                            return SBN_ERROR;
+                        } /* end if */
+                    }     /* end if */
+                }
+                else
+                {
+                    Net-&gt;IfOps-&gt;PollPeer(Peer);
+                } /* end if */
+            }     /* end for */
+        }         /* end if */
+    }             /* end for */
+
+    return SBN_SUCCESS;
+} /* end PeerPoll */
+
+/**
+ * Loops through all hosts and peers, initializing all.
+ *
+ * @return SBN_SUCCESS if interface is initialized successfully
+ *         SBN_ERROR otherwise
+ */
+static SBN_Status_t InitInterfaces(void)
+{
+    if (SBN.NetCnt &lt; 1)
+    {
+        EVSSendErr(SBN_PEER_EID, "no networks configured");
+
+        return SBN_ERROR;
+    } /* end if */
+
+    SBN_NetIdx_t NetIdx = 0;
+    for (NetIdx = 0; NetIdx &lt; SBN.NetCnt; NetIdx++)
+    {
+        EVSSendInfo(SBN_PEER_EID, "initializing net: %d", (int)NetIdx);
+        SBN_NetInterface_t *Net = &amp;SBN.Nets[NetIdx];
+
+        if (!Net-&gt;Configured)
+        {
+            EVSSendErr(SBN_PEER_EID, "network #%d not configured", NetIdx);
+
+            return SBN_ERROR;
+        } /* end if */
+
+        Net-&gt;IfOps-&gt;InitNet(Net);
+
+        SBN_PeerIdx_t PeerIdx = 0;
+        EVSSendInfo(SBN_PEER_EID, "Net %d has %d peers", NetIdx, Net-&gt;PeerCnt);
+        for (PeerIdx = 0; PeerIdx &lt; Net-&gt;PeerCnt; PeerIdx++)
+        {
+            SBN_PeerInterface_t *Peer = &amp;Net-&gt;Peers[PeerIdx];
+
+            EVSSendInfo(SBN_PEER_EID, "initializing net: %d peer: %d: sc: %d cpu: %d", (int)NetIdx, (int)PeerIdx, Peer-&gt;SpacecraftID, Peer-&gt;ProcessorID);
+
+            Net-&gt;IfOps-&gt;InitPeer(Peer);
+        } /* end for */
+    }     /* end for */
+
+    EVSSendInfo(SBN_INIT_EID, "configured, %d nets", SBN.NetCnt);
+
+    for (NetIdx = 0; NetIdx &lt; SBN.NetCnt; NetIdx++)
+    {
+        EVSSendInfo(SBN_INIT_EID, "net %d has %d peers", NetIdx, SBN.Nets[NetIdx].PeerCnt);
+    } /* end for */
+
+    return SBN_SUCCESS;
+} /* end InitInterfaces */
+
+/**
+ * This function waits for the scheduler (SCH) to wake this code up, so that
+ * nothing transpires until the cFE is fully operational.
+ *
+ * @param[in] iTimeOut The time to wait for the scheduler to notify this code.
+ * @return CFE_SUCCESS on success, otherwise an error value.
+ */
+static SBN_Status_t WaitForWakeup(int32 iTimeOut)
+{
+    CFE_Status_t       CFE_Status = CFE_SUCCESS;
+    SBN_Status_t       SBN_Status = SBN_SUCCESS;
+    CFE_MSG_Message_t *MsgPtr    = 0;
+
+    /* Wait for WakeUp messages from scheduler */
+    CFE_Status = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&amp;MsgPtr, SBN.CmdPipe, iTimeOut);
+
+    switch (CFE_Status)
+    {
+        case CFE_SB_NO_MESSAGE:
+        case CFE_SB_TIME_OUT:
+            break;
+        case CFE_SUCCESS:
+            SBN_HandleCommand(MsgPtr);
+            break;
+        default:
+            return SBN_ERROR;
+    } /* end switch */
+
+    /* For sbn, we still want to perform cyclic processing
+    ** if the WaitForWakeup time out
+    ** cyclic processing at timeout rate
+    */
+    CFE_ES_PerfLogEntry(SBN_PERF_RECV_ID);
+
+    SBN_RecvNetMsgs();
+
+    SBN_Status = SBN_CheckSubscriptionPipe();
+    switch(SBN_Status) {
+      case SBN_IF_EMPTY:
+        break;
+      case SBN_ERROR:
+        EVSSendErr(SBN_PEER_EID, "SBN_CheckSubscriptionPipe failed.");
+        break;
+      default:
+        /* no error */
+        break;
+    };
+
+    CheckPeerPipes();
+
+    PeerPoll();
+
+    CFE_ES_PerfLogExit(SBN_PERF_RECV_ID);
+
+    return SBN_SUCCESS;
+} /* end WaitForWakeup */
+
+/**
+ * Load Protocol or Filter Module from the table
+ *
+ * Cleaned up by UnloadModules()
+ */
+static cpuaddr LoadConf_Module(SBN_Module_Entry_t *e, CFE_ES_ModuleID_t *ModuleIDPtr)
+{
+    cpuaddr StructAddr;
+
+    EVSSendInfo(SBN_TBL_EID, "checking if module (%s) already loded", e-&gt;Name);
+    if (OS_SymbolLookup(&amp;StructAddr, e-&gt;LibSymbol) != OS_SUCCESS) /* try loading it if it's not already loaded */
+    {
+        EVSSendInfo(SBN_TBL_EID, "symbol not yet loaded (%s)", e-&gt;LibSymbol);
+        if (e-&gt;LibFileName[0] == '\0')
+        {
+            EVSSendErr(SBN_TBL_EID, "invalid module (Name=%s)", e-&gt;Name);
+            return 0;
+        }
+
+        EVSSendInfo(SBN_TBL_EID, "loading module (Name=%s, File=%s)", e-&gt;Name, e-&gt;LibFileName);
+        if (OS_ModuleLoad(ModuleIDPtr, e-&gt;Name, e-&gt;LibFileName, OS_MODULE_FLAG_GLOBAL_SYMBOLS) != OS_SUCCESS)
+        {
+            EVSSendErr(SBN_TBL_EID, "invalid module file (Name=%s LibFileName=%s)", e-&gt;Name, e-&gt;LibFileName);
+            return 0;
+        } /* end if */
+
+        EVSSendInfo(SBN_TBL_EID, "validating symbol load (%s)", e-&gt;LibSymbol);
+        if (OS_SymbolLookup(&amp;StructAddr, e-&gt;LibSymbol) != OS_SUCCESS)
+        {
+            EVSSendErr(SBN_TBL_EID, "invalid symbol (Name=%s LibSymbol=%s)", e-&gt;Name, e-&gt;LibSymbol);
+            return 0;
+        }
+    } else {
+      EVSSendInfo(SBN_TBL_EID, "symbol already loaded (%s)", e-&gt;LibSymbol);
+    } /* end if */
+
+    return StructAddr;
+} /* end LoadConf_Module */
+
+/**
+ * Load the filters from the table.
+ * Cleaned up by UnloadModules()
+ *
+ * @param FilterModules[in] - The filter module entries in the table.
+ * @param FilterModuleCnt[in] - The number of entries in FilterModules.
+ * @param ModuleNames[in] - The array of filters this peer/net wishes to use.
+ * @param FilterFns[out] - The function pointers for the filters requested.
+ * @return The number of entries in FilterFns.
+ */
+static SBN_ModuleIdx_t LoadConf_Filters(SBN_Module_Entry_t *FilterModules, SBN_ModuleIdx_t FilterModuleCnt,
+                                        SBN_FilterInterface_t **ConfFilters,
+                                        char ModuleNames[SBN_MAX_FILTERS_PER_PEER][SBN_MAX_MOD_NAME_LEN],
+                                        SBN_FilterInterface_t **Filters)
+{
+    int             i         = 0;
+    SBN_ModuleIdx_t FilterCnt = 0;
+
+    memset(FilterModules, 0, sizeof(*FilterModules) * FilterCnt);
+
+    for (i = 0; *ModuleNames[i] &amp;&amp; i &lt; SBN_MAX_FILTERS_PER_PEER; i++)
+    {
+        SBN_ModuleIdx_t FilterIdx = 0;
+        for (FilterIdx = 0; FilterIdx &lt; FilterModuleCnt; FilterIdx++)
+        {
+            if (strcmp(ModuleNames[i], FilterModules[FilterIdx].Name) == 0)
+            {
+                break;
+            } /* end if */
+        }     /* end for */
+
+        if (FilterIdx == FilterModuleCnt)
+        {
+            EVSSendErr(SBN_TBL_EID, "Invalid filter name: %s", ModuleNames[i]);
+            continue;
+        } /* end if */
+
+        Filters[FilterCnt++] = ConfFilters[FilterIdx];
+    } /* end for */
+
+    return FilterCnt;
+} /* end LoadConf_Filters() */
+
+static SBN_Status_t LoadConf(void)
+{
+    SBN_ConfTbl_t *        TblPtr    = NULL;
+    SBN_ModuleIdx_t        ModuleIdx = 0;
+    SBN_PeerIdx_t          PeerIdx   = 0;
+    SBN_FilterInterface_t *Filters[SBN_MAX_MOD_CNT];
+    SBN_ProtocolOutlet_t   Outlet = {.PackMsg = SBN_PackMsg, .UnpackMsg = SBN_UnpackMsg, .Connected = SBN_Connected, .Disconnected = SBN_Disconnected, .SendNetMsg = SBN_SendNetMsg, .GetPeer = SBN_GetPeer};
+
+    memset(Filters, 0, sizeof(Filters));
+
+    if (CFE_TBL_GetAddress((void **)&amp;TblPtr, SBN.ConfTblHandle) != CFE_TBL_INFO_UPDATED)
+    {
+        EVSSendErr(SBN_TBL_EID, "unable to get conf table address");
+        CFE_TBL_Unregister(SBN.ConfTblHandle);
+        return SBN_ERROR;
+    } /* end if */
+
+    /* load protocol modules */
+    EVSSendDbg(SBN_TBL_EID, "Loading protocol modules...");
+    for (ModuleIdx = 0; ModuleIdx &lt; TblPtr-&gt;ProtocolCnt; ModuleIdx++)
+    {
+        CFE_ES_ModuleID_t ModuleID = 0;
+
+        SBN_IfOps_t *Ops = (SBN_IfOps_t *)LoadConf_Module(&amp;TblPtr-&gt;ProtocolModules[ModuleIdx], &amp;ModuleID);
+
+        if (Ops == NULL)
+        {
+            /* LoadConf_Module already generated an event */
+            return SBN_ERROR;
+        } /* end if */
+
+        EVSSendInfo(SBN_TBL_EID, "initializing protocol module");
+        if (Ops-&gt;InitModule(SBN_PROTOCOL_VERSION, TblPtr-&gt;ProtocolModules[ModuleIdx].BaseEID, &amp;Outlet) != CFE_SUCCESS)
+        {
+            EVSSendErr(SBN_TBL_EID, "error in protocol init");
+            return SBN_ERROR;
+        } /* end if */
+        EVSSendInfo(SBN_TBL_EID, "protocol module initialized");
+
+        SBN.IfOps[ModuleIdx]           = Ops;
+        SBN.ProtocolModules[ModuleIdx] = ModuleID;
+    } /* end for */
+
+    /* load filter modules */
+    EVSSendDbg(SBN_TBL_EID, "Loading filter modules...");
+    for (ModuleIdx = 0; ModuleIdx &lt; TblPtr-&gt;FilterCnt; ModuleIdx++)
+    {
+        CFE_ES_ModuleID_t ModuleID = 0;
+
+        Filters[ModuleIdx] = (SBN_FilterInterface_t *)LoadConf_Module(&amp;TblPtr-&gt;FilterModules[ModuleIdx], &amp;ModuleID);
+
+        if (Filters[ModuleIdx] == NULL)
+        {
+            /* LoadConf_Module already generated an event */
+            return SBN_ERROR;
+        } /* end if */
+
+        EVSSendInfo(SBN_TBL_EID, "initializing filter module");
+        if (Filters[ModuleIdx]-&gt;InitModule(SBN_FILTER_VERSION, TblPtr-&gt;FilterModules[ModuleIdx].BaseEID) != CFE_SUCCESS)
+        {
+            EVSSendErr(SBN_TBL_EID, "error in filter init");
+            return SBN_ERROR;
+        } /* end if */
+        EVSSendInfo(SBN_TBL_EID, "filter module initialized");
+
+        SBN.FilterModules[ModuleIdx] = ModuleID;
+    } /* end for */
+
+    /* load nets and peers */
+    for (PeerIdx = 0; PeerIdx &lt; TblPtr-&gt;PeerCnt; PeerIdx++)
+    {
+        SBN_Peer_Entry_t *e = &amp;TblPtr-&gt;Peers[PeerIdx];
+
+        EVSSendInfo(SBN_TBL_EID, "configuring peer (SC=%d, CPU=%d)...", e-&gt;SpacecraftID, e-&gt;ProcessorID);
+
+        for (ModuleIdx = 0; ModuleIdx &lt; TblPtr-&gt;ProtocolCnt; ModuleIdx++)
+        {
+            if (strcmp(TblPtr-&gt;ProtocolModules[ModuleIdx].Name, e-&gt;ProtocolName) == 0)
+            {
+                break;
+            }
+        }
+
+        if (ModuleIdx == TblPtr-&gt;ProtocolCnt)
+        {
+            EVSSendCrit(SBN_TBL_EID, "invalid module name %s", e-&gt;ProtocolName);
+            return SBN_ERROR;
+        } /* end if */
+
+        if (e-&gt;NetNum &lt; 0 || e-&gt;NetNum &gt;= SBN_MAX_NETS)
+        {
+            EVSSendCrit(SBN_TBL_EID, "network index too large (%d&gt;%d)", e-&gt;NetNum, SBN_MAX_NETS);
+            return SBN_ERROR;
+        } /* end if */
+
+        /* Net initialization */
+        if (e-&gt;NetNum + 1 &gt; SBN.NetCnt)
+        {
+            EVSSendInfo(SBN_TBL_EID, "found new highest net id: %d", e-&gt;NetNum);
+            SBN.NetCnt = e-&gt;NetNum + 1;
+            SBN.Nets[e-&gt;NetNum].PeerCnt = 0;
+            EVSSendInfo(SBN_TBL_EID, "increasing net count to %d", SBN.NetCnt);
+        } /* end if */
+
+        SBN_NetInterface_t *Net = &amp;SBN.Nets[e-&gt;NetNum];
+        /* Reset peer count since we're initializing the net */
+        if (e-&gt;ProcessorID == CFE_PSP_GetProcessorId() &amp;&amp; e-&gt;SpacecraftID == CFE_PSP_GetSpacecraftId())
+        {
+            EVSSendInfo(SBN_TBL_EID, "peer is this processor: loading net %d", e-&gt;NetNum);
+            Net-&gt;Configured  = true;
+            Net-&gt;ProtocolIdx = ModuleIdx;
+            Net-&gt;IfOps       = SBN.IfOps[ModuleIdx];
+            Net-&gt;IfOps-&gt;LoadNet(Net, (const char *)e-&gt;Address);
+
+            Net-&gt;FilterCnt =
+                LoadConf_Filters(TblPtr-&gt;FilterModules, TblPtr-&gt;FilterCnt, Filters, e-&gt;Filters, Net-&gt;Filters);
+
+            Net-&gt;TaskFlags = e-&gt;TaskFlags;
+        }
+        else
+        {
+            EVSSendInfo(SBN_TBL_EID, "peer is other processor: loading peer onto net %d", e-&gt;NetNum);
+            SBN_PeerInterface_t *Peer = &amp;Net-&gt;Peers[Net-&gt;PeerCnt++];
+            memset(Peer, 0, sizeof(*Peer));
+            Peer-&gt;Net          = Net;
+            Peer-&gt;ProcessorID  = e-&gt;ProcessorID;
+            Peer-&gt;SpacecraftID = e-&gt;SpacecraftID;
+
+            Peer-&gt;FilterCnt =
+                LoadConf_Filters(TblPtr-&gt;FilterModules, TblPtr-&gt;FilterCnt, Filters, e-&gt;Filters, Peer-&gt;Filters);
+
+            SBN.IfOps[ModuleIdx]-&gt;LoadPeer(Peer, (const char *)e-&gt;Address);
+
+            Peer-&gt;TaskFlags = e-&gt;TaskFlags;
+        } /* end if */
+    }     /* end for */
+
+    /* address only needed at load time, release */
+    if (CFE_TBL_ReleaseAddress(SBN.ConfTblHandle) != CFE_SUCCESS)
+    {
+        EVSSendCrit(SBN_TBL_EID, "unable to release address of conf tbl");
+        return SBN_ERROR;
+    } /* end if */
+
+    /* ...but we keep the handle so we can be notified of updates */
+    return SBN_SUCCESS;
+} /* end LoadConf() */
+
+static uint32 UnloadConf(void)
+{
+    uint32 Status;
+
+    EVSSendInfo(SBN_TBL_EID, "unloading configuration");
+
+    if((Status = UnloadNets()) != SBN_SUCCESS) {
+      EVSSendCrit(SBN_TBL_EID, "unable to unload nets");
+      return Status;
+    }
+
+    if((Status = UnloadModules()) != SBN_SUCCESS) {
+      EVSSendCrit(SBN_TBL_EID, "unable to unload modules");
+      return Status;
+    }
+
+    return SBN_SUCCESS;
+} /* end UnloadConf() */
+
+static SBN_Status_t UnloadPeer(SBN_PeerInterface_t *Peer)
+{
+  SBN_RemoveAllSubsFromPeer(Peer);
+
+  SBN_Disconnected(Peer);
+
+  if (Peer-&gt;TaskFlags &amp; SBN_TASK_SEND)
+  {
+    if (Peer-&gt;SendTaskID)
+    {
+      if(CFE_ES_DeleteChildTask(Peer-&gt;SendTaskID) != CFE_SUCCESS) {
+        EVSSendCrit(SBN_TBL_EID, "unable to delete send task for peer %d:%d", Peer-&gt;SpacecraftID, Peer-&gt;ProcessorID);
+        return SBN_ERROR;
+      }
+    }
+  }
+
+  if (Peer-&gt;TaskFlags &amp; SBN_TASK_RECV)
+  {
+    if (Peer-&gt;RecvTaskID)
+    {
+      if(CFE_ES_DeleteChildTask(Peer-&gt;RecvTaskID) != CFE_SUCCESS) {
+        EVSSendCrit(SBN_TBL_EID, "unable to delete recv task for peer %d:%d", Peer-&gt;SpacecraftID, Peer-&gt;ProcessorID);
+      }
+    }
+  }
+
+  // Reset peer description
+  Peer-&gt;ProcessorID = 0;
+  Peer-&gt;SpacecraftID = 0;
+  Peer-&gt;Net = NULL;
+  Peer-&gt;TaskFlags = 0;
+  Peer-&gt;Pipe = 0;
+  Peer-&gt;FilterCnt = 0;
+
+  return SBN_SUCCESS;
+}
+
+static SBN_Status_t UnloadNets(void)
+{
+    uint32 Status;
+
+    int NetIdx = 0;
+    for (NetIdx = 0; NetIdx &lt; SBN.NetCnt; NetIdx++)
+    {
+        SBN_NetInterface_t *Net = &amp;SBN.Nets[NetIdx];
+        Net-&gt;Configured = false;
+
+        if(Net-&gt;RecvTaskID != 0) {
+          if(CFE_ES_DeleteChildTask(Net-&gt;RecvTaskID) != CFE_SUCCESS) {
+            EVSSendCrit(SBN_TBL_EID, "unable to delete receive task %d", NetIdx);
+          }
+
+          Net-&gt;RecvTaskID = 0;
+        }
+
+        // UnloadNet assumes Peers are still valid
+        if ((Status = Net-&gt;IfOps-&gt;UnloadNet(Net)) != SBN_SUCCESS)
+        {
+            EVSSendCrit(SBN_TBL_EID, "unable to unload network %d", NetIdx);
+            return Status;
+        } /* end if */
+        else
+        {
+            EVSSendInfo(SBN_TBL_EID, "Terminated net: %d", NetIdx);
+        }
+
+        SBN_PeerIdx_t PeerIdx = 0;
+        for (PeerIdx = 0; PeerIdx &lt; Net-&gt;PeerCnt; PeerIdx++)
+        {
+          SBN_PeerInterface_t *Peer      = &amp;Net-&gt;Peers[PeerIdx];
+
+          UnloadPeer(Peer);
+        }
+
+        // Peers were cleared, reset the count
+        Net-&gt;PeerCnt = 0;
+    }/* end for */
+
+    SBN.NetCnt = 0;
+
+    return SBN_SUCCESS;
+}
+
+static uint32 LoadConfTbl(void)
+{
+    int32 Status = CFE_SUCCESS;
+
+    if ((Status = CFE_TBL_Register(&amp;SBN.ConfTblHandle, "SBN_ConfTbl", sizeof(SBN_ConfTbl_t), CFE_TBL_OPT_DEFAULT,
+                                   NULL)) != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_TBL_EID, "unable to register conf tbl handle");
+        return Status;
+    } /* end if */
+
+    if ((Status = CFE_TBL_Load(SBN.ConfTblHandle, CFE_TBL_SRC_FILE, SBN_CONF_TBL_FILENAME)) != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_TBL_EID, "unable to load conf tbl %s", SBN_CONF_TBL_FILENAME);
+        CFE_TBL_Unregister(SBN.ConfTblHandle);
+        return Status;
+    } /* end if */
+
+    if ((Status = CFE_TBL_Manage(SBN.ConfTblHandle)) != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_TBL_EID, "unable to manage conf tbl");
+        CFE_TBL_Unregister(SBN.ConfTblHandle);
+        return Status;
+    } /* end if */
+
+    if ((Status = CFE_TBL_NotifyByMessage(SBN.ConfTblHandle, CFE_SB_ValueToMsgId(SBN_CMD_MID), SBN_TBL_CC, 0)) != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_TBL_EID, "unable to set notifybymessage for conf tbl");
+        CFE_TBL_Unregister(SBN.ConfTblHandle);
+        return Status;
+    } /* end if */
+
+    return SBN_SUCCESS;
+} /* end LoadConfTbl() */
+
+static SBN_Status_t TeardownSubPipe(void)
+{
+    CFE_Status_t Status;
+
+    /* Delete pipe for subscribes and unsubscribes from SB */
+    Status = CFE_SB_DeletePipe(SBN.SubPipe);
+    if (Status != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_INIT_EID, "failed to delete subscription pipe (Status=%d)", (int)Status);
+        return SBN_ERROR;
+    } /* end if */
+
+    return SBN_SUCCESS;
+}
+
+static SBN_Status_t SetupSubPipe(void)
+{
+    CFE_Status_t Status;
+
+    /* Create pipe for subscribes and unsubscribes from SB */
+    Status = CFE_SB_CreatePipe(&amp;SBN.SubPipe, SBN_SUB_PIPE_DEPTH, "SBNSubPipe");
+    if (Status != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_INIT_EID, "failed to create subscription pipe (Status=%d)", (int)Status);
+        return SBN_ERROR;
+    } /* end if */
+
+    Status = CFE_SB_SubscribeLocal(CFE_SB_ValueToMsgId(CFE_SB_ALLSUBS_TLM_MID), SBN.SubPipe, SBN_MAX_ALLSUBS_PKTS_ON_PIPE);
+    if (Status != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_INIT_EID, "failed to subscribe to allsubs (Status=%d)", (int)Status);
+        return SBN_ERROR;
+    } /* end if */
+
+    Status = CFE_SB_SubscribeLocal(CFE_SB_ValueToMsgId(CFE_SB_ONESUB_TLM_MID), SBN.SubPipe, SBN_MAX_ONESUB_PKTS_ON_PIPE);
+    if (Status != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_INIT_EID, "failed to subscribe to sub (Status=%d)", (int)Status);
+        return SBN_ERROR;
+    } /* end if */
+
+    // Status = CFE_SB_SubscribeLocal(CFE_SB_ValueToMsgId(SAMPLE_HK_TLM_MID), SBN.SubPipe, SBN_MAX_ONESUB_PKTS_ON_PIPE);
+    // if (Status != CFE_SUCCESS)
+    // {
+    //     EVSSendErr(SBN_INIT_EID, "failed to subscribe to sub (Status=%d)", (int)Status);
+    //     return SBN_ERROR;
+    // } /* end if */
+
+    return SBN_SUCCESS;
+}
+
+static SBN_Status_t Init(void)
+{
+    static const char FAIL_PREFIX[] = "ERROR: could not initialize SBN:";
+
+    /* Load the configuration from the table */
+    if(LoadConf() != SBN_SUCCESS)
+    {
+        return SBN_ERROR;
+    }
+
+    if (InitInterfaces() == SBN_ERROR)
+    {
+        EVSSendErr(SBN_INIT_EID, "%s unable to initialize interfaces", FAIL_PREFIX);
+        return SBN_ERROR;
+    } /* end if */
+
+    if(SetupSubPipe() != SBN_SUCCESS)
+    {
+        EVSSendErr(SBN_INIT_EID, "%s unable to set up subscription pipe", FAIL_PREFIX);
+        return SBN_ERROR;
+    }
+
+    const char *bit_order =
+#ifdef SOFTWARE_BIG_BIT_ORDER
+        "big-endian";
+#else  /* !SOFTWARE_BIG_BIT_ORDER */
+        "little-endian";
+#endif /* SOFTWARE_BIG_BIT_ORDER */
+
+    EVSSendInfo(SBN_INIT_EID,
+                "initialized (ProcessorID=%d SpacecraftId=%d %s "
+                "SBN.AppID=%d...",
+                (int)CFE_PSP_GetProcessorId(), (int)CFE_PSP_GetSpacecraftId(), bit_order, (int)SBN.AppID);
+
+    EVSSendInfo(SBN_INIT_EID, "...SBN_IDENT=%s CMD_MID=0x%04X)", SBN_IDENT, SBN_CMD_MID);
+
+    SBN_InitializeCounters();
+
+    /* Wait for event from SB saying it is initialized OR a response from SB
+       to the above messages. true means it needs to re-send subscription
+       requests */
+
+    while(CFE_ES_WaitForSystemState(CFE_ES_SystemState_OPERATIONAL, 1000) == CFE_ES_OPERATION_TIMED_OUT) /* do nothing but keep waiting */;
+
+    EVSSendInfo(SBN_INIT_EID, "Re-sending SB subscription requests...");
+    SBN_SendSubsRequests();
+
+    EVSSendInfo(SBN_INIT_EID, "SBN initialized.");
+
+    return SBN_SUCCESS;
+}
+
+static SBN_Status_t Cleanup(void)
+{
+    SBN_Status_t Status;
+
+    if ((Status = TeardownSubPipe()) != SBN_SUCCESS) {
+        EVSSendErr(SBN_PEER_EID, "unable to tear down sub pipe");
+        return Status;
+    }
+
+    if ((Status = UnloadConf()) != SBN_SUCCESS)
+    {
+        EVSSendErr(SBN_PEER_EID, "unable to unload configuration");
+        return Status;
+    } /* end if */
+
+    // cleanup subs
+    memset(SBN.Subs, 0, sizeof(SBN.Subs));
+
+    SBN.SubCnt = 0;
+
+    if (CFE_TBL_Update(SBN.ConfTblHandle) != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_PEER_EID, "unable to update table");
+        return SBN_ERROR;
+    } /* end if */
+
+    return SBN_SUCCESS;
+}
+
+/** \brief SBN Main Routine */
+void SBN_AppMain(void)
+{
+    static const char FAIL_PREFIX[] = "ERROR: could not start SBN:";
+    CFE_ES_TaskInfo_t TaskInfo;
+    uint32            Status    = CFE_SUCCESS;
+    uint32            RunStatus = CFE_ES_RunStatus_APP_RUN, AppID = 0;
+
+    if (CFE_EVS_Register(NULL, 0, CFE_EVS_NO_FILTER != CFE_SUCCESS))
+        return;
+
+    if (CFE_ES_GetAppID(&amp;AppID) != CFE_SUCCESS)
+    {
+        EVSSendCrit(SBN_INIT_EID, "%s unable to get AppID", FAIL_PREFIX);
+        return;
+    }
+
+    SBN.AppID = AppID;
+
+    /* load my TaskName so I can ignore messages I send out to SB */
+    uint32 TskId = OS_TaskGetId();
+    if ((Status = CFE_ES_GetTaskInfo(&amp;TaskInfo, TskId)) != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_INIT_EID, "%s SBN failed to get task info (%d)", FAIL_PREFIX, (int)Status);
+        return;
+    } /* end if */
+
+    strncpy(SBN.App_FullName, (const char *)TaskInfo.TaskName, OS_MAX_API_NAME - 1);
+    SBN.App_FullName[OS_MAX_API_NAME - 1] = '\0';
+
+    /** Create mutex for send tasks */
+    Status = OS_MutSemCreate(&amp;(SBN.SendMutex), "sbn_send_mutex", 0);
+
+    if (Status != OS_SUCCESS)
+    {
+        EVSSendErr(SBN_INIT_EID, "%s error creating mutex for send tasks", FAIL_PREFIX);
+        return;
+    }
+
+    /** Create mutex for coordinating live reconfiguration **/
+    Status = OS_MutSemCreate(&amp;(SBN.ConfMutex), "sbn_conf_mutex", 0);
+    if (Status != OS_SUCCESS)
+    {
+        EVSSendErr(SBN_INIT_EID, "%s error creating mutex for configuiration", FAIL_PREFIX);
+        return;
+    }
+
+    /* Create pipe for HK requests and gnd commands */
+    /* TODO: make configurable depth */
+    Status = CFE_SB_CreatePipe(&amp;SBN.CmdPipe, 20, "SBNCmdPipe");
+    if (Status != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_INIT_EID, "%s failed to create command pipe (%d)", FAIL_PREFIX, (int)Status);
+        return;
+    } /* end if */
+
+    Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(SBN_CMD_MID), SBN.CmdPipe);
+    if (Status == CFE_SUCCESS)
+    {
+        EVSSendInfo(SBN_INIT_EID, "SBN subscribed to command pipe SBN_CMD_MID 0x%04X", SBN_CMD_MID);
+    }
+    else
+    {
+        EVSSendErr(SBN_INIT_EID, "%s failed to subscribe to command pipe (%d)", FAIL_PREFIX, (int)Status);
+        return;
+    } /* end if */
+
+    CFE_ES_WaitForStartupSync(10000);
+
+    /* Load the table */
+    if (LoadConfTbl() != SBN_SUCCESS)
+    {
+        /* the LoadConfTbl() functions will generate events */
+        EVSSendErr(SBN_INIT_EID, "%s failed to load configuration table", FAIL_PREFIX);
+        return;
+    } /* end if */
+
+    if(Init() != SBN_SUCCESS) {
+        RunStatus = CFE_ES_RunStatus_APP_ERROR;
+    }
+
+    /* Loop Forever */
+    while (CFE_ES_RunLoop(&amp;RunStatus))
+    {
+        if (OS_MutSemTake(SBN.ConfMutex) != OS_SUCCESS)
+        {
+            EVSSendErr(SBN_PEER_EID, "ERROR: SBN run loop unable to take configuration mutex");
+            break;
+        } /* end if */
+
+        WaitForWakeup(SBN_MAIN_LOOP_DELAY);
+
+        if (OS_MutSemGive(SBN.ConfMutex) != OS_SUCCESS) {
+            EVSSendErr(SBN_PEER_EID, "ERROR: SBN run loop unable to give configuration mutex");
+            break;
+        }
+    } /* end while */
+
+    if(Cleanup() != SBN_SUCCESS) {
+      EVSSendErr(SBN_INIT_EID, "ERROR: could not clean up SBN");
+    }
+
+    CFE_ES_ExitApp(RunStatus);
+} /* end SBN_AppMain */
+
+/**
+ * Sends a message to a peer.
+ * @param[in] MsgType The type of the message (application data, SBN protocol)
+ * @param[in] ProcessorID The ProcessorID to send this message to.
+ * @param[in] MsgSz The size of the message (in bytes).
+ * @param[in] Msg The message contents.
+ *
+ * @return SBN_SUCCESS on successful processing, SBN_ERROR otherwise
+ */
+SBN_Status_t SBN_ProcessNetMsg(SBN_NetInterface_t *Net, SBN_MsgType_t MsgType, CFE_ProcessorID_t ProcessorID,
+                               CFE_SpacecraftID_t SpacecraftID,
+                               SBN_MsgSz_t MsgSize, void *Msg)
+{
+    // printf("sbn_app: ProcessNetMsg: Start on Packet from Proc %lu, SCID %lu, MsgType: %u, MsgSz: %d, Msg0x", ProcessorID, SpacecraftID, MsgType, MsgSize);
+    // uint8_t * msg_char = (uint8_t*) Msg;
+    // for(SBN_MsgSz_t i = 0; i &lt; MsgSize; i++)
+    // {
+    //     printf("%02x", (uint8_t*) msg_char[i]);
+    // }
+    // printf("\n");
+
+    static const char FAIL_PREFIX[] = "ERROR: could not process peer message:";
+    SBN_Status_t         SBN_Status = SBN_SUCCESS;
+    CFE_Status_t         CFE_Status = CFE_SUCCESS;
+    SBN_PeerInterface_t *Peer       = SBN_GetPeer(Net, ProcessorID, SpacecraftID);
+
+    if (!Peer)
+    {
+        EVSSendErr(SBN_PEERTASK_EID, "SBN ProcessNetMesg%s unknown peer (ProcessorID=%d)", FAIL_PREFIX, ProcessorID);
+        return SBN_ERROR;
+    } /* end if */
+
+    /* Check if message is protocol-specific (unkown to SBN core) */
+    if(MsgType &amp; SBN_MODULE_SPECIFIC_MESSAGE_ID_MASK) {
+      EVSSendDbg(SBN_PEERTASK_EID, "SBN received module-specific message type: 0x%08x", MsgType);
+      return SBN_SUCCESS;
+    }
+    
+    // printf("snb_app: ProcessNetMsg: MsgType = %d, MsgSz = %d, ProcessorID = %d, SpacecraftID = %d, Msg = 0x", MsgType, MsgSize, ProcessorID, SpacecraftID);
+    // uint8_t * msg_char = (uint8_t*) Msg;
+    // for(SBN_MsgSz_t i = 0; i &lt; MsgSize; i++)
+    // {
+    //     printf("%02x", (uint8_t*) msg_char[i]);
+    // }
+    // printf("\n");
+
+    switch (MsgType)
+    {
+        case SBN_PROTO_MSG:
+        {
+            uint8 Ver = ((uint8 *)Msg)[0];
+            if (Ver != SBN_PROTO_VER)
+            {
+                EVSSendErr(SBN_SB_EID,
+                           "%s SBN protocol version mismatch with peer %d:%d, "
+                           "my version=%d, peer version %d",
+                           FAIL_PREFIX,
+                           Peer-&gt;SpacecraftID,
+                           (int)Peer-&gt;ProcessorID, (int)SBN_PROTO_VER, (int)Ver);
+            }
+            else
+            {
+                EVSSendInfo(SBN_SB_EID, "SBN protocol version match with peer %d:%d", (int)Peer-&gt;SpacecraftID, (int)Peer-&gt;ProcessorID);
+            } /* end if */
+            break;
+        } /* end case */
+        case SBN_APP_MSG:
+        {
+            SBN_ModuleIdx_t  FilterIdx = 0;
+            SBN_Filter_Ctx_t Filter_Context;
+
+            Filter_Context.MyProcessorID    = CFE_PSP_GetProcessorId();
+            Filter_Context.MySpacecraftID   = CFE_PSP_GetSpacecraftId();
+            Filter_Context.PeerProcessorID  = Peer-&gt;ProcessorID;
+            Filter_Context.PeerSpacecraftID = Peer-&gt;SpacecraftID;
+
+            for (FilterIdx = 0; FilterIdx &lt; Peer-&gt;FilterCnt; FilterIdx++)
+            {
+                if (Peer-&gt;Filters[FilterIdx]-&gt;FilterRecv == NULL)
+                {
+                    continue;
+                } /* end if */
+
+                SBN_Status = (Peer-&gt;Filters[FilterIdx]-&gt;FilterRecv)(Msg, &amp;Filter_Context);
+
+                /* includes SBN_IF_EMPTY, for when filter recommends removing */
+                if (SBN_Status != SBN_SUCCESS)
+                {
+                    return SBN_Status;
+                } /* end if */
+            }     /* end for */
+
+            CFE_Status = CFE_SB_TransmitMsg(Msg, false);
+
+            if (CFE_Status != CFE_SUCCESS)
+            {
+                EVSSendErr(SBN_SB_EID, "%s CFE_SB_PassMsg error (Status=%d MsgType=0x%x)", FAIL_PREFIX, (int)CFE_Status, MsgType);
+                return SBN_ERROR;
+            } /* end if */
+            break;
+        } /* end case */
+        case SBN_SUB_MSG:
+            return SBN_ProcessSubsFromPeer(Peer, Msg);
+
+        case SBN_UNSUB_MSG:
+            return SBN_ProcessUnsubsFromPeer(Peer, Msg);
+
+        case SBN_NO_MSG:
+            return SBN_SUCCESS;
+        default:
+            /* Should I generate an event? Probably... */
+            EVSSendErr(SBN_PEERTASK_EID, "%s unknown message type 0x%08x", FAIL_PREFIX, MsgType);
+            return SBN_ERROR;
+    } /* end switch */
+
+    return SBN_SUCCESS;
+} /* end SBN_ProcessNetMsg */
+
+/**
+ * Find the PeerIndex for a given ProcessorID and net.
+ * @param Net[in] The network interface to search.
+ * @param ProcessorID[in] The ProcessorID of the peer being sought.
+ * @param SpacecraftID[in] The SpacecraftI of the peer being sought.
+ * @return The Peer interface pointer, or NULL if not found.
+ */
+SBN_PeerInterface_t *SBN_GetPeer(SBN_NetInterface_t *Net, CFE_ProcessorID_t ProcessorID, CFE_SpacecraftID_t SpacecraftID)
+{
+    SBN_PeerIdx_t PeerIdx = 0;
+
+    for (PeerIdx = 0; PeerIdx &lt; Net-&gt;PeerCnt; PeerIdx++)
+    {
+        if (Net-&gt;Peers[PeerIdx].ProcessorID == ProcessorID &amp;&amp; Net-&gt;Peers[PeerIdx].SpacecraftID == SpacecraftID)
+        {
+            return &amp;Net-&gt;Peers[PeerIdx];
+        } /* end if */
+    }     /* end for */
+
+    return NULL;
+} /* end SBN_GetPeer */
+
+
+/** \brief Reload configuration and re-initialize
+ * This is only called after receiving a message from TBL service.
+ */
+SBN_Status_t SBN_ReloadConfTbl(void)
+{
+    static const char FAIL_PREFIX[] = "ERROR: could not reload SBN configuration:";
+
+    SBN_Status_t Status;
+
+    EVSSendInfo(SBN_TBL_EID, "re-initializing SBN with new configuration...");
+
+    if (OS_MutSemTake(SBN.ConfMutex) != OS_SUCCESS)
+    {
+      EVSSendErr(SBN_PEER_EID, "%s could not take configuration mutex", FAIL_PREFIX);
+      return SBN_ERROR;
+    } /* end if */
+
+    Status = Cleanup();
+
+    if(Status != SBN_SUCCESS) {
+      EVSSendErr(SBN_PEER_EID,  "%s could not clean up SBN", FAIL_PREFIX);
+    } else {
+      Status = Init();
+
+      EVSSendInfo(SBN_TBL_EID, "SBN re-initialized.");
+    }
+
+    if (OS_MutSemGive(SBN.ConfMutex) != OS_SUCCESS)
+    {
+      EVSSendErr(SBN_PEER_EID, "%s could not give configuration mutex", FAIL_PREFIX);
+      return SBN_ERROR;
+    } /* end if */
+
+    return Status;
+} /* end SBN_ReloadConfTbl() */
+</pre></div>
+</div>
+</section>
+<section id="sbn-app-h">
+<h2><code class="docutils literal notranslate"><span class="pre">sbn_app.h</span></code><a class="headerlink" href="#sbn-app-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sbn/fsw/src/sbn_app.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/******************************************************************************
+** File: sbn_app.h
+**
+**      Copyright (c) 2004-2006, United States government as represented by the
+**      administrator of the National Aeronautics Space Administration.
+**      All rights reserved. This software(cFE) was created at NASA's Goddard
+**      Space Flight Center pursuant to government contracts.
+**
+**      This software may be used only pursuant to a United States government
+**      sponsored project and the United States government may not be charged
+**      for use thereof.
+**
+** Purpose:
+**      This header file contains prototypes for private functions and type
+**      definitions for the Software Bus Network Application.
+**
+** Authors:   J. Wilmot/GSFC Code582
+**            R. McGraw/SSI
+**            C. Knight/ARC Code TI
+**
+******************************************************************************/
+
+#ifndef _sbn_app_
+#define _sbn_app_
+
+#include &lt;string.h&gt;
+#include &lt;errno.h&gt;
+
+#include "osconfig.h"
+#include "cfe.h"
+#include "sbn_version.h"
+#include "sbn_interfaces.h"
+#include "sbn_msg.h"
+#include "sbn_platform_cfg.h"
+#include "sbn_tbl.h"
+#include "cfe_sb_msg.h"
+#include "cfe_sb.h"
+#include "sbn_msgids.h"
+#include "sbn_cmds.h"
+#include "sbn_subs.h"
+#include "sbn_main_events.h"
+#include "sbn_perfids.h"
+#include "sbn_types.h"
+
+#include "cfe_platform_cfg.h"
+
+#ifndef SBN_TLM_MID
+/* backwards compatability in case you're using a MID generator */
+#define SBN_TLM_MID SBN_HK_TLM_MID
+#endif /* SBN_TLM_MID */
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* SBN application data structures                                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void  SBN_ShowPeerData(void);
+int32 SBN_GetPeerFileData(void);
+
+SBN_Status_t SBN_RecvNetMsgs(void);
+
+void SBN_CheckPeerPipes(void);
+
+/**
+ * \brief SBN global data structure definition
+ */
+typedef struct
+{
+    SBN_NetIdx_t NetCnt;
+
+    /** \brief Data only on host definitions. */
+    SBN_NetInterface_t Nets[SBN_MAX_NETS];
+
+    /** \brief The application ID provided by ES */
+    CFE_ES_AppID_t AppID;
+
+    /** \brief The application full name provided by SB */
+    char App_FullName[(OS_MAX_API_NAME * 2)];
+
+    /**
+     * \brief The subscription pipe used to monitor local subscriptions.
+     */
+    CFE_SB_PipeId_t SubPipe;
+
+    /**
+     * \brief The command pipe used to receive commands.
+     */
+    CFE_SB_PipeId_t CmdPipe;
+
+    /**
+     * \brief Number of local subs.
+     */
+    SBN_SubCnt_t SubCnt;
+
+    /**
+     * \brief All subscriptions by apps connected to the SB.
+     *
+     * When a peer and I connect, I send that peer all subscriptions I have
+     * and they send me theirs. All messages on the local bus that are
+     * subscribed to by the peer are sent over, and vice-versa.
+     */
+    SBN_Subs_t Subs[SBN_MAX_SUBS_PER_PEER + 1];
+
+    /** \brief CFE scheduling pipe */
+    CFE_SB_PipeId_t SchPipe;
+
+    /**
+     * Each SBN back-end module provides a number of functions to
+     * implement the protocols to connect peers.
+     */
+    SBN_IfOps_t *IfOps[SBN_MAX_MOD_CNT];
+
+    /** @brief Retain the module ID's for each interface in case we need to unload. */
+    CFE_ES_ModuleID_t ProtocolModules[SBN_MAX_MOD_CNT];
+
+    /** @brief Retain the module ID's for each interface in case we need to unload. */
+    CFE_ES_ModuleID_t FilterModules[SBN_MAX_MOD_CNT];
+
+    SBN_ConfTbl_t *ConfTbl;
+
+    /** Global mutex for Send Tasks. */
+    CFE_ES_MutexID_t SendMutex;
+
+    /** Global mutex for reconfiguring. */
+    CFE_ES_MutexID_t ConfMutex;
+
+    SBN_HKTlm_t CmdCnt, CmdErrCnt;
+
+    CFE_TBL_Handle_t ConfTblHandle;
+
+    /* Buffer for receiving messages, allocated here to avoid stack smashing */
+    uint8 MsgBuffer[CFE_MISSION_SB_MAX_SB_MSG_SIZE];
+} SBN_App_t;
+
+/**
+ * \brief SBN glocal data structure references, indexed by AppId.
+ */
+extern SBN_App_t SBN;
+
+/*
+** Prototypes
+*/
+void                 SBN_AppMain(void);
+SBN_Status_t         SBN_ProcessNetMsg(SBN_NetInterface_t *Net, SBN_MsgType_t MsgType, CFE_ProcessorID_t ProcessorID, CFE_SpacecraftID_t SpacecraftID,
+                                       SBN_MsgSz_t MsgSz, void *Msg);
+SBN_PeerInterface_t *SBN_GetPeer(SBN_NetInterface_t *Net, CFE_ProcessorID_t ProcessorID, CFE_SpacecraftID_t SpacecraftID);
+SBN_Status_t         SBN_ReloadConfTbl(void);
+void                 SBN_RecvNetTask(void);
+void                 SBN_RecvPeerTask(void);
+void                 SBN_SendTask(void);
+SBN_Status_t         SBN_Connected(SBN_PeerInterface_t *Peer);
+SBN_Status_t         SBN_Disconnected(SBN_PeerInterface_t *Peer);
+void                 SBN_PackMsg(void *SBNBuf, SBN_MsgSz_t MsgSz, SBN_MsgType_t MsgType, CFE_ProcessorID_t ProcessorID, CFE_SpacecraftID_t SpacecraftID, void *Msg);
+bool                 SBN_UnpackMsg(void *SBNBuf, SBN_MsgSz_t *MsgSzPtr, SBN_MsgType_t *MsgTypePtr, CFE_ProcessorID_t *ProcessorIDPtr, CFE_SpacecraftID_t *SpacecraftIDPtr, void *Msg);
+SBN_Status_t         SBN_SendNetMsg(SBN_MsgType_t MsgType, SBN_MsgSz_t MsgSz, void *Msg, SBN_PeerInterface_t *Peer);
+SBN_PeerInterface_t *SBN_GetPeer(SBN_NetInterface_t *Net, CFE_ProcessorID_t ProcessorID, CFE_SpacecraftID_t SpacecraftID);
+
+#endif /* _sbn_app_ */
+</pre></div>
+</div>
+</section>
+<section id="sbn-cmds-c">
+<h2><code class="docutils literal notranslate"><span class="pre">sbn_cmds.c</span></code><a class="headerlink" href="#sbn-cmds-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sbn/fsw/src/sbn_cmds.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdbool.h&gt;
+
+#include "sbn_app.h"
+#include "sbn_pack.h"
+
+/**
+ * @brief Initializes the housekeeping counters for a peer.
+ *
+ * @param[in] Peer The peer interface for which to reset housekeeping.
+ */
+static void InitializePeerCounters(SBN_PeerInterface_t *Peer)
+{
+    Peer-&gt;LastSend   = (OS_time_t) {0};
+    Peer-&gt;LastRecv   = (OS_time_t) {0};
+    Peer-&gt;SendCnt    = 0;
+    Peer-&gt;RecvCnt    = 0;
+    Peer-&gt;SendErrCnt = 0;
+    Peer-&gt;RecvErrCnt = 0;
+} /* end InitializePeerCounters() */
+
+/**
+ * @brief Initializes the housekeeping counters both at the app level
+ *        and for each peer.
+ */
+void SBN_InitializeCounters(void)
+{
+    SBN.CmdCnt    = 0;
+    SBN.CmdErrCnt = 0;
+
+    int NetIdx = 0;
+    for (NetIdx = 0; NetIdx &lt; SBN.NetCnt; NetIdx++)
+    {
+        SBN_NetInterface_t *Net     = &amp;SBN.Nets[NetIdx];
+        int                 PeerIdx = 0;
+        for (PeerIdx = 0; PeerIdx &lt; Net-&gt;PeerCnt; PeerIdx++)
+        {
+            SBN_PeerInterface_t *Peer = &amp;Net-&gt;Peers[PeerIdx];
+            InitializePeerCounters(Peer);
+        } /* end for */
+    }     /* end for */
+} /* end SBN_InitializeCounters */
+
+/************************************************************************/
+/** \brief Verify message length.
+**
+**  \par Description
+**       Checks if the actual length of a software bus message matches
+**       the expected length and sends an error event if a mismatch
+**       occurs.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \param [in]   msg           A #CFE_MSG_Message_t pointer that
+**                              references the software bus message
+**
+**  \param [in]   ExpectedLen   The expected length of the message
+**                              based upon the command code.
+**
+**  @param [in]   name          Text name of the message expected.
+**
+**  \returns
+**  \retstmt Returns true if the length is as expected      \endcode
+**  \retstmt Returns false if the length is not as expected \endcode
+**  \endreturns
+**
+**  \sa #SBN_LEN_EID
+**
+*************************************************************************/
+static bool VerifyMsgLen(CFE_MSG_Message_t *MsgPtr, uint16 ExpectedLen, const char *MsgName)
+{
+    CFE_MSG_Size_t    ActualLen = 0;
+    CFE_MSG_FcnCode_t FcnCode   = 0;
+
+    if(CFE_MSG_GetSize(MsgPtr, &amp;ActualLen) != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_CMD_EID, "invalid hk message (Name=%s)", MsgName);
+        return false;
+    }
+
+    if (ExpectedLen != ActualLen)
+    {
+        if(CFE_MSG_GetFcnCode(MsgPtr, &amp;FcnCode) != CFE_SUCCESS)
+        {
+            EVSSendErr(SBN_CMD_EID, "unable to get FcnCode (Name=%s)", MsgName);
+            return false;
+        }
+
+        if (FcnCode == SBN_HK_CC)
+        {
+            /*
+            ** For a bad HK request, just send the event.  We only increment
+            ** the error counter for ground commands and not internal messages.
+            */
+            EVSSendErr(SBN_CMD_EID,
+                       "invalid hk message length (Name=%s ID=0x%04X "
+                       "CC=%d Len=%d Expected=%d)",
+                       MsgName, FcnCode, (int)FcnCode, (int)ActualLen, (int)ExpectedLen);
+        }
+        else
+        {
+            /*
+            ** All other cases, increment error counter
+            */
+            EVSSendErr(SBN_CMD_EID, "invalid message length (Name=%s ID=0x%04X CC=%d Len=%d Expected=%d)", MsgName,
+                       FcnCode, (int)FcnCode, (int)ActualLen, (int)ExpectedLen);
+
+            SBN.CmdErrCnt++;
+        } /* end if */
+
+        return false;
+    } /* end if */
+
+    return true;
+} /* end VerifyMsgLen */
+
+/************************************************************************/
+/** \brief Noop command
+**
+**  \par Description
+**       Processes a noop ground command.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \param [in]   MsgPtr A #CFE_MSG_Message_t pointer that
+**                       references the software bus message
+**
+**  \sa #SBN_RESET_CC
+**
+*************************************************************************/
+static void NoopCmd(CFE_MSG_Message_t *MsgPtr)
+{
+    if (!VerifyMsgLen(MsgPtr, sizeof(CFE_MSG_CommandHeader_t), "noop"))
+    {
+        EVSSendErr(SBN_CMD_EID, "invalid no-op command");
+        return;
+    } /* end if */
+
+    // EVSSendDbg(SBN_CMD_EID, "no-op command");
+    EVSSendInfo(SBN_CMD_EID, "no-op command");
+
+    SBN.CmdCnt++;
+} /* end NoopCmd */
+
+/************************************************************************/
+/** \brief Reset counters command
+**
+**  \par Description
+**       Processes a reset counters command which will reset the
+**       following SBN application counters to zero:
+**         - Command counter
+**         - Command error counter
+**         - App messages sent counter for each peer
+**         - App message send error counter for each peer
+**         - App messages received counter for each peer
+**         - App message receive error counter for each peer
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \param [in]   MsgPtr A #CFE_MSG_Message_t pointer that
+**                       references the software bus message
+**
+**  \sa #SBN_RESET_CC
+**
+*************************************************************************/
+static void HKResetCmd(CFE_MSG_Message_t *MsgPtr)
+{
+    if (!VerifyMsgLen(MsgPtr, sizeof(CFE_MSG_CommandHeader_t), "reset counters"))
+    {
+        return;
+    } /* end if */
+
+    EVSSendInfo(SBN_CMD_EID, "reset command");
+
+    /*
+    ** Don't increment counter because we're resetting anyway
+    */
+    SBN_InitializeCounters();
+} /* end HKResetCmd */
+
+/************************************************************************/
+/** \brief Reset Peer counters command
+**
+**  \par Description
+**       Reset the counters for a specified peer.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \param [in]   MsgPtr A #CFE_MSG_Message_t pointer that
+**                       references the software bus message
+**
+**  \sa #SBN_RESET_PEER_CC
+**
+*************************************************************************/
+static void HKResetPeerCmd(CFE_MSG_Message_t *MsgPtr)
+{
+    if (!VerifyMsgLen(MsgPtr, SBN_CMD_PEER_LEN, "reset peer"))
+    {
+        return;
+    } /* end if */
+
+    uint8 *Ptr     = (uint8 *)MsgPtr + sizeof(CFE_MSG_CommandHeader_t);
+    uint8  NetIdx  = *Ptr++;
+    uint8  PeerIdx = *Ptr;
+
+    if (NetIdx &lt; 0 || NetIdx &gt;= SBN.NetCnt)
+    {
+        EVSSendErr(SBN_CMD_EID, "invalid net idx %d (max=%d)", NetIdx, SBN.NetCnt);
+        return;
+    } /* end if */
+
+    SBN_NetInterface_t *Net = &amp;SBN.Nets[NetIdx];
+
+    if (PeerIdx &lt; 0 || PeerIdx &gt;= Net-&gt;PeerCnt)
+    {
+        EVSSendErr(SBN_CMD_EID, "invalid peer idx %d (max=%d)", PeerIdx, Net-&gt;PeerCnt);
+        return;
+    } /* end if */
+
+    SBN_PeerInterface_t *Peer = &amp;Net-&gt;Peers[PeerIdx];
+
+    EVSSendInfo(SBN_CMD_EID, "hk reset peer command (NetIdx=%d, PeerIdx=%d)", NetIdx, PeerIdx);
+    SBN.CmdCnt++;
+
+    InitializePeerCounters(Peer);
+} /* end HKResetPeerCmd */
+
+/** \brief Housekeeping request command
+ *
+ *  \par Description
+ *       Processes an on-board housekeeping request message.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       This message does not affect the command execution counter
+ *
+ *  \param [in]   MsgPtr A #CFE_MSG_Message_t pointer that
+ *                       references the software bus message
+ *
+ */
+static void HKCmd(CFE_MSG_Message_t *MsgPtr)
+{
+    if (!VerifyMsgLen(MsgPtr, sizeof(CFE_MSG_CommandHeader_t), "hk"))
+    {
+        return;
+    } /* end if */
+
+    EVSSendInfo(SBN_CMD_EID, "hk command");
+
+    uint8  HKBuf[SBN_HK_LEN];
+    CFE_MSG_Message_t *HKMsg = (CFE_MSG_Message_t *)HKBuf;
+    Pack_t Pack;
+
+    CFE_MSG_Init(HKMsg, CFE_SB_ValueToMsgId(SBN_HK_TLM_MID), SBN_HK_LEN);
+
+    Pack_Init(&amp;Pack, HKBuf + sizeof(CFE_MSG_TelemetryHeader_t), SBN_HK_LEN - sizeof(CFE_MSG_TelemetryHeader_t), 1);
+
+    Pack_UInt8(&amp;Pack, SBN_HK_CC);
+    Pack_UInt16(&amp;Pack, SBN.CmdCnt);
+    Pack_UInt16(&amp;Pack, SBN.CmdErrCnt);
+    Pack_UInt16(&amp;Pack, SBN.SubCnt);
+    Pack_UInt16(&amp;Pack, SBN.NetCnt);
+
+    /*
+    ** Timestamp and send packet
+    */
+    CFE_SB_TimeStampMsg(HKMsg);
+    CFE_SB_TransmitMsg(HKMsg, true);
+} /* end HKCmd */
+
+/** \brief Request for housekeeping for one network.
+ *
+ *  \par Description
+ *       Processes an on-board housekeeping request message.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       This message does not affect the command execution counter
+ *
+ *  \param [in]   MsgPtr A #CFE_MSG_Message_t pointer that
+ *                       references the software bus message
+ */
+static void HKNetCmd(CFE_MSG_Message_t *MsgPtr)
+{
+    if (!VerifyMsgLen(MsgPtr, SBN_CMD_NET_LEN, "hk net"))
+    {
+        return;
+    } /* end if */
+
+    uint8 *Ptr    = (uint8 *)MsgPtr + sizeof(CFE_MSG_CommandHeader_t);
+    uint8  NetIdx = *Ptr;
+
+    if (NetIdx &gt; SBN.NetCnt)
+    {
+        EVSSendErr(SBN_CMD_EID, "Invalid NetIdx (%d, max is %d)", NetIdx, SBN.NetCnt - 1);
+        return;
+    } /* end if */
+
+    EVSSendInfo(SBN_CMD_EID, "hk command, net=%d", NetIdx);
+
+    uint8  HKBuf[SBN_HKNET_LEN];
+    CFE_MSG_Message_t *HKMsg = (CFE_MSG_Message_t *)HKBuf;
+    Pack_t Pack;
+
+    CFE_MSG_Init(HKMsg, CFE_SB_ValueToMsgId(SBN_HKNET_TLM_MID), SBN_HKNET_LEN);
+
+    Pack_Init(&amp;Pack, HKBuf + sizeof(CFE_MSG_TelemetryHeader_t), SBN_HKNET_LEN - sizeof(CFE_MSG_TelemetryHeader_t), 1);
+
+    Pack_UInt8(&amp;Pack, SBN_HK_NET_CC);
+    Pack_UInt8(&amp;Pack, SBN.Nets[NetIdx].ProtocolIdx);
+    Pack_UInt16(&amp;Pack, SBN.Nets[NetIdx].PeerCnt);
+
+    /*
+    ** Timestamp and send packet
+    */
+    CFE_SB_TimeStampMsg(HKMsg);
+    CFE_SB_TransmitMsg(HKMsg, true);
+} /* end HKNetCmd */
+
+/** \brief Request for housekeeping for one peer.
+ *
+ *  \par Description
+ *       Processes an on-board housekeeping request message.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       This message does not affect the command execution counter
+ *
+ *  \param [in]   MsgPtr A #CFE_MSG_Message_t pointer that
+ *                       references the software bus message
+ */
+static void HKPeerCmd(CFE_MSG_Message_t *MsgPtr)
+{
+    if (!VerifyMsgLen(MsgPtr, SBN_CMD_PEER_LEN, "hk peer"))
+    {
+        return;
+    } /* end if */
+
+    uint8 *Ptr     = (uint8 *)MsgPtr + sizeof(CFE_MSG_CommandHeader_t);
+    uint8  NetIdx  = *Ptr++;
+    uint8  PeerIdx = *Ptr;
+
+    if (NetIdx &gt; SBN.NetCnt)
+    {
+        EVSSendErr(SBN_CMD_EID, "Invalid NetIdx (%d, max is %d)", NetIdx, SBN.NetCnt - 1);
+        return;
+    } /* end if */
+
+    if (PeerIdx &gt; SBN.Nets[NetIdx].PeerCnt)
+    {
+        EVSSendErr(SBN_CMD_EID, "Invalid PeerIdx (NetIdx=%d PeerIdx=%d, max is %d)", NetIdx, PeerIdx,
+                   SBN.Nets[NetIdx].PeerCnt - 1);
+        return;
+    } /* end if */
+
+    SBN_PeerInterface_t *Peer = &amp;SBN.Nets[NetIdx].Peers[PeerIdx];
+
+    EVSSendInfo(SBN_CMD_EID, "hk command, net=%d, peer=%d", NetIdx, PeerIdx);
+
+    uint8  HKBuf[SBN_HKPEER_LEN];
+    CFE_MSG_Message_t *HKMsg = (CFE_MSG_Message_t *)HKBuf;
+    Pack_t Pack;
+
+    CFE_MSG_Init(HKMsg, CFE_SB_ValueToMsgId(SBN_HKPEER_TLM_MID), SBN_HKPEER_LEN);
+
+    Pack_Init(&amp;Pack, HKBuf + sizeof(CFE_MSG_TelemetryHeader_t), SBN_HKPEER_LEN - sizeof(CFE_MSG_TelemetryHeader_t), 1);
+
+    Pack_UInt8(&amp;Pack, SBN_HK_PEER_CC);
+    Pack_UInt32(&amp;Pack, Peer-&gt;ProcessorID);
+    Pack_Time(&amp;Pack, Peer-&gt;LastSend);
+    Pack_Time(&amp;Pack, Peer-&gt;LastRecv);
+    Pack_UInt16(&amp;Pack, Peer-&gt;SendCnt);
+    Pack_UInt16(&amp;Pack, Peer-&gt;RecvCnt);
+    Pack_UInt16(&amp;Pack, Peer-&gt;SendErrCnt);
+    Pack_UInt16(&amp;Pack, Peer-&gt;RecvErrCnt);
+    Pack_UInt16(&amp;Pack, Peer-&gt;SubCnt);
+
+    /*
+    ** Timestamp and send packet
+    */
+    CFE_SB_TimeStampMsg(HKMsg);
+    CFE_SB_TransmitMsg(HKMsg, true);
+} /* end HKPeerCmd */
+
+/** \brief Send My Subscriptions
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]   MsgPtr A #CFE_MSG_Message_t pointer that
+ *                       references the software bus message
+ *
+ *  \sa #SBN_MYSUBS_CC
+ */
+static void MySubsCmd(CFE_MSG_Message_t *MsgPtr)
+{
+    if (!VerifyMsgLen(MsgPtr, sizeof(CFE_MSG_CommandHeader_t), "my subs"))
+    {
+        return;
+    } /* end if */
+
+    EVSSendInfo(SBN_CMD_EID, "hk subs command");
+
+    uint8  HKBuf[SBN_HKMYSUBS_LEN];
+    CFE_MSG_Message_t *HKMsg = (CFE_MSG_Message_t *)HKBuf;
+    Pack_t Pack;
+
+    CFE_MSG_Init(HKMsg, CFE_SB_ValueToMsgId(SBN_HKMYSUBS_TLM_MID), SBN_HKMYSUBS_LEN);
+
+    Pack_Init(&amp;Pack, HKBuf + sizeof(CFE_MSG_TelemetryHeader_t), SBN_HKMYSUBS_LEN - sizeof(CFE_MSG_TelemetryHeader_t), 1);
+
+    Pack_UInt8(&amp;Pack, SBN_HK_MYSUBS_CC);
+    Pack_UInt16(&amp;Pack, SBN.SubCnt);
+    int i;
+    for (i = 0; i &lt; SBN.SubCnt; i++)
+    {
+        Pack_MsgID(&amp;Pack, SBN.Subs[i].MsgID);
+    }
+
+    /*
+    ** Timestamp and send packet
+    */
+    CFE_SB_TimeStampMsg(HKMsg);
+    CFE_SB_TransmitMsg(HKMsg, true);
+} /* end MySubsCmd */
+
+/** \brief Reloads the config table.
+ *
+ *  \param [in]   MsgPtr A #CFE_MSG_Message_t pointer that
+ *                       references the software bus message
+ *
+ *  \sa #SBN_TBL_CC
+ */
+static void ReloadTblCmd(CFE_MSG_Message_t *MsgPtr)
+{
+    if (!VerifyMsgLen(MsgPtr, sizeof(CFE_MSG_CommandHeader_t), "reloadtbl"))
+    {
+        EVSSendInfo(SBN_CMD_EID, "reload tbl command");
+        SBN_ReloadConfTbl();
+    } else {
+        EVSSendErr(SBN_CMD_EID, "Recevied tbl reload command, but message was wrong size. This command should only be triggered from the TBL service, itself, and not called directly.");
+    }
+    return;
+}
+
+/************************************************************************/
+/** \brief Send A Peer's Subscriptions
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \param [in]   MsgPtr   A #CFE_MSG_Message_t pointer that
+**                         references the software bus message
+**
+**  \sa #SBN_MYSUBS_CC
+**
+*************************************************************************/
+static void PeerSubsCmd(CFE_MSG_Message_t *MsgPtr)
+{
+    if (!VerifyMsgLen(MsgPtr, SBN_CMD_PEER_LEN, "peer subs"))
+    {
+        return;
+    } /* end if */
+
+    uint8 *Ptr     = (uint8 *)MsgPtr + sizeof(CFE_MSG_CommandHeader_t);
+    uint8  NetIdx  = *Ptr++;
+    uint8  PeerIdx = *Ptr;
+
+    if (NetIdx &gt;= SBN.NetCnt)
+    {
+        EVSSendErr(SBN_CMD_EID, "Invalid NetIdx (%d, max is %d)", NetIdx, SBN.NetCnt - 1);
+        return;
+    } /* end if */
+
+    if (PeerIdx &gt;= SBN.Nets[NetIdx].PeerCnt)
+    {
+        EVSSendErr(SBN_CMD_EID, "Invalid PeerIdx (NetIdx=%d PeerIdx=%d, max is %d)", NetIdx, PeerIdx,
+                   SBN.Nets[NetIdx].PeerCnt - 1);
+        return;
+    } /* end if */
+
+    EVSSendInfo(SBN_CMD_EID, "hk subs command, net=%d peer=%d", NetIdx, PeerIdx);
+
+    SBN_PeerInterface_t *Peer = &amp;SBN.Nets[NetIdx].Peers[PeerIdx];
+
+    uint8  HKBuf[SBN_HKPEERSUBS_LEN];
+    CFE_MSG_Message_t *HKMsg = (CFE_MSG_Message_t *)HKBuf;
+    Pack_t Pack;
+
+    CFE_MSG_Init(HKMsg, CFE_SB_ValueToMsgId(SBN_HKPEERSUBS_TLM_MID), SBN_HKPEERSUBS_LEN);
+
+    Pack_Init(&amp;Pack, HKBuf + sizeof(CFE_MSG_TelemetryHeader_t), SBN_HKPEERSUBS_LEN - sizeof(CFE_MSG_TelemetryHeader_t), 1);
+
+    Pack_UInt8(&amp;Pack, SBN_HK_PEERSUBS_CC);
+    Pack_UInt16(&amp;Pack, NetIdx);
+    Pack_UInt16(&amp;Pack, PeerIdx);
+    Pack_UInt16(&amp;Pack, Peer-&gt;SubCnt);
+
+    int i;
+    for (i = 0; i &lt; Peer-&gt;SubCnt; i++)
+    {
+        Pack_MsgID(&amp;Pack, Peer-&gt;Subs[i].MsgID);
+    }
+
+    /*
+    ** Timestamp and send packet
+    */
+    CFE_SB_TimeStampMsg(HKMsg);
+    CFE_SB_TransmitMsg(HKMsg, true);
+} /* end PeerSubsCmd */
+
+/*******************************************************************/
+/*                                                                 */
+/* Process a command pipe message                                  */
+/*                                                                 */
+/*******************************************************************/
+void SBN_HandleCommand(CFE_MSG_Message_t *MsgPtr)
+{
+    CFE_SB_MsgId_t    MsgId;
+    CFE_MSG_FcnCode_t FcnCode = 0;
+
+    if (CFE_MSG_GetMsgId(MsgPtr, &amp;MsgId) != CFE_SUCCESS)
+    {
+        SBN.CmdErrCnt++;
+        EVSSendErr(SBN_CMD_EID, "invalid FcnCode");
+        return;
+    }
+
+    if (!CFE_SB_MsgId_Equal(MsgId, CFE_SB_ValueToMsgId(SBN_CMD_MID)))
+    {
+        SBN.CmdErrCnt++;
+        EVSSendErr(SBN_CMD_EID, "invalid command pipe MsgId");
+        return;
+    } /* end if */
+
+    if(CFE_MSG_GetFcnCode(MsgPtr, &amp;FcnCode) != CFE_SUCCESS)
+    {
+        SBN.CmdErrCnt++;
+        EVSSendErr(SBN_CMD_EID, "invalid FcnCode (FcnCode=0x%04X)", FcnCode);
+        return;
+    }
+
+    switch (FcnCode)
+    {
+        case SBN_NOOP_CC:
+            NoopCmd(MsgPtr);
+            break;
+
+        case SBN_HK_CC:
+            HKCmd(MsgPtr);
+            break;
+        case SBN_HK_NET_CC:
+            HKNetCmd(MsgPtr);
+            break;
+        case SBN_HK_PEER_CC:
+            HKPeerCmd(MsgPtr);
+            break;
+        case SBN_HK_PEERSUBS_CC:
+            PeerSubsCmd(MsgPtr);
+            break;
+        case SBN_HK_MYSUBS_CC:
+            MySubsCmd(MsgPtr);
+            break;
+        case SBN_HK_RESET_CC:
+            HKResetCmd(MsgPtr);
+            break;
+        case SBN_HK_RESET_PEER_CC:
+            HKResetPeerCmd(MsgPtr);
+            break;
+
+        case SBN_SCH_WAKEUP_CC:
+            EVSSendDbg(SBN_CMD_EID, "wakeup");
+            break;
+        case SBN_TBL_CC:
+            ReloadTblCmd(MsgPtr);
+            break;
+        default:
+            SBN.CmdErrCnt++;
+            EVSSendErr(SBN_CMD_EID, "invalid command code (ID=0x%04X, CC=%d)", FcnCode, FcnCode);
+            break;
+    } /* end switch */
+} /* end SBN_HandleCommand */
+</pre></div>
+</div>
+</section>
+<section id="sbn-cmds-h">
+<h2><code class="docutils literal notranslate"><span class="pre">sbn_cmds.h</span></code><a class="headerlink" href="#sbn-cmds-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sbn/fsw/src/sbn_cmds.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#ifndef _sbn_cmds_h_
+#define _sbn_cmds_h_
+
+#include "cfe.h"
+
+/*************************************************************************
+** Function Prototypes
+*************************************************************************/
+
+/************************************************************************/
+/** \brief Process a command pipe message
+**
+**  \par Description
+**       Processes a single software bus command pipe message.  Checks
+**       the message and command IDs and calls the appropriate routine
+**       to handle the message.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**
+**  \param [in]   MessagePtr   A #CFE_MSG_Message_t pointer that
+**                             references the software bus message
+**
+**  \sa #CFE_SB_RcvMsg
+**
+*************************************************************************/
+void SBN_HandleCommand(CFE_MSG_Message_t *MessagePtr);
+
+/************************************************************************/
+/** \brief Reset telemetry counters to zero
+**
+**  \par Description
+**       Resets all command and message counters for the SBN app and the
+**       modules to zero.
+**
+**  \par Assumptions, External Events, and Notes:
+**       Does NOT reset the subscription counter because that counter
+**       is maintained and used outside of the housekeeping functions
+**       and should not change regularly.
+**
+**  \param [in]   MessagePtr   A #CFE_SB_MsgPtr_t pointer that
+**                             references the software bus message
+**
+**  \sa #SBN_ResetCountersCmd
+**
+*************************************************************************/
+void SBN_InitializeCounters(void);
+
+#endif /* _sbn_cmds_h_ */
+</pre></div>
+</div>
+</section>
+<section id="sbn-main-events-h">
+<h2><code class="docutils literal notranslate"><span class="pre">sbn_main_events.h</span></code><a class="headerlink" href="#sbn-main-events-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sbn/fsw/src/sbn_main_events.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+**   sbn_events.h
+**
+**   2014/11/21 ejtimmon
+**
+**   Specification for the Software Bus Network event identifers.
+**
+*************************************************************************/
+
+#ifndef _sbn_main_events_h_
+#define _sbn_main_events_h_
+
+#define SBN_FIRST_EID 0x0001
+
+#define SBN_SB_EID       SBN_FIRST_EID + 0
+#define SBN_INIT_EID     SBN_FIRST_EID + 1
+#define SBN_MSG_EID      SBN_FIRST_EID + 2
+#define SBN_TBL_EID      SBN_FIRST_EID + 3
+#define SBN_PEER_EID     SBN_FIRST_EID + 4
+#define SBN_PROTO_EID    SBN_FIRST_EID + 5
+#define SBN_CMD_EID      SBN_FIRST_EID + 6
+#define SBN_SUB_EID      SBN_FIRST_EID + 7
+#define SBN_REMAP_EID    SBN_FIRST_EID + 8
+#define SBN_PEERTASK_EID SBN_FIRST_EID + 9
+#define SBN_DEBUG_EID    SBN_FIRST_EID + 10
+
+#endif /* _sbn_main_events_h_ */
+</pre></div>
+</div>
+</section>
+<section id="sbn-pack-c">
+<h2><code class="docutils literal notranslate"><span class="pre">sbn_pack.c</span></code><a class="headerlink" href="#sbn-pack-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sbn/fsw/src/sbn_pack.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#include "sbn_pack.h"
+#include &lt;string.h&gt; /* memcpy */
+
+bool Pack_Init(Pack_t *PackPtr, void *Buf, size_t BufSz, bool ClearFlag)
+{
+    PackPtr-&gt;Buf     = Buf;
+    PackPtr-&gt;BufSz   = BufSz;
+    PackPtr-&gt;BufUsed = 0;
+    if (ClearFlag)
+    {
+        memset(Buf, 0, BufSz);
+    } /* end if */
+    return true;
+} /* end Pack_Init() */
+
+bool Pack_Data(Pack_t *PackPtr, void *DataBuf, size_t DataBufSz)
+{
+    if (PackPtr-&gt;BufUsed + DataBufSz &gt; PackPtr-&gt;BufSz)
+    {
+        /* print an error? */
+        return false;
+    }
+
+    memcpy((uint8 *)PackPtr-&gt;Buf + PackPtr-&gt;BufUsed, DataBuf, DataBufSz);
+    PackPtr-&gt;BufUsed += DataBufSz;
+
+    return true;
+} /* end Pack_Data() */
+
+bool Pack_UInt8(Pack_t *PackPtr, uint8 Data)
+{
+    return Pack_Data(PackPtr, &amp;Data, sizeof(Data));
+} /* end Pack_UInt8() */
+
+bool Pack_UInt16(Pack_t *PackPtr, uint16 Data)
+{
+    uint16 D = CFE_MAKE_BIG16(Data);
+    return Pack_Data(PackPtr, &amp;D, sizeof(D));
+} /* end Pack_UInt16() */
+
+bool Pack_Int16(Pack_t *PackPtr, int16 Data)
+{
+    int16 D = CFE_MAKE_BIG16(Data);
+    return Pack_Data(PackPtr, &amp;D, sizeof(D));
+} /* end Pack_Int16() */
+
+bool Pack_UInt32(Pack_t *PackPtr, uint32 Data)
+{
+    uint32 D = CFE_MAKE_BIG32(Data);
+    return Pack_Data(PackPtr, &amp;D, sizeof(D));
+} /* end Pack_UInt32() */
+
+bool Pack_Time(Pack_t *PackPtr, OS_time_t Data)
+{
+    OS_time_t D;
+    OS_TimeAssembleFromMicroseconds(
+        CFE_MAKE_BIG32(OS_TimeGetTotalSeconds(Data)),
+        CFE_MAKE_BIG32(OS_TimeGetMicrosecondsPart(Data)));
+    return Pack_Data(PackPtr, &amp;D, sizeof(D));
+} /* end Pack_Time() */
+
+bool Pack_MsgID(Pack_t *PackPtr, CFE_SB_MsgId_t Data)
+{
+    uint32 D;
+    D = CFE_MAKE_BIG32(CFE_SB_MsgIdToValue(Data));
+    return Pack_Data(PackPtr, &amp;D, sizeof(D));
+} /* end Pack_MsgID() */
+
+bool Unpack_Data(Pack_t *Pack, void *DataBuf, size_t Sz)
+{
+    if (Pack-&gt;BufUsed + Sz &gt; Pack-&gt;BufSz)
+    {
+        return false;
+    }
+
+    memcpy(DataBuf, (uint8 *)Pack-&gt;Buf + Pack-&gt;BufUsed, Sz);
+
+    Pack-&gt;BufUsed += Sz;
+
+    return true;
+} /* end Unpack_Data() */
+
+bool Unpack_UInt8(Pack_t *Pack, uint8 *DataBuf)
+{
+    return Unpack_Data(Pack, DataBuf, sizeof(*DataBuf));
+} /* end Unpack_UInt8() */
+
+bool Unpack_UInt16(Pack_t *Pack, uint16 *DataBuf)
+{
+    uint16 D;
+    if (!Unpack_Data(Pack, &amp;D, sizeof(D)))
+    {
+        return false;
+    }
+    *DataBuf = CFE_MAKE_BIG16(D);
+    return true;
+} /* end Unpack_UInt16() */
+
+bool Unpack_Int16(Pack_t *Pack, int16 *DataBuf)
+{
+    int16 D;
+    if (!Unpack_Data(Pack, &amp;D, sizeof(D)))
+    {
+        return false;
+    }
+    *DataBuf = CFE_MAKE_BIG16(D);
+    return true;
+} /* end Unpack_Int16() */
+
+bool Unpack_UInt32(Pack_t *Pack, uint32 *DataBuf)
+{
+    uint32 D;
+    if (!Unpack_Data(Pack, &amp;D, sizeof(D)))
+    {
+        return false;
+    }
+    *DataBuf = CFE_MAKE_BIG32(D);
+    return true;
+} /* end Unpack_UInt32() */
+
+bool Unpack_MsgID(Pack_t *Pack, CFE_SB_MsgId_t *DataBuf)
+{
+    uint32 D;
+    if (!Unpack_Data(Pack, &amp;D, sizeof(D)))
+    {
+        return false;
+    }
+    *DataBuf = CFE_SB_ValueToMsgId(CFE_MAKE_BIG32(D));
+    return true;
+} /* end Unpack_MsgID() */
+</pre></div>
+</div>
+</section>
+<section id="sbn-pack-h">
+<h2><code class="docutils literal notranslate"><span class="pre">sbn_pack.h</span></code><a class="headerlink" href="#sbn-pack-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sbn/fsw/src/sbn_pack.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#ifndef _sbn_pack_h_
+#define _sbn_pack_h_
+
+/**
+ * SBN messages are transmitted over the wire with SBN-specific headers which are
+ * network-order packed binary values. These functions are utilities for packing
+ * and unpacking those headers.
+ *
+ * General pattern is:
+ *
+ * ```
+ * Pack_t Pack;
+ * uint8 Buffer[BUFSZ];
+ * void packfn()
+ * {
+ *    Pack_Init(&amp;Pack, Buffer, sizeof(Buffer), true);
+ *    Pack_UInt32(&amp;Pack, 0x1234);
+ * }
+ *
+ * void unpackfn()
+ * {
+ *    uint32 f;
+ *    Pack_Init(&amp;Pack, Buffer, sizeof(Buffer), false);
+ *    Unpack_UInt32(&amp;Pack, &amp;f);
+ * }
+ * ```
+ */
+
+#include &lt;stdlib.h&gt; /* size_t */
+#include "osconfig.h"
+#include "cfe.h"
+#include "cfe_endian.h"
+
+typedef struct
+{
+    void * Buf;
+    size_t BufSz, BufUsed;
+} Pack_t;
+
+/**
+ * Initialize the packing management structure.
+ *
+ * @param PackPtr[in/out] The pointer to the management structure to initialize.
+ * @param Buf[in] The buffer for storing packed data.
+ * @param BufSz[in] The size of the buffer.
+ * @param ClearFlag[in] If true, zero the buffer.
+ *
+ * @return true if the initialization succeeded.
+ *
+ * @sa #Pack_Data, #Pack_UInt8, #Pack_Int16, #Pack_UInt16, #Pack_UInt32, #Pack_Time, #Pack_MsgID
+ * @sa #Unpack_Data, #Unpack_UInt8, #Unpack_Int16, #Unpack_UInt16, #Unpack_UInt32, #Unpack_Time, #Unpack_MsgID
+ */
+bool Pack_Init(Pack_t *PackPtr, void *Buf, size_t BufSz, bool ClearFlag);
+
+/**
+ * Pack data into the buffer. This does the grunt-work of managing the buffer,
+ * and has no idea what the data contains.
+ *
+ * @param PackPtr[in/out] The pointer to the management structure.
+ * @param DataBuf[in] The buffer to pack into the buffer.
+ * @param DataBufSz[in] The size of the data buffer.
+ *
+ * @return true if the data was successfully packed into the buffer, false if
+ *         it failed (likely due to running out of available space in the buffer.)
+ *
+ * @sa #Pack_Init, #Unpack_Data
+ */
+bool Pack_Data(Pack_t *PackPtr, void *DataBuf, size_t DataBufSz);
+
+/**
+ * Pack an unsigned 8-bit integer into the buffer.
+ *
+ * @param PackPtr[in/out] The pointer to the management structure.
+ * @param Data[in] The value to pack.
+ *
+ * @return true if the data was successfully packed into the buffer, false if
+ *         it failed (likely due to running out of available space in the buffer.)
+ *
+ * @sa #Pack_Data
+ */
+bool Pack_UInt8(Pack_t *PackPtr, uint8 Data);
+
+/**
+ * Pack an unsigned 16-bit integer into the buffer.
+ *
+ * @param PackPtr[in/out] The pointer to the management structure.
+ * @param Data[in] The value to pack.
+ *
+ * @return true if the data was successfully packed into the buffer, false if
+ *         it failed (likely due to running out of available space in the buffer.)
+ *
+ * @sa #Pack_Data
+ */
+bool Pack_UInt16(Pack_t *PackPtr, uint16 Data);
+
+/**
+ * Pack a signed 16-bit integer into the buffer.
+ *
+ * @param PackPtr[in/out] The pointer to the management structure.
+ * @param Data[in] The value to pack.
+ *
+ * @return true if the data was successfully packed into the buffer, false if
+ *         it failed (likely due to running out of available space in the buffer.)
+ *
+ * @sa #Pack_Data
+ */
+bool Pack_Int16(Pack_t *PackPtr, int16 Data);
+
+/**
+ * Pack an unsigned 32-bit integer into the buffer.
+ *
+ * @param PackPtr[in/out] The pointer to the management structure.
+ * @param Data[in] The value to pack.
+ *
+ * @return true if the data was successfully packed into the buffer, false if
+ *         it failed (likely due to running out of available space in the buffer.)
+ *
+ * @sa #Pack_Data
+ */
+bool Pack_UInt32(Pack_t *PackPtr, uint32 Data);
+
+/**
+ * Pack a time datum into the buffer.
+ *
+ * @param PackPtr[in/out] The pointer to the management structure.
+ * @param Data[in] The value to pack.
+ *
+ * @return true if the data was successfully packed into the buffer, false if
+ *         it failed (likely due to running out of available space in the buffer.)
+ *
+ * @sa #Pack_Data
+ */
+bool Pack_Time(Pack_t *PackPtr, OS_time_t Data);
+
+/**
+ * Pack a CFE Software Bus message identifier into the buffer.
+ *
+ * @param PackPtr[in/out] The pointer to the management structure.
+ * @param Data[in] The value to pack.
+ *
+ * @return true if the data was successfully packed into the buffer, false if
+ *         it failed (likely due to running out of available space in the buffer.)
+ *
+ * @sa #Pack_Data
+ */
+bool Pack_MsgID(Pack_t *PackPtr, CFE_SB_MsgId_t Data);
+
+/**
+ * Unpacks data from the existing packed buffer. This does the grunt-work of managing the buffer,
+ * and has no idea what the data contains.
+ *
+ * @param PackPtr[in/out] The pointer to the management structure.
+ * @param DataBuf[out] The buffer to pack from the buffer.
+ * @param DataBufSz[in] The number of bytes to read from the buffer into DataBuf.
+ *
+ * @return true if the data was successfully read from the buffer, false if
+ *         it failed (likely due to no more data in the buffer.)
+ *
+ * @sa #Pack_Init, #Pack_Data
+ */
+bool Unpack_Data(Pack_t *PackPtr, void *DataBuf, size_t Sz);
+
+/**
+ * Unpack an unsigned 8-bit integer from the pack buffer.
+ *
+ * @param PackPtr[in/out] The pointer to the management structure.
+ * @param DataBuf[out] The pointer to where the data should be stored.
+ *
+ * @return true if the data was successfully read from the buffer, false if
+ *         it failed (likely due to no more data in the buffer.)
+ *
+ * @sa #Unpack_Data
+ */
+bool Unpack_UInt8(Pack_t *PackPtr, uint8 *DataBuf);
+
+/**
+ * Unpack an unsigned 16-bit integer from the pack buffer.
+ *
+ * @param PackPtr[in/out] The pointer to the management structure.
+ * @param DataBuf[out] The pointer to where the data should be stored.
+ *
+ * @return true if the data was successfully read from the buffer, false if
+ *         it failed (likely due to no more data in the buffer.)
+ *
+ * @sa #Unpack_Data
+ */
+bool Unpack_UInt16(Pack_t *PackPtr, uint16 *DataBuf);
+
+/**
+ * Unpack a signed 16-bit integer from the pack buffer.
+ *
+ * @param PackPtr[in/out] The pointer to the management structure.
+ * @param DataBuf[out] The pointer to where the data should be stored.
+ *
+ * @return true if the data was successfully read from the buffer, false if
+ *         it failed (likely due to no more data in the buffer.)
+ *
+ * @sa #Unpack_Data
+ */
+bool Unpack_Int16(Pack_t *PackPtr, int16 *DataBuf);
+
+/**
+ * Unpack an unsigned 32-bit integer from the pack buffer.
+ *
+ * @param PackPtr[in/out] The pointer to the management structure.
+ * @param DataBuf[out] The pointer to where the data should be stored.
+ *
+ * @return true if the data was successfully read from the buffer, false if
+ *         it failed (likely due to no more data in the buffer.)
+ *
+ * @sa #Unpack_Data
+ */
+bool Unpack_UInt32(Pack_t *PackPtr, uint32 *DataBuf);
+
+/**
+ * Unpack a CFE software bus message identifier from the pack buffer.
+ *
+ * @param PackPtr[in/out] The pointer to the management structure.
+ * @param DataBuf[out] The pointer to where the data should be stored.
+ *
+ * @return true if the data was successfully read from the buffer, false if
+ *         it failed (likely due to no more data in the buffer.)
+ *
+ * @sa #Unpack_Data
+ */
+bool Unpack_MsgID(Pack_t *PackPtr, CFE_SB_MsgId_t *DataBuf);
+
+#endif /* _sbn_pack_h_ */
+</pre></div>
+</div>
+</section>
+<section id="sbn-subs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">sbn_subs.c</span></code><a class="headerlink" href="#sbn-subs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sbn/fsw/src/sbn_subs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/******************************************************************************
+ ** \file sbn_subs.c
+ **
+ **      Copyright (c) 2004-2006, United States government as represented by the
+ **      administrator of the National Aeronautics Space Administration.
+ **      All rights reserved. This software(cFE) was created at NASA's Goddard
+ **      Space Flight Center pursuant to government contracts.
+ **
+ **      This software may be used only pursuant to a United States government
+ **      sponsored project and the United States government may not be charged
+ **      for use thereof.
+ **
+ ** Purpose:
+ **      This file contains source code for the Software Bus Network Application.
+ **
+ ** Authors:   J. Wilmot/GSFC Code582
+ **            R. McGraw/SSI
+ **            E. Timmons/GSFC Code587
+ **            C. Knight/ARC Code TI
+ */
+
+#include "sbn_app.h"
+#include &lt;string.h&gt;
+#include &lt;arpa/inet.h&gt;
+#include "cfe_msgids.h"
+#include "sbn_pack.h"
+
+// TODO: instead of using void * for the buffer for SBN messages, use
+// a struct that has the SBN header in packed bytes.
+
+/**
+ * Informs the software bus to send this application all subscription requests.
+ */
+SBN_Status_t SBN_SendSubsRequests(void)
+{
+    CFE_Status_t    CFE_Status = CFE_SUCCESS;
+    CFE_MSG_CommandHeader_t CmdMsg;
+
+    /* Turn on SB subscription reporting */
+    CFE_MSG_Init((CFE_MSG_Message_t *)&amp;CmdMsg, CFE_SB_ValueToMsgId(CFE_SB_SUB_RPT_CTRL_MID), sizeof(CmdMsg));
+    CFE_MSG_SetFcnCode((CFE_MSG_Message_t *)&amp;CmdMsg, CFE_SB_ENABLE_SUB_REPORTING_CC);
+    CFE_Status = CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&amp;CmdMsg, true);
+    if (CFE_Status != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_SUB_EID, "Unable to turn on sub reporting (status=%d)", CFE_Status);
+        return SBN_ERROR;
+    } /* end if */
+
+    /* Request a list of previous subscriptions from SB */
+    CFE_MSG_SetFcnCode((CFE_MSG_Message_t *)&amp;CmdMsg, CFE_SB_SEND_PREV_SUBS_CC);
+    CFE_Status = CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&amp;CmdMsg, true);
+    if (CFE_Status != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_SUB_EID, "Unable to send prev subs request (status=%d)", CFE_Status);
+        return SBN_ERROR;
+    } /* end if */
+
+    return SBN_SUCCESS;
+} /* end SBN_SendSubsRequests */
+
+/**
+ * \brief Sends a local subscription over the wire to a peer.
+ *
+ * @param[in] SubType Whether this is a subscription or unsubscription.
+ * @param[in] MsgID The CCSDS message ID being (un)subscribed.
+ * @param[in] QoS The CCSDS quality of service being (un)subscribed.
+ * @param[in] Peer The Peer interface
+ */
+static SBN_Status_t SendLocalSubToPeer(int SubType, CFE_SB_MsgId_t MsgID, CFE_SB_Qos_t QoS, SBN_PeerInterface_t *Peer)
+{
+    uint8  Buf[SBN_PACKED_SUB_SZ];
+    Pack_t Pack;
+    Pack_Init(&amp;Pack, &amp;Buf, SBN_PACKED_SUB_SZ, 0);
+    Pack_Data(&amp;Pack, (void *)SBN_IDENT, SBN_IDENT_LEN);
+    Pack_UInt16(&amp;Pack, 1);
+
+    Pack_MsgID(&amp;Pack, MsgID);
+    Pack_Data(&amp;Pack, &amp;QoS, sizeof(QoS)); /* 2 uint8's */
+
+    // printf("sbn_subs: SendLocalSubToPeer: Type: %d, MsgID: %lu, MsgSz: %lu, Msg 0x", SubType, CFE_SB_MsgIdToValue(MsgID), Pack.BufUsed);
+    // uint8_t * msg_char = (uint8_t*) Buf;
+    // for(size_t i = 0; i &lt; Pack.BufUsed; i++)
+    // {
+    //     printf("%02x", (uint8_t*) msg_char[i]);
+    // }
+    // printf("\n");
+
+    EVSSendDbg(SBN_PEER_EID, "send local sub to peer %d:%d", Peer-&gt;SpacecraftID, Peer-&gt;ProcessorID);
+    return SBN_SendNetMsg(SubType, Pack.BufUsed, Buf, Peer);
+} /* end SendLocalSubToPeer */
+
+/**
+ * \brief Sends all local subscriptions over the wire to a peer.
+ *
+ * @param[in] Peer The peer interface.
+ */
+SBN_Status_t SBN_SendLocalSubsToPeer(SBN_PeerInterface_t *Peer)
+{
+    uint8  Buf[SBN_PACKED_SUB_SZ];
+    Pack_t Pack;
+    Pack_Init(&amp;Pack, &amp;Buf, SBN_PACKED_SUB_SZ, 0);
+    Pack_Data(&amp;Pack, (void *)SBN_IDENT, SBN_IDENT_LEN);
+    Pack_UInt16(&amp;Pack, SBN.SubCnt);
+
+    int i = 0;
+    for (i = 0; i &lt; SBN.SubCnt; i++)
+    {
+        Pack_MsgID(&amp;Pack, SBN.Subs[i].MsgID);
+        /* 2 uint8's */
+        Pack_Data(&amp;Pack, &amp;SBN.Subs[i].QoS, sizeof(SBN.Subs[i].QoS));
+    } /* end for */
+    
+    //printf("sbn_subs: SendLocalSubsToPeer: SubCount: %lu, MsgSz: %lu, MsgIds:\n", SBN.SubCnt, Pack.BufUsed);
+    //for(i = 0; i &lt; SBN.SubCnt; i++)
+    //{
+    //    printf("0x%08x\n", CFE_SB_MsgIdToValue(SBN.Subs[i].MsgID));
+    //}
+    //printf("Msg 0x");
+    //uint8_t * msg_char = (uint8_t*) Buf;
+    //for(size_t i = 0; i &lt; Pack.BufUsed; i++)
+    //{
+    //    printf("%02x", (uint8_t*) msg_char[i]);
+    //}
+    //printf("\n");
+
+    EVSSendDbg(SBN_PEER_EID, "send local subs to peer %d:%d", Peer-&gt;SpacecraftID, Peer-&gt;ProcessorID);
+    return SBN_SendNetMsg(SBN_SUB_MSG, Pack.BufUsed, Buf, Peer);
+} /* end SBN_SendLocalSubsToPeer */
+
+/**
+ * Utility to find the subscription index (SBN.Subs)
+ * that is subscribed to the CCSDS message ID.
+ *
+ * @param[out] IdxPtr The subscription index found.
+ * @param[in] MsgID The CCSDS message ID of the subscription being sought.
+ * @return true if found.
+ */
+static int IsMsgIDSub(int *IdxPtr, CFE_SB_MsgId_t MsgID)
+{
+    int i = 0;
+
+    for (i = 0; i &lt; SBN.SubCnt; i++)
+    {
+        if (CFE_SB_MsgId_Equal(SBN.Subs[i].MsgID, MsgID))
+        {
+            if (IdxPtr)
+            {
+                *IdxPtr = i;
+            } /* end if */
+
+            return true;
+        } /* end if */
+    }     /* end for */
+
+    return false;
+} /* end IsMsgIDSub */
+
+/**
+ * \brief Is this peer subscribed to this message ID? If so, what is the index
+ *        of the subscription?
+ *
+ * @param[out] SubIdxPtr The pointer to the subscription index value.
+ * @param[in] MsgID The CCSDS message ID of the subscription being sought.
+ * @param[in] Peer The peer interface.
+ *
+ * @return true if found.
+ */
+static int IsPeerSubMsgID(int *SubIdxPtr, CFE_SB_MsgId_t MsgID, SBN_PeerInterface_t *Peer)
+{
+    int i = 0;
+
+    for (i = 0; i &lt; Peer-&gt;SubCnt; i++)
+    {
+        if (CFE_SB_MsgId_Equal(Peer-&gt;Subs[i].MsgID, MsgID))
+        {
+            *SubIdxPtr = i;
+            return true;
+        } /* end if */
+    }     /* end for */
+
+    return false;
+
+} /* end IsPeerSubMsgID */
+
+/**
+ * \brief I have seen a local subscription, send it on to peers if this is the
+ * first instance of a subscription for this message ID.
+ *
+ * @param[in] MsgID The CCSDS Message ID of the local subscription.
+ * @param[in] QoS The CCSDS quality of service of the local subscription.
+ */
+static SBN_Status_t ProcessLocalSub(CFE_SB_MsgId_t MsgID, CFE_SB_Qos_t QoS)
+{
+    SBN_Status_t SBN_Status = SBN_SUCCESS;
+    /* don't send event messages */
+    if (CFE_SB_MsgId_Equal(MsgID, CFE_SB_ValueToMsgId(CFE_EVS_LONG_EVENT_MSG_MID)))
+        return SBN_SUCCESS;
+
+    /* don't send SBN messages */
+    if (CFE_SB_MsgId_Equal(MsgID, CFE_SB_ValueToMsgId(SBN_CMD_MID))
+            || CFE_SB_MsgId_Equal(MsgID, CFE_SB_ValueToMsgId(SBN_TLM_MID)))
+        return SBN_SUCCESS;
+
+    int SubIdx = 0;
+
+    /* if there is already an entry for this msg id,just incr InUseCtr */
+    if (IsMsgIDSub(&amp;SubIdx, MsgID))
+    {
+        SBN.Subs[SubIdx].InUseCtr++;
+        EVSSendDbg(SBN_SUB_EID, "local sub already exists: in use: %d", SBN.Subs[SubIdx].InUseCtr);
+        /* does not send to peers, as they already know */
+        return SBN_SUCCESS;
+    } /* end if */
+
+    if (SBN.SubCnt &gt;= SBN_MAX_SUBS_PER_PEER)
+    {
+        EVSSendErr(SBN_SUB_EID, "local subscription ignored for MsgID 0x%04X, max (%d) met",
+            CFE_SB_MsgIdToValue(MsgID), SBN_MAX_SUBS_PER_PEER);
+        return SBN_ERROR;
+    } /* end if */
+
+    /* log new entry into Subs array */
+    SBN.Subs[SBN.SubCnt].InUseCtr = 1;
+    SBN.Subs[SBN.SubCnt].MsgID    = MsgID;
+    SBN.Subs[SBN.SubCnt].QoS      = QoS;
+    SBN.SubCnt++;
+
+    int NetIdx = 0, PeerIdx = 0;
+    for (NetIdx = 0; NetIdx &lt; SBN.NetCnt; NetIdx++)
+    {
+        SBN_NetInterface_t *Net = &amp;SBN.Nets[NetIdx];
+        for (PeerIdx = 0; PeerIdx &lt; Net-&gt;PeerCnt; PeerIdx++)
+        {
+            SBN_PeerInterface_t *Peer = &amp;Net-&gt;Peers[PeerIdx];
+
+            EVSSendDbg(SBN_PEER_EID, "process local sub for MID %#04x sending to %d:%d",
+                CFE_SB_MsgIdToValue(MsgID), Peer-&gt;SpacecraftID, Peer-&gt;ProcessorID);
+            SBN_Status = SendLocalSubToPeer(SBN_SUB_MSG, MsgID, QoS, Peer);
+
+            if (SBN_Status != SBN_SUCCESS)
+            {
+                return SBN_Status;
+            } /* end if */
+        }     /* end for */
+    }         /* end for */
+
+    return SBN_Status;
+} /* end ProcessLocalSub */
+
+/**
+ * \brief I have seen a local unsubscription, send it on to peers if this is the
+ * last instance of a subscription for this message ID.
+ *
+ * @param[in] MsgID The CCSDS Message ID of the local unsubscription.
+ * @param[in] QoS The CCSDS quality of service of the local unsubscription.
+ */
+static SBN_Status_t ProcessLocalUnsub(CFE_SB_MsgId_t MsgID)
+{
+    SBN_Status_t SBN_Status = SBN_SUCCESS;
+    int          SubIdx;
+
+    /* find idx of matching subscription */
+    if (!IsMsgIDSub(&amp;SubIdx, MsgID))
+    {
+        return SBN_SUCCESS; /* or should this be error? */
+    }                       /* end if */
+
+    SBN.Subs[SubIdx].InUseCtr--;
+
+    /* do not modify the array and tell peers
+    ** until the # of local subscriptions = 0
+    */
+    if (SBN.Subs[SubIdx].InUseCtr &gt; 0)
+    {
+        return SBN_SUCCESS;
+    } /* end if */
+
+    /* remove sub from array for and
+    ** shift all subscriptions in higher elements to fill the gap
+    ** note that the Subs[] array has one extra element to allow for an
+    ** unsub from a full table.
+    */
+    for (; SubIdx &lt; SBN.SubCnt; SubIdx++)
+    {
+        memcpy(&amp;SBN.Subs[SubIdx], &amp;SBN.Subs[SubIdx + 1], sizeof(SBN_Subs_t));
+    } /* end for */
+
+    SBN.SubCnt--;
+
+    /* send unsubscription to all peers if peer state is heartbeating and */
+    /* only if no more local subs (InUseCtr = 0)  */
+    int NetIdx = 0, PeerIdx = 0;
+    for (NetIdx = 0; NetIdx &lt; SBN.NetCnt; NetIdx++)
+    {
+        SBN_NetInterface_t *Net = &amp;SBN.Nets[NetIdx];
+        for (PeerIdx = 0; PeerIdx &lt; Net-&gt;PeerCnt; PeerIdx++)
+        {
+            SBN_PeerInterface_t *Peer = &amp;Net-&gt;Peers[PeerIdx];
+
+            EVSSendInfo(SBN_PEER_EID, "process local unsub %d:%d", Peer-&gt;SpacecraftID, Peer-&gt;ProcessorID);
+            SBN_Status = SendLocalSubToPeer(SBN_UNSUB_MSG, SBN.Subs[PeerIdx].MsgID, SBN.Subs[PeerIdx].QoS, Peer);
+
+            if (SBN_Status != SBN_SUCCESS)
+            {
+                return SBN_Status;
+            } /* end if */
+        }     /* end for */
+    }         /* end for */
+
+    return SBN_SUCCESS;
+} /* end ProcessLocalUnsub */
+
+/**
+ * \brief Check the local pipe for subscription messages. Send them on to peers
+ *        if there are any (new)subscriptions.
+ *
+ * @return SBN_SUCCESS if subscriptions received, SBN_IF_EMPTY if no subs recvd, SBN_ERROR otherwise.
+ */
+SBN_Status_t SBN_CheckSubscriptionPipe(void)
+{
+    CFE_Status_t CFE_Status = CFE_SUCCESS;
+
+    CFE_SB_AllSubscriptionsTlm_t *MsgPtr = NULL; /* largest message format */
+    CFE_SB_SingleSubscriptionTlm_t *SingleMsgPtr = NULL; /* utility "cast" */
+    CFE_SB_MsgId_t MsgId;
+
+    CFE_Status = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&amp;MsgPtr, SBN.SubPipe, CFE_SB_POLL);
+    switch (CFE_Status)
+    {
+        case CFE_SUCCESS:
+
+            if (CFE_MSG_GetMsgId((CFE_MSG_Message_t *)MsgPtr, &amp;MsgId) != CFE_SUCCESS)
+            {
+                EVSSendErr(SBN_MSG_EID, "unable to get message id");
+                return SBN_ERROR;
+            }
+
+            if(CFE_SB_MsgId_Equal(MsgId, CFE_SB_ValueToMsgId(CFE_SB_ONESUB_TLM_MID)))
+            {
+                SingleMsgPtr = (CFE_SB_SingleSubscriptionTlm_t *)MsgPtr;
+                switch (SingleMsgPtr-&gt;Payload.SubType)
+                {
+                    case CFE_SB_SUBSCRIPTION:
+                        return ProcessLocalSub(SingleMsgPtr-&gt;Payload.MsgId, SingleMsgPtr-&gt;Payload.Qos);
+                    case CFE_SB_UNSUBSCRIPTION:
+                        return ProcessLocalUnsub(SingleMsgPtr-&gt;Payload.MsgId);
+                    default:
+                        EVSSendErr(SBN_SUB_EID, "unexpected subscription type (%d) in SBN_CheckSubscriptionPipe",
+                            SingleMsgPtr-&gt;Payload.SubType);
+                        return SBN_ERROR;
+                } /* end switch */
+            }
+            else if(CFE_SB_MsgId_Equal(MsgId, CFE_SB_ValueToMsgId(CFE_SB_ALLSUBS_TLM_MID)))
+            {
+                return SBN_ProcessAllSubscriptions(MsgPtr);
+            }
+            else
+            {
+                EVSSendErr(SBN_MSG_EID, "unexpected message id (0x%04X) on SBN.SubPipe",
+                   CFE_SB_MsgIdToValue(MsgId));
+                return SBN_ERROR;
+            } /* end switch */
+
+            break;
+        case CFE_SB_NO_MESSAGE:
+            return SBN_IF_EMPTY;
+        default:
+            EVSSendErr(SBN_MSG_EID, "err from rcvmsg on sub pipe");
+            return SBN_ERROR;
+    } /* end switch */
+
+    return SBN_ERROR;
+} /* end SBN_CheckSubscriptionPipe */
+
+/**
+ * \brief Record keep the subscription locally so that when we no longer have any peers subscribed
+ *        to this MID, I unsubscribe from the MID.
+ *
+ * @param[in] Peer The peer interface.
+ * @param[in] MsgID The subscription SBN message ID.
+ * @param[in] QoS The subscription quality of service.
+ *
+ * @return SBN_SUCCESS on successfully adding the sub to my records, otherwise SBN_ERROR
+ */
+static SBN_Status_t AddSub(SBN_PeerInterface_t *Peer, CFE_SB_MsgId_t MsgID, CFE_SB_Qos_t QoS)
+{
+    int          idx        = 0;
+    CFE_Status_t CFE_Status = SBN_SUCCESS;
+
+    /* if msg id already in the list, ignore */
+    if (IsPeerSubMsgID(&amp;idx, MsgID, Peer))
+    {
+        return SBN_SUCCESS;
+    } /* end if */
+
+    if (Peer-&gt;SubCnt &gt;= SBN_MAX_SUBS_PER_PEER)
+    {
+        EVSSendErr(SBN_SUB_EID, "cannot process subscription from ProcessorID %d, max (%d) met",
+            Peer-&gt;ProcessorID, SBN_MAX_SUBS_PER_PEER);
+        return SBN_ERROR;
+    } /* end if */
+
+    /* SubscribeLocal suppresses the subscription report */
+    CFE_Status = CFE_SB_SubscribeLocal(MsgID, Peer-&gt;Pipe, SBN_DEFAULT_MSG_LIM);
+    if (CFE_Status != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_SUB_EID, "unable to subscribe to MID 0x%04X",
+            CFE_SB_MsgIdToValue(MsgID));
+        return SBN_ERROR;
+    } /* end if */
+
+    /* log the subscription in the peer table */
+    Peer-&gt;Subs[Peer-&gt;SubCnt].MsgID = MsgID;
+    Peer-&gt;Subs[Peer-&gt;SubCnt].QoS   = QoS;
+
+    Peer-&gt;SubCnt++;
+
+    return SBN_SUCCESS;
+} /* end AddSub */
+
+/**
+ * \brief Process a subscription from a peer.
+ *
+ * @param[in] Peer The peer interface.
+ * @param[in] MsgID The subscription SBN message ID.
+ * @param[in] QoS The subscription quality of service.
+ *
+ * @return SBN_SUCCESS on successfully handling subscription from peer, otherwise SBN_ERROR
+ */
+static SBN_Status_t ProcessSubFromPeer(SBN_PeerInterface_t *Peer, CFE_SB_MsgId_t MsgID, CFE_SB_Qos_t QoS)
+{
+    SBN_ModuleIdx_t  FilterIdx;
+    SBN_Filter_Ctx_t Filter_Context;
+    SBN_Status_t     SBN_Status;
+
+    Filter_Context.MyProcessorID   = CFE_PSP_GetProcessorId();
+    Filter_Context.MySpacecraftID  = CFE_PSP_GetSpacecraftId();
+    Filter_Context.PeerProcessorID = Peer-&gt;ProcessorID;
+    Filter_Context.PeerSpacecraftID  = Peer-&gt;SpacecraftID;
+
+    printf("snb_subs: ProcessSubFromPeer: MyProcessorID = %d, MySpacecraftID = %d, PeerProcessorID = %d, PeerSpacecraftID = %d, MsgID = 0x%04x\n", Filter_Context.MyProcessorID, Filter_Context.MySpacecraftID, Filter_Context.PeerProcessorID, Filter_Context.PeerSpacecraftID, CFE_SB_MsgIdToValue(MsgID));
+
+    for (FilterIdx = 0; FilterIdx &lt; Peer-&gt;FilterCnt; FilterIdx++)
+    {
+        if (Peer-&gt;Filters[FilterIdx]-&gt;RemapMID == NULL)
+        {
+            continue;
+        } /* end if */
+
+        SBN_Status = (Peer-&gt;Filters[FilterIdx]-&gt;RemapMID)(&amp;MsgID, &amp;Filter_Context);
+
+        if (SBN_Status != SBN_SUCCESS)
+        {
+            return SBN_Status;
+        } /* end if */
+    }     /* end for */
+
+    return AddSub(Peer, MsgID, QoS);
+} /* ProcessSubFromPeer */
+
+/**
+ * \brief Process a subscription message from a peer.
+ *
+ * @param[in] PeerIdx The peer index (in SBN.Peer)
+ * @param[in] Msg The subscription SBN message.
+ *
+ * @return SBN_SUCCESS on successfully handling all subscriptions from peer, otherwise SBN_ERROR
+ */
+SBN_Status_t SBN_ProcessSubsFromPeer(SBN_PeerInterface_t *Peer, void *Msg)
+{
+    SBN_Status_t SBN_Status = SBN_SUCCESS;
+    Pack_t       Pack;
+    char         VersionHash[SBN_IDENT_LEN];
+
+    Pack_Init(&amp;Pack, Msg, CFE_MISSION_SB_MAX_SB_MSG_SIZE, false);
+
+    Unpack_Data(&amp;Pack, VersionHash, SBN_IDENT_LEN);
+
+    if (strncmp(VersionHash, SBN_IDENT, SBN_IDENT_LEN))
+    {
+        EVSSendErr(SBN_PROTO_EID, "version number mismatch with peer CpuID %d", Peer-&gt;ProcessorID);
+        return SBN_ERROR;
+    }
+
+    uint16 SubCnt;
+    Unpack_UInt16(&amp;Pack, &amp;SubCnt);
+
+    int SubIdx = 0;
+    for (SubIdx = 0; SubIdx &lt; SubCnt; SubIdx++)
+    {
+        CFE_SB_MsgId_t MsgID;
+        Unpack_MsgID(&amp;Pack, &amp;MsgID);
+        CFE_SB_Qos_t QoS;
+        Unpack_Data(&amp;Pack, &amp;QoS, sizeof(QoS));
+
+        SBN_Status = ProcessSubFromPeer(Peer, MsgID, QoS);
+
+        if (SBN_Status != SBN_SUCCESS)
+        {
+            return SBN_Status;
+        } /* end if */
+    }     /* end for */
+
+    return SBN_SUCCESS;
+} /* SBN_ProcessSubsFromPeer */
+
+/**
+ * \brief Process an unsubscription message from a peer.
+ *
+ * @param[in] Peer The peer interface
+ * @param[in] MsgID The unsubscription SBN message ID.
+ *
+ * @return SBN_SUCCESS on successful unsubscription from peer, otherwise SBN_ERROR
+ */
+static SBN_Status_t ProcessUnsubFromPeer(SBN_PeerInterface_t *Peer, CFE_SB_MsgId_t MsgID)
+{
+    CFE_Status_t     CFE_Status;
+    SBN_ModuleIdx_t  FilterIdx;
+    SBN_Filter_Ctx_t Filter_Context;
+    SBN_Status_t     SBN_Status;
+
+    int i = 0, idx = 0;
+
+    Filter_Context.MyProcessorID   = CFE_PSP_GetProcessorId();
+    Filter_Context.MySpacecraftID  = CFE_PSP_GetSpacecraftId();
+    Filter_Context.PeerProcessorID = Peer-&gt;ProcessorID;
+    Filter_Context.PeerSpacecraftID  = Peer-&gt;SpacecraftID;
+
+    for (FilterIdx = 0; FilterIdx &lt; Peer-&gt;FilterCnt; FilterIdx++)
+    {
+        if (Peer-&gt;Filters[FilterIdx]-&gt;RemapMID == NULL)
+        {
+            continue;
+        } /* end if */
+
+        SBN_Status = (Peer-&gt;Filters[FilterIdx]-&gt;RemapMID)(&amp;MsgID, &amp;Filter_Context);
+
+        if (SBN_Status != SBN_SUCCESS)
+        {
+            /* assume the filter generated an event */
+            return SBN_Status;
+        } /* end if */
+    }     /* end for */
+
+    if (!IsPeerSubMsgID(&amp;idx, MsgID, Peer))
+    {
+        EVSSendInfo(SBN_SUB_EID, "cannot process unsubscription from ProcessorID %d, msg 0x%04X not found",
+            Peer-&gt;ProcessorID, CFE_SB_MsgIdToValue(MsgID));
+        return SBN_SUCCESS;
+    } /* end if */
+
+    /* remove sub from array for that peer and
+    ** shift all subscriptions in higher elements to fill the gap
+    ** note that the Subs[] array has one extra element to allow for an
+    ** unsub from a full table.
+    */
+    for (i = idx; i &lt; Peer-&gt;SubCnt; i++)
+    {
+        memcpy(&amp;Peer-&gt;Subs[i], &amp;Peer-&gt;Subs[i + 1], sizeof(SBN_Subs_t));
+    } /* end for */
+
+    /* decrement sub cnt */
+    Peer-&gt;SubCnt--;
+
+    /* unsubscribe to the msg id on the peer pipe */
+    if ((CFE_Status = CFE_SB_UnsubscribeLocal(MsgID, Peer-&gt;Pipe)) != CFE_SUCCESS)
+    {
+        EVSSendErr(SBN_SUB_EID, "unable to unsubscribe from MID 0x%04X: %d",
+            CFE_SB_MsgIdToValue(MsgID), CFE_Status);
+        return SBN_ERROR;
+    } /* end if */
+
+    return SBN_SUCCESS;
+} /* end ProcessUnsubFromPeer */
+
+/**
+ * \brief Process an unsubscription message from a peer.
+ *
+ * @param[in] PeerIdx The peer index (in SBN.Peer)
+ * @param[in] Msg The unsubscription SBN message.
+ *
+ * @return SBN_SUCCESS always (whether or not there were some unsubs that failed.)
+ */
+SBN_Status_t SBN_ProcessUnsubsFromPeer(SBN_PeerInterface_t *Peer, void *Msg)
+{
+    Pack_t Pack;
+
+    Pack_Init(&amp;Pack, Msg, CFE_MISSION_SB_MAX_SB_MSG_SIZE, false);
+
+    char VersionHash[SBN_IDENT_LEN];
+
+    Unpack_Data(&amp;Pack, VersionHash, SBN_IDENT_LEN);
+
+    if (strncmp(VersionHash, SBN_IDENT, SBN_IDENT_LEN))
+    {
+        EVSSendInfo(SBN_PROTO_EID, "version number mismatch with peer CpuID %d", Peer-&gt;ProcessorID);
+    }
+
+    uint16 SubCnt;
+    Unpack_UInt16(&amp;Pack, &amp;SubCnt);
+
+    int SubIdx = 0;
+    for (SubIdx = 0; SubIdx &lt; SubCnt; SubIdx++)
+    {
+        CFE_SB_MsgId_t MsgID;
+        Unpack_MsgID(&amp;Pack, &amp;MsgID);
+        CFE_SB_Qos_t QoS;
+        Unpack_Data(&amp;Pack, &amp;QoS, sizeof(QoS));
+
+        ProcessUnsubFromPeer(Peer, MsgID); /* ignore return value, I want to unsub as much as I can */
+    }                                      /* end for */
+
+    return SBN_SUCCESS;
+} /* end SBN_ProcessUnsubsFromPeer() */
+
+/**
+ * When SBN starts, it queries for all existing subscriptions. This method
+ * processes those subscriptions.
+ *
+ * @param[in] Ptr SB message pointer.
+ *
+ * @return SBN_SUCCESS on successful subscriptions, otherwise SBN_ERROR.
+ */
+SBN_Status_t SBN_ProcessAllSubscriptions(CFE_SB_AllSubscriptionsTlm_t *Ptr)
+{
+    SBN_Status_t SBN_Status = SBN_SUCCESS;
+    int          i          = 0;
+
+    if (Ptr-&gt;Payload.Entries &gt; CFE_SB_SUB_ENTRIES_PER_PKT)
+    {
+        EVSSendErr(SBN_SUB_EID, "entries value %d in SB PrevSubMsg exceeds max %d, aborting", (int)Ptr-&gt;Payload.Entries,
+                   CFE_SB_SUB_ENTRIES_PER_PKT);
+        return SBN_ERROR;
+    } /* end if */
+
+    EVSSendInfo(SBN_SUB_EID, "Processing all subscriptions...");
+
+
+    for (i = 0; i &lt; Ptr-&gt;Payload.Entries; i++)
+    {
+        SBN_Status = ProcessLocalSub(Ptr-&gt;Payload.Entry[i].MsgId, Ptr-&gt;Payload.Entry[i].Qos);
+        if (SBN_Status != SBN_SUCCESS)
+        {
+            return SBN_Status;
+        } /* end if */
+    }     /* end for */
+
+    return SBN_Status;
+} /* end SBN_ProcessAllSubscriptions */
+
+/**
+ * Removes all subscriptions (unsubscribe from the local SB )
+ * for the specified peer, particularly when the peer connection has been lost.
+ *
+ * @param[in] PeerIdx The peer index (into SBN.Peer) to clear.
+ *
+ * @return SBN_SUCCESS always (whether or not there were some unsubs that failed.)
+ */
+SBN_Status_t SBN_RemoveAllSubsFromPeer(SBN_PeerInterface_t *Peer)
+{
+    int          i          = 0;
+    CFE_Status_t CFE_Status = CFE_SUCCESS;
+
+    for (i = 0; i &lt; Peer-&gt;SubCnt; i++)
+    {
+        /** Ignore CFE_SB_BAD_ARGUMENT errors -- currently not checking if the pipe is valid before unsubscribing **/
+        CFE_Status = CFE_SB_UnsubscribeLocal(Peer-&gt;Subs[i].MsgID, Peer-&gt;Pipe);
+        if (CFE_Status != CFE_SUCCESS &amp;&amp; CFE_Status != CFE_SB_BAD_ARGUMENT)
+        {
+            EVSSendErr(SBN_SUB_EID, "unable to unsubscribe from message id 0x%04X: 0x%08X",
+                CFE_SB_MsgIdToValue(Peer-&gt;Subs[i].MsgID), CFE_Status);
+            /* but continue processing... */
+        } /* end if */
+    }     /* end for */
+
+    EVSSendInfo(SBN_SUB_EID, "unsubscribed %d message id's from ProcessorID %d", (int)Peer-&gt;SubCnt, Peer-&gt;ProcessorID);
+
+    Peer-&gt;SubCnt = 0;
+
+    return SBN_SUCCESS;
+} /* end SBN_RemoveAllSubsFromPeer */
+</pre></div>
+</div>
+</section>
+<section id="sbn-subs-h">
+<h2><code class="docutils literal notranslate"><span class="pre">sbn_subs.h</span></code><a class="headerlink" href="#sbn-subs-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sbn/fsw/src/sbn_subs.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/******************************************************************************
+** File: sbn_subs.h
+**
+**      Copyright (c) 2004-2006, United States government as represented by the
+**      administrator of the National Aeronautics Space Administration.
+**      All rights reserved. This software(cFE) was created at NASA's Goddard
+**      Space Flight Center pursuant to government contracts.
+**
+**      This software may be used only pursuant to a United States government
+**      sponsored project and the United States government may not be charged
+**      for use thereof.
+**
+** Purpose:
+**      This header file contains prototypes for private functions related to
+**      handling message subscriptions
+**
+** Authors:   J. Wilmot/GSFC Code582
+**            R. McGraw/SSI
+**            E. Timmons/GSFC Code587
+**            C. Knight/ARC Code TI
+**
+******************************************************************************/
+
+#ifndef _sbn_subs_h_
+#define _sbn_subs_h_
+
+#include "sbn_app.h"
+
+SBN_Status_t SBN_SendLocalSubsToPeer(SBN_PeerInterface_t *Peer);
+SBN_Status_t SBN_CheckSubscriptionPipe(void);
+SBN_Status_t SBN_ProcessSubsFromPeer(SBN_PeerInterface_t *Peer, void *submsg);
+SBN_Status_t SBN_ProcessUnsubsFromPeer(SBN_PeerInterface_t *Peer, void *submsg);
+SBN_Status_t SBN_ProcessAllSubscriptions(CFE_SB_AllSubscriptionsTlm_t *Ptr);
+SBN_Status_t SBN_RemoveAllSubsFromPeer(SBN_PeerInterface_t *Peer);
+SBN_Status_t SBN_SendSubsRequests(void);
+
+#endif /* _sbn_subs_h_ */
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../platform_inc/index.html" class="btn btn-neutral float-left" title="platform_inc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../tables/index.html" class="btn btn-neutral float-right" title="tables" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

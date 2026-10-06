@@ -1,0 +1,3562 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>base &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../../../search.html" />
+    <link rel="next" title="filetransfer" href="../filetransfer/index.html" />
+    <link rel="prev" title="archive" href="../archive/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../../../index.html">gsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../index.html">gsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">yamcs-client</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">main</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">java</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">org</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">client</a></li>
+      <li class="breadcrumb-item active">base</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../../../_sources/project_inventory/gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="base">
+<h1>base<a class="headerlink" href="#base" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="abstractpage-java">
+<h2><code class="docutils literal notranslate"><span class="pre">AbstractPage.java</span></code><a class="headerlink" href="#abstractpage-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/AbstractPage.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import org.yamcs.api.Observer;
+import org.yamcs.client.Page;
+
+import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Message;
+
+public abstract class AbstractPage&lt;RequestT extends Message, ResponseT extends Message, ItemT&gt; implements Page&lt;ItemT&gt; {
+
+    private static final String CONTINUATION_TOKEN = "continuationToken";
+    private static final String NEXT = "next";
+
+    private final RequestT originalRequest;
+    private final String repeatableField;
+    private final FieldDescriptor nextField;
+
+    private CompletableFuture&lt;ResponseT&gt; future;
+
+    // Only set when the future resolves
+    private ResponseT response;
+    private List&lt;ItemT&gt; items;
+    private String continuationToken;
+
+    public AbstractPage(RequestT request, String repeatableField) {
+        originalRequest = request;
+        this.repeatableField = repeatableField;
+
+        Descriptor requestDescriptor = request.getDescriptorForType();
+        nextField = requestDescriptor.findFieldByName(NEXT);
+        if (nextField == null) {
+            throw new IllegalArgumentException(String.format(
+                    "Paging requires the request message to have a field '%s'", NEXT));
+        }
+
+        future = new CompletableFuture&lt;&gt;();
+        fetch(request, new ResponseObserver&lt;&gt;(future));
+    }
+
+    public CompletableFuture&lt;Page&lt;ItemT&gt;&gt; future() {
+        return future.thenApply(response -&gt; {
+            readResponse(response);
+            return this;
+        });
+    }
+
+    private void readResponse(ResponseT response) {
+        this.response = response;
+        Descriptor responseDescriptor = response.getDescriptorForType();
+        FieldDescriptor continuationField = responseDescriptor.findFieldByName(CONTINUATION_TOKEN);
+        if (continuationField == null) {
+            throw new IllegalArgumentException(String.format(
+                    "Paging requires the message to have a field '%s'", CONTINUATION_TOKEN));
+        }
+
+        if (response.hasField(continuationField)) {
+            continuationToken = (String) response.getField(continuationField);
+        }
+
+        FieldDescriptor repeatableDescriptor = responseDescriptor.findFieldByName(repeatableField);
+        items = mapRepeatableField(response.getField(repeatableDescriptor));
+    }
+
+    // Can be overriden to expose a page of non-protobuf messages
+    @SuppressWarnings("unchecked")
+    protected List&lt;ItemT&gt; mapRepeatableField(Object field) {
+        return new ArrayList&lt;&gt;((List&lt;ItemT&gt;) field);
+    }
+
+    public ResponseT getResponse() {
+        return response;
+    }
+
+    @Override
+    public boolean hasNextPage() {
+        return continuationToken != null;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public CompletableFuture&lt;Page&lt;ItemT&gt;&gt; getNextPage() {
+        if (continuationToken == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        Message.Builder newRequest = originalRequest.toBuilder();
+        newRequest.setField(nextField, continuationToken);
+        RequestT continuationRequest = (RequestT) newRequest.build();
+        return new ContinuationPage(continuationRequest, repeatableField).future();
+    }
+
+    protected abstract void fetch(RequestT request, Observer&lt;ResponseT&gt; observer);
+
+    /**
+     * Returns an iterator. This only iterates the current page.
+     */
+    @Override
+    public Iterator&lt;ItemT&gt; iterator() {
+        return items.iterator();
+    }
+
+    // Delegates the actual fetch to the subclass
+    private class ContinuationPage extends AbstractPage&lt;RequestT, ResponseT, ItemT&gt; {
+
+        public ContinuationPage(RequestT request, String repeatableField) {
+            super(request, repeatableField);
+        }
+
+        @Override
+        protected void fetch(RequestT request, Observer&lt;ResponseT&gt; observer) {
+            AbstractPage.this.fetch(request, observer);
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="abstractstreamsender-java">
+<h2><code class="docutils literal notranslate"><span class="pre">AbstractStreamSender.java</span></code><a class="headerlink" href="#abstractstreamsender-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/AbstractStreamSender.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+import java.util.concurrent.CompletableFuture;
+
+import org.yamcs.client.ClientException;
+import org.yamcs.client.StreamSender;
+
+import com.google.protobuf.Message;
+
+public class AbstractStreamSender&lt;ItemT extends Message, ResponseT&gt; implements StreamSender&lt;ItemT, ResponseT&gt; {
+
+    private BulkRestDataSender baseSender;
+
+    public AbstractStreamSender(BulkRestDataSender baseSender) {
+        this.baseSender = baseSender;
+    }
+
+    @Override
+    public void send(ItemT message) {
+        try {
+            baseSender.sendData(message.toByteArray());
+        } catch (ClientException e) {
+            // TODO somehow emit to general future
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public CompletableFuture&lt;ResponseT&gt; complete() {
+        return null;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="abstractsubscription-java">
+<h2><code class="docutils literal notranslate"><span class="pre">AbstractSubscription.java</span></code><a class="headerlink" href="#abstractsubscription-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/AbstractSubscription.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.api.Observer;
+import org.yamcs.client.MessageListener;
+import org.yamcs.client.Subscription;
+
+import com.google.protobuf.Message;
+
+/**
+ * Default base class for a {@link Subscription}.
+ * &lt;p&gt;
+ * This is designed such that most subclasses need only to provide type information. More advanced subscription
+ * subclasses may want to add custom functionality such as call-specific message processing.
+ */
+public abstract class AbstractSubscription&lt;C extends Message, S extends Message&gt; implements Subscription&lt;C, S&gt; {
+
+    // A future that resolves when the call is confirmed by the server
+    // A call is confirmed when the server has assigned it an id (upon first message)
+    private CompletableFuture&lt;Void&gt; confirmationFuture = new CompletableFuture&lt;&gt;();
+
+    // A future that resolves when the call is completed
+    private CompletableFuture&lt;Void&gt; wrappedFuture = new CompletableFuture&lt;&gt;();
+
+    protected Observer&lt;C&gt; clientObserver;
+
+    private Set&lt;MessageListener&lt;S&gt;&gt; messageListeners = new CopyOnWriteArraySet&lt;&gt;();
+
+    protected AbstractSubscription(MethodHandler methodHandler, String topic, Class&lt;S&gt; responseClass) {
+        WebSocketClient client = ((HttpMethodHandler) methodHandler).getWebSocketClient();
+        clientObserver = client.call(topic, new DataObserver&lt;S&gt;() {
+
+            @Override
+            public void confirm() {
+                confirmationFuture.complete(null);
+            }
+
+            @Override
+            public void next(S message) {
+                messageListeners.forEach(l -&gt; l.onMessage(message));
+            }
+
+            @Override
+            public void completeExceptionally(Throwable t) {
+                messageListeners.forEach(l -&gt; l.onError(t));
+                wrappedFuture.completeExceptionally(t);
+            }
+
+            @Override
+            public void complete() {
+                wrappedFuture.complete(null);
+            }
+
+            @Override
+            public Class&lt;S&gt; getMessageClass() {
+                return responseClass;
+            }
+        });
+    }
+
+    /**
+     * Send a message (typically a subscription request) to Yamcs
+     */
+    @Override
+    public void sendMessage(C message) {
+        clientObserver.next(message);
+    }
+
+    /**
+     * Get updated on received server messages.
+     */
+    @Override
+    public void addMessageListener(MessageListener&lt;S&gt; listener) {
+        messageListeners.add(listener);
+    }
+
+    /**
+     * Cancel this subscription. After this method is called, you will no longer receive any messages from it.
+     */
+    @Override
+    public boolean cancel(boolean mayInterruptIfRunning) {
+        messageListeners.clear(); // Immediately ensure nobody will receive anything anymore
+        clientObserver.complete(); // Now notify Yamcs async.
+        return true;
+    }
+
+    public CompletableFuture&lt;Void&gt; getConfirmationFuture() {
+        return confirmationFuture;
+    }
+
+    /**
+     * Waits until the server has confirmed the call for this subscription. Only the first client message of a call is
+     * confirmed.
+     */
+    public void awaitConfirmation() throws InterruptedException, ExecutionException {
+        confirmationFuture.get();
+    }
+
+    /**
+     * Waits until the server has confirmed the call for this subscription. Only the first client message of a call is
+     * confirmed.
+     */
+    public void awaitConfirmation(long timeout, TimeUnit unit)
+            throws InterruptedException, ExecutionException, TimeoutException {
+        confirmationFuture.get(timeout, unit);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return wrappedFuture.isCancelled();
+    }
+
+    @Override
+    public boolean isDone() {
+        return wrappedFuture.isDone();
+    }
+
+    @Override
+    public Void get() throws InterruptedException, ExecutionException {
+        return wrappedFuture.get();
+    }
+
+    @Override
+    public Void get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+        return wrappedFuture.get(timeout, unit);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="bulkrestdatareceiver-java">
+<h2><code class="docutils literal notranslate"><span class="pre">BulkRestDataReceiver.java</span></code><a class="headerlink" href="#bulkrestdatareceiver-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/BulkRestDataReceiver.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+import org.yamcs.client.ClientException;
+
+public interface BulkRestDataReceiver {
+    /**
+     * called when receiving data.
+     * 
+     * 
+     * @param data
+     * @throws ClientException
+     *             if exception is thrown the request will be aborted (connection to the server closed)
+     */
+    public void receiveData(byte[] data) throws ClientException;
+
+    /**
+     * Called when receiving an exception. Note that the CompleteableFuture returned from RestClient can also be used to
+     * intercept the exception;
+     * 
+     * @param t
+     */
+    default void receiveException(Throwable t) {
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="bulkrestdatasender-java">
+<h2><code class="docutils literal notranslate"><span class="pre">BulkRestDataSender.java</span></code><a class="headerlink" href="#bulkrestdatasender-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/BulkRestDataSender.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+import java.nio.channels.ClosedChannelException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.client.ClientException;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.DefaultHttpContent;
+import io.netty.handler.codec.http.DefaultLastHttpContent;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+
+/**
+ * Used to post large quantities of data to yamcs. The data is sent using HTTP chuncked encoding
+ */
+public class BulkRestDataSender extends SimpleChannelInboundHandler&lt;FullHttpResponse&gt; {
+    ChannelHandlerContext ctx;
+    CompletableFuture&lt;byte[]&gt; completeRequestCf = new CompletableFuture&lt;&gt;();
+    volatile ClientException clientException = null;
+    int count = 0;
+
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+        this.ctx = ctx;
+    }
+
+    /**
+     * send the next chunk of data. The caller is blocked if it sends data faster that can be transfered to the server.
+     * 
+     * @param data
+     * @throws ClientException
+     *             when there is an exception sending the data. The exception is also thrown if no data can be sent for
+     *             10 seconds
+     */
+    public void sendData(byte[] data) throws ClientException {
+        ByteBuf buf = Unpooled.wrappedBuffer(data);
+        sendData(buf);
+    }
+
+    public void sendData(ByteBuf buf) throws ClientException {
+        if (clientException != null) {
+            throw clientException;
+        }
+
+        count++;
+        try {
+            Channel ch = ctx.channel();
+            if (!ch.isOpen()) {
+                throw new ClosedChannelException();
+            }
+
+            ChannelFuture writeFuture = ctx.writeAndFlush(new DefaultHttpContent(buf));
+            if (!ch.isWritable()) {
+                boolean writeCompleted = writeFuture.await(600, TimeUnit.SECONDS);
+                if (!writeCompleted) {
+                    throw new ClientException("Channel did not become writable in 60 seconds");
+                }
+            }
+        } catch (Exception e) {
+            completeRequestCf.completeExceptionally(e);
+            if (e instanceof ClientException) {
+                throw (ClientException) e;
+            } else {
+                throw new ClientException(e.toString(), e);
+            }
+        }
+    }
+
+    /**
+     * Complete the request by a final empty chunck and return the response from the server.
+     * 
+     * @return a CompletableFuture that completes once the response from the server has been received.
+     */
+    public CompletableFuture&lt;byte[]&gt; completeRequest() {
+        if (completeRequestCf.isDone()) {
+            return completeRequestCf;
+        }
+
+        Channel ch = ctx.channel();
+        if (!ch.isOpen()) {
+            completeRequestCf.completeExceptionally(new ClosedChannelException());
+        }
+        ChannelFuture writeFuture = ctx.writeAndFlush(new DefaultLastHttpContent());
+        writeFuture.addListener(f -&gt; {
+            if (!f.isSuccess()) {
+                completeRequestCf.completeExceptionally(f.cause());
+            }
+        });
+        return completeRequestCf;
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, FullHttpResponse msg) throws Exception {
+        HttpResponseStatus status = msg.status();
+        if (status.equals(HttpResponseStatus.OK)) {
+            byte[] b = HttpClient.getByteArray(msg.content());
+            completeRequestCf.complete(b);
+        } else {
+            clientException = HttpClient.decodeException(msg);
+            completeRequestCf.completeExceptionally(clientException);
+        }
+    }
+
+    /**
+     *
+     * This handler expects to receive a 100 Continue message which means that the request is ok and the sender can
+     * start streaming data if this is received, a new bulk sender will be created and added to the pipeline and the
+     * CompletableFuture will be completed with the new object if any other response is received, the CompletableFuture
+     * will be completed exceptionally.
+     */
+    static class ContinuationHandler extends SimpleChannelInboundHandler&lt;HttpResponse&gt; {
+        CompletableFuture&lt;BulkRestDataSender&gt; cf;
+
+        public ContinuationHandler(CompletableFuture&lt;BulkRestDataSender&gt; cf) {
+            this.cf = cf;
+        }
+
+        @Override
+        protected void channelRead0(ChannelHandlerContext ctx, HttpResponse msg) {
+            if (msg.status().equals(HttpResponseStatus.CONTINUE)) {
+                ChannelPipeline pipeline = ctx.pipeline();
+                pipeline.remove(this);
+                pipeline.addLast(new HttpObjectAggregator(512 * 1024));
+                BulkRestDataSender brds = new BulkRestDataSender();
+                pipeline.addLast(brds);
+                cf.complete(brds);
+            } else {
+                cf.completeExceptionally(new ClientException("Cannot continue the bulk load: " + msg.status()));
+            }
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="certutil-java">
+<h2><code class="docutils literal notranslate"><span class="pre">CertUtil.java</span></code><a class="headerlink" href="#certutil-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/CertUtil.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+
+public class CertUtil {
+
+    public static KeyStore loadCertFile(String caCertFile) throws IOException, GeneralSecurityException {
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        KeyStore caKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        caKeyStore.load(null, null);
+        try (FileInputStream fis = new FileInputStream(caCertFile)) {
+            int i = 0;
+            while (fis.available() &gt; 0) {
+                X509Certificate cer = (X509Certificate) cf.generateCertificate(fis);
+                caKeyStore.setCertificateEntry("cacert" + (i++), cer);
+            }
+            if (i == 0) {
+                throw new IOException("No certificate could be loaded from '" + caCertFile + "'");
+            }
+        }
+        return caKeyStore;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="clientstreamingobserver-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ClientStreamingObserver.java</span></code><a class="headerlink" href="#clientstreamingobserver-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/ClientStreamingObserver.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
+import org.yamcs.api.AnnotationsProto;
+import org.yamcs.api.HttpRoute;
+import org.yamcs.api.Observer;
+import org.yamcs.client.ClientException;
+
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Descriptors.MethodDescriptor;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
+
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.QueryStringEncoder;
+
+/**
+ * A message observer that implements a streaming request over HTTP using chunked transfer encoding.
+ */
+public class ClientStreamingObserver implements Observer&lt;Message&gt; {
+
+    private MethodDescriptor method;
+    private RestClient baseClient;
+    private Message responsePrototype;
+    private Observer&lt;Message&gt; responseObserver;
+    private FieldDescriptor bodyField;
+
+    private BulkRestDataSender sender;
+
+    public ClientStreamingObserver(MethodDescriptor method, RestClient baseClient, Message responsePrototype,
+            Observer&lt;Message&gt; responseObserver) {
+        this.method = method;
+        this.baseClient = baseClient;
+        this.responsePrototype = responsePrototype;
+        this.responseObserver = responseObserver;
+
+        HttpRoute route = method.getOptions().getExtension(AnnotationsProto.route);
+
+        if (!route.hasBody()) {
+            throw new IllegalArgumentException("Route does not accept request bodies");
+        }
+        if (!"*".equals(route.getBody())) {
+            bodyField = method.getInputType().findFieldByName(route.getBody());
+        }
+    }
+
+    @Override
+    public synchronized void next(Message message) { // Synchronize so that sender is available after the first request
+        if (sender == null) {
+            HttpRoute route = method.getOptions().getExtension(AnnotationsProto.route);
+
+            // Holder for extracting route and query params
+            Message.Builder partial = message.toBuilder();
+
+            HttpMethod httpMethod = HttpMethodHandler.getMethod(route);
+            String uriTemplate = HttpMethodHandler.getPattern(route);
+            QueryStringEncoder uri = HttpMethodHandler.resolveUri(uriTemplate, message, method.getInputType(), partial);
+            message = partial.buildPartial();
+            try {
+                sender = baseClient.doBulkSendRequest(uri.toString(), httpMethod).get();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException e) {
+                cancel(e.getCause());
+            }
+        } else { // First message is always the initial request setup (no payload)
+            if (bodyField != null) {
+                message = (Message) message.getField(bodyField);
+            }
+            try {
+                sender.sendData(delimit(message));
+            } catch (ClientException e) {
+                cancel(e);
+            }
+        }
+    }
+
+    private static byte[] delimit(Message message) {
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        try {
+            message.writeDelimitedTo(bout);
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+        return bout.toByteArray();
+    }
+
+    private void cancel(Throwable reason) {
+        // TODO
+        throw new RuntimeException(reason);
+    }
+
+    @Override
+    public void completeExceptionally(Throwable t) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void complete() {
+        sender.completeRequest().whenComplete((data, err) -&gt; {
+            if (err == null) {
+                Message response;
+                try {
+                    response = responsePrototype.newBuilderForType().mergeFrom(data).build();
+                    responseObserver.complete(response);
+                } catch (InvalidProtocolBufferException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            } else {
+                responseObserver.completeExceptionally(err);
+            }
+        });
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="dataobserver-java">
+<h2><code class="docutils literal notranslate"><span class="pre">DataObserver.java</span></code><a class="headerlink" href="#dataobserver-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/DataObserver.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+import org.yamcs.api.Observer;
+
+import com.google.protobuf.Any;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
+
+// Some tricks to unpack data from the Any type without using descriptors
+// Only implementing the getMessageClass() is required -- which is already annoying enough.
+public interface DataObserver&lt;T extends Message&gt; extends Observer&lt;T&gt; {
+
+    Class&lt;T&gt; getMessageClass();
+
+    default void unpackNext(Any data) throws InvalidProtocolBufferException {
+        next(data.unpack(getMessageClass()));
+    }
+
+    /**
+     * Called when the server has confirmed this call.
+     */
+    void confirm();
+}
+</pre></div>
+</div>
+</section>
+<section id="httpclient-java">
+<h2><code class="docutils literal notranslate"><span class="pre">HttpClient.java</span></code><a class="headerlink" href="#httpclient-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/HttpClient.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLException;
+import javax.net.ssl.TrustManagerFactory;
+
+import org.yamcs.api.ExceptionMessage;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.ClientException.ExceptionData;
+import org.yamcs.client.Credentials;
+import org.yamcs.client.OAuth2Credentials;
+import org.yamcs.client.UnauthorizedException;
+import org.yamcs.client.base.SpnegoUtils.SpnegoException;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.DefaultFullHttpRequest;
+import io.netty.handler.codec.http.DefaultHttpRequest;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpClientCodec;
+import io.netty.handler.codec.http.HttpContent;
+import io.netty.handler.codec.http.HttpContentDecompressor;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaderValues;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpObject;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpUtil;
+import io.netty.handler.codec.http.HttpVersion;
+import io.netty.handler.codec.http.LastHttpContent;
+import io.netty.handler.codec.http.cookie.ClientCookieEncoder;
+import io.netty.handler.codec.http.cookie.Cookie;
+import io.netty.handler.codec.http.multipart.HttpPostRequestEncoder;
+import io.netty.handler.codec.http.multipart.HttpPostRequestEncoder.ErrorDataEncoderException;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+
+public class HttpClient {
+
+    public static final String MT_PROTOBUF = "application/protobuf";
+
+    private String sendMediaType = MT_PROTOBUF;
+    private String acceptMediaType = MT_PROTOBUF;
+    private EventLoopGroup group;
+    private List&lt;Cookie&gt; cookies;
+    private SslContext sslCtx;
+
+    // if set, do not verify server certificate
+    private boolean insecureTls;
+
+    private KeyStore caKeyStore;
+    private int maxResponseLength = 1024 * 1024;// max length of the expected response
+
+    private String tokenUrl;
+    private Credentials credentials;
+    private String userAgent;
+
+    public synchronized void login(String tokenUrl, String username, char[] password) throws ClientException {
+        this.tokenUrl = tokenUrl;
+        Map&lt;String, String&gt; attrs = new HashMap&lt;&gt;();
+        attrs.put("grant_type", "password");
+        attrs.put("username", username);
+        attrs.put("password", new String(password));
+
+        try {
+            credentials = requestTokens(tokenUrl, attrs).get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            if (e.getCause() instanceof ClientException) {
+                throw (ClientException) e.getCause();
+            } else {
+                throw new ClientException(e.getCause());
+            }
+        } catch (IOException | GeneralSecurityException e) {
+            throw new ClientException(e);
+        }
+    }
+
+    public synchronized void loginWithAuthorizationCode(String tokenUrl, String authorizationCode)
+            throws ClientException {
+        this.tokenUrl = tokenUrl;
+        Map&lt;String, String&gt; attrs = new HashMap&lt;&gt;();
+        attrs.put("grant_type", "authorization_code");
+        attrs.put("code", authorizationCode);
+
+        try {
+            credentials = requestTokens(tokenUrl, attrs).get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            if (e.getCause() instanceof ClientException) {
+                throw (ClientException) e.getCause();
+            } else {
+                throw new ClientException(e.getCause());
+            }
+        } catch (IOException | GeneralSecurityException e) {
+            throw new ClientException(e);
+        }
+    }
+
+    public synchronized String authorizeKerberos(SpnegoInfo info) throws ClientException {
+        try {
+            return SpnegoUtils.fetchAuthenticationCode(info);
+        } catch (SpnegoException e) {
+            throw new ClientException(e);
+        }
+    }
+
+    private synchronized void refreshAccessToken(OAuth2Credentials credentials) throws ClientException {
+        if (credentials.getRefreshToken() != null) {
+            Map&lt;String, String&gt; attrs = new HashMap&lt;&gt;();
+            attrs.put("grant_type", "refresh_token");
+            attrs.put("refresh_token", credentials.getRefreshToken());
+
+            try {
+                this.credentials = requestTokens(tokenUrl, attrs).get();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException e) {
+                if (e.getCause() instanceof ClientException) {
+                    throw (ClientException) e.getCause();
+                } else {
+                    throw new ClientException(e.getCause());
+                }
+            } catch (IOException | GeneralSecurityException e) {
+                throw new ClientException(e);
+            }
+        } else if (credentials.getSpnegoInfo() != null) {
+            SpnegoInfo spnegoInfo = credentials.getSpnegoInfo();
+            String authorizationCode = authorizeKerberos(spnegoInfo);
+            loginWithAuthorizationCode(tokenUrl, authorizationCode);
+            ((OAuth2Credentials) this.credentials).setSpnegoInfo(spnegoInfo); // We have a new credentials object
+        } else {
+            throw new ClientException("No refresh token available");
+        }
+    }
+
+    public Credentials getCredentials() {
+        return credentials;
+    }
+
+    public void setCredentials(Credentials credentials) {
+        this.credentials = credentials;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
+    private CompletableFuture&lt;OAuth2Credentials&gt; requestTokens(String url, Map&lt;String, String&gt; attrs)
+            throws ClientException, IOException, GeneralSecurityException {
+        URI uri;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new ClientException(e);
+        }
+
+        CompletableFuture&lt;byte[]&gt; responseFuture = new CompletableFuture&lt;&gt;();
+        HttpObjectAggregator aggregator = new HttpObjectAggregator(maxResponseLength);
+
+        ResponseHandler respHandler = new ResponseHandler(responseFuture);
+
+        HttpRequest request = new DefaultFullHttpRequest(
+                HttpVersion.HTTP_1_1, HttpMethod.POST, uri.getRawPath());
+        String host = uri.getHost() == null ? "127.0.0.1" : uri.getHost();
+        request.headers().set(HttpHeaderNames.HOST, host);
+        request.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.CLOSE);
+        request.headers().set(HttpHeaderNames.CONTENT_TYPE, "application/x-www-form-urlencoded");
+        if (userAgent != null) {
+            request.headers().set(HttpHeaderNames.USER_AGENT, userAgent);
+        }
+
+        try {
+            HttpPostRequestEncoder formEncoder = new HttpPostRequestEncoder(request, false);
+            for (Entry&lt;String, String&gt; attr : attrs.entrySet()) {
+                formEncoder.addBodyAttribute(attr.getKey(), attr.getValue());
+            }
+            formEncoder.finalizeRequest();
+        } catch (ErrorDataEncoderException e) {
+            throw new ClientException(e);
+        }
+
+        ChannelFuture channelFuture = setupChannel(uri, aggregator, respHandler);
+        channelFuture.addListener(f -&gt; {
+            if (!f.isSuccess()) {
+                responseFuture.completeExceptionally(f.cause());
+                return;
+            }
+            channelFuture.channel().writeAndFlush(request);
+        });
+
+        return responseFuture.thenApply(data -&gt; OAuth2Credentials.fromJsonTokenResponse(new String(data)));
+    }
+
+    public CompletableFuture&lt;byte[]&gt; doAsyncRequest(String url, HttpMethod httpMethod, byte[] body)
+            throws ClientException, IOException, GeneralSecurityException {
+        return doAsyncRequest(url, httpMethod, body, null);
+    }
+
+    public CompletableFuture&lt;byte[]&gt; doAsyncRequest(String url, HttpMethod httpMethod, byte[] body,
+            HttpHeaders extraHeaders) throws ClientException, IOException, GeneralSecurityException {
+        URI uri;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new ClientException(e);
+        }
+        HttpObjectAggregator aggregator = new HttpObjectAggregator(maxResponseLength);
+
+        CompletableFuture&lt;byte[]&gt; responseFuture = new CompletableFuture&lt;&gt;();
+
+        HttpRequest request = setupRequest(uri, httpMethod, body);
+        if (extraHeaders != null) {
+            request.headers().add(extraHeaders);
+        }
+
+        ResponseHandler respHandler = new ResponseHandler(responseFuture);
+
+        ChannelFuture channelFuture = setupChannel(uri, aggregator, respHandler);
+        channelFuture.addListener(f -&gt; {
+            if (!f.isSuccess()) {
+                responseFuture.completeExceptionally(f.cause());
+                return;
+            }
+            channelFuture.channel().writeAndFlush(request);
+        });
+        return responseFuture;
+    }
+
+    public CompletableFuture&lt;BulkRestDataSender&gt; doBulkSendRequest(String url, HttpMethod httpMethod)
+            throws ClientException, IOException, GeneralSecurityException {
+        URI uri;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new ClientException(e);
+        }
+        CompletableFuture&lt;BulkRestDataSender&gt; cf = new CompletableFuture&lt;&gt;();
+        BulkRestDataSender.ContinuationHandler chandler = new BulkRestDataSender.ContinuationHandler(cf);
+
+        ChannelFuture chf = setupChannel(uri, chandler);
+        HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, httpMethod, getPathWithQuery(uri));
+        fillInHeaders(request, uri);
+        request.headers().set(HttpHeaderNames.TRANSFER_ENCODING, HttpHeaderValues.CHUNKED);
+        HttpUtil.set100ContinueExpected(request, true);
+
+        chf.addListener(f -&gt; {
+            if (!f.isSuccess()) {
+                cf.completeExceptionally(f.cause());
+                return;
+            }
+            chf.channel().writeAndFlush(request);
+        });
+
+        return cf;
+    }
+
+    static ClientException decodeException(HttpObject httpObj) throws IOException {
+        if (!(httpObj instanceof HttpResponse)) {
+            return getInvalidHttpResponseException(httpObj.toString());
+        }
+        if (!(httpObj instanceof FullHttpResponse)) {
+            return getInvalidHttpResponseException(((HttpResponse) httpObj).status().toString());
+        }
+
+        FullHttpResponse fullResp = (FullHttpResponse) httpObj;
+
+        if (fullResp.status() == HttpResponseStatus.UNAUTHORIZED) {
+            return new UnauthorizedException();
+        }
+
+        byte[] data = getByteArray(fullResp.content());
+        String contentType = fullResp.headers().get(HttpHeaderNames.CONTENT_TYPE);
+
+        if (contentType != null &amp;&amp; MT_PROTOBUF.equals(contentType)) {
+            ExceptionMessage msg = ExceptionMessage.parseFrom(data);
+            ExceptionData excData = new ExceptionData(msg.getType(), msg.getMsg(), msg.getDetail());
+            return new ClientException(excData);
+        } else {
+            return new ClientException(fullResp.status() + ": " + new String(data));
+        }
+    }
+
+    private static ClientException getInvalidHttpResponseException(String resp) {
+        return new ClientException("Received http response: " + resp);
+    }
+
+    /**
+     * Sets the maximum size of the responses - this is not applicable to bulk requests whose response is practically
+     * unlimited and delivered piece by piece
+     * 
+     * @param length
+     */
+    public void setMaxResponseLength(int length) {
+        this.maxResponseLength = length;
+    }
+
+    /**
+     * Perform a request that potentially retrieves large amount of data. The data is forwarded to the client.
+     * 
+     * @param receiver
+     *            send all the data to this receiver. To find out when the request has been finished, the Future has to
+     *            be used
+     * @return a future indicating when the operation is completed.
+     * @throws GeneralSecurityException
+     * @throws IOException
+     */
+    public CompletableFuture&lt;Void&gt; doBulkReceiveRequest(String url, HttpMethod httpMethod, byte[] body,
+            BulkRestDataReceiver receiver) throws ClientException, IOException, GeneralSecurityException {
+        URI uri;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new ClientException(e);
+        }
+        BulkChannelHandler channelHandler = new BulkChannelHandler(receiver);
+
+        ChannelFuture chf = setupChannel(uri, channelHandler);
+        HttpRequest request = setupRequest(uri, httpMethod, body);
+        CompletableFuture&lt;Void&gt; cf = new CompletableFuture&lt;&gt;();
+
+        chf.addListener(f -&gt; {
+            if (!f.isSuccess()) {
+                cf.completeExceptionally(f.cause());
+                return;
+            }
+            Channel ch = chf.channel();
+            ch.writeAndFlush(request);
+            ChannelFuture closeFuture = ch.closeFuture();
+            closeFuture.addListener(f1 -&gt; {
+                if (channelHandler.exception != null) {
+                    cf.completeExceptionally(channelHandler.exception);
+                } else {
+                    cf.complete(null);
+                }
+            });
+
+        });
+        cf.whenComplete((v, t) -&gt; {
+            if (t instanceof CancellationException) {
+                chf.channel().close();
+            }
+        });
+        return cf;
+    }
+
+    public CompletableFuture&lt;Void&gt; doBulkRequest(String url, HttpMethod httpMethod, String body,
+            BulkRestDataReceiver receiver) throws ClientException, IOException, GeneralSecurityException {
+        return doBulkReceiveRequest(url, httpMethod, body.getBytes(), receiver);
+    }
+
+    private ChannelFuture setupChannel(URI uri, ChannelHandler... channelHandler)
+            throws IOException, GeneralSecurityException {
+        String scheme = uri.getScheme() == null ? "http" : uri.getScheme();
+        String host = uri.getHost() == null ? "127.0.0.1" : uri.getHost();
+        int port = uri.getPort();
+        if (port == -1) {
+            port = "https".equals(uri.getScheme()) ? 443 : 80;
+        }
+
+        if ("https".equalsIgnoreCase(scheme)) {
+            sslCtx = getSslContext();
+        } else if (!"http".equalsIgnoreCase(scheme)) {
+            throw new IllegalArgumentException("Only HTTP and HTTPS are supported.");
+        }
+
+        if (group == null) {
+            group = new NioEventLoopGroup();
+        }
+
+        Bootstrap b = new Bootstrap();
+        b.group(group).channel(NioSocketChannel.class)
+                .handler(new ChannelInitializer&lt;SocketChannel&gt;() {
+                    @Override
+                    public void initChannel(SocketChannel ch) {
+                        ChannelPipeline p = ch.pipeline();
+                        if (sslCtx != null) {
+                            p.addLast(sslCtx.newHandler(ch.alloc()));
+                        }
+                        p.addLast(new HttpClientCodec());
+                        p.addLast(new HttpContentDecompressor());
+                        p.addLast(channelHandler);
+                    }
+                });
+        return b.connect(host, port);
+    }
+
+    private SslContext getSslContext() throws GeneralSecurityException, SSLException {
+        if (insecureTls) {
+            return SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+        }
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+
+        if (caKeyStore != null) {
+            tmf.init(caKeyStore);
+        } // else the default trustStore configured with -Djavax.net.ssl.trustStore is used
+
+        return SslContextBuilder.forClient().trustManager(tmf).build();
+    }
+
+    /**
+     * In case of https connections, this file contains the CA certificates that are used to verify server certificate
+     * 
+     * @param caCertFile
+     */
+    public void setCaCertFile(String caCertFile) throws IOException, GeneralSecurityException {
+        caKeyStore = CertUtil.loadCertFile(caCertFile);
+    }
+
+    public boolean isInsecureTls() {
+        return insecureTls;
+    }
+
+    /**
+     * if true and https connections are used, do not verify server certificate
+     * 
+     * @param insecureTls
+     */
+    public void setInsecureTls(boolean insecureTls) {
+        this.insecureTls = insecureTls;
+    }
+
+    private void fillInHeaders(HttpRequest request, URI uri) throws ClientException {
+        String host = uri.getHost() == null ? "127.0.0.1" : uri.getHost();
+        request.headers().set(HttpHeaderNames.HOST, host);
+        request.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.CLOSE);
+        request.headers().set(HttpHeaderNames.CONTENT_TYPE, sendMediaType);
+        request.headers().set(HttpHeaderNames.ACCEPT, acceptMediaType);
+        request.headers().set(HttpHeaderNames.ACCEPT_ENCODING, HttpHeaderValues.GZIP);
+        if (userAgent != null) {
+            request.headers().set(HttpHeaderNames.USER_AGENT, userAgent);
+        }
+        if (cookies != null) {
+            String c = ClientCookieEncoder.STRICT.encode(cookies);
+            request.headers().set(HttpHeaderNames.COOKIE, c);
+        }
+        if (credentials != null) {
+            if (credentials.isExpired() &amp;&amp; credentials instanceof OAuth2Credentials) {
+                refreshAccessToken((OAuth2Credentials) credentials); // This blocks
+            }
+            credentials.modifyRequest(request);
+        }
+    }
+
+    private HttpRequest setupRequest(URI uri, HttpMethod httpMethod, byte[] body) throws ClientException {
+        ByteBuf content = (body == null) ? Unpooled.EMPTY_BUFFER : Unpooled.copiedBuffer(body);
+        HttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, httpMethod, getPathWithQuery(uri),
+                content);
+        fillInHeaders(request, uri);
+        int length = body == null ? 0 : body.length;
+        HttpUtil.setContentLength(request, length);
+        return request;
+    }
+
+    private String getPathWithQuery(URI uri) {
+        String r = uri.getRawPath();
+        if (uri.getRawQuery() != null) {
+            r += "?" + uri.getRawQuery();
+        }
+        return r;
+    }
+
+    public void addCookie(Cookie c) {
+        if (cookies == null) {
+            cookies = new ArrayList&lt;&gt;();
+        }
+        cookies.add(c);
+    }
+
+    public List&lt;Cookie&gt; getCookies() {
+        return Collections.unmodifiableList(cookies);
+    }
+
+    public String getSendMediaType() {
+        return sendMediaType;
+    }
+
+    public void setSendMediaType(String sendMediaType) {
+        this.sendMediaType = sendMediaType;
+    }
+
+    public String getAcceptMediaType() {
+        return acceptMediaType;
+    }
+
+    public void setAcceptMediaType(String acceptMediaType) {
+        this.acceptMediaType = acceptMediaType;
+    }
+
+    public void close() {
+        if (group != null) {
+            group.shutdownGracefully(0, 5, TimeUnit.SECONDS);
+        }
+    }
+
+    static byte[] getByteArray(ByteBuf buf) {
+        byte[] b = new byte[buf.readableBytes()];
+        buf.readBytes(b);
+        return b;
+    }
+
+    class ResponseHandler extends SimpleChannelInboundHandler&lt;FullHttpResponse&gt; {
+        Throwable exception;
+        CompletableFuture&lt;byte[]&gt; cf;
+
+        public ResponseHandler(CompletableFuture&lt;byte[]&gt; cf) {
+            this.cf = cf;
+        }
+
+        @Override
+        public void channelRead0(ChannelHandlerContext ctx, FullHttpResponse fullHttpResp) {
+            if (fullHttpResp.status().code() != HttpResponseStatus.OK.code()) {
+                try {
+                    exception = decodeException(fullHttpResp);
+                } catch (IOException e) {
+                    exception = e;
+                }
+                cf.completeExceptionally(exception);
+            } else {
+                cf.complete(getByteArray(fullHttpResp.content()));
+            }
+        }
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+            // cause.printStackTrace();
+            exception = cause;
+            ctx.close();
+            cf.completeExceptionally(cause);
+        }
+
+        @Override
+        public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+            if (!cf.isDone()) {
+                cf.completeExceptionally(new IOException("connection closed: empty response received"));
+            }
+        }
+    }
+
+    static class BulkChannelHandler extends SimpleChannelInboundHandler&lt;HttpObject&gt; {
+        final BulkRestDataReceiver receiver;
+        Throwable exception;
+
+        BulkChannelHandler(BulkRestDataReceiver receiver) {
+            this.receiver = receiver;
+        }
+
+        @Override
+        public void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws IOException {
+            if (msg instanceof HttpResponse) {
+                HttpResponse resp = (HttpResponse) msg;
+                if (resp.status().code() != HttpResponseStatus.OK.code()) {
+                    exception = decodeException(msg);
+                    receiver.receiveException(exception);
+                    ctx.close();
+                }
+            }
+            if (msg instanceof HttpContent) {
+                HttpContent content = (HttpContent) msg;
+                try {
+                    receiver.receiveData(getByteArray(content.content()));
+                } catch (ClientException e) {
+                    exceptionCaught(ctx, e);
+                }
+                if (content instanceof LastHttpContent) {
+                    ctx.close();
+                }
+            }
+        }
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+            receiver.receiveException(cause);
+            exception = cause;
+            ctx.close();
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="httpmethodhandler-java">
+<h2><code class="docutils literal notranslate"><span class="pre">HttpMethodHandler.java</span></code><a class="headerlink" href="#httpmethodhandler-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/HttpMethodHandler.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.time.Instant;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.yamcs.api.AnnotationsProto;
+import org.yamcs.api.HttpBody;
+import org.yamcs.api.HttpRoute;
+import org.yamcs.api.MethodHandler;
+import org.yamcs.api.Observer;
+import org.yamcs.client.YamcsClient;
+
+import com.google.protobuf.ByteString;
+import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Descriptors.MethodDescriptor;
+import com.google.protobuf.Duration;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
+import com.google.protobuf.Timestamp;
+
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.QueryStringEncoder;
+
+public class HttpMethodHandler implements MethodHandler {
+
+    private static final Pattern PATTERN_TEMPLATE_VAR = Pattern.compile("\\{([^\\*\\?\\}]+)(\\*|\\?|\\*\\*)?\\}");
+
+    private RestClient baseClient;
+    private WebSocketClient webSocketClient;
+
+    public HttpMethodHandler(YamcsClient client, RestClient baseClient, WebSocketClient webSocketClient) {
+        this.baseClient = baseClient;
+        this.webSocketClient = webSocketClient;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Observer&lt;? extends Message&gt; streamingCall(MethodDescriptor method, Message requestPrototype,
+            Message responsePrototype, Observer&lt;? extends Message&gt; responseObserver) {
+        return new ClientStreamingObserver(method, baseClient, responsePrototype, (Observer&lt;Message&gt;) responseObserver);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void call(MethodDescriptor method, Message request, Message responsePrototype,
+            Observer&lt;? extends Message&gt; observer) {
+        HttpRoute route = method.getOptions().getExtension(AnnotationsProto.route);
+
+        // Holder for extracting route and query params
+        Message.Builder partial = request.toBuilder();
+
+        String template = getPattern(route);
+        QueryStringEncoder uri = resolveUri(template, request, method.getInputType(), partial);
+        Message body = null;
+        if (route.hasBody()) {
+            if ("*".equals(route.getBody())) {
+                body = partial.buildPartial();
+            } else {
+                FieldDescriptor bodyField = method.getInputType().findFieldByName(route.getBody());
+                if (!request.hasField(bodyField)) {
+                    throw new IllegalArgumentException(
+                            "Request message must have the field '" + route.getBody() + "' set");
+                }
+                body = (Message) request.getField(bodyField);
+                partial.clearField(bodyField);
+            }
+        }
+
+        HttpMethod httpMethod = getMethod(route);
+
+        if (method.toProto().getServerStreaming()) {
+            BulkRestDataReceiver receiver = data -&gt; {
+                try {
+                    Message serverMessage = responsePrototype.toBuilder().mergeFrom(data).build();
+                    ((Observer&lt;Message&gt;) observer).next(serverMessage);
+                } catch (InvalidProtocolBufferException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            };
+            CompletableFuture&lt;Void&gt; future;
+            if (body == null) {
+                appendQueryString(uri, partial.build(), method.getInputType());
+                future = baseClient.doBulkRequest(httpMethod, uri.toString(), receiver);
+            } else if (body instanceof HttpBody) {
+                byte[] data = ((HttpBody) body).getData().toByteArray();
+                future = baseClient.doBulkRequest(httpMethod, uri.toString(), data, receiver);
+            } else {
+                future = baseClient.doBulkRequest(httpMethod, uri.toString(), body.toByteArray(), receiver);
+            }
+            future.whenComplete((v, err) -&gt; {
+                if (err == null) {
+                    observer.complete();
+                } else {
+                    observer.completeExceptionally(err);
+                }
+            });
+        } else {
+            CompletableFuture&lt;byte[]&gt; requestFuture;
+            if (body == null) {
+                appendQueryString(uri, partial.build(), method.getInputType());
+                requestFuture = baseClient.doRequest(uri.toString(), httpMethod);
+            } else if (body instanceof HttpBody) {
+                byte[] data = ((HttpBody) body).getData().toByteArray();
+                requestFuture = baseClient.doRequest(uri.toString(), httpMethod, data);
+            } else {
+                requestFuture = baseClient.doRequest(uri.toString(), httpMethod, body);
+            }
+            requestFuture.whenComplete((data, err) -&gt; {
+                if (err == null) {
+                    if (responsePrototype instanceof HttpBody) {
+                        Message serverMessage = HttpBody.newBuilder().setData(ByteString.copyFrom(data)).build();
+                        ((Observer&lt;Message&gt;) observer).complete(serverMessage);
+                    } else {
+                        try {
+                            Message serverMessage = responsePrototype.toBuilder().mergeFrom(data).build();
+                            ((Observer&lt;Message&gt;) observer).complete(serverMessage);
+                        } catch (Exception e) {
+                            observer.completeExceptionally(e);
+                        }
+                    }
+                } else {
+                    observer.completeExceptionally(err);
+                }
+            });
+        }
+    }
+
+    static QueryStringEncoder resolveUri(String template, Message input, Descriptor inputType,
+            Message.Builder partial) {
+        StringBuffer buf = new StringBuffer();
+        Matcher matcher = PATTERN_TEMPLATE_VAR.matcher(template);
+        while (matcher.find()) {
+            String fieldName = matcher.group(1);
+            boolean optional = "**".equals(matcher.group(2)) || "?".equals(matcher.group(2));
+            FieldDescriptor field = inputType.findFieldByName(fieldName);
+            if (!optional &amp;&amp; !input.hasField(field)) {
+                throw new IllegalArgumentException(
+                        "Request message is missing mandatory parameter '" + fieldName + "'");
+            }
+
+            Object fieldValue = input.getField(field);
+            String stringValue = String.valueOf(fieldValue);
+
+            String encodedValue = encodeURIComponent(stringValue);
+
+            matcher.appendReplacement(buf, encodedValue);
+            partial.clearField(field);
+        }
+        matcher.appendTail(buf);
+
+        String uri = buf.toString().replace("/api", "");
+        QueryStringEncoder encoder = new QueryStringEncoder(uri);
+        return encoder;
+    }
+
+    private void appendQueryString(QueryStringEncoder encoder, Message queryHolder, Descriptor inputType) {
+        for (Entry&lt;FieldDescriptor, Object&gt; entry : queryHolder.getAllFields().entrySet()) {
+            FieldDescriptor descriptor = entry.getKey();
+            if (descriptor.isRepeated()) {
+                List&lt;?&gt; params = (List&lt;?&gt;) entry.getValue();
+                for (Object param : params) {
+                    encoder.addParam(descriptor.getJsonName(), formatQueryParam(param));
+                }
+            } else {
+                encoder.addParam(descriptor.getJsonName(), formatQueryParam(entry.getValue()));
+            }
+        }
+    }
+
+    private static String formatQueryParam(Object value) {
+        if (value instanceof Timestamp) {
+            Timestamp proto = (Timestamp) value;
+            Instant instant = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
+            return instant.toString();
+        } else if (value instanceof Duration) {
+            Duration proto = (Duration) value;
+            return String.format("%d.%09ds", proto.getSeconds(), proto.getNanos());
+        } else {
+            return String.valueOf(value);
+        }
+    }
+
+    static HttpMethod getMethod(HttpRoute route) {
+        switch (route.getPatternCase()) {
+        case GET:
+            return HttpMethod.GET;
+        case POST:
+            return HttpMethod.POST;
+        case PATCH:
+            return HttpMethod.PATCH;
+        case PUT:
+            return HttpMethod.PUT;
+        case DELETE:
+            return HttpMethod.DELETE;
+        default:
+            throw new IllegalStateException();
+        }
+    }
+
+    static String getPattern(HttpRoute route) {
+        switch (route.getPatternCase()) {
+        case GET:
+            return route.getGet();
+        case POST:
+            return route.getPost();
+        case PATCH:
+            return route.getPatch();
+        case PUT:
+            return route.getPut();
+        case DELETE:
+            return route.getDelete();
+        default:
+            throw new IllegalStateException();
+        }
+    }
+
+    private static String encodeURIComponent(String component) {
+        try {
+            return URLEncoder.encode(component, "UTF-8")
+                    .replace("\\+", "%20")
+                    .replace("\\%21", "!")
+                    .replace("\\%27", "'")
+                    .replace("\\%28", "(")
+                    .replace("\\%29", ")")
+                    .replace("\\%7E", "~");
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    // TODO It may be better to handle subscriptions in here, rather than in
+    // AbstractSubscription
+    public WebSocketClient getWebSocketClient() {
+        return webSocketClient;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="package-info-java">
+<h2><code class="docutils literal notranslate"><span class="pre">package-info.java</span></code><a class="headerlink" href="#package-info-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/package-info.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/**
+ * Base implementation for Yamcs HTTP client connectivity.
+ * 
+ * Normally these classes are only needed by idiomatic clients.
+ */
+package org.yamcs.client.base;
+</pre></div>
+</div>
+</section>
+<section id="responseobserver-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ResponseObserver.java</span></code><a class="headerlink" href="#responseobserver-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/ResponseObserver.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+import java.util.concurrent.CompletableFuture;
+
+import org.yamcs.api.Observer;
+
+/**
+ * An observer that completes a future based on a single response.
+ */
+public class ResponseObserver&lt;T&gt; implements Observer&lt;T&gt; {
+
+    private CompletableFuture&lt;T&gt; future;
+
+    public ResponseObserver(CompletableFuture&lt;T&gt; future) {
+        this.future = future;
+    }
+
+    @Override
+    public void next(T message) {
+        future.complete(message);
+    }
+
+    @Override
+    public void completeExceptionally(Throwable t) {
+        future.completeExceptionally(t);
+    }
+
+    @Override
+    public void complete() {
+        if (!future.isDone()) {
+            future.completeExceptionally(new IllegalStateException("no response received"));
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="restclient-java">
+<h2><code class="docutils literal notranslate"><span class="pre">RestClient.java</span></code><a class="headerlink" href="#restclient-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/RestClient.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.security.GeneralSecurityException;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import org.yamcs.client.ClientException;
+import org.yamcs.client.Credentials;
+
+import com.google.protobuf.Message;
+
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.cookie.Cookie;
+
+/**
+ * A simple Yamcs Rest client to help with basic requests.
+ * 
+ * @author nm
+ *
+ */
+public class RestClient {
+
+    private ServerURL serverURL;
+    private final HttpClient httpClient;
+
+    /** maximum size of the responses - this is not applicable to bulk requests */
+    private final static int MAX_RESPONSE_LENGTH = 10 * 1024 * 1024;
+
+    /** max message length of an individual ProtoBuf message part of a bulk retrieval */
+    private final static int MAX_MESSAGE_LENGTH = 10 * 1024 * 1024;
+
+    private boolean autoclose = true;
+
+    /**
+     * Creates a rest client that communications using protobuf
+     */
+    public RestClient(ServerURL serverURL) {
+        this.serverURL = serverURL;
+        httpClient = new HttpClient();
+        httpClient.setMaxResponseLength(MAX_RESPONSE_LENGTH);
+        httpClient.setAcceptMediaType(HttpClient.MT_PROTOBUF);
+        httpClient.setSendMediaType(HttpClient.MT_PROTOBUF);
+    }
+
+    public synchronized void login(String username, char[] password) throws ClientException {
+        String tokenUrl = serverURL + "/auth/token";
+        httpClient.login(tokenUrl, username, password);
+    }
+
+    public synchronized void loginWithAuthorizationCode(String authorizationCode) throws ClientException {
+        String tokenUrl = serverURL + "/auth/token";
+        httpClient.loginWithAuthorizationCode(tokenUrl, authorizationCode);
+    }
+
+    public synchronized String authorizeKerberos(SpnegoInfo info) throws ClientException {
+        return httpClient.authorizeKerberos(info);
+    }
+
+    /**
+     * Performs a request with an empty body. Works using protobuf
+     * 
+     * @param resource
+     * @param method
+     * @return a the response body
+     */
+    public CompletableFuture&lt;byte[]&gt; doRequest(String resource, HttpMethod method) {
+        return doRequest(resource, method, new byte[0]);
+    }
+
+    /**
+     * Perform asynchronously the request indicated by the HTTP method and return the result as a future providing byte
+     * array.
+     * 
+     * Note that the response body will be limited to {@value #MAX_RESPONSE_LENGTH} - in case the server sends more than
+     * that, the CompletableFuture will completed with an error (the get() method will throw an Exception); the partial
+     * response will not be available.
+     * 
+     * @param resource
+     *            the url and query parameters after the "/api" part.
+     * @param method
+     *            http method to use
+     * @param body
+     *            the body of the request. Can be used even for the GET requests although strictly not allowed by the
+     *            HTTP standard.
+     * @return the response body
+     * @throws IllegalArgumentException
+     *             when the resource specification is invalid
+     */
+    public CompletableFuture&lt;String&gt; doRequest(String resource, HttpMethod method, String body) {
+        CompletableFuture&lt;byte[]&gt; cf;
+        try {
+            cf = httpClient.doAsyncRequest(serverURL + "/api" + resource, method, body.getBytes());
+        } catch (ClientException | IOException | GeneralSecurityException e) {
+            // throw a RuntimeException instead since if the code is not buggy it's
+            // unlikely to have this exception thrown
+            throw new RuntimeException(e);
+        }
+
+        if (autoclose) {
+            cf.whenComplete((v, t) -&gt; {
+                close();
+            });
+        }
+        return cf.thenApply(b -&gt; {
+            return new String(b);
+        });
+    }
+
+    /**
+     * Perform asynchronously the request indicated by the HTTP method and return the result as a future providing byte
+     * array.
+     * 
+     * To be used when performing protobuf requests.
+     * 
+     * @param resource
+     * @param method
+     * @param message
+     * @return future containing protobuf encoded data
+     */
+    public CompletableFuture&lt;byte[]&gt; doRequest(String resource, HttpMethod method, Message message) {
+        return doBaseRequest("/api" + resource, method, message.toByteArray());
+    }
+
+    /**
+     * Perform asynchronously the request indicated by the HTTP method and return the result as a future providing byte
+     * array.
+     * 
+     * To be used when performing protobuf requests.
+     * 
+     * @param resource
+     * @param method
+     * @param body
+     *            protobuf encoded data.
+     * @return future containing protobuf encoded data
+     */
+    public CompletableFuture&lt;byte[]&gt; doRequest(String resource, HttpMethod method, byte[] body) {
+        return doBaseRequest("/api" + resource, method, body);
+    }
+
+    /**
+     * Perform asynchronously the request indicated by the HTTP method and return the result as a future providing byte
+     * array.
+     * 
+     * To be used when performing protobuf requests.
+     * 
+     * @param resource
+     * @param method
+     * @param body
+     *            protobuf encoded data.
+     * @return future containing protobuf encoded data
+     */
+    public CompletableFuture&lt;byte[]&gt; doBaseRequest(String resource, HttpMethod method, byte[] body) {
+        CompletableFuture&lt;byte[]&gt; cf;
+        try {
+            cf = httpClient.doAsyncRequest(serverURL + resource, method, body);
+        } catch (ClientException | IOException | GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
+        if (autoclose) {
+            cf.whenComplete((v, t) -&gt; {
+                close();
+            });
+        }
+
+        return cf;
+    }
+
+    public CompletableFuture&lt;Void&gt; doBulkRequest(HttpMethod method, String resource, BulkRestDataReceiver receiver) {
+        return doBulkRequest(method, resource, new byte[0], receiver);
+    }
+
+    /**
+     * Performs a bulk request and provides the result piece by piece to the receiver.
+     * 
+     * The potentially large result is split into messages based on the VarInt size preceding each message. The maximum
+     * size of each individual message is limited to {@value #MAX_MESSAGE_LENGTH}
+     * 
+     * @param method
+     * @param resource
+     * @param receiver
+     * @return future that is completed when the request is finished
+     * @throws RuntimeException
+     *             if the uri + resource does not form a correct URL
+     */
+    public CompletableFuture&lt;Void&gt; doBulkRequest(HttpMethod method, String resource, byte[] body,
+            BulkRestDataReceiver receiver) {
+        CompletableFuture&lt;Void&gt; cf;
+        MessageSplitter splitter = new MessageSplitter(receiver);
+        try {
+            cf = httpClient.doBulkReceiveRequest(serverURL + "/api" + resource, method,
+                    body, splitter);
+        } catch (ClientException | IOException | GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
+        if (autoclose) {
+            cf.whenComplete((v, t) -&gt; {
+                close();
+            });
+        }
+        return cf;
+    }
+
+    private static class MessageSplitter implements BulkRestDataReceiver {
+        BulkRestDataReceiver finalReceiver;
+        byte[] buffer = new byte[2 * MAX_MESSAGE_LENGTH];
+        int readOffset = 0;
+        int writeOffset = 0;
+
+        MessageSplitter(BulkRestDataReceiver finalReceiver) {
+            this.finalReceiver = finalReceiver;
+        }
+
+        @Override
+        public void receiveData(byte[] data) throws ClientException {
+            if (data.length &gt; MAX_MESSAGE_LENGTH) {
+                throw new ClientException(
+                        "Message too long: received " + data.length + " max length: " + MAX_MESSAGE_LENGTH);
+            }
+
+            int length = (data.length &lt; buffer.length - writeOffset) ? data.length : buffer.length - writeOffset;
+            System.arraycopy(data, 0, buffer, writeOffset, length);
+            writeOffset += length;
+            ByteBuffer bb = ByteBuffer.wrap(buffer);
+
+            while (readOffset + 5 &lt; writeOffset) {
+                bb.position(readOffset);
+                int msgLength = readVarInt32(bb);
+                if (msgLength &gt; MAX_MESSAGE_LENGTH) {
+                    throw new ClientException("Message too long: decodedMessageLength: " + msgLength + " max length: "
+                            + MAX_MESSAGE_LENGTH);
+                }
+                if (msgLength &gt; writeOffset - bb.position()) {
+                    break;
+                }
+
+                readOffset = bb.position();
+                byte[] b = new byte[msgLength];
+                System.arraycopy(buffer, readOffset, b, 0, msgLength);
+                readOffset += msgLength;
+                finalReceiver.receiveData(b);
+            }
+
+            System.arraycopy(buffer, readOffset, buffer, 0, writeOffset - readOffset);
+            writeOffset -= readOffset;
+            readOffset = 0;
+            if (length &lt; data.length) {
+                System.arraycopy(buffer, writeOffset, data, length, data.length - length);
+                writeOffset += (data.length - length);
+            }
+        }
+
+        @Override
+        public void receiveException(Throwable t) {
+            finalReceiver.receiveException(t);
+        }
+    }
+
+    public static int readVarInt32(ByteBuffer bb) throws ClientException {
+        byte b = bb.get();
+        int v = b &amp; 0x7F;
+        for (int shift = 7; (b &amp; 0x80) != 0; shift += 7) {
+            if (shift &gt; 28) {
+                throw new ClientException("Invalid VarInt32: more than 5 bytes!");
+            }
+
+            if (!bb.hasRemaining()) {
+                return Integer.MAX_VALUE;// we miss some bytes from the size itself
+            }
+            b = bb.get();
+            v |= (b &amp; 0x7F) &lt;&lt; shift;
+
+        }
+        return v;
+    }
+
+    public void setSendMediaType(String sendMediaType) {
+        httpClient.setSendMediaType(sendMediaType);
+    }
+
+    public void setAcceptMediaType(String acceptMediaType) {
+        httpClient.setAcceptMediaType(acceptMediaType);
+    }
+
+    public void setMaxResponseLength(int size) {
+        httpClient.setMaxResponseLength(size);
+    }
+
+    public void setUserAgent(String userAgent) {
+        httpClient.setUserAgent(userAgent);
+    }
+
+    public void close() {
+        httpClient.close();
+    }
+
+    public boolean isAutoclose() {
+        return autoclose;
+    }
+
+    public Credentials getCredentials() {
+        return httpClient.getCredentials();
+    }
+
+    public void setCredentials(Credentials credentials) {
+        httpClient.setCredentials(credentials);
+    }
+
+    /**
+     * if autoclose is set, the httpClient will be automatically closed at the end of the request, so the netty
+     * eventgroup is shutdown. Otherwise it has to be done manually - but then the same object can be used to perform
+     * multiple requests.
+     * 
+     * @param autoclose
+     */
+    public void setAutoclose(boolean autoclose) {
+        this.autoclose = autoclose;
+    }
+
+    public void addCookie(Cookie c) {
+        httpClient.addCookie(c);
+    }
+
+    public List&lt;Cookie&gt; getCookies() {
+        return httpClient.getCookies();
+    }
+
+    public CompletableFuture&lt;BulkRestDataSender&gt; doBulkSendRequest(String resource, HttpMethod method) {
+        try {
+            return httpClient.doBulkSendRequest(serverURL + "/api" + resource, method);
+        } catch (ClientException | IOException | GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean isInsecureTls() {
+        return httpClient.isInsecureTls();
+    }
+
+    /**
+     * if true and https connections are used, do not verify server certificate
+     * 
+     * @param insecureTls
+     */
+    public void setInsecureTls(boolean insecureTls) {
+        httpClient.setInsecureTls(insecureTls);
+    }
+
+    /**
+     * In case of https connections, this file contains the CA certificates that are used to verify server certificate.
+     * 
+     * If this is not set, java will use the default mechanism with the trustStore that can be configured via the
+     * javax.net.ssl.trustStore system property.
+     * 
+     * @param caCertFile
+     */
+    public void setCaCertFile(String caCertFile) throws IOException, GeneralSecurityException {
+        httpClient.setCaCertFile(caCertFile);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="serverurl-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ServerURL.java</span></code><a class="headerlink" href="#serverurl-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/ServerURL.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Objects;
+
+/**
+ * Parses Yamcs Server URLs and exposes standardized string outputs, as well as access to the individual URL components.
+ */
+public class ServerURL {
+
+    private final String host;
+    private final int port;
+    private boolean tls;
+    private String context;
+
+    private ServerURL(String host, int port, boolean tls, String context) {
+        this.host = host;
+        this.port = port;
+        this.tls = tls;
+        this.context = context;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public boolean isTLS() {
+        return tls;
+    }
+
+    public void setTLS(boolean tls) {
+        this.tls = tls;
+    }
+
+    public String getContext() {
+        return context;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
+    }
+
+    /**
+     * @throws IllegalArgumentException
+     *             when the URL is not something that can be matched to a Yamcs Server URL.
+     */
+    public static ServerURL parse(String url) {
+        url = Objects.requireNonNull(url).trim();
+        URI uri;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Failed to parse Server URL", e);
+        }
+
+        boolean tls;
+        int port = uri.getPort();
+        String scheme = uri.getScheme();
+        if ("http".equalsIgnoreCase(scheme)) {
+            tls = false;
+            if (port == -1) {
+                port = 80;
+            }
+        } else if ("https".equalsIgnoreCase(scheme)) {
+            tls = true;
+            if (port == -1) {
+                port = 443;
+            }
+        } else {
+            throw new IllegalArgumentException("Server URL should start with http:// or https://");
+        }
+
+        // Remove any leading or trailing slashes
+        String context = uri.getRawPath();
+        if (context != null &amp;&amp; context.length() &gt; 1) {
+            if (context.startsWith("/")) {
+                context = context.substring(1);
+            }
+            if (context.endsWith("/")) {
+                context = context.substring(0, context.length() - 1);
+            }
+        }
+        if (context != null &amp;&amp; (context.isEmpty() || "/".equals(context))) {
+            context = null;
+        }
+
+        String host = uri.getHost();
+        return new ServerURL(host, port, tls, context);
+    }
+
+    @Override
+    public String toString() {
+        String result;
+        if (tls) {
+            result = "https://" + host;
+            if (port != 443) {
+                result += ":" + port;
+            }
+        } else {
+            result = "http://" + host;
+            if (port != 80) {
+                result += ":" + port;
+            }
+        }
+        return context == null ? result : result + "/" + context;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="spnegoinfo-java">
+<h2><code class="docutils literal notranslate"><span class="pre">SpnegoInfo.java</span></code><a class="headerlink" href="#spnegoinfo-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/SpnegoInfo.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+/**
+ * Data holder for SPNEGO information.
+ */
+public class SpnegoInfo {
+
+    private ServerURL serverURL;
+    private boolean verifyTls;
+    private String principal;
+
+    public SpnegoInfo(ServerURL serverURL, boolean verifyTls, String principal) {
+        this.serverURL = serverURL;
+        this.verifyTls = verifyTls;
+        this.principal = principal;
+    }
+
+    public ServerURL getServerURL() {
+        return serverURL;
+    }
+
+    public boolean isVerifyTLS() {
+        return verifyTls;
+    }
+
+    public String getPrincipal() {
+        return principal;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="spnegoutils-java">
+<h2><code class="docutils literal notranslate"><span class="pre">SpnegoUtils.java</span></code><a class="headerlink" href="#spnegoutils-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/SpnegoUtils.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import javax.security.auth.Subject;
+import javax.security.auth.login.AppConfigurationEntry;
+import javax.security.auth.login.AppConfigurationEntry.LoginModuleControlFlag;
+import javax.security.auth.login.Configuration;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
+
+import org.ietf.jgss.GSSContext;
+import org.ietf.jgss.GSSCredential;
+import org.ietf.jgss.GSSException;
+import org.ietf.jgss.GSSManager;
+import org.ietf.jgss.GSSName;
+import org.ietf.jgss.Oid;
+
+public final class SpnegoUtils {
+
+    private static final String JAAS_KRB5 = "com.sun.security.auth.module.Krb5LoginModule";
+
+    private static final Oid SPNEGO_OID;
+    static {
+        try {
+            SPNEGO_OID = new Oid("1.3.6.1.5.5.2");
+        } catch (GSSException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static final HostnameVerifier NO_HOSTNAME_VERIFICATION = (hostname, session) -&gt; true;
+    private static final TrustManager[] TRUST_ALL_CERTS = new TrustManager[] { new X509TrustManager() {
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+            // Ignore
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+            // Ignore
+        }
+    } };
+
+    public static synchronized String fetchAuthenticationCode(SpnegoInfo info) throws SpnegoException {
+        try {
+            byte[] token = createToken(info.getServerURL().getHost(), info.getPrincipal());
+
+            URL url = new URL(info.getServerURL() + "/auth/spnego");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("Authorization", "Negotiate " + new String(token));
+
+            if (info.getServerURL().isTLS() &amp;&amp; !info.isVerifyTLS()) {
+                try {
+                    SSLContext ctx = SSLContext.getInstance("TLS");
+                    ctx.init(null, TRUST_ALL_CERTS, new java.security.SecureRandom());
+                    ((HttpsURLConnection) conn).setSSLSocketFactory(ctx.getSocketFactory());
+                    ((HttpsURLConnection) conn).setHostnameVerifier(NO_HOSTNAME_VERIFICATION);
+                } catch (KeyManagementException | NoSuchAlgorithmException e) {
+                    throw new SpnegoException(e);
+                }
+            }
+
+            conn.connect();
+
+            if (conn.getResponseCode() == 200) {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+                    return reader.readLine();
+                }
+            } else {
+                throw new SpnegoException("Unexpected server response " + conn.getResponseCode());
+            }
+        } catch (PrivilegedActionException e) {
+            throw new SpnegoException(e.getCause());
+        } catch (LoginException | GSSException | IOException e) {
+            throw new SpnegoException(e);
+        }
+    }
+
+    private static synchronized byte[] createToken(String host, String principal)
+            throws LoginException, PrivilegedActionException, GSSException {
+        GSSManager gssManager = GSSManager.getInstance();
+        GSSName gssName = gssManager.createName("HTTP@" + host, GSSName.NT_HOSTBASED_SERVICE, SPNEGO_OID);
+        Subject subject = login(principal);
+
+        GSSContext gssContext = Subject.doAs(subject, (PrivilegedExceptionAction&lt;GSSContext&gt;) () -&gt; {
+            GSSCredential credential = gssManager.createCredential(
+                    null, GSSCredential.DEFAULT_LIFETIME, SPNEGO_OID, GSSCredential.INITIATE_ONLY);
+
+            GSSContext context = gssManager.createContext(gssName, SPNEGO_OID, credential, GSSContext.DEFAULT_LIFETIME);
+            context.requestMutualAuth(true);
+            context.requestConf(true);
+            context.requestInteg(true);
+            context.requestReplayDet(true);
+            context.requestSequenceDet(true);
+            return context;
+        });
+
+        try {
+            byte[] token = Subject.doAs(subject, (PrivilegedExceptionAction&lt;byte[]&gt;) () -&gt; {
+                return gssContext.initSecContext(new byte[0], 0, 0);
+            });
+            return Base64.getEncoder().encode(token);
+        } finally {
+            if (gssContext != null) {
+                gssContext.dispose();
+            }
+        }
+    }
+
+    private static Subject login(String principal) throws LoginException {
+        Map&lt;String, String&gt; options = new HashMap&lt;&gt;();
+        options.put("renewTGT", "true");
+        options.put("principal", principal);
+        options.put("useTicketCache", "true");
+        options.put("doNotPrompt", "true");
+
+        LoginContext context = new LoginContext("", null, null, new Configuration() {
+            @Override
+            public AppConfigurationEntry[] getAppConfigurationEntry(String name) {
+                return new AppConfigurationEntry[] { new AppConfigurationEntry(
+                        JAAS_KRB5, LoginModuleControlFlag.REQUIRED, options) };
+            }
+        });
+
+        context.login();
+        return context.getSubject();
+    }
+
+    @SuppressWarnings("serial")
+    static class SpnegoException extends Exception {
+
+        private SpnegoException(String message) {
+            super(message);
+        }
+
+        private SpnegoException(Throwable cause) {
+            super(cause);
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="websocketclient-java">
+<h2><code class="docutils literal notranslate"><span class="pre">WebSocketClient.java</span></code><a class="headerlink" href="#websocketclient-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/WebSocketClient.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.net.ssl.SSLException;
+import javax.net.ssl.TrustManagerFactory;
+
+import org.yamcs.api.ExceptionMessage;
+import org.yamcs.api.Observer;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.ClientException.ExceptionData;
+import org.yamcs.protobuf.CancelOptions;
+import org.yamcs.protobuf.ClientMessage;
+import org.yamcs.protobuf.Reply;
+import org.yamcs.protobuf.ServerMessage;
+
+import com.google.protobuf.Any;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.DefaultHttpHeaders;
+import io.netty.handler.codec.http.HttpClientCodec;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
+import io.netty.handler.codec.http.websocketx.WebSocketVersion;
+import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import io.netty.util.concurrent.Future;
+
+/**
+ * Netty-implementation of a Yamcs web socket client.
+ */
+public class WebSocketClient {
+
+    private static final Logger log = Logger.getLogger(WebSocketClient.class.getName());
+    private Level messageLogging = Level.FINEST;
+
+    private String host;
+    private int port;
+    private boolean tls;
+    private String context;
+
+    private WebSocketClientCallback callback;
+
+    private EventLoopGroup group = new NioEventLoopGroup(1);
+    private Channel nettyChannel;
+    private String userAgent;
+    private boolean allowCompression = true;
+    private Integer timeoutMs;
+
+    private boolean tcpKeepAlive;
+    private boolean insecureTls;
+    private KeyStore caKeyStore;
+
+    private int maxFramePayloadLength = 65536;
+
+    private AtomicInteger idSequence = new AtomicInteger(1);
+
+    // Calls by client-assigned id
+    private Map&lt;Integer, Call&gt; calls = new ConcurrentHashMap&lt;&gt;();
+    // Calls by server-assigned id
+    private Map&lt;Integer, Call&gt; confirmedCalls = new ConcurrentHashMap&lt;&gt;();
+
+    public WebSocketClient(ServerURL serverURL, WebSocketClientCallback callback) {
+        this.host = serverURL.getHost();
+        this.port = serverURL.getPort();
+        this.tls = serverURL.isTLS();
+        this.context = serverURL.getContext();
+        this.callback = callback;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
+    public void setConnectionTimeoutMs(int timeoutMs) {
+        this.timeoutMs = timeoutMs;
+    }
+
+    public boolean isAllowCompression() {
+        return allowCompression;
+    }
+
+    public void setAllowCompression(boolean allowCompression) {
+        this.allowCompression = allowCompression;
+    }
+
+    /**
+     * Enables logging of all inbound and outbound messages on the request logging level.
+     * &lt;p&gt;
+     * By default set to {@link Level#FINEST}
+     */
+    public void setMessageLogging(Level level) {
+        messageLogging = level;
+    }
+
+    public ChannelFuture connect(String authorization) throws SSLException, GeneralSecurityException {
+        callback.connecting();
+        return createBootstrap(authorization);
+    }
+
+    private ChannelFuture createBootstrap(String authorization) throws SSLException, GeneralSecurityException {
+        HttpHeaders header = new DefaultHttpHeaders();
+        if (userAgent != null) {
+            header.add(HttpHeaderNames.USER_AGENT, userAgent);
+        }
+
+        if (authorization != null) {
+            header.add(HttpHeaderNames.AUTHORIZATION, authorization);
+        }
+        URI uri;
+        try {
+            if (context == null) {
+                uri = new URI(String.format("%s://%s:%s/api/websocket", (tls ? "wss" : "ws"), host, port));
+            } else {
+                uri = new URI(String.format("%s://%s:%s/%s/api/websocket", (tls ? "wss" : "ws"), host, port, context));
+            }
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+
+        WebSocketClientHandshaker handshaker = WebSocketClientHandshakerFactory.newHandshaker(
+                uri,
+                WebSocketVersion.V13,
+                "protobuf",
+                true,
+                header,
+                maxFramePayloadLength);
+        WebSocketClientHandler webSocketHandler = new WebSocketClientHandler(handshaker, this, callback);
+
+        Bootstrap bootstrap = new Bootstrap()
+                .group(group)
+                .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                .channel(NioSocketChannel.class)
+                .option(ChannelOption.SO_KEEPALIVE, tcpKeepAlive);
+
+        if (timeoutMs != null) {
+            bootstrap = bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, timeoutMs);
+        }
+        SslContext sslCtx = tls ? getSslContext() : null;
+
+        bootstrap.handler(new ChannelInitializer&lt;SocketChannel&gt;() {
+            @Override
+            protected void initChannel(SocketChannel ch) throws Exception {
+                ChannelPipeline p = ch.pipeline();
+                if (sslCtx != null) {
+                    p.addLast(sslCtx.newHandler(ch.alloc()));
+                }
+                p.addLast(new HttpClientCodec());
+                p.addLast(new HttpObjectAggregator(8192));
+                if (allowCompression) {
+                    p.addLast(WebSocketClientCompressionHandler.INSTANCE);
+                }
+                p.addLast(webSocketHandler);
+            }
+        });
+
+        log.info("WebSocket client connecting");
+        try {
+            nettyChannel = bootstrap.connect(uri.getHost(), uri.getPort()).sync().channel();
+        } catch (Exception e) {
+            callback.connectionFailed(e);
+        }
+
+        // Finish handshake, this may still catch something like a 401
+        return webSocketHandler.handshakeFuture();
+    }
+
+    /**
+     * Initiates a new call. This does not yet communicate to Yamcs. Use the returned observer to send one or more
+     * messages.
+     */
+    public &lt;T extends Message&gt; Observer&lt;T&gt; call(String type, DataObserver&lt;? extends Message&gt; observer) {
+        Call call = new Call(type, observer);
+        calls.put(call.correlationId, call);
+
+        return new Observer&lt;&gt;() {
+
+            @Override
+            public void next(T message) {
+                try {
+                    call.write(message);
+                } catch (IOException e) {
+                    observer.completeExceptionally(e);
+                }
+            }
+
+            @Override
+            public void completeExceptionally(Throwable t) {
+                observer.completeExceptionally(t);
+            }
+
+            @Override
+            public void complete() {
+                try {
+                    cancelCall(call.callId);
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }
+        };
+    }
+
+    public void cancelCall(int callId) throws IOException {
+        Call call = confirmedCalls.remove(callId);
+        if (call != null) {
+            calls.remove(call.correlationId);
+        }
+        writeMessage(ClientMessage.newBuilder()
+                .setType("cancel")
+                .setOptions(Any.pack(CancelOptions.newBuilder().setCall(callId).build()))
+                .build());
+    }
+
+    public void disconnect() {
+        log.info("WebSocket client sending close");
+        nettyChannel.writeAndFlush(new CloseWebSocketFrame());
+
+        // WebSocketClientHandler will close the channel when the server
+        // responds to the CloseWebSocketFrame
+        nettyChannel.closeFuture().awaitUninterruptibly();
+    }
+
+    private void writeMessage(Message message) throws IOException {
+        if (log.isLoggable(messageLogging)) {
+            log.log(messageLogging, "&gt;&gt;&gt; " + message);
+        }
+        if (nettyChannel == null) {
+            throw new IllegalStateException("Not connected");
+        }
+        ByteBuf buf = nettyChannel.alloc().buffer();
+        try (ByteBufOutputStream bout = new ByteBufOutputStream(buf)) {
+            message.writeTo(bout);
+        }
+        nettyChannel.writeAndFlush(new BinaryWebSocketFrame(buf));
+    }
+
+    /**
+     * Enable/disable the TCP Keep-Alive on websocket sockets. By default it is disabled. It has to be enabled before
+     * the connection is established.
+     * 
+     * @param enableTcpKeepAlive
+     *            if true the TCP SO_KEEPALIVE option is set
+     */
+    public void enableTcpKeepAlive(boolean enableTcpKeepAlive) {
+        tcpKeepAlive = enableTcpKeepAlive;
+    }
+
+    void completeAll() {
+        calls.values().forEach(call -&gt; call.serverObserver.complete());
+        calls.clear();
+        confirmedCalls.clear();
+    }
+
+    /**
+     * @return the Future which is notified when the executor has been terminated.
+     */
+    public Future&lt;?&gt; shutdown() {
+        return group.shutdownGracefully(0, 5, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Returns true if the TCP connection is opened (even before the websocket handshake has been established FIXME) 
+     */
+    public boolean isConnected() {
+        return nettyChannel != null &amp;&amp; nettyChannel.isOpen();
+    }
+
+    private SslContext getSslContext() throws GeneralSecurityException, SSLException {
+        if (insecureTls) {
+            return SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+        }
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+
+        if (caKeyStore != null) {
+            tmf.init(caKeyStore);
+        } // else the default trustStore configured with -Djavax.net.ssl.trustStore is used
+
+        return SslContextBuilder.forClient().trustManager(tmf).build();
+    }
+
+    /**
+     * In case of https connections, this file contains the CA certificates that are used to verify server certificate
+     * 
+     * @param caCertFile
+     */
+    public void setCaCertFile(String caCertFile) throws IOException, GeneralSecurityException {
+        caKeyStore = CertUtil.loadCertFile(caCertFile);
+    }
+
+    public boolean isInsecureTls() {
+        return insecureTls;
+    }
+
+    /**
+     * if true and https connections are used, do not verify server certificate
+     * 
+     * @param insecureTls
+     */
+    public void setInsecureTls(boolean insecureTls) {
+        this.insecureTls = insecureTls;
+    }
+
+    public int getMaxFramePayloadLength() {
+        return maxFramePayloadLength;
+    }
+
+    public void setMaxFramePayloadLength(int maxFramePayloadLength) {
+        this.maxFramePayloadLength = maxFramePayloadLength;
+    }
+
+    void handleReply(ServerMessage message) throws InvalidProtocolBufferException {
+        if (log.isLoggable(messageLogging)) {
+            log.log(messageLogging, "&lt;&lt;&lt; " + message);
+        }
+        Reply reply = message.getData().unpack(Reply.class);
+        Call call = calls.get(reply.getReplyTo());
+        if (call != null) {
+            if (!reply.hasException()) {
+                confirmedCalls.put(message.getCall(), call);
+                call.assignCallId(message.getCall());
+            } else {
+                ExceptionMessage err = reply.getException();
+                log.warning(String.format("Server error: %s: %s", err.getType(), err.getMsg()));
+                ExceptionData excData = new ExceptionData(err.getType(), err.getMsg(), err.getDetail());
+                call.serverObserver.completeExceptionally(new ClientException(excData));
+            }
+        } else {
+            log.warning("Received a reply for an unknown call: " + reply);
+        }
+    }
+
+    public void handleMessage(ServerMessage message) throws InvalidProtocolBufferException {
+        if (log.isLoggable(messageLogging)) {
+            log.log(messageLogging, "&lt;&lt;&lt; " + message);
+        }
+        Call call = confirmedCalls.get(message.getCall());
+        if (call != null) {
+            call.serverObserver.unpackNext(message.getData());
+        } else if (log.isLoggable(Level.FINER)) {
+            // Usually just means that there was just a message underway while
+            // the call was in the process of being cancelled.
+            log.finer("Received a message for an unknown call: " + message);
+        }
+    }
+
+    private class Call {
+
+        final String type;
+        final int correlationId = idSequence.getAndIncrement();
+        final DataObserver&lt;? extends Message&gt; serverObserver;
+
+        boolean first = true;
+        int callId;
+        CountDownLatch callIdLatch = new CountDownLatch(1);
+
+        Call(String type, DataObserver&lt;? extends Message&gt; serverObserver) {
+            this.type = type;
+            this.serverObserver = serverObserver;
+        }
+
+        void write(Message data) throws IOException {
+            if (first) {
+                ClientMessage clientMessage = ClientMessage.newBuilder()
+                        .setType(type)
+                        .setId(correlationId)
+                        .setOptions(Any.pack(data))
+                        .build();
+                writeMessage(clientMessage);
+                first = false;
+            } else {
+                try {
+                    callIdLatch.await();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+                ClientMessage clientMessage = ClientMessage.newBuilder()
+                        .setType(type)
+                        .setCall(callId)
+                        .setOptions(Any.pack(data))
+                        .build();
+                writeMessage(clientMessage);
+            }
+        }
+
+        void assignCallId(int callId) {
+            this.callId = callId;
+            serverObserver.confirm();
+            callIdLatch.countDown();
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="websocketclientcallback-java">
+<h2><code class="docutils literal notranslate"><span class="pre">WebSocketClientCallback.java</span></code><a class="headerlink" href="#websocketclientcallback-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/WebSocketClientCallback.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+public interface WebSocketClientCallback {
+
+    /**
+     * When a connection attempt is underway
+     */
+    default void connecting() {
+    }
+
+    /**
+     * When the connection was successfully established
+     */
+    default void connected() {
+    }
+
+    /**
+     * When the initial connection attempt failed
+     */
+    default void connectionFailed(Throwable t) {
+    }
+
+    /**
+     * When a previously successful connection was disconnected
+     */
+    default void disconnected() {
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="websocketclienthandler-java">
+<h2><code class="docutils literal notranslate"><span class="pre">WebSocketClientHandler.java</span></code><a class="headerlink" href="#websocketclienthandler-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/WebSocketClientHandler.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.client.base;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.yamcs.protobuf.ServerMessage;
+
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
+import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import io.netty.util.CharsetUtil;
+
+public class WebSocketClientHandler extends SimpleChannelInboundHandler&lt;Object&gt; {
+
+    private static final Logger log = Logger.getLogger(WebSocketClientHandler.class.getName());
+
+    private final WebSocketClientHandshaker handshaker;
+    private final WebSocketClient client;
+
+    private WebSocketClientCallback callback;
+
+    private ChannelPromise handshakeFuture;
+
+    public WebSocketClientHandler(WebSocketClientHandshaker handshaker, WebSocketClient client,
+            WebSocketClientCallback callback) {
+        this.handshaker = handshaker;
+        this.client = client;
+        this.callback = callback;
+    }
+
+    public ChannelFuture handshakeFuture() {
+        return handshakeFuture;
+    }
+
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) {
+        handshakeFuture = ctx.newPromise();
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) {
+        handshaker.handshake(ctx.channel());
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) {
+        log.info("WebSocket Client disconnected");
+        client.completeAll();
+        callback.disconnected();
+    }
+
+    @Override
+    public void channelRead0(ChannelHandlerContext ctx, Object msg) {
+        Channel ch = ctx.channel();
+        if (!handshaker.isHandshakeComplete()) {
+            handshaker.finishHandshake(ch, (FullHttpResponse) msg);
+            log.info("WebSocket Client connected");
+            handshakeFuture.setSuccess();
+            callback.connected();
+            return;
+        }
+
+        if (msg instanceof FullHttpResponse) {
+            FullHttpResponse response = (FullHttpResponse) msg;
+            throw new IllegalStateException(
+                    "Unexpected FullHttpResponse (getStatus="
+                            + response.status() + ", content="
+                            + response.content().toString(CharsetUtil.UTF_8)
+                            + ')');
+        }
+
+        WebSocketFrame frame = (WebSocketFrame) msg;
+        if (frame instanceof BinaryWebSocketFrame) {
+            BinaryWebSocketFrame binaryFrame = (BinaryWebSocketFrame) frame;
+            if (log.isLoggable(Level.FINEST)) {
+                log.finest("WebSocket Client received message of size " + binaryFrame.content().readableBytes());
+            }
+            handleFrame(binaryFrame);
+        } else if (frame instanceof PingWebSocketFrame) {
+            frame.content().retain();
+            ch.writeAndFlush(new PongWebSocketFrame(frame.content()));
+        } else if (frame instanceof PongWebSocketFrame) {
+            log.info("WebSocket Client received pong");
+        } else if (frame instanceof CloseWebSocketFrame) {
+            log.info("WebSocket Client received closing");
+            ch.close();
+        } else {
+            log.severe("Received unsupported web socket frame " + frame);
+            System.out.println(((TextWebSocketFrame) frame).text());
+        }
+    }
+
+    private void handleFrame(BinaryWebSocketFrame frame) {
+        try (InputStream in = new ByteBufInputStream(frame.content())) {
+            ServerMessage message = ServerMessage.newBuilder().mergeFrom(in).build();
+            if ("reply".equals(message.getType())) {
+                client.handleReply(message);
+            } else {
+                client.handleMessage(message);
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        log.log(Level.SEVERE, "WebSocket exception. Closing channel", cause);
+        if (!handshakeFuture.isDone()) {
+            handshakeFuture.setFailure(cause);
+        }
+        ctx.close();
+        callback.connectionFailed(cause);
+    }
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../archive/index.html" class="btn btn-neutral float-left" title="archive" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../filetransfer/index.html" class="btn btn-neutral float-right" title="filetransfer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

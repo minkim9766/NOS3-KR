@@ -1,0 +1,1924 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Top &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="lib" href="../../lib/index.html" />
+    <link rel="prev" title="deployment" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">fprime-nos3</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">deployment</a></li>
+      <li class="breadcrumb-item active">Top</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/fsw/fprime/fprime-nos3/deployment/Top/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="top">
+<h1>Top<a class="headerlink" href="#top" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/deployment/Top/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="cmakelists-txt">
+<h2><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code><a class="headerlink" href="#cmakelists-txt" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/deployment/Top/CMakeLists.txt</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>####
+# F Prime CMakeLists.txt:
+#
+# SOURCES: list of source files (to be compiled)
+# AUTOCODER_INPUTS: list of files to be passed to the autocoders
+# DEPENDS: list of libraries that this module depends on
+#
+# More information in the F´ CMake API documentation:
+# https://fprime.jpl.nasa.gov/latest/docs/reference/api/cmake/API/
+#
+####
+
+#ITC SFTUFF:
+find_path(_ITC_CMAKE_MODULES_
+NAMES FindITC_Common.cmake
+PATHS ${ITC_CMAKE_MODULES}
+        ${ITC_DEV_ROOT}/cmake/modules
+        $ENV{ITC_DEV_ROOT}/cmake/modules
+        /usr/local/cmake/modules
+        /usr/cmake/modules)
+if(NOT _ITC_CMAKE_MODULES_)
+message(WARNING "Unable to find ITC CMake Modules")
+endif()
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${_ITC_CMAKE_MODULES_})
+
+find_package(NOSENGINE REQUIRED QUIET COMPONENTS common transport client uart can i2c spi)
+
+include_directories("../../../../../components/sample/fsw/shared")#sample_device.h
+include_directories("../../../../../components/sample/fsw/standalone") #device_cfg.h
+include_directories("../../../../../components/sample/fsw/fprime/platform_inc")
+
+include_directories("../../../../../components/generic_mag/fsw/standalone/") #device_cfg.h
+include_directories("../../../../../components/generic_mag/fsw/shared/")
+include_directories("../../../../../components/generic_mag/fsw/fprime/platform_inc")
+
+include_directories("../../../../../fsw/apps/hwlib/fsw/public_inc")
+
+include_directories("../../../../../fsw/apps/hwlib/sim/inc")
+
+include_directories("../../../../../components/generic_star_tracker/fsw/shared")
+include_directories("../../../../../components/generic_star_tracker/fsw/standalone") #device_cfg.
+include_directories("../../../../../components/generic_star_tracker/fsw/fprime/platform_inc")
+
+include_directories("../../../../../components/generic_radio/fsw/shared")
+include_directories("../../../../../components/generic_radio/fsw/standalone") #device_cfg.h
+include_directories("../../../../../components/generic_radio/fsw/fprime/platform_inc")
+
+include_directories("../../../../../components/arducam/fsw/shared/") #device.h
+include_directories("../../../../../components/arducam/fsw/standalone/") #device_cfg.h
+include_directories("../../../../../components/arducam/fsw/fprime/platform_inc") #platform_cfg.h
+include_directories("../../../../../components/generic_thruster/fsw/shared")
+include_directories("../../../../../components/generic_thruster/fsw/standalone") #device_cfg.h
+include_directories("../../../../../components/generic_thruster/fsw/fprime/platform_inc")
+include_directories("../../../../../components/generic_torquer/fsw/shared")
+include_directories("../../../../../components/generic_torquer/fsw/standalone") #device_cfg.h
+include_directories("../../../../../components/generic_torquer/fsw/fprime/platform_inc")
+
+include_directories("../../../../../components/generic_css/fsw/shared")
+include_directories("../../../../../components/generic_css/fsw/standalone") #device_cfg.h
+include_directories("../../../../../components/generic_css/fsw/fprime/platform_inc")
+
+include_directories("../../../../../components/generic_eps/fsw/shared")
+include_directories("../../../../../components/generic_eps/fsw/standalone") #device_cfg.h
+include_directories("../../../../../components/generic_eps/fsw/fprime/platform_inc")
+
+include_directories("../../../../../components/generic_imu/fsw/shared")
+include_directories("../../../../../components/generic_imu/fsw/standalone") #device_cfg.h
+include_directories("../../../../../components/generic_imu/fsw/fprime/platform_inc")
+include_directories("../../../../../components/generic_fss/fsw/shared")
+include_directories("../../../../../components/generic_fss/fsw/standalone/") #device_cfg.h
+include_directories("../../../../../components/generic_fss/fsw/fprime/platform_inc")
+
+include_directories("../../../../../components/generic_reaction_wheel/fsw/fprime/platform_inc")
+include_directories("../../../../../components/generic_reaction_wheel/fsw/shared")
+include_directories("../../../../../components/generic_reaction_wheel/fsw/standalone") #device_cfg.h
+
+include_directories("../../../../../components/novatel_oem615/fsw/shared")
+include_directories("../../../../../components/novatel_oem615/fsw/standalone") #device_cfg.h
+include_directories("../../../../../components/novatel_oem615/fsw/fprime/platform_inc")
+
+include_directories("../../../../../components/generic_adcs/fsw/fprime/src")
+include_directories("../../../../../components/generic_adcs/fsw/shared")
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/instances.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/deploymentPackets.xml"
+  "${CMAKE_CURRENT_LIST_DIR}/topology.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/deploymentTopology.cpp"
+
+  #ITC STUFF
+  
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/arducam/fsw/shared/cam_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/arducam/fsw/shared/cam_registers.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_torquer/fsw/shared/generic_torquer_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libsocket.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_css/fsw/shared/generic_css_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_fss/fsw/shared/generic_fss_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_mag/fsw/shared/generic_mag_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_star_tracker/fsw/shared/generic_star_tracker_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_radio/fsw/shared/generic_radio_device.c" 
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/sample/fsw/shared/sample_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_thruster/fsw/shared/generic_thruster_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_adcs/fsw/shared/generic_adcs_utilities.c"
+
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_eps/fsw/shared/generic_eps_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_imu/fsw/shared/generic_imu_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_reaction_wheel/fsw/shared/generic_reaction_wheel_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_mag/fsw/shared/generic_mag_device.c"
+  
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libtrq.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libsocket.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libuart.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libcan.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libi2c.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libspi.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+set(MOD_DEPS
+  Fw/Logger
+  Svc/PosixTime
+  # Communication Implementations
+  Drv/Udp
+  Drv/TcpClient
+
+  #ITC Stuff
+  ${ITC_Common_LIBRARIES}
+  ${NOSENGINE_LIBRARIES}
+)
+
+register_fprime_module(
+    # AUTOCODER_INPUTS
+    #     "${CMAKE_CURRENT_LIST_DIR}/instances.fpp"
+    #     "${CMAKE_CURRENT_LIST_DIR}/topology.fpp"
+    # SOURCES
+    #     "${CMAKE_CURRENT_LIST_DIR}/deploymentTopology.cpp"
+    # DEPENDS
+    #     Fw_Logger
+)
+
+target_sources(${FPRIME_CURRENT_MODULE} PRIVATE 
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/arducam/fsw/shared/cam_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/arducam/fsw/shared/cam_registers.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_torquer/fsw/shared/generic_torquer_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libsocket.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_css/fsw/shared/generic_css_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_fss/fsw/shared/generic_fss_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_mag/fsw/shared/generic_mag_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_star_tracker/fsw/shared/generic_star_tracker_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_radio/fsw/shared/generic_radio_device.c" 
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/sample/fsw/shared/sample_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_thruster/fsw/shared/generic_thruster_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_adcs/fsw/shared/generic_adcs_utilities.c"
+
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_eps/fsw/shared/generic_eps_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_imu/fsw/shared/generic_imu_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_reaction_wheel/fsw/shared/generic_reaction_wheel_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_mag/fsw/shared/generic_mag_device.c"
+  
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libtrq.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libsocket.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libuart.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libcan.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libi2c.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libspi.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+
+target_include_directories(${FPRIME_CURRENT_MODULE} PRIVATE
+    "../../../../../components/sample/fsw/shared"
+    "../../../../../components/sample/fsw/standalone"
+    "../../../../../components/sample/fsw/fprime/platform_inc"
+    
+    "../../../../../fsw/apps/hwlib/fsw/public_inc"
+    
+    "../../../../../fsw/apps/hwlib/sim/inc"
+    
+    "../../../../../components/generic_star_tracker/fsw/shared"
+    "../../../../../components/generic_star_tracker/fsw/standalone/"
+    "../../../../../components/generic_star_tracker/fsw/fprime/platform_inc"
+    
+    "../../../../../components/generic_radio/fsw/shared"
+    "../../../../../components/generic_radio/fsw/standalone" 
+    "../../../../../components/generic_radio/fsw/fprime/platform_inc"
+    
+    "../../../../../components/generic_torquer/fsw/shared"
+    "../../../../../components/generic_torquer/fsw/standalone"
+    "../../../../../components/generic_torquer/fsw/fprime/platform_inc"
+    "../../../../../components/generic_css/fsw/shared"
+    "../../../../../components/generic_css/fsw/standalone"
+    "../../../../../components/generic_css/fsw/fprime/platform_inc"
+    "../../../../../components/generic_fss/fsw/shared/src"
+    "../../../../../components/generic_fss/fsw/standalone/"
+    "../../../../../components/generic_fss/fsw/fprime/platform_inc"
+    
+    "../../../../../components/generic_eps/fsw/shared"
+    "../../../../../components/generic_eps/fsw/standalone"
+    "../../../../../components/generic_eps/fsw/fprime/platform_inc"
+    
+    "../../../../../components/arducam/fsw/shared/"
+    "../../../../../components/arducam/fsw/standalone/"
+    "../../../../../components/arducam/fsw/fprime/platform_inc"
+    "../../../../../components/generic_thruster/fsw/shared"
+    "../../../../../components/generic_thruster/fsw/standalone"
+    "../../../../../components/generic_thruster/fsw/fprime/platform_inc"
+    
+    "../../../../../components/generic_imu/fsw/shared"
+    "../../../../../components/generic_imu/fsw/standalone"
+    "../../../../../components/generic_imu/fsw/fprime/platform_inc"
+    
+    "../../../../../components/generic_mag/fsw/shared"
+    "../../../../../components/generic_mag/fsw/standalone"
+    "../../../../../components/generic_mag/fsw/fprime/platform_inc"
+    
+    "../../../../../components/generic_reaction_wheel/fsw/shared"
+    "../../../../../components/generic_reaction_wheel/fsw/standalone"
+    "../../../../../components/generic_reaction_wheel/fsw/fprime/platform_inc"
+
+    "../../../../../components/novatel_oem615/fsw/shared"
+    "../../../../../components/novatel_oem615/fsw/standalone"
+    "../../../../../components/novatel_oem615/fsw/fprime/platform_inc"
+    
+    "../../../../../components/generic_adcs/fsw/fprime/src"
+    "../../../../../components/generic_adcs/fsw/shared"
+)
+</pre></div>
+</div>
+</section>
+<section id="deploymentpackets-fppi">
+<h2><code class="docutils literal notranslate"><span class="pre">deploymentPackets.fppi</span></code><a class="headerlink" href="#deploymentpackets-fppi" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/deployment/Top/deploymentPackets.fppi</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>telemetry packets deploymentPackets {
+
+  packet CDH id 1 group 1 {
+    CdhCore.cmdDisp.CommandsDispatched
+
+    FileHandling.fileUplink.FilesReceived
+    FileHandling.fileUplink.PacketsReceived
+    FileHandling.fileDownlink.FilesSent
+    FileHandling.fileDownlink.PacketsSent
+    FileHandling.fileManager.CommandsExecuted
+
+    deployment.cmdSeq.CS_LoadCommands
+    deployment.cmdSeq.CS_CancelCommands
+    deployment.cmdSeq.CS_CommandsExecuted
+    deployment.cmdSeq.CS_SequencesCompleted
+    ComCcsds.comQueue.comQueueDepth
+    ComCcsds.comQueue.buffQueueDepth
+    ComCcsds.commsBufferManager.TotalBuffs
+    ComCcsds.commsBufferManager.CurrBuffs
+    ComCcsds.commsBufferManager.HiBuffs
+    #ComCcsds.tlmSend.SendLevel
+
+    deployment.rateGroup1.RgMaxTime
+    deployment.rateGroup2.RgMaxTime
+    deployment.rateGroup3.RgMaxTime
+    deployment.rateGroup4.RgMaxTime
+  }
+
+  packet CDHErrors id 2 group 1 {
+    CdhCore.$health.PingLateWarnings
+
+    FileHandling.fileUplink.Warnings
+    FileHandling.fileDownlink.Warnings
+    FileHandling.fileManager.Errors
+
+    deployment.cmdSeq.CS_Errors
+    ComCcsds.commsBufferManager.NoBuffs
+    ComCcsds.commsBufferManager.EmptyBuffs
+
+    deployment.rateGroup1.RgCycleSlips
+    deployment.rateGroup2.RgCycleSlips
+    deployment.rateGroup3.RgCycleSlips
+    deployment.rateGroup4.RgCycleSlips
+  }
+
+  packet SystemRes1 id 5 group 2 {
+    deployment.systemResources.MEMORY_TOTAL
+    deployment.systemResources.MEMORY_USED
+    deployment.systemResources.NON_VOLATILE_TOTAL
+    deployment.systemResources.NON_VOLATILE_FREE
+  }
+
+  packet SystemRes3 id 6 group 2 {
+    deployment.systemResources.CPU
+    deployment.systemResources.CPU_00
+    deployment.systemResources.CPU_01
+    deployment.systemResources.CPU_02
+    deployment.systemResources.CPU_03
+    deployment.systemResources.CPU_04
+    deployment.systemResources.CPU_05
+    deployment.systemResources.CPU_06
+    deployment.systemResources.CPU_07
+    deployment.systemResources.CPU_08
+    deployment.systemResources.CPU_09
+    deployment.systemResources.CPU_10
+    deployment.systemResources.CPU_11
+    deployment.systemResources.CPU_12
+    deployment.systemResources.CPU_13
+    deployment.systemResources.CPU_14
+    deployment.systemResources.CPU_15
+  }
+
+  packet DataProducts id 21 group 3 {
+    DataProducts.dpCat.CatalogDps
+    DataProducts.dpCat.DpsSent
+
+    DataProducts.dpMgr.NumSuccessfulAllocations
+    DataProducts.dpMgr.NumFailedAllocations
+    DataProducts.dpMgr.NumDataProducts
+    DataProducts.dpMgr.NumBytes
+
+    DataProducts.dpWriter.NumBuffersReceived
+    DataProducts.dpWriter.NumBytesWritten
+    DataProducts.dpWriter.NumSuccessfulWrites
+    DataProducts.dpWriter.NumFailedWrites
+    DataProducts.dpWriter.NumErrors
+
+    DataProducts.dpBufferManager.TotalBuffs
+    DataProducts.dpBufferManager.CurrBuffs
+    DataProducts.dpBufferManager.HiBuffs
+    DataProducts.dpBufferManager.NoBuffs
+    DataProducts.dpBufferManager.EmptyBuffs
+  }
+
+  packet Version1 id 22 group 2 {
+    CdhCore.version.FrameworkVersion
+    CdhCore.version.ProjectVersion
+  }
+
+  packet Version_Library1 id 23 group 2 {
+    CdhCore.version.LibraryVersion01
+    CdhCore.version.LibraryVersion02
+  }
+
+  packet Version_Library2 id 24 group 2 {
+    CdhCore.version.LibraryVersion03
+    CdhCore.version.LibraryVersion04
+  }
+
+  packet Version_Library3 id 25 group 2 {
+    CdhCore.version.LibraryVersion05
+    CdhCore.version.LibraryVersion06
+  }
+
+  packet Version_Library4 id 26 group 2 {
+    CdhCore.version.LibraryVersion07
+    CdhCore.version.LibraryVersion08
+  }
+
+  packet Version_Library5 id 27 group 2 {
+    CdhCore.version.LibraryVersion09
+    CdhCore.version.LibraryVersion10
+  }
+
+  packet Version_Custom1 id 28 group 2 {
+    CdhCore.version.CustomVersion01
+  }
+
+  packet Version_Custom2 id 29 group 2 {
+    CdhCore.version.CustomVersion02
+  }
+
+  packet Version_Custom3 id 30 group 2 {
+    CdhCore.version.CustomVersion03
+  }
+
+  packet Version_Custom4 id 31 group 2 {
+    CdhCore.version.CustomVersion04
+  }
+
+  packet Version_Custom5 id 32 group 2 {
+    CdhCore.version.CustomVersion05
+  }
+
+  packet Version_Custom6 id 33 group 2 {
+    CdhCore.version.CustomVersion06
+  }
+
+  packet Version_Custom7 id 34 group 2 {
+    CdhCore.version.CustomVersion07
+  }
+
+  packet Version_Custom8 id 35 group 2 {
+    CdhCore.version.CustomVersion08
+  }
+
+  packet Version_Custom9 id 36 group 2 {
+    CdhCore.version.CustomVersion09
+  }
+
+  packet Version_Custom10 id 37 group 2 {
+    CdhCore.version.CustomVersion10
+  }
+
+} omit {
+  CdhCore.cmdDisp.CommandErrors
+
+  Components.arducam.CommandCount
+  Components.arducam.CommandErrorCount
+
+  Components.generic_css.CommandCount
+  Components.generic_css.CommandErrorCount
+  Components.generic_css.DeviceCount
+  Components.generic_css.DeviceErrorCount
+  Components.generic_css.DeviceEnabled
+  Components.generic_css.ADCVoltage0
+  Components.generic_css.ADCVoltage1
+  Components.generic_css.ADCVoltage2
+  Components.generic_css.ADCVoltage3
+  Components.generic_css.ADCVoltage4
+  Components.generic_css.ADCVoltage5
+
+  Components.generic_eps.DeviceCount
+  Components.generic_eps.DeviceErrorCount
+  Components.generic_eps.CommandErrorCount
+  Components.generic_eps.CommandCount
+  Components.generic_eps.BatteryVoltage
+  Components.generic_eps.BatteryTemperature
+  Components.generic_eps.Bus3p3Voltage
+  Components.generic_eps.Bus5p0Voltage
+  Components.generic_eps.Bus12Voltage
+  Components.generic_eps.EPSTemperature
+  Components.generic_eps.SolarArrayVoltage
+  Components.generic_eps.SolarArrayTemperature
+  Components.generic_eps.RawBatteryVoltage
+  Components.generic_eps.RawBatteryTemperature
+  Components.generic_eps.RawBus3p3V
+  Components.generic_eps.RawBus5p0V
+  Components.generic_eps.RawBus12V
+  Components.generic_eps.RawEPSTemperature
+  Components.generic_eps.RawSAVoltage
+  Components.generic_eps.RawSATemperature
+  Components.generic_eps.SW0Voltage
+  Components.generic_eps.SW0Current
+  Components.generic_eps.RawSW0Voltage
+  Components.generic_eps.RawSW0Current
+  Components.generic_eps.SW0State
+  Components.generic_eps.SW0Flag
+  Components.generic_eps.SW1Voltage
+  Components.generic_eps.SW1Current
+  Components.generic_eps.RawSW1Voltage
+  Components.generic_eps.RawSW1Current
+  Components.generic_eps.SW1State
+  Components.generic_eps.SW1Flag
+  Components.generic_eps.SW2Voltage
+  Components.generic_eps.SW2Current
+  Components.generic_eps.RawSW2Voltage
+  Components.generic_eps.RawSW2Current
+  Components.generic_eps.SW2State
+  Components.generic_eps.SW2Flag
+  Components.generic_eps.SW3Voltage
+  Components.generic_eps.SW3Current
+  Components.generic_eps.RawSW3Voltage
+  Components.generic_eps.RawSW3Current
+  Components.generic_eps.SW3State
+  Components.generic_eps.SW3Flag
+  Components.generic_eps.SW4Voltage
+  Components.generic_eps.SW4Current
+  Components.generic_eps.RawSW4Voltage
+  Components.generic_eps.RawSW4Current
+  Components.generic_eps.SW4State
+  Components.generic_eps.SW4Flag
+  Components.generic_eps.SW5Voltage
+  Components.generic_eps.SW5Current
+  Components.generic_eps.RawSW5Voltage
+  Components.generic_eps.RawSW5Current
+  Components.generic_eps.SW5State
+  Components.generic_eps.SW5Flag
+  Components.generic_eps.SW6Voltage
+  Components.generic_eps.SW6Current
+  Components.generic_eps.RawSW6Voltage
+  Components.generic_eps.RawSW6Current
+  Components.generic_eps.SW6State
+  Components.generic_eps.SW6Flag
+  Components.generic_eps.SW7Voltage
+  Components.generic_eps.SW7Current
+  Components.generic_eps.RawSW7Voltage
+  Components.generic_eps.RawSW7Current
+  Components.generic_eps.SW7State
+  Components.generic_eps.SW7Flag
+
+  Components.generic_fss.CommandCount
+  Components.generic_fss.CommandErrorCount
+  Components.generic_fss.DeviceCount
+  Components.generic_fss.DeviceErrorCount
+  Components.generic_fss.DeviceEnabled
+  Components.generic_fss.ALPHA
+  Components.generic_fss.BETA
+  Components.generic_fss.ERRORCODE
+
+  Components.generic_imu.CommandCount
+  Components.generic_imu.CommandErrorCount
+  Components.generic_imu.DeviceCount
+  Components.generic_imu.DeviceErrorCount
+  Components.generic_imu.DeviceEnabled
+  Components.generic_imu.ReportedComponentCount
+  Components.generic_imu.DeviceStatus
+  Components.generic_imu.X_Axis_LinearAcc
+  Components.generic_imu.X_Axis_AngularAcc
+  Components.generic_imu.Y_Axis_LinearAcc
+  Components.generic_imu.Y_Axis_AngularAcc
+  Components.generic_imu.Z_Axis_LinearAcc
+  Components.generic_imu.Z_Axis_AngularAcc
+
+  Components.generic_mag.CommandCount
+  Components.generic_mag.CommandErrorCount
+  Components.generic_mag.DeviceCount
+  Components.generic_mag.DeviceErrorCount
+  Components.generic_mag.DeviceEnabled
+  Components.generic_mag.MagneticIntensityX
+  Components.generic_mag.MagneticIntensityY
+  Components.generic_mag.MagneticIntensityZ
+
+  Components.generic_radio.CommandCount
+  Components.generic_radio.CommandErrorCount
+  Components.generic_radio.DeviceCount
+  Components.generic_radio.DeviceErrorCount
+  Components.generic_radio.ReportedComponentCount
+  Components.generic_radio.DeviceConfig
+  Components.generic_radio.ProxySignal
+
+  Components.generic_reaction_wheel.CommandCount
+  Components.generic_reaction_wheel.CommandErrorCount
+  Components.generic_reaction_wheel.DeviceCountRW0
+  Components.generic_reaction_wheel.DeviceErrorCountRW0
+  Components.generic_reaction_wheel.DeviceEnabledRW0
+  Components.generic_reaction_wheel.RW0_Data
+  Components.generic_reaction_wheel.DeviceCountRW1
+  Components.generic_reaction_wheel.DeviceErrorCountRW1
+  Components.generic_reaction_wheel.DeviceEnabledRW1
+  Components.generic_reaction_wheel.RW1_Data
+  Components.generic_reaction_wheel.DeviceCountRW2
+  Components.generic_reaction_wheel.DeviceErrorCountRW2
+  Components.generic_reaction_wheel.DeviceEnabledRW2
+  Components.generic_reaction_wheel.RW2_Data
+
+  Components.generic_star_tracker.ReportedComponentCount
+  Components.generic_star_tracker.CommandCount
+  Components.generic_star_tracker.CommandErrorCount
+  Components.generic_star_tracker.DeviceCount
+  Components.generic_star_tracker.DeviceErrorCount
+  Components.generic_star_tracker.DeviceEnabled
+  Components.generic_star_tracker.Q0_Data
+  Components.generic_star_tracker.Q1_Data
+  Components.generic_star_tracker.Q2_Data
+  Components.generic_star_tracker.Q3_Data
+  Components.generic_star_tracker.IsValid
+
+  Components.generic_thruster.CommandCount
+  Components.generic_thruster.CommandErrorCount
+  Components.generic_thruster.DeviceCount
+  Components.generic_thruster.DeviceErrorCount
+  Components.generic_thruster.DeviceEnabled
+  Components.generic_thruster.Percentage_0
+  Components.generic_thruster.Percentage_1
+  Components.generic_thruster.Percentage_2
+  Components.generic_thruster.Percentage_3
+
+  Components.generic_torquer.DeviceCount
+  Components.generic_torquer.DeviceErrorCount
+  Components.generic_torquer.CommandErrorCount
+  Components.generic_torquer.CommandCount
+  Components.generic_torquer.DeviceEnabled
+  Components.generic_torquer.Direction_0
+  Components.generic_torquer.Percent_0
+  Components.generic_torquer.Direction_1
+  Components.generic_torquer.Percent_1
+  Components.generic_torquer.Direction_2
+  Components.generic_torquer.Percent_2
+
+  Components.generic_adcs.ingestIMUCount
+  Components.generic_adcs.ingestMagCount
+  Components.generic_adcs.ingestFSSCount
+  Components.generic_adcs.ingestCSSCount
+  Components.generic_adcs.ingestRWCount
+  Components.generic_adcs.ingestSTCount
+  Components.generic_adcs.ingestBDOT
+  Components.generic_adcs.ingestSUNSAFE
+  Components.generic_adcs.ingestPASSIVE
+  Components.generic_adcs.ADCSMode
+  Components.generic_adcs.INERTIALQUATERNIONX
+  Components.generic_adcs.INERTIALQUATERNIONY
+  Components.generic_adcs.INERTIALQUATERNIONZ
+  Components.generic_adcs.INERTIALQUATERNIONW
+  Components.generic_adcs.CommandCount
+  Components.generic_adcs.CommandErrorCount
+  Components.generic_adcs.ADCSMomentumManagement
+
+  Components.sampleSim.ReportedComponentCount
+  Components.sampleSim.DeviceConfig
+  Components.sampleSim.DeviceStatus
+  Components.sampleSim.DeviceCount
+  Components.sampleSim.DeviceErrorCount
+  Components.sampleSim.CommandCount
+  Components.sampleSim.CommandErrorCount
+  Components.sampleSim.DeviceEnabled
+
+  Components.novatel_oem615.Weeks
+  Components.novatel_oem615.SecondsIntoWeek
+  Components.novatel_oem615.Fractions
+  Components.novatel_oem615.ECEFX
+  Components.novatel_oem615.ECEFY
+  Components.novatel_oem615.ECEFZ
+  Components.novatel_oem615.VelX
+  Components.novatel_oem615.VelY
+  Components.novatel_oem615.VelZ
+  Components.novatel_oem615.lat
+  Components.novatel_oem615.lon
+  Components.novatel_oem615.alt
+
+}
+</pre></div>
+</div>
+</section>
+<section id="deploymenttopology-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">deploymentTopology.cpp</span></code><a class="headerlink" href="#deploymenttopology-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/deployment/Top/deploymentTopology.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  deploymentTopology.cpp
+// \brief cpp file containing the topology instantiation code
+//
+// ======================================================================
+// Provides access to autocoded functions
+#include &lt;deployment/Top/deploymentTopologyAc.hpp&gt;
+// Note: Uncomment when using Svc:TlmPacketizer
+//#include &lt;deployment/Top/deploymentPacketsAc.hpp&gt;
+
+// Necessary project-specified types
+#include &lt;Fw/Types/MallocAllocator.hpp&gt;
+
+// Allows easy reference to objects in FPP/autocoder required namespaces
+using namespace deployment;
+
+// Instantiate a malloc allocator for cmdSeq buffer allocation
+Fw::MallocAllocator mallocator;
+
+// The reference topology divides the incoming clock signal (1Hz) into sub-signals: 1Hz, 1/2Hz, and 1/4Hz with 0 offset
+Svc::RateGroupDriver::DividerSet rateGroupDivisorsSet{{{10, 0}, {20, 0}, {40, 0}, {2, 0}}};
+
+// Rate groups may supply a context token to each of the attached children whose purpose is set by the project. The
+// reference topology sets each token to zero as these contexts are unused in this project.
+U32 rateGroup1Context[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX] = {};
+U32 rateGroup2Context[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX] = {};
+U32 rateGroup3Context[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX] = {};
+U32 rateGroup4Context[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX] = {};
+
+enum TopologyConstants {
+    COMM_PRIORITY = 100,
+};
+
+/**
+ * \brief configure/setup components in project-specific way
+ *
+ * This is a *helper* function which configures/sets up each component requiring project specific input. This includes
+ * allocating resources, passing-in arguments, etc. This function may be inlined into the topology setup function if
+ * desired, but is extracted here for clarity.
+ */
+void configureTopology() {
+    // Rate group driver needs a divisor list
+    rateGroupDriver.configure(rateGroupDivisorsSet);
+
+    // Rate groups require context arrays.
+    rateGroup1.configure(rateGroup1Context, FW_NUM_ARRAY_ELEMENTS(rateGroup1Context));
+    rateGroup2.configure(rateGroup2Context, FW_NUM_ARRAY_ELEMENTS(rateGroup2Context));
+    rateGroup3.configure(rateGroup3Context, FW_NUM_ARRAY_ELEMENTS(rateGroup3Context));
+    rateGroup4.configure(rateGroup4Context, FW_NUM_ARRAY_ELEMENTS(rateGroup4Context));
+
+    // Command sequencer needs to allocate memory to hold contents of command sequences
+    cmdSeq.allocateBuffer(0, mallocator, 5 * 1024);
+}
+
+// Public functions for use in main program are namespaced with deployment name deployment
+namespace deployment {
+void setupTopology(const TopologyState&amp; state) {
+    // Autocoded initialization. Function provided by autocoder.
+    initComponents(state);
+    // Autocoded id setup. Function provided by autocoder.
+    setBaseIds();
+    // Autocoded connection wiring. Function provided by autocoder.
+    connectComponents();
+    // Autocoded command registration. Function provided by autocoder.
+    regCommands();
+    // Autocoded configuration. Function provided by autocoder.
+    configComponents(state);
+    if (state.hostname != nullptr &amp;&amp; state.port != 0) {
+        comDriver.configure(state.hostname, state.port);
+    }
+    // Project-specific component configuration. Function provided above. May be inlined, if desired.
+    configureTopology();
+    // Autocoded parameter loading. Function provided by autocoder.
+    loadParameters();
+    // Autocoded task kick-off (active components). Function provided by autocoder.
+    startTasks(state);
+    // Initialize socket communication if and only if there is a valid specification
+    if (state.hostname != nullptr &amp;&amp; state.port != 0) {
+        Os::TaskString name("ReceiveTask");
+        // Uplink is configured for receive so a socket task is started
+        comDriver.start(name, COMM_PRIORITY, Default::STACK_SIZE);
+    }
+}
+
+void startRateGroups(Fw::TimeInterval interval) {
+    // The timer component drives the fundamental tick rate of the system.
+    // Svc::RateGroupDriver will divide this down to the slower rate groups.
+    // This call will block until the stopRateGroups() call is made.
+    // For this Linux demo, that call is made from a signal handler.
+    timer.startTimer(interval.getSeconds()*1000+interval.getUSeconds()/1000);
+}
+
+void stopRateGroups() {
+    timer.quit();
+}
+
+void teardownTopology(const TopologyState&amp; state) {
+    // Autocoded (active component) task clean-up. Functions provided by topology autocoder.
+    stopTasks(state);
+    freeThreads(state);
+
+    // Other task clean-up.
+    comDriver.stop();
+    (void)comDriver.join();
+
+    // Resource deallocation
+    cmdSeq.deallocateBuffer(mallocator);
+
+    tearDownComponents(state);
+}
+};  // namespace deployment
+</pre></div>
+</div>
+</section>
+<section id="deploymenttopology-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">deploymentTopology.hpp</span></code><a class="headerlink" href="#deploymenttopology-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/deployment/Top/deploymentTopology.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  deploymentTopology.hpp
+// \brief header file containing the topology instantiation definitions
+//
+// ======================================================================
+#ifndef DEPLOYMENT_DEPLOYMENTTOPOLOGY_HPP
+#define DEPLOYMENT_DEPLOYMENTTOPOLOGY_HPP
+// Included for access to deployment::TopologyState and deployment::ConfigObjects::pingEntries. These definitions are required by the
+// autocoder, but are also used in this hand-coded topology.
+#include &lt;deployment/Top/deploymentTopologyDefs.hpp&gt;
+
+// Remove unnecessary deployment:: qualifications
+using namespace deployment;
+namespace deployment {
+/**
+ * \brief initialize and run the F´ topology
+ *
+ * Initializes, configures, and runs the F´ topology. This is performed through a series of steps, some provided via
+ * autocoded functions, and others provided via the functions implementation. These steps are:
+ *
+ *   1. Call the autocoded `initComponents()` function initializing each component via the `component.init` method
+ *   2. Call the autocoded `setBaseIds()` function to set the base IDs (offset) for each component instance
+ *   3. Call the autocoded `connectComponents()` function to wire-together the topology of components
+ *   4. Configure components requiring custom configuration
+ *   5. Call the autocoded `loadParameters()` function to cause each component to load initial parameter values
+ *   6. Call the autocoded `startTasks()` function to start the active component tasks
+ *   7. Start tasks not owned by active components
+ *
+ * Step 4 and step 7 are custom and supplied by the project. The ordering of steps 1, 2, 3, 5, and 6 are critical for
+ * F´ topologies to function. Configuration (step 4) typically assumes a connect but not started topology and is thus
+ * inserted between step 3 and 5. Step 7 may come before or after the active component initializations. Since these
+ * custom tasks often start radio communication it is convenient to start them last.
+ *
+ * The state argument carries command line inputs used to setup the topology. For an explanation of the required type
+ * deployment::TopologyState see: deploymentTopologyDefs.hpp.
+ *
+ * \param state: object shuttling CLI arguments (e.g. hostname/port, or UART baudrate) needed to construct the topology
+ */
+void setupTopology(const TopologyState&amp; state);
+
+/**
+ * \brief teardown the F´ topology
+ *
+ * Tears down the F´ topology in preparation for shutdown. This is done via a series of steps, some provided by
+ * autocoded functions, and others provided via the function implementation. These steps are:
+ *
+ *   1. Call the autocoded `stopTasks()` function to stop the tasks started by `startTasks()` (active components)
+ *   2. Call the autocoded `freeThreads()` function to join to the tasks started by `startTasks()`
+ *   3. Stop the tasks not owned by active components
+ *   4. Join to the tasks not owned by active components
+ *   5. Deallocate other resources
+ *
+ * Step 1, 2, 3, and 4 must occur in-order as the tasks must be stopped before being joined. These tasks must be stopped
+ * and joined before any active resources may be deallocated.
+ *
+ * For an explanation of the required type deployment::TopologyState see: deploymentTopologyDefs.hpp.
+ *
+ * \param state: state object provided to setupTopology
+ */
+void teardownTopology(const TopologyState&amp; state);
+
+/**
+ * \brief cycle the rate group driver at a crude rate
+ *
+ * The reference topology does not have a true 1Hz input clock for the rate group driver because it is designed to
+ * operate across various computing endpoints (e.g. laptops) where a clear 1Hz source may not be easily and generically
+ * achieved. This function mimics the cycling via a Task::delay(milliseconds) loop that manually invokes the ISR call
+ * to the example block driver.
+ *
+ *
+ * This loop is stopped via a stopRateGroups call.
+ *
+ */
+void startRateGroups(Fw::TimeInterval interval = Fw::TimeInterval(1,0));
+
+/**
+ * \brief stop the rate groups 
+ *
+ * This stops the cycle started by startRateGroups.
+ */
+void stopRateGroups();
+
+} // namespace deployment
+#endif
+</pre></div>
+</div>
+</section>
+<section id="deploymenttopologydefs-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">deploymentTopologyDefs.hpp</span></code><a class="headerlink" href="#deploymenttopologydefs-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/deployment/Top/deploymentTopologyDefs.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  deploymentTopologyDefs.hpp
+// \brief required header file containing the required definitions for the topology autocoder
+//
+// ======================================================================
+#ifndef DEPLOYMENT_DEPLOYMENTTOPOLOGYDEFS_HPP
+#define DEPLOYMENT_DEPLOYMENTTOPOLOGYDEFS_HPP
+
+// Subtopology PingEntries includes
+#include "Svc/Subtopologies/CdhCore/PingEntries.hpp"
+#include "Svc/Subtopologies/ComCcsds/PingEntries.hpp"
+#include "Svc/Subtopologies/DataProducts/PingEntries.hpp"
+#include "Svc/Subtopologies/FileHandling/PingEntries.hpp"
+
+// SubtopologyTopologyDefs includes
+#include "Svc/Subtopologies/CdhCore/SubtopologyTopologyDefs.hpp"
+#include "Svc/Subtopologies/ComCcsds/SubtopologyTopologyDefs.hpp"
+#include "Svc/Subtopologies/DataProducts/SubtopologyTopologyDefs.hpp"
+#include "Svc/Subtopologies/FileHandling/SubtopologyTopologyDefs.hpp"
+
+//ComCcsds Enum Includes
+#include "Svc/Subtopologies/ComCcsds/Ports_ComPacketQueueEnumAc.hpp"
+#include "Svc/Subtopologies/ComCcsds/Ports_ComBufferQueueEnumAc.hpp"
+
+// Include autocoded FPP constants
+#include "deployment/Top/FppConstantsAc.hpp"
+
+/**
+ * \brief required ping constants
+ *
+ * The topology autocoder requires a WARN and FATAL constant definition for each component that supports the health-ping
+ * interface. These are expressed as enum constants placed in a namespace named for the component instance. These
+ * are all placed in the PingEntries namespace.
+ *
+ * Each constant specifies how many missed pings are allowed before a WARNING_HI/FATAL event is triggered. In the
+ * following example, the health component will emit a WARNING_HI event if the component instance cmdDisp does not
+ * respond for 3 pings and will FATAL if responses are not received after a total of 5 pings.
+ *
+ * ```c++
+ * namespace PingEntries {
+ * namespace cmdDisp {
+ *     enum { WARN = 3, FATAL = 5 };
+ * }
+ * }
+ * ```
+ */
+namespace PingEntries {
+    namespace deployment_rateGroup1 {enum { WARN = 3, FATAL = 5 };}
+    namespace deployment_rateGroup2 {enum { WARN = 3, FATAL = 5 };}
+    namespace deployment_rateGroup3 {enum { WARN = 3, FATAL = 5 };}
+    namespace deployment_rateGroup4 {enum { WARN = 3, FATAL = 5 };}
+    namespace deployment_cmdSeq {enum { WARN = 3, FATAL = 5 };}
+}  // namespace PingEntries
+
+// Definitions are placed within a namespace named after the deployment
+namespace deployment {
+
+/**
+ * \brief required type definition to carry state
+ *
+ * The topology autocoder requires an object that carries state with the name `deployment::TopologyState`. Only the type
+ * definition is required by the autocoder and the contents of this object are otherwise opaque to the autocoder. The
+ * contents are entirely up to the definition of the project. This deployment uses subtopologies.
+ */
+struct TopologyState {
+    const char* hostname;   //!&lt; Hostname for TCP communication
+    U16 port;              //!&lt; Port for TCP communication
+    CdhCore::SubtopologyState cdhCore;           //!&lt; Subtopology state for CdhCore
+    ComCcsds::SubtopologyState comCcsds;         //!&lt; Subtopology state for ComCcsds 
+    DataProducts::SubtopologyState dataProducts; //!&lt; Subtopology state for DataProducts
+    FileHandling::SubtopologyState fileHandling; //!&lt; Subtopology state for FileHandling
+};
+
+namespace PingEntries = ::PingEntries;
+}  // namespace deployment
+#endif
+</pre></div>
+</div>
+</section>
+<section id="instances-fpp">
+<h2><code class="docutils literal notranslate"><span class="pre">instances.fpp</span></code><a class="headerlink" href="#instances-fpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/deployment/Top/instances.fpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>module deployment {
+
+  # ----------------------------------------------------------------------
+  # Base ID Convention
+  # ----------------------------------------------------------------------
+  #
+  # All Base IDs follow the 8-digit hex format: 0xDSSCCxxx
+  #
+  # Where:
+  #   D   = Deployment digit (1 for this deployment)
+  #   SS  = Subtopology digits (00 for main topology, 01-05 for subtopologies)
+  #   CC  = Component digits (00, 01, 02, etc.)
+  #   xxx = Reserved for internal component items (events, commands, telemetry)
+  #
+
+  # ----------------------------------------------------------------------
+  # Defaults
+  # ----------------------------------------------------------------------
+
+  module Default {
+    constant QUEUE_SIZE = 100
+    constant STACK_SIZE = 64 * 1024
+    constant QUEUE_SIZE_BIG = 20000
+  }
+
+  # ----------------------------------------------------------------------
+  # Active component instances
+  # ----------------------------------------------------------------------
+
+  instance rateGroup1: Svc.ActiveRateGroup base id 0x10001000 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 95
+
+  instance rateGroup2: Svc.ActiveRateGroup base id 0x10002000 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 90
+
+  instance rateGroup3: Svc.ActiveRateGroup base id 0x10003000 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 90
+  
+  instance rateGroup4: Svc.ActiveRateGroup base id 0xEB00 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 90
+
+  instance cmdSeq: Svc.CmdSequencer base id 0x10004000 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 20
+
+   instance sampleSim: Components.SampleSim base id 0x0F00 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance generic_mag: Components.Generic_mag base id 0xEF00 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance generic_star_tracker: Components.Generic_star_tracker base id 0xE000 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance generic_radio: Components.Generic_radio base id 0xE100 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 50
+    
+  instance generic_css: Components.Generic_css base id 0xE300 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 50
+    
+  instance generic_eps: Components.Generic_eps base id 0xE200 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance arducam: Components.Arducam base id 0xF900 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance generic_thruster: Components.Generic_thruster base id 0xE500 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance generic_fss: Components.Generic_fss base id 0xE400 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance generic_imu: Components.Generic_imu base id 0xE600 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance generic_reaction_wheel: Components.Generic_reaction_wheel base id 0xE700 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance novatel_oem615: Components.novatel_oem615 base id 0xE800 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 50
+    
+  instance generic_torquer: Components.Generic_torquer base id 0xE900 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance generic_adcs: Components.Generic_adcs base id 0xEA00 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 45
+
+  # ----------------------------------------------------------------------
+  # Queued component instances
+  # ----------------------------------------------------------------------
+
+
+  # ----------------------------------------------------------------------
+  # Passive component instances
+  # ----------------------------------------------------------------------
+
+  #instance chronoTime: Svc.ChronoTime base id 0x10010000
+  instance nos3Time: Components.Nos3Time base id 0x4500
+
+  instance rateGroupDriver: Svc.RateGroupDriver base id 0x10011000
+
+  instance systemResources: Svc.SystemResources base id 0x10012000
+
+  instance timer: Svc.LinuxTimer base id 0x10013000
+  instance comDriver: Drv.TcpClient base id 0x10014000
+
+}
+</pre></div>
+</div>
+</section>
+<section id="topology-fpp">
+<h2><code class="docutils literal notranslate"><span class="pre">topology.fpp</span></code><a class="headerlink" href="#topology-fpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/deployment/Top/topology.fpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>module deployment {
+
+  # ----------------------------------------------------------------------
+  # Symbolic constants for port numbers
+  # ----------------------------------------------------------------------
+
+  enum Ports_RateGroups {
+    rateGroup1
+    rateGroup2
+    rateGroup3
+    rateGroup4
+  }
+
+  topology deployment {
+
+  # ----------------------------------------------------------------------
+  # Subtopology imports
+  # ----------------------------------------------------------------------
+    import CdhCore.Subtopology
+    import ComCcsds.Subtopology
+    import DataProducts.Subtopology
+    import FileHandling.Subtopology
+    
+  # ----------------------------------------------------------------------
+  # Instances used in the topology
+  # ----------------------------------------------------------------------
+    #instance chronoTime
+    instance rateGroup1
+    instance rateGroup2
+    instance rateGroup3
+    instance rateGroup4
+    instance rateGroupDriver
+    instance systemResources
+    instance timer
+    instance comDriver
+    instance cmdSeq
+    instance sampleSim
+    instance nos3Time
+    instance generic_mag
+    instance generic_star_tracker
+    instance generic_radio
+    instance generic_torquer
+    instance generic_css
+    instance generic_fss
+    instance generic_eps
+    instance arducam
+    instance generic_thruster
+    instance generic_imu
+    instance generic_reaction_wheel
+    instance novatel_oem615
+    instance generic_adcs
+
+  # ----------------------------------------------------------------------
+  # Pattern graph specifiers
+  # ----------------------------------------------------------------------
+
+    command connections instance CdhCore.cmdDisp
+    event connections instance CdhCore.events
+    telemetry connections instance CdhCore.tlmSend
+    text event connections instance CdhCore.textLogger
+    health connections instance CdhCore.$health
+    param connections instance FileHandling.prmDb
+    time connections instance nos3Time
+
+  # ----------------------------------------------------------------------
+  # Telemetry packets (only used when TlmPacketizer is used)
+  # ----------------------------------------------------------------------
+
+    # include "deploymentPackets.fppi"
+
+  # ----------------------------------------------------------------------
+  # Direct graph specifiers
+  # ----------------------------------------------------------------------
+
+    connections ComCcsds_CdhCore {
+      # Core events and telemetry to communication queue
+      CdhCore.events.PktSend -&gt; ComCcsds.comQueue.comPacketQueueIn[ComCcsds.Ports_ComPacketQueue.EVENTS]
+      CdhCore.tlmSend.PktSend -&gt; ComCcsds.comQueue.comPacketQueueIn[ComCcsds.Ports_ComPacketQueue.TELEMETRY]
+
+      # Router to Command Dispatcher
+      ComCcsds.fprimeRouter.commandOut -&gt; CdhCore.cmdDisp.seqCmdBuff
+      CdhCore.cmdDisp.seqCmdStatus -&gt; ComCcsds.fprimeRouter.cmdResponseIn
+      
+    }
+
+    connections ComCcsds_FileHandling {
+      # File Downlink to Communication Queue
+      FileHandling.fileDownlink.bufferSendOut -&gt; ComCcsds.comQueue.bufferQueueIn[ComCcsds.Ports_ComBufferQueue.FILE]
+      ComCcsds.comQueue.bufferReturnOut[ComCcsds.Ports_ComBufferQueue.FILE] -&gt; FileHandling.fileDownlink.bufferReturn
+
+      # Router to File Uplink
+      ComCcsds.fprimeRouter.fileOut -&gt; FileHandling.fileUplink.bufferSendIn
+      FileHandling.fileUplink.bufferSendOut -&gt; ComCcsds.fprimeRouter.fileBufferReturnIn
+    }
+
+    connections Communications {
+      # ComDriver buffer allocations
+      comDriver.allocate      -&gt; ComCcsds.commsBufferManager.bufferGetCallee
+      comDriver.deallocate    -&gt; ComCcsds.commsBufferManager.bufferSendIn
+      
+      # ComDriver &lt;-&gt; ComStub (Uplink)
+      comDriver.$recv                     -&gt; ComCcsds.comStub.drvReceiveIn
+      ComCcsds.comStub.drvReceiveReturnOut -&gt; comDriver.recvReturnIn
+      
+      # ComStub &lt;-&gt; ComDriver (Downlink)
+      ComCcsds.comStub.drvSendOut      -&gt; comDriver.$send
+      comDriver.ready         -&gt; ComCcsds.comStub.drvConnected
+    }
+
+    connections FileHandling_DataProducts {
+      # Data Products to File Downlink
+      DataProducts.dpCat.fileOut -&gt; FileHandling.fileDownlink.SendFile
+      FileHandling.fileDownlink.FileComplete -&gt; DataProducts.dpCat.fileDone
+    }
+
+    connections RateGroups {
+      # timer to drive rate group
+      timer.CycleOut -&gt; rateGroupDriver.CycleIn
+
+      # Rate group 1
+      rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup1] -&gt; rateGroup1.CycleIn
+      rateGroup1.RateGroupMemberOut[0] -&gt; CdhCore.tlmSend.Run
+      rateGroup1.RateGroupMemberOut[1] -&gt; FileHandling.fileDownlink.Run
+      rateGroup1.RateGroupMemberOut[2] -&gt; systemResources.run
+      rateGroup1.RateGroupMemberOut[3] -&gt; ComCcsds.comQueue.run
+      rateGroup1.RateGroupMemberOut[4] -&gt; generic_imu.updateTlm
+      rateGroup1.RateGroupMemberOut[5] -&gt; generic_star_tracker.updateTlm
+      rateGroup1.RateGroupMemberOut[6] -&gt; generic_mag.updateTlm
+      rateGroup1.RateGroupMemberOut[7] -&gt; generic_reaction_wheel.updateTlm
+      rateGroup1.RateGroupMemberOut[8] -&gt; generic_fss.updateTlm
+      rateGroup1.RateGroupMemberOut[9] -&gt; generic_css.updateTlm
+      rateGroup1.RateGroupMemberOut[10] -&gt; generic_torquer.updateTlm
+      rateGroup1.RateGroupMemberOut[11] -&gt; novatel_oem615.updateTlm
+
+
+      # Rate group 2
+      rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup2] -&gt; rateGroup2.CycleIn
+      rateGroup2.RateGroupMemberOut[0] -&gt; cmdSeq.schedIn
+
+      # Rate group 3
+      rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup3] -&gt; rateGroup3.CycleIn
+      rateGroup3.RateGroupMemberOut[0] -&gt; CdhCore.$health.Run
+      rateGroup3.RateGroupMemberOut[1] -&gt; ComCcsds.commsBufferManager.schedIn
+      rateGroup3.RateGroupMemberOut[2] -&gt; DataProducts.dpBufferManager.schedIn
+      rateGroup3.RateGroupMemberOut[3] -&gt; DataProducts.dpWriter.schedIn
+      rateGroup3.RateGroupMemberOut[4] -&gt; DataProducts.dpMgr.schedIn
+    
+
+      # Rate group 4
+      rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup4] -&gt; rateGroup4.CycleIn
+      rateGroup4.RateGroupMemberOut[0] -&gt; generic_imu.updateData
+      rateGroup4.RateGroupMemberOut[1] -&gt; generic_star_tracker.updateData
+      rateGroup4.RateGroupMemberOut[2] -&gt; generic_mag.updateData
+      rateGroup4.RateGroupMemberOut[3] -&gt; generic_reaction_wheel.updateData
+      rateGroup4.RateGroupMemberOut[4] -&gt; generic_fss.updateData
+      rateGroup4.RateGroupMemberOut[5] -&gt; generic_css.updateData
+      rateGroup4.RateGroupMemberOut[6] -&gt; generic_adcs.updateData
+      rateGroup4.RateGroupMemberOut[7] -&gt; novatel_oem615.updateData
+    }
+
+    connections CdhCore_cmdSeq {
+      # Command Sequencer
+      cmdSeq.comCmdOut -&gt; CdhCore.cmdDisp.seqCmdBuff
+      CdhCore.cmdDisp.seqCmdStatus -&gt; cmdSeq.cmdResponseIn
+    }
+
+    connections deployment {
+      # Add here connections to user-defined components
+      generic_imu.IMUout -&gt; generic_adcs.IMUin
+      generic_mag.MAGout -&gt; generic_adcs.MAGin
+      generic_fss.FSSout -&gt; generic_adcs.FSSin
+      generic_css.CSSout -&gt; generic_adcs.CSSin
+      generic_reaction_wheel.RWout -&gt; generic_adcs.RWin
+      generic_star_tracker.STout -&gt; generic_adcs.STin
+      novatel_oem615.GPSout -&gt; generic_adcs.GPSin
+      generic_adcs.RWOUTout -&gt; generic_reaction_wheel.RWin
+      generic_adcs.TORQout -&gt; generic_torquer.TORQin
+    }
+
+  }
+
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="deployment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../lib/index.html" class="btn btn-neutral float-right" title="lib" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

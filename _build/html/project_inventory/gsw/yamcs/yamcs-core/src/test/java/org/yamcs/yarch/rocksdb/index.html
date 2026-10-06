@@ -1,0 +1,3072 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>rocksdb &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../../../search.html" />
+    <link rel="next" title="resources" href="../../../../../resources/index.html" />
+    <link rel="prev" title="yarch" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../../../index.html">gsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../index.html">gsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">yamcs-core</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">test</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">java</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">org</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">yarch</a></li>
+      <li class="breadcrumb-item active">rocksdb</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../../../_sources/project_inventory/gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="rocksdb">
+<h1>rocksdb<a class="headerlink" href="#rocksdb" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="bucketdbtest-java">
+<h2><code class="docutils literal notranslate"><span class="pre">BucketDbTest.java</span></code><a class="headerlink" href="#bucketdbtest-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/BucketDbTest.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.buckets.ObjectProperties;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.TimeEncoding;
+
+public class BucketDbTest {
+
+    static Path testDir = Path.of(System.getProperty("java.io.tmpdir"), "BucketDbTest");
+    Random random = new Random();
+
+    @BeforeAll
+    static public void beforeClass() {
+        TimeEncoding.setUp();
+    }
+
+    @BeforeEach
+    public void cleanup() throws Exception {
+        FileUtils.deleteRecursivelyIfExists(testDir);
+    }
+
+    @Test
+    public void test1() throws Exception {
+        String dir = testDir + File.separator + "tablespace1";
+        Tablespace tablespace = new Tablespace("tablespace1");
+        tablespace.setCustomDataDir(dir);
+        tablespace.loadDb(false);
+
+        RdbBucketDatabase bucketDb = new RdbBucketDatabase("test", tablespace);
+        assertTrue(bucketDb.listBuckets().isEmpty());
+
+        RdbBucket rdbBucket = bucketDb.createBucket("bucket1");
+        assertNotNull(rdbBucket);
+        Exception e = null;
+        try {
+            bucketDb.createBucket("bucket1");
+        } catch (Exception e1) {
+            e = e1;
+        }
+        assertNotNull(e);
+        List&lt;RdbBucket&gt; bl = bucketDb.listBuckets();
+        assertEquals(1, bl.size());
+        RdbBucket bucket = bl.get(0);
+        assertEquals("bucket1", bucket.getName());
+        assertEquals(0, bucket.getProperties().size());
+
+        assertTrue(bucket.listObjects(null, x -&gt; true).isEmpty());
+        Map&lt;String, String&gt; props = new HashMap&lt;&gt;();
+        props.put("prop1", "value1");
+        props.put("prop2", "value2");
+        byte[] objectData = new byte[1000];
+        random.nextBytes(objectData);
+        bucket.putObject("object1", null, props, objectData);
+        List&lt;ObjectProperties&gt; l = bucket.listObjects(null, x -&gt; true);
+        assertEquals(1, l.size());
+        assertEquals("object1", l.get(0).name());
+
+        byte[] b = bucket.getObject("object1");
+        assertArrayEquals(objectData, b);
+
+        // closing and reopening
+        tablespace.close();
+        tablespace = new Tablespace("tablespace1bis");
+        tablespace.setCustomDataDir(dir);
+        tablespace.loadDb(false);
+        bucketDb = new RdbBucketDatabase("test", tablespace);
+
+        bl = bucketDb.listBuckets();
+        assertEquals(1, bl.size());
+        bucket = bl.get(0);
+        var bucketProps = bucket.getProperties();
+        assertEquals("bucket1", bucketProps.name());
+        assertEquals(1000, bucketProps.size());
+        assertEquals(1, bucketProps.numObjects());
+
+        bucket = bucketDb.getBucket("bucket1");
+
+        l = bucket.listObjects(null, x -&gt; true);
+        assertEquals(1, l.size());
+        assertEquals("object1", l.get(0).name());
+
+        l = bucket.listObjects("x", x -&gt; true);
+        assertEquals(0, l.size());
+
+        b = bucket.getObject("object1");
+        assertArrayEquals(objectData, b);
+
+        bucket.deleteObject("object1");
+        assertTrue(bucket.listObjects(null, x -&gt; true).isEmpty());
+
+        bucketDb.deleteBucket("bucket1");
+        assertTrue(bucketDb.listBuckets().isEmpty());
+        tablespace.close();
+    }
+
+    @Test
+    public void test2() throws Exception {
+        String dir = testDir + File.separator + "tablespace2";
+        Tablespace tablespace = new Tablespace("tablespace2");
+        tablespace.setCustomDataDir(dir);
+        tablespace.loadDb(false);
+
+        RdbBucketDatabase bucketDb = new RdbBucketDatabase("test", tablespace);
+        assertTrue(bucketDb.listBuckets().isEmpty());
+
+        RdbBucket bucket = bucketDb.createBucket("bucket1");
+        bucket.putObject("object1", null, new HashMap&lt;&gt;(), new byte[100]);
+        bucket.putObject("object2", "plain/text", new HashMap&lt;&gt;(), new byte[100]);
+
+        List&lt;ObjectProperties&gt; l = bucket.listObjects("object", x -&gt; true);
+        assertEquals(2, l.size());
+
+        assertEquals(4, tablespace.getRdb().getApproxNumRecords());
+        bucketDb.deleteBucket("bucket1");
+
+        tablespace.close();
+
+        // closing and reopening
+        tablespace = new Tablespace("tablespace2bis");
+        tablespace.setCustomDataDir(dir);
+        tablespace.loadDb(false);
+        bucketDb = new RdbBucketDatabase("test", tablespace);
+        bucket = bucketDb.getBucket("bucket1");
+        assertNull(bucket);
+        tablespace.close();
+    }
+
+    @Test
+    public void test3() throws Exception {
+        RdbBucketDatabase bucketDb = createDb(3);
+        RdbBucket b = bucketDb.createBucket("bucket1");
+        Exception e = null;
+        int n = RdbBucketDatabase.DEFAULT_MAX_OBJECTS_PER_BUCKET;
+        try {
+            for (int i = 0; i &lt; n + 1; i++) {
+                b.putObject("obj" + i, null, null, new byte[10]);
+            }
+        } catch (Exception e1) {
+            e = e1;
+        }
+        assertNotNull(e);
+        b.deleteObject("obj0");
+        b.putObject("newobj", null, null, new byte[10]);
+        bucketDb.getTablespace().close();
+    }
+
+    @Test
+    public void test4() throws Exception {
+        RdbBucketDatabase bucketDb = createDb(4);
+        RdbBucket b = bucketDb.createBucket("bucket1");
+        Exception e = null;
+        try {
+            for (int i = 0; i &lt; RdbBucketDatabase.DEFAULT_MAX_BUCKET_SIZE / (1024 * 1024) + 1; i++) {
+                b.putObject("obj" + i, null, null, new byte[1024 * 1024]);
+            }
+        } catch (Exception e1) {
+            e = e1;
+        }
+
+        assertNotNull(e);
+        b.deleteObject("obj0");
+        b.putObject("newobj", null, null, new byte[1024 * 1024]);
+        bucketDb.getTablespace().close();
+    }
+
+    private RdbBucketDatabase createDb(int n) throws Exception {
+        String dir = testDir + File.separator + "tablespace" + n;
+        Tablespace tablespace = new Tablespace("tablespace" + n);
+        tablespace.setCustomDataDir(dir);
+        tablespace.loadDb(false);
+        return new RdbBucketDatabase("test", tablespace);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="histogramrebuildertest-java">
+<h2><code class="docutils literal notranslate"><span class="pre">HistogramRebuilderTest.java</span></code><a class="headerlink" href="#histogramrebuildertest-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/HistogramRebuilderTest.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Semaphore;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.ColumnSerializer;
+import org.yamcs.yarch.ColumnSerializerFactory;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.HistogramIterator;
+import org.yamcs.yarch.HistogramRecord;
+import org.yamcs.yarch.PartitionManager;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWriter;
+import org.yamcs.yarch.TableWriter.InsertMode;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchTestCase;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class HistogramRebuilderTest extends YarchTestCase {
+    String tblName = "HistogramRebuilderTest";
+    TableDefinition tblDef;
+    RdbStorageEngine rse;
+    long t1 = TimeEncoding.parse("2016-12-16T00:00:00");
+
+    void createTable(boolean partitioned) throws StreamSqlException, ParseException {
+        String query = "create table " + tblName
+                + "(gentime timestamp, seqNum int, name string, primary key(gentime, seqNum)) histogram(name) "
+                + (partitioned ? " partition by time(gentime)" : "");
+        ydb.execute(query);
+    }
+
+    public void populate(boolean partitioned) throws Exception {
+        createTable(partitioned);
+
+        tblDef = ydb.getTable(tblName);
+        rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        TableWriter tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { 1000L, 10, "p1" }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { 2000L, 20, "p1" }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { 3000L, 30, "p2" }));
+
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { t1, 30, "p2" }));
+        tw.close();
+    }
+
+    @AfterEach
+    public void dropTable() throws Exception {
+        ydb.execute("drop table " + tblName);
+    }
+
+    @Test
+    public void testDeleteValues() throws Exception {
+        populate(true);
+        Tablespace tablespace = rse.getTablespace(ydb.getName());
+        TimeInterval interval = new TimeInterval();
+        HistogramIterator iter = rse.getHistogramIterator(ydb, tblDef, "name", interval);
+        assertNumElementsEqual(iter, 3);
+        iter.close();
+
+        HistogramRebuilder rebuilder = new HistogramRebuilder(tablespace, ydb, tblName);
+        PartitionManager.Interval pminterval = ydb.getPartitionManager(tblDef)
+                .intervalIterator(new TimeInterval(1000L, 1000L)).next();
+        rebuilder.deleteHistograms(pminterval, new CompletableFuture&lt;Void&gt;());
+
+        iter = rse.getHistogramIterator(ydb, tblDef, "name", interval);
+        assertNumElementsEqual(iter, 1);
+        iter.close();
+
+        rebuilder.rebuild(new TimeInterval(0, 2000)).get();
+        iter = rse.getHistogramIterator(ydb, tblDef, "name", interval);
+        assertNumElementsEqual(iter, 3);
+        iter.close();
+    }
+
+    @Test
+    public void testRebuildAll() throws Exception {
+        populate(true);
+        Tablespace tablespace = rse.getTablespace(ydb.getName());
+        HistogramIterator iter = rse.getHistogramIterator(ydb, tblDef, "name", new TimeInterval());
+        assertNumElementsEqual(iter, 3);
+        iter.close();
+
+        HistogramRebuilder rebuilder = new HistogramRebuilder(tablespace, ydb, tblName);
+        ydb.getPartitionManager(tblDef).intervalIterator(new TimeInterval()).forEachRemaining(interval -&gt; {
+            rebuilder.deleteHistograms(interval, new CompletableFuture&lt;Void&gt;());
+        });
+
+        iter = rse.getHistogramIterator(ydb, tblDef, "name", new TimeInterval());
+        assertNumElementsEqual(iter, 0);
+        iter.close();
+
+        rebuilder.rebuild().get();
+        iter = rse.getHistogramIterator(ydb, tblDef, "name", new TimeInterval());
+
+        assertNumElementsEqual(iter, 3);
+        iter.close();
+    }
+
+    Thread startWriter(int n, int m, int seqStart, String p, Semaphore semaphore) {
+        Thread thread = new Thread(() -&gt; {
+            int seq = seqStart;
+            for (int j = 0; j &lt; n; j++) {
+                long start = 500_000 * j;
+                for (int i = 0; i &lt; m; i++) {
+                    TableWriter tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+                    tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { start + i, seq++, p }));
+                }
+                if (j == 2 &amp;&amp; semaphore != null) {
+                    semaphore.release();
+                }
+            }
+        });
+        thread.start();
+
+        return thread;
+    }
+
+    @Test
+    public void testConcurrency() throws Exception {
+        int n = 5;
+        int m = 2;
+
+        createTable(false);
+        tblDef = ydb.getTable(tblName);
+        rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        Semaphore semaphore = new Semaphore(0);
+        Thread thread1 = startWriter(n, m, 0, "p1", semaphore);
+
+        // wait for the thread to write 2 cycles
+        semaphore.acquire();
+        Tablespace tablespace = rse.getTablespace(ydb.getName());
+        // rebuild all the histograms
+        HistogramRebuilder rebuilder = new HistogramRebuilder(tablespace, ydb, tblName);
+        rebuilder.rebuild().get();
+
+        // wait for the thread to finish
+        thread1.join(100000);
+        // assertFalse(thread1.isAlive());
+
+        ColumnSerializer&lt;String&gt; cs = ColumnSerializerFactory.getBasicColumnSerializerV3(DataType.STRING);
+        HistogramIterator iter = rse.getHistogramIterator(ydb, tblDef, "name", new TimeInterval());
+        List&lt;HistogramRecord&gt; p1List = new ArrayList&lt;&gt;();
+        while (iter.hasNext()) {
+            HistogramRecord hr = iter.next();
+            String p = cs.deserialize(ByteBuffer.wrap(hr.getColumnv()), null);
+            if ("p1".equals(p)) {
+                p1List.add(hr);
+            }
+        }
+        assertEquals(n, p1List.size());
+
+        for (int j = 0; j &lt; n; j++) {
+            HistogramRecord hr1 = p1List.get(j);
+
+            assertEquals(j * 500_000, hr1.getStart());
+            assertEquals(j * 500_000 + m - 1, hr1.getStop());
+            assertEquals(m, hr1.getNumTuples());
+
+        }
+        iter.close();
+    }
+
+    /**
+     * This test shows that rebuilding a histogram with two fast concurrent writers may result in inconsistent results.
+     * &lt;p&gt;
+     * See {@link SingleColumnHistogramWriter#startQueueing(String)}.
+     * 
+     * @throws Exception
+     */
+    @Test
+    @Disabled
+    public void testConcurrencyDoubleThread() throws Exception {
+        int n = 5;
+        int m = 2;
+
+        createTable(false);
+        tblDef = ydb.getTable(tblName);
+        rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        Semaphore semaphore = new Semaphore(0);
+        Thread thread1 = startWriter(n, m, 0, "p1", semaphore);
+        Thread thread2 = startWriter(n, m, 1000_000, "p2", null);
+
+        // wait for the thread1 to write 2 cycles
+        semaphore.acquire();
+
+        // rebuild all the histograms
+        Tablespace tablespace = rse.getTablespace(ydb.getName());
+        HistogramRebuilder rebuilder = new HistogramRebuilder(tablespace, ydb, tblName);
+        rebuilder.rebuild().get();
+
+        // wait for the threads to finish
+        thread1.join(100000);
+        thread2.join(100000);
+        assertFalse(thread1.isAlive());
+        assertFalse(thread2.isAlive());
+
+        // now verify the results
+        ColumnSerializer&lt;String&gt; cs = ColumnSerializerFactory.getBasicColumnSerializerV3(DataType.STRING);
+        HistogramIterator iter = rse.getHistogramIterator(ydb, tblDef, "name", new TimeInterval());
+        List&lt;HistogramRecord&gt; p1List = new ArrayList&lt;&gt;();
+        List&lt;HistogramRecord&gt; p2List = new ArrayList&lt;&gt;();
+        while (iter.hasNext()) {
+            HistogramRecord hr = iter.next();
+            String p = cs.deserialize(ByteBuffer.wrap(hr.getColumnv()), null);
+            if ("p1".equals(p)) {
+                p1List.add(hr);
+            } else {
+                p2List.add(hr);
+            }
+        }
+        assertEquals(n, p1List.size());
+        assertEquals(n, p2List.size());
+
+        for (int j = 0; j &lt; n; j++) {
+            HistogramRecord hr1 = p1List.get(j);
+            HistogramRecord hr2 = p2List.get(j);
+
+            assertEquals(j * 500_000, hr1.getStart());
+            assertEquals(j * 500_000 + m - 1, hr1.getStop());
+            assertEquals(m, hr1.getNumTuples());
+
+            assertEquals(j * 500_000, hr2.getStart());
+            assertEquals(j * 500_000 + m - 1, hr2.getStop());
+            assertEquals(m, hr2.getNumTuples());
+        }
+        iter.close();
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="partitioningtest-java">
+<h2><code class="docutils literal notranslate"><span class="pre">PartitioningTest.java</span></code><a class="headerlink" href="#partitioningtest-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/PartitioningTest.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.Test;
+import org.rocksdb.RocksDBException;
+import org.rocksdb.RocksIterator;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.Partition;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchTestCase;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class PartitioningTest extends YarchTestCase {
+
+    @Test
+    public void testIndexPartitioning() throws Exception {
+        execute("create table test1(gentime timestamp, apidSeqCount int, primary key(gentime,apidSeqCount)) partition by time(gentime('YYYY/DOY'))");
+        execute("create stream tm_in(gentime timestamp, apidSeqCount int)");
+        execute("insert into test1 select * from tm_in");
+        Stream tm_in = ydb.getStream("tm_in");
+
+        long instant1 = TimeEncoding.parse("1999-06-21T07:03:00");
+        tm_in.emitTuple(new Tuple(tm_in.getDefinition(), new Object[] { instant1, 20000 }));
+
+        TableDefinition tdef = ydb.getTable("test1");
+        RdbStorageEngine storageEngine = (RdbStorageEngine) ydb.getStorageEngine(tdef);
+        Tablespace tablespace = storageEngine.getTablespace(instance);
+
+        assertTrue(tdef.hasPartitioning());
+        RdbPartitionManager pmgr = storageEngine.getPartitionManager(ydb, tdef);
+        List&lt;Partition&gt; partitions = pmgr.getPartitions();
+        assertEquals(1, partitions.size());
+        RdbPartition p1 = (RdbPartition) partitions.iterator().next();
+        assertEquals("1999/172", p1.dir);
+        File f = new File(tablespace.getDataDir() + "/" + p1.dir);
+        assertTrue(f.exists());
+
+        long instant2 = TimeEncoding.parse("2001-01-01T00:00:00");
+        tm_in.emitTuple(new Tuple(tm_in.getDefinition(), new Object[] { instant2, 2000 }));
+        partitions = pmgr.getPartitions();
+        assertEquals(2, partitions.size());
+        Iterator&lt;Partition&gt; it = partitions.iterator();
+        p1 = (RdbPartition) it.next();
+        assertEquals("1999/172", p1.dir);
+        RdbPartition p2 = (RdbPartition) it.next();
+        assertEquals("2001/001", p2.dir);
+
+        long instant3 = TimeEncoding.parse("2001-01-01T00:00:01");
+        tm_in.emitTuple(new Tuple(tm_in.getDefinition(), new Object[] { instant3, 2000 }));
+        partitions = pmgr.getPartitions();
+        assertEquals(2, partitions.size());
+        it = partitions.iterator();
+        p1 = (RdbPartition) it.next();
+        assertEquals("1999/172", p1.dir);
+        p2 = (RdbPartition) it.next();
+        assertEquals("2001/001", p2.dir);
+
+        long instant4 = TimeEncoding.parse("2000-12-31T23:59:59");
+        tm_in.emitTuple(new Tuple(tm_in.getDefinition(), new Object[] { instant4, 2000 }));
+        partitions = pmgr.getPartitions();
+        assertEquals(3, partitions.size());
+        it = partitions.iterator();
+        p1 = (RdbPartition) it.next();
+        assertEquals("1999/172", p1.dir);
+        p2 = (RdbPartition) it.next();
+        assertEquals("2000/366", p2.dir);
+        RdbPartition p3 = (RdbPartition) it.next();
+        assertEquals("2001/001", p3.dir);
+
+        long instant5 = TimeEncoding.parse("2008-12-31T23:59:60");
+        tm_in.emitTuple(new Tuple(tm_in.getDefinition(), new Object[] { instant5, 2000 }));
+        Thread.sleep(100);// give time to the other thread to finish reading the input
+        partitions = pmgr.getPartitions();
+        assertEquals(4, partitions.size());
+        it = partitions.iterator();
+        p1 = (RdbPartition) it.next();
+        assertEquals("1999/172", p1.dir);
+        p2 = (RdbPartition) it.next();
+        assertEquals("2000/366", p2.dir);
+        p3 = (RdbPartition) it.next();
+        assertEquals("2001/001", p3.dir);
+        RdbPartition p4 = (RdbPartition) it.next();
+        assertEquals("2008/366", p4.dir);
+        execute("close stream tm_in");
+
+        execute("create stream test1_out as select * from test1");
+
+        List&lt;Tuple&gt; tuples = fetchAll("test1_out");
+        assertEquals(5, tuples.size());
+        Iterator&lt;Tuple&gt; iter = tuples.iterator();
+
+        assertEquals(instant1, (long) (Long) iter.next().getColumn(0));
+        assertEquals(instant4, (long) (Long) iter.next().getColumn(0));
+        assertEquals(instant2, (long) (Long) iter.next().getColumn(0));
+        assertEquals(instant3, (long) (Long) iter.next().getColumn(0));
+        assertEquals(instant5, (long) (Long) iter.next().getColumn(0));
+
+        assertTrue((new File(tablespace.getDataDir() + "/1999/172/")).exists());
+        assertTrue((new File(tablespace.getDataDir() + "/2001/001/")).exists());
+        assertTrue((new File(tablespace.getDataDir() + "/2000/366/")).exists());
+
+        execute("drop table test1");
+        // for the new rocksdb storage engine we don't want the partitions to be removed because they may be shared by
+        // other tables
+        // we should check that no data is inside though
+        assertTrue((new File(tablespace.getDataDir() + "/1999/172/")).exists());
+        assertTrue((new File(tablespace.getDataDir() + "/2001/001/")).exists());
+        assertTrue((new File(tablespace.getDataDir() + "/2000/366/")).exists());
+        RDBFactory rdbFactory = tablespace.rdbFactory;
+        checkEmpty(rdbFactory.getRdb("1999/172", true));
+        checkEmpty(rdbFactory.getRdb("2001/001", true));
+        checkEmpty(rdbFactory.getRdb("2000/366", true));
+    }
+
+    private void checkEmpty(YRDB db) throws RocksDBException {
+        try (RocksIterator it1 = db.newIterator()) {
+            it1.seekToFirst();
+            assertFalse(it1.isValid());
+        }
+    }
+
+    private void doublePartitioningSelect(String whereCnd, final long[] expectedInstant)
+            throws InterruptedException, StreamSqlException, ParseException {
+        String query = "create stream testdp_out as select * from testdp"
+                + (whereCnd == null ? "" : " where " + whereCnd);
+        execute(query);
+        Stream test1_out = ydb.getStream("testdp_out");
+        final Semaphore semaphore = new Semaphore(0);
+        final AtomicInteger c = new AtomicInteger(0);
+        test1_out.addSubscriber(new StreamSubscriber() {
+
+            @Override
+            public void streamClosed(Stream stream) {
+                semaphore.release();
+            }
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                long inst = (Long) tuple.getColumn("gentime");
+                assertEquals(expectedInstant[c.getAndIncrement()], inst);
+            }
+        });
+        test1_out.start();
+        assertTrue(semaphore.tryAcquire(10, TimeUnit.SECONDS));
+        assertEquals(expectedInstant.length, c.get());
+    }
+
+    /**
+     * Tests partitioning by time and string value
+     *
+     * @throws ParseException
+     * @throws StreamSqlException
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    @Test
+    public void testDoublePartitioning() throws Exception {
+        final long[] instant = new long[4];
+        ydb.execute(
+                "create table testdp(gentime timestamp, seqNumber int, part enum, packet binary, primary key(gentime,seqNumber)) partition by time_and_value(gentime('YYYY/DOY'), part)");
+        ydb.execute("create stream tm_in(gentime timestamp, seqNumber int, part enum, packet binary)");
+        ydb.execute("insert into testdp select * from tm_in");
+        Stream tm_in = ydb.getStream("tm_in");
+        TupleDefinition tpdef = tm_in.getDefinition();
+        Tablespace tablespace = RdbStorageEngine.getInstance().getTablespace(instance);
+
+        instant[0] = TimeEncoding.parse("1999-06-21T07:03:00");
+        Tuple t11 = new Tuple(tpdef, new Object[] { instant[0], 1, "part1", new byte[1000] });
+        tm_in.emitTuple(t11);
+
+        instant[1] = instant[0];
+        Tuple t12 = new Tuple(tpdef, new Object[] { instant[1], 2, "partition2", new byte[1000] });
+        tm_in.emitTuple(t12);
+
+        instant[2] = TimeEncoding.parse("1999-06-21T07:03:01");
+        ;
+        Tuple t2 = new Tuple(tpdef, new Object[] { instant[2], 3, "partition2", new byte[1000] });
+        tm_in.emitTuple(t2);
+
+        TableDefinition tdef = ydb.getTable("testdp");
+        assertTrue(tdef.hasPartitioning());
+
+        RdbStorageEngine storageEngine = (RdbStorageEngine) ydb.getStorageEngine(tdef);
+
+        assertTrue(tdef.hasPartitioning());
+        RdbPartitionManager pmgr = storageEngine.getPartitionManager(ydb, tdef);
+
+        List&lt;Partition&gt; partitions = pmgr.getPartitions();
+        Iterator&lt;Partition&gt; it = partitions.iterator();
+        assertEquals(2, partitions.size());
+        RdbPartition p1 = (RdbPartition) it.next();
+        assertEquals("1999/172", p1.dir);
+
+        RdbPartition p2 = (RdbPartition) it.next();
+        assertEquals("1999/172", p2.dir);
+
+        Object[] pvalues = new Object[] { p1.getValue(), p2.getValue() };
+        Arrays.sort(pvalues);
+
+        assertEquals((short) 0, pvalues[0]);
+        assertEquals((short) 1, pvalues[1]);
+
+        File f = new File(tablespace.getDataDir() + "/1999/172");
+        assertTrue(f.exists());
+
+        instant[3] = TimeEncoding.parse("2001-01-01T00:00:00");
+        Tuple t3 = new Tuple(tpdef, new Object[] { instant[3], 4, "part3", new byte[1000] });
+        tm_in.emitTuple(t3);
+        partitions = pmgr.getPartitions();
+        assertEquals(3, partitions.size());
+        it = partitions.iterator();
+        it.next();
+        it.next();
+        RdbPartition p3 = (RdbPartition) it.next();
+
+        assertEquals("2001/001", p3.dir);
+        assertEquals((short) 2, p3.getValue());
+
+        execute("close stream tm_in");
+
+        doublePartitioningSelect(null, instant);
+
+        doublePartitioningSelect("part='partition2'", new long[] { instant[1], instant[2] });
+
+        doublePartitioningSelect("part='partition2' and gentime&gt;" + instant[1], new long[] { instant[2] });
+
+        doublePartitioningSelect("part in ('part1','part3') and gentime&lt;=" + instant[3],
+                new long[] { instant[0], instant[3] });
+
+        doublePartitioningSelect("part='partition2' and part='part3' and gentime&gt;" + instant[1], new long[] {});
+
+        assertTrue((new File(tablespace.getDataDir() + "/1999/172")).exists());
+        assertTrue((new File(tablespace.getDataDir() + "/2001/001")).exists());
+
+        execute("drop table testdp");
+        assertTrue((new File(tablespace.getDataDir() + "/1999/172")).exists());
+        assertTrue((new File(tablespace.getDataDir() + "/2001/001")).exists());
+
+        checkEmpty(tablespace.rdbFactory.getRdb("1999/172", true));
+        checkEmpty(tablespace.rdbFactory.getRdb("2001/001", true));
+    }
+
+    /**
+     * Tests partitioning by enum value
+     *
+     * @throws ParseException
+     * @throws StreamSqlException
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    @Test
+    public void testEnumPartitioning() throws ParseException, StreamSqlException, IOException, InterruptedException {
+        final long[] instant = new long[4];
+        execute("create table testdp(gentime timestamp, seqNumber int, part enum, packet binary, primary key(gentime,seqNumber)) engine rocksdb2 partition by value(part)");
+        execute("create stream tm_in(gentime timestamp, seqNumber int, part enum, packet binary)");
+        execute("insert into testdp select * from tm_in");
+        Stream tm_in = ydb.getStream("tm_in");
+        TupleDefinition tpdef = tm_in.getDefinition();
+
+        instant[0] = TimeEncoding.parse("1999-06-21T07:03:00");
+        Tuple t11 = new Tuple(tpdef, new Object[] { instant[0], 1, "part0", new byte[1000] });
+        tm_in.emitTuple(t11);
+
+        instant[1] = instant[0];
+        Tuple t12 = new Tuple(tpdef, new Object[] { instant[1], 2, "partition1", new byte[1000] });
+        tm_in.emitTuple(t12);
+
+        instant[2] = TimeEncoding.parse("1999-06-21T07:03:01");
+        ;
+        Tuple t2 = new Tuple(tpdef, new Object[] { instant[2], 3, "partition1", new byte[1000] });
+        tm_in.emitTuple(t2);
+
+        TableDefinition tdef = ydb.getTable("testdp");
+        assertTrue(tdef.hasPartitioning());
+        RdbStorageEngine storageEngine = (RdbStorageEngine) ydb.getStorageEngine(tdef);
+
+        RdbPartitionManager pmgr = storageEngine.getPartitionManager(ydb, tdef);
+
+        Collection&lt;Partition&gt; partitions = pmgr.getPartitions();
+        Iterator&lt;Partition&gt; it = partitions.iterator();
+        assertEquals(2, partitions.size());
+        RdbPartition p1 = (RdbPartition) it.next();
+        assertNull(p1.dir);
+        assertEquals((short) 0, p1.getValue());
+
+        RdbPartition p2 = (RdbPartition) it.next();
+        assertNull(p2.dir);
+        assertEquals((short) 1, p2.getValue());
+
+        instant[3] = TimeEncoding.parse("2001-01-01T00:00:00");
+        Tuple t3 = new Tuple(tpdef, new Object[] { instant[3], 4, "part2", new byte[1000] });
+        tm_in.emitTuple(t3);
+        partitions = pmgr.getPartitions();
+        assertEquals(3, partitions.size());
+        it = partitions.iterator();
+        p1 = (RdbPartition) it.next();
+        assertNull(p1.dir);
+        assertEquals((short) 0, p1.getValue());
+
+        p2 = (RdbPartition) it.next();
+        RdbPartition p3 = (RdbPartition) it.next();
+        assertNull(p3.dir);
+
+        short[] pvalues = new short[] { (Short) p2.getValue(), (Short) p3.getValue() };
+        Arrays.sort(pvalues);
+        assertEquals((short) 1, pvalues[0]);
+
+        assertEquals((short) 2, pvalues[1]);
+
+        execute("close stream tm_in");
+
+        // doublePartitioningSelect(null, instant);
+
+        // doublePartitioningSelect("part='partition1'", new long[]{instant[1], instant[2]});
+
+        doublePartitioningSelect("part='partition1' and gentime&gt;" + instant[1], new long[] { instant[2] });
+
+        doublePartitioningSelect("part in ('part0','part2') and gentime&lt;=" + instant[3],
+                new long[] { instant[0], instant[3] });
+
+        doublePartitioningSelect("part='partition2' and part='part3' and gentime&gt;" + instant[1], new long[] {});
+        execute("drop table testdp");
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="rdbenginetest-java">
+<h2><code class="docutils literal notranslate"><span class="pre">RdbEngineTest.java</span></code><a class="headerlink" href="#rdbenginetest-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbEngineTest.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.HistogramIterator;
+import org.yamcs.yarch.PartitioningSpec;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWriter;
+import org.yamcs.yarch.TableWriter.InsertMode;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchTestCase;
+
+public class RdbEngineTest extends YarchTestCase {
+    @Test
+    public void testCreateDrop() throws Exception {
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+
+        TupleDefinition tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("packetid", DataType.INT));
+        TableDefinition tblDef = new TableDefinition("RdbEngineTest", tdef, Arrays.asList("gentime"));
+
+        PartitioningSpec pspec = PartitioningSpec.timeAndValueSpec("gentime", "packetid", "YYYY");
+        pspec.setValueColumnType(DataType.INT);
+        tblDef.setPartitioningSpec(pspec);
+
+        checkNoReaderStreamPossible(rse, tblDef);
+
+        rse.createTable(ydb, tblDef);
+        TableWriter tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+        Tuple t = new Tuple(tdef, new Object[] { 1000L, 10 });
+        tw.onTuple(null, t);
+
+        rse.dropTable(ydb, tblDef);
+
+        checkNoReaderStreamPossible(rse, tblDef);
+    }
+
+    @Test
+    public void testOpenClose() throws Exception {
+        TableDefinition tblDef = populate();
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+        TimeInterval interval = new TimeInterval();
+        HistogramIterator iter = rse.getHistogramIterator(ydb, tblDef, "name", interval);
+        assertNumElementsEqual(iter, 3);
+        iter.close();
+
+        rse.shutdown();
+
+        rse.loadTablespaces(false);
+        tblDef = rse.loadTables(ydb).get(0);
+        iter = rse.getHistogramIterator(ydb, tblDef, "name", interval);
+        assertNumElementsEqual(iter, 3);
+        iter.close();
+    }
+
+    @Test
+    public void testOpenCloseWithTableDrop() throws Exception {
+        TableDefinition tblDef = populate();
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+        rse.dropTable(ydb, tblDef);
+
+        rse.shutdown();
+
+        rse.loadTablespaces(false);
+        List&lt;TableDefinition&gt; tblList = rse.loadTables(ydb);
+        assertTrue(tblList.isEmpty());
+    }
+
+    private void checkNoReaderStreamPossible(RdbStorageEngine rse, TableDefinition tblDef) {
+        IllegalArgumentException iae = null;
+        try (ExecutionContext ctx = new ExecutionContext(ydb)) {
+            rse.newTableWalker(ctx, tblDef, true, true);
+        } catch (IllegalArgumentException e) {
+            iae = e;
+        }
+        assertNotNull(iae);
+    }
+
+    public TableDefinition populate() throws Exception {
+        String query = "create table table1(gentime timestamp, seqNum int, name string, vals string[], primary key(gentime, seqNum)) histogram(name) "
+                + "partition by time(gentime) table_format=compressed engine rocksdb2";
+        execute(query);
+        long t1 = TimeEncoding.parse("2016-12-16T00:00:00");
+
+        TableDefinition tblDef = ydb.getTable("table1");
+        RdbStorageEngine rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        TableWriter tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(),
+                new Object[] { 1000L, 10, "p1", Arrays.asList("x", "y") }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(),
+                new Object[] { 2000L, 20, "p1", Arrays.asList("x", "y") }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(),
+                new Object[] { 3000L, 30, "p2", Arrays.asList("x", "y") }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(),
+                new Object[] { t1, 30, "p2", Arrays.asList("x", "y") }));
+        tw.close();
+        return tblDef;
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="rdbfactorytest-java">
+<h2><code class="docutils literal notranslate"><span class="pre">RDBFactoryTest.java</span></code><a class="headerlink" href="#rdbfactorytest-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RDBFactoryTest.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.file.FileSystemException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.rocksdb.ColumnFamilyHandle;
+import org.rocksdb.RocksDB;
+import org.yamcs.utils.FileUtils;
+
+public class RDBFactoryTest {
+
+    @BeforeAll
+    public static void initRocksDb() {
+        RocksDB.loadLibrary();
+    }
+
+    private boolean isOpen(YRDB yrdb) {
+        return yrdb.isOpen();
+    }
+
+    @Test
+    public void testDispose() throws Exception {
+        YRDB[] dbs = new YRDB[RDBFactory.maxOpenDbs * 2];
+        Path dataDir = Path.of(System.getProperty("java.io.tmpdir"), "testDispose");
+        RDBFactory rdbf = new RDBFactory(dataDir.toString(), new ScheduledThreadPoolExecutor(1));
+
+        for (int i = 0; i &lt; RDBFactory.maxOpenDbs; i++) {
+            dbs[i] = rdbf.getRdb("rdbfactorytest" + i, false);
+        }
+        for (int i = 0; i &lt; RDBFactory.maxOpenDbs / 2; i++) {
+            rdbf.dispose(dbs[i]);
+        }
+        for (int i = 0; i &lt; RDBFactory.maxOpenDbs; i++) {
+            assertTrue(isOpen(dbs[i]));
+        }
+        for (int i = RDBFactory.maxOpenDbs; i &lt; 2 * RDBFactory.maxOpenDbs; i++) {
+            dbs[i] = rdbf.getRdb("rdbfactorytest" + i, false);
+        }
+        for (int i = 0; i &lt; RDBFactory.maxOpenDbs / 2; i++) {
+            assertFalse(isOpen(dbs[i]));
+        }
+        for (int i = RDBFactory.maxOpenDbs / 2; i &lt; 2 * RDBFactory.maxOpenDbs; i++) {
+            assertTrue(isOpen(dbs[i]));
+        }
+        // cleanup
+
+        for (int i = 0; i &lt; 2 * RDBFactory.maxOpenDbs; i++) {
+            rdbf.closeIfOpen("rdbfactorytest" + i);
+            Path d = dataDir.resolve("rdbfactorytest" + i);
+            FileUtils.deleteRecursivelyIfExists(d);
+        }
+    }
+
+    @Test
+    public void testBackup() throws Exception {
+        Path dir = Path.of(System.getProperty("java.io.tmpdir"), "rdb_backup_test");
+        FileUtils.deleteRecursivelyIfExists(dir);
+        RDBFactory rdbf = new RDBFactory(dir.toString(), new ScheduledThreadPoolExecutor(1));
+
+        YRDB db1 = rdbf.getRdb("db1", false);
+        ColumnFamilyHandle cfh = db1.createColumnFamily("c1");
+        db1.put(cfh, "aaa".getBytes(), "bbb".getBytes());
+
+        db1.createColumnFamily("c2");
+
+        Path backupDir = dir.resolve("db1_back");
+        Files.createDirectories(backupDir);
+        rdbf.doBackup("db1", backupDir.toString()).get();
+
+        db1.createColumnFamily("c3");
+        rdbf.doBackup("db1", backupDir.toString()).get();
+
+        // try to backup on top of existing non backup directory -&gt; should throw an exception
+        assertThrows(FileSystemException.class, () -&gt; {
+            try {
+                rdbf.doBackup("db1", dir.resolve("db1").toString()).get();
+            } catch (ExecutionException e1) {
+                throw e1.getCause();
+            }
+        });
+
+        db1.put(cfh, "aaa1".getBytes(), "bbb1".getBytes());
+        byte[] b = db1.get(cfh, "aaa1".getBytes());
+        assertNotNull(b);
+        rdbf.close(db1);
+
+        rdbf.restoreBackup(1, backupDir.toString(), "db2").get();
+        YRDB db2 = rdbf.getRdb("db2", false);
+
+        assertNotNull(db2.getColumnFamilyHandle("c2"));
+        assertNull(db2.getColumnFamilyHandle("c3"));
+
+        ColumnFamilyHandle cfh_db2 = db2.getColumnFamilyHandle("c1");
+        assertNotNull(cfh_db2);
+
+        b = db2.get(cfh_db2, "aaa".getBytes());
+        assertNotNull(b);
+        b = db2.get(cfh_db2, "aaa1".getBytes());
+        assertNull(b);
+
+        rdbf.restoreBackup(-1, backupDir.toString(), "db3").get();
+        YRDB db3 = rdbf.getRdb("db3", false);
+
+        assertNotNull(db3.getColumnFamilyHandle("c2"));
+        assertNotNull(db3.getColumnFamilyHandle("c3"));
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="rdbhistogramiteratortest-java">
+<h2><code class="docutils literal notranslate"><span class="pre">RdbHistogramIteratorTest.java</span></code><a class="headerlink" href="#rdbhistogramiteratortest-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbHistogramIteratorTest.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.ByteArray;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.yarch.HistogramIterator;
+import org.yamcs.yarch.HistogramRecord;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWriter;
+import org.yamcs.yarch.TableWriter.InsertMode;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchTestCase;
+
+public class RdbHistogramIteratorTest extends YarchTestCase {
+    long t0 = 0L;
+    long t1 = 100000000000L;
+
+    @Test
+    public void test1() throws Exception {
+        TableDefinition tblDef = populate();
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+        TimeInterval interval = new TimeInterval();
+
+        HistogramIterator iter = rse.getHistogramIterator(ydb, tblDef, "name", interval);
+        assertNumElementsEqual(iter, 3);
+        assertFalse(iter.hasNext());
+        iter.close();
+
+        iter = rse.getHistogramIterator(ydb, tblDef, "name", interval);
+        iter.seek(colValue("p1"), t0 + 3000L);
+        assertTrue(iter.hasNext());
+        HistogramRecord hr = iter.next();
+        assertArrayEquals(colValue("p1"), hr.getColumnv());
+        assertNumElementsEqual(iter, 1);
+        iter.close();
+
+        HistogramIterator iter1 = rse.getHistogramIterator(ydb, tblDef, "name", interval);
+        iter1.seek(colValue("p1"), t1 + 1L);
+
+        assertNumElementsEqual(iter1, 0);
+        iter1.close();
+    }
+
+    private byte[] colValue(String s) {
+        ByteArray ba = new ByteArray();
+        ba.addNullTerminatedUTF("p1");
+        return ba.toArray();
+    }
+
+    public TableDefinition populate() throws Exception {
+        String query = "create table table1(gentime timestamp, seqNum int, name string, primary key(gentime, seqNum)) histogram(name) "
+                + "partition by time(gentime) table_format=compressed engine rocksdb2";
+        execute(query);
+
+        TableDefinition tblDef = ydb.getTable("table1");
+        RdbStorageEngine rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        TableWriter tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { t0 + 1000L, 1, "p1" }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { t0 + 2000L, 2, "p1" }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { t0 + 40000L, 3, "p1" }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { t0 + 40001L, 4, "p1" }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { t1, 4, "p1" }));
+
+        tw.close();
+        return tblDef;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="rdbpartitionmanagertest-java">
+<h2><code class="docutils literal notranslate"><span class="pre">RdbPartitionManagerTest.java</span></code><a class="headerlink" href="#rdbpartitionmanagertest-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbPartitionManagerTest.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Partition;
+import org.yamcs.yarch.PartitionManager;
+import org.yamcs.yarch.PartitioningSpec;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TupleDefinition;
+
+public class RdbPartitionManagerTest {
+
+    @BeforeAll
+    static public void init() {
+        TimeEncoding.setUp();
+    }
+
+    TableDefinition getTableDefTimeAndValue() throws Exception {
+        TupleDefinition tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("packetid", DataType.INT));
+        PartitioningSpec spec = PartitioningSpec.timeAndValueSpec("gentime", "packetid", "YYYY/DOY");
+
+        TableDefinition tblDef = new TableDefinition("tbltest", tdef, Arrays.asList("gentime"));
+        tblDef.setPartitioningSpec(spec);
+
+        return tblDef;
+    }
+
+    TableDefinition getTableDefValue() throws Exception {
+        TupleDefinition tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("packetid", DataType.INT));
+        PartitioningSpec spec = PartitioningSpec.valueSpec("packetid");
+
+        TableDefinition tblDef = new TableDefinition("tbltest", tdef, Arrays.asList("gentime"));
+        tblDef.setPartitioningSpec(spec);
+
+        return tblDef;
+    }
+
+    TableDefinition getTableDefTime() throws Exception {
+        TupleDefinition tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("packetid", DataType.INT));
+        PartitioningSpec spec = PartitioningSpec.timeSpec("gentime", "YYYYY/DOY");
+
+        TableDefinition tblDef = new TableDefinition("tbltest", tdef, Arrays.asList("gentime"));
+        tblDef.setPartitioningSpec(spec);
+
+        return tblDef;
+    }
+
+    @Test
+    public void createAndIteratePartitions() throws Exception {
+        Tablespace tablespace = new Tablespace("test");
+        String tmpdir = Files.createTempDirectory("RdbPartitionManagerTest").toString();
+        tablespace.setCustomDataDir(tmpdir);
+
+        tablespace.loadDb(false);
+
+        TableDefinition tblDef = getTableDefTimeAndValue();
+        RdbTable table = new RdbTable("test", tablespace, tblDef, 1, "default");
+
+        RdbPartitionManager pm = table.getPartitionManager();
+        RdbPartition part = (RdbPartition) pm.createAndGetPartition(TimeEncoding.parse("2011-01-01T00:00:00"), 1);
+        assertEquals("2011/001", part.dir);
+
+        part = (RdbPartition) pm.createAndGetPartition(TimeEncoding.parse("2011-03-01T00:00:00"), 1);
+        assertEquals("2011/060", part.dir);
+
+        part = (RdbPartition) pm.createAndGetPartition(TimeEncoding.parse("2011-02-01T00:00:00"), 2);
+        assertEquals("2011/032", part.dir);
+
+        part = (RdbPartition) pm.createAndGetPartition(TimeEncoding.parse("2011-02-01T00:00:00"), 3);
+        assertEquals("2011/032", part.dir);
+
+        part = (RdbPartition) pm.createAndGetPartition(TimeEncoding.parse("2011-03-01T00:00:00"), 3);
+        assertEquals("2011/060", part.dir);
+
+        Set&lt;Object&gt; filter = new HashSet&lt;&gt;();
+        filter.add(1);
+        filter.add(3);
+        Iterator&lt;PartitionManager.Interval&gt; it = pm.iterator(TimeEncoding.parse("2011-02-01T00:00:00"), filter);
+        assertTrue(it.hasNext());
+        PartitionManager.Interval parts = it.next();
+        assertEquals(1, parts.size());
+
+        assertTrue(it.hasNext());
+        parts = it.next();
+        Iterator&lt;Partition&gt; pit = parts.iterator();
+        assertEquals("2011/060", ((RdbPartition) pit.next()).dir);
+        assertEquals("2011/060", ((RdbPartition) pit.next()).dir);
+
+        tablespace.close();
+
+        tablespace = new Tablespace("test");
+        tablespace.setCustomDataDir(tmpdir);
+
+        tablespace.loadDb(true);
+
+        table = new RdbTable("test", tablespace, tblDef, 1, "default");
+        pm = table.getPartitionManager();
+        pm.readPartitions();
+        List&lt;Partition&gt; plist = pm.getPartitions();
+        assertEquals(5, plist.size());
+        tablespace.close();
+
+        Path path = Paths.get(tmpdir);
+        FileUtils.deleteRecursivelyIfExists(path);
+    }
+
+    @Test
+    public void createAndIteratePartitions1() throws Exception {
+        Tablespace tablespace = new Tablespace("test");
+        String tmpdir = Files.createTempDirectory("RdbPartitionManagerTest").toString();
+        tablespace.setCustomDataDir(tmpdir);
+
+        tablespace.loadDb(false);
+
+        TableDefinition tblDef = getTableDefTimeAndValue();
+
+        RdbTable table = new RdbTable("test", tablespace, tblDef, 1, "default");
+
+        RdbPartitionManager pm = table.getPartitionManager();
+        RdbPartition part = (RdbPartition) pm.createAndGetPartition(TimeEncoding.parse("0001-01-01T00:00:00"), 1);
+        assertEquals("0001/001", part.dir);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="rdbperformancetest-java">
+<h2><code class="docutils literal notranslate"><span class="pre">RdbPerformanceTest.java</span></code><a class="headerlink" href="#rdbperformancetest-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbPerformanceTest.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Arrays;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.PartitioningSpec;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWriter;
+import org.yamcs.yarch.TableWriter.InsertMode;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchTestCase;
+
+@Disabled // note that this one does not cleanup the test directory resulting in error if run multiple times
+public class RdbPerformanceTest extends YarchTestCase {
+    private TupleDefinition tdef;
+    private TableWriter tw;
+    int numPacketType = 20;
+    int[] freq = new int[] {
+            1, 1, 1, 1,
+            10, 10, 10, 10,
+            300, 300, 300, 300,
+            3600, 3600, 3600, 3600,
+            86400, 86400, 86400, 86400
+    };
+    String dir = "/storage/ptest";
+
+    void populate(TableDefinition tblDef, int n, boolean timeFirst) throws Exception {
+        RdbStorageEngine rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+
+        long baseTime = TimeEncoding.parse("2015-01-01T00:00:00");
+
+        ThreadLocalRandom r = ThreadLocalRandom.current();
+        byte[] b = new byte[256];
+        int numPackets = 0;
+
+        long t0 = System.currentTimeMillis();
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = 0; j &lt; freq.length; j++) {
+                if (i % freq[j] == 0) {
+                    r.nextBytes(b);
+                    numPackets++;
+                    Tuple t;
+                    if (timeFirst) {
+                        t = new Tuple(tdef, new Object[] { baseTime + i * 1000L + j, "packet" + j, b });
+                    } else {
+                        t = new Tuple(tdef, new Object[] { "packet" + j, baseTime + i * 1000L + j, b });
+                    }
+                    tw.onTuple(null, t);
+                }
+            }
+        }
+        System.out.println("total numPackets: " + numPackets);
+        long t1 = System.currentTimeMillis();
+        System.out.println("time to populate " + ((t1 - t0) / 1000) + " seconds");
+    }
+
+    void read(String tblName, String packetName) throws Exception {
+        long t0 = System.currentTimeMillis();
+        String q = "create stream s as select * from " + tblName;
+        if (packetName != null) {
+            q = q + " where pname='" + packetName + "'";
+        }
+        execute(q);
+        Stream s = ydb.getStream("s");
+
+        Semaphore semaphore = new Semaphore(0);
+        AtomicInteger r = new AtomicInteger();
+        s.addSubscriber(new StreamSubscriber() {
+            int c = 0;
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                if (packetName != null) {
+                    assertEquals(packetName, tuple.getColumn("pname"));
+                }
+                c++;
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                r.set(c);
+                semaphore.release();
+            }
+        });
+        s.start();
+        semaphore.acquire();
+
+        long t1 = System.currentTimeMillis();
+        System.out
+                .println("time to read " + r.get() + " tuples with " + packetName + ": " + (t1 - t0) + " miliseconds");
+    }
+
+    void populateAndRead(TableDefinition tbldef, boolean timeFirst) throws Exception {
+        String tblname = tbldef.getName();
+        System.out.println("********************** " + tblname + " timeFirst:" + timeFirst + " **********************");
+
+        // populate(tblDef, 365*24*60*60);
+        populate(tbldef, 90 * 24 * 60 * 60, timeFirst);
+        // Thread.sleep(1000);
+
+        // populate(tblDef, 100);
+        read(tblname, null);
+        read(tblname, "packet1");
+        read(tblname, "packet5");
+        read(tblname, "packet9");
+        read(tblname, "packet14");
+        read(tblname, "packet19");
+        System.out.println("sleeping 60 seconds to allow rocksdb consolidation");
+        Thread.currentThread().sleep(60000);
+        read(tblname, null);
+
+    }
+
+    @Test
+    public void testPname() throws Exception {
+        String tblname = "Pname";
+        tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("pname", DataType.ENUM));
+        tdef.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+        TableDefinition tblDef = new TableDefinition(tblname, tdef, Arrays.asList("gentime"));
+
+        PartitioningSpec pspec = PartitioningSpec.valueSpec("pname");
+        pspec.setValueColumnType(DataType.ENUM);
+        tblDef.setPartitioningSpec(pspec);
+
+        tblDef.setStorageEngineName(YarchDatabase.RDB_ENGINE_NAME);
+
+        ydb.createTable(tblDef);
+        populateAndRead(tblDef, true);
+    }
+
+    @Test
+    public void testNoPnameYYYY() throws Exception {
+        String tblname = "NoPname_YYYY";
+        tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("pname", DataType.ENUM));
+        tdef.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+        TableDefinition tblDef = new TableDefinition(tblname, tdef, Arrays.asList("gentime"));
+
+        PartitioningSpec pspec = PartitioningSpec.timeSpec("gentime", "YYYY");
+        tblDef.setPartitioningSpec(pspec);
+
+        tblDef.setStorageEngineName(YarchDatabase.RDB_ENGINE_NAME);
+
+        ydb.createTable(tblDef);
+
+        populateAndRead(tblDef, true);
+    }
+
+    @Test
+    public void testPnameYYYY() throws Exception {
+        String tblname = "Pname_YYYY";
+        tdef = new TupleDefinition();
+
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("pname", DataType.ENUM));
+        tdef.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+        TableDefinition tblDef = new TableDefinition(tblname, tdef, Arrays.asList("gentime", "pname"));
+
+        PartitioningSpec pspec = PartitioningSpec.timeAndValueSpec("gentime", "pname", "YYYY");
+        tblDef.setPartitioningSpec(pspec);
+
+        tblDef.setStorageEngineName(YarchDatabase.RDB_ENGINE_NAME);
+
+        ydb.createTable(tblDef);
+
+        populateAndRead(tblDef, true);
+    }
+}
+/*
+ * Results
+ Intel(R) Core(TM) i7-4610M CPU @ 3.00GHz
+ Samsung SSD 850 EVO 500GB
+ 
+ 
+ * 
+ ********************** NoPname_YYYY timeFirst:true **********************
+total numPackets: 3814120
+time to populate 26 seconds
+time to read 3814120 tuples with null: 8196 miliseconds
+time to read 864000 tuples with packet1: 8440 miliseconds
+time to read 86400 tuples with packet5: 8500 miliseconds
+time to read 2880 tuples with packet9: 8072 miliseconds
+time to read 240 tuples with packet14: 8146 miliseconds
+time to read 10 tuples with packet19: 8110 miliseconds
+time to read 3814120 tuples with null: 7840 miliseconds
+********************** Pname timeFirst:true **********************
+total numPackets: 3814120
+time to populate 79 seconds
+time to read 3814120 tuples with null: 17420 miliseconds
+time to read 864000 tuples with packet1: 1855 miliseconds
+time to read 86400 tuples with packet5: 183 miliseconds
+time to read 2880 tuples with packet9: 6 miliseconds
+time to read 240 tuples with packet14: 1 miliseconds
+time to read 10 tuples with packet19: 2 miliseconds
+time to read 3814120 tuples with null: 8740 miliseconds
+********************** Pname_YYYY timeFirst:true **********************
+total numPackets: 3814120
+time to populate 90 seconds
+time to read 3814120 tuples with null: 17903 miliseconds
+time to read 864000 tuples with packet1: 3624 miliseconds
+time to read 86400 tuples with packet5: 340 miliseconds
+time to read 2880 tuples with packet9: 118 miliseconds
+time to read 240 tuples with packet14: 2 miliseconds
+time to read 10 tuples with packet19: 1 miliseconds
+time to read 3814120 tuples with null: 16988 miliseconds
+ 
+ */
+</pre></div>
+</div>
+</section>
+<section id="rdbselectperftest-java">
+<h2><code class="docutils literal notranslate"><span class="pre">RdbSelectPerfTest.java</span></code><a class="headerlink" href="#rdbselectperftest-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbSelectPerfTest.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.rocksdb.ColumnFamilyDescriptor;
+import org.rocksdb.ColumnFamilyHandle;
+import org.rocksdb.ColumnFamilyOptions;
+import org.rocksdb.Options;
+import org.rocksdb.RocksDB;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.PartitioningSpec;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWriter;
+import org.yamcs.yarch.TableWriter.InsertMode;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchTestCase;
+
+@Disabled
+public class RdbSelectPerfTest extends YarchTestCase {
+    private TupleDefinition tdef;
+    private TableWriter tw;
+    int numPacketType = 20;
+    int[] freq = new int[] {
+            1, 1, 1, 1,
+            10, 10, 10, 10,
+            300, 300, 300, 300,
+            3600, 3600, 3600, 3600,
+            86400, 86400, 86400, 86400
+    };
+    String dir = "/storage/ptest";
+
+    void populate(TableDefinition tblDef, int n, boolean timeFirst) throws Exception {
+        RdbStorageEngine rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+
+        long baseTime = TimeEncoding.parse("2015-01-01T00:00:00");
+
+        ThreadLocalRandom r = ThreadLocalRandom.current();
+        byte[] b = new byte[256];
+        int numPackets = 0;
+
+        long t0 = System.currentTimeMillis();
+        for (int i = 0; i &lt; n; i++) {
+            for (int j = 0; j &lt; freq.length; j++) {
+                if (i % freq[j] == 0) {
+                    r.nextBytes(b);
+                    numPackets++;
+                    Tuple t;
+                    if (timeFirst) {
+                        t = new Tuple(tdef, new Object[] { baseTime + i * 1000L + j, "packet" + j, b });
+                    } else {
+                        t = new Tuple(tdef, new Object[] { "packet" + j, baseTime + i * 1000L + j, b });
+                    }
+                    tw.onTuple(null, t);
+                }
+            }
+        }
+        System.out.println("total numPackets: " + numPackets);
+        long t1 = System.currentTimeMillis();
+        System.out.println("time to populate " + ((t1 - t0) / 1000) + " seconds");
+    }
+
+    void read(String tblName, String packetName) throws Exception {
+        long t0 = System.currentTimeMillis();
+        String q = "create stream s as select * from " + tblName;
+        if (packetName != null) {
+            q = q + " where pname='" + packetName + "'";
+        }
+        execute(q);
+        Stream s = ydb.getStream("s");
+
+        Semaphore semaphore = new Semaphore(0);
+        AtomicInteger r = new AtomicInteger();
+        s.addSubscriber(new StreamSubscriber() {
+            int c = 0;
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                if (packetName != null) {
+                    assertEquals(packetName, tuple.getColumn("pname"));
+                }
+                c++;
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                r.set(c);
+                semaphore.release();
+            }
+        });
+        s.start();
+        semaphore.acquire();
+
+        long t1 = System.currentTimeMillis();
+        System.out
+                .println("time to read " + r.get() + " tuples with " + packetName + ": " + (t1 - t0) + " miliseconds");
+    }
+
+    void populateAndRead(TableDefinition tbldef, boolean timeFirst) throws Exception {
+        String tblname = tbldef.getName();
+        System.out.println("********************** " + tblname + " timeFirst:" + timeFirst + " **********************");
+
+        // populate(tblDef, 365*24*60*60);
+        populate(tbldef, 90 * 24 * 60 * 60, timeFirst);
+        // populate(tblDef, 100);
+        read(tblname, null);
+        read(tblname, "packet1");
+        read(tblname, "packet5");
+        read(tblname, "packet9");
+        read(tblname, "packet14");
+        read(tblname, "packet19");
+    }
+
+    @Test
+    public void testPartition() throws Exception {
+        tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("pname", DataType.ENUM));
+        tdef.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+        TableDefinition tblDef = new TableDefinition("part_YYYY_pname", tdef, Arrays.asList("gentime"));
+
+        PartitioningSpec pspec = PartitioningSpec.timeAndValueSpec("gentime", "pname", "YYYY");
+        pspec.setValueColumnType(DataType.ENUM);
+        tblDef.setPartitioningSpec(pspec);
+
+        tblDef.setStorageEngineName(YarchDatabase.RDB_ENGINE_NAME);
+
+        ydb.createTable(tblDef);
+        populateAndRead(tblDef, true);
+    }
+
+    @Test
+    public void testNoPnameYYYY() throws Exception {
+        String tblname = "NoPname_YYYY";
+        tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("pname", DataType.ENUM));
+        tdef.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+        TableDefinition tblDef = new TableDefinition(tblname, tdef, Arrays.asList("gentime"));
+
+        PartitioningSpec pspec = PartitioningSpec.timeSpec("gentime", "YYYY");
+        tblDef.setPartitioningSpec(pspec);
+
+        tblDef.setStorageEngineName(YarchDatabase.RDB_ENGINE_NAME);
+
+        ydb.createTable(tblDef);
+
+        populateAndRead(tblDef, true);
+    }
+
+    @Test
+    public void testNonePartition() throws Exception {
+        String tblname = "NonePartition";
+        tdef = new TupleDefinition();
+
+        tdef.addColumn(new ColumnDefinition("pname", DataType.ENUM));
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+        TableDefinition tblDef = new TableDefinition(tblname, tdef, Arrays.asList("pname", "gentime"));
+
+        PartitioningSpec pspec = PartitioningSpec.noneSpec();
+        tblDef.setPartitioningSpec(pspec);
+
+        tblDef.setStorageEngineName(YarchDatabase.RDB_ENGINE_NAME);
+
+        ydb.createTable(tblDef);
+
+        populateAndRead(tblDef, false);
+    }
+
+    @Test
+    public void test() throws Exception {
+        String dir = "/storage/ptest/2015/NoPnameYYYY";
+
+        List&lt;byte[]&gt; cfl = RocksDB.listColumnFamilies(new Options(), dir);
+
+        List&lt;ColumnFamilyDescriptor&gt; cfdList = new ArrayList&lt;&gt;(cfl.size());
+        ColumnFamilyOptions cfoptions = new ColumnFamilyOptions();
+        cfoptions.setTargetFileSizeMultiplier(10);
+
+        for (byte[] b : cfl) {
+            cfdList.add(new ColumnFamilyDescriptor(b, cfoptions));
+        }
+
+        List&lt;ColumnFamilyHandle&gt; cfhList = new ArrayList&lt;&gt;(cfl.size());
+        RocksDB db = RocksDB.open(dir, cfdList, cfhList);
+        String s = db.getProperty(cfhList.get(1), "rocksdb.stats");
+        System.out.println(s);
+        Thread.sleep(100000);
+        db.close();
+    }
+
+}
+
+/* results
+writeBufferSize: 50240        #in KB
+
+HW config: Intel NUC
+Intel(R) Core(TM) i7-5557U CPU @ 3.10GHz 4 cores
+Disk: Crucial_CT240M500SSD1
+
+ ********************** NonePartition timeFirst:false **********************
+total numPackets: 34327080
+time to populate 567 seconds
+time to read 23937270 tuples with null: 33557 miliseconds
+time to read 7776000 tuples with packet1: 10678 miliseconds
+time to read 777600 tuples with packet5: 1055 miliseconds
+time to read 25920 tuples with packet9: 46 miliseconds
+time to read 2160 tuples with packet14: 4 miliseconds
+time to read 90 tuples with packet19: 1 miliseconds
+
+ls -ltrh NonePartition/|wc -l
+142
+ls -ltrh NonePartition/*sst|wc -l
+134
+du -h NonePartition/
+9,2G    NonePartition/
+
+
+********************** part_YYYY_pname timeFirst:true **********************
+total numPackets: 34327080
+time to populate 245 seconds
+time to read 34327080 tuples with null: 127798 miliseconds
+time to read 7776000 tuples with packet1: 11268 miliseconds
+time to read 777600 tuples with packet5: 1006 miliseconds
+time to read 25920 tuples with packet9: 34 miliseconds
+time to read 2160 tuples with packet14: 4 miliseconds
+time to read 90 tuples with packet19: 1 miliseconds
+
+ls -lh 2015/part_YYYY_pname/|wc -l
+261
+mache@sancho:/storage/ptest$ ls -lh 2015/part_YYYY_pname/*sst|wc -l
+216
+du -h 2015/part_YYYY_pname/
+11G     2015/part_YYYY_pname/
+
+ 
+ */
+</pre></div>
+</div>
+</section>
+<section id="rdbselecttest-java">
+<h2><code class="docutils literal notranslate"><span class="pre">RdbSelectTest.java</span></code><a class="headerlink" href="#rdbselecttest-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbSelectTest.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.PartitioningSpec;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWriter;
+import org.yamcs.yarch.TableWriter.InsertMode;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchException;
+import org.yamcs.yarch.YarchTestCase;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class RdbSelectTest extends YarchTestCase {
+
+    private TupleDefinition tdef;
+    private TableWriter tw;
+
+    @BeforeEach
+    public void before() throws StreamSqlException, YarchException {
+        tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("packetid", DataType.INT));
+        tdef.addColumn(new ColumnDefinition("col3", DataType.INT));
+        TableDefinition tblDef = new TableDefinition("RdbSelectTest", tdef, Arrays.asList("gentime"));
+
+        PartitioningSpec pspec = PartitioningSpec.timeAndValueSpec("gentime", "packetid", "YYYY");
+        pspec.setValueColumnType(DataType.INT);
+        tblDef.setPartitioningSpec(pspec);
+
+        tblDef.setStorageEngineName(YarchDatabase.RDB_ENGINE_NAME);
+
+        ydb.createTable(tblDef);
+
+        RdbStorageEngine rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+        tw.onTuple(null, new Tuple(tdef, new Object[] { 2000L, 20, 2 }));
+        tw.onTuple(null, new Tuple(tdef, new Object[] { 1000L, 10, 1 }));
+        tw.onTuple(null, new Tuple(tdef, new Object[] { 3000L, 30, 3 }));
+    }
+
+    @AfterEach
+    public void after() throws YarchException {
+        ydb.dropTable("RdbSelectTest");
+    }
+
+    @Test
+    public void testUnspecifiedOrder() throws Exception {
+        execute("create stream s1 as select * from RdbSelectTest");
+        Stream s1 = ydb.getStream("s1");
+        List&lt;Tuple&gt; tuples = fetchTuples(s1);
+        assertEquals(3, tuples.size());
+
+        // Ordered ascending by key
+        assertEquals(1000L, tuples.get(0).getLongColumn("gentime"));
+        assertEquals(2000L, tuples.get(1).getLongColumn("gentime"));
+        assertEquals(3000L, tuples.get(2).getLongColumn("gentime"));
+    }
+
+    @Test
+    public void testOrderAscending() throws Exception {
+        // keyword ORDER is allowed but unneeded (defaults to ascending)
+        execute("create stream s1 as select * from RdbSelectTest order");
+        Stream s1 = ydb.getStream("s1");
+        List&lt;Tuple&gt; tuples = fetchTuples(s1);
+        assertEquals(3, tuples.size());
+
+        // Ordered ascending by key
+        assertEquals(1000L, tuples.get(0).getLongColumn("gentime"));
+        assertEquals(2000L, tuples.get(1).getLongColumn("gentime"));
+        assertEquals(3000L, tuples.get(2).getLongColumn("gentime"));
+
+        // keywords ORDER ASC unneeded, but allowed
+        execute("create stream s2 as select * from RdbSelectTest order asc");
+        Stream s2 = ydb.getStream("s2");
+        tuples = fetchTuples(s2);
+        assertEquals(3, tuples.size());
+
+        // Ordered ascending by key
+        assertEquals(1000L, tuples.get(0).getLongColumn("gentime"));
+        assertEquals(2000L, tuples.get(1).getLongColumn("gentime"));
+        assertEquals(3000L, tuples.get(2).getLongColumn("gentime"));
+    }
+
+    @Test
+    public void testOrderDescending() throws Exception {
+        execute("create stream s1 as select * from RdbSelectTest order desc");
+        Stream s1 = ydb.getStream("s1");
+        List&lt;Tuple&gt; tuples = fetchTuples(s1);
+        assertEquals(3, tuples.size());
+
+        // Ordered descending by key
+        // Every tuple comes from a different partition
+        assertEquals(3000L, tuples.get(0).getLongColumn("gentime"));
+        assertEquals(2000L, tuples.get(1).getLongColumn("gentime"));
+        assertEquals(1000L, tuples.get(2).getLongColumn("gentime"));
+
+        // Mix it up a bit, by adding a tuple that is more than a month separated
+        long t4 = TimeEncoding.getWallclockTime();
+        tw.onTuple(null, new Tuple(tdef, new Object[] { t4, 20, 2 }));
+
+        execute("create stream s2 as select * from RdbSelectTest order desc");
+        Stream s2 = ydb.getStream("s2");
+        tuples = fetchTuples(s2);
+        assertEquals(4, tuples.size());
+        assertEquals(t4, tuples.get(0).getTimestampColumn("gentime"));
+        assertEquals(3000L, tuples.get(1).getLongColumn("gentime"));
+        assertEquals(2000L, tuples.get(2).getLongColumn("gentime"));
+        assertEquals(1000L, tuples.get(3).getLongColumn("gentime"));
+
+        // Filter with a strict range end
+        execute("create stream s3 as select * from RdbSelectTest where gentime&lt;3000 order desc");
+        Stream s3 = ydb.getStream("s3");
+        tuples = fetchTuples(s3);
+
+        assertEquals(2, tuples.size());
+        assertEquals(2000L, tuples.get(0).getLongColumn("gentime"));
+        assertEquals(1000L, tuples.get(1).getLongColumn("gentime"));
+
+        // Filter with a non-strict range end
+        execute("create stream s4 as select * from RdbSelectTest where gentime&lt;=2000 order desc");
+        Stream s4 = ydb.getStream("s4");
+        tuples = fetchTuples(s4);
+        assertEquals(2, tuples.size());
+        assertEquals(2000L, tuples.get(0).getLongColumn("gentime"));
+        assertEquals(1000L, tuples.get(1).getLongColumn("gentime"));
+
+        // Filter with a strict range start
+        execute("create stream s5 as select * from RdbSelectTest where gentime&gt;2000 order desc");
+        Stream s5 = ydb.getStream("s5");
+        tuples = fetchTuples(s5);
+        assertEquals(2, tuples.size());
+        assertEquals(t4, tuples.get(0).getLongColumn("gentime"));
+        assertEquals(3000L, tuples.get(1).getLongColumn("gentime"));
+
+        // Filter with a non-strict range start
+        execute("create stream s6 as select * from RdbSelectTest where gentime&gt;=3000 order desc");
+        Stream s6 = ydb.getStream("s6");
+        tuples = fetchTuples(s6);
+        assertEquals(2, tuples.size());
+        assertEquals(t4, tuples.get(0).getTimestampColumn("gentime"));
+        assertEquals(3000L, tuples.get(1).getLongColumn("gentime"));
+    }
+
+    @Test
+    public void testOrderedMerge() throws Exception {
+        execute("create stream s1 as merge " +
+                "(select * from RdbSelectTest where gentime &lt;3000 order desc), " +
+                "(select * from RdbSelectTest where gentime &gt;= 3000 order desc) " +
+                "using gentime order desc");
+        Stream s1 = ydb.getStream("s1");
+        List&lt;Tuple&gt; tuples = fetchTuples(s1);
+        assertEquals(3, tuples.size());
+
+        // Ordered descending by gentime
+        assertEquals(3000L, tuples.get(0).getLongColumn("gentime"));
+        assertEquals(2000L, tuples.get(1).getLongColumn("gentime"));
+        assertEquals(1000L, tuples.get(2).getLongColumn("gentime"));
+    }
+
+    @Test
+    public void testInvalidOrder() throws Exception {
+        assertThrows(ParseException.class, () -&gt; {
+            execute("create stream s1 as select * from RdbSelectTest order blabla");
+        });
+    }
+
+    @Test
+    public void testFollow() throws Exception {
+        // Sanity check
+        execute("create stream s1 as select * from RdbSelectTest");
+        Stream s1 = ydb.getStream("s1");
+        List&lt;Tuple&gt; tuples = fetchTuples(s1);
+        assertEquals(3, tuples.size());
+
+        // Record a tuple in one of the existing partitions
+        // (and ordered -after- the first tuple of the table)
+        Tuple sameMonthTuple = new Tuple(tdef, new Object[] { 2001L, 20, 2 });
+        execute("create stream s2 as select * from RdbSelectTest");
+        Stream s2 = ydb.getStream("s2");
+        tuples = fetchTuplesAndProduceOne(s2, sameMonthTuple);
+        assertEquals(4, tuples.size());
+
+        // Record a tuple that is sure to be in another partition
+        // (more than a month separated)
+        execute("create stream s3 as select * from RdbSelectTest");
+        Stream s3 = ydb.getStream("s3");
+        long t = TimeEncoding.getWallclockTime();
+        Tuple farOutTuple = new Tuple(tdef, new Object[] { t, 20, 2 });
+        tuples = fetchTuplesAndProduceOne(s3, farOutTuple);
+        // assertEquals(5, tuples.size());
+        // TODO this last test still fails
+    }
+
+    @Test
+    public void testNofollow() throws Exception {
+        int tableSize = 3;
+
+        // Sanity check
+        execute("create stream s1 as select * from RdbSelectTest nofollow");
+        Stream s1 = ydb.getStream("s1");
+        List&lt;Tuple&gt; tuples = fetchTuples(s1);
+        assertEquals(tableSize, tuples.size());
+
+        // Record a tuple in one of the existing partitions
+        // (and ordered -after- the first tuple of the table)
+        Tuple sameMonthTuple = new Tuple(tdef, new Object[] { 2001L, 20, 2 });
+        execute("create stream s2 as select * from RdbSelectTest nofollow");
+        Stream s2 = ydb.getStream("s2");
+        tuples = fetchTuplesAndProduceOne(s2, sameMonthTuple);
+        assertEquals(tableSize, tuples.size());
+
+        tableSize++;
+        // Record a tuple that is sure to be in another partition
+        // (more than a month separated)
+        execute("create stream s3 as select * from RdbSelectTest nofollow");
+        Stream s3 = ydb.getStream("s3");
+        long t = TimeEncoding.getWallclockTime();
+        Tuple farOutTuple = new Tuple(tdef, new Object[] { t, 20, 2 });
+        tuples = fetchTuplesAndProduceOne(s3, farOutTuple);
+        assertEquals(tableSize, tuples.size());
+    }
+
+    private List&lt;Tuple&gt; fetchTuples(Stream s) throws InterruptedException {
+        List&lt;Tuple&gt; tuples = new ArrayList&lt;&gt;();
+        Semaphore semaphore = new Semaphore(0);
+        s.addSubscriber(new StreamSubscriber() {
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                tuples.add(tuple);
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                semaphore.release();
+            }
+        });
+        s.start();
+        semaphore.tryAcquire(5000, TimeUnit.SECONDS);
+        return tuples;
+    }
+
+    private List&lt;Tuple&gt; fetchTuplesAndProduceOne(Stream s, Tuple extraTuple) throws InterruptedException {
+        List&lt;Tuple&gt; tuples = new ArrayList&lt;&gt;();
+        Semaphore semaphore = new Semaphore(0);
+        s.addSubscriber(new StreamSubscriber() {
+
+            boolean first = true;
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                if (first) {
+                    first = false;
+                    tw.onTuple(null, extraTuple);
+                }
+                tuples.add(tuple);
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                semaphore.release();
+            }
+        });
+        s.start();
+        semaphore.tryAcquire(5, TimeUnit.SECONDS);
+        return tuples;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="rdbsequencetest-java">
+<h2><code class="docutils literal notranslate"><span class="pre">RdbSequenceTest.java</span></code><a class="headerlink" href="#rdbsequencetest-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbSequenceTest.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.rocksdb.ColumnFamilyHandle;
+import org.rocksdb.RocksDB;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.LongArray;
+import org.yamcs.yarch.YarchException;
+
+public class RdbSequenceTest {
+    static Path dbdir;
+
+    YRDB rdb;
+    ColumnFamilyHandle cfMetadata;
+
+    @BeforeAll
+    public static void beforeClass() throws Exception {
+        RocksDB.loadLibrary();
+        dbdir = Files.createTempDirectory("rdbtest");
+    }
+
+    @AfterAll
+    public static void afterClass() throws Exception {
+        FileUtils.deleteRecursively(dbdir);
+    }
+
+    @BeforeEach
+    public void before() throws Exception {
+        openDb();
+    }
+
+    @AfterEach
+    public void after() throws Exception {
+        closeDb();
+    }
+
+    @Test
+    public void test1() throws Exception {
+        RdbSequence seq = new RdbSequence("test1", rdb, cfMetadata);
+        for (long i = 0; i &lt; 234; i++) {
+            assertEquals(i, seq.next());
+        }
+        seq.close();
+        closeDb();
+        openDb();
+
+        RdbSequence seq1 = new RdbSequence("test1", rdb, cfMetadata);
+        for (long i = 234; i &lt; 543; i++) {
+            assertEquals(i, seq1.next());
+        }
+        seq1.reset(100);
+        assertEquals(100, seq1.next());
+        seq1.close();
+        closeDb();
+        openDb();
+
+        RdbSequence seq2 = new RdbSequence("test1", rdb, cfMetadata);
+        assertEquals(101, seq2.next());
+
+    }
+
+    @Test
+    public void testnthreads() throws Exception {
+        int n = 200;
+        int m = 1000;
+        RdbSequence seq = new RdbSequence("testnthreads", rdb, cfMetadata);
+
+        ExecutorService executor = Executors.newFixedThreadPool(n);
+        Future&lt;LongArray&gt;[] f = new Future[n];
+
+        for (int k = 0; k &lt; n; k++) {
+            f[k] = executor.submit(() -&gt; {
+                LongArray a = new LongArray(m);
+                for (int i = 0; i &lt; m; i++) {
+                    a.add(seq.next());
+                }
+                return a;
+            });
+        }
+        List&lt;Long&gt; list = new ArrayList&lt;&gt;(n * m);
+        for (int k = 0; k &lt; n; k++) {
+            LongArray la = f[k].get();
+            assertEquals(m, la.size());
+            for (int i = 0; i &lt; m; i++) {
+                list.add(la.get(i));
+            }
+        }
+        Collections.sort(list);
+        for (int i = 0; i &lt; n * m; i++) {
+            assertEquals(i, (long) list.get(i));
+        }
+    }
+
+    @Test
+    public void testClose() {
+        assertThrows(YarchException.class, () -&gt; {
+            RdbSequence seq = new RdbSequence("testclose", rdb, cfMetadata);
+            seq.close();
+            seq.next();
+        });
+    }
+
+    private void openDb() throws Exception {
+        rdb = new YRDB(dbdir.toString(), false);
+        cfMetadata = rdb.getColumnFamilyHandle("_metadata_");
+        if (cfMetadata == null) {
+            cfMetadata = rdb.createColumnFamily("_metadata_");
+        }
+    }
+
+    private void closeDb() {
+        cfMetadata.close();
+        rdb.close();
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="tablespacetest-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TablespaceTest.java</span></code><a class="headerlink" href="#tablespacetest-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/TablespaceTest.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.rocksdb.RocksDBException;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.rocksdb.protobuf.Tablespace.TablespaceRecord;
+import org.yamcs.yarch.rocksdb.protobuf.Tablespace.TablespaceRecord.Type;
+import org.yamcs.yarch.rocksdb.protobuf.Tablespace.TimeBasedPartition;
+
+import com.google.protobuf.ByteString;
+
+public class TablespaceTest {
+    static Path testDir = Path.of(System.getProperty("java.io.tmpdir"), "TablespaceTest");
+
+    @BeforeEach
+    public void cleanup() throws Exception {
+        FileUtils.deleteRecursivelyIfExists(testDir);
+    }
+
+    @Test
+    public void test1() throws Exception {
+        String dir = testDir + File.separator + "tablespace1";
+        Tablespace tablespace = new Tablespace("tablespace1");
+        tablespace.setCustomDataDir(dir);
+        tablespace.loadDb(false);
+
+        createTablePartitionRecord(tablespace, "inst", "tbl1", null, null);
+        createTablePartitionRecord(tablespace, "tablespace1", "tbl2", "/tmp2/", null);
+
+        byte[] tbl3p1 = new byte[10];
+        new Random().nextBytes(tbl3p1);
+        createTablePartitionRecord(tablespace, "inst", "tbl3", "/tmp", tbl3p1);
+        byte[] tbl3p2 = new byte[10];
+        new Random().nextBytes(tbl3p2);
+        createTablePartitionRecord(tablespace, "inst", "tbl3", "/tmp", tbl3p2);
+
+        verify1(tablespace, tbl3p1, tbl3p2);
+        tablespace.close();
+
+        Tablespace tablespace2 = new Tablespace("tablespace2");
+        tablespace2.setCustomDataDir(dir);
+        tablespace2.loadDb(false);
+        verify1(tablespace2, tbl3p1, tbl3p2);
+        assertEquals(5, tablespace2.maxTbsIndex);
+        tablespace2.close();
+    }
+
+    private void verify1(Tablespace tablespace, byte[] tbl3p1, byte[] tbl3p2) throws RocksDBException, IOException {
+        List&lt;TablespaceRecord&gt; l = tablespace.getTablePartitions("inst", "tbl1");
+        assertEquals(1, l.size());
+        assertTrEquals1("inst", "tbl1", null, null, l.get(0));
+
+        l = tablespace.getTablePartitions("inst", "tbl3");
+        assertEquals(2, l.size());
+        assertTrEquals1("inst", "tbl3", "/tmp", tbl3p1, l.get(0));
+        assertTrEquals1("inst", "tbl3", "/tmp", tbl3p2, l.get(1));
+
+        l = tablespace.getTablePartitions(tablespace.getName(), "tbl2");
+        assertEquals(1, l.size());
+        assertTrEquals1(tablespace.getName(), "tbl2", "/tmp2/", null, l.get(0));
+
+    }
+
+    private void assertTrEquals1(String expectedInstance, String expectedTable, String expectedDir,
+            byte[] expectedValue, TablespaceRecord tr) {
+        assertEquals(Type.TABLE_PARTITION, tr.getType());
+        assertEquals(expectedInstance, tr.getInstanceName());
+        assertEquals(expectedTable, tr.getTableName());
+        if (expectedDir == null) {
+            assertFalse(tr.hasPartition());
+        } else {
+            assertTrue(tr.hasPartition());
+            assertEquals(expectedDir, tr.getPartition().getPartitionDir());
+        }
+        if (expectedValue == null) {
+            assertFalse(tr.hasPartitionValue());
+        } else {
+            assertTrue(tr.hasPartitionValue());
+            assertEquals(StringConverter.arrayToHexString(expectedValue),
+                    StringConverter.arrayToHexString(tr.getPartitionValue().toByteArray()));
+        }
+    }
+
+    @Test
+    public void test2() throws Exception {
+        String dir = testDir + File.separator + "tablespace2";
+        Tablespace tablespace = new Tablespace("tablespace2");
+        tablespace.setCustomDataDir(dir);
+        tablespace.loadDb(false);
+
+        createHistogramRecord(tablespace, "inst", "tbl1", "col1", null);
+        createHistogramRecord(tablespace, "inst", "tbl2", "col2", "/tmp");
+        verify2(tablespace);
+
+        tablespace.close();
+
+        Tablespace tablespace2 = new Tablespace("tablespace2");
+        tablespace2.setCustomDataDir(dir);
+        tablespace2.loadDb(false);
+        tablespace2.close();
+    }
+
+    private void verify2(Tablespace tablespace) throws Exception {
+        List&lt;TablespaceRecord&gt; l = tablespace.getTableHistograms("inst", "tbl1");
+        assertEquals(1, l.size());
+        assertTrEquals2("inst", "tbl1", "col1", null, l.get(0));
+
+        l = tablespace.getTableHistograms("inst", "tbl2");
+        assertEquals(1, l.size());
+        assertTrEquals2("inst", "tbl2", "col2", "/tmp", l.get(0));
+    }
+
+    private void assertTrEquals2(String expectedInstance, String expectedTable, String expectedColumnName,
+            String expectedDir, TablespaceRecord tr) {
+        assertEquals(Type.HISTOGRAM, tr.getType());
+        assertEquals(expectedInstance, tr.getInstanceName());
+        assertEquals(expectedTable, tr.getTableName());
+        assertEquals(expectedColumnName, tr.getHistogramColumnName());
+        if (expectedDir == null) {
+            assertFalse(tr.hasPartition());
+        } else {
+            assertTrue(tr.hasPartition());
+            assertEquals(expectedDir, tr.getPartition().getPartitionDir());
+        }
+    }
+
+    @Test
+    public void testRenameTable() throws Exception {
+        String dir = testDir + File.separator + "tablespace3";
+        Tablespace tablespace = new Tablespace("tablespace3");
+        tablespace.setCustomDataDir(dir);
+        tablespace.loadDb(false);
+        TupleDefinition tupleDef = new TupleDefinition();
+        tupleDef.addColumn("x", DataType.INT);
+        TableDefinition tblDef = new TableDefinition("tbl1", tupleDef, Arrays.asList("x"));
+        tablespace.createTable("inst", tblDef);
+        createTablePartitionRecord(tablespace, "inst", "tbl1", null, null);
+
+        tablespace.renameTable("inst", tblDef, "tbl2");
+        assertEquals("tbl2", tblDef.getName());
+        tablespace.close();
+
+        Tablespace tablespace2 = new Tablespace("tablespace4");
+        tablespace2.setCustomDataDir(dir);
+        tablespace2.loadDb(false);
+
+        Collection&lt;TableDefinition&gt; tdefs = tablespace2.loadTables("inst");
+        assertEquals(1, tdefs.size());
+        TableDefinition tblDef2 = tdefs.iterator().next();
+        assertEquals("tbl2", tblDef2.getName());
+
+        List&lt;TablespaceRecord&gt; trList = tablespace2.getTablePartitions("inst", "tbl2");
+        assertEquals(1, trList.size());
+        tablespace2.close();
+    }
+
+    private TablespaceRecord createTablePartitionRecord(Tablespace tablespace, String yamcsInstance, String tblName,
+            String dir, byte[] bvalue) throws RocksDBException {
+        TablespaceRecord.Builder trb = TablespaceRecord.newBuilder().setType(Type.TABLE_PARTITION)
+                .setTableName(tblName);
+        if (dir != null) {
+            trb.setPartition(TimeBasedPartition.newBuilder().setPartitionDir(dir));
+        }
+        if (bvalue != null) {
+            trb.setPartitionValue(ByteString.copyFrom(bvalue));
+        }
+        TablespaceRecord tr = tablespace.createMetadataRecord(yamcsInstance, trb);
+        return tr;
+    }
+
+    public TablespaceRecord createHistogramRecord(Tablespace tablespace, String yamcsInstance, String tblName,
+            String columnName, String partitionDir) throws RocksDBException {
+        TablespaceRecord.Builder trb = TablespaceRecord.newBuilder().setType(Type.HISTOGRAM)
+                .setTableName(tblName);
+
+        trb.setHistogramColumnName(columnName);
+
+        if (partitionDir != null) {
+            trb.setPartition(TimeBasedPartition.newBuilder().setPartitionDir(partitionDir));
+        }
+
+        TablespaceRecord tr = tablespace.createMetadataRecord(yamcsInstance, trb);
+        return tr;
+    }
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="yarch" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../../../../resources/index.html" class="btn btn-neutral float-right" title="resources" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

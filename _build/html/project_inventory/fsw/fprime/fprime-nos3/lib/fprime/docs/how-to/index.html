@@ -1,0 +1,2081 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>how-to &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../search.html" />
+    <link rel="next" title="img" href="../img/index.html" />
+    <link rel="prev" title="getting-started" href="../getting-started/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fprime-nos3</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">lib</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">docs</a></li>
+      <li class="breadcrumb-item active">how-to</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../_sources/project_inventory/fsw/fprime/fprime-nos3/lib/fprime/docs/how-to/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="how-to">
+<h1>how-to<a class="headerlink" href="#how-to" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/docs/how-to/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="custom-framing-md">
+<h2><code class="docutils literal notranslate"><span class="pre">custom-framing.md</span></code><a class="headerlink" href="#custom-framing-md" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/docs/how-to/custom-framing.md</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Implement a Framing Protocol
+
+This How-To Guide provides a step-by-step guide to implementing a custom framing protocol in F Prime Flight Software.
+
+The default [F Prime Protocol](../../Svc/FprimeProtocol/docs/sdd.md) is a lightweight protocol used to get development started quickly with a low-overhead communications protocol that the [F Prime GDS](https://github.com/nasa/fprime-gds) understands. However, as projects mature, there may be a need to implement a framing protocol that fits mission requirements. This document provides an overview of how to implement a custom framing protocol in F Prime Flight Software, and how to integrate it with the F Prime GDS.
+
+## Overview
+
+This guide demonstrates how to implement a custom framing protocol, referred to here as **MyCustomProtocol**. The protocol defines how data is wrapped (framed) for transmission and how frames are validated and unpacked (deframed) on reception. 
+
+A reference implementation of a custom framing protocol (the "Decaf Protocol") is available in the `fprime-examples` repository:
+- [C++ CustomFraming Example](https://github.com/nasa/fprime-examples/tree/devel/FlightExamples/CustomFraming)
+- [GDS Plugin Example](https://github.com/nasa/fprime-examples/tree/devel/GdsExamples/gds-plugins/src/framing)
+
+This guide is divided into two main sections: flight software implementation and GDS integration. Note that if you are aiming to integrate with another GDS and do not wish to use the F´ GDS, you can skip the GDS section.
+
+## Flight Software Implementation
+
+To implement a custom framing protocol in F´, will need to implement the following:
+- **Framer**: A component that wraps payload data into frames for transmission.
+- **Deframer**: A component that unpacks received frames, extracts the payload data, and validate the frame.
+- **FrameDetector** (optional): A helper class that detects the start and end of frames in a stream of data, if your transport is stream-based (e.g., TCP, UART).
+
+The following examples will walk through the implementation of a custom framer and deframer for a hypothetical **MyCustomProtocol** protocol. Implementation details are left to the reader, but examples of such implementations can be found in the [fprime-examples repository](https://github.com/nasa/fprime-examples/tree/devel/FlightExamples/CustomFraming), or within the F´ codebase itself ([Svc.FprimeFramer](../../Svc/FprimeFramer/docs/sdd.md) and [Svc.FprimeDeframer](../../Svc/FprimeDeframer/docs/sdd.md)).
+
+1. **Define the Framer and Deframer FPP Components**
+
+   Framer and Deframer components should implement the FPP interfaces by including them.
+
+   In  `MyCustomFramer.fpp`:
+   ```
+    passive component MyCustomFramer {
+        include "path/to/fprime/Svc/Interfaces/FramerInterface.fppi"
+        [...]
+    }
+   ```
+   And in `MyCustomDeframer.fpp`:
+   ```
+    @ Deframer implementation for MyCustomProtocol
+    passive component MyCustomDeframer {
+        include "path/to/fprime/Svc/Interfaces/DeframerInterface.fppi"
+        [...]
+    }
+   ```
+
+2. **Implement the Framer C++ Component**
+
+   Implement the required handler functions:
+   ```cpp
+   // ...existing code...
+   void MyCustomFramer ::dataIn_handler(FwIndexType portNum, Fw::Buffer&amp; data, const ComCfg::FrameContext&amp; context) {
+       // TODO: Implement framing logic
+   }
+
+   void MyCustomFramer ::comStatusIn_handler(FwIndexType portNum, Fw::Success&amp; condition) {
+        this-&gt;comStatusOut_out(portNum, condition); // pass comStatus through (unless project requires otherwise)
+   }
+
+   void MyCustomFramer ::dataReturnIn_handler(FwIndexType portNum, Fw::Buffer&amp; data, const ComCfg::FrameContext&amp; context) {
+        // TODO: handle return of data ownership
+        // For example, if component required to allocate from a buffer manager, return the buffer to the manager
+   }
+   // ...existing code...
+   ```
+
+3. **Implement the Deframer C++ Component**
+
+   Similarly, implement the required handler functions:
+   ```cpp
+   // ...existing code...
+   void MyCustomDeframer ::dataIn_handler(FwIndexType portNum, Fw::Buffer&amp; data, const ComCfg::FrameContext&amp; context) {
+       // TODO: Implement deframing logic
+   }
+
+   void MyCustomDeframer ::dataReturnIn_handler(FwIndexType portNum, Fw::Buffer&amp; data, const ComCfg::FrameContext&amp; context) {
+        // TODO: handle return of data ownership
+   }
+   // ...existing code...
+   ```
+
+4. **(Optional) Implement a Frame Detector**
+
+   _When is this not needed?_  
+   If your communications manager component always receives complete frames, you do not need to implement frame detection. This can be the case when using radios with built-in frame synchronization or when another subsystem handles frame delimiting.
+
+   _When is this needed?_  
+   If your data transport is stream-based (for example, relying on TCP or UART), or if you cannot guarantee that frames will always be received in full, you must implement a mechanism to delimit frames. F Prime provides this capability with the [Svc.FrameAccumulator](../../Svc/FrameAccumulator/docs/sdd.md) component, which uses a circular buffer and a helper `FrameDetector` to identify complete frames in the data stream.
+
+   To use the `Svc.FrameAccumulator`, you need to configure it with a FrameDetector that detects when a frame is present:
+   **MyCustomFrameDetector.hpp**
+   ```cpp
+    #include &lt;Svc/FrameDetector/FrameDetector.hpp&gt;
+
+    class MyCustomFrameDetector : public Svc::FrameDetector {
+      public:
+        Svc::FrameDetector::Status detect(const Types::CircularBuffer&amp; data, FwSizeType&amp; size_out) const override;
+    };
+   ```
+
+   **MyCustomFrameDetector.cpp**
+   ```cpp
+   // ...existing code...
+   Svc::FrameDetector::Status MyCustomFrameDetector::detect(const Types::CircularBuffer&amp; data, FwSizeType&amp; size_out) const {
+       // TODO: Implement frame boundary detection
+       // Refer to the Svc.FrameDetector documentation for details on how to implement this
+       return Svc::FrameDetector::NO_FRAME_DETECTED;
+   }
+   // ...existing code...
+   ```
+
+   Then configure the `Svc.FrameAccumulator` component to use your custom frame detector in your Topology CPP:
+   **Top/Topology.cpp**
+   ```cpp
+    #include &lt;path/to/MyCustomFrameDetector.hpp&gt;
+    // ...existing code...
+    MyCustomFrameDetector frameDetector;
+    // ...existing code...
+    frameAccumulator.configure(frameDetector, 1, mallocator, 2048);
+    ```
+
+
+## F´ GDS Implementation
+
+To support your custom protocol in the F´ GDS, implement a GDS framing plugin. The GDS plugin system allows you to customize GDS behavior with user-provided code. For new framing protocols, you will need to implement a plugin that extends the `FramerDeframer`. This is further documented in the [How-To Develop a GDS Plugin Guide](./develop-gds-plugins.md) and [F Prime GDS Framing Plugin reference](../reference/gds-plugins/framing.md).
+
+For example, in Python:
+
+```python
+from fprime_gds.common.communication.framing import FramerDeframer
+from fprime_gds.plugin.definitions import gds_plugin
+
+@gds_plugin(FramerDeframer)
+class MyCustomFramerDeframer(FramerDeframer):
+    """GDS plugin for MyCustomProtocol framing"""
+    def frame(self, data):
+        # TODO: Implement framing logic
+        return frame
+
+    def deframe(self, data, no_copy=False):
+        # TODO: Implement deframing logic
+        return packet, leftover_data, discarded_data
+```
+
+Make sure to [package and install the plugin in your virtual environment](./develop-gds-plugins.md#packaging-and-testing-plugins) for the GDS to be able to load it, then run it:
+
+```
+fprime-gds --framing-selection MyCustomFramerDeframer
+```
+
+## References 
+
+- [C++ CustomFraming Example](https://github.com/nasa/fprime-examples/tree/devel/FlightExamples/CustomFraming)
+- [GDS Plugin Example](https://github.com/nasa/fprime-examples/tree/devel/GdsExamples/gds-plugins/src/framing)
+- [F Prime GDS Framing Plugin](../reference/gds-plugins/framing.md)
+- [F Prime Communication Adapter Interface](../reference/communication-adapter-interface.md)
+- [F Prime GDS Plugin Development](https://fprime.jpl.nasa.gov/devel/docs/how-to/develop-gds-plugins/)
+</pre></div>
+</div>
+</section>
+<section id="develop-fprime-libraries-md">
+<h2><code class="docutils literal notranslate"><span class="pre">develop-fprime-libraries.md</span></code><a class="headerlink" href="#develop-fprime-libraries-md" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/docs/how-to/develop-fprime-libraries.md</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Develop an F´ Library
+
+This guide will walk you through the structure and best practices in developing an F´ library.  F´ libraries are used to share modules (components, ports, topologies, etc.), toolchains, and platforms between F´ projects.  These libraries help with code reuse between projects by enabling direct sharing of F´ software.
+
+*Contents:*
+
+1. [F´ Library Structure](#f-library-structure)
+2. [Required: `library.cmake`](#required-librarycmake)
+3. [Optional: Toolchain Folder and Toolchain Files](#optional-toolchain-folder-and-toolchain-files)
+4. [Optional: Platform Folder and Platform Files](#optional-platform-folder-and-platform-files)
+5. [Optional: F´ Module Directories](#optional-f-module-directories)
+
+## F´ Library Structure
+
+In this section, you will learn about the expected structure of an F´ library. An F´ library must have a `library.cmake` and may have any of the following items:
+
+1. Module Directories and Modules (Components, Ports, Topologies, etc.)
+2. `cmake/toolchain` Folder and Toolchain Files
+3. `cmake/platform` Folder and Platform Files
+
+That means that a complete F´ library might look like the following:
+
+```bash
+my-library/
+├── cmake
+│   ├── platform
+│   └── toolchain
+├── MyLibrary
+│   ├── Components
+│   │   └── MyComponent
+│   │       └── ...
+│   └── MyDeployment
+│       └── ...
+└── library.cmake
+```
+
+&gt; [!NOTE]
+&gt; Module directories shall be namespaced (i.e. `MyLibrary` above) to ensure that modules do not collide with F´ and other libraries. Placing container directories (e.g. `Components`, `Svc`, `Drv`, etc.) directly at the root of the repository is *strongly* forbidden.
+
+You will see how to develop each of these parts of the library in the following sections.
+
+##  Required: `library.cmake`
+
+The `library.cmake` file is the only required file for an F´ library.  It consists of a series of `add_fprime_subdirectory` calls that include the various modules that are part of the library.  For libraries that just contain toolchains and platforms, this file may be empty. 
+
+**Sample `library.cmake`**
+```cmake
+####
+# library.cmake for MyLibrary
+####
+add_fprime_subdirectory("${CURRENT_CMAKE_LIST_DIR}/MyLibrary/Components/MyComponent")
+add_fprime_subdirectory("${CURRENT_CMAKE_LIST_DIR}/MyLibrary/MyTopology")
+```
+
+`library.cmake` should exist at the root of the library's directory structure.
+
+
+## Optional: F´ Module Directories
+
+F´ libraries share F´ code through modules. These module directories are created by `fprime-util new --component` or by hand and may include any F´ code (Components, Ports, Topologies, Data Types, etc.).  These types are made available to users of the library by ensuring that they are added to the `library.cmake` file.  The only restriction is that these component should be placed under a namespacing directory for the library (e.g. `MyLibrary`) to avoid collisions with other libraries and F´ code.
+
+Developing component, ports, topologies, etc. are the subject of our [tutorials](../tutorials/index.md).
+
+
+## Optional: Toolchain Folder and Toolchain Files
+
+F´ libraries often need to supply new toolchain integrations with F´. These libraries must define a `cmake/toolchain` folder and place toolchain files within that folder.  Any file ending in `.cmake` and placed within the `cmake/toolchain` folder will be available as a toolchain via `fprime-util generate &lt;toolchain&gt;`.
+
+The example toolchain above (`cmake/toolchain/my-toolchain`) would be found as `my-toolchain` in `fprime-util`.
+
+```bash
+fprime-util generate my-toolchain
+```
+
+The `cmake/toolchain` folder may contain any number of toolchains and must be placed in the root of the library's directory structure.
+
+## Optional: Platform Folder and Platform Files
+
+In a similar manner to toolchains, platforms may be provided in the `cmake/platform` folder. Any file ending in `.cmake` and placed within the `cmake/platform` folder will be available to F´  to be loaded as a platform. Commonly, this means that a toolchain would include the line `set(FPRIME_PLATFORM &lt;platform&gt;)`.
+
+The example platform would thus need to include `set(FPRIME_PLATFORM "my-platform")`.
+
+The `cmake/platform` folder may contain any number of platform files and must be placed in the root of the library's directory structure.
+
+## Conclusion
+
+You should now understand the structure of an F´  library an know how to assemble one.
+</pre></div>
+</div>
+</section>
+<section id="develop-gds-plugins-md">
+<h2><code class="docutils literal notranslate"><span class="pre">develop-gds-plugins.md</span></code><a class="headerlink" href="#develop-gds-plugins-md" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/docs/how-to/develop-gds-plugins.md</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Develop a GDS Plugin
+
+This guide will walk through the process of developing GDS plugins.  GDS plugins allow users to add functionality to the
+GDS in several ways. These include:
+
+1. SELECTION plugins: add another choice for key GDS functionality
+2. FEATURE plugins: add functionality as an addition to the GDS.
+
+This guide will walk through the development of a `framing`  SELECTION plugin to see the basic development of a plugin. Then
+the guide will walk you through the development of a start-up application FEATURE plugin, which will also discuss
+taking arguments to plugins. Finally the guide will close with a discussion of testing and distributing your plugins.
+
+Examples covered here are available at: [https://github.com/fprime-community/fprime-gds-plugin-examples](https://github.com/fprime-community/fprime-gds-plugin-examples)
+
+## Contents
+
+- [Plugin System Design](#plugin-system-design)
+- [Developing a Plugin](#developing-a-plugin)
+  - [Basic Plugin Skeleton](#basic-plugin-skeleton)
+  - [Implementing Virtual Functions](#implementing-virtual-functions)
+- [Application Plugins](#application-plugins)
+  - [Application Plugin Skeleton](#application-plugin-skeleton)
+  - [Plugin Arguments](#plugin-arguments)
+- [Packaging and Testing Plugins](#packaging-and-testing-plugins)
+- [Distributing Plugins](#distributing-plugins)
+- [Conclusion](#conclusion)
+
+
+## Plugin System Design
+
+GDS plugins are built on top of the [pluggy](https://pluggy.readthedocs.io/en/stable/). This means that each implementor
+of a GDS plugin must define a function for behavior and mark that function with an implementation decorator. GDS plugins
+all define a registration function, which returns an implementation class for the given plugin category.
+
+The GDS defines several categories of plugins that the user may implement. These categories and the plugin type of each
+category is summarized in the table below.
+
+| Category      | Type          | Description                                                              | Reference                                                                    |
+|---------------|---------------|--------------------------------------------------------------------------|------------------------------------------------------------------------------|
+| framing       | SELECTION     | Implement a framer/deframer pair to handle serialized data               | [Framing Plugin Reference](../reference/gds-plugins/framing.md)              |
+| communication | SELECTION     | Implement a communication adapter for flight software communication      | [Communication Plugin Reference](../reference/gds-plugins/communications.md) |
+| data-handler  | FEATURE | Implement custom data item handling (for channels, events, etc)          | [Data Handler Plugin](../reference/gds-plugins/data-handler.md)              |
+| gds-app       | FEATURE | Implement a new GDS application isolated to a separate process           | [Gds Application Plugin](../reference/gds-plugins/gds-app.md)                |
+| gds-function  | FEATURE | (Advanced) Implement new GDS functionality with control over the process | [Gds Function Plugin](../reference/gds-plugins/gds-function.md)              |
+
+
+Plugins should define a function called `register_&lt;category&gt;_plugin` that return a concrete subclass of the category's
+implementation base class from the above table.  These concrete classes may additionally define `get_arguments`,
+`get_name`, and `check_arguments` functions used by the plugin system to provide and validate arguments from the CLI.
+
+This guide will walk through the development of a framing plugin and compare that to a gds-app plugin.
+
+## Developing a Plugin
+
+The first step in developing a framing plugin is to determine the function that must be implemented and the class that
+must be derived to develop the plugin. For the case of a `framing` plugin, the `register_framing_plugin` function
+must be defined to return a concrete subclass of `FramerDeframer`. This information was found in the above table.
+
+&gt; [TIP]
+&gt; Use the decorator `@gds_plugin(&lt;BaseClass&gt;)` to help define your plugins (e.g. `@gds_plugin(FramerDeframer)`).
+&gt; This will:
+&gt;  1. Check the supplied base class is a valid plugin base class
+&gt;  2. Add the appropriate register function
+&gt;  3. Ensure the decorated class is an appropriate sub class
+&gt;  4. Ensure all virtual functions are implemented
+
+### Basic Plugin Skeleton
+
+GDS plugins define a class that inherits from the implementation base class and implements all virtual functions. These
+classes also define a properly decorated class method for the registration function, and may define the other class
+methods used for CLI interaction.
+
+A basic framing plugin skeleton would thus look like:
+**`src/my_plugin.py`:**
+```python
+from fprime_gds.common.communication.framing import FramerDeframer
+from fprime_gds.plugin.definitions import gds_plugin
+
+@gds_plugin(FramerDeframer)
+class MyPlugin(FramerDeframer):
+    # TODO: implement virtual functions
+    @classmethod
+    def get_name(cls):
+        """ Name of this implementation provided to CLI """
+        return "my-plugin"
+
+    @classmethod
+    def get_arguments(cls):
+        """ Arguments to request from the CLI """
+        return {}
+
+    @classmethod
+    def check_arguments(cls):
+        """ Check arguments from the CLI """
+        pass
+```
+
+### Implementing Virtual Functions
+
+Each plugin implementation base class (e.g. `FramerDeframer`) has a set of virtual methods that plugin implementors
+*must* implement  in order to support the plugin implementation.  These functions are marked as ` @abc.abstractmethod`
+and can be found in the virtual class definition.
+
+[FramerDeframer virtual functions](https://github.com/fprime-community/fprime-gds/blob/devel/src/fprime_gds/common/communication/framing.py#L29-L51)
+consist of a `frame` and `deframe` method. Below the frame function adds the bytes `MY-PLUGIN` to the start of each
+frame and strip the same bytes off the start of each frame. This is a trivial example of a start word.
+
+**`src/my_plugin.py`:**
+```python
+from fprime_gds.common.communication.framing import FramerDeframer
+from fprime_gds.plugin.definitions import gds_plugin
+
+@gds_plugin(FramerDeframer)
+class MyPlugin(FramerDeframer):
+    START_TOKEN = b"MY-PLUGIN"
+    
+    def frame(self, data):
+        """ Frames data with 'MY-PLUGIN' start token """
+        return self.START_TOKEN + data
+
+    def deframe(self, data, no_copy=False):
+        """ Deframe data with 'MY-PLUGIN' start token """
+        discarded = b""
+        data = data if no_copy else b"" + data # Copy data if no_copy
+        
+        # Deframing can deframe until data length isn't enough to provide start token
+        while len(data) &gt; len(self.START_TOKEN):
+            # Starts with start word and a second start word found
+            if data[:len(self.START_TOKEN)] == self.START_TOKEN and self.START_TOKEN in data[1:]:
+                data = data[len(self.START_TOKEN):] # Remove initial start token
+                # Return packet (data to next start token), unconsumed data, and discarded data
+                return data[:data.index(self.START_TOKEN)], data[data.index(self.START_TOKEN):], discarded
+            # Starts with start token, but beginning of next packet was not found
+            elif data[:len(self.START_TOKEN)] == self.START_TOKEN:
+                # Wait for new data
+                break
+            # Does not start with requested token throw away one byte and continue
+            else:
+                discarded += data[1]
+                data[1:]
+                continue
+        # No packet found, all data unconsumed, and discarded
+        return None, data, discarded
+    
+    @classmethod
+    def get_name(cls):
+        """ Name of this implementation provided to CLI """
+        return "my-plugin"
+
+    @classmethod
+    def get_arguments(cls):
+        """ Arguments to request from the CLI """
+        return {}
+
+    @classmethod
+    def check_arguments(cls):
+        """ Check arguments from the CLI """
+        pass
+```
+
+This is the basic implementation of a no-argument framing plugin. The above plugin tracks a single start `MY-PLUGIN`
+string and deframes that as a packet.  Next, this guide will cover how to integrate this plugin via python packaging. 
+Following that, plugin arguments will be covered.
+
+You may now continue to read about "Application Plugins" that show the other type of plugin available for the `fprime-gds`.
+This section also covers how arguments to plugins work.  Otherwise, jump to the
+[Packaging and Testing Plugins](#packaging-and-testing-plugins) section to begin testing your plugin!
+
+## Application Plugins
+
+Unlike the example `framing` plugin, application plugins run in addition to the GDS. These plugins can be used to start
+new services that connect to the larger GDS network.  Application plugins will be used to show how to solicit arguments
+from the command line.
+
+Our plugin ill run python to print a message supplied via arguments. This is the equivalent to running the following
+command line:
+```bash
+python -c "print('Hello World')"
+```
+
+### Application Plugin Skeleton
+
+Here is the basic structure for a `gds-app` plugin.  It prints "Hello World".  gds-app plugins must implement the
+function `get_process_invocation` that returns command line arguments to be run as a separate process using the
+`subprocess` module.
+
+**`src/my_app.py`:**
+```python
+import sys
+from fprime_gds.executables.apps import GdsApp
+from fprime_gds.plugin.definitions import gds_plugin
+
+@gds_plugin(GdsApp)
+class MyApp(GdsApp):
+    """ An app for the GDS """
+
+    def get_process_invocation(self):
+        """ Process invocation """
+        return [sys.executable, "-c", "print('Hello World')"]
+
+    @classmethod
+    def get_name(cls):
+        """ Get name """
+        return "my-app"
+```
+
+### Plugin Arguments
+
+Plugins can source arguments from the command line. Although, all types of plugins can source arguments using the pattern
+described here, you will see them shown with our application plugin.
+
+It is time to add in plugin arguments. This plugin will take one argument `--message` and will inject this message into
+the printed message.  To do this we return the argument using the `get_arguments` class method.  Add this to your plugin
+`MyApp` class:
+
+```python
+    @classmethod
+    def get_arguments(cls):
+      """ Get arguments """
+      return {
+        ("--message", ): {
+          "type": str,
+          "help": "Message to print",
+          "required": True
+        }
+      }
+```
+
+`get_arguments` is a class method that returns a dictionary whose keys are tuples containing the flags, and whose value
+is a dictionary of keyword arguments passed to
+[`argparse.add_argument`](https://docs.python.org/3/library/argparse.html#the-add-argument-method).
+
+Arguments are supplied to the plugin at instantiation via keyword arguments. Add the following to your `MyApp` class.
+
+```python
+    def __init__(self, message):
+        """ Constructor """
+        super().__init__()
+        self.message = message
+```
+
+Change the `get_process_invocation` to use the new member variable.
+
+```python
+    def get_process_invocation(self):
+        """ Process invocation """
+        # Inject message into command line to print
+        return [sys.executable, "-c", f"print(f'{self.message}')"]
+```
+
+Finally, security-minded developers will notice there is an injection vulnerability above. This can be check using the
+`check_arguments` class method.  This method should raise a `ValueError` or `TypeError` when an argument value is
+malformed.  Add this function to `MyApp` fix the injection:
+
+```python
+    @classmethod
+    def check_arguments(cls, message):
+        """ Check arguments """
+        if "'" in message or '\n' in message:
+            raise ValueError("--message must not include ' nor a newline")
+```
+
+Now our plugin may be run.  The GDS will automatically solicit the message argument as seen should the user run
+```bash
+fprime-gds --help
+```
+
+The complete plugin would look like:
+
+**`src/my_app.py`:**
+```python
+import sys
+from fprime_gds.plugin.definitions import gds_plugin
+from fprime_gds.executables.apps import GdsApp
+
+@gds_plugin(GdsApp)
+class MyApp(GdsApp):
+    """ An app for the GDS """
+
+    def __init__(self, message):
+        """ Constructor """
+        super().__init__()
+        self.message = message
+
+    def get_process_invocation(self):
+        """ Process invocation """
+        # Inject message into command line to print
+        return [sys.executable, "-c", f"print(f'{self.message}')"]
+
+    @classmethod
+    def get_name(cls):
+        """ Get name """
+        return "my-app"
+    
+    @classmethod
+    def get_arguments(cls):
+        """ Get arguments """
+        return {
+            ("--message", ): {
+                "type": str,
+                "help": "Message to print",
+                "required": True
+            }
+        }
+
+    @classmethod
+    def check_arguments(cls, message):
+        """ Check arguments """
+        if "'" in message or '\n' in message:
+            raise ValueError("--message must not include ' nor a newline")
+```
+
+## Packaging and Testing Plugins
+
+Plugins are supplied as python packages with an entrypoint used to load the plugin. In the root of the package a basic
+python package will need to be configured. This consists of two files: pyproject.toml representing the package, and
+setup.py for backwards compatibility.
+
+The project structure should look like:
+```
+    src/my_plugin.py
+    pyproject.toml
+    setup.py
+```
+
+A sample pyproject.toml file would look like:
+
+```toml
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fprime-gds-my-plugin"
+version = "0.1.0"
+dependencies = [
+    "pluggy&gt;=1.3.0",
+    "fprime-gds&gt;=3.4.4"
+]
+
+[project.entry-points.fprime_gds]
+my_plugin = "my_plugin:MyPlugin"
+
+[tool.setuptools_scm]
+```
+
+A sample `setup.py` would look like:
+```python
+from setuptools import setup
+
+# Configuration is in pyproject.toml
+setup()
+```
+
+We can add our application plugin with the following additional line in the `project.entry-points.fprime_gds` section:
+
+```toml
+my_app = "my_app:MyApp"
+```
+
+Once these files have been written, the plugin can be installed locally for testing with the following command:
+
+```
+cd /path/to/plugin/directory
+pip install -e .
+```
+
+&gt; [!WARNING]
+&gt; Users must be in the same virtual environment that the `fprime-gds` package has been installed into
+&gt;
+&gt; `-e` allows local changes to take effect without a reinstall
+
+The first step in testing a plugin is to run `fprime-gds --help`. This should show arguments associated with your plugin.
+The plugins implemented here would produce the following output:
+
+```
+usage: fprime-gds ...
+...
+Framing Plugin Options:
+  --framing-selection {fprime,my-plugin}
+                        Select framing implementer. (default: fprime)
+...
+Gds_App Plugin 'my-app' Options:
+  --disable-my-app      Disable the gds_app plugin 'my-app' (default: False)
+  --message MESSAGE     Message to print (default: None)
+```
+&gt; [!WARNING]
+&gt; Syntax errors, indentation errors, and other exceptions can arise during this step. Resolving these errors will allow the help message to display properly.
+
+To test SELECTION plugins, select them during a normal GDS run:
+
+```
+fprime-gds --framing-selection my-plugin
+```
+&gt; [!WARNING]
+&gt; Remember to supply any arguments needed for your plugin!
+
+Application plugins run automatically at start-up. To test these plugins, just supply any desired arguments:
+
+```
+fprime-gds --message "Hello Plugin
+```
+
+## Distributing Plugins
+
+Plugins are implemented as python packages.  Thus plugins may be distributed in the following ways:
+
+1. Source Distribution: send users your source code and install with `pip install .` as shown above
+2. Binary Distribution: send users a wheel of your package to install with `pip install /path/to/wheel`
+3. PyPI: distribute your wheel via PyPI
+
+A tutorial on python packaging including building wheels and uploading them to PyPI is available from packaging.python.org:
+[https://packaging.python.org/en/latest/tutorials/packaging-projects/](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
+
+## Conclusion
+
+This guide has covered how to develop GDS plugins, their design, and SELECTION vs FEATURE plugins. You should now
+be capable of writing plugins and handling arguments.
+</pre></div>
+</div>
+</section>
+<section id="develop-subtopologies-md">
+<h2><code class="docutils literal notranslate"><span class="pre">develop-subtopologies.md</span></code><a class="headerlink" href="#develop-subtopologies-md" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/docs/how-to/develop-subtopologies.md</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Develop a Subtopology
+
+Subtopologies are topologies for smaller chunks of behavior in F Prime. It allows for grouping bits of topology architecture that fit together, to then be imported into a base deployment's topology. The use case for this is seen when working with shareable components, specifically in the form of [libraries](./develop-fprime-libraries.md).
+
+There are two ways that subtopologies can be created in F Prime. The first (native) way to do so is by hand-writing subtopologies. This method is less complex, but more tedious and restrictive on the capabilities of subtopologies. **This document covers hand-written subtopologies**. 
+
+The second method of creating subtopologies is through the [Subtopology Autocoder](https://github.com/fprime-community/fprime-subtopology-tool) (also described in [a later section of this document](#the-subtopology-autocoder)). This method is more complex, however expands upon the feature set and capabilities of subtopologies. A document that details the process for creating a subtopology with it is available [at the repo for the tool](https://github.com/fprime-community/fprime-subtopology-tool/blob/main/docs/Example.md).
+
+*Contents*
+1. [Subtopology Structure](#subtopology-structure)
+2. [Individual File Contents](#individual-file-contents)
+    1. [Example Scenario](#example-scenario)
+3. [Integration into a "Main" Deployment](#integration-into-a-main-deployment)
+4. [Subtopology Autocoder](#the-subtopology-autocoder)
+5. [Conclusion](#conclusion)
+
+## Subtopology Structure
+
+A subtopology is a folder that contains a `topology.cpp` file, which includes a `topology.fpp` file, which is a *unified* topology file including your wiring, component instances, and init specifications. As opposed to having separate files for component instances and the topology itself, the single file encapsulates both. A `topologydefs.hpp` defines a struct that is used when instantiating your subtopology. A `CMakeLists.txt` file links your `topology.cpp` file to the build for your project.
+
+Thus, the required structure for your subtopology should be:
+
+```bash
+MySubtopology/
+├─ CMakeLists.txt
+├─ intentionally-empty.cpp
+├─ MySubtopology.cmake
+├─ MySubtopology.fpp
+└─ MySubtopologyTopologyDefs.hpp
+```
+
+All files will be discussed in more detail in later sections of this guide. Additionally, note that there are optional files that can be included in your subtopology to extend its capability.
+
+- It is highly recommended to include a `docs` folder to document your subtopology. Simple markdown files (`sdd` for subtopology design document) work well in this case.
+- Other `.fpp` files can also be included in your subtopology. For example, a `config.fpp` may prove to be quite useful.
+- Unit tests can also be added to your subtopology, using a similar structure to unit tests for components.
+- Subtopology configuration behavior for components are written with [phases](https://nasa.github.io/fpp/fpp-users-guide.html#Defining-Component-Instances_Init-Specifiers_Execution-Phases).
+- `intentionally-empty.cpp` is a necessary file to include. It will be discussed why this is included [later](#cmake-and-buildstep-files).
+
+&gt; Note that with the latest release of `fprime-tools`, you can run `fprime-util new --subtopology` to generate the subtopology structure.
+
+&gt; [!NOTE]
+&gt; Remember, this document covers hand-written subtopologies. See [a later section](#the-subtopology-autocoder) for information about the Subtopology Autocoder tool, the other way of creating subtopologies.
+
+## Individual File Contents
+
+This section will provide an overview to the contents of the individual files that make up a subtopology. We will use the names of the required files structure as shown in the [above](#subtopology-structure) section. However, note that the file names shown are not required to be duplicated within your own custom subtopologies.
+
+### Example Scenario
+
+For this section, it would be helpful to come up with an example scenario where the subtopology is used, such that it can be better understood. Let's imagine that we would like to create a component called `RNG` that will write a random integer to some telemetry channel when it is hooked up to a 1Hz clock (rate group). The `RNG` component will have an input port called `run`, that will be the entry point from the clock (rate group). The `RNG` component will be an active component, and is under the `MyLibrary` namespace.
+
+### MySubtopology.fpp
+
+As mentioned, this is a unified `.fpp` file. It not only includes the instances instance declarations for components that you'd like your subtopology to use, but also the definitions for the instances.
+
+Based on our example, we may have the following instance declarations:
+
+```
+instance rng // RNG component instance
+instance rateGroup // rate group instance
+``` 
+
+and thus the following instance definitions:
+
+```
+instance rng: MyLibrary.RNG base id 0xFF2FF \
+    queue size Defaults.QUEUE_SIZE \
+    stack size Defaults.STACK_SIZE \
+    priority 100
+
+instance rateGroup: Svc.ActiveRateGroup base id 0xFF4FF \
+    queue size Defaults.QUEUE_SIZE \
+    stack size DEFAULTS.STACK_SIZE \
+    priority 150
+```
+
+and also the following wiring:
+
+```
+connections MyWiring {
+    // we will hook up the cycle for our rate group later on
+    rateGroup.RateGroupMemberOut[0] -&gt; rng.run
+}
+```
+
+Thus, your unified fpp file, and so `MySubtopology.fpp` could look like:
+
+```
+module MySubtopology {
+    instance rng: MyLibrary.RNG base id 0xFF2FF \
+        queue size Defaults.QUEUE_SIZE \
+        stack size Defaults.STACK_SIZE \
+        priority 100
+
+    instance rateGroup: Svc.ActiveRateGroup base id 0xFF4FF \
+        queue size Defaults.QUEUE_SIZE \
+        stack size DEFAULTS.STACK_SIZE \
+        priority 150
+
+    topology MySubtopology {
+        instance rng // RNG component instance
+        instance rateGroup // rate group instance
+
+        connections MyWiring {
+            rateGroup.RateGroupMemberOut[0] -&gt; rng.run
+        }
+    } // end topology
+} // end MySubtopology
+```
+
+## Unified fpp with Phases
+
+"Phases" are a way to be able to write C++ based configuration functions on a component instance-basis. They aim to replace a topology.cpp/hpp pair of files with the single, unified fpp file. For subtopologies, we enforce the usage of phases to maintain consistency and simplicity in the subtopology.
+
+In a standard cpp/hpp configuration model, your topology would be initialized using the following three functions:
+
+```cpp
+namespace MySubtopology{
+    void configureTopology(const TopologyState&amp; state) {
+        // ... your code here ...
+    }
+
+    void startTopology(const TopologyState&amp; state) {
+        // ... your code here ...
+    }
+
+    void teardownTopology(const TopologyState&amp; state) {
+        // ... your code here ...
+    }
+}
+```
+
+In the phase pattern, these three (as well as others, [described in detail](https://nasa.github.io/fpp/fpp-users-guide.html#Defining-Component-Instances_Init-Specifiers)) are tied as "init specifiers" to fpp component instances. So, instead of configuring all components in one place, each instance defines its own init specification. 
+
+This looks like the following example, and can be done inline within your unified fpp file:
+
+```
+passive component C1
+
+instance c1: C1 base id 0x4444 \
+{
+    phase Fpp.ToCpp.Phases.configComponents """
+        // your cpp code here for configuring
+    """
+}
+```
+
+As aforementioned, we enforce the utilization of phases for subtopologies. Notably, not shown here is that phases can still take in the `TopologyState state` variable. `TopologyState` is that struct, which can include any variables you would like a developer to be able to modify. This provides dynamic-ness to your subtopology.
+
+We're now going to interject information about `MySubtopologyTopologyDefs.hpp`, because it is more relevant to the current topic.
+
+## MySubtopologyTopologyDefs.hpp
+
+In our example, we may want to allow the user to customize the initial seed for our random number generator:
+
+```cpp
+struct TopologyState {
+    // ...
+    U32 initialSeed;
+    // ...
+}
+```
+
+This struct definition is included within `MySubtopologyDefs.hpp`. In addition to this, we may notice that we need to include global definitions in our `Defs.hpp` file; however depending on your subtopology, you may find this part optional. An example of how these definitions may be written is here:
+
+```cpp
+// Example; may not be required
+
+namespace GlobalDefs {
+    namespace PingEntries {
+        MySubtopology_rateGroup {
+            enum { WARN = 3, ERROR = 5 };
+        }
+    } // end PingEntries
+} // GlobalDefs
+```
+
+Notice that we wrap `PingEntries` in a namespace called `GlobalDefs`. This is important, as it allows us to use the namespace `GlobalDefs` across multiple topologies, and then link them all together in the main deployment. This will become more clear in the [next section](#integration-into-a-main-deployment).
+
+This brings us to a unique naming scheme for variable names for subtopologies. On the development-end of the subtopology, we see names like `configureTopology`. However, on the build end when these subtopologies are folded into a bigger project, these functions are added to namespaces via their names. Inherently this makes sense, so that we don't confuse a function, or especially a component instance, with each other. So:
+
+| fpp                     | cpp syntax              |
+| ----------------------- | ----------------------- |
+| MySubtopology.rateGroup | MySubtopology_rateGroup |
+
+## CMake and buildstep files
+
+The last step is to include our CMake-specific files. This includes `CMakeLists.txt`. There is a very repeatable structure, and inherently just notifies the compiler that our topology exists when we build a deployment. 
+
+In `CMakeLists.txt`: 
+
+```cmake
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/RNGTopology.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/intentionally-empty.cpp"
+)
+
+register_fprime_module()
+
+set_target_properties(
+    ${FPRIME_CURRENT_MODULE}
+    PROPERTIES
+    SOURCES "${CMAKE_CURRENT_LIST_DIR}/intentionally-empty.cpp"
+)
+```
+
+As you can see, we have reached the point where we need to use `intentionally-empty.cpp`. Remember the syntax renaming from earlier, where `MySubtopology -&gt; rateGroup` becomes `MySubtopology_rateGroup...`? Well, if we run `fprime-util build`, the *main* deployment that uses our subtopology as well as our subtopology will build and create that syntax. In this case, we get a namespace error, where we try to use `MySubtopology_rateGroup` in a place where it's "not defined". The empty file tells CMake that when our subtopology is built, return the empty file, so there is only a single place where the syntax is defined.
+
+
+# Integration into a "Main" Deployment
+
+At this point, we're ready to integrate our subtopology into the topology of our main deployment (you can think of this being our deliverable, with `MySubtopology` being a portion of it). We will assume, given our example, that you have the RNG component developed alongside the topology. Additionally, we assume that you have created an F Prime project and an associated deployment for it. Let's call this deployment "MainDeployment", and the project "MainProject".
+
+First step is to ensure that our subtopology is linked to our project; within `project.cmake` add:
+
+```cmake
+# before the line adding your main topology
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/MySubtopology/")
+```
+
+Then, let's `cd` into `MainDeployment/Top/`. We have some files here we need to configure to use our subtopology. Before anything let's go to `CMakeLists.txt` to include your own subtopology's CMake file:
+
+```cmake
+...
+include("${CMAKE_CURRENT_LIST_DIR}/../../MySubtopology/MySubtopology.cmake")
+register_fprime_module()
+...
+```
+
+Head over to `MainDeploymentTopologyDefs.hpp`. We want to not only include our subtopology's definitions header, but also modify `PingEntires` to use `GlobalDefs::PingEntries`. At the end of `namespace MainDeployment`, include:
+
+```cpp
+namespace PingEntries = GlobalDefs::PingEntries;
+```
+
+Then modify the current `PingEntries` namespace call to be surrounded by GlobalDefs:
+
+```cpp
+namespace GlobalDefs {
+    namespace PingEntries {
+        namespace blockDrv {
+            enum { WARN = 3, FATAL = 5 };
+        }
+...
+```
+
+Then, we want to tell our MainDeployment's topology to import and use our unified topology file from our subtopology. While we're here, we should also hook up the `CycleOut` port of our main deployment's rate group driver to the `CycleIn` port of our subtopology's rate group. Ensure that the rate group driver has an appropriate output port array size. We head over to the `topology.fpp` file, and include:
+
+```cpp
+...
+topology MainDeployment {
+    import MySubtopology.MySubtopology
+    ...
+
+    connections RateGroups{
+        ...
+        rateGroupDriver.CycleOut[3] -&gt; MySubtopology.rateGroup.CycleIn // you'll notice that the syntax here is &lt;Namespace&gt;.&lt;instance&gt;
+        ...
+    }
+}
+...
+```
+
+At this point, we want to now call our subtopology's configure/start/teardown functions within the corresponding functions of our `MainDeployment` topology. So, in `MainDeploymentTopology.cpp`:
+
+&lt;!-- {% raw %} --&gt;
+```cpp
+// at the top, include our topology.hpp
+#include &lt;MySubtopology/MySubtopologyTopology.hpp&gt;
+
+...
+// MODIFY this line to include the 4th divider
+Svc::RateGroupDriver::DividerSet rateGroupDivisorsSet{{{1, 0}, {2, 0}, {4, 0}, {1, 0}}};
+
+void configureTopology() {
+    ...
+    MySubtopology::TopologyState = myState;
+    myState.clockRate = 1; // we set our clock rate to whatever standard we want
+    MySubtopology::configureTopology(myState);
+}
+
+...
+
+void setupTopology(const TopologyState&amp; state){
+    ...
+    MySubtopology::startTopology({});
+}
+
+...
+
+void teardownTopology(const TopologyState&amp; state){
+    ...
+    MySubtopology::teardownTopology({})
+}
+```
+&lt;!-- {% endraw %} --&gt;
+
+Lastly, since our RNG component has some telemetry, we need to include (or ignore) these channels within the `Packets.fppi` file in this folder. As with any other component that is added to a deployment, you use the same syntax with the name of the instance followed by the name of the telemetry channel.
+
+Now go ahead and run and build your deployment, and you should see that you have a built deployment that uses a subtopology.
+
+# The Subtopology Autocoder
+
+As you may notice, the current implementation of subtopologies lacks in a few areas of simplicity and especially reusability. A couple of these issues are tabulated here:
+
+1. It may be the case that I would like to have multiple uses of a subtopology `st` within a main topology `main`. For example, `st` could define the topology for managing a single temperature sensor, but I would like to implement $n$ number of those sensors. At the moment, to do this one would need to duplicate the entire subtopology and make proper modifications to instances, the TopologyDefs file, and more.
+2. Let's maintain our example of `st` being the topology for managing a single temperature sensor. It may be the case that `st` only implements the software behavior, as is reasonable: the developer of the subtopology probably cannot write hardware interface drivers for every platform possible. So, the user would provide the proper driver to `st`, which is again reasonable. However, to accomplish this one would need to modify the contents of a subtopology, changing instance definitions and possibly the connection graphs as well. Such a task could become monstrous if, say `st` now implements the [hub pattern](../user-manual/design-patterns/hub-pattern.md).
+
+Thus, an autocoder [tool](https://github.com/fprime-community/fprime-subtopology-tool) dubbed the "Subtopology AC Tool" has been developed to be able to provide features like instantiation, local components, and formal subtopology interfaces. The tool itself provides examples of the syntax required to use these features, as well as a design methodology and a worked example with diagrams using a similar context to the one [in this document](#example-scenario).
+
+We recommend that subtopologies are built around the syntax of this tool, as it is on the road map to introduce the patterns in this tool into native FPP syntax.
+
+# Conclusion
+
+This how-to guide has walked through the development of a subtopology. Deployments can include multiple different subtopologies, and thus this feature truly paves the way for making F Prime more accessible to quick prototyping. 
+</pre></div>
+</div>
+</section>
+<section id="index-md">
+<h2><code class="docutils literal notranslate"><span class="pre">index.md</span></code><a class="headerlink" href="#index-md" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/docs/how-to/index.md</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>---
+hide:
+  - toc
+---
+
+# How-To
+
+How-To guides offer step-by-step instructions for specific development tasks in F Prime.
+
+
+&lt;div class="grid cards" markdown&gt;
+
+-   &lt;span class="card-title"&gt;__F´ GDS Plugin Development__&lt;/span&gt;
+
+    ---
+
+    This guide will walk you through the process of developing GDS plugins.
+
+    [View Develop F´ GDS Plugins](develop-gds-plugins.md){ .md-button .md-button--primary }
+
+-   &lt;span class="card-title"&gt;__F´ Library Development__&lt;/span&gt;
+
+    ---
+
+    This how to will walk you through the structure and best practices in developing an F´ library.
+
+    [View Develop F´ Libraries](develop-fprime-libraries.md){ .md-button .md-button--primary }
+
+-   &lt;span class="card-title"&gt;__Integrating Third-Party Libraries__&lt;/span&gt;
+
+    ---
+
+    This how to will walk you through how to integrate non-F´ libraries into your F´ project. It
+    will cover multiple approaches based on examples with [OpenCV](https://github.com/opencv/opencv), [OpenSSL](https://github.com/openssl/openssl) and [ETL](https://github.com/etlcpp/etl).
+
+    [View Integrating Third-Party Libraries](integrate-external-libraries.md){ .md-button .md-button--primary }
+
+-   &lt;span class="card-title"&gt;__Porting F´ To a New Platform__&lt;/span&gt;
+
+    ---
+
+    This how to will walk you through porting F´ to a new platform.
+
+    [View Porting Guide](porting-guide.md){ .md-button .md-button--primary }
+
+&lt;/div&gt;
+</pre></div>
+</div>
+</section>
+<section id="integrate-external-libraries-md">
+<h2><code class="docutils literal notranslate"><span class="pre">integrate-external-libraries.md</span></code><a class="headerlink" href="#integrate-external-libraries-md" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/docs/how-to/integrate-external-libraries.md</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Integrate a Third-Party Library
+
+&gt; [!IMPORTANT]
+&gt; For this How-To guide and many other advanced F´ CMake use cases, it is recommended to have a basic understanding of CMake. If you are unfamiliar with CMake, please refer to the [CMake documentation](https://cmake.org/getting-started/). They provide a [great tutorial to get you started](https://cmake.org/cmake/help/latest/guide/tutorial/index.html).
+
+It is common practice to use third-party libraries in F´ projects. CMake provides multiple ways to integrate external libraries into a project, and the F´ build system facilitates it even further. This document will cover four different approaches to integrate external libraries into your F´ project design and build process. You should also refer to each library's documentation for any specific requirements or recommendations for integration, as there are many different ways to build and use libraries in CMake.
+
+&gt; [!TIP]
+&gt; The source code for the examples shown in this guide can be found in our examples repository here: [https://github.com/nasa/fprime-examples/tree/devel/FlightExamples/ExternalLibs](https://github.com/nasa/fprime-examples/tree/devel/FlightExamples/ExternalLibs)
+
+## Common considerations
+
+CMake provides a [Using Dependencies Guide](https://cmake.org/cmake/help/v3.24/guide/using-dependencies/index.html) which we recommend reading for a deeper understanding of how to integrate dependencies into CMake projects.
+
+When integrating a library into your F´ project, there are considerations based on how the library is built and what it provides.
+
+- **Source or Pre-compiled**: Do you have the source code for the library, or is it pre-compiled (installed on your system, or `.a / .so` files provided)?
+    - **Build System:** _If you have the source code_, does it use CMake as its build system?
+    - **Local or Remote**: _If you have the source code_, is it available in a subfolder of your project (e.g., a git submodule), or is it at a remote location?
+- **CMake integration**: Does the library provide CMake configuration files such as `&lt;libName&gt;Config.cmake`? (refer to the [CMake documentation](https://cmake.org/cmake/help/latest/guide/using-dependencies/index.html) for more information)
+
+The following flowchart summarizes recommendations on which approach to use based on the above considerations.
+
+```mermaid
+flowchart TD  
+    Library--&gt;Source{Is source code available?}  
+    Source--&gt;|Yes| CMakeSourceSupport{Library builds&lt;br&gt;with CMake?}  
+        CMakeSourceSupport--&gt;|Yes|IsSubmodule{Is local folder?}  
+            IsSubmodule--&gt;|Yes| AddSubdirectory[&lt;a href='#add_subdirectory'&gt;Approach 1: add_subdirectory&lt;/a&gt;]  
+            IsSubmodule--&gt;|No| FetchContent[&lt;a href='#fetchcontent'&gt;Approach 2: FetchContent&lt;/a&gt;]  
+        CMakeSourceSupport--&gt;|No|ExternalProject_Add[&lt;a href='#externalproject_add'&gt;Approach 5: ExternalProject_Add&lt;/a&gt;]  
+    Source--&gt;|No| CMakePackageSupport{Library provides &lt;br&gt;CMake integrations?}  
+        CMakePackageSupport--&gt;|Yes| find_package[&lt;a href='#find_package'&gt;Approach 4: find_package&lt;/a&gt;]  
+        CMakePackageSupport--&gt;|No| DEPENDS[&lt;a href='#DEPENDS'&gt;Approach 3: DEPENDS&lt;/a&gt;]  
+```
+
+
+Note that these are mere recommendations, and you may choose to use a different approach based on your project's needs or the library's requirements. The following sections will cover each of these approaches in detail.
+
+---
+
+## &lt;a id="add_subdirectory"&gt;&lt;/a&gt; Approach 1: CMake library with add_subdirectory
+
+|     |     |
+| --- | --- |
+| **Benefits** | Very easy to set up; portable |
+| **Drawbacks** | None |
+| **Considerations** | Recommended approach if available |
+
+Many popular libraries use CMake as their build system and should likely be able to be added to your build with a [add_subdirectory()](https://cmake.org/cmake/help/v3.24/command/add_subdirectory.html) call. This requires the library to be available in your project source tree, for example through a git submodule. This is the preferred method if available because it allows you to build the library alongside your project, ensuring that the library is built for the same architecture and with the same compiler settings as your project.
+
+&gt; [!NOTE]
+&gt; Some libraries may not build properly with this method. OpenCV, for example, [does not support it](https://github.com/opencv/opencv/issues/26955#issuecomment-2690702771) due to the complexity of its CMake set up (as of April 2025). In such cases, you will need to use `find_package()` or `ExternalProject_Add` as described in the sections below.
+
+
+##### Step 1: Use add_subdirectory (or equivalent FetchContent) to include the library in your project
+
+The following excerpt demonstrates how to integrate the [ETL libraries](https://github.com/ETLCPP/etl) using `add_subdirectory()`:
+
+```cmake
+# This code can be located in the root project.cmake file if the library is used by multiple modules
+# or directly in the module's CMakeLists.txt if it is only used by that module.
+# Here, the ETL library is a submodule of the current project, under ./lib/etl/
+add_subdirectory("${FPRIME_PROJECT_ROOT}/lib/etl" "${CMAKE_BINARY_DIR}/etl")
+```
+
+In the `fprime-examples` repository, this is done in [ExternalLibs/CMakeLists.txt](https://github.com/nasa/fprime-examples/tree/devel/FlightExamples/ExternalLibs/CMakeLists.txt) file. This allows any module within the ExternalLibs module to use the `etl` library.
+If the library is only needed by a single component, it is also acceptable to place the `add_subdirectory` code directly in that component's `CMakeLists.txt` file. If the library is needed at the project level, it is best to place the `add_subdirectory` code in the root `project.cmake` file. The bottom line is the following: the `add_subdirectory` command must be called before registering any module that uses the library.
+
+##### Step 2: Set the library as a dependency of the module
+
+Any component or module that depends on ETL can now link against it by adding the following entry to its `DEPENDS`:
+
+```cmake
+# In MyComponent/CMakeLists.txt 
+register_fprime_module(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/MyComponent.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/MyComponent.fpp"
+  DEPENDS
+    etl::etl   # This is the target name for the ETL library
+)
+```
+
+---
+
+## &lt;a id="fetchcontent"&gt;&lt;/a&gt;Approach 2: CMake library with FetchContent
+
+|     |     |
+| --- | --- |
+| **Benefits** | Very easy to set up; portable |
+| **Drawbacks** | None |
+| **Considerations** | Recommended approach if available |
+
+This method is very similar to the previous one, only it applies if the source code for the library is not available in your source tree, but rather at some remote location (git repository, web archive, etc.). In this case, you can use the [FetchContent module](https://cmake.org/cmake/help/v3.24/module/FetchContent.html) to download the library source code and add it to your project. In many cases, this approach will perform a clone and then a `add_subdirectory()` call ([reference](https://cmake.org/cmake/help/latest/module/FetchContent.html#command:fetchcontent_makeavailable)). For this reason, the same considerations and details apply. 
+
+##### Step 1: Use FetchContent to include the library in your project
+
+The following excerpt demonstrates how to integrate the [ETL libraries](https://github.com/ETLCPP/etl) using `FetchContent`:
+
+```cmake
+# This code can be located in the root project.cmake file if the library is used by multiple modules
+# or directly in the module's CMakeLists.txt if it is only used by that module.
+include(FetchContent)
+FetchContent_Declare(
+    etl
+    GIT_REPOSITORY https://github.com/ETLCPP/etl
+    GIT_TAG        20.40.0
+)
+FetchContent_MakeAvailable(etl)
+```
+
+The same considerations as [Approach 1 (add_subdirectory)](#add_subdirectory) apply with regards to where to place that code.
+
+##### Step 2: Set the library as a dependency of the module
+
+Any component or module that depends on ETL can now link against it by adding the following entry to its `DEPENDS`:
+
+```cmake
+# In MyComponent/CMakeLists.txt 
+register_fprime_module(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/MyComponent.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/MyComponent.fpp"
+  DEPENDS
+    etl::etl   # This is the target name for the ETL library
+)
+```
+
+
+---
+
+## &lt;a id="DEPENDS"&gt;&lt;/a&gt;Approach 3: DEPENDS - Depending on pre-compiled library files
+
+|     |     |
+| --- | --- |
+| **Benefits** | Easy to set up; no additional build time |
+| **Drawbacks** | Not portable across platforms |
+| **Considerations** | May be provided by a vendor or third-party |
+
+A pre-compiled library file is a library that has already been compiled and is ready to be used, often named `lib&lt;libName&gt;.a` or `lib&lt;libName&gt;.so`. There are many ways to obtain pre-compiled libraries, such as downloading them from a vendor repository or building them from source yourself.
+
+To integrate a pre-compiled library, you need to add the path of that library file to the `DEPENDS` list of the module(s) that depend on it (DEPENDS = module dependencies). The following example demonstrates how to integrate the OpenSSL `libcrypto` library into an F´ wrapper component:
+
+```cmake
+register_fprime_module(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/OpenSslWrapper.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/OpenSslWrapper.fpp"
+  DEPENDS
+    ${FPRIME_PROJECT_ROOT}/lib/openssl/libcrypto.a # Full path to the pre-compiled library file - do not use relative paths here
+)
+target_include_directories(${FPRIME_CURRENT_MODULE} PUBLIC "${FPRIME_PROJECT_ROOT}/lib/openssl/include")
+```
+
+This assumes that the `libcrypto.a` is available for the targeted architecture in the `lib/openssl/` directory of your F´ project root, and that the necessary header files are in `lib/openssl/include/`.
+
+&gt; [!NOTE]
+&gt; If you are attempting to cross-compile but also want to build for your local machine for testing, you must ensure to have a version of the precompiled library that matches the platform you are building for.
+
+---
+
+## &lt;a id="find_package"&gt;&lt;/a&gt;Approach 4: Install once and integrate with find_package()
+
+|     |     |
+| --- | --- |
+| **Benefits** | Easier than approach 5 |
+| **Drawbacks** | Additional step managed outside of CMake |
+| **Considerations** | Need to ensure developers will install the dependency |
+
+Some libraries may not be built with CMake but still integrate with CMake through [installed config files](https://cmake.org/cmake/help/v3.24/guide/using-dependencies/index.html). In this case, you may choose to install the library manually on your machine and use [`find_package()`](https://cmake.org/cmake/help/v3.24/command/find_package.html) in CMake to locate it. This is a common approach for libraries that have complex build requirements.
+
+##### Step 1: Install the library on your system
+
+There can be many ways to install the library, such as using a package manager (e.g., `apt`, `brew`, `yum`, `conda`, etc.), or building from source. Refer to each the library installation instructions to decide which fits your project best. Also keep in mind that the installed library must be built for the target architecture. If you are cross-compiling you may want to look into the compiler's [sysroot](https://gcc.gnu.org/onlinedocs/gcc/Directory-Options.html#index-sysroot) option.
+
+##### Step 2: Use find_package() to locate the library
+
+CMake will look for installed packages in standard locations as well as additional locations based on your PATH. Should you install the library in a non-standard location, you may need to set the [`CMAKE_PREFIX_PATH`](https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html) variable to point to the directory containing the library's CMake configuration files (in the form `&lt;libName&gt;Config.cmake` or `&lt;libName&gt;-config.cmake`).
+
+The [ImageProcessor component](https://github.com/nasa/fprime-examples/tree/devel/FlightExamples/ExternalLibs/ImageProcessor) component demonstrates this approach by encapsulating the OpenCV library after it has been installed on the system. The following code shows how to integrate the OpenCV library using `find_package()`:
+
+```cmake
+# The following requires that OpenCV is installed on the system and may need to be added to CMAKE_MODULE_PATH
+find_package(OpenCV REQUIRED)
+register_fprime_module(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/MyComponent.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/MyComponent.fpp"
+  DEPENDS
+    ${OpenCV_LIBS} # You may only need a subset of the libraries
+)
+```
+
+The `find_package()` command searches for the OpenCV library and sets the `OpenCV_LIBS` variable to the appropriate libraries. You may refer to your own library's documentation to find the correct variable or direct library names to use.  
+
+&gt; [!IMPORTANT]
+&gt; When using this approach, you must ensure that users of your project have the library installed on their system. This can be done by providing instructions in your project's documentation.
+
+---
+
+## &lt;a id="externalproject_add"&gt;&lt;/a&gt;Approach 5: Build from source alongside your project with ExternalProject_Add
+
+|     |     |
+| --- | --- |
+| **Benefits** | High control over the environment |
+| **Drawbacks** | Can be very hard to set-up correctly; builds only at project build-time |
+| **Considerations** | Sometimes it's the only way... |
+
+&gt; [!NOTE]
+&gt; This section is using the OpenSSL library to illustrate. However, should you need OpenSSL in your project, note that OpenSSL is also available through the find_package() API mentioned above.
+
+The ExternalProject module is highly flexible and allows you to build external projects as part of your CMake project, regardless of their build process. The full documentation can be found here: [https://cmake.org/cmake/help/v3.24/module/ExternalProject.html](https://cmake.org/cmake/help/v3.24/module/ExternalProject.html).
+
+#### Step 1: Understand the library's build process
+
+Before you can use `ExternalProject_Add`, you need to understand how the library is built. This includes knowing the build system it uses (e.g., CMake, Makefile, etc.), any dependencies it may have, any configuration options that need to be set, as well as where the installation artifacts are placed.
+
+#### Step 2: Use ExternalProject_Add to build the library within CMake
+
+The library source code must be made available to the ExternalProject_Add command. This can be done with a local path (e.g. a git submodule or local tarball) or by specifying a remote URL. 
+
+The `ExternalProject_Add` command is used to build the library as part of your CMake project. This is done by specifying the steps identified in Step 1 through the `CONFIGURE_COMMAND`, `BUILD_COMMAND`, `INSTALL_COMMAND`, and more. Please referer to the [ExternalProject documentation](https://cmake.org/cmake/help/v3.24/module/ExternalProject.html) for more information. 
+
+After this is done, you can create a CMake library using `add_library()` and set its properties to point to the built library and its include directories. This allows you to use the library in your F´ modules just like any other library.
+
+The following example demonstrates how to integrate the OpenSSL library using `ExternalProject_Add`:
+
+```cmake
+
+include(ExternalProject)
+set(OPENSSL_SOURCE_DIR ${FPRIME_PROJECT_ROOT}/lib/openssl)
+set(OPENSSL_INSTALL_DIR ${CMAKE_BINARY_DIR}/openssl)
+set(OPENSSL_INCLUDE_DIR ${OPENSSL_INSTALL_DIR}/include)
+set(OPENSSL_LIBCRYPTO_LIB ${OPENSSL_INSTALL_DIR}/lib/libcrypto.a)
+
+ExternalProject_Add(
+    OpenSSL
+    SOURCE_DIR ${OPENSSL_SOURCE_DIR}
+    CONFIGURE_COMMAND
+        ${OPENSSL_SOURCE_DIR}/config
+        --prefix=${OPENSSL_INSTALL_DIR}
+        --openssldir=${OPENSSL_INSTALL_DIR}
+        --libdir=lib # this makes sure libcrypto.a is in lib/ (instead of lib64 on some systems)
+        no-tests
+    BUILD_COMMAND make -j8 build_generated libcrypto.a
+    TEST_COMMAND ""
+    INSTALL_COMMAND make install_sw
+    INSTALL_DIR ${OPENSSL_INSTALL_DIR}
+    BUILD_BYPRODUCTS ${OPENSSL_INCLUDE_DIR} ${OPENSSL_LIBCRYPTO_LIB} # allows the build to know libcrypto.a is a byproduct of this ExternalProject_Add
+)
+# Since ExternalProject_Add will only build OpenSSL at project-build-time, we need to create the
+# include directory so it exists at project-configure-time
+file(MAKE_DIRECTORY ${OPENSSL_INCLUDE_DIR})
+# Declare the properties needed for the OpenSSL::Crypto library
+add_library(OpenSSL::Crypto STATIC IMPORTED GLOBAL)
+set_property(TARGET OpenSSL::Crypto PROPERTY IMPORTED_LOCATION ${OPENSSL_LIBCRYPTO_LIB})
+set_property(TARGET OpenSSL::Crypto PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${OPENSSL_INCLUDE_DIR})
+add_dependencies(OpenSSL::Crypto OpenSSL)
+
+```
+
+&gt; [!NOTE]
+&gt; The source code for this example can be found at [ExternalLibs/OpenSslWrapper](https://github.com/nasa/fprime-examples/tree/devel/FlightExamples/ExternalLibs/CMakeLists.txt).
+
+
+#### Step 3: Set the library as a dependency of the module/component
+
+Any component or module that depends on OpenSSL can now link against it by adding the following entry to its `DEPENDS`:
+
+```cmake
+# OpenSslWrapper component
+register_fprime_module(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/OpenSslWrapper.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/OpenSslWrapper.fpp"
+  DEPENDS
+    OpenSSL::Crypto   # Target name we just registered for the OpenSSL crypto library
+)
+```
+
+&gt; [!NOTE]
+&gt; The source code for this example can be found at [ExternalLibs/OpenSslWrapper](https://github.com/nasa/fprime-examples/tree/devel/FlightExamples/ExternalLibs/OpenSslWrapper).
+
+---
+
+## Patterns for using a library in the F´ architecture
+
+When integrating a library into your F´ project, you may want to consider how the library will be used within the F´ architecture. The following patterns are common when using libraries in F´:
+
+### 1. Wrapper Component
+
+A wrapper component is a component that encapsulates the library's functionality and provides an interface to the library functionalities for other F´ components to use through port calls. This allows for other components of the system to benefit from the library functionalities directly through F Prime objects. In the [ExternalLibs examples](https://github.com/nasa/fprime-examples/tree/devel/FlightExamples/ExternalLibs/) that we have seen so far, we have used this pattern to wrap the OpenSSL cryptographic functions in the `OpenSslWrapper` component so that we encrypt and decrypt Fw::Buffer objects directly, through a port call. This also allows to centralize the management of cryptographic keys and other configuration parameters in the wrapper component, making it easier to manage and update the library's usage across the system.
+
+### 2. Global library usage
+
+You may wish to use library code in multiple places, without wrapping it in a component. This can be the case for libraries that provide utilities that are not tied to a specific component or unit of behavior. This can for example be the case for the [ETL library](https://github.com/ETLCPP/etl) – used in both `OpenSslWrapper`  and `OpenCvWrapper` – which provides a set of utilities for working with C++ containers and algorithms in embedded systems. In this case, each component that needs to use the library can define it in their `DEPENDS` for direct usage.
+
+### 3. Others
+
+It is ultimately up to the project to determine how to best use a library within the F´ architecture. The above patterns are common, but you may find that your project requires a different approach based on the library's functionality and how it fits into your system's architecture.
+
+
+---
+
+## Common Issues
+
+- `The dependency target "libfoo.a" of target "XYZ" does not exist.` this error can occur when a library file (`libfoo.a`) is specified using a relative path in the `DEPENDS` list of a module. The F´ build system requires absolute paths for library files in the `DEPENDS` list. To fix this, use the full path to the library file, such as `${FPRIME_PROJECT_ROOT}/lib/foo/libfoo.a`.
+</pre></div>
+</div>
+</section>
+<section id="porting-guide-md">
+<h2><code class="docutils literal notranslate"><span class="pre">porting-guide.md</span></code><a class="headerlink" href="#porting-guide-md" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/docs/how-to/porting-guide.md</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Porting to new platforms
+
+Porting F′ to a new hardware platform is often required for using F´ on
+new missions and projects. Fortunately, F´ is designed to be mostly
+independent of hardware. There are four parts of F´ that need to be
+developed to run on a new platform:
+
+1.  CMake Toolchain and F´ platform files. These files specify the
+    location of compilers and other build tools for compiling F´ for a
+    given platform.
+
+2.  Fw::Types and configuration. A Fw::Types header may be needed along with appropriate configuration if the hardware needs settings that are different from the default.
+
+3.  Hardware drivers. Any drivers that are outside the provided Linux
+    Driver package would need to be developed for the hardware-specific
+    interfaces to be supported.
+
+4.  OSAL support. Should a non-Linux operating system be needed to run
+    on the platform, OSAL support files must be developed.
+
+Once these areas are implemented, the user should be able to run on a new system or platform.
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../getting-started/index.html" class="btn btn-neutral float-left" title="getting-started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../img/index.html" class="btn btn-neutral float-right" title="img" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

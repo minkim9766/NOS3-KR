@@ -1,0 +1,1610 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../search.html" />
+    <link rel="next" title="toolchain" href="../../toolchain/index.html" />
+    <link rel="prev" title="TestTargetAutocoder" href="../data/TestDeployment/TestTargetAutocoder/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">fprime-nos3</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">lib</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">cmake</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">test</a></li>
+      <li class="breadcrumb-item active">src</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../_sources/project_inventory/fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="src">
+<h1>src<a class="headerlink" href="#src" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="init-py">
+<h2><code class="docutils literal notranslate"><span class="pre">__init__.py</span></code><a class="headerlink" href="#init-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/__init__.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</section>
+<section id="cmake-py">
+<h2><code class="docutils literal notranslate"><span class="pre">cmake.py</span></code><a class="headerlink" href="#cmake-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/cmake.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>"""
+cmake.py:
+
+A wrapper used to call CMake given a directory, a target directory to build, and a list of expected
+outputs for the given run. Options to the run and build targets (make targets) can optionally be
+supplied. CMake is run as a command line call to the cmake system. Thus CMake must be installed.
+
+@author mstarch
+"""
+import multiprocessing
+import select
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+import pytest
+
+# Constants to supplied to the calls to subprocess
+CPUS = multiprocessing.cpu_count()
+CMAKE = "cmake"
+MAKE_CALL = "make"
+MAKE_ARGS = [f"-j{CPUS}"]
+
+
+def subprocess_helper(args, cwd):
+    """Subprocess helper used to 'tee' the output to: console and capture"""
+
+    def read_available(proc, stdout, stderr):
+        """Read the available output from the process and return it"""
+
+        def capture_stream(stream, lines):
+            """Capture output from a stream, printing to console if needed"""
+            new_lines = stream.readlines()
+            lines[stream].extend(new_lines)
+            if "-s" in sys.argv or "--capture=no" in sys.argv:
+                for line in new_lines:
+                    print(
+                        line,
+                        end="",
+                        file=(sys.stdout if stream == stdout else sys.stderr),
+                    )
+
+        lines = {stdout: [], stderr: []}
+        while proc.poll() is None:
+            ready, _, _ = select.select([stdout, stderr], [], [])
+            for stream in ready:
+                capture_stream(stream, lines)
+        capture_stream(stdout, lines)
+        capture_stream(stderr, lines)
+        return (
+            proc.poll(),
+            [line for line in lines[stdout] if line.strip() != ""],
+            [line for line in lines[stderr] if line.strip() != ""],
+        )
+
+    # Verbose output desired from pytest
+    proc = subprocess.Popen(
+        args=args,
+        cwd=str(cwd),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    return read_available(proc, proc.stdout, proc.stderr)
+
+
+def run_cmake(source_directory, build_path, options=None):
+    """
+    Runs the cmake in the current directory with the given options and build_path
+
+    :param source_directory: source directory to run CMake within
+    :param build_path: path to build
+    :param options: options to pass CMake
+    :return: True if successful, False otherwise
+    """
+    args = [CMAKE]
+    options = {} if options is None else options
+    for option in options.keys():
+        value = options[option]
+        args.append("-D{0}={1}".format(option, value))
+    args.append(source_directory)
+
+    return subprocess_helper(args, build_path)
+
+
+def run_make(build_directory, target):
+    """
+    Runs the make command to ensure that the CMake system can follow through and finish the build.
+    Note: this assumes that the provided application built properly. Thus, those unit tests should
+    run first.
+
+    :param build_directory: build directory to change to
+    :param target: target to the make command
+    :return: True if successful, False otherwise
+    """
+    args = [MAKE_CALL]
+    if target != "":
+        args.append(target)
+    args.extend(MAKE_ARGS)
+    return subprocess_helper(args, build_directory)
+
+
+def assert_process_success(data_object, errors_ok=False, targets=None):
+    """Assert the subprocess runs worked as expected"""
+    for field in ["source", "build", "install", "cmake", "targets"]:
+        assert field in data_object, f"Data object malformed: missing '{field}' field"
+        assert field in data_object, f"Data object malformed: missing '{field}' field"
+
+    return_code, stdout, stderr = data_object["cmake"]
+    assert return_code == 0, f"CMake generation failed with return code {return_code}"
+    assert stdout, "CMake generated no standard out process"
+    assert not stderr or errors_ok, f"CMake generated errors:\n{''.join(stderr)}"
+
+    targets = data_object["targets"].keys() if targets is None else targets
+    filtered = [
+        (target, output)
+        for target, output in data_object["targets"].items()
+        if target in targets
+    ]
+
+    for target, output in filtered:
+        return_code, stdout, stderr = output
+        assert return_code == 0, f"CMake failed building '{target}'"
+        assert stdout, f"CMake generated no standard out building '{target}'"
+
+
+def get_build(
+    fixture_name,
+    source_directory,
+    cmake_arguments=None,
+    make_targets=None,
+    install_directory=None,
+):
+    """Generate and build a cmake deployment, then returns a pytest fixture for it"""
+    base_cmake_arguments = {"FPRIME_SUB_BUILD_JOBS": f"{CPUS}"}
+    cmake_arguments = {} if cmake_arguments is None else cmake_arguments
+    cmake_arguments.update(base_cmake_arguments)
+    build_directory = Path(tempfile.mkdtemp())
+    install_directory_calc = Path(
+        Path(source_directory) / "build-artifacts"
+        if install_directory is None
+        else install_directory
+    )
+    make_targets = ["all"] if make_targets is None else make_targets
+    if install_directory is not None:
+        cmake_arguments["CMAKE_INSTALL_PREFIX"] = str(install_directory)
+
+    cmake_output = run_cmake(source_directory, build_directory, cmake_arguments)
+    target_outputs = {
+        target: run_make(build_directory, target) for target in make_targets
+    }
+
+    @pytest.fixture(scope="session", name=fixture_name)
+    def fixture_function():
+        yield {
+            "source": source_directory,
+            "build": build_directory,
+            "install": install_directory_calc,
+            "cmake": cmake_output,
+            "targets": target_outputs,
+        }
+        shutil.rmtree(build_directory, ignore_errors=True)
+        if install_directory is not None:
+            shutil.rmtree(install_directory, ignore_errors=True)
+
+    return fixture_function
+</pre></div>
+</div>
+</section>
+<section id="settings-py">
+<h2><code class="docutils literal notranslate"><span class="pre">settings.py</span></code><a class="headerlink" href="#settings-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/settings.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>"""
+cmake/test/settings.py:
+
+Settings for the CMake tests. Mostly constants that must be tracked.
+"""
+from pathlib import Path
+
+DATA_DIR = Path(__file__).parent.parent / "data"
+REF_APP_PATH = Path(__file__).parent.parent.parent.parent / "Ref"
+
+
+FRAMEWORK_MODULES = [
+    "Fw_Cmd",
+    "Fw_Com",
+    "Fw_Comp",
+    "Fw_CompQueued",
+    "Fw_Log",
+    "Fw_Logger",
+    "Fw_Obj",
+    "Fw_Port",
+    "Fw_Time",
+    "Fw_Tlm",
+    "Fw_Types",
+    "Os",
+]
+
+STANDARD_MODULES = [
+    "Fw_Buffer",
+    "Fw_FilePacket",
+    "Fw_Prm",
+    "CFDP_Checksum",
+    "Drv_ByteStreamDriverModel",
+    "Drv_Ports_DataTypes",
+    "Drv_Ip",
+    "Drv_TcpClient",
+    "Utils_Hash",
+    "Utils_Types",
+]
+
+REF_MODULES = [
+    "Svc_ActiveRateGroup",
+    "Svc_AssertFatalAdapter",
+    "Svc_BufferManager",
+    "Svc_CmdDispatcher",
+    "Svc_CmdSequencer",
+    "Svc_Cycle",
+    "Svc_EventManager",
+    "Svc_Fatal",
+    "Svc_FatalHandler",
+    "Svc_FileDownlink",
+    "Svc_FileManager",
+    "Svc_FileUplink",
+    "Svc_FprimeDeframer",
+    "Svc_Framer",
+    "Svc_FramingProtocol",
+    "Svc_Health",
+    "Svc_PosixTime",
+    "Svc_PassiveConsoleTextLogger",
+    "Svc_Ping",
+    "Svc_PrmDb",
+    "Svc_RateGroupDriver",
+    "Svc_Sched",
+    "Svc_Seq",
+    "Svc_StaticMemory",
+    "Svc_Time",
+    "Svc_TlmChan",
+    "Ref_BlockDriver",
+    "Ref_PingReceiver",
+    "Ref_RecvBuffApp",
+    "Ref_SendBuffApp",
+    "Ref_SignalGen",
+    "Ref_Top",
+]
+</pre></div>
+</div>
+</section>
+<section id="test-autocoder-py">
+<h2><code class="docutils literal notranslate"><span class="pre">test_autocoder.py</span></code><a class="headerlink" href="#test-autocoder-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_autocoder.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>from . import cmake
+from . import settings
+
+_ = cmake.get_build(
+    "AUTOCODER_BUILD",
+    settings.DATA_DIR / "TestDeployment",
+    {
+        "FPRIME_FRAMEWORK_PATH": settings.REF_APP_PATH.parent,
+        "FPRIME_PROJECT_ROOT": settings.DATA_DIR,
+        "FPRIME_LIBRARY_LOCATIONS": ";".join(
+            [
+                str(settings.DATA_DIR / "test-fprime-library"),
+                str(settings.DATA_DIR / "test-fprime-library2"),
+            ]
+        ),
+    },
+    make_targets=[
+        "TestBuildAutocoderModule",
+        "TestTargetAutocoderModule",
+        "TestChainedAutocoderModule",
+        "TestHeaderAutocoderModule",
+    ],
+)
+
+
+def test_build_autocoder(AUTOCODER_BUILD):
+    """Test that a build-autocoder works"""
+    cmake.assert_process_success(AUTOCODER_BUILD, targets=["TestBuildAutocoderModule"])
+
+
+def test_target_autocoder(AUTOCODER_BUILD):
+    """Test that a target-triggered autocoder works"""
+    cmake.assert_process_success(AUTOCODER_BUILD, targets=["TestTargetAutocoderModule"])
+
+
+def test_autocoder_non_build_files(AUTOCODER_BUILD):
+    """Test that a target-triggered autocoder works"""
+    cmake.assert_process_success(AUTOCODER_BUILD, targets=["TestTargetAutocoderModule"])
+    build_cache_path = (
+        AUTOCODER_BUILD["build"] / "TestDeployment" / "TestTargetAutocoder"
+    )
+    for created in [
+        "test1.test-target.generated.txt",
+        "test2.test-target.generated.txt",
+    ]:
+        full_created_path = build_cache_path / created
+        assert (
+            full_created_path.exists()
+        ), f"Failed to create non-build output: {created}"
+
+
+def test_autocoder_chaining(AUTOCODER_BUILD):
+    """Test that autocoder chaining works - where one autocoder's output becomes another's input"""
+    cmake.assert_process_success(
+        AUTOCODER_BUILD, targets=["TestChainedAutocoderModule"]
+    )
+    build_cache_path = (
+        AUTOCODER_BUILD["build"] / "TestDeployment" / "TestChainedAutocoder"
+    )
+
+    # Verify that chained autocoder files are created
+    # First autocoder should create intermediate files with .generated suffix
+    for intermediate in [
+        "test1.test-target.generated.txt",
+        "test2.test-target.generated.txt",
+    ]:
+        intermediate_path = build_cache_path / intermediate
+        assert (
+            intermediate_path.exists()
+        ), f"Failed to create intermediate autocoder output: {intermediate}"
+
+    # Second autocoder should process the intermediate files and create final outputs
+    for final in ["test1.chained.txt", "test2.chained.txt"]:
+        final_path = build_cache_path / final
+        assert (
+            final_path.exists()
+        ), f"Failed to create chained autocoder output: {final}"
+
+
+def test_autocoder_header_as_sources(AUTOCODER_BUILD):
+    """Test that autocoders can generate header files that are treated as sources"""
+    cmake.assert_process_success(AUTOCODER_BUILD, targets=["TestHeaderAutocoderModule"])
+
+
+def test_autocoder_rerun_autocoder(AUTOCODER_BUILD):
+    """Test that autocoders can generate header files that are treated as sources"""
+    cmake.assert_process_success(AUTOCODER_BUILD, targets=["TestBuildAutocoderModule"])
+    build_cache_path = (
+        AUTOCODER_BUILD["build"] / "TestDeployment" / "TestBuildAutocoder"
+    )
+    rerun_autocoder_output = build_cache_path / "test-rerun-autocoder.txt"
+    assert rerun_autocoder_output.exists(), "Failed to create rerun autocoder output"
+</pre></div>
+</div>
+</section>
+<section id="test-basic-py">
+<h2><code class="docutils literal notranslate"><span class="pre">test_basic.py</span></code><a class="headerlink" href="#test-basic-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_basic.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>from . import cmake
+from .test_feature import FEATURE_BUILD_RESULT
+
+
+def test_relative_paths(FEATURE_BUILD):
+    """Basic run test for feature build"""
+    cmake.assert_process_success(FEATURE_BUILD)
+</pre></div>
+</div>
+</section>
+<section id="test-config-py">
+<h2><code class="docutils literal notranslate"><span class="pre">test_config.py</span></code><a class="headerlink" href="#test-config-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_config.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>####
+# test_basic.py:
+#
+# Basic CMake tests.
+#
+####
+import pytest
+from . import cmake
+from . import settings
+
+_1 = cmake.get_build(
+    "CONFIG_BUILD",
+    settings.DATA_DIR / "TestConfigDeployment",
+    {
+        "FPRIME_FRAMEWORK_PATH": settings.REF_APP_PATH.parent,
+        "FPRIME_PROJECT_ROOT": settings.DATA_DIR,
+        "FPRIME_LIBRARY_LOCATIONS": ";".join(
+            [
+                str(settings.DATA_DIR / "test-config-library"),
+            ]
+        ),
+    },
+    make_targets=[
+        "TestModelOverride",
+        "TestHeaderOverride",
+        "TestFPrimeLibraryOverride",
+        "library_config",
+        "TestLibraryNewConfig",
+    ],
+)
+
+_2 = cmake.get_build(
+    "CONFIG_FAILED_OVERRIDE_BUILD",
+    settings.DATA_DIR / "TestConfigDeployment",
+    {
+        "FPRIME_FRAMEWORK_PATH": settings.REF_APP_PATH.parent,
+        "FPRIME_PROJECT_ROOT": settings.DATA_DIR,
+        "FPRIME_LIBRARY_LOCATIONS": ";".join(
+            [
+                str(settings.DATA_DIR / "test-config-library"),
+            ]
+        ),
+        "_TEST_CONFIG_BAD_OVERRIDE": "ON",
+    },
+    make_targets=[],
+)
+
+_3 = cmake.get_build(
+    "CONFIG_FAILED_NEW_FILE_BUILD",
+    settings.DATA_DIR / "TestConfigDeployment",
+    {
+        "FPRIME_FRAMEWORK_PATH": settings.REF_APP_PATH.parent,
+        "FPRIME_PROJECT_ROOT": settings.DATA_DIR,
+        "FPRIME_LIBRARY_LOCATIONS": ";".join(
+            [
+                str(settings.DATA_DIR / "test-config-library"),
+            ]
+        ),
+        "_TEST_CONFIG_BAD_NEW_FILE": "ON",
+    },
+    make_targets=[],
+)
+
+
+def test_fprime_model_override(CONFIG_BUILD):
+    """Test that the config override works"""
+    cmake.assert_process_success(CONFIG_BUILD, targets=["TestModelOverride"])
+
+
+def test_fprime_header_override(CONFIG_BUILD):
+    """Test that the config override works"""
+    cmake.assert_process_success(CONFIG_BUILD, targets=["TestHeaderOverride"])
+
+
+def test_fprime_library_override(CONFIG_BUILD):
+    """Test that the config override (from library) works"""
+    cmake.assert_process_success(CONFIG_BUILD, targets=["TestFPrimeLibraryOverride"])
+
+
+def test_library_override(CONFIG_BUILD):
+    """Test that the config override (of library) works"""
+    cmake.assert_process_success(CONFIG_BUILD, targets=["library_config"])
+
+
+def test_library_new_config(CONFIG_BUILD):
+    """Test that the new config (of library) works"""
+    cmake.assert_process_success(CONFIG_BUILD, targets=["TestLibraryNewConfig"])
+
+
+def test_library_bad_new_config(CONFIG_FAILED_NEW_FILE_BUILD):
+    """Test that the new config that accidentally overrides work works"""
+    with pytest.raises(AssertionError):
+        cmake.assert_process_success(CONFIG_FAILED_NEW_FILE_BUILD, targets=[])
+
+
+def test_library_bad_override_config(CONFIG_FAILED_OVERRIDE_BUILD):
+    """Test that the config that is not an override overrides work works"""
+    with pytest.raises(AssertionError):
+        cmake.assert_process_success(CONFIG_FAILED_OVERRIDE_BUILD, targets=[])
+</pre></div>
+</div>
+</section>
+<section id="test-feature-py">
+<h2><code class="docutils literal notranslate"><span class="pre">test_feature.py</span></code><a class="headerlink" href="#test-feature-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_feature.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>####
+# test_basic.py:
+#
+# Basic CMake tests.
+#
+####
+import json
+import platform
+
+from . import cmake
+from . import settings
+
+
+TOOLCHAIN_NAME = "generic-native"
+
+
+FEATURE_BUILD_RESULT = cmake.get_build(
+    "FEATURE_BUILD",
+    settings.DATA_DIR / "TestDeployment",
+    {
+        "FPRIME_FRAMEWORK_PATH": settings.REF_APP_PATH.parent,
+        "FPRIME_PROJECT_ROOT": settings.DATA_DIR,
+        "FPRIME_LIBRARY_LOCATIONS": ";".join(
+            [
+                str(settings.DATA_DIR / "test-fprime-library"),
+                str(settings.DATA_DIR / "test-fprime-library2"),
+            ]
+        ),
+        "CMAKE_TOOLCHAIN_FILE": str(
+            settings.DATA_DIR
+            / "test-fprime-library"
+            / "cmake"
+            / "toolchain"
+            / f"{TOOLCHAIN_NAME}.cmake"
+        ),
+        "FPRIME_PLATFORM": platform.system(),
+    },
+    make_targets=[
+        "TestDeployment",
+        "test",
+        "TestDeployment_test",
+        "TestLibrary_TestComponent_test",
+        "version",
+        "TestRelative",
+    ],
+)
+
+
+def test_feature_run(FEATURE_BUILD):
+    """Basic run test for feature build"""
+    cmake.assert_process_success(FEATURE_BUILD)
+
+
+def test_feature_framework(FEATURE_BUILD):
+    """Feature build check framework properly detected"""
+    cmake.assert_process_success(FEATURE_BUILD)
+    for module in settings.FRAMEWORK_MODULES + ["Svc_CmdDispatcher"]:
+        library_name = f"lib{module}.a"
+        output_path = FEATURE_BUILD["build"] / "lib" / TOOLCHAIN_NAME / library_name
+        assert output_path.exists(), f"Failed to locate {library_name} in build output"
+
+
+def test_feature_library(FEATURE_BUILD):
+    """Feature build check libraries properly detected"""
+    cmake.assert_process_success(FEATURE_BUILD)
+    modules = ["TestLibrary_TestComponent", "TestLibrary2_TestComponent"]
+    for module in modules:
+        library_name = f"lib{module}.a"
+        output_path = FEATURE_BUILD["build"] / "lib" / TOOLCHAIN_NAME / library_name
+        assert output_path.exists(), f"Failed to locate {library_name} in build output"
+
+
+def test_feature_deployment(FEATURE_BUILD):
+    """Feature build check deployment properly detected"""
+    cmake.assert_process_success(FEATURE_BUILD)
+    library_name = "TestDeployment"
+    output_path = FEATURE_BUILD["build"] / "bin" / TOOLCHAIN_NAME / library_name
+    assert output_path.exists(), f"Failed to locate {library_name} in build output"
+
+
+def test_feature_autocoder(FEATURE_BUILD):
+    """Feature build check deployment properly detected"""
+    cmake.assert_process_success(FEATURE_BUILD)
+    for output_file in ["test-ac-1", "test-ac-2"]:
+        output_path = FEATURE_BUILD["build"] / output_file
+        assert output_path.exists(), f"Failed to locate {output_file} in build output"
+
+
+def test_feature_targets(FEATURE_BUILD):
+    """Feature build check deployment properly detected"""
+    cmake.assert_process_success(FEATURE_BUILD)
+    for output_file in [
+        "global-test",
+        "deployment-test",
+        "TestLibrary_TestComponent-test",
+    ]:
+        output_path = FEATURE_BUILD["build"] / output_file
+        assert output_path.exists(), f"Failed to locate {output_file} in build output"
+
+
+def test_feature_version_info(FEATURE_BUILD):
+    """Build and assert version files validity"""
+    cmake.assert_process_success(FEATURE_BUILD)
+    version_hpp = FEATURE_BUILD["build"] / "versions" / "version.hpp"
+    version_json = FEATURE_BUILD["build"] / "versions" / "version.json"
+    assert version_hpp.exists(), "Failed to locate version.hpp in build output"
+    assert version_json.exists(), "Failed to locate version.json in build output"
+    versions_dict = json.loads(version_json.read_text())
+    for key in ["framework_version", "project_version", "library_versions"]:
+        assert key in versions_dict, f"Failed to locate key: {key} in version.json"
+    assert (
+        "test-fprime-library" in versions_dict["library_versions"]
+    ), "Library version missing "
+    assert (
+        "test-fprime-library2" in versions_dict["library_versions"]
+    ), "Library version missing"
+    assert (
+        versions_dict["library_versions"]["test-fprime-library"]
+        == versions_dict["framework_version"]
+    ), "Library version mismatch"
+    assert (
+        versions_dict["library_versions"]["test-fprime-library2"]
+        == versions_dict["framework_version"]
+    ), "Library version mismatch"
+
+
+def test_feature_installation(FEATURE_BUILD):
+    """Run reference and assert reference targets exit"""
+    cmake.assert_process_success(FEATURE_BUILD)
+    deployment_name = "TestDeployment"
+    for module in settings.FRAMEWORK_MODULES + [
+        "Svc_CmdDispatcher",
+        "TestLibrary_TestComponent",
+        "TestLibrary2_TestComponent",
+    ]:
+        library_name = f"lib{module}.a"
+        output_path = (
+            FEATURE_BUILD["install"]
+            / TOOLCHAIN_NAME
+            / deployment_name
+            / "lib"
+            / "static"
+            / library_name
+        )
+        assert output_path.exists(), f"Failed to locate {library_name} in build output"
+    output_path = (
+        FEATURE_BUILD["install"]
+        / TOOLCHAIN_NAME
+        / deployment_name
+        / "bin"
+        / deployment_name
+    )
+    assert output_path.exists(), "Failed to locate TestDeployment in build output"
+
+
+def test_sub_build(FEATURE_BUILD):
+    """Test that the sub buil process builds"""
+    output_paths = [
+        # Test that a file in the sub build exists
+        FEATURE_BUILD["build"] / f"sub-build-test-sub-build" / "sub-test",
+        # Test the sub build could "return" files to the primary build
+        FEATURE_BUILD["build"] / "sub-test",
+    ]
+    for output_path in output_paths:
+        assert output_path.exists(), "Failed to locate sub-build artifact"
+</pre></div>
+</div>
+</section>
+<section id="test-implementation-py">
+<h2><code class="docutils literal notranslate"><span class="pre">test_implementation.py</span></code><a class="headerlink" href="#test-implementation-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_implementation.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>####
+# test_basic.py:
+#
+# Basic CMake tests.
+#
+####
+import platform
+
+from . import cmake
+from . import settings
+
+
+_ = cmake.get_build(
+    "IMPLEMENTATION_TEST",
+    settings.DATA_DIR / "test-implementations" / "Deployment",
+    {
+        "FPRIME_FRAMEWORK_PATH": settings.REF_APP_PATH.parent,
+        "FPRIME_PROJECT_ROOT": settings.DATA_DIR / "test-implementations",
+        "FPRIME_LIBRARY_LOCATIONS": ";".join(
+            [
+                str(settings.DATA_DIR / "test-implementations" / "test-platforms"),
+            ]
+        ),
+    },
+    make_targets=["Deployment"],
+)
+
+
+def test_platform_implementation(IMPLEMENTATION_TEST):
+    """Check the platform-specified implementation was produced"""
+    cmake.assert_process_success(IMPLEMENTATION_TEST)
+
+
+def test_override_implementation(IMPLEMENTATION_TEST):
+    """Check the override-specified implementation was produced"""
+    cmake.assert_process_success(IMPLEMENTATION_TEST)
+
+
+def test_non_built_implementation(IMPLEMENTATION_TEST):
+    """Check the override target that wasn't use was not built along with the override platform target"""
+    cmake.assert_process_success(IMPLEMENTATION_TEST)
+</pre></div>
+</div>
+</section>
+<section id="test-ref-shared-py">
+<h2><code class="docutils literal notranslate"><span class="pre">test_ref_shared.py</span></code><a class="headerlink" href="#test-ref-shared-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_ref_shared.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>####
+# test_basic.py:
+#
+# Basic CMake tests.
+#
+####
+import platform
+import tempfile
+import json
+import pytest
+from pathlib import Path
+from . import cmake
+from . import settings
+
+
+if platform.system() == "Darwin":
+    pytestmark = pytest.mark.skip(reason="Shared modules are not supported on macOS")
+
+_ = cmake.get_build(
+    "REF_BUILD",
+    settings.REF_APP_PATH,
+    cmake_arguments={"BUILD_SHARED_LIBS": "ON"},
+    make_targets=["Ref"],
+    install_directory=tempfile.mkdtemp(),
+)
+MODULES = settings.FRAMEWORK_MODULES + settings.STANDARD_MODULES
+
+
+def test_ref_run(REF_BUILD):
+    """Basic run test for ref"""
+    cmake.assert_process_success(REF_BUILD)
+
+
+def test_ref_targets(REF_BUILD):
+    """Run reference and assert reference targets exit"""
+    cmake.assert_process_success(REF_BUILD)
+    for module in MODULES:
+        library_name = (
+            f"lib{module}{'.so' if platform.system() != 'Darwin' else '.dylib'}"
+        )
+        output_path = REF_BUILD["build"] / "lib" / platform.system() / library_name
+        assert output_path.exists(), f"Failed to locate {library_name} in build output"
+    output_path = REF_BUILD["build"] / "bin" / platform.system() / "Ref"
+    assert output_path.exists(), "Failed to locate Ref in build output"
+
+
+def test_ref_installation(REF_BUILD):
+    """Run reference and assert reference targets exit"""
+    cmake.assert_process_success(REF_BUILD)
+    for module in MODULES:
+        library_name = (
+            f"lib{module}{'.so' if platform.system() != 'Darwin' else '.dylib'}"
+        )
+        output_path = (
+            REF_BUILD["install"] / platform.system() / "Ref" / "lib" / library_name
+        )
+        assert output_path.exists(), f"Failed to locate {library_name} in build output"
+    output_path = REF_BUILD["install"] / platform.system() / "Ref" / "bin" / "Ref"
+    assert output_path.exists(), "Failed to locate Ref in build output"
+
+
+def test_ref_dictionary_json(REF_BUILD):
+    """Build Ref and assert JSON dictionary exists"""
+    cmake.assert_process_success(REF_BUILD)
+    output_path = (
+        REF_BUILD["install"]
+        / platform.system()
+        / "Ref"
+        / "dict"
+        / "RefTopologyDictionary.json"
+    )
+    assert output_path.exists(), "Failed to locate Ref JSON Dictionary in build output"
+    dict_metadata = json.loads(output_path.read_text()).get("metadata")
+    assert (
+        dict_metadata.get("projectVersion") is not None
+    ), "Project version missing in JSON Dictionary"
+    # For Ref, versions should match since it's the same Git repo
+    assert dict_metadata.get("frameworkVersion") == dict_metadata.get(
+        "projectVersion"
+    ), "Version mismatch in JSON Dictionary"
+</pre></div>
+</div>
+</section>
+<section id="test-symlink-py">
+<h2><code class="docutils literal notranslate"><span class="pre">test_symlink.py</span></code><a class="headerlink" href="#test-symlink-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_symlink.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>####
+# test_symlink.py:
+#
+# Test that a build from a directory that contains a symlink works correctly.
+#
+####
+import os
+import shutil
+import tempfile
+import pytest
+from pathlib import Path
+from . import cmake
+from . import settings
+
+
+SYMLINK_PATH = Path(tempfile.mkdtemp()) / "fprime-link"
+os.symlink(settings.REF_APP_PATH.parent, SYMLINK_PATH)
+
+
+_ = cmake.get_build(
+    "SYMLINKED_UT_BUILD",
+    SYMLINK_PATH / "Ref",
+    cmake_arguments={"BUILD_TESTING": "ON", "CMAKE_DEBUG_OUTPUT": "ON"},
+    make_targets=["Ref", "Ref_ut_exe"],
+    install_directory=tempfile.mkdtemp(),
+)
+
+
+@pytest.fixture(scope="session")
+def symlink_maker():
+    """Fixture for symlinked builds"""
+    yield None
+    shutil.rmtree(SYMLINK_PATH, ignore_errors=True)
+
+
+def test_unittest_run(SYMLINKED_UT_BUILD, symlink_maker):
+    """Basic run test for ref"""
+    cmake.assert_process_success(SYMLINKED_UT_BUILD, errors_ok=True)
+</pre></div>
+</div>
+</section>
+<section id="test-unittests-py">
+<h2><code class="docutils literal notranslate"><span class="pre">test_unittests.py</span></code><a class="headerlink" href="#test-unittests-py" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_unittests.py</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>####
+# test_basic.py:
+#
+# Basic CMake tests.
+#
+####
+import platform
+import tempfile
+from pathlib import Path
+from . import cmake
+from . import settings
+
+_ = cmake.get_build(
+    "UT_BUILD",
+    settings.REF_APP_PATH,
+    cmake_arguments={"BUILD_TESTING": "ON"},
+    make_targets=["all", "Ref", "Ref_ut_exe"],
+    install_directory=tempfile.mkdtemp(),
+)
+MODULES = settings.FRAMEWORK_MODULES + settings.STANDARD_MODULES
+
+UNIT_TESTS = [
+    "CFDP_Checksum_ut_exe",
+    "Drv_TcpClient_ut_exe",
+    "Drv_TcpServer_ut_exe",
+    "Drv_Udp_ut_exe",
+    "Fw_Buffer_ut_exe",
+    "Fw_FilePacket_ut_exe",
+    "Fw_Log_ut_exe",
+    "Fw_SerializableFile_ut_exe",
+    "Fw_Time_ut_exe",
+    "Fw_Tlm_ut_exe",
+    "Fw_Types_ut_exe",
+    "Os_ut_exe",
+    "Ref_SignalGen_ut_exe",
+    "Svc_EventManager_ut_exe",
+    "Svc_ActiveRateGroup_ut_exe",
+    "Svc_ActiveTextLogger_ut_exe",
+    "Svc_AssertFatalAdapter_ut_exe",
+    "Svc_BufferLogger_ut_exe",
+    "Svc_BufferManager_ut_exe",
+    "Svc_CmdDispatcher_ut_exe",
+    "Svc_CmdSequencer_ut_exe",
+    "Svc_ComLogger_ut_exe",
+    "Svc_ComSplitter_ut_exe",
+    "Svc_FileDownlink_ut_exe",
+    "Svc_FileManager_ut_exe",
+    "Svc_FileUplink_ut_exe",
+    "Svc_FprimeFramer_ut_exe",
+    "Svc_GenericHub_ut_exe",
+    "Svc_Health_ut_exe",
+    "Svc_PosixTime_ut_exe",
+    "Svc_LinuxTimer_ut_exe",
+    "Svc_PolyDb_ut_exe",
+    "Svc_PrmDb_ut_exe",
+    "Svc_RateGroupDriver_ut_exe",
+    "Svc_StaticMemory_ut_exe",
+    "Svc_TlmChan_ut_exe",
+    "Svc_TlmPacketizer_ut_exe",
+    "Types_Circular_Buffer_ut_exe",
+    "Utils_ut_exe",
+]
+
+
+def test_unittest_run(UT_BUILD):
+    """Basic run test for ref"""
+    cmake.assert_process_success(UT_BUILD, errors_ok=True)
+
+
+def test_unittest_targets(UT_BUILD):
+    """Run reference and assert reference targets exit"""
+    cmake.assert_process_success(UT_BUILD, errors_ok=True)
+    for module in MODULES:
+        library_name = f"lib{module}.a"
+        output_path = UT_BUILD["build"] / "lib" / platform.system() / library_name
+        assert output_path.exists(), f"Failed to locate {library_name} in build output"
+    for executable in ["Ref"] + UNIT_TESTS:
+        output_path = UT_BUILD["build"] / "bin" / platform.system() / executable
+        assert output_path.exists(), "Failed to locate Ref in build output"
+
+
+def test_unittest_installation(UT_BUILD):
+    """Run reference and assert reference targets exit"""
+    cmake.assert_process_success(UT_BUILD, errors_ok=True)
+    for module in MODULES:
+        library_name = f"lib{module}.a"
+        output_path = (
+            UT_BUILD["install"]
+            / platform.system()
+            / "Ref"
+            / "lib"
+            / "static"
+            / library_name
+        )
+        assert output_path.exists(), f"Failed to locate {library_name} in build output"
+    output_path = UT_BUILD["install"] / platform.system() / "Ref" / "bin" / "Ref"
+    assert output_path.exists(), "Failed to locate Ref in build output"
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../data/TestDeployment/TestTargetAutocoder/index.html" class="btn btn-neutral float-left" title="TestTargetAutocoder" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../toolchain/index.html" class="btn btn-neutral float-right" title="toolchain" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

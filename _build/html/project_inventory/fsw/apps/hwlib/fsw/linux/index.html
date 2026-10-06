@@ -1,0 +1,2748 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linux &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="mission_inc" href="../mission_inc/index.html" />
+    <link rel="prev" title="fsw" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">apps</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">hwlib</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">fsw</a></li>
+      <li class="breadcrumb-item active">linux</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/fsw/apps/hwlib/fsw/linux/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="linux">
+<h1>linux<a class="headerlink" href="#linux" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/hwlib/fsw/linux/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="libcan-c">
+<h2><code class="docutils literal notranslate"><span class="pre">libcan.c</span></code><a class="headerlink" href="#libcan-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/hwlib/fsw/linux/libcan.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2019 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&amp;V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "libcan.h"
+
+/* The `libsocketcan` library wraps many of the netlink operations to control a SocketCAN interface
+ * Documentation here: https://lalten.github.io/libsocketcan/Documentation/html/group__extern.html */
+
+// Bring CAN network interface
+int32_t can_init_dev(can_info_t* device) 
+{
+  int retVal;
+  struct timeval tv;
+  char devname[10];
+
+  // Get device name from handle
+  snprintf(devname, 10, "can%d", device-&gt;handle);
+
+  retVal = can_set_bitrate(devname, device-&gt;bitrate);
+  if (retVal &lt; 0) 
+  {
+    OS_printf("Errno: %d \n", errno);
+    OS_printf("\n");
+    OS_printf("Try the following before running again: \n");
+    OS_printf("  modprobe -r xilinx_can \n");
+    OS_printf("  modprobe xilinx_can \n");
+    OS_printf("\n");
+    return CAN_SET_BITRATE_ERR;
+  }
+
+  /* Running this function on the zybo spits out "RTNETLINK answers: Operation not supported" */
+  retVal = can_set_modes(device);
+  if (retVal &lt; 0) 
+  {
+    return CAN_SET_MODES_ERR;
+  }
+
+  /* TODO: Add option for filters */
+
+  retVal = can_do_start(devname);
+  if (retVal &lt; 0) 
+  {
+    return CAN_UP_ERR;
+  }
+
+  device-&gt;sock = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+  if (device-&gt;sock &lt; 0) 
+  { 
+    return CAN_SOCK_OPEN_ERR; 
+  }
+
+  strcpy(device-&gt;ifr.ifr_name, devname);
+
+  retVal = ioctl(device-&gt;sock, SIOCGIFINDEX, &amp;device-&gt;ifr);
+  if (retVal &lt; 0) 
+  { 
+    return CAN_SOCK_FLAGSET_ERR; 
+  }
+  
+  device-&gt;addr.can_family  = AF_CAN;
+  device-&gt;addr.can_ifindex = device-&gt;ifr.ifr_ifindex;
+
+  if (bind(device-&gt;sock, (struct sockaddr*)&amp;device-&gt;addr, sizeof(device-&gt;addr)) &lt; 0) 
+  {
+    return CAN_SOCK_BIND_ERR;
+  }
+  
+  // Set timeouts
+  tv.tv_sec = device-&gt;second_timeout;
+  tv.tv_usec = device-&gt;microsecond_timeout;
+  retVal = setsockopt(device-&gt;sock, SOL_SOCKET, SO_RCVTIMEO, &amp;tv, sizeof(tv));
+  if(retVal &lt; 0) 
+  {
+    return CAN_SOCK_SETOPT_ERR;
+  }
+
+  // Set to non-blocking
+	fcntl(device-&gt;sock, F_SETFL, O_NONBLOCK);
+
+  device-&gt;isUp = CAN_INTERFACE_UP;
+
+  return CAN_SUCCESS;
+}
+
+// Call the `libsocketcan` function to set each CAN mode on/off
+int32_t can_set_modes(can_info_t* device) 
+{
+  struct can_ctrlmode cm;
+  memset(&amp;cm, 0, sizeof(cm));
+  char devname[10];
+
+  // Get device name from handle
+  snprintf(devname, 10, "can%d", device-&gt;handle);
+
+  cm.mask = CAN_CTRLMODE_LOOPBACK     | // Remaining flags not supported
+            //CAN_CTRLMODE_LISTENONLY     | 
+            //CAN_CTRLMODE_3_SAMPLES      | 
+            //CAN_CTRLMODE_ONE_SHOT       | 
+            CAN_CTRLMODE_BERR_REPORTING;
+            //CAN_CTRLMODE_FD             | 
+            //CAN_CTRLMODE_PRESUME_ACK;
+
+  cm.flags = (device-&gt;presumeAck &lt;&lt; 6)     | 
+             (device-&gt;fd &lt;&lt; 5)             | 
+             (device-&gt;berrReporting &lt;&lt; 4)  | 
+             (device-&gt;oneShot &lt;&lt; 3)        | 
+             (device-&gt;tripleSampling &lt;&lt; 2) | 
+             (device-&gt;listenOnly &lt;&lt; 1)     | 
+              device-&gt;loopback;
+
+  int retVal = can_set_ctrlmode(devname, &amp;cm);
+
+  if (retVal &lt; 0) 
+  {
+    return CAN_SET_MODES_ERR;
+  }
+
+  return CAN_SUCCESS;
+}
+
+// Write a can_frame  from `device-&gt;tx_Frame` to CAN bus from SocketCAN socket specified by `device`
+int32_t can_write(can_info_t* device) 
+{  
+  int ret;
+
+  // If can_id is &gt; 11 bits, means it is extended frame format (EFF) and need to set bit 31 of the can_id field to signal EFF
+  if (device-&gt;tx_frame.can_id &gt; 0x7FF) 
+  {
+    device-&gt;tx_frame.can_id |= 1 &lt;&lt; 31;
+  }
+
+  ret = write(device-&gt;sock, &amp;device-&gt;tx_frame, sizeof(struct can_frame));
+  if (ret &lt; 0) 
+  { 
+    ret = CAN_WRITE_ERR; 
+  }
+  else
+  {
+    ret = CAN_SUCCESS;
+  }
+
+  #ifdef LIBCAN_VERBOSE
+    printf("can_write ret = %d \n", ret);
+  #endif
+
+  return ret;
+}
+
+// Read a can_frame from SocketCAN interface specified by `device` into `device-&gt;rx_frame`
+// Does a nonblocking read call
+int32_t can_read(can_info_t* device) 
+{		
+  int ret;
+
+  ret = read(device-&gt;sock, &amp;device-&gt;rx_frame, sizeof(struct can_frame));
+  if(ret &lt; 0) 
+  {
+    if(errno == 11) 
+    {
+      ret = CAN_READ_TIMEOUT_ERR;
+    }
+    else 
+    {
+      ret = CAN_READ_ERR;
+    }
+  }
+
+  if (ret == 16)
+  {
+    ret = CAN_SUCCESS;
+  }
+
+  #ifdef LIBCAN_VERBOSE
+    OS_printf("can_read ret = %d \n", ret);
+  #endif
+
+  return ret;
+}
+
+// Bring CAN network interface down
+int32_t can_close_device(can_info_t* device) 
+{
+  int retVal;
+  char devname[10];
+
+  // Get device name from handle
+  snprintf(devname, 10, "can%d", device-&gt;handle);
+  
+  close(device-&gt;sock);
+
+  retVal = can_do_stop(devname);
+  if (retVal &lt; 0) 
+  {
+    return CAN_DOWN_ERR;
+  }
+  device-&gt;isUp = CAN_INTERFACE_DOWN;
+
+  return CAN_SUCCESS;
+}
+
+// Perform non-blocking can transaction
+int32_t can_master_transaction(can_info_t* device) 
+{
+  int32_t status;
+
+  status = can_write(device);
+  if (status != CAN_SUCCESS)
+  {
+      return status;
+  }
+
+  usleep(device-&gt;xfer_us_delay);
+
+  status = can_read(device);
+  if (status != CAN_SUCCESS)
+  {
+      return status;
+  }
+
+  #ifdef LIBCAN_VERBOSE
+    uint8_t i;
+    OS_printf("can_master_transaction: \n");
+    OS_printf("  can_id = 0x%08x \t tx: 0x", device-&gt;tx_frame.can_id);
+    for (i = 0; i &lt; device-&gt;tx_frame.can_dlc; i++)
+    {
+      OS_printf("%02x ", device-&gt;tx_frame.data[i]);
+    }
+    OS_printf("\n");
+    OS_printf("  can_id = 0x%08x \t rx: 0x", device-&gt;rx_frame.can_id);
+    for (i = 0; i &lt; device-&gt;rx_frame.can_dlc; i++)
+    {
+      OS_printf("%02x ", device-&gt;rx_frame.data[i]);
+    }
+    OS_printf("\n");
+  #endif
+
+  return status;
+}
+</pre></div>
+</div>
+</section>
+<section id="libgpio-c">
+<h2><code class="docutils literal notranslate"><span class="pre">libgpio.c</span></code><a class="headerlink" href="#libgpio-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/hwlib/fsw/linux/libgpio.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2019 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&amp;V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "libgpio.h"
+
+int32_t gpio_init(gpio_info_t* device) 
+{    
+    char buffer[128];
+    int  bytes_written;
+    int  write_size;
+    int  fd;
+
+    snprintf(buffer, 128, "/sys/class/gpio/gpio%d/direction", device-&gt;pin);
+
+    // Check if pin already exported
+    if (access(buffer, W_OK) &lt; 0)
+    {   // File does not exist
+        fd = open("/sys/class/gpio/export", O_WRONLY);
+        if (fd &lt; 0) 
+        {
+            return GPIO_FD_OPEN_ERR;
+        }
+        write_size = snprintf(buffer, 128, "%d", device-&gt;pin);
+        bytes_written = write(fd, buffer, write_size);
+        if (bytes_written &lt; write_size) 
+        {
+            return GPIO_WRITE_ERR;
+        }
+        close(fd);
+    }
+
+    // Set direction
+    snprintf(buffer, 128, "/sys/class/gpio/gpio%d/direction", device-&gt;pin);
+    fd = open(buffer, O_WRONLY);
+    if (fd &lt; 0) 
+    {
+        return GPIO_FD_OPEN_ERR;
+    }
+
+    if (device-&gt;direction == GPIO_INPUT)
+    {
+        snprintf(buffer, 128, "IN");
+        bytes_written = write(fd, buffer, 4);
+    }
+    else
+    {
+        snprintf(buffer, 128, "OUT");
+        bytes_written = write(fd, buffer, 4);
+    }
+    close(fd);
+
+    // Set open
+    device-&gt;isOpen = GPIO_OPEN;
+    return GPIO_SUCCESS;
+}
+
+int32_t gpio_read(gpio_info_t* device, uint8_t* value)
+{
+    int32_t status = GPIO_SUCCESS;
+    char buffer[128];
+    char readValue[3];
+    int fd;
+
+    if(device-&gt;isOpen != GPIO_OPEN) 
+    {
+        status = GPIO_READ_ERR;
+        return status;
+    }
+
+    snprintf(buffer, 128, "/sys/class/gpio/gpio%d/value", device-&gt;pin);
+    fd = open(buffer, O_RDONLY);
+    if (fd &lt; 0) 
+    {
+        status = GPIO_FD_OPEN_ERR;
+        return status;
+    }
+    if (read(fd, &amp;readValue, 3) &lt; 0) 
+    {
+        status = GPIO_READ_ERR;
+        return status;
+    }
+
+    //convert from ASCII to decimal
+    if(readValue[0] == '0') *value = 0;
+    else if(readValue[0] == '1') *value = 1;
+    else {
+        *value = 0;
+    }
+
+    close(fd);
+    return status;
+}
+
+int32_t gpio_write(gpio_info_t* device, uint8_t value)
+{
+    char buffer[128];
+    char charVal;
+    int fd;
+
+    if (value == 1) 
+    {
+        charVal = '1';
+    }
+    else 
+    {
+        charVal = '0';
+    }
+
+    snprintf(buffer, 128, "/sys/class/gpio/gpio%d/value", device-&gt;pin);
+    fd = open(buffer, O_WRONLY);
+    if (fd &lt; 0) 
+    {
+         return GPIO_FD_OPEN_ERR;
+    }
+
+    if (write(fd, &amp;charVal, 1) != 1) 
+    {
+        return GPIO_WRITE_ERR;
+    }
+
+    close(fd);
+    return GPIO_SUCCESS;
+}
+
+int32_t gpio_close(gpio_info_t* device)
+{
+    char buffer[128];
+    int  bytes_written;
+    int  write_size;
+    int  fd;
+    
+    if (device-&gt;isOpen == GPIO_OPEN)
+    {   // Unexport pin
+        fd = open("/sys/class/gpio/unexport", O_WRONLY);
+        if (fd &lt; 0) 
+        {
+            return GPIO_FD_OPEN_ERR;
+        }
+        write_size = snprintf(buffer, 128, "%d", device-&gt;pin);
+        bytes_written = write(fd, buffer, write_size);
+        if (bytes_written &lt; write_size) 
+        {
+            return GPIO_WRITE_ERR;
+        }
+        close(fd);
+        device-&gt;isOpen = GPIO_CLOSED;
+    }
+    return GPIO_SUCCESS;
+}
+</pre></div>
+</div>
+</section>
+<section id="libi2c-c">
+<h2><code class="docutils literal notranslate"><span class="pre">libi2c.c</span></code><a class="headerlink" href="#libi2c-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/hwlib/fsw/linux/libi2c.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2018 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&amp;V
+ivv-itc@lists.nasa.gov
+*/
+
+#include &lt;errno.h&gt;
+#include &lt;string.h&gt;
+
+#include "libi2c.h"
+
+/* Call to configure a specific i2c device from /dev
+** i2c_bus- struct with bus configuration
+** speed  - currently unused
+*/
+int32_t i2c_master_init(i2c_bus_info_t* device)
+{
+    char devname[20];
+    int32_t status = I2C_SUCCESS;
+
+    snprintf(devname, 19, "/dev/i2c-%d", device-&gt;handle);
+    device-&gt;handle = open(devname, O_RDWR);
+    if (device-&gt;handle &lt; 0)
+    {
+        printf("i2c bus open failed for handle = %d, %s\n", device-&gt;handle, strerror(errno));
+        status = I2C_ERROR;
+        device-&gt;isOpen = I2C_CLOSED;
+    }
+    else
+    {
+        device-&gt;isOpen = I2C_OPEN;
+        printf("i2c bus open passed for handle = %d\n", device-&gt;handle);
+    }
+    return status;
+}
+
+int32_t i2c_master_transaction(i2c_bus_info_t* device, uint8_t addr, void * txbuf, uint8_t txlen, void * rxbuf, uint8_t rxlen, uint16_t timeout)
+{
+    int32_t status = I2C_SUCCESS;
+    int32_t resp;
+
+    /* Set I2C slave address */
+    if (ioctl(device-&gt;handle, I2C_SLAVE, addr) &lt; 0)
+    {
+        printf("i2c-%d setting slave address = 0x%X FAILED, %s\n", device-&gt;handle, addr, strerror(errno));
+        status = I2C_ERROR;
+        return status;
+    }
+
+    /* Perform write if needed */
+    if (txlen &gt; 0 )
+    {
+        resp = write(device-&gt;handle, txbuf, txlen);
+        if (resp != txlen)
+        {
+            printf("i2c-%d write to address 0x%X FAILED, [%u] %s\n", device-&gt;handle, addr, errno, strerror(errno));
+            status = I2C_ERROR;
+        }
+    }
+    /* Perform read if needed */
+    if (rxlen &gt; 0 )
+    {
+        resp = read(device-&gt;handle, rxbuf, rxlen);
+        if (resp != rxlen)
+        {
+            printf("i2c-%d read from address 0x%X FAILED, %s\n", device-&gt;handle, addr, strerror(errno));
+            status = I2C_ERROR;
+        }
+    }
+
+    return status;
+}
+
+int32_t i2c_read_transaction(i2c_bus_info_t* device, uint8_t addr, void * rxbuf, uint8_t rxlen, uint8_t timeout)
+{
+    int32_t resp;
+    int32_t status = I2C_SUCCESS;
+
+    /* Set I2C slave address */
+    if (ioctl(device-&gt;handle, I2C_SLAVE, addr) &lt; 0)
+    {
+        printf("i2c-%d setting slave address = 0x%X FAILED, %s\n", device-&gt;handle, addr, strerror(errno));
+        status = I2C_ERROR;
+        return status;
+    }
+
+    resp = read(device-&gt;handle, rxbuf, rxlen); //&lt;-- ACK would need to go in here
+    if (resp != rxlen)
+    {
+        printf("i2c-%d read from address 0x%X FAILED, %s\n", device-&gt;handle, addr, strerror(errno));
+        status = I2C_ERROR;
+    }
+
+    return status;
+}
+
+int32_t i2c_write_transaction(i2c_bus_info_t* device, uint8_t addr, void * txbuf, uint8_t txlen, uint8_t timeout)
+{
+    int32_t resp;
+    int32_t status = I2C_SUCCESS;
+
+    /* Set I2C slave address */
+    if (ioctl(device-&gt;handle, I2C_SLAVE, addr) &lt; 0)
+    {
+        printf("i2c-%d setting slave address = 0x%X FAILED, %s\n", device-&gt;handle, addr, strerror(errno));
+        status = I2C_ERROR;
+        return status;
+    }
+
+    resp = write(device-&gt;handle, txbuf, txlen);
+    if (resp != txlen)
+    {
+        printf("i2c-%d write from address 0x%X FAILED, %s\n", device-&gt;handle, addr, strerror(errno));
+        status = I2C_ERROR;
+    }
+
+    return status;
+}
+
+int32_t i2c_multiple_transaction(i2c_bus_info_t* device, uint8_t addr, struct i2c_rdwr_ioctl_data* rdwr_data, uint16_t timeout)
+{
+    /* Do combined read/write transaction without stop (simply restarts) in between. */
+    int32_t status = I2C_SUCCESS;
+
+    /* Set I2C slave address */
+    if (ioctl(device-&gt;handle, I2C_SLAVE, addr) &lt; 0)
+    {
+        printf("i2c-%d setting slave address = 0x%X FAILED, %s\n", device-&gt;handle, addr, strerror(errno));
+        status = I2C_ERROR;
+        return status;
+    }
+
+    /* Make the ICOTL call */
+    if (ioctl(device-&gt;handle, I2C_RDWR, rdwr_data) &lt; 0)
+    {
+        printf("i2c-%d multple transaction error = 0x%X FAILED, %s\n", device-&gt;handle, addr, strerror(errno));
+        status = I2C_ERROR;
+        return status;
+    }
+
+    return status;
+}
+</pre></div>
+</div>
+</section>
+<section id="libmem-c">
+<h2><code class="docutils literal notranslate"><span class="pre">libmem.c</span></code><a class="headerlink" href="#libmem-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/hwlib/fsw/linux/libmem.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#include &lt;sys/mman.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;string.h&gt;
+#include "libmem.h"
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * Xil_MMAP() - Map physical address to userspace using mmap intermediary with /dev/mem. 
+ *              MMAP creates userspace intermediary buffers to other memory locations. MMAP users can write/read 
+ *              to/from the intermediaries and MMAP can sync changes to the buffers with the memory they are mapped
+ *              to. Anything mapped by MMAP must be page aligned. This function calculates the page offset of the
+ *              requested address and then creates mapped page buffers using mmap that users may interface to. 
+ *
+ * Inputs:      _off_t address: Requested address
+ *              size_t length:  Length of memory request
+ *
+ * Outputs:     returns void *: Address offset into mapped page. Corresponds to requested physical address. 
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void *Xil_MMAP(__off_t address, size_t length){
+	size_t 	pagesize    = sysconf(_SC_PAGE_SIZE); 
+	__off_t	page_base   = (address / pagesize) * pagesize; 
+	__off_t	page_offset = address - page_base; 
+	unsigned char *sysaddr; 
+	int fd, error;  
+
+	if((fd = open("/dev/mem", O_RDWR | O_SYNC)) &lt; 0)
+		return NULL; 
+
+	if((sysaddr = mmap(NULL, page_offset + length, PROT_READ | PROT_WRITE, MAP_SHARED, fd, page_base)) == MAP_FAILED){
+        error = errno; 
+        OS_printf("MMAP ERROR = %d\n", error); 
+		sysaddr = NULL; 
+    }
+	close(fd); 
+
+	return sysaddr + page_offset; 
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *  
+ * Xil_MMAP_close() -   Sync page buffers and unmap previously mapped memory address with MMAP.
+ *                      Mapped intermediary buffers must be freed since they are dynamically allocated with MMAP. 
+ *                      The kernel periodically syncs mapped buffer changes. This should be done explicitly prior
+ *                      to close however just to make sure. The msync() function does this. 
+ *                      TODO: Normally the flag MS_SYNC given to msync tells it to wait for completion of the sync
+ *                      before moving forward. This is currently broken and results in msync returning EINVAL. As
+ *                      an alternative, we're just waiting explicitly for it to finish. 
+ *  
+ * Inputs:              __off_t shared_addr:    Mapped buffer address previously returned by MMAP
+ *                      __off_t address:        Physical address previously mapped by MMAP 
+ *                      size_t length:          Data length previously mapped by MMAP
+ *                      int read:               Whether this buffer was used for writing
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void Xil_MMAP_close(__off_t shared_addr, __off_t address, size_t length, int read){
+	size_t 	pagesize    = sysconf(_SC_PAGE_SIZE); 
+	__off_t	page_base   = (address / pagesize) * pagesize; 
+	__off_t	page_offset = address - page_base; 
+    int     error; 
+
+    if(!read){
+        if(msync((void *)(shared_addr - page_offset),  page_offset + length, MS_ASYNC) != 0){
+            error = errno; 
+            OS_printf("MSYNC ERROR = %d\n", error); 
+        }
+        usleep(10000); 
+    }
+
+    if(munmap((void *)(shared_addr - page_offset), page_offset + length)){
+        error = errno; 
+        OS_printf("MUNMAP ERROR = %d\n", error); 
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *  
+ * Xil_MMAP_Out32() -   Write 32-bit register from userspace. 
+ *
+ * Inputs:              unsigned int Addr:      Register address to write to
+ *                      unsigned int Value:     32-bit value to write 
+ * 
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void Xil_MMAP_Out32(unsigned int Addr, unsigned int Value){
+	volatile unsigned int   *LocalAddr;
+
+	if((LocalAddr = Xil_MMAP(Addr, 4)) == NULL)
+		return; 
+	
+    *LocalAddr = Value; 
+
+    Xil_MMAP_close((unsigned long int)LocalAddr, Addr, 4, 0); 
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *  
+ * Xil_MMAP_In32() -    Read 32-bit register from userspace.
+ *
+ * Inputs:              unsigned int Addr:      Register address to read from
+ * Outputs:             returns unsigned int:   Data from register 
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+unsigned int Xil_MMAP_In32(unsigned int Addr){
+	volatile unsigned int  *LocalAddr;
+    unsigned int           res; 
+
+	if((LocalAddr = Xil_MMAP(Addr, 4)) == NULL)
+		return -1; 
+
+    res = *LocalAddr; 
+
+    Xil_MMAP_close((unsigned long int)LocalAddr, Addr, 4, 1); 
+    return res; 
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *  
+ * devmem_write() - Higher-level function to write physical memory from user-space. 
+ *
+ * Inputs:          unsigned int addr:  Address to write to
+ *                  unsigned char *in:  Input data to write
+ *                  int length:         Length of input data
+ *
+ * Outputs:         returns int:        Length of data written on success, -1 on failure
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t devmem_write(uint32_t addr, uint8_t *in, int32_t length){
+	volatile unsigned char *LocalAddr;
+    int                     byte;  
+
+	if((LocalAddr = Xil_MMAP(addr, length)) == NULL)
+		return -1;  
+
+    for(byte = 0; byte &lt; length; byte++)
+        LocalAddr[byte] = in[byte]; 
+
+    Xil_MMAP_close((unsigned long int)LocalAddr, addr, length, 0); 
+
+    return length; 
+}
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *  
+ * devmem_read() -  Higher-level function to read physical memory from user-space. 
+ *
+ * Inputs:          unsigned int addr:  Address to read from
+ *                  unsigned char *out: Output buffer to read into
+ *                  int length:         Length of data to read
+ *
+ * Outputs:         returns int:        Length of data read on success, -1 on failure  
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t devmem_read(uint32_t addr, uint8_t *out, int32_t length){
+	volatile unsigned char *LocalAddr;
+    int                     byte;
+
+	if((LocalAddr = Xil_MMAP(addr, length)) == NULL)
+		return -1;  
+
+    for(byte = 0; byte &lt; length; byte++)
+        out[byte] = LocalAddr[byte]; 
+
+    Xil_MMAP_close((unsigned long int)LocalAddr, addr, length, 1); 
+
+    return length; 
+}
+</pre></div>
+</div>
+</section>
+<section id="libsocket-c">
+<h2><code class="docutils literal notranslate"><span class="pre">libsocket.c</span></code><a class="headerlink" href="#libsocket-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/hwlib/fsw/linux/libsocket.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#include "libsocket.h"
+
+#include &lt;sys/socket.h&gt;
+#include &lt;arpa/inet.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;errno.h&gt;
+
+// Creates an endpoint for communication
+// Binds stream, server sockets to localhost and port number
+//
+// Inputs:
+//      socket_info-&gt;address_family
+//      socket_info-&gt;type
+//      socket_info-&gt;port_num (used for stream sockets)
+//      socket_info-&gt;block
+//
+// Outputs:
+//      socket_info-&gt;sockfd
+//      socket_info-&gt;created
+//      socket_info-&gt;bound  
+int32_t socket_create(socket_info_t* socket_info)
+{
+    int ret;
+    int type;
+    int address_family;
+    int protocol;
+    struct sockaddr_in sockaddr;
+    int flags;
+    int optval;
+    socklen_t optlen;
+    int32_t status;
+
+    status = SOCKET_SUCCESS;
+
+    // Set the socket address family
+    if(socket_info-&gt;address_family==ip_ver_4)
+    {
+        address_family=AF_INET; // IP version 4
+    }
+    else if(socket_info-&gt;address_family==ip_ver_6)
+    {
+        address_family=AF_INET6; // IP version 6
+    }
+    else
+    {
+        status = SOCKET_CREATE_ERR;
+        return status;        
+    }
+
+    // Set the socket type 
+    if(socket_info-&gt;type==stream)
+    {
+        type=SOCK_STREAM; // Connection based
+    }
+    else if(socket_info-&gt;type==dgram)
+    {
+        type=SOCK_DGRAM; // Connectionless
+    }
+    else
+    {
+        status = SOCKET_CREATE_ERR;
+        return status;        
+    }
+
+    // Set the socket protocol
+    protocol = IPPROTO_IP; // IP protocol
+
+    // Create the socket
+    ret = socket(address_family, type, protocol);
+    if(ret == -1)
+    {
+        status = SOCKET_CREATE_ERR;
+        return status;
+    }
+
+    // Assign values to the socket_info structure 
+    socket_info-&gt;sockfd = ret;
+    socket_info-&gt;created = true;
+    OS_printf("socket_info-&gt;sockfd = %d\n",socket_info-&gt;sockfd);
+    OS_printf("socket_info-&gt;created = %d\n",socket_info-&gt;created);
+
+    // Bind server sockets to localhost and port number
+    if(socket_info-&gt;category==server || socket_info-&gt;type==dgram)
+    {
+        // Prepare the sockaddr_in structure
+        sockaddr.sin_family = address_family;
+        sockaddr.sin_addr.s_addr = inet_addr(socket_info-&gt;ip_address);
+        sockaddr.sin_port = htons(socket_info-&gt;port_num);       
+
+        // Bind the socket 
+        ret = bind(socket_info-&gt;sockfd,(struct sockaddr *)&amp;sockaddr , sizeof(sockaddr));
+        if(ret != 0)
+        {
+            status = SOCKET_BIND_ERR;
+            return status;
+        }  
+
+        // Assign values to the socket_info structure
+        socket_info-&gt;bound = true;
+        OS_printf("socket_info-&gt;bound = %d\n",socket_info-&gt;bound);
+    }
+
+    // Make socket non-blocking?
+    if(socket_info-&gt;block==false)
+    {
+        flags = fcntl(socket_info-&gt;sockfd, F_GETFL, 0);
+        fcntl(socket_info-&gt;sockfd, F_SETFL, flags | O_NONBLOCK);
+    }
+
+    // Turn keep alive on?
+    if(socket_info-&gt;keep_alive==true)
+    {
+        optval = 1;
+        optlen = sizeof(optval);
+        setsockopt(socket_info-&gt;sockfd, SOL_SOCKET, SO_KEEPALIVE, &amp;optval, optlen);      
+    }
+
+    return status;
+}
+
+// Listens on a connection on a socket
+//
+// Inputs:
+//      socket_info-&gt;bound
+//      socket_info-&gt;sockfd
+//
+// Outputs:
+//      socket_info-&gt;listening
+int32_t socket_listen(socket_info_t* socket_info)
+{
+    int ret;
+    int pending_connections_queue_size;
+    int32_t status;
+
+    status = SOCKET_SUCCESS;
+    pending_connections_queue_size = 5;
+    
+    // Only listen on a stream socket that has been bound
+    if( (!socket_info-&gt;type==stream)||(!socket_info-&gt;bound) )
+    {
+        status = SOCKET_LISTEN_ERR;
+        return status;
+    }
+
+    // Listen on the socket
+    ret = listen(socket_info-&gt;sockfd, pending_connections_queue_size);
+    if(ret != 0)
+    {
+        status = SOCKET_LISTEN_ERR;
+        return status;
+    }  
+
+    // Assign values to the socket_info structure
+    socket_info-&gt;listening = true;
+    OS_printf("socket_info-&gt;listening = %d\n",socket_info-&gt;listening);
+
+    return status;
+}
+
+// Accepts a connection on a socket
+//
+// Inputs:
+//      socket_info-&gt;listening
+//      socket_info-&gt;sockfd
+//
+// Outputs:
+//      socket_info-&gt;connected
+//      socket_info-&gt;sockfd
+int32_t socket_accept(socket_info_t* socket_info)
+{
+    int c;
+    int ret;
+    struct sockaddr_in client;
+    int32_t status;
+
+    status = SOCKET_SUCCESS;
+
+    // Only accept connections on a socket that is in a listening state
+    if(socket_info-&gt;listening==false)
+    {
+		status = SOCKET_ACCEPT_ERR;
+        return status;        
+    }
+
+    // Accept incoming connection 
+    c = sizeof(struct sockaddr_in);
+    ret = accept(socket_info-&gt;sockfd, (struct sockaddr *)&amp;client, (socklen_t*)&amp;c);
+	if (ret == -1)
+	{
+        // Handle non-blocking sockets
+        if( (socket_info-&gt;block==false) &amp;&amp; (errno==EAGAIN) )
+        {
+		    status = SOCKET_TRY_AGAIN;
+            return status;
+        }   
+        if( (socket_info-&gt;block==false) &amp;&amp; (errno==EWOULDBLOCK) )
+        {
+		    status = SOCKET_TRY_AGAIN;
+            return status;
+        }          
+		status = SOCKET_ACCEPT_ERR;
+        return status;
+	}
+
+    // Assign values to the socket_info structure
+    socket_info-&gt;sockfd = ret;
+    socket_info-&gt;connected = true;
+    OS_printf("socket_info-&gt;sockfd = %d\n",socket_info-&gt;sockfd);
+    OS_printf("socket_info-&gt;connected = %d\n",socket_info-&gt;connected);
+
+    return status;
+} 
+
+// Initiates a connection to a remote ip address and port number
+//
+// Inputs:
+//      socket_info-&gt;created
+//      socket_info-&gt;category
+//      socket_info-&gt;address_family
+//      socket_info-&gt;sockfd
+//      remote_ip_address (the remote ip address)
+//      remote_port_num (the remote port number)
+//
+// Outputs:
+//      socket_info-&gt;connected
+int32_t socket_connect(socket_info_t* socket_info, char* remote_ip_address, int remote_port_num)
+{
+    int ret;
+    int address_family;
+    struct sockaddr_in server;
+    int32_t status;
+    int error_num;
+
+    status = SOCKET_SUCCESS;
+
+    // Only make outbound connections on client sockets that have been created
+    if(  (socket_info-&gt;category!=client)||(!socket_info-&gt;created) )
+    {
+        status = SOCKET_CONNECT_ERR;
+        return status; 
+    }
+
+    // Set the socket address family
+    if(socket_info-&gt;address_family==ip_ver_4)
+    {
+        address_family=AF_INET; // IP version 4
+    }
+    else if(socket_info-&gt;address_family==ip_ver_6)
+    {
+        address_family=AF_INET6; // IP version 6
+    }
+    else
+    {
+        status = SOCKET_CONNECT_ERR;
+        return status;        
+    }
+
+    // Prepare the server structure 
+	server.sin_family = address_family;
+	server.sin_addr.s_addr = inet_addr(remote_ip_address);
+	server.sin_port = htons(remote_port_num);  
+
+    // Connect to remote address/port 
+	ret = connect(socket_info-&gt;sockfd , (struct sockaddr *)&amp;server , sizeof(server));
+	if (ret == -1)
+	{
+        error_num = errno;
+        // Ignore "Operation in progress" error on a non-blocking socket
+        if( (socket_info-&gt;block==0) &amp;&amp; (error_num==115) )
+        {
+            // Do nothing 
+        }
+        else
+        {
+            printf("errno = %d\n",error_num);
+            status = SOCKET_CONNECT_ERR;
+            return status;
+        }
+        
+	}    
+
+    // Assign values to the socket_info structure
+    socket_info-&gt;connected = true;    
+
+    return status;
+}
+
+int32_t socket_send(socket_info_t* socket_info, uint8_t* buffer, size_t buflen, size_t* bytes_sent, char* remote_ip_address, int remote_port_num)
+{
+    int ret;
+    int32_t status;
+    struct sockaddr_in remote_sockaddr;
+    status = SOCKET_SUCCESS;
+
+   switch(socket_info-&gt;type)
+    {
+        case stream:
+        {
+            // Only send on stream sockets in a connected state
+            if(socket_info-&gt;connected == false)
+            {
+                status = SOCKET_SEND_ERR;
+                return status;
+            }
+            else
+            {           
+                ret = send(socket_info-&gt;sockfd, buffer, buflen, 0);
+                if(ret == -1)
+                {
+                    status = SOCKET_SEND_ERR;     
+                    return status;           
+                }
+            }
+            *bytes_sent = ret;
+            break;
+        }
+        case dgram:
+        {
+            // Prepare the remote_sockaddr structure 
+            remote_sockaddr.sin_family = socket_info-&gt;address_family;
+            remote_sockaddr.sin_addr.s_addr = inet_addr(remote_ip_address);
+            remote_sockaddr.sin_port = htons(remote_port_num);
+
+            ret = sendto(socket_info-&gt;sockfd, (void*)buffer, buflen, 0, (struct sockaddr *)&amp;remote_sockaddr , sizeof(remote_sockaddr));
+            if(ret == -1)
+            {
+                OS_printf("socket_send: sendto returned error %d \n", ret);
+                status = SOCKET_SEND_ERR;     
+                return status;           
+            }
+
+            if(ret != (int) buflen)
+            {
+                OS_printf("socket_send: sendto sent only %d out of %lu bytes! \n", ret, buflen);
+            }
+
+            *bytes_sent = ret;
+            break;
+        }
+        default: 
+        {
+            status = SOCKET_SEND_ERR; 
+            break;
+        }
+    }
+
+    return status;
+}
+
+int32_t socket_recv(socket_info_t* socket_info, uint8_t* buffer, size_t buflen, size_t* bytes_recvd)
+{
+    int c;
+    int ret;
+    int32_t status;
+    struct sockaddr_in remote_sockaddr;
+
+    status = SOCKET_SUCCESS;
+
+    switch(socket_info-&gt;type)
+    {
+        case stream:
+        {
+            // Only recv on stream sockets in a connected state
+            if(socket_info-&gt;connected == false)
+            {
+                status = SOCKET_RECV_ERR;
+                return status;
+            }
+            else
+            {           
+                ret = recv(socket_info-&gt;sockfd, (void*)buffer, buflen, 0);
+                if(ret == 0)
+                {
+                    // Client disconnected
+                    socket_info-&gt;connected = false;
+                    status = SOCKET_RECV_ERR;
+                    return status;
+                }
+                else if(ret == -1)
+                {
+                    // Handle non-blocking sockets
+                    if( (socket_info-&gt;block==false) &amp;&amp; (errno==EAGAIN) )
+                    {
+                        status = SOCKET_TRY_AGAIN;
+                        return status;
+                    }   
+                    if( (socket_info-&gt;block==false) &amp;&amp; (errno==EWOULDBLOCK) )
+                    {
+                        status = SOCKET_TRY_AGAIN;
+                        return status;
+                    }
+                    status = SOCKET_RECV_ERR;     
+                    return status;           
+                }
+                *bytes_recvd = ret;
+            }
+            break;
+        }
+        case dgram:
+        {
+            c = sizeof(struct sockaddr_in);
+            ret = recvfrom(socket_info-&gt;sockfd, (void*)buffer, buflen, 0, (struct sockaddr *)&amp;remote_sockaddr, (socklen_t*)&amp;c);
+            if(ret == -1)
+            {
+                // Handle non-blocking sockets
+                if( (socket_info-&gt;block==false) &amp;&amp; (errno==EAGAIN) )
+                {
+                    status = SOCKET_TRY_AGAIN;
+                    return status;
+                }   
+                if( (socket_info-&gt;block==false) &amp;&amp; (errno==EWOULDBLOCK) )
+                {
+                    status = SOCKET_TRY_AGAIN;
+                    return status;
+                }
+                status = SOCKET_RECV_ERR;     
+                return status;           
+            }   
+            *bytes_recvd = ret;   
+            break;
+        }
+        default: 
+        {
+            status = SOCKET_RECV_ERR; 
+            break;
+        }
+    }
+
+    return status;
+}
+
+int32_t socket_close(socket_info_t* socket_info)
+{
+    int ret;
+    int32_t status;
+
+    status = SOCKET_SUCCESS;
+
+    ret = close(socket_info-&gt;sockfd);
+    if(ret == -1)
+    {
+        status = SOCKET_CLOSE_ERR;
+        return status;
+    }
+
+    // Assign values to the socket_info structure
+    // TBD
+
+    return status;
+}
+</pre></div>
+</div>
+</section>
+<section id="libspi-c">
+<h2><code class="docutils literal notranslate"><span class="pre">libspi.c</span></code><a class="headerlink" href="#libspi-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/hwlib/fsw/linux/libspi.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2018 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&amp;V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "libspi.h"
+
+spi_mutex_t spi_bus_mutex[MAX_SPI_BUSES];
+
+int32_t spi_init_dev(spi_info_t* device)
+{
+  int32_t status = SPI_SUCCESS;
+  char    buffer[16];
+
+  // Initialize the bus mutex
+  if (device-&gt;bus &lt; MAX_SPI_BUSES)
+  {
+    if (spi_bus_mutex[device-&gt;bus].users == 0)
+    {
+      snprintf(buffer, 16, "spi_%d_mutex", device-&gt;bus);
+      status = OS_MutSemCreate(&amp;spi_bus_mutex[device-&gt;bus].spi_mutex, buffer, 0);
+      if (status != OS_SUCCESS)
+      {
+        OS_printf("HWLIB: Create spi mutex error %d", status);
+        return status;
+      }
+    }
+    spi_bus_mutex[device-&gt;bus].users++;
+  }
+  else
+  {
+    OS_printf("HWLIB: Create spi mutex error %d, bus invalid!", status);
+    return status;
+  }
+
+  if (OS_MutSemTake(spi_bus_mutex[device-&gt;bus].spi_mutex) == OS_SUCCESS)
+  {
+    // Open the device
+    device-&gt;handle = open(device-&gt;deviceString, O_RDWR, 0); 
+    if (device-&gt;handle &lt; 0)
+    {
+      device-&gt;isOpen = SPI_DEVICE_CLOSED;
+      status = SPI_ERR_FILE_OPEN;
+      OS_MutSemGive(spi_bus_mutex[device-&gt;bus].spi_mutex);
+      OS_printf("HWLIB: Open SPI device \"%s\" error %d", device-&gt;deviceString, status);
+      return status;
+    }
+  }
+  OS_MutSemGive(spi_bus_mutex[device-&gt;bus].spi_mutex);
+
+  // Set the mode 
+  status = spi_set_mode(device);
+  if(status != SPI_SUCCESS)
+  {
+    return status;
+  }
+
+  // Set open flag
+  device-&gt;isOpen = SPI_DEVICE_OPEN;
+
+  return status;
+}
+
+int32_t spi_set_mode(spi_info_t* device)
+{
+  uint8_t mode; 
+  int32_t ret;
+  int32_t status = SPI_SUCCESS; 
+
+  switch(device-&gt;spi_mode)
+  {
+    case 0:
+      mode = SPI_MODE_0;
+      break;
+    case 1:
+      mode = SPI_MODE_1;
+      break;
+    case 2:
+      mode = SPI_MODE_2;
+      break;
+    case 3:
+      mode = SPI_MODE_3;
+      break;
+    default: 
+      status = SPI_ERR_INVAL_MD;
+      OS_printf("HWLIB: Invalid spi mode error %d", status);
+      return status;
+  }
+
+  if (OS_MutSemTake(spi_bus_mutex[device-&gt;bus].spi_mutex) == OS_SUCCESS)
+  {
+    // Set mode
+    ret = ioctl(device-&gt;handle, SPI_IOC_WR_MODE, &amp;mode);
+    if (ret != SPI_SUCCESS)
+    {
+      status = SPI_ERR_WR_MODE;
+      OS_MutSemGive(spi_bus_mutex[device-&gt;bus].spi_mutex);
+      return status;
+    }  
+    // Set bits per word
+    ret = ioctl(device-&gt;handle, SPI_IOC_WR_BITS_PER_WORD, &amp;(device-&gt;bits_per_word));
+    if (ret != SPI_SUCCESS)
+    {
+      status = SPI_ERR_WR_BPW;
+      OS_MutSemGive(spi_bus_mutex[device-&gt;bus].spi_mutex);
+      return status;
+    }
+    // Set max speed
+    ret = ioctl(device-&gt;handle, SPI_IOC_WR_MAX_SPEED_HZ, &amp;(device-&gt;baudrate));
+    if (ret != SPI_SUCCESS)
+    {
+      status = SPI_ERR_WR_SD_HZ;
+      OS_MutSemGive(spi_bus_mutex[device-&gt;bus].spi_mutex);
+      return status;
+    }
+  }
+  OS_MutSemGive(spi_bus_mutex[device-&gt;bus].spi_mutex);
+  
+  return status;
+}
+
+int32_t spi_get_mode(spi_info_t* device)
+{
+  int32_t  ret;
+  int32_t  status = SPI_SUCCESS; 
+  uint8_t  spi_mode = 0;
+  uint8_t  bits_per_word = 0;
+  uint32_t baudrate = 0;
+  
+  if (OS_MutSemTake(spi_bus_mutex[device-&gt;bus].spi_mutex) == OS_SUCCESS)
+  {
+    // Get mode
+    ret = ioctl(device-&gt;handle, SPI_IOC_RD_MODE, &amp;spi_mode);
+    if (ret != SPI_SUCCESS)
+    {
+      status = SPI_ERR_RD_MODE;
+      OS_MutSemGive(spi_bus_mutex[device-&gt;bus].spi_mutex);
+      return status;
+    }  
+    // Get bits per word
+    ret = ioctl(device-&gt;handle, SPI_IOC_RD_BITS_PER_WORD, &amp;bits_per_word);
+    if (ret != SPI_SUCCESS)
+    {
+      status = SPI_ERR_RD_BPW;
+      OS_MutSemGive(spi_bus_mutex[device-&gt;bus].spi_mutex);
+      return status;
+    }  
+    // Get max speed
+    ret = ioctl(device-&gt;handle, SPI_IOC_RD_MAX_SPEED_HZ, &amp;baudrate);
+    if (ret != SPI_SUCCESS)
+    {
+      status = SPI_ERR_RD_SD_HZ;
+      OS_MutSemGive(spi_bus_mutex[device-&gt;bus].spi_mutex);
+      return status;
+    }
+  }
+  OS_MutSemGive(spi_bus_mutex[device-&gt;bus].spi_mutex);
+
+  device-&gt;spi_mode = spi_mode;
+  device-&gt;bits_per_word = bits_per_word;
+  device-&gt;baudrate = baudrate;
+
+  return status;
+}
+
+int32_t spi_write(spi_info_t* device, uint8_t data[], const uint32_t numBytes)
+{
+  int32_t status = SPI_SUCCESS;
+
+  status = spi_transaction(device, NULL, data, numBytes, 0, 8, 0);
+
+  return status;     
+}
+
+int32_t spi_read(spi_info_t* device, uint8_t data[], const uint32_t numBytes)
+{
+  int32_t status = SPI_SUCCESS;
+
+  status = spi_transaction(device, NULL, data, numBytes, 0, 8, 0);
+
+  return status;  
+}
+
+int32_t spi_transaction(spi_info_t* device, uint8_t *txBuff, uint8_t * rxBuffer, uint32_t length, uint16_t delay, uint8_t bits, uint8_t deselect)
+{
+  int32_t status = SPI_SUCCESS;
+  int ret;
+  struct spi_ioc_transfer xfer;
+
+  // Clear the xfer struct
+  memset((void *)&amp;xfer, 0, sizeof(struct spi_ioc_transfer));
+
+  // Setup the transfer structure for the transaction 
+  xfer.tx_buf = (unsigned long) txBuff;
+  xfer.rx_buf = (unsigned long) rxBuffer; 
+
+  xfer.len = length;
+  xfer.speed_hz = device-&gt;baudrate;
+  
+  xfer.delay_usecs = delay;
+  xfer.bits_per_word = bits;
+  xfer.cs_change = deselect;
+  xfer.tx_nbits = (bits * length);
+  xfer.rx_nbits = (bits * length);
+
+  // Perform a full duplex transaction
+  ret = ioctl(device-&gt;handle, SPI_IOC_MESSAGE(1), &amp;xfer);
+  if (ret &lt; 1)
+  {
+      status = SPI_ERR_IOC_MSG;
+      return status;
+  }
+  
+  return status;
+}
+
+int32_t spi_select_chip(spi_info_t* device)
+{
+  int32_t status = SPI_SUCCESS;
+
+  /* 
+  * See "/usr/share/doc/linux-doc/spi/spidev":
+  * "From userspace, you can't currently change the chip select polarity;
+  *  that could corrupt transfers to other devices sharing the SPI bus.
+  *  Each SPI device is deselected when it's not in active use, allowing
+  *  other drivers to talk to other devices."
+  */
+  status = OS_MutSemTake(spi_bus_mutex[device-&gt;bus].spi_mutex);
+  
+  return status;
+}
+
+int32_t spi_unselect_chip(spi_info_t* device)
+{
+  int32_t status = SPI_SUCCESS;
+
+  /* 
+  * See "/usr/share/doc/linux-doc/spi/spidev":
+  * "From userspace, you can't currently change the chip select polarity;
+  *  that could corrupt transfers to other devices sharing the SPI bus.
+  *  Each SPI device is deselected when it's not in active use, allowing
+  *  other drivers to talk to other devices."
+  */
+  status = OS_MutSemGive(spi_bus_mutex[device-&gt;bus].spi_mutex);
+  
+  return status;
+}
+
+int32_t spi_close_device(spi_info_t* device)
+{
+  int32_t status = SPI_SUCCESS;
+
+  // Check for valid handle
+  if (device-&gt;handle &gt;= 0)
+  {
+    spi_bus_mutex[device-&gt;bus].users--;
+    if (spi_bus_mutex[device-&gt;bus].users == 0)
+    {
+      OS_MutSemDelete(spi_bus_mutex[device-&gt;bus].spi_mutex);
+    }
+
+    status = close(device-&gt;handle);
+    if (status != SPI_SUCCESS) 
+    {
+      status = SPI_ERR_FILE_CLOSE;
+      return status;
+    }
+    // Set open flag
+    device-&gt;isOpen = SPI_DEVICE_CLOSED;
+  }
+  else
+  {
+    status = SPI_ERR_FILE_HANDLE;
+    return status;
+  }
+
+  return status;
+}
+</pre></div>
+</div>
+</section>
+<section id="libtrq-c">
+<h2><code class="docutils literal notranslate"><span class="pre">libtrq.c</span></code><a class="headerlink" href="#libtrq-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/hwlib/fsw/linux/libtrq.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2019 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&amp;V
+ivv-itc@lists.nasa.gov
+*/
+
+#include &lt;fcntl.h&gt;
+#include "libtrq.h"
+#include "libtrq_ioctl.h"
+
+#define TRQ_FNAME_SIZE 50
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * trq_set_time_high(): Configure the time high per period in nanoseconds for a TRQ device. Time high lengths
+ *                      may not exceed a device's period length. 
+ *
+ * Inputs:              trq_info_t *device      -   TRQ device info structure 
+ *                      uint32_t    new_time    -   New time high length for the device period in nanoseconds
+ *
+ * Outputs:             trq_info_t *device      -   High time set to new_time if successful
+ *                      returns int32_t         -   TRQ_ERROR_* type on failure, TRQ_SUCCESS on success
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t trq_set_time_high(trq_info_t* device, uint32_t new_time) 
+{
+    if(!device-&gt;enabled)
+    {
+        printf("trq_set_time_high: Error setting trq %d timer period because it's disabled! \n", device-&gt;trq_num); 
+        return TRQ_ERROR; 
+    }
+
+	// Make sure the time high isn't greater than the period
+	if(new_time &gt; device-&gt;timer_period_ns) 
+    {
+		printf("trq_set_time_high: Error setting trq %d time high, must not exceed the period! \n", device-&gt;trq_num);
+		return TRQ_TIME_HIGH_VAL_ERR;
+	}
+
+    ioctl(device-&gt;timerfd, TMRCTR_PWM_DISABLE); 
+    if(ioctl(device-&gt;timerfd, TMRCTR_PWM_SET_HIGH_TIME, new_time) &lt; 0)
+    {
+        printf("trq_set_time_high: Error setting trq %d high time! \n", device-&gt;trq_num); 
+        return TRQ_ERROR; 
+    }
+	device-&gt;timer_high_ns = new_time;
+
+    if(device-&gt;timer_period_ns &amp;&amp; device-&gt;timer_high_ns)
+    {
+        ioctl(device-&gt;timerfd, TMRCTR_PWM_ENABLE);
+    }
+
+    //printf("trq_set_time_high: timer_period_ns = %d, timer_high_ns = %d\n", device-&gt;timer_period_ns, device-&gt;timer_high_ns); 
+    return TRQ_SUCCESS;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * trq_set_period():    Configure the period length for a TRQ device in nanoseconds. Note that timer time high 
+ *                      is set to zero before this function is called. 
+ *
+ * Inputs:              trq_info_t *device      -   TRQ device info structure 
+ *
+ * Outputs:             returns int32_t         -   TRQ_ERROR on failure, TRQ_SUCCESS on success
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t trq_set_period(trq_info_t* device) 
+{
+    if(!device-&gt;enabled)
+    {
+        printf("trq_set_period: Error setting trq %d timer period because it's disabled! \n", device-&gt;trq_num); 
+        return TRQ_ERROR; 
+    }
+
+    // Make sure timer is disabled first
+    ioctl(device-&gt;timerfd, TMRCTR_PWM_DISABLE); 
+
+    if(ioctl(device-&gt;timerfd, TMRCTR_PWM_SET_PERIOD, device-&gt;timer_period_ns) &lt; 0)
+    {
+        printf("trq_set_period: Error setting trq %d timer period! \n", device-&gt;trq_num); 
+        return TRQ_ERROR; 
+    }
+
+    // Enable timer
+    ioctl(device-&gt;timerfd, TMRCTR_PWM_ENABLE); 
+
+    return TRQ_SUCCESS;
+}
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * trq_set_direction():    Configure the direction of the TRQ device. 
+ *
+ * Inputs:              trq_info_t *device      -   TRQ device info structure 
+ *                      bool        direction   -   New direction desired for device
+ *
+ * Outputs:             trq_info_t *device      -   positive_direction set to direction if successful
+ *                      returns int32_t         -   TRQ_ERROR on failure, TRQ_SUCCESS on success
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t trq_set_direction(trq_info_t* device, bool direction) 
+{
+    char charVal;
+    
+    if (direction == TRQ_DIR_NEGATIVE) 
+    {
+        charVal = '1'; // Inverted due to hardware
+    }
+    else 
+    {
+        charVal = '0';
+    }
+
+    if (write(device-&gt;direction_pin_fd, &amp;charVal, 1) != 1) 
+    {
+        printf("trq_set_direction: Error setting trq %d direction! \n", device-&gt;trq_num);
+        return TRQ_ERROR;
+    }
+    device-&gt;positive_direction = direction;
+
+    return TRQ_SUCCESS;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * trq_init():          Opens a TRQ device and initializes it. This function can also be
+ *                      used on an already opened TRQ number to reset it. 
+ *
+ * Inputs:              trq_info_t *device  -   TRQ Device info structure to initialize   
+ * 
+ * Outputs:             trq_info_t *device  -   Info structure contains AXI timer device file descriptor. 
+ *                      returns int32_t     -   &lt;0 on failure, TRQ_SUCCESS on success
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t trq_init(trq_info_t* device) 
+{
+    int32_t status = TRQ_SUCCESS;
+    char devname[TRQ_FNAME_SIZE];
+
+    if(!device-&gt;enabled)
+    {
+        // Open axi timer
+        snprintf(devname, TRQ_FNAME_SIZE, "/dev/tmrctr%d", device-&gt;trq_num); 
+        if((device-&gt;timerfd = open(devname, O_RDWR, 0)) &lt; 0)
+        {
+            printf("trq_init: Error opening axi timer device %s \n", devname); 
+            return TRQ_INIT_ERR; 
+        } 
+        //printf("trq_init: Initialized AXI Timer Device: %s for device-&gt;trq_num %d \n", devname, device-&gt;trq_num);
+
+        // Open direction pin
+        snprintf(devname, TRQ_FNAME_SIZE, "/dev/hb%d", device-&gt;trq_num); 
+        if((device-&gt;direction_pin_fd = open(devname, O_RDWR, 0)) &lt; 0)
+        {
+            printf("trq_init: Error opening axi timer device %s \n", devname); 
+            return TRQ_INIT_ERR; 
+        }
+
+        // Set direction
+        status = trq_set_direction(device, TRQ_DIR_POSITIVE);
+        if(status != TRQ_SUCCESS)
+        {
+            return TRQ_INIT_ERR;
+        }
+
+        device-&gt;enabled = true;
+    }
+
+    // Set timer time high to zero
+    status = trq_set_time_high(device, 0);
+    if(status != TRQ_SUCCESS)
+    {
+        return TRQ_INIT_ERR;
+    }
+    device-&gt;timer_high_ns = 0;  // no pulse
+
+    // Set timer period. Expects timer_period_ns to be set by app. 
+    status = trq_set_period(device);
+    if(status != TRQ_SUCCESS)
+    {
+        return TRQ_INIT_ERR;
+    }
+
+    return status;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * trq_command():   Change TQR period, time high, or direction.
+ *
+ * Inputs:              trq_info_t* device      -   TQR device info structure to modify
+ *                      uint8_t percent_high    -   Percent of the period to be high (0-100)
+ *                      bool pos_dir            -   Direction - True for positive, False for negative
+ *
+ * Outputs:             trq_info_t *device      -   Parameters set to new values if successful
+ *                      returns int32_t         -   TRQ_ERROR_* type on failure, TRQ_SUCCESS on success
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t trq_command(trq_info_t *device, uint8_t percent_high, bool pos_dir)
+{
+    int32_t status = TRQ_SUCCESS;
+    uint32_t time_high_ns;
+
+    if(!device-&gt;enabled)
+    {
+        status = TRQ_ERROR; 
+        return status;
+    }
+    
+    // Calculate time high
+    if (percent_high &gt; 100)
+    {
+        printf("trq_command: Error setting percent high greater than 100! \n");
+        return TRQ_ERROR;
+    }
+    time_high_ns = device-&gt;timer_period_ns * (percent_high / 100.00);
+    
+    // Change time high? 
+    if(device-&gt;timer_high_ns != time_high_ns)
+    {
+        status=trq_set_time_high(device, time_high_ns);
+        if(status != TRQ_SUCCESS)
+        {
+            status = TRQ_ERROR; 
+            return status;
+        }
+        device-&gt;timer_high_ns = time_high_ns;
+    }
+
+    // Change direction?
+    if(device-&gt;positive_direction != pos_dir)
+    {
+        // Set direction
+        status = trq_set_direction(device, pos_dir);
+        if(status != TRQ_SUCCESS)
+        {
+            printf("trq_command: Error setting trq %d direction! \n", device-&gt;trq_num);
+            status = TRQ_INIT_ERR;
+            return status;
+        }
+    }
+
+    return status;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+ *
+ * trq_close():         Disables and closes an active TRQ device. 
+ * 
+ * Inputs:              trq_info_t *device - TRQ device info structure for TRQ device to disable
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void trq_close(trq_info_t* device)
+{
+    if(!device-&gt;enabled)
+    {
+        printf("trq_close: Error closing trq %d, already disabled! \n", device-&gt;trq_num); 
+        return; 
+    }
+
+    close(device-&gt;timerfd); 
+    close(device-&gt;direction_pin_fd);
+    device-&gt;enabled = false; 
+}
+</pre></div>
+</div>
+</section>
+<section id="libtrq-ioctl-h">
+<h2><code class="docutils literal notranslate"><span class="pre">libtrq_ioctl.h</span></code><a class="headerlink" href="#libtrq-ioctl-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/hwlib/fsw/linux/libtrq_ioctl.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2019 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&amp;V
+ivv-itc@lists.nasa.gov
+*/
+
+
+/* IOCTL commands */
+#include &lt;sys/ioctl.h&gt;
+
+#define TMRCTR_MAGIC                            15
+
+#define TMRCTR_START                _IO(    TMRCTR_MAGIC, 0         )
+#define TMRCTR_STOP                 _IO(    TMRCTR_MAGIC, 1         )
+#define TMRCTR_PWM_ENABLE           _IO(    TMRCTR_MAGIC, 2         )
+#define TMRCTR_PWM_SET_PERIOD       _IOW(   TMRCTR_MAGIC, 3,    long)
+#define TMRCTR_PWM_SET_HIGH_TIME    _IOW(   TMRCTR_MAGIC, 4,    long)
+#define TMRCTR_PWM_DISABLE          _IO(    TMRCTR_MAGIC, 5         )
+#define TMRCTR_SELFTEST             _IO(    TMRCTR_MAGIC, 6         )
+#define TMRCTR_SETOPTION            _IOW(   TMRCTR_MAGIC, 7,    long)
+#define TMRCTR_GETOPTION            _IOR(   TMRCTR_MAGIC, 8,    long)
+#define TMRCTR_RESET                _IO(    TMRCTR_MAGIC, 9         )
+#define TMRCTR_SET_RESET_VALUE      _IOW(   TMRCTR_MAGIC, 10,   long)
+#define TMRCTR_GET_VALUE            _IOR(   TMRCTR_MAGIC, 11,   long)
+#define TMRCTR_GET_CAPTURE_VALUE    _IOR(   TMRCTR_MAGIC, 12,   long)
+#define TMRCTR_CHECK_UPDATE         _IOR(   TMRCTR_MAGIC, 13,   long)
+#define TMRCTR_TMR_SELECT           _IOW(   TMRCTR_MAGIC, 14,   long)
+
+/* IOCTL Errors */
+#define TMRCTR_BAD_CMD            (-1)
+</pre></div>
+</div>
+</section>
+<section id="libuart-c">
+<h2><code class="docutils literal notranslate"><span class="pre">libuart.c</span></code><a class="headerlink" href="#libuart-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/hwlib/fsw/linux/libuart.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2009 - 2018 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&amp;V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "libuart.h"
+
+int32_t uart_init_port(uart_info_t* device)
+{
+  int32_t status = UART_SUCCESS;
+  speed_t speed;
+
+  // Set the access flag.  We default to O_RDWR if the specified access flag is
+  // out of range
+  int oflag = O_RDWR;
+
+  if (device-&gt;access_option == uart_access_flag_RDONLY)
+    oflag = O_RDONLY;
+  else if (device-&gt;access_option == uart_access_flag_WRONLY)
+    oflag = O_WRONLY;
+
+  device-&gt;handle = open(device-&gt;deviceString, oflag);
+
+  if (device-&gt;handle &gt;= 0)
+  {
+    // Set open flag
+    device-&gt;isOpen = PORT_OPEN;
+
+    // Get current port options
+    if(tcgetattr(device-&gt;handle, &amp;device-&gt;options)&lt;0)
+    {
+        status = OS_ERR_FILE;
+        return status;
+    }
+
+    // Set baud rate
+    switch(device-&gt;baud)
+    {
+      case 4800:
+        speed=B4800;
+        break;
+      case 9600:
+        speed=B9600;
+        break;
+      case 19200:
+        speed=B19200;
+        break;
+      case 38400:
+        speed=B38400;
+        break;
+      case 57600:
+        speed=B57600;
+        break;
+      case 115200:
+        speed=B115200;
+        break;
+      case 230400:
+        speed=B230400;
+        break;
+      case 460800:
+        speed=B460800;
+        break;
+      case 500000:
+        speed=B500000;
+        break;
+      case 576000:
+        speed=B576000;
+        break;
+      case 921600:
+        speed=B921600;
+        break;
+      case 1000000:
+        speed=B1000000;
+        break;
+      case 1152000:
+        speed=B1152000;
+        break;
+      case 2000000:
+        speed=B2000000;
+        break;
+      case 2500000:
+        speed=B2500000;
+        break;
+      case 3000000:
+        speed=B3000000;
+        break;
+      case 3500000:
+        speed=B3500000;
+        break;
+      case 4000000:
+        speed=B4000000;
+        break;
+      default:
+        status = OS_ERR_FILE;
+        return status;
+    }
+    if(cfsetispeed(&amp;device-&gt;options,speed)&lt;0)
+    {
+        status = OS_ERR_FILE;
+        return status;
+    }
+    if(cfsetospeed(&amp;device-&gt;options,speed)&lt;0)
+    {
+        status = OS_ERR_FILE;
+        return status;
+    }
+
+    // Raw byte mode - no strings and no CRLF
+    device-&gt;options.c_iflag      = IGNBRK | INPCK;
+    device-&gt;options.c_oflag      = 0;
+    device-&gt;options.c_cflag      = CREAD | CS8 | CLOCAL;
+    device-&gt;options.c_lflag      = NOFLSH;
+    if(device-&gt;canonicalModeOn == 1)
+    {
+        device-&gt;options.c_lflag |= ICANON;
+    }
+
+    // Set the port to blocking read with timeout of 0.1 sec
+    device-&gt;options.c_cc[VMIN] = 0;       // min of bytes to read
+    device-&gt;options.c_cc[VTIME] = 1;      // intra-byte time to wait - tenths of sec
+    fcntl(device-&gt;handle, F_SETFL, O_NONBLOCK);    // Don't have serial port block
+
+    // TODO - any other options needed like hw control?
+    tcflush(device-&gt;handle, TCIOFLUSH);
+
+    // Set the options
+    if(tcsetattr(device-&gt;handle, TCSANOW, &amp;device-&gt;options)&lt;0)
+    {
+        status = OS_ERR_FILE;
+        return status;
+    }
+  }
+  else
+  {
+      printf("Oh no!  Open \"%s\" failed and reported: %s \n", device-&gt;deviceString, strerror(device-&gt;handle));
+      device-&gt;isOpen = PORT_CLOSED;
+      status = OS_ERR_FILE;
+  }
+
+  return status;
+}
+
+int32_t uart_bytes_available(uart_info_t* device)
+{
+  int32_t bytes_available = 0;
+
+  ioctl(device-&gt;handle, FIONREAD, &amp;bytes_available);
+
+  return bytes_available;
+}
+
+int32_t uart_flush(uart_info_t* device)
+{
+  tcflush(device-&gt;handle,TCIOFLUSH);
+
+  return UART_SUCCESS;
+}
+
+int32_t uart_read_port(uart_info_t* device, uint8_t data[], const uint32_t numBytes)
+{
+  int32_t status = UART_SUCCESS;
+
+  if (data != NULL)
+  {
+    // TODO - this read blocks forever if no serial data on the port.
+    //        it should be timing out - need to look into this ASAP
+    status = read(device-&gt;handle, data, numBytes);
+  }
+  else
+  {
+    status = OS_ERR_FILE;
+  }
+
+  return status;
+}
+
+int32_t uart_write_port(uart_info_t* device, uint8_t data[], const uint32_t numBytes)
+{
+  int32_t status = UART_SUCCESS;
+
+  status = write(device-&gt;handle, data, numBytes);
+
+  return status;
+}
+
+int32_t uart_close_port(uart_info_t* device)
+{
+  int32_t status = UART_SUCCESS;
+
+  if (device-&gt;handle &gt;= 0)
+  {
+    status = close(device-&gt;handle);
+    if (0 == status) /* todo remove magic number */
+    {
+      status = UART_SUCCESS;
+    }
+    else
+    {
+      status = OS_ERR_FILE;
+    }
+  }
+  else
+  {
+    status = OS_ERR_FILE;
+  }
+  return status;
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="fsw" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../mission_inc/index.html" class="btn btn-neutral float-right" title="mission_inc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

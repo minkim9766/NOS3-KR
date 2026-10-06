@@ -1,0 +1,1767 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>filetransfer &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../../search.html" />
+    <link rel="next" title="http" href="../http/index.html" />
+    <link rel="prev" title="external" href="../external/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../../index.html">gsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">gsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">yamcs-core</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">main</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">java</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">org</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">yamcs</a></li>
+      <li class="breadcrumb-item active">filetransfer</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../../_sources/project_inventory/gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="filetransfer">
+<h1>filetransfer<a class="headerlink" href="#filetransfer" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="abstractfiletransferservice-java">
+<h2><code class="docutils literal notranslate"><span class="pre">AbstractFileTransferService.java</span></code><a class="headerlink" href="#abstractfiletransferservice-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/AbstractFileTransferService.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.filetransfer;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.actions.ActionHelper;
+import org.yamcs.protobuf.FileTransferCapabilities;
+
+public abstract class AbstractFileTransferService extends AbstractYamcsService
+        implements FileTransferService, FileActionProvider {
+
+    private Map&lt;String, FileAction&gt; fileActions = new LinkedHashMap&lt;&gt;(); // Keep them in order of registration
+
+    protected void addFileAction(FileAction action) {
+        if (fileActions.containsKey(action.getId())) {
+            throw new IllegalArgumentException("Action '" + action.getId() + "' already registered");
+        }
+        fileActions.put(action.getId(), action);
+    }
+
+    @Override
+    public List&lt;FileAction&gt; getFileActions() {
+        return new ArrayList&lt;&gt;(fileActions.values());
+    }
+
+    @Override
+    public FileAction getFileAction(String actionId) {
+        return fileActions.get(actionId);
+    }
+
+    @Override
+    public final FileTransferCapabilities getCapabilities() {
+        var b = FileTransferCapabilities.newBuilder();
+        for (var action : fileActions.values()) {
+            var actionInfo = ActionHelper.toActionInfo(action);
+            b.addFileActions(actionInfo);
+        }
+
+        addCapabilities(b);
+        return b.build();
+    }
+
+    protected abstract void addCapabilities(FileTransferCapabilities.Builder builder);
+}
+</pre></div>
+</div>
+</section>
+<section id="basiclistingparser-java">
+<h2><code class="docutils literal notranslate"><span class="pre">BasicListingParser.java</span></code><a class="headerlink" href="#basiclistingparser-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/BasicListingParser.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.filetransfer;
+
+import org.yamcs.Spec;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.protobuf.RemoteFile;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+/**
+ * Parses a directory listing from a linebreak separated list of filenames
+ * Directories are detected when the file name ends with a directory terminator
+ */
+public class BasicListingParser extends FileListingParser {
+
+    private boolean removePrependingRemotePath;
+    private final List&lt;String&gt; DEFAULT_DIRECTORY_TERMINATORS = List.of("/");
+    private List&lt;String&gt; directoryTerminators;
+    private String directoryTerminatorsRegex;
+
+    private EventProducer eventProducer;
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("removePrependingRemotePath", Spec.OptionType.BOOLEAN).withDefault(true);
+        spec.addOption("directoryTerminators", Spec.OptionType.LIST).withElementType(Spec.OptionType.STRING)
+                .withDefault(DEFAULT_DIRECTORY_TERMINATORS);
+        return spec;
+    }
+
+    public BasicListingParser() {
+        setDirectoryTerminators(DEFAULT_DIRECTORY_TERMINATORS);
+    }
+
+    @Override
+    public void init(String yamcsInstance, YConfiguration config) {
+        super.init(yamcsInstance, config);
+        if(!"".equals(yamcsInstance)) {
+            eventProducer = EventProducerFactory.getEventProducer(yamcsInstance, "BasicListingParser", 10000);
+        }
+        removePrependingRemotePath = config.getBoolean("removePrependingRemotePath");
+        List&lt;String&gt; terminators = config.getList("directoryTerminators");
+        if(!terminators.equals(DEFAULT_DIRECTORY_TERMINATORS)) { // Only overwrite the directory terminators if config is not default
+            setDirectoryTerminators(terminators);
+        }
+    }
+
+    /**
+     * Sets the directory terminators for parsing
+     * @param directoryTerminators directory terminators
+     */
+    public void setDirectoryTerminators(List&lt;String&gt; directoryTerminators) {
+        this.directoryTerminators = directoryTerminators;
+        this.directoryTerminatorsRegex = "(" + directoryTerminators.stream().map(Pattern::quote).collect(Collectors.joining("|")) + ")";
+    }
+
+    @Override
+    public List&lt;RemoteFile&gt; parse(String remotePath, byte[] data) {
+        String textData = new String(data);
+        if(!removePrependingRemotePath) {
+            remotePath = "";
+        }
+
+        // TODO: maybe add (directoryTerminatorsRegex*) at the beginning?
+        String regex = "^(" + Pattern.quote(remotePath) + ")?(" + directoryTerminatorsRegex + "*)(?&lt;name&gt;.*?)(" + directoryTerminatorsRegex + "*)$";
+        return Arrays.stream(textData.replace("\r", "").split("\\n"))
+                .map(fileName -&gt; {
+                    try {
+                        if (fileName.isBlank()) {
+                            return null;
+                        }
+
+                        return RemoteFile.newBuilder()
+                                .setName(fileName.replaceAll(regex, "${name}"))
+                                .setIsDirectory(directoryTerminators.stream().anyMatch(fileName::endsWith))
+                                .build();
+                    } catch (Exception e) {
+                        if(eventProducer != null) {
+                            eventProducer.sendWarning("Error parsing filename '" + fileName + "' in directory listing");
+                        }
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .sorted(fileDirComparator)
+                .collect(Collectors.toList());
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="csvlistingparser-java">
+<h2><code class="docutils literal notranslate"><span class="pre">CsvListingParser.java</span></code><a class="headerlink" href="#csvlistingparser-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/CsvListingParser.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.filetransfer;
+
+import com.csvreader.CsvReader;
+import com.google.protobuf.Descriptors;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.protobuf.RemoteFile;
+import org.yamcs.utils.TimestampUtil;
+
+import java.io.IOException;
+import java.time.Instant;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * Parses a directory listing from Comma Separated Values (CSV) formatted data.
+ * Uses configurable mappings to associate columns to the correct file properties.
+ * Timestamps can be formatted as numbers or as strings in the ISO format.
+ */
+public class CsvListingParser extends FileListingParser {
+
+    /**
+     * Maps RemoteFile protobuf field names to the CSV colum number.
+     * Example: [ name -&gt; 0, isDirectory -&gt; 1, size -&gt; 2, modified -&gt; 3 ]
+     */
+    Map&lt;String, Integer&gt; protobufColumnNumberMapping; // Protobuf names -&gt; column numbers
+
+    /**
+     * Maps CSV header column names to RemoteFile protobuf field names.
+     * Example: [ filename -&gt; name, is_dir -&gt; isDirectory, size -&gt; size, last_updated -&gt; modified ]
+     */
+    Map&lt;String, String&gt; headerProtobufMapping; // CSV column names -&gt; protobuf names
+
+    /**
+     * Whether to parse the CSV header and to use for mapping values to the RemoteFile fields
+     */
+    private boolean useCsvHeader;
+
+    /**
+     * Multiplier for number encoded timestamps to get to the value in milliseconds
+     */
+    private double timestampMultiplier;
+
+    private EventProducer eventProducer;
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("useCsvHeader", OptionType.BOOLEAN).withDefault(false);
+        spec.addOption("timestampMultiplier", OptionType.FLOAT).withDefault(1000);
+        spec.addOption("protobufColumnNumberMapping", OptionType.MAP).withSpec(Spec.ANY).withDefault(new HashMap&lt;&gt;( // Default: protobuf order
+                    RemoteFile.getDescriptor().getFields().stream()
+                            .collect(Collectors.toMap(Descriptors.FieldDescriptor::getName,fieldDescriptor -&gt; fieldDescriptor.getNumber() - 1))));
+        spec.addOption("headerProtobufMapping", OptionType.MAP).withSpec(Spec.ANY).withDefault(new HashMap&lt;&gt;( // Default: assumes same names as protobuf
+                        RemoteFile.getDescriptor().getFields().stream()
+                                .collect(Collectors.toMap(Descriptors.FieldDescriptor::getName, Descriptors.FieldDescriptor::getName))));
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, YConfiguration config) {
+        super.init(yamcsInstance, config);
+        if(!"".equals(yamcsInstance)) {
+            eventProducer = EventProducerFactory.getEventProducer(yamcsInstance, "CsvListingParser", 10000);
+        }
+
+        useCsvHeader = config.getBoolean("useCsvHeader");
+        timestampMultiplier = config.getDouble("timestampMultiplier");
+        protobufColumnNumberMapping = config.getMap("protobufColumnNumberMapping");
+        headerProtobufMapping = config.getMap("headerProtobufMapping");
+    }
+
+    @Override
+    public List&lt;RemoteFile&gt; parse(String remotePath, byte[] data) {
+        String textData = new String(data);
+        ArrayList&lt;RemoteFile&gt; files = new ArrayList&lt;&gt;();
+
+        CsvReader reader = CsvReader.parse(textData);
+        try {
+            Map&lt;String, Integer&gt; mapping = getMapping(reader);
+
+            while (reader.readRecord()) {
+                List&lt;String&gt; values = List.of(reader.getValues());
+
+                RemoteFile.Builder builder = RemoteFile.newBuilder();
+
+                RemoteFile.getDescriptor().getFields().forEach(field -&gt; {
+                    Integer id = mapping.get(field.getName());
+                    if (id != null &amp;&amp; id &lt; values.size() &amp;&amp; values.get(id) != null) {
+                        try{
+                            builder.setField(field, parseValue(values.get(id), field));
+                        } catch (IllegalArgumentException | DateTimeParseException e) {
+                            sendInfo("Failed to parse value from directory listing CSV: " + values.get(id) + " as " + field.getJavaType() + " (" + e.getMessage() + ")");
+                        }
+                   }
+                });
+
+                if(builder.hasName()) {
+                    files.add(builder.build());
+                } else
+                    sendInfo("Failed to parse file info from file listing (no filename?): " + reader.getRawRecord());
+            }
+        } catch (IOException e) {
+            sendWarning("Exception while parsing directory listing CSV: " + e.getMessage());
+        }
+
+        files.sort(fileDirComparator);
+        return files;
+    }
+
+    private Object parseValue(String value, Descriptors.FieldDescriptor field) {
+        switch (field.getJavaType()) {
+        case INT:
+            return Integer.parseInt(value);
+        case LONG:
+            return Long.parseLong(value);
+        case FLOAT:
+            return Float.parseFloat(value);
+        case DOUBLE:
+            return Double.parseDouble(value);
+        case BOOLEAN:
+            return Boolean.parseBoolean(value);
+        case STRING:
+            return value.strip();
+        case MESSAGE:
+            if(field.getMessageType().getFullName().equals("google.protobuf.Timestamp")) {
+                try {
+                    return TimestampUtil.java2Timestamp((long) (Double.parseDouble(value) * timestampMultiplier));
+                } catch (NumberFormatException e) {
+                    return TimestampUtil.java2Timestamp(Instant.parse(value).toEpochMilli());
+                }
+            }
+            // Else do default case
+        case BYTE_STRING:
+        case ENUM:
+        default:
+            throw new IllegalArgumentException("Unsupported type in directory listing CSV: " + value + " (" + field.getJavaType() + ", " + field.getName() + ")");
+        }
+    }
+
+    private Map&lt;String, Integer&gt; getMapping(CsvReader reader) throws IOException {
+        if (useCsvHeader) {
+            if (reader.readHeaders()) {
+                String[] headers = reader.getHeaders();
+                if (headers != null &amp;&amp; headers.length &gt; 0) {
+                    Map&lt;String, Integer&gt; mapping = new HashMap&lt;&gt;();
+                    for (int i = 0; i &lt; headers.length; i++) {
+                        String protobufName = headerProtobufMapping.get(headers[i]);
+                        if (protobufName != null) {
+                            mapping.put(protobufName, i);
+                        } else {
+                            sendInfo("Unknown directory listing CSV header value: " + headers[i]);
+                        }
+                    }
+
+                    return mapping;
+                }
+            }
+            sendWarning("Error parsing CSV header in directory listing");
+        }
+
+        return protobufColumnNumberMapping;
+    }
+
+    private void sendInfo(String msg) {
+        if (eventProducer != null) {
+            eventProducer.sendInfo(msg);
+        }
+    }
+
+    private void sendWarning(String msg) {
+        if (eventProducer != null) {
+            eventProducer.sendWarning(msg);
+        }
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="fileaction-java">
+<h2><code class="docutils literal notranslate"><span class="pre">FileAction.java</span></code><a class="headerlink" href="#fileaction-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileAction.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.filetransfer;
+
+import org.yamcs.actions.Action;
+
+public abstract class FileAction extends Action&lt;FileActionIdentifier&gt; {
+
+    protected FileAction(String id, String label) {
+        super(id, label);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="fileactionidentifier-java">
+<h2><code class="docutils literal notranslate"><span class="pre">FileActionIdentifier.java</span></code><a class="headerlink" href="#fileactionidentifier-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileActionIdentifier.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.filetransfer;
+
+public class FileActionIdentifier {
+    public final String entityName;
+    public final String fileName;
+
+    public FileActionIdentifier(String entityName, String fileName) {
+        this.entityName = entityName;
+        this.fileName = fileName;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="fileactionprovider-java">
+<h2><code class="docutils literal notranslate"><span class="pre">FileActionProvider.java</span></code><a class="headerlink" href="#fileactionprovider-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileActionProvider.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.filetransfer;
+
+import java.util.List;
+
+public interface FileActionProvider {
+
+    List&lt;FileAction&gt; getFileActions();
+
+    FileAction getFileAction(String actionId);
+}
+</pre></div>
+</div>
+</section>
+<section id="filelistingparser-java">
+<h2><code class="docutils literal notranslate"><span class="pre">FileListingParser.java</span></code><a class="headerlink" href="#filelistingparser-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileListingParser.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.filetransfer;
+
+import org.yamcs.Spec;
+import org.yamcs.YConfiguration;
+import org.yamcs.protobuf.RemoteFile;
+
+import java.util.Comparator;
+import java.util.List;
+
+/**
+ * Interface for retrieving and saving the list of files of a certain remote directory.
+ */
+public abstract class FileListingParser {
+
+    String yamcsInstance;
+    YConfiguration config;
+
+    /**
+     * Comparator to compare 2 RemoteFile lexicographically by file name and by placing directories first
+     */
+    Comparator&lt;RemoteFile&gt; fileDirComparator = (file1, file2) -&gt; { // Sort by filename placing directories first
+        int typeCmp = - Boolean.compare(file1.getIsDirectory(), file2.getIsDirectory());
+        return typeCmp != 0 ? typeCmp : file1.getName().compareToIgnoreCase(file2.getName());
+    };
+
+    public abstract Spec getSpec();
+
+    public void init(String yamcsInstance, YConfiguration config) {
+        this.yamcsInstance = yamcsInstance;
+        this.config = config;
+    }
+
+    /**
+     * Parse the provided text data into a list of RemoteFiles
+     *
+     * @param remotePath remote path where the file listing is located
+     * @param data text data (e.g. coming from a file)
+     * @return parsed remote files and directories
+     */
+    public abstract List&lt;RemoteFile&gt; parse(String remotePath, byte[] data);
+}
+</pre></div>
+</div>
+</section>
+<section id="filelistingservice-java">
+<h2><code class="docutils literal notranslate"><span class="pre">FileListingService.java</span></code><a class="headerlink" href="#filelistingservice-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileListingService.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.filetransfer;
+
+import java.util.Map;
+import java.util.Set;
+
+import org.yamcs.InitException;
+import org.yamcs.YConfiguration;
+import org.yamcs.protobuf.ListFilesResponse;
+
+public interface FileListingService {
+
+    default void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+    }
+
+    void registerRemoteFileListMonitor(RemoteFileListMonitor monitor);
+
+    void unregisterRemoteFileListMonitor(RemoteFileListMonitor monitor);
+
+    void notifyRemoteFileListMonitors(ListFilesResponse listFilesResponse);
+
+    Set&lt;RemoteFileListMonitor&gt; getRemoteFileListMonitors();
+
+    /**
+     * Return latest file list of the given destination.
+     *
+     * @param source
+     *            source requesting the file list (e.g. local entity for CFDP)
+     * @param destination
+     *            destination from which the file list is needed (e.g. remote entity for CFDP)
+     * @param remotePath
+     *            path on the destination from which to get the file list
+     * @param options
+     *            reliability of the file listing request (e.g. transmission mode for CFDP, may not be needed)
+     * @return file list
+     */
+    ListFilesResponse getFileList(String source, String destination, String remotePath, Map&lt;String, Object&gt; options);
+
+    /**
+     * Start fetching a new file list from remote.
+     *
+     * @param source
+     *            source requesting the file list (e.g. local entity for CFDP)
+     * @param destination
+     *            destination from which the file list is needed (e.g. remote entity for CFDP)
+     * @param remotePath
+     *            path on the destination from which to get the file list
+     * @param options
+     *            reliability of the file listing request (e.g. transmission mode for CFDP, may not be needed)
+     */
+    void fetchFileList(String source, String destination, String remotePath, Map&lt;String, Object&gt; options);
+
+    void saveFileList(ListFilesResponse listFilesResponse);
+}
+</pre></div>
+</div>
+</section>
+<section id="filesavehandler-java">
+<h2><code class="docutils literal notranslate"><span class="pre">FileSaveHandler.java</span></code><a class="headerlink" href="#filesavehandler-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileSaveHandler.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.filetransfer;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.buckets.Bucket;
+import org.yamcs.cfdp.CfdpTransactionId;
+import org.yamcs.cfdp.DataFile;
+import org.yamcs.cfdp.FileDownloadRequests;
+import org.yamcs.logging.Log;
+
+public class FileSaveHandler {
+
+    private final Log log;
+    private final Bucket defaultBucket;
+    private FileDownloadRequests fileDownloadRequests;
+    private final boolean allowRemoteProvidedBucket;
+    private final boolean allowRemoteProvidedSubdirectory;
+    private final boolean allowDownloadOverwrites;
+    private final int maxExistingFileRenames;
+    private Bucket bucket;
+    private String objectName;
+
+    public FileSaveHandler(String yamcsInstance, Bucket defaultBucket, FileDownloadRequests fileDownloadRequests,
+            boolean allowRemoteProvidedBucket, boolean allowRemoteProvidedSubdirectory, boolean allowDownloadOverwrites,
+            int maxExistingFileRenames) {
+        this.log = new Log(this.getClass(), yamcsInstance);
+        this.defaultBucket = defaultBucket;
+        this.fileDownloadRequests = fileDownloadRequests;
+        this.allowRemoteProvidedBucket = allowRemoteProvidedBucket;
+        this.allowRemoteProvidedSubdirectory = allowRemoteProvidedSubdirectory;
+        this.allowDownloadOverwrites = allowDownloadOverwrites;
+        this.maxExistingFileRenames = maxExistingFileRenames;
+    }
+
+    public FileSaveHandler(String yamcsInstance, Bucket defaultBucket) {
+        this(yamcsInstance, defaultBucket, null, false, false, false, 1000);
+    }
+
+    public void saveFile(String objectName, DataFile file, Map&lt;String, String&gt; metadata,
+            CfdpTransactionId originatingTransactionId)
+            throws FileAlreadyExistsException {
+        setObjectName(objectName);
+        saveFile(file, metadata, originatingTransactionId);
+    }
+
+    public void saveFile(DataFile file, Map&lt;String, String&gt; metadata, CfdpTransactionId originatingTransactionId) {
+        if (objectName == null) {
+            log.warn("File name not set, not saving");
+            return;
+        }
+        if (bucket == null) {
+            bucket = defaultBucket;
+        }
+
+        try {
+            bucket.putObjectAsync(this.objectName, null, metadata, file.getData()).get();
+        } catch (ExecutionException e) {
+            throw new UncheckedIOException(new IOException("Cannot save incoming file in bucket: " + objectName
+                    + (bucket != null ? " -&gt; " + bucket.getName() : ""), e.getCause()));
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private String parseObjectName(String name) throws IOException {
+        if (bucket == null) {
+            bucket = defaultBucket;
+
+            if (allowRemoteProvidedBucket) {
+                String[] split = name.split(":", 2);
+                if (split.length == 2) {
+                    var bucketManager = YamcsServer.getServer().getBucketManager();
+
+                    Bucket customBucket = bucketManager.getBucket(split[0]);
+                    if (customBucket != null) {
+                        this.bucket = customBucket;
+                        name = split[1];
+                    }
+                }
+            }
+        }
+
+        if (!allowRemoteProvidedSubdirectory) {
+            name = name.replaceAll("[/\\\\]", "_");
+        } else {
+            // Removing leading slashes, spaces and dots (permitting ".filename")
+            name = name.replaceAll("^(?![.]\\w)[./\\\\ ]+", "");
+            // Removing directory traversal characters
+            name = name.replaceAll("[.]{2,}[/\\\\]", "");
+        }
+
+        name = name.strip();
+
+        if (allowDownloadOverwrites) {
+            return name;
+        } else {
+            try {
+                if (bucket.findObjectAsync(name).get() == null) {
+                    return name;
+                }
+
+                for (int i = 1; i &lt; maxExistingFileRenames; i++) {
+                    String namei = name + "(" + i + ")";
+                    if (bucket.findObjectAsync(namei).get() == null) {
+                        return namei;
+                    }
+                }
+            } catch (ExecutionException e) {
+                throw new IOException("Failed to retrieve object", e.getCause());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        throw new FileAlreadyExistsException(
+                "CANCELLED: \"" + name + "\" already exists in bucket \"" + bucket.getName() + "\"");
+    }
+
+    public void setObjectName(String objectName) throws FileAlreadyExistsException {
+        if (objectName == null) {
+            return;
+        }
+
+        try {
+            this.objectName = parseObjectName(objectName);
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException e) {
+            throw new UncheckedIOException("Cannot save incoming file in bucket: " + objectName
+                    + (bucket != null ? " -&gt; " + bucket.getName() : ""), e);
+        }
+    }
+
+    public String getBucketName() {
+        return bucket != null ? bucket.getName() : null;
+    }
+
+    public String getObjectName() {
+        return objectName;
+    }
+
+    public void setBucket(Bucket bucket) {
+        this.bucket = bucket;
+    }
+
+    public Bucket getBucket() {
+        return bucket;
+    }
+
+    public void processOriginatingTransactionId(CfdpTransactionId originatingTransactionId) throws IOException {
+        String bucketName = fileDownloadRequests.getBuckets().get(originatingTransactionId);
+        fileDownloadRequests.removeTransfer(originatingTransactionId);
+        if (bucketName != null) {
+            var bucketManager = YamcsServer.getServer().getBucketManager();
+            try {
+                bucket = bucketManager.getBucket(bucketName);
+            } catch (IOException e) {
+                throw new IOException("Recognised originating transaction id " + originatingTransactionId
+                        + " from incoming transfer but bucket does not exist");
+            }
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="filetransfer-java">
+<h2><code class="docutils literal notranslate"><span class="pre">FileTransfer.java</span></code><a class="headerlink" href="#filetransfer-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileTransfer.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.filetransfer;
+
+import org.yamcs.protobuf.TransferDirection;
+import org.yamcs.protobuf.TransferState;
+
+public interface FileTransfer {
+    /**
+     * return the name of the bucket where the file is being transfered to/from.
+     * &lt;p&gt;
+     * Could be null for incoming transfers. For the CFDP service, the bucket is determined by the source or destination
+     * entity id and it is not null. However if the bucket was determined by the filename which is known only when the
+     * metadata packet is received, this could be null.
+     */
+    String getBucketName();
+
+    /**
+     * return the name of the object (file) which is being transfered. This is the filename on the local (Yamcs) site.
+     * &lt;p&gt;
+     * Can be null for incoming transfers - for example CFDP can start a transfer without knowing the filename if the
+     * first metadata packet has been lost.
+     */
+    String getObjectName();
+
+    /**
+     * return the remote path of the file which is being transfered.
+     * &lt;p&gt;
+     * Can be null for incoming transfers - for example CFDP can start a transfer without having this information if the
+     * first metadata packet has been lost.
+     */
+    String getRemotePath();
+
+    Long getLocalEntityId();
+
+    Long getRemoteEntityId();
+
+    TransferDirection getDirection();
+
+    /**
+     * return the file size in bytes or -1 if the size is not known.
+     * &lt;p&gt;
+     * For the CFDP service the incoming files can be unbounded (but this is not yet supported) or the size will be part
+     * of the metadata packet which may be missing.
+     */
+    long getTotalSize();
+
+    long getTransferredSize();
+
+    long getId();
+
+    TransferState getTransferState();
+
+    boolean isReliable();
+
+    String getFailuredReason();
+
+    long getCreationTime();
+
+    long getStartTime();
+
+    String getTransferType();
+
+    boolean pausable();
+
+    boolean cancellable();
+}
+</pre></div>
+</div>
+</section>
+<section id="filetransferfilter-java">
+<h2><code class="docutils literal notranslate"><span class="pre">FileTransferFilter.java</span></code><a class="headerlink" href="#filetransferfilter-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileTransferFilter.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.filetransfer;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.protobuf.TransferDirection;
+import org.yamcs.protobuf.TransferState;
+import org.yamcs.utils.TimeEncoding;
+
+public class FileTransferFilter {
+
+    public long start = TimeEncoding.INVALID_INSTANT;
+    public long stop = TimeEncoding.INVALID_INSTANT;
+    public TransferDirection direction;
+    public Long localEntityId;
+    public Long remoteEntityId;
+    public List&lt;TransferState&gt; states = new ArrayList&lt;&gt;();
+    public int limit = 100;
+    public boolean descending = true;
+}
+</pre></div>
+</div>
+</section>
+<section id="filetransferservice-java">
+<h2><code class="docutils literal notranslate"><span class="pre">FileTransferService.java</span></code><a class="headerlink" href="#filetransferservice-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileTransferService.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.filetransfer;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
+import org.yamcs.InitException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsService;
+import org.yamcs.buckets.Bucket;
+import org.yamcs.protobuf.EntityInfo;
+import org.yamcs.protobuf.FileTransferCapabilities;
+import org.yamcs.protobuf.FileTransferOption;
+
+/**
+ * The file transfer service defines an interface for implementing file transfers.
+ * &lt;p&gt;
+ * The service provides file transfer operations between named "entities".
+ * &lt;p&gt;
+ * The entity term is borrowed from CFDP (CCSDS File Delivery Protocol) and it can mean anything for a particular
+ * implementation. For example it could mean a host in a traditional TCP/IP network.
+ * &lt;p&gt;
+ * Each file transfer is identified by a unique 64 bit identifier.
+ * 
+ * @author nm
+ *
+ */
+public interface FileTransferService extends YamcsService, FileListingService {
+
+    @Override
+    default void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+    }
+
+    /**
+     * Get the list of configured local entities. These contain the {@code source) used in the {@link
+     * #startUpload(String, Bucket, String, String, String, TransferOptions)} call.
+     * 
+     * &lt;p&gt;
+     * Can return an empty list if there is only one unnamed entity. @return
+     */
+    public List&lt;EntityInfo&gt; getLocalEntities();
+
+    /**
+     * Get the list of configured remote entity. These contain the {@code destination} used in the
+     * {@link #startUpload(String, Bucket, String, String, String, TransferOptions)} call.
+     * &lt;p&gt;
+     * Can return an empty list if there is only one unnamed remote entity.
+     * 
+     * @return
+     */
+    public List&lt;EntityInfo&gt; getRemoteEntities();
+
+    /**
+     * Get the capabilities supported by this service.
+     * &lt;p&gt;
+     * The capabilities are used by the yamcs-web to enable/disable some options.
+     * 
+     * @return
+     */
+    public FileTransferCapabilities getCapabilities();
+
+    /**
+     * Get configured options for the file transfers
+     *
+     * @return
+     */
+    default List&lt;FileTransferOption&gt; getFileTransferOptions() {
+        return Collections.emptyList();
+    }
+
+    /**
+     * Start a file upload.
+     * 
+     * @param sourceEntity
+     *            the source (local) entity. Can be null if the service supports only one unnamed source entity.
+     * @param bucket
+     *            the bucket containing the object to be transferred.
+     * @param objectName
+     *            the object name to be transferred.
+     * @param destinationEntity
+     *            the destination (remote) entity. Can be null if the service supports only one unnamed destination
+     *            entity.
+     * @param destinationPath
+     *            the path on the destination where the file will be uploaded. Depending on the implementation this can
+     *            be the path of a directory in which case the objectName will be used as a destination file name or can
+     *            be the name of a (non-existent) file which will then be used as the destination file. if the
+     *            destinationPath is null, then the objectName will be used as the name at the destination.
+     * @param options
+     *            transfer options.
+     * @return
+     * @throws IOException
+     *             if there was a problem retrieving the object from the bucket.
+     * @throws InvalidRequestException
+     *             thrown if the request is invalid; possible reasons:
+     *             &lt;ul&gt;
+     *             &lt;li&gt;object does not exist in the bucket&lt;/li&gt;
+     *             &lt;li&gt;the source or destination entities are not valid&lt;/li&gt;
+     *             &lt;li&gt;the transfer options are invalid&lt;/li&gt;
+     *             &lt;li&gt;other service specific error.&lt;/li&gt;
+     *             &lt;/ul&gt;
+     */
+    FileTransfer startUpload(String sourceEntity, Bucket bucket, String objectName,
+            String destinationEntity, String destinationPath,
+            TransferOptions options) throws IOException;
+
+    /**
+     * Start a file download.
+     * 
+     * @param sourceEntity
+     *            the source (remote) entity. Can be null if the service supports only one unnamed source entity.
+     * @param sourcePath
+     *            the path on the source representing the file to be transferred.
+     * @param destinationEntity
+     *            the destination (local) entity. Can be null if the service supports only one unnamed destination
+     *            entity.
+     * @param bucket
+     *            the bucket where the file will be stored.
+     * @param objectName
+     *            the object name where the file will be stored.
+     * @param options
+     *            transfer options.
+     * @return
+     * @throws IOException
+     *             if there was a problem retrieving the object from the bucket.
+     * @throws InvalidRequestException
+     *             thrown if the request is invalid; possible reasons:
+     *             &lt;ul&gt;
+     *             &lt;li&gt;the source or destination entities are not valid&lt;/li&gt;
+     *             &lt;li&gt;the transfer options are invalid&lt;/li&gt;
+     *             &lt;li&gt;download operation not supported or cannot be triggered by this call (most systems will have a
+     *             telecommand to trigger a download)&lt;/li&gt;
+     *             &lt;li&gt;other service specific error.&lt;/li&gt;
+     *             &lt;/ul&gt;
+     */
+    FileTransfer startDownload(String sourceEntity, String sourcePath, String destinationEntity, Bucket bucket,
+            String objectName, TransferOptions options) throws IOException, InvalidRequestException;
+
+    /**
+     * Get the list of ongoing or past transfers.
+     * 
+     * @return the list of transfers
+     */
+    List&lt;FileTransfer&gt; getTransfers(FileTransferFilter filter);
+
+    /**
+     * Get the file transfer with the given identifier.
+     * 
+     * @param id
+     * @return
+     */
+    FileTransfer getFileTransfer(long id);
+
+    /**
+     * Pause the file transfer.
+     * &lt;p&gt;
+     * If the transfer is already paused, this operation has no effect.
+     * 
+     * @param transfer
+     *            the transfer to be paused.
+     * @throws UnsupportedOperationException
+     *             if the pause operation is not supported.
+     */
+    void pause(FileTransfer transfer);
+
+    /**
+     * Resume the file transfer.
+     * &lt;p&gt;
+     * If the transfer is not paused, this call has no effect.
+     * 
+     * @param transfer
+     *            the transfer to be resumed.
+     * @throws UnsupportedOperationException
+     *             if the resume operation is not supported.
+     */
+    void resume(FileTransfer transfer);
+
+    /**
+     * Cancel the file transfer.
+     * 
+     * @param transfer
+     * @throws UnsupportedOperationException
+     *             if the cancel operation is not supported.
+     */
+    void cancel(FileTransfer transfer);
+
+    /**
+     * Register a monitor to be called each time a file transfer is started or changes state.
+     */
+    void registerTransferMonitor(TransferMonitor listener);
+
+    /**
+     * Unregister the monitor. If the monitor was not registered, this call has no effect.
+     */
+    void unregisterTransferMonitor(TransferMonitor listener);
+}
+</pre></div>
+</div>
+</section>
+<section id="invalidrequestexception-java">
+<h2><code class="docutils literal notranslate"><span class="pre">InvalidRequestException.java</span></code><a class="headerlink" href="#invalidrequestexception-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/InvalidRequestException.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.filetransfer;
+
+@SuppressWarnings("serial")
+public class InvalidRequestException extends RuntimeException {
+
+    public InvalidRequestException(String message) {
+        super(message);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="remotefilelistmonitor-java">
+<h2><code class="docutils literal notranslate"><span class="pre">RemoteFileListMonitor.java</span></code><a class="headerlink" href="#remotefilelistmonitor-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/RemoteFileListMonitor.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.filetransfer;
+
+import org.yamcs.protobuf.ListFilesResponse;
+
+public interface RemoteFileListMonitor {
+    void receivedFileList(ListFilesResponse fileList);
+}
+</pre></div>
+</div>
+</section>
+<section id="transfermonitor-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TransferMonitor.java</span></code><a class="headerlink" href="#transfermonitor-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/TransferMonitor.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.filetransfer;
+
+public interface TransferMonitor {
+    void stateChanged(FileTransfer cfdpTransfer);
+}
+</pre></div>
+</div>
+</section>
+<section id="transferoptions-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TransferOptions.java</span></code><a class="headerlink" href="#transferoptions-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/TransferOptions.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.filetransfer;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class TransferOptions {
+    private boolean overwrite;
+    boolean reliable;
+    private boolean reliableSet = false;
+    // used in CFDP to indicate that the receiving entity should acknowledge the reception of the file even if the
+    // reliable is false
+    boolean closureRequested;
+
+    boolean createpath;
+    private boolean closureRequestedSet = false;
+
+    private final Map&lt;String, Object&gt; extraOptions = new HashMap&lt;&gt;();
+
+    public boolean isOverwrite() {
+        return overwrite;
+    }
+
+    public void setOverwrite(boolean overwrite) {
+        this.overwrite = overwrite;
+    }
+
+    public void setCreatePath(boolean createpath) {
+        this.createpath = createpath;
+    }
+
+    public boolean isCreatePath() {
+        return createpath;
+    }
+
+    public void setReliable(boolean reliable) {
+        this.reliable = reliable;
+        this.reliableSet = true; // Temporary solution
+    }
+
+    public boolean isReliable() {
+        return reliable;
+    }
+
+    public boolean isReliableSet() {
+        return reliableSet;
+    }
+
+    public void setClosureRequested(boolean closureRequested) {
+        this.closureRequested = closureRequested;
+        this.closureRequestedSet = true; // Temporary solution
+    }
+
+    public boolean isClosureRequested() {
+        return closureRequested;
+    }
+
+    public boolean isClosureRequestedSet() {
+        return closureRequestedSet;
+    }
+
+    public void putExtraOptions(Map&lt;String, Object&gt; options) {
+        extraOptions.putAll(options);
+    }
+
+    public Map&lt;String, Object&gt; getExtraOptions() {
+        return extraOptions;
+    }
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../external/index.html" class="btn btn-neutral float-left" title="external" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../http/index.html" class="btn btn-neutral float-right" title="http" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

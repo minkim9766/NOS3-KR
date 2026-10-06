@@ -1,0 +1,2319 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="fprime" href="../../fprime/index.html" />
+    <link rel="prev" title="platform_inc" href="../platform_inc/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">components</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">components</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">generic_adcs</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">cfs</a></li>
+      <li class="breadcrumb-item active">src</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/components/generic_adcs/fsw/cfs/src/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="src">
+<h1>src<a class="headerlink" href="#src" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/generic_adcs/fsw/cfs/src/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="generic-adcs-app-c">
+<h2><code class="docutils literal notranslate"><span class="pre">generic_adcs_app.c</span></code><a class="headerlink" href="#generic-adcs-app-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/generic_adcs/fsw/cfs/src/generic_adcs_app.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*******************************************************************************
+** Purpose:
+**   This file contains the source code for the Generic ADCS application.
+**
+*******************************************************************************/
+
+/*
+** Include Files
+*/
+#include "generic_adcs_perfids.h"
+#include "generic_adcs_events.h"
+#include "generic_adcs_msgids.h"
+#include "generic_adcs_version.h"
+#include "generic_adcs_ingest.h"
+#include "generic_adcs_adac.h"
+#include "generic_adcs_output.h"
+#include "generic_adcs_app.h"
+
+// ADCS sensor/actuator messages
+#include "generic_mag_msgids.h"
+#include "generic_fss_msgids.h"
+#include "generic_css_msgids.h"
+#include "generic_imu_msgids.h"
+#include "generic_torquer_msgids.h"
+#include "generic_reaction_wheel_msgids.h"
+#include "generic_star_tracker_msgids.h"
+#include "novatel_oem615_msgids.h"
+
+/*
+** Global Data
+*/
+Generic_ADCS_AppData_t Generic_ADCS_AppData;
+
+/*
+** Forward Declarations
+*/
+static int32 Generic_ADCS_AppInit(void);
+static void  Generic_ADCS_ProcessCommandPacket(void);
+static void  Generic_ADCS_ProcessGroundCommand(void);
+static void  Generic_ADCS_ProcessTelemetryRequest(void);
+static void  Generic_ADCS_ReportHousekeeping(void);
+static void  Generic_ADCS_ResetCounters(void);
+static int32 Generic_ADCS_SendDICommand(void);
+static int32 Generic_ADCS_SendADCommand(void);
+static int32 Generic_ADCS_SendGNCCommand(void);
+static int32 Generic_ADCS_SendACCommand(void);
+static int32 Generic_ADCS_SendDOCommand(void);
+static int32 Generic_ADCS_VerifyCmdLength(CFE_MSG_Message_t *msg, uint16 expected_length);
+
+/*
+** Application entry point and main process loop
+*/
+void ADCS_AppMain(void)
+{
+    int32 status = OS_SUCCESS;
+
+    /*
+    ** Create the first Performance Log entry
+    */
+    CFE_ES_PerfLogEntry(GENERIC_ADCS_PERF_ID);
+
+    /*
+    ** Perform application initialization
+    */
+    status = Generic_ADCS_AppInit();
+    if (status != CFE_SUCCESS)
+    {
+        Generic_ADCS_AppData.RunStatus = CFE_ES_RunStatus_APP_ERROR;
+    }
+
+    /*
+    ** Main loop
+    */
+    while (CFE_ES_RunLoop(&amp;Generic_ADCS_AppData.RunStatus) == true)
+    {
+        /*
+        ** Performance log exit stamp
+        */
+        CFE_ES_PerfLogExit(GENERIC_ADCS_PERF_ID);
+
+        /*
+        ** Pend on the arrival of the next Software Bus message
+        ** Note that this is the standard, but timeouts are available
+        */
+        status = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&amp;Generic_ADCS_AppData.MsgPtr, Generic_ADCS_AppData.CmdPipe,
+                                      CFE_SB_PEND_FOREVER);
+
+        /*
+        ** Begin performance metrics on anything after this line. This will help to determine
+        ** where we are spending most of the time during this app execution.
+        */
+        CFE_ES_PerfLogEntry(GENERIC_ADCS_PERF_ID);
+
+        /*
+        ** If the CFE_SB_ReceiveBuffer was successful, then continue to process the command packet
+        ** If not, then exit the application in error.
+        ** Note that a SB read error should not always result in an app quitting.
+        */
+        if (status == CFE_SUCCESS)
+        {
+            Generic_ADCS_ProcessCommandPacket();
+        }
+        else
+        {
+            CFE_EVS_SendEvent(GENERIC_ADCS_PIPE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Generic_ADCS: SB Pipe Read Error = %d", (int)status);
+            Generic_ADCS_AppData.RunStatus = CFE_ES_RunStatus_APP_ERROR;
+        }
+    }
+
+    /*
+    ** Performance log exit stamp
+    */
+    CFE_ES_PerfLogExit(GENERIC_ADCS_PERF_ID);
+
+    /*
+    ** Exit the application
+    */
+    CFE_ES_ExitApp(Generic_ADCS_AppData.RunStatus);
+}
+
+/*
+** Initialize application
+*/
+static int32 Generic_ADCS_AppInit(void)
+{
+    int32 status = OS_SUCCESS;
+
+    Generic_ADCS_AppData.RunStatus = CFE_ES_RunStatus_APP_RUN;
+
+    /*
+    ** Register the events
+    */
+    status = CFE_EVS_Register(NULL, 0, CFE_EVS_EventFilter_BINARY); /* as default, no filters are used */
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Generic_ADCS: Error registering for event services: 0x%08X\n", (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** Create the Software Bus command pipe
+    */
+    status = CFE_SB_CreatePipe(&amp;Generic_ADCS_AppData.CmdPipe, GENERIC_ADCS_PIPE_DEPTH, "ADCS_CMD_PIPE");
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(GENERIC_ADCS_PIPE_ERR_EID, CFE_EVS_EventType_ERROR, "Error Creating SB Pipe,RC=0x%08X",
+                          (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** Subscribe to ground commands
+    */
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_ADCS_CMD_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(GENERIC_ADCS_SUB_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error Subscribing to HK Gnd Cmds, MID=0x%04X, RC=0x%08X", GENERIC_ADCS_CMD_MID,
+                          (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** Subscribe to housekeeping (hk) message requests
+    */
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_ADCS_REQ_HK_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(GENERIC_ADCS_SUB_REQ_HK_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error Subscribing to HK Request, MID=0x%04X, RC=0x%08X", GENERIC_ADCS_REQ_HK_MID,
+                          (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** TODO: Subscribe to any other messages here
+    */
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_ADCS_ADAC_UPDATE_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(GENERIC_ADCS_SUB_REQ_HK_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error Subscribing to ADAC Update, MID=0x%04X, RC=0x%08X", GENERIC_ADCS_ADAC_UPDATE_MID,
+                          (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** Initialize the published HK message - this HK message will contain the
+    ** telemetry that has been defined in the Generic_ADCS_HkTelemetryPkt for this app.
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(Generic_ADCS_AppData.HkTelemetryPkt.TlmHeader),
+                 CFE_SB_ValueToMsgId(GENERIC_ADCS_HK_TLM_MID), GENERIC_ADCS_HK_TLM_LNGTH);
+
+    /*
+    ** Initialize any other messages that this app will publish
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(Generic_ADCS_AppData.DIPacket.TlmHeader), CFE_SB_ValueToMsgId(GENERIC_ADCS_DI_MID),
+                 GENERIC_ADCS_DI_LNGTH);
+    CFE_MSG_Init(CFE_MSG_PTR(Generic_ADCS_AppData.ADPacket.TlmHeader), CFE_SB_ValueToMsgId(GENERIC_ADCS_AD_MID),
+                 GENERIC_ADCS_AD_LNGTH);
+    CFE_MSG_Init(CFE_MSG_PTR(Generic_ADCS_AppData.GNCPacket.TlmHeader), CFE_SB_ValueToMsgId(GENERIC_ADCS_GNC_MID),
+                 GENERIC_ADCS_GNC_LNGTH);
+    CFE_MSG_Init(CFE_MSG_PTR(Generic_ADCS_AppData.ACSPacket.TlmHeader), CFE_SB_ValueToMsgId(GENERIC_ADCS_AC_MID),
+                 GENERIC_ADCS_AC_LNGTH);
+    CFE_MSG_Init(CFE_MSG_PTR(Generic_ADCS_AppData.DOPacket.TlmHeader), CFE_SB_ValueToMsgId(GENERIC_ADCS_DO_MID),
+                 GENERIC_ADCS_DO_LNGTH);
+
+    CFE_MSG_Init(CFE_MSG_PTR(Generic_ADCS_AppData.MtbPctOnCmd.CmdHeader), CFE_SB_ValueToMsgId(GENERIC_TORQUER_CMD_MID),
+                 GENERIC_TORQUER_ALL_PERCENT_ON_CMD_LEN);
+    CFE_MSG_SetFcnCode((CFE_MSG_Message_t *)&amp;Generic_ADCS_AppData.MtbPctOnCmd, GENERIC_TORQUER_CONFIG_ALL_CC);
+    CFE_MSG_Init(CFE_MSG_PTR(Generic_ADCS_AppData.RwCmd.CmdHeader), CFE_SB_ValueToMsgId(GENERIC_RW_APP_CMD_MID),
+                 GENERIC_RW_CMD_LEN);
+    CFE_MSG_SetFcnCode((CFE_MSG_Message_t *)&amp;Generic_ADCS_AppData.RwCmd, GENERIC_RW_APP_SET_TORQUE_CC);
+
+    /*
+    ** Always reset all counters during application initialization
+    */
+    Generic_ADCS_ResetCounters();
+
+    /* ADCS initializations */
+    FILE *adcs_in = fopen("cf/Inp_DI.txt", "r");
+    if (adcs_in == NULL)
+    {
+        CFE_EVS_SendEvent(GENERIC_ADCS_FOPEN_ERR_EID, CFE_EVS_EventType_ERROR, "Error opening cf/Inp_DI.txt");
+        return OS_ERROR;
+    }
+    Generic_ADCS_ingest_init(adcs_in, &amp;Generic_ADCS_AppData.DIPacket.Payload);
+    fclose(adcs_in);
+
+    adcs_in = fopen("cf/Inp_ADAC.txt", "r");
+    if (adcs_in == NULL)
+    {
+        CFE_EVS_SendEvent(GENERIC_ADCS_FOPEN_ERR_EID, CFE_EVS_EventType_ERROR, "Error opening cf/Inp_ADAC.txt");
+        return OS_ERROR;
+    }
+    Generic_ADCS_init_attitude_determination_and_attitude_control(
+        adcs_in, &amp;Generic_ADCS_AppData.EPHPacket.Payload, &amp;Generic_ADCS_AppData.ADPacket.Payload,
+        &amp;Generic_ADCS_AppData.GNCPacket.Payload, &amp;Generic_ADCS_AppData.ACSPacket.Payload);
+    fclose(adcs_in);
+
+    adcs_in = fopen("cf/Inp_DO.txt", "r");
+    if (adcs_in == NULL)
+    {
+        CFE_EVS_SendEvent(GENERIC_ADCS_FOPEN_ERR_EID, CFE_EVS_EventType_ERROR, "Error opening cf/Inp_DO.txt");
+        return OS_ERROR;
+    }
+    Generic_ADCS_output_init(adcs_in, &amp;Generic_ADCS_AppData.DOPacket.Payload);
+    fclose(adcs_in);
+
+    /*
+    ** Subscribe to ADCS packets from the sensors
+    */
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_MAG_DEVICE_TLM_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Generic_ADCS App: Error Subscribing to GENERIC_MAG_DEVICE_TLM_MID, RC = 0x%08lX\n",
+                             (unsigned long)status);
+        return (status);
+    }
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_FSS_DEVICE_TLM_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Generic_ADCS App: Error Subscribing to GENERIC_FSS_DEVICE_TLM_MID, RC = 0x%08lX\n",
+                             (unsigned long)status);
+        return (status);
+    }
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_CSS_DEVICE_TLM_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Generic_ADCS App: Error Subscribing to GENERIC_CSS_DEVICE_TLM_MID, RC = 0x%08lX\n",
+                             (unsigned long)status);
+        return (status);
+    }
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_IMU_DEVICE_TLM_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Generic_ADCS App: Error Subscribing to GENERIC_IMU_DEVICE_TLM_MID, RC = 0x%08lX\n",
+                             (unsigned long)status);
+        return (status);
+    }
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_RW_APP_HK_TLM_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Generic_ADCS App: Error Subscribing to GENERIC_RW_APP_HK_TLM_MID, RC = 0x%08lX\n",
+                             (unsigned long)status);
+        return (status);
+    }
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_STAR_TRACKER_DEVICE_TLM_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog(
+            "Generic_ADCS App: Error Subscribing to GENERIC_STAR_TRACKER_DEVICE_TLM_MID, RC = 0x%08lX\n",
+            (unsigned long)status);
+        return (status);
+    }
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(NOVATEL_OEM615_DEVICE_TLM_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Generic_ADCS App: Error Subscribing to NOVATEL_OEM615_DEVICE_TLM_MID, RC = 0x%08lX\n",
+                             (unsigned long)status);
+        return (status);
+    }
+
+    /*
+     ** Send an information event that the app has initialized.
+     ** This is useful for debugging the loading of individual applications.
+     */
+    status = CFE_EVS_SendEvent(GENERIC_ADCS_STARTUP_INF_EID, CFE_EVS_EventType_INFORMATION,
+                               "Generic_ADCS App Initialized. Version %d.%d.%d.%d", GENERIC_ADCS_MAJOR_VERSION,
+                               GENERIC_ADCS_MINOR_VERSION, GENERIC_ADCS_REVISION, GENERIC_ADCS_MISSION_REV);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Generic_ADCS: Error sending initialization event: 0x%08X\n", (unsigned int)status);
+    }
+    return status;
+}
+
+/*
+** Process packets received on the Generic_ADCS command pipe
+*/
+static void Generic_ADCS_ProcessCommandPacket(void)
+{
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_GetMsgId(Generic_ADCS_AppData.MsgPtr, &amp;MsgId);
+    switch (CFE_SB_MsgIdToValue(MsgId))
+    {
+        /*
+        ** Ground Commands with command codes fall under the GENERIC_ADCS_CMD_MID (Message ID)
+        */
+        case GENERIC_ADCS_CMD_MID:
+            Generic_ADCS_ProcessGroundCommand();
+            break;
+
+        /*
+        ** All other messages, other than ground commands, add to this case statement.
+        */
+        case GENERIC_ADCS_REQ_HK_MID:
+            Generic_ADCS_ProcessTelemetryRequest();
+            break;
+
+        case GENERIC_MAG_DEVICE_TLM_MID:
+            Generic_ADCS_ingest_generic_mag(Generic_ADCS_AppData.MsgPtr, &amp;Generic_ADCS_AppData.DIPacket.Payload.Mag);
+            break;
+
+        case GENERIC_FSS_DEVICE_TLM_MID:
+            Generic_ADCS_ingest_generic_fss(Generic_ADCS_AppData.MsgPtr, &amp;Generic_ADCS_AppData.DIPacket.Payload.Fss);
+            break;
+
+        case GENERIC_CSS_DEVICE_TLM_MID:
+            Generic_ADCS_ingest_generic_css(Generic_ADCS_AppData.MsgPtr, &amp;Generic_ADCS_AppData.DIPacket.Payload.Css);
+            break;
+
+        case GENERIC_IMU_DEVICE_TLM_MID:
+            Generic_ADCS_ingest_generic_imu(Generic_ADCS_AppData.MsgPtr, &amp;Generic_ADCS_AppData.DIPacket.Payload.Imu);
+            break;
+
+        case GENERIC_RW_APP_HK_TLM_MID:
+            Generic_ADCS_ingest_generic_rw(Generic_ADCS_AppData.MsgPtr, &amp;Generic_ADCS_AppData.DIPacket.Payload.Rw);
+            break;
+
+        case GENERIC_STAR_TRACKER_DEVICE_TLM_MID:
+            Generic_ADCS_ingest_generic_st(Generic_ADCS_AppData.MsgPtr, &amp;Generic_ADCS_AppData.DIPacket.Payload.St);
+            break;
+
+        case NOVATEL_OEM615_DEVICE_TLM_MID:
+            Generic_ADCS_ingest_novatel_gps(Generic_ADCS_AppData.MsgPtr, &amp;Generic_ADCS_AppData.DIPacket.Payload.Gps);
+            break;
+
+        case GENERIC_ADCS_ADAC_UPDATE_MID:
+            Generic_ADCS_execute_attitude_determination_and_attitude_control(
+                &amp;Generic_ADCS_AppData.DIPacket.Payload, &amp;Generic_ADCS_AppData.EPHPacket.Payload,
+                &amp;Generic_ADCS_AppData.ADPacket.Payload, &amp;Generic_ADCS_AppData.GNCPacket.Payload,
+                &amp;Generic_ADCS_AppData.ACSPacket.Payload);
+            Generic_ADCS_output_to_actuators(&amp;Generic_ADCS_AppData.GNCPacket.Payload,
+                                             &amp;Generic_ADCS_AppData.DOPacket.Payload, &amp;Generic_ADCS_AppData.MtbPctOnCmd,
+                                             &amp;Generic_ADCS_AppData.RwCmd);
+            break;
+
+        /*
+        ** All other invalid messages that this app doesn't recognize,
+        ** increment the command error counter and log as an error event.
+        */
+        default:
+            Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            CFE_EVS_SendEvent(GENERIC_ADCS_PROCESS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Generic_ADCS: Invalid command packet, MID = 0x%x", CFE_SB_MsgIdToValue(MsgId));
+            break;
+    }
+    return;
+}
+
+/*
+** Process ground commands
+*/
+static void Generic_ADCS_ProcessGroundCommand(void)
+{
+    CFE_SB_MsgId_t    MsgId       = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode = 0;
+
+    /*
+    ** MsgId is only needed if the command code is not recognized. See default case
+    */
+    CFE_MSG_GetMsgId(Generic_ADCS_AppData.MsgPtr, &amp;MsgId);
+
+    /*
+    ** Ground Commands, by definition, have a command code (_CC) associated with them
+    ** Pull this command code from the message and then process
+    */
+    CFE_MSG_GetFcnCode(Generic_ADCS_AppData.MsgPtr, &amp;CommandCode);
+    switch (CommandCode)
+    {
+        /*
+        ** NOOP Command
+        */
+        case GENERIC_ADCS_NOOP_CC:
+            /*
+            ** First, verify the command length immediately after CC identification
+            ** Note that VerifyCmdLength handles the command and command error counters
+            */
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                /* Second, send EVS event on successful receipt ground commands*/
+                CFE_EVS_SendEvent(GENERIC_ADCS_CMD_NOOP_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "Generic_ADCS: NOOP command received");
+                /* Third, do the desired command action if applicable, in the case of NOOP it is no operation */
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+
+            break;
+
+        /*
+        ** Reset Counters Command
+        */
+        case GENERIC_ADCS_RESET_COUNTERS_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                CFE_EVS_SendEvent(GENERIC_ADCS_CMD_RESET_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "Generic_ADCS: RESET counters command received");
+                Generic_ADCS_ResetCounters();
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        case GENERIC_ADCS_SET_MODE_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_Mode_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                Generic_ADCS_Mode_cmd_t *cmd;
+                cmd                                         = (Generic_ADCS_Mode_cmd_t *)Generic_ADCS_AppData.MsgPtr;
+                Generic_ADCS_AppData.GNCPacket.Payload.Mode = cmd-&gt;Mode; // Keep the current value in **one** place
+                CFE_EVS_SendEvent(GENERIC_ADCS_SET_MODE_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "***ADCS*** Changed mode to: %u", cmd-&gt;Mode);
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        case GENERIC_ADCS_SET_MOMENTUM_MANAGEMENT_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr,
+                                             sizeof(Generic_ADCS_MomentumManagement_cmd_t)) == OS_SUCCESS)
+            {
+                Generic_ADCS_MomentumManagement_cmd_t *cmd;
+                cmd = (Generic_ADCS_MomentumManagement_cmd_t *)Generic_ADCS_AppData.MsgPtr;
+                Generic_ADCS_AppData.GNCPacket.Payload.HmgmtOn =
+                    cmd-&gt;MomentumManagement; // Keep the current value in **one** place
+                CFE_EVS_SendEvent(GENERIC_ADCS_SET_MOMENTUM_MANAGEMENT_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "***ADCS*** Changed momentum management to: %u", cmd-&gt;MomentumManagement);
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        case GENERIC_ADCS_SEND_DI_CMD_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                int32 status = Generic_ADCS_SendDICommand();
+                if (status != CFE_SUCCESS)
+                {
+                    CFE_EVS_SendEvent(GENERIC_ADCS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Unable to send DI telemetry: status = %d", status);
+                }
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        case GENERIC_ADCS_SEND_AD_CMD_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                int32 status = Generic_ADCS_SendADCommand();
+                if (status != CFE_SUCCESS)
+                {
+                    CFE_EVS_SendEvent(GENERIC_ADCS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Unable to send AD telemetry: status = %d", status);
+                }
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        case GENERIC_ADCS_SEND_GNC_CMD_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                int32 status = Generic_ADCS_SendGNCCommand();
+                if (status != CFE_SUCCESS)
+                {
+                    CFE_EVS_SendEvent(GENERIC_ADCS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Unable to send GNC telemetry: status = %d", status);
+                }
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        case GENERIC_ADCS_SEND_AC_CMD_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                int32 status = Generic_ADCS_SendACCommand();
+                if (status != CFE_SUCCESS)
+                {
+                    CFE_EVS_SendEvent(GENERIC_ADCS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Unable to send AC telemetry: status = %d", status);
+                }
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        case GENERIC_ADCS_SEND_DO_CMD_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                int32 status = Generic_ADCS_SendDOCommand();
+                if (status != CFE_SUCCESS)
+                {
+                    CFE_EVS_SendEvent(GENERIC_ADCS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Unable to send DO telemetry: status = %d", status);
+                }
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        case GENERIC_ADCS_INERTIAL_QUATERNION_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_Quat_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                Generic_ADCS_Quat_cmd_t *cmd;
+                cmd = (Generic_ADCS_Quat_cmd_t *)Generic_ADCS_AppData.MsgPtr;
+                Generic_ADCS_AppData.ACSPacket.Payload.Inertial.qbn_cmd[0] = ((double)cmd-&gt;qbn[0]);
+                Generic_ADCS_AppData.ACSPacket.Payload.Inertial.qbn_cmd[1] = ((double)cmd-&gt;qbn[1]);
+                Generic_ADCS_AppData.ACSPacket.Payload.Inertial.qbn_cmd[2] = ((double)cmd-&gt;qbn[2]);
+                Generic_ADCS_AppData.ACSPacket.Payload.Inertial.qbn_cmd[3] = ((double)cmd-&gt;qbn[3]);
+                CFE_EVS_SendEvent(GENERIC_ADCS_SET_INER_QUAT_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "Set inertial quaternion to: %f,%f,%f,%f", cmd-&gt;qbn[0], cmd-&gt;qbn[1], cmd-&gt;qbn[2],
+                                  cmd-&gt;qbn[3]);
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        /*
+        ** Invalid Command Codes
+        */
+        default:
+            /* Increment the error counter upon receipt of an invalid command */
+            Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            CFE_EVS_SendEvent(GENERIC_ADCS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Generic_ADCS: Invalid command code for packet, MID = 0x%x, cmdCode = 0x%x",
+                              CFE_SB_MsgIdToValue(MsgId), CommandCode);
+            break;
+    }
+    return;
+}
+
+/*
+** Process Telemetry Request - Triggered in response to a telemetery request
+*/
+static void Generic_ADCS_ProcessTelemetryRequest(void)
+{
+    CFE_SB_MsgId_t    MsgId       = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode = 0;
+
+    /* MsgId is only needed if the command code is not recognized. See default case */
+    CFE_MSG_GetMsgId(Generic_ADCS_AppData.MsgPtr, &amp;MsgId);
+
+    /* Pull this command code from the message and then process */
+    CFE_MSG_GetFcnCode(Generic_ADCS_AppData.MsgPtr, &amp;CommandCode);
+    switch (CommandCode)
+    {
+        case GENERIC_ADCS_REQ_HK_TLM:
+            Generic_ADCS_ReportHousekeeping();
+            break;
+
+        /*
+        ** Invalid Command Codes
+        */
+        default:
+            /* Increment the error counter upon receipt of an invalid command */
+            Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            CFE_EVS_SendEvent(GENERIC_ADCS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Generic_ADCS: Invalid command code for packet, MID = 0x%x, cmdCode = 0x%x",
+                              CFE_SB_MsgIdToValue(MsgId), CommandCode);
+            break;
+    }
+    return;
+}
+
+/*
+** Report Application Housekeeping
+*/
+static void Generic_ADCS_ReportHousekeeping(void)
+{
+    /* Time stamp and publish housekeeping telemetry */
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&amp;Generic_ADCS_AppData.HkTelemetryPkt);
+    CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&amp;Generic_ADCS_AppData.HkTelemetryPkt, true);
+}
+
+/*
+** Reset all global counter variables
+*/
+static void Generic_ADCS_ResetCounters(void)
+{
+    Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount = 0;
+    Generic_ADCS_AppData.HkTelemetryPkt.CommandCount      = 0;
+}
+
+static int32 Generic_ADCS_SendDICommand(void)
+{
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&amp;Generic_ADCS_AppData.DIPacket);
+    return CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&amp;Generic_ADCS_AppData.DIPacket, true);
+}
+
+static int32 Generic_ADCS_SendADCommand(void)
+{
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&amp;Generic_ADCS_AppData.ADPacket);
+    return CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&amp;Generic_ADCS_AppData.ADPacket, true);
+}
+
+static int32 Generic_ADCS_SendGNCCommand(void)
+{
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&amp;Generic_ADCS_AppData.GNCPacket);
+    return CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&amp;Generic_ADCS_AppData.GNCPacket, true);
+}
+
+static int32 Generic_ADCS_SendACCommand(void)
+{
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&amp;Generic_ADCS_AppData.ACSPacket);
+    return CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&amp;Generic_ADCS_AppData.ACSPacket, true);
+}
+
+static int32 Generic_ADCS_SendDOCommand(void)
+{
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&amp;Generic_ADCS_AppData.DOPacket);
+    return CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&amp;Generic_ADCS_AppData.DOPacket, true);
+}
+
+/*
+** Verify command packet length matches expected
+*/
+static int32 Generic_ADCS_VerifyCmdLength(CFE_MSG_Message_t *msg, uint16 expected_length)
+{
+    int32             status        = OS_SUCCESS;
+    CFE_SB_MsgId_t    msg_id        = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t cmd_code      = 0;
+    size_t            actual_length = 0;
+
+    CFE_MSG_GetSize(msg, &amp;actual_length);
+    if (expected_length == actual_length)
+    {
+        /* Increment the command counter upon receipt of an invalid command */
+        Generic_ADCS_AppData.HkTelemetryPkt.CommandCount++;
+    }
+    else
+    {
+        CFE_MSG_GetMsgId(msg, &amp;msg_id);
+        CFE_MSG_GetFcnCode(msg, &amp;cmd_code);
+
+        CFE_EVS_SendEvent(GENERIC_ADCS_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid msg length: ID = 0x%X,  CC = %d, Len = %ld, Expected = %d",
+                          CFE_SB_MsgIdToValue(msg_id), cmd_code, actual_length, expected_length);
+
+        status = OS_ERROR;
+
+        /* Increment the command error counter upon receipt of an invalid command */
+        Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+    }
+    return status;
+}
+</pre></div>
+</div>
+</section>
+<section id="generic-adcs-app-h">
+<h2><code class="docutils literal notranslate"><span class="pre">generic_adcs_app.h</span></code><a class="headerlink" href="#generic-adcs-app-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/generic_adcs/fsw/cfs/src/generic_adcs_app.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*******************************************************************************
+** Purpose:
+**   This is the main header file for the GENERIC_ADCS application.
+**
+*******************************************************************************/
+#ifndef _GENERIC_ADCS_APP_H_
+#define _GENERIC_ADCS_APP_H_
+
+/*
+** Include Files
+*/
+#include "cfe.h"
+#include "generic_torquer_msg.h"
+#include "generic_reaction_wheel_msg.h"
+#include "generic_adcs_msg.h"
+
+/*
+** Specified pipe depth - how many messages will be queued in the pipe
+*/
+#define GENERIC_ADCS_PIPE_DEPTH 32
+
+/*
+** GENERIC_ADCS global data structure
+** The cFE convention is to put all global app data in a single struct.
+** This struct is defined in the `sample_app.h` file with one global instance
+** in the `.c` file.
+*/
+typedef struct
+{
+    /*
+    ** Housekeeping telemetry packet
+    ** Each app defines its own packet which contains its OWN telemetry
+    */
+    Generic_ADCS_Hk_tlm_t  HkTelemetryPkt; /* GENERIC_ADCS Housekeeping Telemetry Packet */
+    Generic_ADCS_EPH_Tlm_t EPHPacket;
+    Generic_ADCS_DI_Tlm_t  DIPacket;
+    Generic_ADCS_AD_Tlm_t  ADPacket;
+    Generic_ADCS_GNC_Tlm_t GNCPacket;
+    Generic_ADCS_AC_Tlm_t  ACSPacket;
+    Generic_ADCS_DO_Tlm_t  DOPacket;
+
+    /*
+    ** Command packets to other apps
+    */
+    GENERIC_TORQUER_All_Percent_On_cmd_t MtbPctOnCmd;
+    GENERIC_RW_Cmd_t                     RwCmd;
+
+    /*
+    ** Operational data  - not reported in housekeeping
+    */
+    CFE_MSG_Message_t *MsgPtr;    /* Pointer to msg received on software bus */
+    CFE_SB_PipeId_t    CmdPipe;   /* Pipe Id for HK command pipe */
+    uint32             RunStatus; /* App run status for controlling the application state */
+
+} Generic_ADCS_AppData_t;
+
+/*
+** Exported Data
+** Extern the global struct in the header for the Unit Test Framework (UTF).
+*/
+extern Generic_ADCS_AppData_t Generic_ADCS_AppData; /* GENERIC_ADCS App Data */
+
+/*
+**
+** Local function prototypes.
+**
+** Note: Except for the entry point (ADCS_AppMain), these
+**       functions are not called from any other source module.
+*/
+void ADCS_AppMain(void);
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="generic-adcs-events-h">
+<h2><code class="docutils literal notranslate"><span class="pre">generic_adcs_events.h</span></code><a class="headerlink" href="#generic-adcs-events-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/generic_adcs/fsw/cfs/src/generic_adcs_events.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+** Purpose:
+**  Define GENERIC_ADCS application event IDs
+**
+*************************************************************************/
+
+#ifndef _GENERIC_ADCS_EVENTS_H_
+#define _GENERIC_ADCS_EVENTS_H_
+
+/* Standard app event IDs */
+#define GENERIC_ADCS_RESERVED_EID        0
+#define GENERIC_ADCS_STARTUP_INF_EID     1
+#define GENERIC_ADCS_LEN_ERR_EID         2
+#define GENERIC_ADCS_PIPE_ERR_EID        3
+#define GENERIC_ADCS_SUB_CMD_ERR_EID     4
+#define GENERIC_ADCS_SUB_REQ_HK_ERR_EID  5
+#define GENERIC_ADCS_PROCESS_CMD_ERR_EID 6
+#define GENERIC_ADCS_FOPEN_ERR_EID       7
+
+/* Standard command event IDs */
+#define GENERIC_ADCS_CMD_ERR_EID       10
+#define GENERIC_ADCS_CMD_NOOP_INF_EID  11
+#define GENERIC_ADCS_CMD_RESET_INF_EID 12
+
+#define GENERIC_ADCS_SET_MODE_INF_EID                20
+#define GENERIC_ADCS_SET_MOMENTUM_MANAGEMENT_INF_EID 21
+
+#define GENERIC_ADCS_SET_INER_QUAT_INF_EID 30
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="generic-adcs-ingest-c">
+<h2><code class="docutils literal notranslate"><span class="pre">generic_adcs_ingest.c</span></code><a class="headerlink" href="#generic-adcs-ingest-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/generic_adcs/fsw/cfs/src/generic_adcs_ingest.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*******************************************************************************
+** Purpose:
+**   This file implements the functions to ingest messages from the sensor applications.
+**
+*******************************************************************************/
+
+#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+#include "generic_mag_msg.h"
+#include "generic_fss_msg.h"
+#include "generic_css_msg.h"
+#include "generic_imu_msg.h"
+#include "generic_reaction_wheel_msg.h"
+#include "generic_star_tracker_msg.h"
+#include "novatel_oem615_msg.h"
+#include "generic_adcs_utilities.h"
+#include "generic_adcs_ingest.h"
+
+static const double NANO = 1.0e-9;
+
+void Generic_ADCS_ingest_init(FILE *in, Generic_ADCS_DI_Tlm_Payload_t *DI)
+{
+    char junk[120], newline;
+    // Magnetometer
+    fscanf(in, "%[^\n]%[\n]", junk, &amp;newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &amp;DI-&gt;Mag.qbs[0], &amp;DI-&gt;Mag.qbs[1], &amp;DI-&gt;Mag.qbs[2], &amp;DI-&gt;Mag.qbs[3], junk,
+           &amp;newline);
+    // Fine Sun Sensor
+    fscanf(in, "%[^\n]%[\n]", junk, &amp;newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &amp;DI-&gt;Fss.qbs[0], &amp;DI-&gt;Fss.qbs[1], &amp;DI-&gt;Fss.qbs[2], &amp;DI-&gt;Fss.qbs[3], junk,
+           &amp;newline);
+    // Coarse Sun Sensors
+    fscanf(in, "%[^\n]%[\n]", junk, &amp;newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &amp;DI-&gt;Css.Sensor[0].axis[0], &amp;DI-&gt;Css.Sensor[0].axis[1],
+           &amp;DI-&gt;Css.Sensor[0].axis[2], &amp;DI-&gt;Css.Sensor[0].scale, junk, &amp;newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &amp;DI-&gt;Css.Sensor[1].axis[0], &amp;DI-&gt;Css.Sensor[1].axis[1],
+           &amp;DI-&gt;Css.Sensor[1].axis[2], &amp;DI-&gt;Css.Sensor[1].scale, junk, &amp;newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &amp;DI-&gt;Css.Sensor[2].axis[0], &amp;DI-&gt;Css.Sensor[2].axis[1],
+           &amp;DI-&gt;Css.Sensor[2].axis[2], &amp;DI-&gt;Css.Sensor[2].scale, junk, &amp;newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &amp;DI-&gt;Css.Sensor[3].axis[0], &amp;DI-&gt;Css.Sensor[3].axis[1],
+           &amp;DI-&gt;Css.Sensor[3].axis[2], &amp;DI-&gt;Css.Sensor[3].scale, junk, &amp;newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &amp;DI-&gt;Css.Sensor[4].axis[0], &amp;DI-&gt;Css.Sensor[4].axis[1],
+           &amp;DI-&gt;Css.Sensor[4].axis[2], &amp;DI-&gt;Css.Sensor[4].scale, junk, &amp;newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &amp;DI-&gt;Css.Sensor[5].axis[0], &amp;DI-&gt;Css.Sensor[5].axis[1],
+           &amp;DI-&gt;Css.Sensor[5].axis[2], &amp;DI-&gt;Css.Sensor[5].scale, junk, &amp;newline);
+    // Inertial Measurement Unit
+    fscanf(in, "%[^\n]%[\n]", junk, &amp;newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &amp;DI-&gt;Imu.qbs[0], &amp;DI-&gt;Imu.qbs[1], &amp;DI-&gt;Imu.qbs[2], &amp;DI-&gt;Imu.qbs[3], junk,
+           &amp;newline);
+    fscanf(in, "%lf %lf %lf%[^\n]%[\n]", &amp;DI-&gt;Imu.pos[0], &amp;DI-&gt;Imu.pos[1], &amp;DI-&gt;Imu.pos[2], junk, &amp;newline);
+    // Reaction Wheels
+    fscanf(in, "%[^\n]%[\n]", junk, &amp;newline);
+    double h_max[3] = {0.0, 0.0, 0.0};
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &amp;DI-&gt;Rw.whl_axis[0][0], &amp;DI-&gt;Rw.whl_axis[0][1], &amp;DI-&gt;Rw.whl_axis[0][2],
+           &amp;h_max[0], junk, &amp;newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &amp;DI-&gt;Rw.whl_axis[1][0], &amp;DI-&gt;Rw.whl_axis[1][1], &amp;DI-&gt;Rw.whl_axis[1][2],
+           &amp;h_max[1], junk, &amp;newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &amp;DI-&gt;Rw.whl_axis[2][0], &amp;DI-&gt;Rw.whl_axis[2][1], &amp;DI-&gt;Rw.whl_axis[2][2],
+           &amp;h_max[2], junk, &amp;newline);
+    double H_in_body[3] = {0.0, 0.0, 0.0};
+    for (int i = 0; i &lt; 3; i++)
+    {
+        DI-&gt;Rw.H_maxB[i] = 0.0;
+    }
+    for (int whl = 0; whl &lt; 3; whl++)
+    {
+        SxV(h_max[whl], DI-&gt;Rw.whl_axis[whl], H_in_body);
+        for (int i = 0; i &lt; 3; i++)
+        {
+            DI-&gt;Rw.H_maxB[i] += H_in_body[i];
+        }
+    }
+    // Star Tracker
+    fscanf(in, "%[^\n]%[\n]", junk, &amp;newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &amp;DI-&gt;St.qbs[0], &amp;DI-&gt;St.qbs[1], &amp;DI-&gt;St.qbs[2], &amp;DI-&gt;St.qbs[3], junk,
+           &amp;newline);
+}
+
+void Generic_ADCS_ingest_generic_mag(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Mag_Tlm_Payload_t *Mag)
+{
+    GENERIC_MAG_Device_tlm_t *mag        = (GENERIC_MAG_Device_tlm_t *)Msg;
+    double                    msg_bvs[3] = {mag-&gt;Generic_mag.MagneticIntensityX, mag-&gt;Generic_mag.MagneticIntensityY,
+                                            mag-&gt;Generic_mag.MagneticIntensityZ};
+    QxV(Mag-&gt;qbs, msg_bvs, Mag-&gt;bvb); // convert from sensor frame to body frame
+    /* convert from raw data to engineering units of Teslas */
+    Mag-&gt;bvb[0] *= NANO;
+    Mag-&gt;bvb[1] *= NANO;
+    Mag-&gt;bvb[2] *= NANO;
+    /* OS_printf("Generic_ADCS_ingest_generic_mag: %f %f %f\n", Mag-&gt;bvb[0], Mag-&gt;bvb[1], Mag-&gt;bvb[2]); */
+}
+
+void Generic_ADCS_ingest_generic_fss(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Fss_Tlm_Payload_t *Fss)
+{
+    GENERIC_FSS_Device_tlm_t *fss = (GENERIC_FSS_Device_tlm_t *)Msg;
+
+    Fss-&gt;valid = 0;
+    if (fss-&gt;Generic_fss.ErrorCode == 0)
+        Fss-&gt;valid = 1;
+    if (Fss-&gt;valid == 1)
+    {
+        double svs[3];
+        double ta = tan(fss-&gt;Generic_fss.Alpha);
+        double tb = tan(fss-&gt;Generic_fss.Beta);
+        svs[2]    = 1.0 / sqrt(1 + ta * ta + tb * tb);
+        svs[0]    = svs[2] * ta;
+        svs[1]    = svs[2] * tb;
+        QxV(Fss-&gt;qbs, svs, Fss-&gt;svb); // convert from sensor frame to body frame
+    }
+    else
+    {
+        Fss-&gt;svb[0] = 0.0;
+        Fss-&gt;svb[1] = 0.0;
+        Fss-&gt;svb[2] = 0.0;
+    }
+}
+
+void Generic_ADCS_ingest_generic_css(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Css_Tlm_Payload_t *Css)
+{
+    GENERIC_CSS_Device_tlm_t *css = (GENERIC_CSS_Device_tlm_t *)Msg;
+    Css-&gt;Sensor[0].percenton      = css-&gt;Generic_css.Voltage[0] * Css-&gt;Sensor[0].scale;
+    Css-&gt;Sensor[1].percenton      = css-&gt;Generic_css.Voltage[1] * Css-&gt;Sensor[1].scale;
+    Css-&gt;Sensor[2].percenton      = css-&gt;Generic_css.Voltage[2] * Css-&gt;Sensor[2].scale;
+    Css-&gt;Sensor[3].percenton      = css-&gt;Generic_css.Voltage[3] * Css-&gt;Sensor[3].scale;
+    Css-&gt;Sensor[4].percenton      = css-&gt;Generic_css.Voltage[4] * Css-&gt;Sensor[4].scale;
+    Css-&gt;Sensor[5].percenton      = css-&gt;Generic_css.Voltage[5] * Css-&gt;Sensor[5].scale;
+
+    double svb[3] = {0.0, 0.0, 0.0};
+    for (int i = 0; i &lt; 6; i++)
+    {
+        svb[0] += Css-&gt;Sensor[i].axis[0] * Css-&gt;Sensor[i].percenton;
+        svb[1] += Css-&gt;Sensor[i].axis[1] * Css-&gt;Sensor[i].percenton;
+        svb[2] += Css-&gt;Sensor[i].axis[2] * Css-&gt;Sensor[i].percenton;
+    }
+    UNITV(svb);
+
+    Css-&gt;svb[0] = svb[0];
+    Css-&gt;svb[1] = svb[1];
+    Css-&gt;svb[2] = svb[2];
+    if (MAGV(svb) &gt; 0.0)
+    {
+        Css-&gt;valid = 1;
+    }
+    else
+    {
+        Css-&gt;valid = 0;
+    }
+}
+
+void Generic_ADCS_ingest_generic_imu(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Imu_Tlm_Payload_t *Imu)
+{
+    GENERIC_IMU_Device_tlm_t *imu    = (GENERIC_IMU_Device_tlm_t *)Msg;
+    double                    wsn[3] = {imu-&gt;Generic_imu.X_Data.AngularAcc, imu-&gt;Generic_imu.Y_Data.AngularAcc,
+                                        imu-&gt;Generic_imu.Z_Data.AngularAcc};
+    QxV(Imu-&gt;qbs, wsn, Imu-&gt;wbn);
+    double acc[3] = {imu-&gt;Generic_imu.X_Data.LinearAcc, imu-&gt;Generic_imu.Y_Data.LinearAcc,
+                     imu-&gt;Generic_imu.Z_Data.LinearAcc};
+    QxV(Imu-&gt;qbs, acc, Imu-&gt;acc);
+    Imu-&gt;valid = 1;
+}
+
+void Generic_ADCS_ingest_generic_rw(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Rw_Tlm_Payload_t *Rw)
+{
+    double              H_in_body[3] = {0.0, 0.0, 0.0};
+    GENERIC_RW_HkTlm_t *rw           = (GENERIC_RW_HkTlm_t *)Msg;
+    for (int i = 0; i &lt; 3; i++)
+    {
+        Rw-&gt;HwhlB[i] = 0.0;
+    }
+    for (int whl = 0; whl &lt; 3; whl++)
+    {
+        SxV(rw-&gt;Payload.data.momentum[whl], Rw-&gt;whl_axis[whl], H_in_body);
+        for (int i = 0; i &lt; 3; i++)
+        {
+            Rw-&gt;HwhlB[i] += H_in_body[i];
+        }
+    }
+}
+
+void Generic_ADCS_ingest_generic_st(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_St_Tlm_Payload_t *St)
+{
+    GENERIC_STAR_TRACKER_Device_tlm_t *st = (GENERIC_STAR_TRACKER_Device_tlm_t *)Msg;
+
+    St-&gt;valid   = st-&gt;Generic_star_tracker.IsValid;
+    double q[4] = {st-&gt;Generic_star_tracker.Q0, st-&gt;Generic_star_tracker.Q1, st-&gt;Generic_star_tracker.Q2,
+                   st-&gt;Generic_star_tracker.Q3};
+    QxQ(q, St-&gt;qbs, St-&gt;q);
+}
+
+void Generic_ADCS_ingest_novatel_gps(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Gps_Tlm_Payload_t *Gps)
+{
+    NOVATEL_OEM615_Device_tlm_t *gps = (NOVATEL_OEM615_Device_tlm_t *)Msg;
+
+    Gps-&gt;Weeks           = gps-&gt;Novatel_oem615.Weeks;
+    Gps-&gt;SecondsIntoWeek = gps-&gt;Novatel_oem615.SecondsIntoWeek;
+    Gps-&gt;Fractions       = gps-&gt;Novatel_oem615.Fractions;
+    Gps-&gt;ECEFX           = gps-&gt;Novatel_oem615.ECEFX;
+    Gps-&gt;ECEFY           = gps-&gt;Novatel_oem615.ECEFY;
+    Gps-&gt;ECEFZ           = gps-&gt;Novatel_oem615.ECEFZ;
+    Gps-&gt;VelX            = gps-&gt;Novatel_oem615.VelX;
+    Gps-&gt;VelY            = gps-&gt;Novatel_oem615.VelY;
+    Gps-&gt;VelZ            = gps-&gt;Novatel_oem615.VelZ;
+    Gps-&gt;lat             = gps-&gt;Novatel_oem615.lat;
+    Gps-&gt;lon             = gps-&gt;Novatel_oem615.lon;
+    Gps-&gt;alt             = gps-&gt;Novatel_oem615.alt;
+}
+</pre></div>
+</div>
+</section>
+<section id="generic-adcs-ingest-h">
+<h2><code class="docutils literal notranslate"><span class="pre">generic_adcs_ingest.h</span></code><a class="headerlink" href="#generic-adcs-ingest-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/generic_adcs/fsw/cfs/src/generic_adcs_ingest.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*******************************************************************************
+** Purpose:
+**   This file has the functions to ingest messages from the sensor applications.
+**
+*******************************************************************************/
+#ifndef _GENERIC_ADCS_INGEST_H_
+#define _GENERIC_ADCS_INGEST_H_
+
+#include "cfe.h"
+#include "generic_adcs_msg.h"
+
+void Generic_ADCS_ingest_init(FILE *in, Generic_ADCS_DI_Tlm_Payload_t *DI);
+void Generic_ADCS_ingest_generic_mag(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Mag_Tlm_Payload_t *Mag);
+void Generic_ADCS_ingest_generic_fss(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Fss_Tlm_Payload_t *Fss);
+void Generic_ADCS_ingest_generic_css(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Css_Tlm_Payload_t *Css);
+void Generic_ADCS_ingest_generic_imu(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Imu_Tlm_Payload_t *Imu);
+void Generic_ADCS_ingest_generic_rw(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Rw_Tlm_Payload_t *Rw);
+void Generic_ADCS_ingest_generic_st(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_St_Tlm_Payload_t *St);
+void Generic_ADCS_ingest_novatel_gps(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Gps_Tlm_Payload_t *Gps);
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="generic-adcs-msg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">generic_adcs_msg.h</span></code><a class="headerlink" href="#generic-adcs-msg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/generic_adcs/fsw/cfs/src/generic_adcs_msg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*******************************************************************************
+** Purpose:
+**  Define GENERIC_ADCS application commands and telemetry messages
+**
+*******************************************************************************/
+#ifndef _GENERIC_ADCS_MSG_H_
+#define _GENERIC_ADCS_MSG_H_
+
+#include "cfe.h"
+
+/*
+** Ground Command Codes
+*/
+#define GENERIC_ADCS_NOOP_CC                    0
+#define GENERIC_ADCS_RESET_COUNTERS_CC          1
+#define GENERIC_ADCS_SET_MODE_CC                2
+#define GENERIC_ADCS_SEND_DI_CMD_CC             3
+#define GENERIC_ADCS_SEND_AD_CMD_CC             4
+#define GENERIC_ADCS_SEND_GNC_CMD_CC            5
+#define GENERIC_ADCS_SEND_AC_CMD_CC             6
+#define GENERIC_ADCS_SEND_DO_CMD_CC             7
+#define GENERIC_ADCS_SET_MOMENTUM_MANAGEMENT_CC 8
+#define GENERIC_ADCS_INERTIAL_QUATERNION_CC     9
+
+/*
+** Telemetry Request Command Codes
+*/
+#define GENERIC_ADCS_REQ_HK_TLM 0
+
+/*
+** Generic "no arguments" command type definition
+*/
+typedef struct
+{
+    /* Every command requires a header used to identify it */
+    CFE_MSG_CommandHeader_t CmdHeader;
+
+} Generic_ADCS_NoArgs_cmd_t;
+
+typedef struct
+{
+    /* Every command requires a header used to identify it */
+    CFE_MSG_CommandHeader_t CmdHeader;
+    uint8                   Mode;
+} Generic_ADCS_Mode_cmd_t;
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader;
+    uint8                   MomentumManagement;
+} Generic_ADCS_MomentumManagement_cmd_t;
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader;
+    double                  qbn[4];
+} __attribute__((packed)) Generic_ADCS_Quat_cmd_t;
+
+/*
+** Generic_ADCS housekeeping type definition
+*/
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader;
+    uint8                     CommandErrorCount;
+    uint8                     CommandCount;
+} __attribute__((packed)) Generic_ADCS_Hk_tlm_t;
+#define GENERIC_ADCS_HK_TLM_LNGTH sizeof(Generic_ADCS_Hk_tlm_t)
+
+/*
+** Generic_ADCS EPH type definition
+*/
+typedef struct
+{
+    double date_epoch;
+    double coeff_G1;
+    double coeff_G2;
+    double coeff_L1;
+    double coeff_l2;
+    double coeff_long1;
+    double coeff_long2;
+    double cos_obliq_eclp;
+    double sin_obliq_eclp;
+} __attribute__((packed)) Generic_ADCS_EPH_Sol_Tlm_Payload_t;
+
+typedef struct
+{
+    int nmax;
+} __attribute__((packed)) Generic_ADCS_EPH_Mag_Tlm_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_EPH_Sol_Tlm_Payload_t Sol;
+    Generic_ADCS_EPH_Mag_Tlm_Payload_t bfld;
+} __attribute__((packed)) Generic_ADCS_EPH_Tlm_Payload_t;
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t      TlmHeader;
+    Generic_ADCS_EPH_Tlm_Payload_t Payload;
+} __attribute__((packed)) Generic_ADCS_EPH_Tlm_t;
+#define GENERIC_ADCS_EPH_LNGTH sizeof(Generic_ADCS_EPH_Tlm_t)
+
+/*
+** Generic_ADCS DI type definition
+*/
+typedef struct
+{
+    double qbs[4]; // quaternion from sensor to body
+    double bvb[3]; // magnetic field measurement by sensor in body frame
+} __attribute__((packed)) Generic_ADCS_DI_Mag_Tlm_Payload_t;
+
+typedef struct
+{
+    double qbs[4]; // quaternion from sensor to body
+    uint8  valid;
+    double svb[3]; // sun vector from sensor in body frame
+} __attribute__((packed)) Generic_ADCS_DI_Fss_Tlm_Payload_t;
+
+typedef struct
+{
+    double axis[3]; // CSS axis in body frame
+    double scale;   // scale factor
+    double percenton;
+} __attribute__((packed)) Generic_ADCS_DI_Css_Sensor_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_DI_Css_Sensor_Payload_t Sensor[6];
+    uint8                                valid;
+    double                               svb[3]; // sun vector from sensors in body frame
+} __attribute__((packed)) Generic_ADCS_DI_Css_Tlm_Payload_t;
+
+typedef struct
+{
+    double qbs[4]; // quaternion from sensor to body
+    double pos[3]; // position of sensor in body
+    uint8  valid;
+    double wbn[3]; // angular rate
+    double acc[3]; // acceleration
+} __attribute__((packed)) Generic_ADCS_DI_Imu_Tlm_Payload_t;
+
+typedef struct
+{
+    double whl_axis[3][3];
+    double H_maxB[3];
+    double HwhlB[3];
+} __attribute__((packed)) Generic_ADCS_DI_Rw_Tlm_Payload_t;
+
+typedef struct
+{
+    double qbs[4]; // quaternion from sensor to body
+    double q[4];
+    uint8  valid;
+} __attribute__((packed)) Generic_ADCS_DI_St_Tlm_Payload_t;
+
+typedef struct
+{
+    uint16_t Weeks;
+    uint32_t SecondsIntoWeek;
+    double   Fractions;
+    double   ECEFX;
+    double   ECEFY;
+    double   ECEFZ;
+    double   VelX;
+    double   VelY;
+    double   VelZ;
+    double   lat;
+    double   lon;
+    double   alt;
+} __attribute__((packed)) Generic_ADCS_DI_Gps_Tlm_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_DI_Mag_Tlm_Payload_t Mag;
+    Generic_ADCS_DI_Fss_Tlm_Payload_t Fss;
+    Generic_ADCS_DI_Css_Tlm_Payload_t Css;
+    Generic_ADCS_DI_Imu_Tlm_Payload_t Imu;
+    Generic_ADCS_DI_Rw_Tlm_Payload_t  Rw;
+    Generic_ADCS_DI_St_Tlm_Payload_t  St;
+    Generic_ADCS_DI_Gps_Tlm_Payload_t Gps;
+} __attribute__((packed)) Generic_ADCS_DI_Tlm_Payload_t;
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t     TlmHeader;
+    Generic_ADCS_DI_Tlm_Payload_t Payload;
+} __attribute__((packed)) Generic_ADCS_DI_Tlm_t;
+#define GENERIC_ADCS_DI_LNGTH sizeof(Generic_ADCS_DI_Tlm_t)
+
+/*
+** Generic_ADCS AD type definition
+*/
+typedef struct
+{
+    double bvb[3];
+    uint8  MagValid;
+} __attribute__((packed)) Generic_ADCS_AD_Mag_Tlm_Payload_t;
+
+typedef struct
+{
+    uint8  SunValid;
+    uint8  FssValid;
+    double svb[3];
+} __attribute__((packed)) Generic_ADCS_AD_Sol_Tlm_Payload_t;
+
+typedef struct
+{
+    uint8  init;
+    double alpha;
+    uint8  valid;
+    double wbn_prev[3];
+    double wbn[3];
+    double acc[3];
+} __attribute__((packed)) Generic_ADCS_AD_Imu_Tlm_Payload_t;
+
+typedef struct
+{
+    uint8  Valid;  /* [-] data validity flag */
+    double qbn[4]; /* [-] quaternion expressed in body frame */
+} __attribute__((packed)) Generic_ADCS_AD_ST_Tlm_Payload_t;
+
+typedef struct
+{
+    uint16_t Weeks;
+    uint32_t SecondsIntoWeek;
+    double   Fractions;
+    double   ECEFX;
+    double   ECEFY;
+    double   ECEFZ;
+    double   VelX;
+    double   VelY;
+    double   VelZ;
+    double   lat;
+    double   lon;
+    double   alt;
+} __attribute__((packed)) Generic_ADCS_AD_Gps_Tlm_Payload_t;
+
+typedef struct
+{
+    uint8  Valid;
+    uint8  enable_filter; /*Flag to enable/disable Moving Average filter*/
+    uint8  SolInit;
+    uint8  MagInit;
+    double wbn[3];
+    double ws[3];       /*(rad/s) Estimated angular rate from Sun Vector*/
+    double wm[3];       /*(rad/s) Estimated angular rate from Mag Vector*/
+    double svb_prev[3]; /*sol.svb at prevous time*/
+    double bvb_prev[3]; /*mag.bvb unit at last time step*/
+    int32  sample_size; /*Number of samples used in moving average filter*/
+} __attribute__((packed)) Generic_AD_rateEst_Tlm_Payload_t;
+
+typedef struct
+{
+    long   init; /* Initialization marker */
+    double dt;   /* rate at which dynamics propogated */
+    double eye3[3][3];
+    double sig_u;
+    double sig_v;
+    double sig_mag;
+    double sig_sun;
+    double sig_star;
+    double bias_est[3];
+    double qk_est[4];
+    double Pk[6][6];
+    double Qk[6][6];
+    double Gt[6][6];
+    double Hk[3][6];
+    double delta_xk_est[6];
+    double ek_ST_bound;
+    double ek_FSS_bound;
+    double ek_MG_bound;
+    double wbn[3];
+    double qbn[4];
+    int    AKFvalid;
+    double Mag_range;
+    double Dvg_tol;
+    int    reset_flag;
+} __attribute__((packed)) Generic_ADCS_AD_murAKF_Tlm_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_AD_Mag_Tlm_Payload_t    Mag;
+    Generic_ADCS_AD_Sol_Tlm_Payload_t    Sol;
+    Generic_ADCS_AD_Imu_Tlm_Payload_t    Imu;
+    Generic_ADCS_AD_ST_Tlm_Payload_t     ST;
+    Generic_ADCS_AD_Gps_Tlm_Payload_t    Gps;
+    Generic_AD_rateEst_Tlm_Payload_t     RateEst;
+    Generic_ADCS_AD_murAKF_Tlm_Payload_t AKF;
+} __attribute__((packed)) Generic_ADCS_AD_Tlm_Payload_t;
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t     TlmHeader;
+    Generic_ADCS_AD_Tlm_Payload_t Payload;
+} __attribute__((packed)) Generic_ADCS_AD_Tlm_t;
+#define GENERIC_ADCS_AD_LNGTH sizeof(Generic_ADCS_AD_Tlm_t)
+
+/*
+** Generic_ADCS GNC type definition
+*/
+typedef struct
+{
+    double Kb;
+    double b_range;
+    double loFrac;
+    double hiFrac;
+    uint8  mm_active[3];
+    double Mcmd[3];
+} __attribute__((packed)) Generic_ADCS_GNC_Hmgmt_t;
+
+typedef struct
+{
+    double                   DT;
+    double                   MaxMcmd;
+    uint8                    Mode;
+    uint8                    HmgmtOn;
+    Generic_ADCS_GNC_Hmgmt_t Hmgmt;
+    double                   bvb[3];
+    double                   svb[3];
+    uint8                    SunValid;
+    double                   wbn[3];
+    double                   HwhlMaxB[3];
+    double                   HwhlB[3];
+    double                   Mcmd[3];
+    double                   Tcmd[3];
+    uint8                    qValid;
+    double                   qbn[4];
+    double                   qErr[4];
+    double                   Bfield_ECIF[3];
+    double                   Bfield_ECEF[3];
+    double                   Bfield_NED[3];
+    double                   svn[3];
+    double                   beta;
+} __attribute__((packed)) Generic_ADCS_GNC_Tlm_Payload_t;
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t      TlmHeader;
+    Generic_ADCS_GNC_Tlm_Payload_t Payload;
+} __attribute__((packed)) Generic_ADCS_GNC_Tlm_t;
+#define GENERIC_ADCS_GNC_LNGTH sizeof(Generic_ADCS_GNC_Tlm_t)
+
+/*
+** Generic_ADCS AC type definition
+*/
+typedef struct
+{
+    double b_range;
+    double Kb;
+    double bold[3];
+    double bdot[3];
+} __attribute__((packed)) Generic_ADCS_AC_Bdot_Tlm_t;
+
+typedef struct
+{
+    /* Inputs*/
+    double Kp[3];
+    double Kr[3];
+    double sside[3];
+    double vmax;
+    double cmd_wbn[3];
+    uint8  h_mgmt;
+
+    /* Internal Variables */
+    double therr[3];
+    double werr[3];
+    double Tcmd[3];
+    double err_t;
+} __attribute__((packed)) Generic_ADCS_AC_Sunsafe_Tlm_t;
+
+typedef struct
+{
+    /* Inputs*/
+    double Kp[3];
+    double Kr[3];
+    double Ki[3];
+    double phiErr_max;
+    double qbn_cmd[4];
+    long   h_mgmt;
+
+    /* Internal Variables */
+    double therr[3];
+    double sumtherr[3];
+    double qErr[4];
+    double werr[3];
+    double Tcmd[3];
+} __attribute__((packed)) Generic_ADCS_AC_Inertial_Tlm_t;
+
+typedef struct
+{
+    Generic_ADCS_AC_Bdot_Tlm_t     Bdot;
+    Generic_ADCS_AC_Sunsafe_Tlm_t  Sunsafe;
+    Generic_ADCS_AC_Inertial_Tlm_t Inertial;
+} __attribute__((packed)) Generic_ADCS_AC_Tlm_Payload_t;
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t     TlmHeader;
+    Generic_ADCS_AC_Tlm_Payload_t Payload;
+} __attribute__((packed)) Generic_ADCS_AC_Tlm_t;
+#define GENERIC_ADCS_AC_LNGTH sizeof(Generic_ADCS_AC_Tlm_t)
+
+/*
+** Generic_ADCS DO type definition
+*/
+typedef struct
+{
+    double qba[4]; // quaternion from actuator to body
+    double Mcmd[3];
+} __attribute__((packed)) Generic_ADCS_DO_Trq_TlmPayload_t;
+
+typedef struct
+{
+    double axis[3][3];
+    double Tcmd[3];
+} __attribute__((packed)) Generic_ADCS_DO_Rw_TlmPayload_t;
+
+typedef struct
+{
+    Generic_ADCS_DO_Trq_TlmPayload_t Trq;
+    Generic_ADCS_DO_Rw_TlmPayload_t  Rw;
+} __attribute__((packed)) Generic_ADCS_DO_Tlm_Payload_t;
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t     TlmHeader;
+    Generic_ADCS_DO_Tlm_Payload_t Payload;
+} __attribute__((packed)) Generic_ADCS_DO_Tlm_t;
+#define GENERIC_ADCS_DO_LNGTH sizeof(Generic_ADCS_DO_Tlm_t)
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="generic-adcs-output-c">
+<h2><code class="docutils literal notranslate"><span class="pre">generic_adcs_output.c</span></code><a class="headerlink" href="#generic-adcs-output-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/generic_adcs/fsw/cfs/src/generic_adcs_output.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*******************************************************************************
+** Purpose:
+**   This file implements the functions to output messages to the actuator applications.
+**
+*******************************************************************************/
+
+#include "generic_adcs_app.h"
+#include "generic_adcs_utilities.h"
+#include "generic_adcs_output.h"
+
+static void send_mtb_commands(double Mcmd[3], Generic_ADCS_DO_Trq_TlmPayload_t *DO,
+                              GENERIC_TORQUER_All_Percent_On_cmd_t *MtbPctOnCmd);
+static void mcmd_to_percent_direction(double Mcmd, uint8 *percent, uint8 *direction);
+static void send_rw_commands(double Tcmd[3], Generic_ADCS_DO_Rw_TlmPayload_t *DO, GENERIC_RW_Cmd_t *RwCmd);
+
+void Generic_ADCS_output_init(FILE *in, Generic_ADCS_DO_Tlm_Payload_t *DO)
+{
+    char junk[512], newline;
+    fscanf(in, "%[^\n]%[\n]", junk, &amp;newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &amp;DO-&gt;Trq.qba[0], &amp;DO-&gt;Trq.qba[1], &amp;DO-&gt;Trq.qba[2], &amp;DO-&gt;Trq.qba[3], junk,
+           &amp;newline);
+    fscanf(in, "%[^\n]%[\n]", junk, &amp;newline);
+    fscanf(in, "%lf %lf %lf%[^\n]%[\n]", &amp;DO-&gt;Rw.axis[0][0], &amp;DO-&gt;Rw.axis[0][1], &amp;DO-&gt;Rw.axis[0][2], junk, &amp;newline);
+    fscanf(in, "%lf %lf %lf%[^\n]%[\n]", &amp;DO-&gt;Rw.axis[1][0], &amp;DO-&gt;Rw.axis[1][1], &amp;DO-&gt;Rw.axis[1][2], junk, &amp;newline);
+    fscanf(in, "%lf %lf %lf%[^\n]%[\n]", &amp;DO-&gt;Rw.axis[2][0], &amp;DO-&gt;Rw.axis[2][1], &amp;DO-&gt;Rw.axis[2][2], junk, &amp;newline);
+}
+
+void Generic_ADCS_output_to_actuators(const Generic_ADCS_GNC_Tlm_Payload_t *GNC, Generic_ADCS_DO_Tlm_Payload_t *DO,
+                                      GENERIC_TORQUER_All_Percent_On_cmd_t *MtbPctOnCmd, GENERIC_RW_Cmd_t *RwCmd)
+{
+    send_mtb_commands(GNC-&gt;Mcmd, &amp;DO-&gt;Trq, MtbPctOnCmd);
+    send_rw_commands(GNC-&gt;Tcmd, &amp;DO-&gt;Rw, RwCmd);
+}
+
+static struct
+{
+    uint8 Direction;
+    uint8 PercentOn;
+} CurrentMtb[] = {{1, 0}, {1, 0}, {1, 0}}; // Keep current state so commands are only sent on change
+static void send_mtb_commands(double Mcmd[3], Generic_ADCS_DO_Trq_TlmPayload_t *DO,
+                              GENERIC_TORQUER_All_Percent_On_cmd_t *MtbPctOnCmd)
+{
+    QTxV(DO-&gt;qba, Mcmd, DO-&gt;Mcmd);
+    mcmd_to_percent_direction(DO-&gt;Mcmd[0], &amp;MtbPctOnCmd-&gt;PercentOn_0, &amp;MtbPctOnCmd-&gt;Direction_0);
+    mcmd_to_percent_direction(DO-&gt;Mcmd[1], &amp;MtbPctOnCmd-&gt;PercentOn_1, &amp;MtbPctOnCmd-&gt;Direction_1);
+    mcmd_to_percent_direction(DO-&gt;Mcmd[2], &amp;MtbPctOnCmd-&gt;PercentOn_2, &amp;MtbPctOnCmd-&gt;Direction_2);
+    if ((MtbPctOnCmd-&gt;Direction_0 != CurrentMtb[0].Direction) ||
+        (MtbPctOnCmd-&gt;PercentOn_0 != CurrentMtb[0].PercentOn) ||
+        (MtbPctOnCmd-&gt;Direction_1 != CurrentMtb[1].Direction) ||
+        (MtbPctOnCmd-&gt;PercentOn_1 != CurrentMtb[1].PercentOn) ||
+        (MtbPctOnCmd-&gt;Direction_2 != CurrentMtb[2].Direction) || (MtbPctOnCmd-&gt;PercentOn_2 != CurrentMtb[2].PercentOn))
+    {
+        CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)MtbPctOnCmd);
+        CFE_SB_TransmitMsg((CFE_MSG_Message_t *)MtbPctOnCmd, true);
+        CurrentMtb[0].Direction = MtbPctOnCmd-&gt;Direction_0;
+        CurrentMtb[0].PercentOn = MtbPctOnCmd-&gt;PercentOn_0;
+        CurrentMtb[1].Direction = MtbPctOnCmd-&gt;Direction_1;
+        CurrentMtb[1].PercentOn = MtbPctOnCmd-&gt;PercentOn_1;
+        CurrentMtb[2].Direction = MtbPctOnCmd-&gt;Direction_2;
+        CurrentMtb[2].PercentOn = MtbPctOnCmd-&gt;PercentOn_2;
+    }
+}
+
+static void mcmd_to_percent_direction(double Mcmd, uint8 *percent, uint8 *direction)
+{
+    double pct = 100.0 * Mcmd / Generic_ADCS_AppData.GNCPacket.Payload.MaxMcmd;
+    *direction = 1;
+    if (pct &lt; 0)
+    {
+        pct *= -1.0;
+        *direction = 0;
+    }
+    if (pct &gt; 100)
+        pct = 100;
+    *percent = pct;
+}
+
+static int16 CurrentRw[] = {0, 0, 0}; // Keep current state so commands are only sent on change
+static void  send_rw_commands(double Tcmd[3], Generic_ADCS_DO_Rw_TlmPayload_t *DO, GENERIC_RW_Cmd_t *RwCmd)
+{
+    int16 torque;
+    for (uint8 i = 0; i &lt; 3; i++)
+    {
+        DO-&gt;Tcmd[i] = Tcmd[i];
+        torque      = 10000.0 * VoV(Tcmd, DO-&gt;axis[i]); // cmd is in 10^-4 Nm
+        if (torque != CurrentRw[i])
+        {
+            RwCmd-&gt;data         = torque;
+            RwCmd-&gt;wheel_number = i;
+            CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)RwCmd);
+            CFE_SB_TransmitMsg((CFE_MSG_Message_t *)RwCmd, true);
+            CurrentRw[i] = torque;
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="generic-adcs-output-h">
+<h2><code class="docutils literal notranslate"><span class="pre">generic_adcs_output.h</span></code><a class="headerlink" href="#generic-adcs-output-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">components/generic_adcs/fsw/cfs/src/generic_adcs_output.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*******************************************************************************
+** Purpose:
+**   This file has the functions to output messages to the actuator applications.
+**
+*******************************************************************************/
+#ifndef _GENERIC_ADCS_OUTPUT_H_
+#define _GENERIC_ADCS_OUTPUT_H_
+
+#include "cfe.h"
+#include "generic_adcs_msg.h"
+#include "generic_torquer_msg.h"
+#include "generic_reaction_wheel_msg.h"
+
+void Generic_ADCS_output_init(FILE *in, Generic_ADCS_DO_Tlm_Payload_t *DO);
+void Generic_ADCS_output_to_actuators(const Generic_ADCS_GNC_Tlm_Payload_t *GNC, Generic_ADCS_DO_Tlm_Payload_t *DO,
+                                      GENERIC_TORQUER_All_Percent_On_cmd_t *MtbPctOnCmd, GENERIC_RW_Cmd_t *RwCmd);
+
+#endif
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../platform_inc/index.html" class="btn btn-neutral float-left" title="platform_inc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../fprime/index.html" class="btn btn-neutral float-right" title="fprime" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

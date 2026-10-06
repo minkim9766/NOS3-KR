@@ -1,0 +1,2524 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ip &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../search.html" />
+    <link rel="next" title="docs" href="docs/index.html" />
+    <link rel="prev" title="docs" href="../Interfaces/docs/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fprime-nos3</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">lib</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Drv</a></li>
+      <li class="breadcrumb-item active">Ip</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../_sources/project_inventory/fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="ip">
+<h1>Ip<a class="headerlink" href="#ip" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/</span></code></p>
+<section id="id1">
+<h2>하위 폴더<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="docs/index.html">docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test/index.html">test</a></li>
+</ul>
+</div>
+</section>
+<section id="id2">
+<h2>이 폴더의 파일<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+</section>
+<section id="cmakelists-txt">
+<h2><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code><a class="headerlink" href="#cmakelists-txt" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/CMakeLists.txt</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+restrict_platforms(Posix SOCKETS)
+
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/IpSocket.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/TcpClientSocket.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/TcpServerSocket.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/UdpSocket.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/SocketComponentHelper.cpp"
+)
+
+set(MOD_DEPS
+    Os
+    Fw/Buffer
+)
+
+register_fprime_module()
+
+# The PortSelector library and testing helper is only needed on Testing build
+if (BUILD_TESTING)
+    add_library(SocketTestHelper STATIC
+        "${CMAKE_CURRENT_LIST_DIR}/test/ut/PortSelector.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/test/ut/SocketTestHelper.cpp")
+    target_include_directories(SocketTestHelper PUBLIC
+            "${FPRIME_FRAMEWORK_PATH}/STest"
+            "${FPRIME_FRAMEWORK_PATH}/googletest/googletest/include"
+    )
+    add_dependencies(SocketTestHelper STest Fw_Buffer)
+    target_link_libraries(SocketTestHelper STest Fw_Buffer)
+endif()
+
+set(UT_MOD_DEPS
+    SocketTestHelper
+)
+
+### UTs ###
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/TestTcp.cpp"
+)
+register_fprime_ut("Drv_Ip_Tcp_test")
+
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/TestUdp.cpp"
+)
+register_fprime_ut("Drv_Ip_Udp_test")
+</pre></div>
+</div>
+</section>
+<section id="ipsocket-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">IpSocket.cpp</span></code><a class="headerlink" href="#ipsocket-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/IpSocket.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  IpSocket.cpp
+// \author mstarch, crsmith
+// \brief  cpp file for IpSocket core implementation classes
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#include &lt;sys/time.h&gt;
+#include &lt;Drv/Ip/IpSocket.hpp&gt;
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+#include &lt;Fw/Types/Assert.hpp&gt;
+#include &lt;Fw/Types/StringUtils.hpp&gt;
+#include &lt;cstring&gt;
+
+// This implementation has primarily implemented to isolate
+// the socket interface from the F' Fw::Buffer class.
+// There is a macro in VxWorks (m_data) that collides with
+// the m_data member in Fw::Buffer.
+
+#ifdef TGT_OS_TYPE_VXWORKS
+#include &lt;errnoLib.h&gt;
+#include &lt;fioLib.h&gt;
+#include &lt;hostLib.h&gt;
+#include &lt;inetLib.h&gt;
+#include &lt;ioLib.h&gt;
+#include &lt;sockLib.h&gt;
+#include &lt;socket.h&gt;
+#include &lt;sysLib.h&gt;
+#include &lt;taskLib.h&gt;
+#include &lt;vxWorks.h&gt;
+#include &lt;cstring&gt;
+#elif defined TGT_OS_TYPE_LINUX || TGT_OS_TYPE_DARWIN
+#include &lt;arpa/inet.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;cerrno&gt;
+#else
+#error OS not supported for IP Socket Communications
+#endif
+
+namespace Drv {
+
+IpSocket::IpSocket() : m_timeoutSeconds(0), m_timeoutMicroseconds(0), m_port(0) {
+    ::memset(m_hostname, 0, sizeof(m_hostname));
+}
+
+SocketIpStatus IpSocket::configure(const char* const hostname,
+                                   const U16 port,
+                                   const U32 timeout_seconds,
+                                   const U32 timeout_microseconds) {
+    FW_ASSERT(timeout_microseconds &lt; 1000000, static_cast&lt;FwAssertArgType&gt;(timeout_microseconds));
+    FW_ASSERT(this-&gt;isValidPort(port), static_cast&lt;FwAssertArgType&gt;(port));
+    FW_ASSERT(hostname != nullptr);
+    this-&gt;m_timeoutSeconds = timeout_seconds;
+    this-&gt;m_timeoutMicroseconds = timeout_microseconds;
+    this-&gt;m_port = port;
+    (void)Fw::StringUtils::string_copy(this-&gt;m_hostname, hostname, static_cast&lt;FwSizeType&gt;(SOCKET_MAX_HOSTNAME_SIZE));
+    return SOCK_SUCCESS;
+}
+
+bool IpSocket::isValidPort(U16 port) {
+    return true;
+}
+
+SocketIpStatus IpSocket::setupTimeouts(int socketFd) {
+// Get the IP address from host
+#ifdef TGT_OS_TYPE_VXWORKS
+    // No timeouts set on Vxworks
+#else
+    // Set timeout socket option
+    struct timeval timeout;
+    timeout.tv_sec = static_cast&lt;time_t&gt;(this-&gt;m_timeoutSeconds);
+    timeout.tv_usec = static_cast&lt;suseconds_t&gt;(this-&gt;m_timeoutMicroseconds);
+    // set socket write to timeout after 1 sec
+    if (setsockopt(socketFd, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast&lt;char*&gt;(&amp;timeout), sizeof(timeout)) &lt; 0) {
+        return SOCK_FAILED_TO_SET_SOCKET_OPTIONS;
+    }
+#endif
+    return SOCK_SUCCESS;
+}
+
+SocketIpStatus IpSocket::addressToIp4(const char* address, void* ip4) {
+    FW_ASSERT(address != nullptr);
+    FW_ASSERT(ip4 != nullptr);
+    // Get the IP address from host
+#ifdef TGT_OS_TYPE_VXWORKS
+    int ip = inet_addr(address);
+    if (ip == ERROR) {
+        return SOCK_INVALID_IP_ADDRESS;
+    }
+    // from sin_addr, which has one struct
+    // member s_addr, which is unsigned int
+    *reinterpret_cast&lt;unsigned long*&gt;(ip4) = ip;
+#else
+    // First IP address to socket sin_addr
+    if (not ::inet_pton(AF_INET, address, ip4)) {
+        return SOCK_INVALID_IP_ADDRESS;
+    };
+#endif
+    return SOCK_SUCCESS;
+}
+
+void IpSocket::close(const SocketDescriptor&amp; socketDescriptor) {
+    (void)::close(socketDescriptor.fd);
+}
+
+void IpSocket::shutdown(const SocketDescriptor&amp; socketDescriptor) {
+    errno = 0;
+    int status = ::shutdown(socketDescriptor.fd, SHUT_RDWR);
+    // If shutdown fails, go straight to the hard-shutdown
+    if (status != 0) {
+        this-&gt;close(socketDescriptor);
+    }
+}
+
+SocketIpStatus IpSocket::open(SocketDescriptor&amp; socketDescriptor) {
+    SocketIpStatus status = SOCK_SUCCESS;
+    errno = 0;
+    // Open a TCP socket for incoming commands, and outgoing data if not using UDP
+    status = this-&gt;openProtocol(socketDescriptor);
+    if (status != SOCK_SUCCESS) {
+        socketDescriptor.fd = -1;
+        return status;
+    }
+    return status;
+}
+
+SocketIpStatus IpSocket::send(const SocketDescriptor&amp; socketDescriptor, const U8* const data, const U32 size) {
+    FW_ASSERT(data != nullptr);
+    FW_ASSERT(size &gt; 0);
+
+    U32 total = 0;
+    I32 sent = 0;
+    // Attempt to send out data and retry as necessary
+    for (U32 i = 0; (i &lt; SOCKET_MAX_ITERATIONS) &amp;&amp; (total &lt; size); i++) {
+        errno = 0;
+        // Send using my specific protocol
+        sent = this-&gt;sendProtocol(socketDescriptor, data + total, size - total);
+        // Error is EINTR or timeout just try again
+        if (((sent == -1) &amp;&amp; (errno == EINTR)) || (sent == 0)) {
+            continue;
+        }
+        // Error bad file descriptor is a close along with reset
+        else if ((sent == -1) &amp;&amp; ((errno == EBADF) || (errno == ECONNRESET))) {
+            return SOCK_DISCONNECTED;
+        }
+        // Error returned, and it wasn't an interrupt nor a disconnect
+        else if (sent == -1) {
+            return SOCK_SEND_ERROR;
+        }
+        FW_ASSERT(sent &gt; 0, static_cast&lt;FwAssertArgType&gt;(sent));
+        total += static_cast&lt;U32&gt;(sent);
+    }
+    // Failed to retry enough to send all data
+    if (total &lt; size) {
+        return SOCK_INTERRUPTED_TRY_AGAIN;
+    }
+    // Ensure we sent everything
+    FW_ASSERT(total == size, static_cast&lt;FwAssertArgType&gt;(total), static_cast&lt;FwAssertArgType&gt;(size));
+    return SOCK_SUCCESS;
+}
+
+SocketIpStatus IpSocket::recv(const SocketDescriptor&amp; socketDescriptor, U8* data, U32&amp; req_read) {
+    // TODO: Uncomment FW_ASSERT for socketDescriptor.fd once we fix TcpClientTester to not pass in uninitialized
+    // socketDescriptor
+    //  FW_ASSERT(socketDescriptor.fd != -1, static_cast&lt;FwAssertArgType&gt;(socketDescriptor.fd));
+    FW_ASSERT(data != nullptr);
+
+    I32 bytes_received_or_status;  // Stores the return value from recvProtocol
+
+    // Loop primarily for EINTR. Other conditions should lead to an earlier exit.
+    for (U32 i = 0; i &lt; SOCKET_MAX_ITERATIONS; i++) {
+        errno = 0;
+        // Pass the current value of req_read (max buffer size) to recvProtocol.
+        // recvProtocol returns bytes read or -1 on error.
+        bytes_received_or_status = this-&gt;recvProtocol(socketDescriptor, data, req_read);
+
+        if (bytes_received_or_status &gt; 0) {
+            // Successfully read data
+            req_read = static_cast&lt;U32&gt;(bytes_received_or_status);
+            return SOCK_SUCCESS;
+        } else if (bytes_received_or_status == 0) {
+            // Handle zero return based on protocol-specific behavior
+            req_read = 0;
+            return this-&gt;handleZeroReturn();
+        } else {  // bytes_received_or_status == -1, an error occurred
+            if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) {
+                // Non-blocking socket would block, or SO_RCVTIMEO timeout occurred.
+                req_read = 0;
+                return SOCK_NO_DATA_AVAILABLE;
+            } else if ((errno == ECONNRESET) || (errno == EBADF)) {
+                // Connection reset or bad file descriptor.
+                req_read = 0;
+                return SOCK_DISCONNECTED;  // Or a more specific error like SOCK_READ_ERROR
+            } else {
+                // Other socket read error.
+                req_read = 0;
+                return SOCK_READ_ERROR;
+            }
+        }
+    }
+    // If the loop completes, it means SOCKET_MAX_ITERATIONS of EINTR occurred.
+    req_read = 0;
+    return SOCK_INTERRUPTED_TRY_AGAIN;
+}
+
+SocketIpStatus IpSocket::handleZeroReturn() {
+    // For TCP (which IpSocket primarily serves as a base for, or when not overridden),
+    // a return of 0 from ::recv means the peer has performed an orderly shutdown.
+    return SOCK_DISCONNECTED;
+}
+
+}  // namespace Drv
+</pre></div>
+</div>
+</section>
+<section id="ipsocket-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">IpSocket.hpp</span></code><a class="headerlink" href="#ipsocket-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/IpSocket.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  IpSocket.hpp
+// \author mstarch
+// \brief  hpp file for IpSocket core implementation classes
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#ifndef DRV_IP_IPHELPER_HPP_
+#define DRV_IP_IPHELPER_HPP_
+
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+#include &lt;Os/Mutex.hpp&gt;
+#include &lt;config/IpCfg.hpp&gt;
+
+namespace Drv {
+
+struct SocketDescriptor final {
+    int fd = -1;        //!&lt; Used for all sockets to track the communication file descriptor
+    int serverFd = -1;  //!&lt; Used for server sockets to track the listening file descriptor
+};
+
+/**
+ * \brief Status enumeration for socket return values
+ */
+enum SocketIpStatus {
+    SOCK_SUCCESS = 0,                        //!&lt; Socket operation successful
+    SOCK_FAILED_TO_GET_SOCKET = -1,          //!&lt; Socket open failed
+    SOCK_FAILED_TO_GET_HOST_IP = -2,         //!&lt; Host IP lookup failed
+    SOCK_INVALID_IP_ADDRESS = -3,            //!&lt; Bad IP address supplied
+    SOCK_FAILED_TO_CONNECT = -4,             //!&lt; Failed to connect socket
+    SOCK_FAILED_TO_SET_SOCKET_OPTIONS = -5,  //!&lt; Failed to configure socket
+    SOCK_INTERRUPTED_TRY_AGAIN = -6,         //!&lt; Interrupted status for retries
+    SOCK_READ_ERROR = -7,                    //!&lt; Failed to read socket
+    SOCK_DISCONNECTED = -8,                  //!&lt; Failed to read socket with disconnect
+    SOCK_FAILED_TO_BIND = -9,                //!&lt; Failed to bind to socket
+    SOCK_FAILED_TO_LISTEN = -10,             //!&lt; Failed to listen on socket
+    SOCK_FAILED_TO_ACCEPT = -11,             //!&lt; Failed to accept connection
+    SOCK_SEND_ERROR = -13,                   //!&lt; Failed to send after configured retries
+    SOCK_NOT_STARTED = -14,                  //!&lt; Socket has not been started
+    SOCK_FAILED_TO_READ_BACK_PORT = -15,     //!&lt; Failed to read back port from connection
+    SOCK_NO_DATA_AVAILABLE = -16,            //!&lt; No data available or read operation would block
+    SOCK_ANOTHER_THREAD_OPENING = -17,       //!&lt; Another thread is opening
+    SOCK_AUTO_CONNECT_DISABLED = -18,        //!&lt; Automatic connections are disabled
+    SOCK_INVALID_CALL = -19                  //!&lt; Operation is invalid
+};
+
+/**
+ * \brief Helper base-class for setting up Berkeley sockets
+ *
+ * Certain IP headers have conflicting definitions with the m_data member of various types in fprime. TcpHelper
+ * separates the ip setup from the incoming Fw::Buffer in the primary component class preventing this collision.
+ */
+class IpSocket {
+  public:
+    IpSocket();
+    virtual ~IpSocket() {};
+    /**
+     * \brief configure the ip socket with host and transmission timeouts
+     *
+     * Configures the IP handler (Tcp, Tcp server, and Udp) to use the given hostname and port. When multiple ports are
+     * used for send/receive these settings affect the send direction (as is the case for udp). Hostname DNS translation
+     * is left up to the caller and thus hostname must be an IP address in dot-notation of the form "x.x.x.x". Port
+     * cannot be set to 0 as dynamic port assignment is not supported.
+     *
+     * Note: for UDP sockets this is equivalent to `configureSend` and only sets up the transmission direction of the
+     * socket.  A separate call to `configureRecv` is required to receive on the socket and should be made before the
+     * `open` call has been made.
+     *
+     * \param hostname: socket uses for outgoing transmissions (and incoming when tcp). Must be of form x.x.x.x
+     * \param port: port socket uses for outgoing transmissions (and incoming when tcp). Must NOT be 0.
+     * \param send_timeout_seconds: send timeout seconds portion
+     * \param send_timeout_microseconds: send timeout microseconds portion. Must be less than 1000000
+     * \return status of configure
+     */
+    virtual SocketIpStatus configure(const char* hostname,
+                                     const U16 port,
+                                     const U32 send_timeout_seconds,
+                                     const U32 send_timeout_microseconds);
+
+    /**
+     * \brief open the IP socket for communications
+     *
+     * This will open the IP socket for communication. This method error checks and validates properties set using the
+     * `configure` method.  Tcp sockets will open bidirectional communication assuming the `configure` function was
+     * previously called. Udp sockets allow `configureRecv` and `configure`/`configureSend` calls to configure for
+     * each direction separately and may be operated in a single-direction or bidirectional mode. This call returns a
+     * status of SOCK_SEND means the port is ready for transmissions and any other status should be treated as an error
+     * with the socket not capable of sending nor receiving. This method will properly close resources on any
+     * unsuccessful status.
+     *
+     * In the case of server components (TcpServer) this function will block until a client has connected.
+     *
+     * Note: delegates to openProtocol for protocol specific implementation
+     *
+     * \param socketDescriptor: socket descriptor to update with opened port
+     * \return status of open
+     */
+    SocketIpStatus open(SocketDescriptor&amp; socketDescriptor);
+    /**
+     * \brief send data out the IP socket from the given buffer
+     *
+     * Sends data out of the IpSocket. This outgoing transmission will be retried several times if the transmission
+     * fails to send all the data. Retries are globally configured in the `IpCfg.hpp` header. Should the
+     * socket be unavailable, SOCK_DISCONNECTED is returned and the socket should be reopened using the `open` call.
+     * This can happen even when the socket has already been opened should a transmission error/closure be detected.
+     * Unless an error is received, all data will have been transmitted.
+     *
+     * Note: delegates to `sendProtocol` to send the data
+     *
+     * \param fd: file descriptor to send to
+     * \param data: pointer to data to send
+     * \param size: size of data to send
+     * \return status of the send, SOCK_DISCONNECTED to reopen, SOCK_SUCCESS on success, something else on error
+     */
+    virtual SocketIpStatus send(const SocketDescriptor&amp; socketDescriptor, const U8* const data, const U32 size);
+    /**
+     * \brief receive data from the IP socket from the given buffer
+     *
+     * Receives data from the IpSocket. Should the socket be unavailable, SOCK_DISCONNECTED will be returned and
+     * the socket should be reopened using the `open` call. This can happen even when the socket has already been opened
+     * should a transmission error/closure be detected. Since this blocks until data is available, it will retry as long
+     * as EINTR is set and less than a max number of iterations has passed. This function will block to receive data and
+     * will retry (up to a configured set of retries) as long as EINTR is returned.
+     *
+     * Note: delegates to `recvProtocol` to send the data
+     *
+     * \param socketDescriptor: socket descriptor to recv from
+     * \param data: pointer to data to fill with received data
+     * \param size: maximum size of data buffer to fill
+     * \return status of the send, SOCK_DISCONNECTED to reopen, SOCK_SUCCESS on success, something else on error
+     */
+    SocketIpStatus recv(const SocketDescriptor&amp; fd, U8* const data, U32&amp; size);
+
+    /**
+     * \brief closes the socket
+     *
+     * Closes the socket opened by the open call. In this case of the TcpServer, this does NOT close server's listening
+     * port but will close the active client connection.
+     *
+     * \param socketDescriptor: socket descriptor to close
+     */
+    void close(const SocketDescriptor&amp; socketDescriptor);
+
+    /**
+     * \brief shutdown the socket
+     *
+     * Shuts down the socket opened by the open call. In this case of the TcpServer, this does shut down server's
+     * listening port, but rather shuts down the active client.
+     *
+     * A shut down begins the termination of communication. The underlying socket will coordinate a clean shutdown, and
+     * it is safe to close the socket once a recv with 0 size has returned or an appropriate timeout has been reached.
+     *
+     * \param socketDescriptor: socket descriptor to shutdown
+     */
+    void shutdown(const SocketDescriptor&amp; socketDescriptor);
+
+  protected:
+    /**
+     * \brief Check if the given port is valid for the socket
+     *
+     * Some ports should be allowed for sockets and disabled on others (e.g. port 0 is a valid tcp server port but not a
+     * client. This will check the port and return "true" if the port is valid, or "false" otherwise. In the default
+     * implementation, all ports are considered valid.
+     *
+     * \param port: port to check
+     * \return true if valid, false otherwise
+     */
+    virtual bool isValidPort(U16 port);
+
+    /**
+     * \brief setup the socket timeout properties of the opened outgoing socket
+     * \param socketDescriptor: socket descriptor to setup
+     * \return status of timeout setup
+     */
+    SocketIpStatus setupTimeouts(int socketFd);
+
+    /**
+     * \brief converts a given address in dot form x.x.x.x to an ip address. ONLY works for IPv4.
+     * \param address: address to convert
+     * \param ip4: IPv4 representation structure to fill
+     * \return: status of conversion
+     */
+    static SocketIpStatus addressToIp4(const char* address, void* ip4);
+    /**
+     * \brief Protocol specific open implementation, called from open.
+     * \param socketDescriptor: (output) socket descriptor opened. Only valid on SOCK_SUCCESS. Otherwise will be invalid
+     * \return status of open
+     */
+    virtual SocketIpStatus openProtocol(SocketDescriptor&amp; fd) = 0;
+    /**
+     * \brief Protocol specific implementation of send.  Called directly with retry from send.
+     * \param socketDescriptor: socket descriptor to send to
+     * \param data: data to send
+     * \param size: size of data to send
+     * \return: size of data sent, or -1 on error.
+     */
+    virtual I32 sendProtocol(const SocketDescriptor&amp; socketDescriptor, const U8* const data, const U32 size) = 0;
+
+    /**
+     * \brief Protocol specific implementation of recv.  Called directly with error handling from recv.
+     * \param socketDescriptor: socket descriptor to recv from
+     * \param data: data pointer to fill
+     * \param size: size of data buffer
+     * \return: size of data received, or -1 on error.
+     */
+    virtual I32 recvProtocol(const SocketDescriptor&amp; socketDescriptor, U8* const data, const U32 size) = 0;
+
+    /**
+     * \brief Handle zero return from recvProtocol
+     *
+     * This method is called when recvProtocol returns 0. The default implementation
+     * treats this as a disconnection (appropriate for TCP). Subclasses can override
+     * this to provide different behavior.
+     *
+     * @return SocketIpStatus Status to return from recv
+     */
+    virtual SocketIpStatus handleZeroReturn();
+
+    U32 m_timeoutSeconds;
+    U32 m_timeoutMicroseconds;
+    U16 m_port;                                 //!&lt; IP address port used
+    char m_hostname[SOCKET_MAX_HOSTNAME_SIZE];  //!&lt; Hostname to supply
+};
+}  // namespace Drv
+
+#endif /* DRV_SOCKETIPDRIVER_SOCKETHELPER_HPP_ */
+</pre></div>
+</div>
+</section>
+<section id="socketcomponenthelper-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">SocketComponentHelper.cpp</span></code><a class="headerlink" href="#socketcomponenthelper-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/SocketComponentHelper.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  SocketComponentHelper.cpp
+// \author mstarch, crsmith
+// \brief  cpp file for SocketComponentHelper implementation class
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include &lt;Drv/Ip/SocketComponentHelper.hpp&gt;
+#include &lt;Fw/Logger/Logger.hpp&gt;
+#include &lt;Fw/Types/Assert.hpp&gt;
+#include &lt;cerrno&gt;
+
+namespace Drv {
+
+SocketComponentHelper::SocketComponentHelper() {}
+
+SocketComponentHelper::~SocketComponentHelper() {}
+
+void SocketComponentHelper::start(const Fw::StringBase&amp; name,
+                                  const FwTaskPriorityType priority,
+                                  const Os::Task::ParamType stack,
+                                  const Os::Task::ParamType cpuAffinity) {
+    FW_ASSERT(m_task.getState() ==
+              Os::Task::State::NOT_STARTED);  // It is a coding error to start this task multiple times
+    this-&gt;m_stop = false;
+    // Note: the first step is for the IP socket to open the port
+    Os::Task::Arguments arguments(name, SocketComponentHelper::readTask, this, priority, stack, cpuAffinity);
+    Os::Task::Status stat = m_task.start(arguments);
+    FW_ASSERT(Os::Task::OP_OK == stat, static_cast&lt;FwAssertArgType&gt;(stat));
+}
+
+SocketIpStatus SocketComponentHelper::open() {
+    SocketIpStatus status = SOCK_ANOTHER_THREAD_OPENING;
+    OpenState local_open = OpenState::OPEN;
+    // Scope to guard lock
+    {
+        Os::ScopeLock scopeLock(m_lock);
+        if (this-&gt;m_open == OpenState::NOT_OPEN) {
+            this-&gt;m_open = OpenState::OPENING;
+            local_open = this-&gt;m_open;
+        } else {
+            local_open = OpenState::SKIP;
+        }
+    }
+    if (local_open == OpenState::OPENING) {
+        FW_ASSERT(this-&gt;m_descriptor.fd == -1);  // Ensure we are not opening an opened socket
+        status = this-&gt;getSocketHandler().open(this-&gt;m_descriptor);
+        // Lock scope
+        {
+            Os::ScopeLock scopeLock(m_lock);
+            if (Drv::SOCK_SUCCESS == status) {
+                this-&gt;m_open = OpenState::OPEN;
+            } else {
+                this-&gt;m_open = OpenState::NOT_OPEN;
+                this-&gt;m_descriptor.fd = -1;
+            }
+        }
+        // Notify connection on success outside locked scope
+        if (Drv::SOCK_SUCCESS == status) {
+            this-&gt;connected();
+        }
+    }
+
+    return status;
+}
+
+bool SocketComponentHelper::isOpened() {
+    Os::ScopeLock scopedLock(this-&gt;m_lock);
+    bool is_open = this-&gt;m_open == OpenState::OPEN;
+    return is_open;
+}
+
+void SocketComponentHelper::setAutomaticOpen(bool auto_open) {
+    Os::ScopeLock scopedLock(this-&gt;m_lock);
+    this-&gt;m_reopen = auto_open;
+}
+
+SocketIpStatus SocketComponentHelper::reopen() {
+    SocketIpStatus status = SOCK_SUCCESS;
+    if (not this-&gt;isOpened()) {
+        // Check for auto-open before attempting to reopen
+        bool reopen = false;
+        {
+            Os::ScopeLock scopedLock(this-&gt;m_lock);
+            reopen = this-&gt;m_reopen;
+        }
+        // Open a network connection if it has not already been open
+        if (not reopen) {
+            status = SOCK_AUTO_CONNECT_DISABLED;
+        } else {
+            status = this-&gt;open();
+            if (status == SocketIpStatus::SOCK_ANOTHER_THREAD_OPENING) {
+                status = SocketIpStatus::SOCK_SUCCESS;
+            }
+        }
+    }
+    return status;
+}
+
+SocketIpStatus SocketComponentHelper::send(const U8* const data, const U32 size) {
+    SocketIpStatus status = SOCK_SUCCESS;
+    this-&gt;m_lock.lock();
+    SocketDescriptor descriptor = this-&gt;m_descriptor;
+    this-&gt;m_lock.unlock();
+    // Prevent transmission before connection, or after a disconnect
+    if (descriptor.fd == -1) {
+        status = this-&gt;reopen();
+        // if reopen wasn't successful, pass the that up to the caller
+        if (status != SOCK_SUCCESS) {
+            return status;
+        }
+        // Refresh local copy after reopen
+        this-&gt;m_lock.lock();
+        descriptor = this-&gt;m_descriptor;
+        this-&gt;m_lock.unlock();
+    }
+    status = this-&gt;getSocketHandler().send(descriptor, data, size);
+    if (status == SOCK_DISCONNECTED) {
+        this-&gt;close();
+    }
+    return status;
+}
+
+void SocketComponentHelper::shutdown() {
+    Os::ScopeLock scopedLock(this-&gt;m_lock);
+    this-&gt;getSocketHandler().shutdown(this-&gt;m_descriptor);
+}
+
+void SocketComponentHelper::close() {
+    Os::ScopeLock scopedLock(this-&gt;m_lock);
+    this-&gt;getSocketHandler().close(this-&gt;m_descriptor);
+    this-&gt;m_descriptor.fd = -1;
+    this-&gt;m_open = OpenState::NOT_OPEN;
+}
+
+Os::Task::Status SocketComponentHelper::join() {
+    return m_task.join();
+}
+
+void SocketComponentHelper::stop() {
+    // Scope to protect lock
+    {
+        Os::ScopeLock scopeLock(m_lock);
+        this-&gt;m_stop = true;
+    }
+    this-&gt;shutdown();  // Break out of any receives and fully shutdown
+}
+
+bool SocketComponentHelper::running() {
+    Os::ScopeLock scopedLock(this-&gt;m_lock);
+    bool running = not this-&gt;m_stop;
+    return running;
+}
+
+SocketIpStatus SocketComponentHelper::recv(U8* data, U32&amp; size) {
+    SocketIpStatus status = SOCK_SUCCESS;
+    // Check for previously disconnected socket
+    this-&gt;m_lock.lock();
+    SocketDescriptor descriptor = this-&gt;m_descriptor;
+    this-&gt;m_lock.unlock();
+    if (descriptor.fd == -1) {
+        return SOCK_DISCONNECTED;
+    }
+    status = this-&gt;getSocketHandler().recv(descriptor, data, size);
+    if (status == SOCK_DISCONNECTED) {
+        this-&gt;close();
+    }
+    return status;
+}
+
+void SocketComponentHelper::readLoop() {
+    SocketIpStatus status = SOCK_SUCCESS;
+    do {
+        // Prevent transmission before connection, or after a disconnect
+        if ((not this-&gt;isOpened()) and this-&gt;running()) {
+            status = this-&gt;reopen();
+            // When reopen is disabled, just break as this is a exit condition for the loop
+            if (status == SOCK_AUTO_CONNECT_DISABLED) {
+                break;
+            }
+            // If the reconnection failed in any other way, warn, wait, and retry
+            else if (status != SOCK_SUCCESS) {
+                Fw::Logger::log("[WARNING] Failed to open port with status %d and errno %d\n", status, errno);
+                (void)Os::Task::delay(SOCKET_RETRY_INTERVAL);
+                continue;
+            }
+        }
+        // If the network connection is open, read from it
+        if (this-&gt;isOpened() and this-&gt;running()) {
+            Fw::Buffer buffer = this-&gt;getBuffer();
+            U8* data = buffer.getData();
+            FW_ASSERT(data);
+            FW_ASSERT_NO_OVERFLOW(buffer.getSize(), U32);
+            U32 size = static_cast&lt;U32&gt;(buffer.getSize());
+            // recv blocks, so it may have been a while since its done an isOpened check
+            status = this-&gt;recv(data, size);
+            if ((status != SOCK_SUCCESS) &amp;&amp; (status != SOCK_INTERRUPTED_TRY_AGAIN) &amp;&amp;
+                (status != SOCK_NO_DATA_AVAILABLE)) {
+                Fw::Logger::log("[WARNING] Failed to recv from port with status %d and errno %d\n", status, errno);
+                this-&gt;close();
+                buffer.setSize(0);
+            } else {
+                // Send out received data
+                buffer.setSize(size);
+            }
+            this-&gt;sendBuffer(buffer, status);
+        }
+    }
+    // This will loop until stopped. If auto-open is disabled, this will break when reopen returns disabled status
+    while (this-&gt;running());
+    // Close the socket
+    this-&gt;close();  // Close the port entirely
+}
+
+void SocketComponentHelper::readTask(void* pointer) {
+    FW_ASSERT(pointer);
+    SocketComponentHelper* self = reinterpret_cast&lt;SocketComponentHelper*&gt;(pointer);
+    self-&gt;readLoop();
+}
+}  // namespace Drv
+</pre></div>
+</div>
+</section>
+<section id="socketcomponenthelper-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">SocketComponentHelper.hpp</span></code><a class="headerlink" href="#socketcomponenthelper-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/SocketComponentHelper.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  SocketComponentHelper.hpp
+// \author mstarch
+// \brief  hpp file for SocketComponentHelper implementation class
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#ifndef DRV_SocketComponentHelper_HPP
+#define DRV_SocketComponentHelper_HPP
+
+#include &lt;Drv/Ip/IpSocket.hpp&gt;
+#include &lt;Fw/Buffer/Buffer.hpp&gt;
+#include &lt;Os/Mutex.hpp&gt;
+#include &lt;Os/Task.hpp&gt;
+
+namespace Drv {
+/**
+ * \brief supports a task to read a given socket adaptation
+ *
+ * Defines an Os::Task task to read a socket and send out the data. This represents the task itself, which is capable of
+ * reading the data from the socket, sending the data out, and reopening the connection should a non-retry error occur.
+ *
+ */
+class SocketComponentHelper {
+  public:
+    enum OpenState { NOT_OPEN, OPENING, OPEN, SKIP };
+    /**
+     * \brief constructs the socket read task
+     */
+    SocketComponentHelper();
+
+    /**
+     * \brief destructor of the socket read task
+     */
+    virtual ~SocketComponentHelper();
+
+    /**
+     * \brief start the socket read task to start producing data
+     *
+     * Starts up the socket reading task and when reopen was configured, will open up the socket.
+     *
+     * \note: users must now use `setAutomaticOpen` to configure the socket to automatically open connections. The
+     *        default behavior is to automatically open connections.
+     *
+     * \param name: name of the task
+     * \param priority: priority of the started task. See: Os::Task::start. Default: TASK_PRIORITY_DEFAULT, not
+     * prioritized
+     * \param stack: stack size provided to the task. See: Os::Task::start. Default: TASK_DEFAULT, posix threads default
+     * \param cpuAffinity: cpu affinity provided to task. See: Os::Task::start. Default: TASK_DEFAULT, don't care
+     */
+    void start(const Fw::StringBase&amp; name,
+               const FwTaskPriorityType priority = Os::Task::TASK_PRIORITY_DEFAULT,
+               const Os::Task::ParamType stack = Os::Task::TASK_DEFAULT,
+               const Os::Task::ParamType cpuAffinity = Os::Task::TASK_DEFAULT);
+
+    /**
+     * \brief open the socket for communications
+     *
+     * Typically the socket read task will open the connection and keep it open. However, in cases where the socket is
+     * not automatically opening, this call will open the socket. This will block until the socket is opened.
+     *
+     * Note: this just delegates to the handler
+     *
+     * \return status of open, SOCK_SUCCESS for success, something else on error
+     */
+    SocketIpStatus open();
+
+    /**
+     * \brief check if IP socket has previously been opened
+     *
+     * Check if this IpSocket has previously been opened. In the case of Udp this will check for outgoing transmissions
+     * and (if configured) incoming transmissions as well. This does not guarantee errors will not occur when using this
+     * socket as the remote component may have disconnected.
+     *
+     * \return true if socket is open, false otherwise
+     */
+    bool isOpened();
+
+    /**
+     * \brief set socket to automatically open connections when true, or not when false
+     *
+     * When passed `true`, this instructs the socket to automatically open a socket and reopen socket failed
+     * connections. When passed `false` the user must explicitly call the `open` method to open the socket initially and
+     * when a socket fails.
+     *
+     * \param auto_open: true to automatically open and reopen sockets, false otherwise
+     */
+    void setAutomaticOpen(bool auto_open);
+
+    /**
+     * \brief send data to the IP socket from the given buffer
+     *
+     *
+     * \param data: pointer to data to send
+     * \param size: size of data to send
+     * \return status of send, SOCK_SUCCESS for success, something else on error
+     */
+    SocketIpStatus send(const U8* const data, const U32 size);
+
+    /**
+     * \brief receive data from the IP socket from the given buffer
+     *
+     *
+     * \param data: pointer to data to fill with received data
+     * \param size: maximum size of data buffer to fill
+     * \return status of the send, SOCK_DISCONNECTED to reopen, SOCK_SUCCESS on success, something else on error
+     */
+    SocketIpStatus recv(U8* data, U32&amp; size);
+
+    /**
+     * \brief close the socket communications
+     *
+     * Close the client connection. This will ensure that the resources used are cleaned-up.
+     *
+     * Note: this just delegates to the handler
+     */
+    void close();
+
+    /**
+     * \brief shutdown the socket communications
+     *
+     * Shutdown communication. This will begin the process of cleanly closing communications. This process will be
+     * finished with a receive of 0 size and should be followed by a close.
+     *
+     * Note: this just delegates to the handler
+     */
+    void shutdown();
+
+    /**
+     * \brief is the read loop running
+     */
+    bool running();
+
+    /**
+     * \brief stop the socket read task and close the associated socket.
+     *
+     * Called to stop the socket read task. It is an error to call this before the thread has been started using the
+     * startSocketTask call. This will stop the read task and close the client socket.
+     */
+    void stop();
+
+    /**
+     * \brief joins to the stopping read task to wait for it to close
+     *
+     * Called to join with the read socket task. This will block and return after the task has been stopped with a call
+     * to the stopSocketTask method.
+     * \param value_ptr: a pointer to fill with data. Passed to the Os::Task::join call. NULL to ignore.
+     * \return: Os::Task::Status passed back from the Os::Task::join call.
+     */
+    Os::Task::Status join();
+
+  protected:
+    /**
+     * \brief receive off the TCP socket
+     */
+    virtual void readLoop();
+    /**
+     * \brief returns a reference to the socket handler
+     *
+     * Gets a reference to the current socket handler in order to operate generically on the IpSocket instance. Used for
+     * receive, and open calls.
+     *
+     * Note: this must be implemented by the inheritor
+     *
+     * \return IpSocket reference
+     */
+    virtual IpSocket&amp; getSocketHandler() = 0;
+
+    /**
+     * \brief returns a buffer to fill with data
+     *
+     * Gets a reference to a buffer to fill with data. This allows the component to determine how to provide a
+     * buffer and the socket read task just fills said buffer.
+     *
+     * Note: this must be implemented by the inheritor
+     *
+     * \return Fw::Buffer to fill with data
+     */
+    virtual Fw::Buffer getBuffer() = 0;
+
+    /**
+     * \brief sends a buffer to be filled with data
+     *
+     * Sends the buffer gotten by getBuffer that has now been filled with data. This is used to delegate to the
+     * component how to send back the buffer.
+     *
+     * Note: this must be implemented by the inheritor
+     *
+     * \return Fw::Buffer filled with data to send out
+     */
+    virtual void sendBuffer(Fw::Buffer buffer, SocketIpStatus status) = 0;
+
+    /**
+     * \brief called when the IPv4 system has been connected
+     */
+    virtual void connected() = 0;
+
+    /**
+     * \brief a task designed to read from the socket and output incoming data
+     *
+     * \param pointer: pointer to "this" component
+     */
+    static void readTask(void* pointer);
+
+  private:
+    /**
+     * \brief Re-open port if it has been disconnected
+     *
+     * This function is a helper to handle the situations where this code needs to safely reopen a socket. User code
+     * should connect using the `open` call. This is for opening/reopening in situations where automatic open is
+     * performed within this socket helper.
+     *
+     * \return status of reconnect, SOCK_SUCCESS for success, something else on error
+     */
+    SocketIpStatus reopen();
+
+  protected:
+    Os::Task m_task;
+    Os::Mutex m_lock;
+    SocketDescriptor m_descriptor;
+    bool m_reopen = true;                    //!&lt; Force reopen on disconnect
+    bool m_stop = true;                      //!&lt; Stops the task when set to true
+    OpenState m_open = OpenState::NOT_OPEN;  //!&lt; Have we successfully opened
+};
+}  // namespace Drv
+#endif  // DRV_SocketComponentHelper_HPP
+</pre></div>
+</div>
+</section>
+<section id="tcpclientsocket-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">TcpClientSocket.cpp</span></code><a class="headerlink" href="#tcpclientsocket-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/TcpClientSocket.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  TcpClientSocket.cpp
+// \author mstarch
+// \brief  cpp file for TcpClientSocket core implementation classes
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include &lt;Drv/Ip/TcpClientSocket.hpp&gt;
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+#include &lt;Fw/Logger/Logger.hpp&gt;
+#include &lt;Fw/Types/Assert.hpp&gt;
+
+#ifdef TGT_OS_TYPE_VXWORKS
+#include &lt;errnoLib.h&gt;
+#include &lt;fioLib.h&gt;
+#include &lt;hostLib.h&gt;
+#include &lt;inetLib.h&gt;
+#include &lt;ioLib.h&gt;
+#include &lt;sockLib.h&gt;
+#include &lt;socket.h&gt;
+#include &lt;sysLib.h&gt;
+#include &lt;taskLib.h&gt;
+#include &lt;vxWorks.h&gt;
+#include &lt;cstring&gt;
+#elif defined TGT_OS_TYPE_LINUX || TGT_OS_TYPE_DARWIN
+#include &lt;arpa/inet.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;unistd.h&gt;
+#else
+#error OS not supported for IP Socket Communications
+#endif
+
+#include &lt;cstdio&gt;
+#include &lt;cstring&gt;
+
+namespace Drv {
+
+TcpClientSocket::TcpClientSocket() : IpSocket() {}
+
+bool TcpClientSocket::isValidPort(U16 port) {
+    return port != 0;
+}
+
+SocketIpStatus TcpClientSocket::openProtocol(SocketDescriptor&amp; socketDescriptor) {
+    int socketFd = -1;
+    struct sockaddr_in address;
+
+    // Acquire a socket, or return error
+    if ((socketFd = ::socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+        return SOCK_FAILED_TO_GET_SOCKET;
+    }
+    // Set up the address port and name
+    address.sin_family = AF_INET;
+    address.sin_port = htons(this-&gt;m_port);
+
+    // OS specific settings
+#if defined TGT_OS_TYPE_VXWORKS || TGT_OS_TYPE_DARWIN
+    address.sin_len = static_cast&lt;U8&gt;(sizeof(struct sockaddr_in));
+#endif
+
+    // First IP address to socket sin_addr
+    if (IpSocket::addressToIp4(m_hostname, &amp;(address.sin_addr)) != SOCK_SUCCESS) {
+        ::close(socketFd);
+        return SOCK_INVALID_IP_ADDRESS;
+    };
+
+    // Now apply timeouts
+    if (IpSocket::setupTimeouts(socketFd) != SOCK_SUCCESS) {
+        ::close(socketFd);
+        return SOCK_FAILED_TO_SET_SOCKET_OPTIONS;
+    }
+
+    // TCP requires connect to the socket to allow for communication
+    if (::connect(socketFd, reinterpret_cast&lt;struct sockaddr*&gt;(&amp;address), sizeof(address)) &lt; 0) {
+        ::close(socketFd);
+        return SOCK_FAILED_TO_CONNECT;
+    }
+    socketDescriptor.fd = socketFd;
+    Fw::Logger::log("Connected to %s:%hu as a tcp client\n", m_hostname, m_port);
+    return SOCK_SUCCESS;
+}
+
+I32 TcpClientSocket::sendProtocol(const SocketDescriptor&amp; socketDescriptor, const U8* const data, const U32 size) {
+    return static_cast&lt;I32&gt;(::send(socketDescriptor.fd, data, size, SOCKET_IP_SEND_FLAGS));
+}
+
+I32 TcpClientSocket::recvProtocol(const SocketDescriptor&amp; socketDescriptor, U8* const data, const U32 size) {
+    return static_cast&lt;I32&gt;(::recv(socketDescriptor.fd, data, size, SOCKET_IP_RECV_FLAGS));
+}
+
+}  // namespace Drv
+</pre></div>
+</div>
+</section>
+<section id="tcpclientsocket-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">TcpClientSocket.hpp</span></code><a class="headerlink" href="#tcpclientsocket-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/TcpClientSocket.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  TcpClientSocket.hpp
+// \author mstarch
+// \brief  cpp file for TcpClientSocket core implementation classes
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#ifndef DRV_TCPCLIENT_TCPHELPER_HPP_
+#define DRV_TCPCLIENT_TCPHELPER_HPP_
+
+#include &lt;Drv/Ip/IpSocket.hpp&gt;
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+#include &lt;config/IpCfg.hpp&gt;
+
+namespace Drv {
+/**
+ * \brief Helper for setting up Tcp using Berkeley sockets as a client
+ *
+ * Certain IP headers have conflicting definitions with the m_data member of various types in fprime. TcpClientSocket
+ * separates the ip setup from the incoming Fw::Buffer in the primary component class preventing this collision.
+ */
+class TcpClientSocket : public IpSocket {
+  public:
+    /**
+     * \brief Constructor for client socket tcp implementation
+     */
+    TcpClientSocket();
+
+  protected:
+    /**
+     * \brief Check if the given port is valid for the socket
+     *
+     * Some ports should be allowed for sockets and disabled on others (e.g. port 0 is a valid tcp server port but not a
+     * client. This will check the port and return "true" if the port is valid, or "false" otherwise. In the tcp client
+     * implementation, all ports are considered valid except for "0".
+     *
+     * \param port: port to check
+     * \return true if valid, false otherwise
+     */
+    bool isValidPort(U16 port) override;
+
+    /**
+     * \brief Tcp specific implementation for opening a client socket.
+     * \param socketDescriptor: (output) descriptor opened. Only valid on SOCK_SUCCESS. Otherwise will be invalid
+     * \return status of open
+     */
+    SocketIpStatus openProtocol(SocketDescriptor&amp; socketDescriptor) override;
+    /**
+     * \brief Protocol specific implementation of send.  Called directly with retry from send.
+     * \param socketDescriptor: descriptor to send to
+     * \param data: data to send
+     * \param size: size of data to send
+     * \return: size of data sent, or -1 on error.
+     */
+    I32 sendProtocol(const SocketDescriptor&amp; socketDescriptor, const U8* const data, const U32 size) override;
+    /**
+     * \brief Protocol specific implementation of recv.  Called directly with error handling from recv.
+     * \param socketDescriptor: descriptor to recv from
+     * \param data: data pointer to fill
+     * \param size: size of data buffer
+     * \return: size of data received, or -1 on error.
+     */
+    I32 recvProtocol(const SocketDescriptor&amp; socketDescriptor, U8* const data, const U32 size) override;
+};
+}  // namespace Drv
+
+#endif /* DRV_TCPCLIENT_TCPHELPER_HPP_ */
+</pre></div>
+</div>
+</section>
+<section id="tcpserversocket-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">TcpServerSocket.cpp</span></code><a class="headerlink" href="#tcpserversocket-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/TcpServerSocket.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  TcpServerSocket.cpp
+// \author mstarch
+// \brief  cpp file for TcpServerSocket core implementation classes
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#include &lt;Drv/Ip/TcpServerSocket.hpp&gt;
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+#include &lt;Fw/Logger/Logger.hpp&gt;
+#include &lt;Fw/Types/Assert.hpp&gt;
+
+#ifdef TGT_OS_TYPE_VXWORKS
+#include &lt;errnoLib.h&gt;
+#include &lt;fioLib.h&gt;
+#include &lt;hostLib.h&gt;
+#include &lt;inetLib.h&gt;
+#include &lt;ioLib.h&gt;
+#include &lt;sockLib.h&gt;
+#include &lt;socket.h&gt;
+#include &lt;sysLib.h&gt;
+#include &lt;taskLib.h&gt;
+#include &lt;vxWorks.h&gt;
+#include &lt;cstring&gt;
+#elif defined TGT_OS_TYPE_LINUX || TGT_OS_TYPE_DARWIN
+#include &lt;arpa/inet.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;unistd.h&gt;
+#else
+#error OS not supported for IP Socket Communications
+#endif
+
+#include &lt;cstring&gt;
+
+namespace Drv {
+
+TcpServerSocket::TcpServerSocket() : IpSocket() {}
+
+U16 TcpServerSocket::getListenPort() {
+    U16 port = this-&gt;m_port;
+    return port;
+}
+
+SocketIpStatus TcpServerSocket::startup(SocketDescriptor&amp; socketDescriptor) {
+    int serverFd = -1;
+    struct sockaddr_in address;
+    // Acquire a socket, or return error
+    if ((serverFd = ::socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+        return SOCK_FAILED_TO_GET_SOCKET;
+    }
+    // Set up the address port and name
+    address.sin_family = AF_INET;
+    address.sin_port = htons(this-&gt;m_port);
+
+    // OS specific settings
+#if defined TGT_OS_TYPE_VXWORKS || TGT_OS_TYPE_DARWIN
+    address.sin_len = static_cast&lt;U8&gt;(sizeof(struct sockaddr_in));
+#endif
+    // First IP address to socket sin_addr
+    if (IpSocket::addressToIp4(m_hostname, &amp;(address.sin_addr)) != SOCK_SUCCESS) {
+        ::close(serverFd);
+        return SOCK_INVALID_IP_ADDRESS;
+    };
+
+    // TCP requires bind to an address to the socket
+    if (::bind(serverFd, reinterpret_cast&lt;struct sockaddr*&gt;(&amp;address), sizeof(address)) &lt; 0) {
+        ::close(serverFd);
+        return SOCK_FAILED_TO_BIND;
+    }
+
+    socklen_t size = sizeof(address);
+    if (::getsockname(serverFd, reinterpret_cast&lt;struct sockaddr*&gt;(&amp;address), &amp;size) == -1) {
+        ::close(serverFd);
+        return SOCK_FAILED_TO_READ_BACK_PORT;
+    }
+    // TCP requires listening on the socket. Since we only expect a single client, set the TCP backlog (second argument)
+    // to 1 to prevent queuing of multiple clients.
+    if (::listen(serverFd, 1) &lt; 0) {
+        ::close(serverFd);
+        return SOCK_FAILED_TO_LISTEN;  // What we have here is a failure to communicate
+    }
+    Fw::Logger::log("Listening for single client at %s:%hu\n", m_hostname, m_port);
+    FW_ASSERT(serverFd != -1);
+    socketDescriptor.serverFd = serverFd;
+    this-&gt;m_port = ntohs(address.sin_port);
+    return SOCK_SUCCESS;
+}
+
+void TcpServerSocket::terminate(const SocketDescriptor&amp; socketDescriptor) {
+    (void)::close(socketDescriptor.serverFd);
+}
+
+SocketIpStatus TcpServerSocket::openProtocol(SocketDescriptor&amp; socketDescriptor) {
+    int clientFd = -1;
+    int serverFd = socketDescriptor.serverFd;
+
+    // Check for not started yet, may be true in the case of start-up reconnect attempts
+    if (serverFd == -1) {
+        return SOCK_NOT_STARTED;
+    }
+
+    // TCP requires accepting on the socket to get the client socket file descriptor.
+    clientFd = ::accept(serverFd, nullptr, nullptr);
+    if (clientFd &lt; 0) {
+        return SOCK_FAILED_TO_ACCEPT;  // What we have here is a failure to communicate
+    }
+    // Setup client send timeouts
+    if (IpSocket::setupTimeouts(clientFd) != SOCK_SUCCESS) {
+        ::close(clientFd);
+        return SOCK_FAILED_TO_SET_SOCKET_OPTIONS;
+    }
+
+    Fw::Logger::log("Accepted client at %s:%hu\n", m_hostname, m_port);
+    socketDescriptor.fd = clientFd;
+    return SOCK_SUCCESS;
+}
+
+I32 TcpServerSocket::sendProtocol(const SocketDescriptor&amp; socketDescriptor, const U8* const data, const U32 size) {
+    return static_cast&lt;I32&gt;(::send(socketDescriptor.fd, data, size, SOCKET_IP_SEND_FLAGS));
+}
+
+I32 TcpServerSocket::recvProtocol(const SocketDescriptor&amp; socketDescriptor, U8* const data, const U32 size) {
+    I32 size_buf;
+    // recv will return 0 if the client has done an orderly shutdown
+    size_buf = static_cast&lt;I32&gt;(::recv(socketDescriptor.fd, data, size, SOCKET_IP_RECV_FLAGS));
+    return size_buf;
+}
+
+}  // namespace Drv
+</pre></div>
+</div>
+</section>
+<section id="tcpserversocket-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">TcpServerSocket.hpp</span></code><a class="headerlink" href="#tcpserversocket-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/TcpServerSocket.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  TcpServerSocket.hpp
+// \author mstarch
+// \brief  hpp file for TcpServerSocket core implementation classes
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#ifndef DRV_TCPSERVER_TCPHELPER_HPP_
+#define DRV_TCPSERVER_TCPHELPER_HPP_
+
+#include &lt;Drv/Ip/IpSocket.hpp&gt;
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+#include &lt;config/IpCfg.hpp&gt;
+
+namespace Drv {
+
+/**
+ * \brief Helper for setting up Tcp using Berkeley sockets as a server
+ *
+ * Certain IP headers have conflicting definitions with the m_data member of various types in fprime. TcpServerSocket
+ * separates the ip setup from the incoming Fw::Buffer in the primary component class preventing this collision.
+ */
+class TcpServerSocket : public IpSocket {
+  public:
+    /**
+     * \brief Constructor for client socket tcp implementation
+     */
+    TcpServerSocket();
+
+    /**
+     * \brief Opens the server socket and listens, does not block.
+     *
+     * Opens the server's listening socket such that this server can listen for incoming client requests. Given the
+     * nature of this component, only one (1) client can be handled at a time. After this call succeeds, clients may
+     * connect. This call does not block, block occurs on `open` while waiting to accept incoming clients.
+     * \param socketDescriptor: server descriptor will be written here
+     * \return status of the server socket setup.
+     */
+    SocketIpStatus startup(SocketDescriptor&amp; socketDescriptor);
+
+    /**
+     * \brief close the server socket created by the `startup` call
+     *
+     * Calls the close function on the server socket. No shutdown is performed on the server socket, as that is left to
+     * the individual client sockets.
+     *
+     * \param socketDescriptor:  descriptor to close
+     */
+    void terminate(const SocketDescriptor&amp; socketDescriptor);
+
+    /**
+     * \brief get the port being listened on
+     *
+     * Most useful when listen was configured to use port "0", this will return the port used for listening after a port
+     * has been determined. Will return 0 if the connection has not been setup.
+     *
+     * \return receive port
+     */
+    U16 getListenPort();
+
+  protected:
+    /**
+     * \brief Tcp specific implementation for opening a client socket connected to this server.
+     * \param socketDescriptor: (output) descriptor opened. Only valid on SOCK_SUCCESS. Otherwise will be invalid
+     * \return status of open
+     */
+    SocketIpStatus openProtocol(SocketDescriptor&amp; socketDescriptor) override;
+    /**
+     * \brief Protocol specific implementation of send.  Called directly with retry from send.
+     * \param socketDescriptor: descriptor to send to
+     * \param data: data to send
+     * \param size: size of data to send
+     * \return: size of data sent, or -1 on error.
+     */
+    I32 sendProtocol(const SocketDescriptor&amp; socketDescriptor, const U8* const data, const U32 size) override;
+    /**
+     * \brief Protocol specific implementation of recv.  Called directly with error handling from recv.
+     * \param socketDescriptor: descriptor to recv from
+     * \param data: data pointer to fill
+     * \param size: size of data buffer
+     * \return: size of data received, or -1 on error.
+     */
+    I32 recvProtocol(const SocketDescriptor&amp; socketDescriptor, U8* const data, const U32 size) override;
+};
+}  // namespace Drv
+
+#endif /* DRV_TCPSERVER_TCPHELPER_HPP_ */
+</pre></div>
+</div>
+</section>
+<section id="udpsocket-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">UdpSocket.cpp</span></code><a class="headerlink" href="#udpsocket-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/UdpSocket.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  UdpSocket.cpp
+// \author mstarch
+// \brief  cpp file for UdpSocket core implementation classes
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#include &lt;Drv/Ip/UdpSocket.hpp&gt;
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+#include &lt;Fw/Logger/Logger.hpp&gt;
+#include &lt;Fw/Types/Assert.hpp&gt;
+#include &lt;Fw/Types/StringUtils.hpp&gt;
+
+#ifdef TGT_OS_TYPE_VXWORKS
+#include &lt;errnoLib.h&gt;
+#include &lt;fioLib.h&gt;
+#include &lt;hostLib.h&gt;
+#include &lt;inetLib.h&gt;
+#include &lt;ioLib.h&gt;
+#include &lt;sockLib.h&gt;
+#include &lt;socket.h&gt;
+#include &lt;sysLib.h&gt;
+#include &lt;taskLib.h&gt;
+#include &lt;vxWorks.h&gt;
+#include &lt;cstring&gt;
+#else
+#include &lt;arpa/inet.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;unistd.h&gt;
+#endif
+
+#include &lt;cerrno&gt;
+#include &lt;cstring&gt;
+#include &lt;new&gt;
+
+namespace Drv {
+
+UdpSocket::UdpSocket() : IpSocket(), m_recv_configured(false) {
+    (void)::memset(&amp;m_addr_send, 0, sizeof(m_addr_send));
+    (void)::memset(&amp;m_addr_recv, 0, sizeof(m_addr_recv));
+}
+
+UdpSocket::~UdpSocket() = default;
+
+SocketIpStatus UdpSocket::configure(const char* const hostname,
+                                    const U16 port,
+                                    const U32 timeout_seconds,
+                                    const U32 timeout_microseconds) {
+    FW_ASSERT(0);  // Must use configureSend and/or configureRecv
+    return SocketIpStatus::SOCK_INVALID_CALL;
+}
+
+SocketIpStatus UdpSocket::configureSend(const char* const hostname,
+                                        const U16 port,
+                                        const U32 timeout_seconds,
+                                        const U32 timeout_microseconds) {
+    FW_ASSERT(hostname != nullptr);
+    FW_ASSERT(this-&gt;isValidPort(port));
+    FW_ASSERT(timeout_microseconds &lt; 1000000);
+    return IpSocket::configure(hostname, port, timeout_seconds, timeout_microseconds);
+}
+
+SocketIpStatus UdpSocket::configureRecv(const char* hostname, const U16 port) {
+    FW_ASSERT(hostname != nullptr);
+    FW_ASSERT(this-&gt;isValidPort(port));
+    FW_ASSERT(Fw::StringUtils::string_length(hostname, SOCKET_MAX_HOSTNAME_SIZE) &lt; SOCKET_MAX_HOSTNAME_SIZE);
+
+    // Initialize the receive address structure
+    (void)::memset(&amp;m_addr_recv, 0, sizeof(m_addr_recv));
+    m_addr_recv.sin_family = AF_INET;
+    m_addr_recv.sin_port = htons(port);
+
+    // Convert hostname to IP address
+    SocketIpStatus status = IpSocket::addressToIp4(hostname, &amp;m_addr_recv.sin_addr);
+    if (status != SOCK_SUCCESS) {
+        return status;
+    }
+
+    this-&gt;m_recv_configured = true;
+    return SOCK_SUCCESS;
+}
+
+U16 UdpSocket::getRecvPort() {
+    return ntohs(this-&gt;m_addr_recv.sin_port);
+}
+
+SocketIpStatus UdpSocket::bind(const int fd) {
+    FW_ASSERT(fd != -1);
+    struct sockaddr_in address = this-&gt;m_addr_recv;
+
+    // OS specific settings
+#if defined TGT_OS_TYPE_VXWORKS || TGT_OS_TYPE_DARWIN
+    address.sin_len = static_cast&lt;U8&gt;(sizeof(struct sockaddr_in));
+#endif
+    // UDP (for receiving) requires bind to an address to the socket
+    if (::bind(fd, reinterpret_cast&lt;struct sockaddr*&gt;(&amp;address), sizeof(address)) &lt; 0) {
+        return SOCK_FAILED_TO_BIND;
+    }
+
+    socklen_t size = sizeof(address);
+    if (::getsockname(fd, reinterpret_cast&lt;struct sockaddr*&gt;(&amp;address), &amp;size) == -1) {
+        return SOCK_FAILED_TO_READ_BACK_PORT;
+    }
+
+    // Update m_addr_recv with the actual port assigned (for ephemeral port support)
+    this-&gt;m_addr_recv.sin_port = address.sin_port;
+
+    return SOCK_SUCCESS;
+}
+
+SocketIpStatus UdpSocket::openProtocol(SocketDescriptor&amp; socketDescriptor) {
+    if (this-&gt;m_port == 0 &amp;&amp; !this-&gt;m_recv_configured) {
+        return SOCK_INVALID_CALL;  // Neither send nor receive is configured
+    }
+
+    SocketIpStatus status = SOCK_SUCCESS;
+    int socketFd = -1;
+
+    // Initialize address structure to zero before use
+    struct sockaddr_in address;
+    (void)::memset(&amp;address, 0, sizeof(address));
+
+    U16 port = this-&gt;m_port;
+    U16 recv_port = ntohs(this-&gt;m_addr_recv.sin_port);
+
+    // Acquire a socket, or return error
+    if ((socketFd = ::socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
+        return SOCK_FAILED_TO_GET_SOCKET;
+    }
+
+    // May not be sending in all cases
+    if (port != 0) {
+        // Set up the address port and name
+        address.sin_family = AF_INET;
+        address.sin_port = htons(this-&gt;m_port);
+
+        // OS specific settings
+#if defined TGT_OS_TYPE_VXWORKS || TGT_OS_TYPE_DARWIN
+        address.sin_len = static_cast&lt;U8&gt;(sizeof(struct sockaddr_in));
+#endif
+
+        // First IP address to socket sin_addr
+        status = IpSocket::addressToIp4(m_hostname, &amp;(address.sin_addr));
+        if (status != SOCK_SUCCESS) {
+            Fw::Logger::log("Failed to resolve hostname %s: %d\n", m_hostname, static_cast&lt;I32&gt;(status));
+            ::close(socketFd);
+            return status;
+        };
+
+        // Now apply timeouts
+        status = this-&gt;setupTimeouts(socketFd);
+        if (status != SOCK_SUCCESS) {
+            ::close(socketFd);
+            return status;
+        }
+        FW_ASSERT(sizeof(this-&gt;m_addr_send) == sizeof(address), static_cast&lt;FwAssertArgType&gt;(sizeof(this-&gt;m_addr_send)),
+                  static_cast&lt;FwAssertArgType&gt;(sizeof(address)));
+        (void)memcpy(&amp;this-&gt;m_addr_send, &amp;address, sizeof(this-&gt;m_addr_send));
+    }
+
+    // Only bind if configureRecv was called (including ephemeral)
+    if (this-&gt;m_recv_configured) {
+        status = this-&gt;bind(socketFd);
+
+        if (status != SOCK_SUCCESS) {
+            (void)::close(socketFd);  // Closing FD as a retry will reopen send side
+            return status;
+        }
+    }
+
+    // Log message for UDP
+    char recv_addr[INET_ADDRSTRLEN];
+    const char* recv_addr_str = inet_ntop(AF_INET, &amp;(this-&gt;m_addr_recv.sin_addr), recv_addr, INET_ADDRSTRLEN);
+    if (recv_addr_str == nullptr) {
+        (void)Fw::StringUtils::string_copy(recv_addr, "INVALID_ADDR", INET_ADDRSTRLEN);
+    }
+
+    if ((port == 0) &amp;&amp; (recv_port &gt; 0)) {
+        Fw::Logger::log("Setup to only receive udp at %s:%hu\n", recv_addr, recv_port);
+    } else if ((port &gt; 0) &amp;&amp; (recv_port == 0)) {
+        Fw::Logger::log("Setup to only send udp at %s:%hu\n", m_hostname, port);
+    } else if ((port &gt; 0) &amp;&amp; (recv_port &gt; 0)) {
+        Fw::Logger::log("Setup to receive udp at %s:%hu and send to %s:%hu\n", recv_addr, recv_port, m_hostname, port);
+    }
+
+    FW_ASSERT(status == SOCK_SUCCESS, static_cast&lt;FwAssertArgType&gt;(status));
+    socketDescriptor.fd = socketFd;
+    return status;
+}
+
+I32 UdpSocket::sendProtocol(const SocketDescriptor&amp; socketDescriptor, const U8* const data, const U32 size) {
+    FW_ASSERT(this-&gt;m_addr_send.sin_family != 0);  // Make sure the address was previously setup
+    FW_ASSERT(socketDescriptor.fd &gt;= 0);           // File descriptor should be valid
+    FW_ASSERT(data != nullptr);                    // Data pointer should not be null
+
+    return static_cast&lt;I32&gt;(::sendto(socketDescriptor.fd, data, size, SOCKET_IP_SEND_FLAGS,
+                                     reinterpret_cast&lt;struct sockaddr*&gt;(&amp;this-&gt;m_addr_send),
+                                     sizeof(this-&gt;m_addr_send)));
+}
+
+I32 UdpSocket::recvProtocol(const SocketDescriptor&amp; socketDescriptor, U8* const data, const U32 size) {
+    FW_ASSERT(this-&gt;m_addr_recv.sin_family != 0);  // Make sure the address was previously setup
+    FW_ASSERT(socketDescriptor.fd &gt;= 0);           // File descriptor should be valid
+    FW_ASSERT(data != nullptr);                    // Data pointer should not be null
+
+    // Initialize sender address structure to zero
+    struct sockaddr_in sender_addr;
+    (void)::memset(&amp;sender_addr, 0, sizeof(sender_addr));
+
+    socklen_t sender_addr_len = sizeof(sender_addr);
+    I32 received = static_cast&lt;I32&gt;(::recvfrom(socketDescriptor.fd, data, size, SOCKET_IP_RECV_FLAGS,
+                                               reinterpret_cast&lt;struct sockaddr*&gt;(&amp;sender_addr), &amp;sender_addr_len));
+    // If we have not configured a send port, set it to the source of the last received packet
+    if (received &gt;= 0 &amp;&amp; this-&gt;m_addr_send.sin_port == 0) {
+        this-&gt;m_addr_send = sender_addr;
+        this-&gt;m_port = ntohs(sender_addr.sin_port);
+        Fw::Logger::log("Configured send port to %hu as specified by the last received packet.\n", this-&gt;m_port);
+    }
+    return received;
+}
+
+SocketIpStatus UdpSocket::send(const SocketDescriptor&amp; socketDescriptor, const U8* const data, const U32 size) {
+    // Note: socketDescriptor.fd can be -1 in some test cases
+    FW_ASSERT((size == 0) || (data != nullptr));
+
+    // Special case for zero-length datagrams in UDP
+    if (size == 0) {
+        errno = 0;
+        I32 sent = this-&gt;sendProtocol(socketDescriptor, data, 0);
+        if (sent == -1) {
+            if (errno == EINTR) {
+                // For zero-length datagrams, we'll just try once more if interrupted
+                errno = 0;
+                sent = this-&gt;sendProtocol(socketDescriptor, data, 0);
+            }
+
+            if (sent == -1) {
+                if ((errno == EBADF) || (errno == ECONNRESET)) {
+                    return SOCK_DISCONNECTED;
+                } else {
+                    return SOCK_SEND_ERROR;
+                }
+            }
+        }
+        // For zero-length datagrams in UDP, success is either 0 or a non-negative value
+        return SOCK_SUCCESS;
+    }
+
+    // For non-zero-length data, delegate to the base class implementation
+    return IpSocket::send(socketDescriptor, data, size);
+}
+
+SocketIpStatus UdpSocket::handleZeroReturn() {
+    // For UDP, a return of 0 from recvfrom means a 0-byte datagram was received.
+    // This is a success case for UDP, not a disconnection.
+    return SOCK_SUCCESS;
+}
+
+}  // namespace Drv
+</pre></div>
+</div>
+</section>
+<section id="udpsocket-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">UdpSocket.hpp</span></code><a class="headerlink" href="#udpsocket-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/UdpSocket.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  UdpSocket.hpp
+// \author mstarch
+// \brief  hpp file for UdpSocket core implementation classes
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#ifndef DRV_IP_UDPSOCKET_HPP_
+#define DRV_IP_UDPSOCKET_HPP_
+
+#include &lt;Drv/Ip/IpSocket.hpp&gt;
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+#include &lt;config/IpCfg.hpp&gt;
+
+// Include system headers for sockaddr_in
+#ifdef TGT_OS_TYPE_VXWORKS
+#include &lt;inetLib.h&gt;
+#include &lt;socket.h&gt;
+#else
+#include &lt;arpa/inet.h&gt;
+#include &lt;sys/socket.h&gt;
+#endif
+
+namespace Drv {
+
+/**
+ * \brief Helper for setting up Udp using Berkeley sockets as a client
+ *
+ * Certain IP headers have conflicting definitions with the m_data member of various types in fprime. UdpSocket
+ * separates the ip setup from the incoming Fw::Buffer in the primary component class preventing this collision.
+ */
+class UdpSocket : public IpSocket {
+  public:
+    /**
+     * \brief Constructor for client socket udp implementation
+     */
+    UdpSocket();
+    /**
+     * \brief to cleanup state created at instantiation
+     */
+    virtual ~UdpSocket();
+
+    /**
+     * \brief configure is disabled
+     *
+     * \warning configure is disabled for UdpSocket. Use configureSend and configureRecv instead.
+     */
+    SocketIpStatus configure(const char* hostname,
+                             const U16 port,
+                             const U32 send_timeout_seconds,
+                             const U32 send_timeout_microseconds) override;
+
+    /**
+     * \brief configure the udp socket for outgoing transmissions
+     *
+     * Configures the UDP handler to use the given hostname and port for outgoing transmissions. Incoming hostname
+     * and port are configured using the `configureRecv` function call for UDP as it requires separate host/port pairs
+     * for outgoing and incoming transmissions. Hostname DNS translation is left up to the caller and thus hostname must
+     * be an IP address in dot-notation of the form "x.x.x.x". If port is set to 0, the socket will be configured for
+     * ephemeral send (dynamic reply-to) and will use the sender's address from the first received datagram for replies.
+     * It is possible to configure the UDP port as a single-direction send port only.
+     *
+     * Note: delegates to `IpSocket::configure`
+     *
+     * \param hostname: socket uses for outgoing transmissions. Must be of form x.x.x.x
+     * \param port: port socket uses for outgoing transmissions. Can be 0 for ephemeral reply-to mode.
+     * \param send_timeout_seconds: send timeout seconds portion
+     * \param send_timeout_microseconds: send timeout microseconds portion. Must be less than 1000000
+     * \return status of configure
+     */
+    SocketIpStatus configureSend(const char* hostname,
+                                 const U16 port,
+                                 const U32 send_timeout_seconds,
+                                 const U32 send_timeout_microseconds);
+
+    /**
+     * \brief configure the udp socket for incoming transmissions
+     *
+     * Configures the UDP handler to use the given hostname and port for incoming transmissions. Outgoing hostname
+     * and port are configured using the `configureSend` function call for UDP as it requires separate host/port pairs
+     * for outgoing and incoming transmissions. Hostname DNS translation is left up to the caller and thus hostname must
+     * be an IP address in dot-notation of the form "x.x.x.x". It is possible to configure the UDP port as a
+     * single-direction receive port only.
+     *
+     * \param hostname: socket uses for incoming transmissions. Must be of form x.x.x.x
+     * \param port: port socket uses for incoming transmissions. Can be 0 for ephemeral port assignment.
+     * \return status of configure
+     */
+    SocketIpStatus configureRecv(const char* hostname, const U16 port);
+
+    /**
+     * \brief get the port being received on
+     *
+     * Most useful when receive was configured to use port "0", this will return the port used for receiving data after
+     * a port has been determined. Will return 0 if the connection has not been setup.
+     *
+     * \return receive port
+     */
+    U16 getRecvPort();
+
+    /**
+     * \brief UDP-specific implementation of send that handles zero-length datagrams correctly.
+     * \param socketDescriptor: descriptor to send to
+     * \param data: data pointer to send
+     * \param size: size of data to send
+     * \return: status of the send operation
+     */
+    SocketIpStatus send(const SocketDescriptor&amp; socketDescriptor, const U8* const data, const U32 size) override;
+
+  protected:
+    /**
+     * \brief bind the UDP to a port such that it can receive packets at the previously configured port
+     * \param socketDescriptor: socket descriptor used in bind
+     * \return status of the bind
+     */
+    SocketIpStatus bind(const int fd);
+    /**
+     * \brief udp specific implementation for opening a socket.
+     * \param socketDescriptor: (output) file descriptor opened. Only valid on SOCK_SUCCESS. Otherwise will be invalid
+     * \return status of open
+     */
+    SocketIpStatus openProtocol(SocketDescriptor&amp; socketDescriptor) override;
+    /**
+     * \brief Protocol specific implementation of send.  Called directly with retry from send.
+     * \param socketDescriptor: descriptor to send to
+     * \param data: data to send
+     * \param size: size of data to send
+     * \return: size of data sent, or -1 on error.
+     */
+    I32 sendProtocol(const SocketDescriptor&amp; socketDescriptor, const U8* const data, const U32 size) override;
+    /**
+     * \brief Protocol specific implementation of recv.  Called directly with error handling from recv.
+     * \param socketDescriptor: descriptor to recv from
+     * \param data: data pointer to fill
+     * \param size: size of data buffer
+     * \return: size of data received, or -1 on error.
+     */
+    I32 recvProtocol(const SocketDescriptor&amp; socketDescriptor, U8* const data, const U32 size) override;
+    /**
+     * \brief Handle zero return from recvProtocol for UDP
+     *
+     * For UDP, a return of 0 from recvfrom means a 0-byte datagram was received,
+     * which is a success case, not a disconnection.
+     *
+     * @return SocketIpStatus Status to return from recv
+     */
+    SocketIpStatus handleZeroReturn() override;
+
+  private:
+    struct sockaddr_in m_addr_send;  //!&lt; UDP server address for sending
+    struct sockaddr_in m_addr_recv;  //!&lt; UDP server address for receiving
+    bool m_recv_configured;          //!&lt; True if configureRecv was called
+};
+}  // namespace Drv
+
+#endif /* DRV_IP_UDPSOCKET_HPP_ */
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../Interfaces/docs/index.html" class="btn btn-neutral float-left" title="docs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docs/index.html" class="btn btn-neutral float-right" title="docs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

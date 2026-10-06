@@ -1,0 +1,2009 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="pc-linux" href="../../pc-linux/index.html" />
+    <link rel="prev" title="make" href="../make/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">psp</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">nos-linux</a></li>
+      <li class="breadcrumb-item active">src</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/fsw/psp/fsw/nos-linux/src/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="src">
+<h1>src<a class="headerlink" href="#src" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/psp/fsw/nos-linux/src/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="cfe-psp-exception-c">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_psp_exception.c</span></code><a class="headerlink" href="#cfe-psp-exception-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/psp/fsw/nos-linux/src/cfe_psp_exception.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+**  GSC-18128-1, "Core Flight Executive Version 6.7"
+**
+**  Copyright (c) 2006-2019 United States Government as represented by
+**  the Administrator of the National Aeronautics and Space Administration.
+**  All Rights Reserved.
+**
+**  Licensed under the Apache License, Version 2.0 (the "License");
+**  you may not use this file except in compliance with the License.
+**  You may obtain a copy of the License at
+**
+**    http://www.apache.org/licenses/LICENSE-2.0
+**
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+*/
+
+/******************************************************************************
+S
+** File:  cfe_psp_exception.c
+**
+**      POSIX ( Mac OS X, Linux, Cygwin ) version
+**
+** Purpose:
+**   cFE PSP Exception handling functions
+**
+** History:
+**   2007/05/29  A. Cudmore      | POSIX Version
+**
+******************************************************************************/
+
+/*
+**  Include Files
+*/
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;pthread.h&gt;
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+#include "cfe_psp.h"
+#include "cfe_psp_config.h"
+#include "cfe_psp_exceptionstorage_types.h"
+#include "cfe_psp_exceptionstorage_api.h"
+
+#include &lt;execinfo.h&gt;
+#include &lt;signal.h&gt;
+
+#include "NOS-time.h"
+
+/*
+ * A set of asynchronous signals which will be masked during other signal processing
+ */
+sigset_t    CFE_PSP_AsyncMask;
+
+
+/***************************************************************************
+ **                        FUNCTIONS DEFINITIONS
+ ***************************************************************************/
+
+
+/*
+** Name: CFE_PSP_ExceptionSigHandler
+**
+** Installed as a signal handler to log exception events.
+**
+*/
+void CFE_PSP_ExceptionSigHandler (int signo, siginfo_t *si, void *ctxt)
+{
+    CFE_PSP_Exception_LogData_t* Buffer;
+    int NumAddrs;
+
+    /*
+     * Note that the time between CFE_PSP_Exception_GetNextContextBuffer()
+     * and CFE_PSP_Exception_WriteComplete() is sensitive in that it is
+     * accessing a global.
+     *
+     * Cannot use a conventional lock because this is a signal handler, the
+     * solution would need to involve a signal-safe spinlock and/or C11
+     * atomic ops.
+     *
+     * This means if another exception occurs on another task during this
+     * time window, it may use the same buffer.
+     *
+     * However, exceptions should be rare enough events that this is highly
+     * unlikely to occur, so leaving this unhandled for now.
+     */
+    Buffer = CFE_PSP_Exception_GetNextContextBuffer();
+    if (Buffer != NULL)
+    {
+        /*
+         * read the clock as a timestamp - note "clock_gettime" is signal safe per POSIX,
+         *
+         * _not_ going through OSAL to read this as it may do something signal-unsafe...
+         * (current implementation would be safe, but it is not guaranteed to always be).
+         */
+        NOS_clock_gettime(CLOCK_MONOTONIC, &amp;Buffer-&gt;context_info.event_time);
+        memcpy(&amp;Buffer-&gt;context_info.si, si, sizeof(Buffer-&gt;context_info.si));
+        NumAddrs = backtrace(Buffer-&gt;context_info.bt_addrs, CFE_PSP_MAX_EXCEPTION_BACKTRACE_SIZE);
+        Buffer-&gt;context_size = offsetof(CFE_PSP_Exception_ContextDataEntry_t, bt_addrs[NumAddrs]);
+        /* pthread_self() is signal-safe per POSIX.1-2013 */
+        Buffer-&gt;sys_task_id = pthread_self();
+        CFE_PSP_Exception_WriteComplete();
+    }
+
+    /*
+     * notify the main (idle) thread that an interesting event occurred.
+     * Note on this platform this cannot _directly_ invoke CFE from a signal handler.
+     */
+    pthread_kill(CFE_PSP_IdleTaskState.ThreadID, CFE_PSP_EXCEPTION_EVENT_SIGNAL);
+}
+
+/*
+** Name: CFE_PSP_ExceptionSigHandlerSuspend
+**
+** An extension of CFE_PSP_ExceptionSigHandler that also
+** suspends the calling task and prevents returning to the
+** application.
+**
+** This is required for handling events like Floating Point exceptions,
+** where returning to the application would resume at the same instruction
+** and re-trigger the exception, resulting in a loop.
+**
+*/
+void CFE_PSP_ExceptionSigHandlerSuspend (int signo, siginfo_t *si, void *ctxt)
+{
+    /*
+     * Perform normal exception logging
+     */
+    CFE_PSP_ExceptionSigHandler(signo, si, ctxt);
+
+    /*
+     * calling "sigsuspend" with an empty mask should
+     * block this thread indefinitely.  This is intended
+     * to replicate the behavior of vxworks which suspends
+     * the task after an exception.
+     *
+     * This stops execution of the thread in anticipation that it
+     * will be deleted by the CFE/OSAL.
+     */
+    sigsuspend(&amp;CFE_PSP_AsyncMask);
+
+} /* end function */
+
+/*
+ * Helper function to call sigaction() to attach a signal handler
+ */
+void CFE_PSP_AttachSigHandler (int signo)
+{
+    struct sigaction sa;
+
+    memset(&amp;sa, 0, sizeof(sa));
+    sa.sa_mask = CFE_PSP_AsyncMask;
+
+    if(!sigismember(&amp;CFE_PSP_AsyncMask, signo))
+    {
+        /*
+         * In the event that the handler is being installed for one of the
+         * synchronous events, use the CFE_PSP_ExceptionSigHandlerSuspend variant.
+         *
+         * This suspends the caller and prevents returning to the application.
+         */
+        sa.sa_sigaction = CFE_PSP_ExceptionSigHandlerSuspend;
+
+        /*
+         * add it back to the mask set.
+         * This is supposed to be default unless SA_NODEFER flag is set,
+         * but also setting it here to be sure.
+         */
+        sigaddset(&amp;sa.sa_mask, signo);
+    }
+    else
+    {
+        /*
+         * Use default handler which will return to the application
+         * after logging the event
+         */
+        sa.sa_sigaction = CFE_PSP_ExceptionSigHandler;
+    }
+    sa.sa_flags = SA_SIGINFO;
+
+    sigaction(signo, &amp;sa, NULL);
+}
+
+
+
+/*
+**   Name: CFE_PSP_AttachExceptions
+**
+**   This is called from the CFE Main task, before any other threads
+**   are started.  Use this opportunity to install the handler for
+**   CTRL+C events, which will now be treated as an exception.
+**
+**   Not only does this clean up the code by NOT requiring a specific
+**   handler for CTRL+C, it also provides a way to exercise and test
+**   the exception handling in general, which tends to be infrequently
+**   invoked because otherwise it only happens with off nominal behavior.
+**
+**   This has yet another benefit that SIGINT events will make their
+**   way into the exception and reset log, so it is visible why the
+**   CFE shut down.
+*/
+
+void CFE_PSP_AttachExceptions(void)
+{
+    void *Addr[1];
+
+    /*
+     * preemptively call "backtrace" -
+     * The manpage notes that backtrace is implemented in libgcc
+     * which may be dynamically linked with lazy binding. So
+     * by calling it once we ensure that it is loaded and therefore
+     * it is safe to use in a signal handler.
+     */
+    backtrace(Addr, 1);
+
+    OS_printf("CFE_PSP: CFE_PSP_AttachExceptions Called\n");
+
+    /*
+     * Block most other signals during handler execution.
+     * Exceptions are for synchronous errors SIGFPE/SIGSEGV/SIGILL/SIGBUS
+     */
+    sigfillset(&amp;CFE_PSP_AsyncMask);
+    sigdelset(&amp;CFE_PSP_AsyncMask, SIGILL);
+    sigdelset(&amp;CFE_PSP_AsyncMask, SIGFPE);
+    sigdelset(&amp;CFE_PSP_AsyncMask, SIGBUS);
+    sigdelset(&amp;CFE_PSP_AsyncMask, SIGSEGV);
+
+    /*
+     * Install sigint_handler as the signal handler for SIGINT.
+     *
+     * In the event that the user presses CTRL+C at the console
+     * this will be recorded as an exception and use the general
+     * purpose exception processing logic to shut down CFE.
+     *
+     * Also include SIGTERM so it will invoke a graceful shutdown
+     */
+    CFE_PSP_AttachSigHandler(SIGINT);
+    CFE_PSP_AttachSigHandler(SIGTERM);
+
+    /*
+     * Clear any pending exceptions.
+     *
+     * This is just in case this is a PROCESSOR reset and there
+     * was something still in the queue from the last lifetime.
+     *
+     * It should have been logged already, but if not, then
+     * don't action on it now.
+     */
+    CFE_PSP_Exception_Reset();
+}
+
+/*
+**
+**   Name: CFE_PSP_SetDefaultExceptionEnvironment
+**
+**   Purpose: This function sets a default exception environment that can be used
+**
+**   Notes: The exception environment is local to each task Therefore this must be
+**          called for each task that that wants to do floating point and catch exceptions
+**          Currently, this is automaticall called from OS_TaskRegister for every task
+*/
+
+void CFE_PSP_SetDefaultExceptionEnvironment(void)
+{
+    /*
+     * This additionally sets a handler for SIGFPE which will catch arithmetic errors
+     * such as divide by zero.  Other possibilities are SIGILL/SIGBUS/SIGSEGV.
+     *
+     * This is primarily used as a proof-of-concept on this platform to demonstrate
+     * how the exception handling feature works.
+     *
+     * As the PC-Linux platform is often used for debugging, it is better to
+     * maintain the default signal handler for the SIGILL/SIGBUS/SIGSEGV which will
+     * abort the program and generate a core file.
+     */
+    CFE_PSP_AttachSigHandler(SIGFPE);
+}
+
+int32 CFE_PSP_ExceptionGetSummary_Impl(const CFE_PSP_Exception_LogData_t* Buffer, char *ReasonBuf, uint32 ReasonSize)
+{
+    const char *ComputedReason = "unknown";
+
+    /* check the "code" within the siginfo structure, which reveals more info about the FP exception */
+    if (Buffer-&gt;context_info.si.si_signo == SIGFPE)
+    {
+        switch(Buffer-&gt;context_info.si.si_code)
+        {
+        case FPE_INTDIV:
+            ComputedReason = "Integer divide by zero";
+            break;
+        case FPE_INTOVF:
+            ComputedReason = "Integer overflow";
+            break;
+        case FPE_FLTDIV:
+            ComputedReason = "Floating-point divide by zero";
+            break;
+        case FPE_FLTOVF:
+            ComputedReason = "Floating-point overflow";
+            break;
+        case FPE_FLTUND:
+            ComputedReason = "Floating-point underflow";
+            break;
+        case FPE_FLTRES:
+            ComputedReason = "Floating-point inexact result";
+            break;
+        case FPE_FLTINV:
+            ComputedReason = "Invalid floating-point operation";
+            break;
+        case FPE_FLTSUB:
+            ComputedReason = "Subscript out of range";
+            break;
+        default:
+            ComputedReason = "Unknown SIGFPE";
+        }
+        (void)snprintf(ReasonBuf, ReasonSize, "%s at ip 0x%lx", ComputedReason,
+                (unsigned long)Buffer-&gt;context_info.si.si_addr);
+
+    }
+    else if (Buffer-&gt;context_info.si.si_signo == SIGINT)
+    {
+        /* interrupt e.g. CTRL+C */
+        (void)snprintf(ReasonBuf, ReasonSize, "Caught SIGINT");
+    }
+    else
+    {
+        /*
+         * other signal....
+         * POSIX 2008 does provide a strsignal() function to get the name, but this
+         * is a newer spec than what is targeted by CFE, so just print the number.
+         */
+        (void)snprintf(ReasonBuf, ReasonSize, "Caught Signal %d",Buffer-&gt;context_info.si.si_signo);
+    }
+
+    return CFE_PSP_SUCCESS;
+}
+</pre></div>
+</div>
+</section>
+<section id="cfe-psp-start-c">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_psp_start.c</span></code><a class="headerlink" href="#cfe-psp-start-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/psp/fsw/nos-linux/src/cfe_psp_start.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+**  GSC-18128-1, "Core Flight Executive Version 6.7"
+**
+**  Copyright (c) 2006-2019 United States Government as represented by
+**  the Administrator of the National Aeronautics and Space Administration.
+**  All Rights Reserved.
+**
+**  Licensed under the Apache License, Version 2.0 (the "License");
+**  you may not use this file except in compliance with the License.
+**  You may obtain a copy of the License at
+**
+**    http://www.apache.org/licenses/LICENSE-2.0
+**
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+*/
+
+/******************************************************************************
+** File:  cfe_psp_start.c
+**
+** Purpose:
+**   cFE BSP main entry point.
+**
+** History:
+**   2005/07/26  A. Cudmore      | Initial version for OS X/Linux 
+**
+******************************************************************************/
+
+/*
+**  Include Files
+*/
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;signal.h&gt;
+#include &lt;sys/time.h&gt;
+#include &lt;getopt.h&gt;
+#include &lt;string.h&gt;
+#include &lt;limits.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;sched.h&gt;
+#include &lt;errno.h&gt;
+
+/*
+** cFE includes 
+*/
+#include "common_types.h"
+#include "osapi.h"
+
+#include "cfe_psp.h"
+#include "cfe_psp_memory.h"
+
+/*
+ * The preferred way to obtain the CFE tunable values at runtime is via
+ * the dynamically generated configuration object.  This allows a single build
+ * of the PSP to be completely CFE-independent.
+ */
+#include &lt;target_config.h&gt;
+#include "cfe_psp_module.h"
+
+/* nos engine includes */
+#include "Client/CInterface.h"
+#include "nos_link.h"
+
+#define CFE_PSP_MAIN_FUNCTION        (*GLOBAL_CONFIGDATA.CfeConfig-&gt;SystemMain)
+#define CFE_PSP_1HZ_FUNCTION         (*GLOBAL_CONFIGDATA.CfeConfig-&gt;System1HzISR)
+#define CFE_PSP_NONVOL_STARTUP_FILE  (GLOBAL_CONFIGDATA.CfeConfig-&gt;NonvolStartupFile)
+#define CFE_PSP_CPU_ID               (GLOBAL_CONFIGDATA.Default_CpuId)
+#define CFE_PSP_CPU_NAME             (GLOBAL_CONFIGDATA.Default_CpuName)
+#define CFE_PSP_SPACECRAFT_ID        (GLOBAL_CONFIGDATA.Default_SpacecraftId)
+
+/*
+** Defines
+*/
+
+#define CFE_PSP_CPU_NAME_LENGTH  32
+#define CFE_PSP_RESET_NAME_LENGTH 10
+
+/* Constants used for NOS Engine Time and NOS Engine bus */
+#define ENGINE_SERVER_URI       "tcp://nos-engine-server:12000"
+#define ENGINE_BUS_NAME         "command"
+#define TICKS_PER_SECOND        100
+NE_Bus          *CFE_PSP_Bus;
+pthread_mutex_t  CFE_PSP_sim_time_mutex;
+NE_SimTime       CFE_PSP_sim_time;
+int64_t          CFE_PSP_ticks_per_second;
+extern void NOS_timer_fire(NE_SimTime time);
+
+/*
+** Typedefs for this module
+*/
+
+/*
+** Structure for the Command line parameters
+*/
+typedef struct
+{   
+   char     ResetType[CFE_PSP_RESET_NAME_LENGTH];   /* Reset type can be "PO" for Power on or "PR" for Processor Reset */
+   uint32   GotResetType;    /* did we get the ResetType parameter ? */
+
+   uint32   SubType;         /* Reset Sub Type ( 1 - 5 )  */
+   uint32   GotSubType;      /* did we get the ResetSubType parameter ? */
+   
+   char     CpuName[CFE_PSP_CPU_NAME_LENGTH];     /* CPU Name */
+   uint32   GotCpuName;      /* Did we get a CPU Name ? */
+
+   uint32   CpuId;            /* CPU ID */
+   uint32   GotCpuId;         /* Did we get a CPU Id ?*/
+
+   uint32   SpacecraftId;     /* Spacecraft ID */ 
+   uint32   GotSpacecraftId;  /* Did we get a Spacecraft ID */
+   
+} CFE_PSP_CommandData_t;
+
+/*
+** Prototypes for this module
+*/
+void CFE_PSP_TimerHandler (int signum);
+void CFE_PSP_DisplayUsage(char *Name );
+void CFE_PSP_ProcessArgumentDefaults(CFE_PSP_CommandData_t *CommandDataDefault);
+void CFE_PSP_SetupLocal1Hz(void);
+void CFE_PSP_NosTickCallback(NE_SimTime time);
+
+static void print_splash(void);
+
+/*
+** Global variables
+*/
+uint32              TimerCounter;
+CFE_PSP_CommandData_t CommandData;
+uint32              CFE_PSP_SpacecraftId;
+uint32              CFE_PSP_CpuId;
+char                CFE_PSP_CpuName[CFE_PSP_CPU_NAME_LENGTH];
+
+CFE_PSP_IdleTaskState_t  CFE_PSP_IdleTaskState;
+
+/*
+** getopts parameter passing options string
+*/
+static const char *optString = "R:S:C:I:N:h";
+
+/*
+** getopts_long long form argument table
+*/
+static const struct option longOpts[] = {
+   { "reset",     required_argument, NULL, 'R' },
+   { "subtype",   required_argument, NULL, 'S' },
+   { "cpuid",     required_argument, NULL, 'C' },
+   { "scid",      required_argument, NULL, 'I'},
+   { "cpuname",   required_argument, NULL, 'N'},
+   { "help",      no_argument,       NULL, 'h' },
+   { NULL,        no_argument,       NULL,  0 }
+};
+
+
+/******************************************************************************
+**  Function:  main()
+**
+**  Purpose:
+**    BSP Application entry point.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+void OS_Application_Startup(void)
+{
+   uint32             reset_type;
+   uint32             reset_subtype;
+   int32              time_status;
+   uint32             sys_timebase_id;
+   uint32             fs_id;
+   int                opt = 0;
+   int                longIndex = 0;
+   int32              Status;
+   char * const *     argv;
+   int                argc;
+
+   /* nos3 splash screen */
+   print_splash();
+
+   /*
+   ** Initialize the CommandData struct 
+   */
+   memset(&amp;(CommandData), 0, sizeof(CFE_PSP_CommandData_t));
+
+   /* 
+   ** Process the arguments with getopt_long(), then 
+   ** start the cFE
+   */
+   argc = OS_BSP_GetArgC();
+   argv = OS_BSP_GetArgV();
+   opt = getopt_long( argc, argv, optString, longOpts, &amp;longIndex );
+   while( opt != -1 ) 
+   {
+      switch( opt ) 
+      {
+         case 'R':
+            strncpy(CommandData.ResetType, optarg, CFE_PSP_RESET_NAME_LENGTH-1);
+            CommandData.ResetType[CFE_PSP_RESET_NAME_LENGTH-1] = 0;
+
+            if ((strncmp(CommandData.ResetType, "PO", CFE_PSP_RESET_NAME_LENGTH ) != 0 ) &amp;&amp;
+                (strncmp(CommandData.ResetType, "PR", CFE_PSP_RESET_NAME_LENGTH ) != 0 ))
+            {
+               printf("\nERROR: Invalid Reset Type: %s\n\n",CommandData.ResetType);
+               CommandData.GotResetType = 0;
+               CFE_PSP_DisplayUsage(argv[0]);
+               break;
+            }
+            printf("CFE_PSP: Reset Type: %s\n",(char *)optarg);
+            CommandData.GotResetType = 1;
+            break;
+				
+         case 'S':
+            CommandData.SubType = strtol(optarg, NULL, 0 );
+            if ( CommandData.SubType &lt; 1 || CommandData.SubType &gt; 5 )
+            {
+               printf("\nERROR: Invalid Reset SubType: %s\n\n",optarg);
+               CommandData.SubType = 0;
+               CommandData.GotSubType = 0;
+               CFE_PSP_DisplayUsage(argv[0]);
+               break;
+            }
+            printf("CFE_PSP: Reset SubType: %d\n",(int)CommandData.SubType);
+            CommandData.GotSubType = 1;
+            break;
+
+         case 'N':
+            strncpy(CommandData.CpuName, optarg, CFE_PSP_CPU_NAME_LENGTH-1 );
+            CommandData.CpuName[CFE_PSP_CPU_NAME_LENGTH-1] = 0;
+            printf("CFE_PSP: CPU Name: %s\n",CommandData.CpuName);
+            CommandData.GotCpuName = 1;
+            break;
+
+         case 'C':
+            CommandData.CpuId = strtol(optarg, NULL, 0 );
+            printf("CFE_PSP: CPU ID: %d\n",(int)CommandData.CpuId);
+            CommandData.GotCpuId = 1;
+            break;
+
+         case 'I':
+            CommandData.SpacecraftId = strtol(optarg, NULL, 0 );
+            printf("CFE_PSP: Spacecraft ID: %d\n",(int)CommandData.SpacecraftId);
+            CommandData.GotSpacecraftId = 1;
+            break;
+
+         case 'h':
+            CFE_PSP_DisplayUsage(argv[0]);
+            break;
+	
+         default:
+            CFE_PSP_DisplayUsage(argv[0]);
+            break;
+       }
+		
+       opt = getopt_long( argc, argv, optString, longOpts, &amp;longIndex );
+   } /* end while */
+   
+   /*
+   ** Set the defaults for values that were not given for the 
+   ** optional arguments, and check for arguments that are required.
+   */
+   CFE_PSP_ProcessArgumentDefaults(&amp;CommandData);
+
+   /*
+   ** Assign the Spacecraft ID, CPU ID, and CPU Name
+   */
+   CFE_PSP_SpacecraftId = CommandData.SpacecraftId;
+   CFE_PSP_CpuId = CommandData.CpuId;
+   strncpy(CFE_PSP_CpuName, CommandData.CpuName, sizeof(CFE_PSP_CpuName)-1);
+   CFE_PSP_CpuName[sizeof(CFE_PSP_CpuName)-1] = 0;
+
+   /*
+   ** Set the reset subtype
+   */
+   reset_subtype = CommandData.SubType;
+
+   CFE_PSP_ticks_per_second = TICKS_PER_SECOND;
+
+   /*
+   ** Initialize the OS API data structures
+   */
+   Status = OS_API_Init();
+   if (Status != OS_SUCCESS)
+   {
+       /* irrecoverable error if OS_API_Init() fails. */
+       /* note: use printf here, as OS_printf may not work */
+       printf("CFE_PSP: OS_API_Init() failure\n");
+       CFE_PSP_Panic(Status);
+   }
+
+   /*
+    * Map the PSP shared memory segments
+    */
+   CFE_PSP_SetupReservedMemoryMap();
+
+   /*
+    * Prepare for exception handling in the idle task
+    */
+   memset(&amp;CFE_PSP_IdleTaskState, 0, sizeof(CFE_PSP_IdleTaskState));
+   CFE_PSP_IdleTaskState.ThreadID = pthread_self();
+
+   /*
+   ** Initialize the NOS engine link (note: this also creates the common hub)
+   */
+   nos_init_link();
+
+   /*
+   ** Set the NOS Engine Timer Tick Callback
+   */
+   CFE_PSP_Bus = NE_create_bus(hub, ENGINE_BUS_NAME, ENGINE_SERVER_URI);
+   NE_bus_add_time_tick_callback(CFE_PSP_Bus, CFE_PSP_NosTickCallback);
+
+   /*
+   ** Set up the timebase, if OSAL supports it
+   ** Done here so that the modules can also use it, if desired
+   **
+   ** This is a clock named "cFS-Master" that will serve to drive
+   ** all time-related CFE functions including the 1Hz signal.
+   **
+   ** Note the timebase is only prepared here; the application is
+   ** not ready to receive a callback yet, as it hasn't been started.
+   ** CFE TIME registers its own callback when it is ready to do so.
+   */
+   time_status = OS_TimeBaseCreate(&amp;sys_timebase_id, "cFS-Master", NULL);
+   if (time_status == OS_SUCCESS)
+   {
+       /*
+        * Set the clock to trigger with 50ms resolution - slow enough that
+        * it will not hog CPU resources but fast enough to have sufficient resolution
+        * for most general timing purposes.
+        * (It may be better to move this to the mission config file)
+        */
+       time_status = OS_TimeBaseSet(sys_timebase_id, 50000, 50000);
+   }
+   else
+   {
+       /*
+        * Cannot create a timebase in OSAL.
+        *
+        * Note: Most likely this is due to building with
+        * the old/classic POSIX OSAL which does not support this.
+        *
+        * See below for workaround.
+        */
+       sys_timebase_id = 0;
+   }
+
+   /*
+   ** Set up the virtual FS mapping for the "/cf" directory
+   ** On this platform it is just a local/relative dir of the same name.
+   */
+   Status = OS_FileSysAddFixedMap(&amp;fs_id, "./cf", "/cf");
+   if (Status != OS_SUCCESS)
+   {
+       /* Print for informational purposes --
+        * startup can continue, but loads may fail later, depending on config. */
+       OS_printf("CFE_PSP: OS_FileSysAddFixedMap() failure: %d\n", (int)Status);
+   }
+
+   /*
+   ** Set up virtual FS mapping for the "/data" directory
+   ** This folder is for storing housekeeping, science, and other data provided by the DS application.
+   */
+   Status = OS_FileSysAddFixedMap(&amp;fs_id, "./data", "/data");
+   if (Status != OS_SUCCESS)
+   {
+       /* Print for informational purposes --
+        * startup can continue, but loads may fail later, depending on config. */
+       OS_printf("CFE_PSP: OS_FileSysAddFixedMap() failure: %d\n", (int)Status);
+   }
+
+   /*
+   ** Initialize the statically linked modules (if any)
+   ** This is only applicable to CMake build - classic build
+   ** does not have the logic to selectively include/exclude modules
+   */
+   CFE_PSP_ModuleInit();
+     
+   sleep(1);
+
+   /*
+    * For informational purposes, show the state of the last exit
+    */
+   if (CFE_PSP_ReservedMemoryMap.BootPtr-&gt;ValidityFlag == CFE_PSP_BOOTRECORD_VALID)
+   {
+       OS_printf("CFE_PSP: Normal exit from previous cFE instance\n");
+   }
+   else if (CFE_PSP_ReservedMemoryMap.BootPtr-&gt;ValidityFlag == CFE_PSP_BOOTRECORD_INVALID)
+   {
+       OS_printf("CFE_PSP: Abnormal exit from previous cFE instance\n");
+   }
+
+   /*
+    * determine reset type...
+    * If not specified at the command line, then check the "boot record"
+    */
+   reset_type = 0;
+   if (!CommandData.GotResetType)
+   {
+       if (CFE_PSP_ReservedMemoryMap.BootPtr-&gt;ValidityFlag == CFE_PSP_BOOTRECORD_VALID ||
+               CFE_PSP_ReservedMemoryMap.BootPtr-&gt;ValidityFlag == CFE_PSP_BOOTRECORD_INVALID)
+       {
+           reset_type = CFE_PSP_ReservedMemoryMap.BootPtr-&gt;NextResetType;
+       }
+   }
+   else if (strncmp("PR", CommandData.ResetType, 2 ) == 0 )
+   {
+       reset_type = CFE_PSP_RST_TYPE_PROCESSOR;
+   }
+
+   if (reset_type == CFE_PSP_RST_TYPE_PROCESSOR)
+   {
+       OS_printf("CFE_PSP: Starting the cFE with a PROCESSOR reset.\n");
+   }
+   else
+   {
+       /* catch-all for anything else */
+       reset_type = CFE_PSP_RST_TYPE_POWERON;
+       OS_printf("CFE_PSP: Starting the cFE with a POWER ON reset.\n");
+   }
+
+
+   /*
+   ** Initialize the reserved memory 
+   */
+   Status = CFE_PSP_InitProcessorReservedMemory(reset_type);
+   if (Status != CFE_PSP_SUCCESS)
+   {
+       OS_printf("CFE_PSP: CFE_PSP_InitProcessorReservedMemory() Failure");
+       CFE_PSP_Panic(Status);
+   }
+
+   /*
+   ** Call cFE entry point.
+   */
+   CFE_PSP_MAIN_FUNCTION(reset_type, reset_subtype, 1, CFE_PSP_NONVOL_STARTUP_FILE);
+
+   /*
+    * Backward compatibility for old OSAL.
+    */
+   if (sys_timebase_id == 0 || time_status != OS_SUCCESS)
+   {
+       OS_printf("CFE_PSP: WARNING - Compatibility mode - using local 1Hz Interrupt\n");
+       CFE_PSP_SetupLocal1Hz();
+   }
+
+}
+
+void OS_Application_Run(void)
+{
+    int sig;
+    int ret;
+    sigset_t sigset;
+
+
+    /*
+     * Now that all main tasks are created,
+     * this original thread will exist just to service signals
+     * that aren't directed to a specific task.
+     *
+     * OSAL sets a very conservative signal mask that
+     * blocks most signals. Start by unblocking the
+     * ones that should be handled.
+     *
+     * Unblock SIGQUIT so the user can force exit the CFE
+     * by pressing CTRL+\ (default handler).  Also allow
+     * SIGTERM for which a handler was installed in CFE_PSP_AttachExceptions()
+     */
+    sigemptyset(&amp;sigset);
+    sigaddset(&amp;sigset, SIGQUIT);
+    sigaddset(&amp;sigset, SIGTERM);
+    pthread_sigmask(SIG_UNBLOCK, &amp;sigset, NULL);
+
+    /*
+     * Reset to the signal for background events (SIGUSR1)
+     */
+    sigemptyset(&amp;sigset);
+    sigaddset(&amp;sigset, CFE_PSP_EXCEPTION_EVENT_SIGNAL);
+
+    /*
+    ** just wait for events to occur and notify CFE
+    **
+    ** "shutdownreq" will become true if CFE calls CFE_PSP_Restart(),
+    ** indicating a request to gracefully exit and restart CFE.
+    */
+    while (!CFE_PSP_IdleTaskState.ShutdownReq)
+    {
+        /* go idle and wait for an event */
+        ret = sigwait(&amp;sigset, &amp;sig);
+
+        if (ret == 0 &amp;&amp; !CFE_PSP_IdleTaskState.ShutdownReq &amp;&amp;
+                sig == CFE_PSP_EXCEPTION_EVENT_SIGNAL &amp;&amp;
+                GLOBAL_CFE_CONFIGDATA.SystemNotify != NULL)
+        {
+            /* notify the CFE of the event */
+            GLOBAL_CFE_CONFIGDATA.SystemNotify();
+        }
+    }
+
+   /*
+    * This happens if an unhandled exception occurs, or if the user presses CTRL+C
+    */
+   OS_printf("\nCFE_PSP: Shutdown initiated - Exiting cFE\n");
+   OS_TaskDelay(100);
+
+   OS_DeleteAllObjects();
+
+   /*
+   ** Cleanup NOS engine resources
+   */
+   NE_destroy_bus(&amp;CFE_PSP_Bus);
+   nos_destroy_link();
+}
+
+/******************************************************************************
+**  Function:  CFE_PSP_NosTickCallback()
+**
+**  Purpose:
+**    NOS engine tick callback.
+**    This timer handler will execute 4 times a second.
+**
+**  Arguments:
+**    time -- the NOS engine time.
+**
+**  Return:
+**    (none)
+*/
+void CFE_PSP_NosTickCallback(NE_SimTime time)
+{
+    pthread_mutex_lock(&amp;CFE_PSP_sim_time_mutex);
+    CFE_PSP_sim_time = time;
+    pthread_mutex_unlock(&amp;CFE_PSP_sim_time_mutex);
+    NOS_timer_fire(time);
+}
+
+/******************************************************************************
+**  Function:  CFE_PSP_TimerHandler()
+**
+**  Purpose:
+**    1hz "isr" routine for linux/OSX
+**    This timer handler will execute 4 times a second.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+void CFE_PSP_TimerHandler (int signum)
+{
+      /*
+      ** call the CFE_TIME 1hz ISR
+      */
+      if((TimerCounter % 4) == 0) CFE_PSP_1HZ_FUNCTION();
+
+	  /* update timer counter */
+	  TimerCounter++;
+}
+
+/******************************************************************************
+**  Function:  CFE_PSP_DisplayUsage
+**
+**  Purpose:
+**    Display program usage, and exit.
+**
+**  Arguments:
+**    Name -- the name of the binary.
+**
+**  Return:
+**    (none)
+*/
+void CFE_PSP_DisplayUsage(char *Name )
+{
+
+   printf("usage : %s [-R &lt;value&gt;] [-S &lt;value&gt;] [-C &lt;value] [-N &lt;value] [-I &lt;value] [-h] \n", Name);
+   printf("\n");
+   printf("        All parameters are optional and can be used in any order\n");
+   printf("\n");
+   printf("        Parameters include:\n");
+   printf("        -R [ --reset ] Reset Type is one of:\n");
+   printf("             PO   for Power On reset ( default )\n");
+   printf("             PR   for Processor Reset\n");
+   printf("        -S [ --subtype ] Reset Sub Type is one of\n");
+   printf("             1   for  Power on ( default )\n");
+   printf("             2   for  Push Button Reset\n");
+   printf("             3   for  Hardware Special Command Reset\n");
+   printf("             4   for  Watchdog Reset\n");
+   printf("             5   for  Reset Command\n");
+   printf("        -C [ --cpuid ]   CPU ID is an integer CPU identifier.\n");
+   printf("             The default  CPU ID is from the platform configuration file: %d\n",CFE_PSP_CPU_ID);
+   printf("        -N [ --cpuname ] CPU Name is a string to identify the CPU.\n");
+   printf("             The default  CPU Name is from the platform configuration file: %s\n",CFE_PSP_CPU_NAME);
+   printf("        -I [ --scid ]    Spacecraft ID is an integer Spacecraft identifier.\n");
+   printf("             The default Spacecraft ID is from the mission configuration file: %d\n",CFE_PSP_SPACECRAFT_ID);
+   printf("        -h [ --help ]    This message.\n");
+   printf("\n");
+   printf("       Example invocation:\n");
+   printf(" \n");
+   printf("       Short form:\n");
+   printf("       %s -R PO -S 1 -C 1 -N CPU1 -I 32\n",Name);
+   printf("       Long form:\n");
+   printf("       %s --reset PO --subtype 1 --cpuid 1 --cpuname CPU1 --scid 32\n",Name);
+   printf(" \n");
+
+   exit( 1 );
+}
+/******************************************************************************
+**  Function: CFE_PSP_ProcessArgumentDefaults
+**
+**  Purpose:
+**    This function assigns defaults to parameters and checks to make sure
+**    the user entered required parameters 
+**
+**  Arguments:
+**    CFE_PSP_CommandData_t *CommandDataDefault -- A pointer to the command parameters.
+**
+**  Return:
+**    (none)
+*/
+void CFE_PSP_ProcessArgumentDefaults(CFE_PSP_CommandData_t *CommandDataDefault)
+{
+   if ( CommandDataDefault-&gt;GotSubType == 0 )
+   {
+      CommandDataDefault-&gt;SubType = 1;
+      printf("CFE_PSP: Default Reset SubType = 1\n");
+      CommandDataDefault-&gt;GotSubType = 1;
+   }
+   
+   if ( CommandDataDefault-&gt;GotCpuId == 0 )
+   {
+      CommandDataDefault-&gt;CpuId = CFE_PSP_CPU_ID;
+      printf("CFE_PSP: Default CPU ID = %d\n",CFE_PSP_CPU_ID);
+      CommandDataDefault-&gt;GotCpuId = 1;
+   }
+   
+   if ( CommandDataDefault-&gt;GotSpacecraftId == 0 )
+   {
+      CommandDataDefault-&gt;SpacecraftId = CFE_PSP_SPACECRAFT_ID;
+      printf("CFE_PSP: Default Spacecraft ID = %d\n",CFE_PSP_SPACECRAFT_ID);
+      CommandDataDefault-&gt;GotSpacecraftId = 1;
+   }
+   
+   if ( CommandDataDefault-&gt;GotCpuName == 0 )
+   {
+      strncpy(CommandDataDefault-&gt;CpuName, CFE_PSP_CPU_NAME, CFE_PSP_CPU_NAME_LENGTH-1 );
+      CommandDataDefault-&gt;CpuName[CFE_PSP_CPU_NAME_LENGTH-1] = 0;
+      printf("CFE_PSP: Default CPU Name: %s\n",CFE_PSP_CPU_NAME);
+      CommandDataDefault-&gt;GotCpuName = 1;
+   }
+
+}
+
+/******************************************************************************
+**  Function:  CFE_PSP_SetupLocal1Hz
+**
+**  Purpose:
+**    This is a backward-compatible timer setup that is invoked when
+**    there is a failure to set up the timebase in OSAL.  It is basically
+**    the old way of doing things.
+**
+**    IMPORTANT: Note this is technically incorrect as it gives the
+**    callback directly in the context of the signal handler.  It is
+**    against spec to use most OSAL functions within a signal.
+**
+**    This is included merely to mimic the previous system behavior. It
+**    should be removed in a future version of the PSP.
+**
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+**
+*/
+
+void CFE_PSP_SetupLocal1Hz(void)
+{
+    struct sigaction    sa;
+    struct itimerval    timer;
+    int ret;
+
+    /*
+    ** Init timer counter
+    */
+    TimerCounter = 0;
+
+    /*
+    ** Install timer_handler as the signal handler for SIGALRM.
+    */
+    memset (&amp;sa, 0, sizeof (sa));
+    sa.sa_handler = &amp;CFE_PSP_TimerHandler;
+
+    /*
+    ** Configure the timer to expire after 250ms
+    **
+    ** (this is historical; the actual callback is invoked
+    ** only on every 4th timer tick.  previous versions of the
+    ** PSP did it this way, so this is preserved here).
+    */
+    timer.it_value.tv_sec  = 0;
+    timer.it_value.tv_usec = 250000;
+    timer.it_interval.tv_sec  = 0;
+    timer.it_interval.tv_usec = 250000;
+
+    ret = sigaction (SIGALRM, &amp;sa, NULL);
+
+    if (ret &lt; 0)
+    {
+        OS_printf("CFE_PSP: sigaction() error %d: %s \n", ret, strerror(errno));
+    }
+    else
+    {
+        ret = setitimer (ITIMER_REAL, &amp;timer, NULL);
+        if (ret &lt; 0)
+        {
+            OS_printf("CFE_PSP: setitimer() error %d: %s \n", ret, strerror(errno));
+        }
+    }
+}
+
+static void print_splash(void)
+{
+    const char *splash = "   \x1B[1;37m*                                      *                    *\n\
+       *                                                  *                *             \n\
+\x1B[1;37m            ]]]]]]]]]]]]  ]]]]]]]]]]]]]]]]]  ]]]]]]]]]]]]]]]]            ]]]]]]\033[0m\n\
+\x1B[32m          ]]]]]]]]]]]]]  ]]]]]]]]]]]]]]]]]  ]]]]]]]]]]]]]]]]            ]]]]]] \033[0m\n\
+\x1B[1;33m    \x1B[1;37m*\x1B[1;33m    ]]]]]]]]]]]]]  ]]]]]]]]]]]]]]]]]  ]]]]]]]]]]]]]]]]            ]]]]]]  \033[0m\n\
+\x1B[33m         ]]]]]]              ]]]]]]       ]]]]]]]                     ]]]]]]   \033[0m\n\
+\x1B[1;31m         ]]]]]]]]       \x1B[1;37m*\033[0m\x1B[1;31m   ]]]]]]       ]]]]]]]]]]]]]]   ]]]]]]]]   ]]]]]]    \033[0m\n\
+\x1B[1;35m \x1B[1;37m*\x1B[1;35m        ]]]]]]]]         ]]]]]]       ]]]]]]]]]]]]]]   ]]]]]]]]   ]]]]]]     \033[0m\n\
+\x1B[1;34m             ]]]]]]      ]]]]]]]  \x1B[1;37m*\x1B[1;34m    ]]]]]]]                     ]]]]]]      \033[0m\n\
+\x1B[1;37m   ]]]]]]]]]]]]]]]      ]]]]]]]       ]]]]]]]   FLIGHT SOFTWARE   ]]]]]]     *  \033[0m\n\
+\x1B[37m  ]]]]]]]]]]]]]]]      ]]]]]]]       ]]]]]]]                     ]]]]]]        \033[0m\n\
+\x1B[1;30m ]]]]]]]]]]]]]]       ]]]]]]]       ]]]]]]]                     ]]]]]]\033[0m\n\
+\x1B[1;37m      *                        *                        *                         *\n\
+ *                                     *                                *               *\n\
+                *\n\
+\n\
+";
+
+    printf("%s", splash);
+}
+</pre></div>
+</div>
+</section>
+<section id="cfe-psp-timer-c">
+<h2><code class="docutils literal notranslate"><span class="pre">cfe_psp_timer.c</span></code><a class="headerlink" href="#cfe-psp-timer-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/psp/fsw/nos-linux/src/cfe_psp_timer.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+**  GSC-18128-1, "Core Flight Executive Version 6.7"
+**
+**  Copyright (c) 2006-2019 United States Government as represented by
+**  the Administrator of the National Aeronautics and Space Administration.
+**  All Rights Reserved.
+**
+**  Licensed under the Apache License, Version 2.0 (the "License");
+**  you may not use this file except in compliance with the License.
+**  You may obtain a copy of the License at
+**
+**    http://www.apache.org/licenses/LICENSE-2.0
+**
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+*/
+
+/************************************************************************************************
+** File:  cfe_psp_timer.c
+**
+** Purpose:
+**   This file contains glue routines between the cFE and the OS Board Support Package ( BSP ).
+**   The functions here allow the cFE to interface functions that are board and OS specific
+**   and usually dont fit well in the OS abstraction layer.
+**
+** History:
+**   2005/06/05  K.Audra    | Initial version,
+**
+*************************************************************************************************/
+
+/*
+**  Include Files
+*/
+
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+
+/*
+**  System Include Files
+*/
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+/*
+** Types and prototypes for this module
+*/
+#include "cfe_psp.h"
+
+#include "NOS-time.h"
+
+/*
+ * The specific clock ID to use with clock_gettime
+ *
+ * Linux provides some special (non-posix) clock IDs that also
+ * could be relevant/useful:
+ *
+ * CLOCK_MONOTONIC_COARSE - emphasis on read speed at the (possible?) expense of precision
+ * CLOCK_MONOTONIC_RAW - possibly hardware based, not affected by NTP or other sync software
+ * CLOCK_BOOTTIME - includes time the system is suspended.
+ *
+ * Defaulting to the POSIX-specified "MONOTONIC" but it should be possible to use
+ * one of the Linux-specific variants if the target system provides it.
+ */
+#define CFE_PSP_TIMEBASE_REF_CLOCK CLOCK_MONOTONIC
+
+
+/******************* Macro Definitions ***********************/
+
+#define CFE_PSP_TIMER_TICKS_PER_SECOND       1000000    /* Resolution of the least significant 32 bits of the 64 bit
+                                                           time stamp returned by OS_BSPGet_Timebase in timer ticks per second.
+                                                           The timer resolution for accuracy should not be any slower than 1000000
+                                                           ticks per second or 1 us per tick */
+#define CFE_PSP_TIMER_LOW32_ROLLOVER         1000000    /* The number that the least significant 32 bits of the 64 bit
+                                                           time stamp returned by OS_BSPGet_Timebase rolls over.  If the lower 32
+                                                           bits rolls at 1 second, then the OS_BSP_TIMER_LOW32_ROLLOVER will be 1000000.
+                                                           if the lower 32 bits rolls at its maximum value (2^32) then
+                                                           OS_BSP_TIMER_LOW32_ROLLOVER will be 0. */
+
+/******************************************************************************
+**  Function:  CFE_PSP_GetTime()
+**
+**  Purpose: Gets the value of the time from the hardware
+**
+**  Arguments: LocalTime - where the time is returned through
+******************************************************************************/
+
+void CFE_PSP_GetTime( OS_time_t *LocalTime)
+{
+    struct timespec now;
+
+    if (NOS_clock_gettime(CFE_PSP_TIMEBASE_REF_CLOCK, &amp;now) != 0)
+    {
+        /* unlikely - but avoids undefined behavior */
+        now.tv_sec  = 0;
+        now.tv_nsec = 0;
+    }
+
+    *LocalTime = OS_TimeAssembleFromNanoseconds(now.tv_sec, now.tv_nsec);
+
+}/* end CFE_PSP_GetLocalTime */
+
+
+
+/******************************************************************************
+**  Function:  CFE_PSP_Get_Timer_Tick()
+**
+**  Purpose:
+**    Provides a common interface to system clock tick. This routine
+**    is in the BSP because it is sometimes implemented in hardware and
+**    sometimes taken care of by the RTOS.
+**
+**  Arguments:
+**
+**  Return:
+**  OS system clock ticks per second
+*/
+uint32 CFE_PSP_Get_Timer_Tick(void)
+{
+   /* SUB -add function call code*/
+   return (0);
+}
+
+/******************************************************************************
+**  Function:  CFE_PSP_GetTimerTicksPerSecond()
+**
+**  Purpose:
+**    Provides the resolution of the least significant 32 bits of the 64 bit
+**    time stamp returned by OS_BSPGet_Timebase in timer ticks per second.
+**    The timer resolution for accuracy should not be any slower than 1000000
+**    ticks per second or 1 us per tick
+**
+**  Arguments:
+**
+**  Return:
+**    The number of timer ticks per second of the time stamp returned
+**    by CFE_PSP_Get_Timebase
+*/
+uint32 CFE_PSP_GetTimerTicksPerSecond(void)
+{
+    return(CFE_PSP_TIMER_TICKS_PER_SECOND);
+}
+
+/******************************************************************************
+**  Function:  CFE_PSP_GetTimerLow32Rollover()
+**
+**  Purpose:
+**    Provides the number that the least significant 32 bits of the 64 bit
+**    time stamp returned by CFE_PSP_Get_Timebase rolls over.  If the lower 32
+**    bits rolls at 1 second, then the CFE_PSP_TIMER_LOW32_ROLLOVER will be 1000000.
+**    if the lower 32 bits rolls at its maximum value (2^32) then
+**    CFE_PSP_TIMER_LOW32_ROLLOVER will be 0.
+**
+**  Arguments:
+**
+**  Return:
+**    The number that the least significant 32 bits of the 64 bit time stamp
+**    returned by CFE_PSP_Get_Timebase rolls over.
+*/
+uint32 CFE_PSP_GetTimerLow32Rollover(void)
+{
+    return(CFE_PSP_TIMER_LOW32_ROLLOVER);
+}
+
+/******************************************************************************
+**  Function:  CFE_PSP_Get_Timebase()
+**
+**  Purpose:
+**    Provides a common interface to system timebase. This routine
+**    is in the BSP because it is sometimes implemented in hardware and
+**    sometimes taken care of by the RTOS.
+**
+**  Arguments:
+**
+**  Return:
+**  Timebase register value
+*/
+void CFE_PSP_Get_Timebase(uint32 *Tbu, uint32* Tbl)
+{
+   struct timespec now;
+
+    if (NOS_clock_gettime(CFE_PSP_TIMEBASE_REF_CLOCK, &amp;now) != 0)
+    {
+        /* unlikely - but avoids undefined behavior */
+        now.tv_sec  = 0;
+        now.tv_nsec = 0;
+    }
+
+    *Tbu = now.tv_sec &amp; 0xFFFFFFFF;
+    *Tbl = now.tv_nsec;
+}
+
+/******************************************************************************
+**  Function:  CFE_PSP_Get_Dec()
+**
+**  Purpose:
+**    Provides a common interface to decrementer counter. This routine
+**    is in the PSP because it is sometimes implemented in hardware and
+**    sometimes taken care of by the RTOS.
+**
+**  Arguments:
+**
+**  Return:
+**  Timebase register value
+*/
+
+uint32 CFE_PSP_Get_Dec(void)
+{
+   /* SUB -add function call code*/
+   return(0);
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../make/index.html" class="btn btn-neutral float-left" title="make" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../pc-linux/index.html" class="btn btn-neutral float-right" title="pc-linux" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1355 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dox_src &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="users_guide_historical" href="../users_guide_historical/index.html" />
+    <link rel="prev" title="docs" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">apps</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">sc</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">docs</a></li>
+      <li class="breadcrumb-item active">dox_src</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/fsw/apps/sc/docs/dox_src/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="dox-src">
+<h1>dox_src<a class="headerlink" href="#dox-src" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sc/docs/dox_src/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="cfs-sc-dox">
+<h2><code class="docutils literal notranslate"><span class="pre">cfs_sc.dox</span></code><a class="headerlink" href="#cfs-sc-dox" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sc/docs/dox_src/cfs_sc.dox</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/**
+  \page cfsscfrontpage CFS Stored Command (SC) Documentation
+  &lt;UL&gt;
+      &lt;LI&gt; \subpage cfsscintro
+      &lt;LI&gt; \subpage cfsscovr
+      &lt;LI&gt; \subpage cfsscopr
+      &lt;LI&gt; \subpage cfssccmdspg
+      &lt;LI&gt; \subpage cfssctlmpg
+      &lt;LI&gt; \subpage cfssceventspg
+      &lt;LI&gt; \subpage cfsscdg
+      &lt;LI&gt; \subpage cfssccfgpg
+      &lt;LI&gt; \subpage cfssctbl
+      &lt;LI&gt; \subpage cfssccons
+      &lt;LI&gt; \subpage cfsscfaqs
+  &lt;/UL&gt;
+**/
+
+/**
+ * \page cfssceventspg CFS Stored Command Events
+ *
+ * \ref cfsscevents
+ */
+
+/**
+ * \page cfssccfgpg CFS Stored Command Configuration
+ *
+ * \ref cfsscmissioncfg
+ *
+ * \ref cfsscplatformcfg
+ */
+
+/**
+ * \page cfssccmdspg CFS Stored Command Commands
+ *
+ * \ref cfssccmdmid
+ *
+ * \ref cfssccmdstructs
+ *
+ * \ref cfssccmdcodes
+ */
+
+/**
+ * \page cfssctlmpg CFS Stored Command Telemetry
+ *
+ * \ref cfssctlmmid
+ *
+ * \ref cfssctlm
+ */
+
+/**
+  \page cfsscintro CFS Stored Command Introduction
+
+  &lt;H1&gt; Scope &lt;/H1&gt;
+
+  This document provides a complete specification for the commands and telemetry
+  associated with the CFS Stored Command (SC) application software. The document
+  is intended primarily for users of the software (operations personnel, test
+  engineers, and maintenance personnel). The deployment guide section, is
+  intended for mission developers when deploying and configuring the SC
+  application software for a mission flight software build environment. 
+
+  \ref cfsscversion
+
+  &lt;H1&gt; Acronyms &lt;/H1&gt;
+
+  &lt;TABLE BORDER="1" CELLPADDING="2" WIDTH="60%"&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; &lt;B&gt;Acronym&lt;/B&gt; &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; &lt;B&gt;Description&lt;/B&gt;                       &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; API     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Application Programming Interface               &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; ATP     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Absolute Time Processor                         &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; ATS     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Absolute Time tagged command Sequence           &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; CCSDS   &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Consultative Committee for Space Data Systems   &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; C&amp;DH    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Command and Data Handling                       &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; CFE     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Core Flight Executive                           &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; CFS     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Core Flight System                              &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; CI      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Command Ingest                                  &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; Cmd     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Command                                         &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; CPU     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Central Processing Unit                         &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; EDAC    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Error Detection and Correction                  &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; FDS     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Flight Data System                              &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; FM      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; File Manager                                    &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; FSW     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Flight Software                                 &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; GN&amp;C    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Guidance Navigation &amp; Control                   &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; GSFC    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Goddard Space Flight Center                     &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; HK      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Housekeeping                                    &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; HW, H/W &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Hardware                                        &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; ICD     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Interface Control Document                      &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; ISR     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Interrupt Service Routine                       &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; OS      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Operating System                                &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; OSAL    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Operating System Abstraction Layer              &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; Pkts    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Packets                                         &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; RAM     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Random-Access Memory                            &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; RTOS    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Real Time Operating System                      &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; RTP     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Relative Time Processor                         &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; RTS     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Relative Time tagged command Sequence           &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; SB      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Software Bus Service                            &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; SBC     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Single Board Computer                           &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; SC      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Stored Commands task                            &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; SW, S/W &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Software                                        &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; TBD     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; To Be Determined                                &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; TBL     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Table                                           &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; TLM     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Telemetry                                       &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; UTC     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Universal time code                             &lt;/TD&gt;
+  &lt;/TABLE&gt;
+**/
+
+
+/**
+  \page cfsscovr CFS Stored Command Overview
+
+  The CFS Stored Command appliaction allows the spacecraft to be commanded
+  using sequences of commands that are loaded from the ground. Each
+  command has a time tag associated with it, permitting the command to be
+  released for distribution at predetermined times. SC supports both Absolute
+  Time tagged command Sequences (ATSs) and multiple Relative Time tagged
+  command Sequences (RTSs).  
+
+  \section SC Design Overview
+
+  The CFS Stored Command application is driven off of the 1Hz packet from the
+  Scheduler Application. When the 1Hz is received, SC looks to see if there are
+  stored commands to execute (in the ATS and the RTS's). If there are commands
+  to be executed in this second, SC will execute them up until
+  #SC_MAX_CMDS_PER_SEC commands are executed. SC is also driven off of the
+  housekeeping request packet from the Scheduler Application. When SC receives
+  the HK request, it processes the request, sends out the housekeeping packet,
+  and looks for table updates to the load/dump tables that SC maintains. SC is
+  also driven by commands, responding to them as they are received. 
+**/
+
+/**
+  \page cfsscopr CFS Stored Command Operation
+
+  &lt;H2&gt;Initialization&lt;/H2&gt;
+
+  SC initialization is the same for Power On Resets and Processor Resets
+  except for which RTS gets (optionally) started.  During all resets
+  standard application initialization is performed, all tables are registered,
+  status tables are initialized and the default RTS tables are loaded.
+
+  &lt;H2&gt;Power On Resets&lt;/H2&gt;
+
+  The RTS ID defined by #RTS_ID_AUTO_POWER_ON is started (if non-zero).
+
+  &lt;H2&gt;Processor Resets&lt;/H2&gt;
+
+  The RTS ID defined by #RTS_ID_AUTO_PROCESSOR is started (if non-zero).
+
+  &lt;H2&gt;Absolute Time Processor (ATP)&lt;/H2&gt;
+
+  The ATP is used to schedule spacecraft commands for an extended period of
+  time. Under normal operations one of the ATS buffers will be loaded with all
+  anticipated commands to operate the spacecraft for a day. While one ATS buffer
+  is being used, the second ATS buffer can be prepared for the next day. The job
+  of the ATP is to send out the commands in the ATS buffer in time order. Each
+  command will be sent out to the data system when the command time tag matches
+  the UTC Time. Because the ATS command time tag only has seconds, the
+  resolution of each ATS command is in seconds. Commands with the same time tag
+  are legal and will be sent to the data system in the same second. In the case
+  where the time tags are equal, the command with the lower command number will
+  be executed first. When it is time for an ATS command to be executed, the
+  corresponding command status from the ATS Command Status Table is checked. If
+  the command status is valid (i.e. LOADED) the command will be executed. If the
+  command status indicates any status other than LOADED, the command is not
+  executed. After the command status is checked and determined to be valid, the
+  checksum on the ATS command is verified. If the checksum fails, the status of
+  the command in the ATS Command Status Table will be marked as FAILED_CHECKSUM.
+  If the checksum is valid, the command is sent out to the data system via the
+  Software Bus. If the command is targeted for the SC (i.e. START RTS), the
+  Software Bus will route the command back to the input pipeline for the SC.
+  After the command has been sent to the Software Bus, the return status will be
+  checked. If the Software Bus was able to send the command with no errors, the
+  status will be marked as EXECUTED. If the Software Bus returns an error code,
+  the status will be marked as FAILED_DISTRIBUTION. After a command has been
+  sent to the Software Bus, the ATP sets up the next ATS command for processing.
+  If the ATP detects the end of the ATS buffer, it will stop the ATS. After
+  finding the next command (or stopping the ATS buffer) the ATP will return
+  control to the main function of the SC. 
+
+  &lt;H2&gt;ATP Error Handling&lt;/H2&gt; 
+
+  There are many error checks built in to the ATP to assure that it does not
+  cause any ill effects on the spacecraft. The error handling within the ATP can
+  be thought of in four different categories: ground command validation,
+  sequence error detection, load error detection, and memory error detection.
+
+  Each ground command sent to the SC is first checked to see if the parameters
+  are valid. For example, the command to execute ATS number 24 will never be
+  accepted. After the parameter is checked, there is a logical check on each
+  command. An example of the logical check is the Ground Switch command checking
+  to see if the ATP is actually executing an ATS before a switch is attempted.
+  If the ATP is idle, then it makes no sense to switch the ATS buffer. The
+  exception to this rule is the Stop ATS ground command. This command will be
+  executed even if there is not an ATS currently running. This feature is useful
+  in the very unlikely case that the ATP is running an ATS but does not "think"
+  it is actually running an ATS (i.e. processor memory becomes corrupted). The
+  Stop ATS command simply cleans up the ATP control block regardless of the ATP
+  status.
+
+  The ATP also catches errors within ATSs. The common errors it checks for
+  include: invalid packet IDs, and end of buffer detection (not really an
+  error). The ATP also checks the ATS Command Status Table for each command to
+  make sure that each command is loaded and ready to go. As mentioned in the
+  section on ATS loads, the ATP also parses through the load to try to assure
+  that the ATS loads are valid and not corrupted. If the ATS does not pass the
+  load checks, it will be rejected. This check will eliminate many of the
+  run-time errors before the ATS gets started. The ATP also does memory error
+  checking. Before each command is sent out, the checksum in the command 
+  secondary header is recomputed and compared to the checksum stored with the 
+  command. If the checksum fails, the command is not sent out and the
+  appropriate entry in the ATS Command Status Table is set to FAILED_CHECKSUM.
+  Also, the command number is checked to make sure it matches the number of the
+  next ATS command to execute.
+
+  &lt;H2&gt;Appending to an ATS&lt;/H2&gt;
+
+  Version 2.1+ of the SC application contains a capability to append commands
+  to an existing ATS. The user loads the desired commands into the ATS Append
+  Table using the cFE Table Services. The new commands will be added to the end
+  of the ATS being appended. The new commands can replace existing commands in
+  the ATS as long as those commands have not executed yet. The ATS being
+  appended can be executing or idle. Once the data in the Append Table is
+  loaded, validated and activated, the #SC_APPEND_ATS_CC command can be sent to add
+  the contents of the Append Table to the specified ATS. When the #SC_APPEND_ATS_CC
+  command is processed, the SC application will copy the contents of the Append
+  Table to the specified ATS and rebuild the pending execution list with the new
+  commands.
+  
+  &lt;H2&gt;ATP Precaution&lt;/H2&gt;
+  
+  Despite the many error checks built in to the ATP to assure that it does not
+  cause any ill effects on the spacecraft, there is a crucial safety measure that
+  is required of all ATS tables.  The ATP relies on a sentinel word of zeroes at the
+  end of an ATS table to signal the end of the ATS table (end of data marker).  cFE 
+  Table Services, when loading a new table, unconditionally fills the table working 
+  buffer with the contents of the current table prior to placing the new table file 
+  contents into the buffer.  If a newly loaded ATS table does not contain the 
+  sentinel word of zeroes at the end of the table and is smaller than the table that 
+  was previously loaded, the newly loaded table has potential to execute the "old" 
+  invalid commands that were part of the prior table load.  It is therefore essential 
+  for operators to place the sentinel word of zeroes at the end of each ATS table 
+  including ATS append tables.  
+
+  &lt;H2&gt;Relative Time Processor (RTP)&lt;/H2&gt;
+
+  When the sequence is started, the RTP reads the delay of the first command.
+  After the amount of seconds listed in the delay, the RTP will fetch the
+  command, check the checksum of the command, and send the command out to the
+  data system. The RTP will then fetch the next command in the sequence and
+  determine when this command needs to execute.
+
+  The RTP will continue to process commands in the RTS until one of the
+  following conditions occur: 
+    - The SCP receives a Stop RTS command from any source.
+    - The RTP detects the end of the RTS sequence (Zero value for the first word
+      of the cFE command) or detect the end of the buffer.
+    - The RTP encounters an RTS command with an invalid CCSDS length field. Because
+      the RTS commands are variable length, the RTP relies on the length field in
+      each command to find the next command. If the length field is not valid, then
+      the RTP cannot assume that it can find the next command so it must stop the sequence.
+    - The RTP encounters a command that runs past the end of the RTS buffer.
+    - The RTP processes a command with a bad checksum.
+
+  &lt;B&gt;NOTE:&lt;/B&gt; The RTS will stop if it encounters the end of its buffer. If the
+  last command in an RTS is a command to stop the RTS, the command will be 'sent
+  out' to the SC. Meanwhile, the RTP will detect the end of the buffer and stop
+  the RTS. Then the SC will process the Stop RTS command and stop an RTS that is
+  already stopped. This is not an error, but it shows that the Stop RTS command
+  is not needed within the buffer.
+
+  Each RTS can be started and run independently of the other RTSs. The only
+  restriction is that an RTS cannot be started a second time while it is
+  executing. When there is more than one RTS running concurrently, each RTS has
+  a priority associated with it. The priority is assigned by the buffer number.
+  In other words, RTS buffer 1 has the highest priority and the last RTS buffer
+  has the lowest priority. This priority only comes into play when there is more
+  than one RTS that has commands to be executed in the SAME SECOND. For example,
+  if RTS 1 has a command to go out at 12:00:01 and RTS 50 has 8 commands to go
+  out at 12:00:00, all 8 commands from RTS 50 will be executed before RTS 1
+  executes it's command. However, if the 8 commands from RTS 50 are scheduled to
+  go out at 12:00:01, then the command from RTS 1 will be sent first, followed
+  by 7 commands from RTS 50. At 12:00:02, the 8th command from RTS 50 will be
+  sent.
+     
+  &lt;H2&gt;RTP Error Handling&lt;/H2&gt; 
+
+  Like the ATP, the RTP performs many error checks. The RTP detects and handles 
+  errors in ground commands, in sequences and in memory. Each ground command
+  sent to the RTP must pass validation checks on each of the parameters required
+  for that command. After the parameter check, a logical check is performed to
+  see if the command can be safely executed. For example, if a command to Start
+  RTS 1 is sent and RTS 1 is already executing, the command is rejected because
+  that RTS is already in use. Any command that is rejected is reported by an
+  event message as well as in telemetry. In addition to ground command errors,
+  the RTP detects a number of sequence errors once the RTS is running. The RTP
+  checks for invalid packet length, invalid packet application ids, command
+  packets that run off the end of the RTS buffer, and end of buffer detection.
+  The RTP also checks for memory errors. When it is time for the command to be
+  sent out to the data system, the checksum in the command secondary header is
+  computed and compared to the checksum attached to the command. If the checksum
+  fails, the command is discarded, the error is reported through an event
+  message, and the RTS is stopped. 
+**/
+
+/**
+  \page cfsscdg CFS Stored Command Deployment Guide
+
+  While the SC application does not require a great deal of work for platform
+  deployment, the following are some general guidlines.
+
+  CFS Stored Command requires that two message ID's be put in the CFS Scheduler
+  table for proper operation. Those message ID's are #SC_SEND_HK_MID, which
+  should be sent out at the housekeeping request interval, and
+  #SC_1HZ_WAKEUP_MID, which needs to be sent out every second.
+
+  CFS Stored Command generates telemetry when it receives the housekeeping
+  request. Its telemetry message ID is #SC_HK_TLM_MID.
+
+  The user should look through the SC platform configuration header file to make
+  sure the default configuration meets the needs of the mission. Special care
+  should be taken with the following parameters: #SC_ATS_FILE_NAME,
+  #SC_RTS_FILE_NAME, #SC_APPEND_FILE_NAME and #SC_TIME_TO_USE.
+
+  The #SC_ATS_FILE_NAME, #SC_RTS_FILE_NAME and #SC_APPEND_FILE_NAME is where
+  SC will look for files upon startup.
+
+  The #SC_TIME_TO_USE specifies the type of time format SC should use. If the
+  time format is set to anything but #SC_USE_CFE_TIME, then the user must take
+  special care when creating ATS commands to take this time difference into
+  account. 
+
+  Also, please be aware that SC has a performance ID, #SC_APPMAIN_PERF_ID, that
+  keeps track of the performance of the SC app. 
+**/
+
+/**
+  \page cfssctbl CFS Stored Command Table Definitions
+
+  The CFS Stored Command application utilizes several tables of varying types.
+
+  &lt;H2&gt;Load/Dump Tables&lt;/H2&gt;
+
+  There are two types of load/dump tables: an ATS table and an RTS table. While
+  there are multiple tables of each type, each table itself is unique. There are
+  two ATS tables (for ATS A and B) and there are multiple (#SC_NUMBER_OF_RTS)
+  RTS tables. There is also a single ATS Append table that has the same
+  entry structure as the ATS tables. The ATS and RTS table structures are different
+  than most other kinds of table structures in that they contain an ATS/RTS
+  header followed by variable length command pairs.
+
+  &lt;B&gt;ATS Tables&lt;/B&gt;
+  
+  The ATS tables are double-buffer tables. The size of these tables are defined
+  by the configuration parameters #SC_ATS_BUFF_SIZE times #SC_BYTES_IN_WORD.
+  Each table contains a series of ATS commands defined by #SC_AtsEntryHeader_t.
+
+  &lt;B&gt;NOTE:&lt;/B&gt; Headers must start on a 32-bit boundary. See also the ATP Precaution section.
+
+  &lt;B&gt;RTS Tables&lt;/B&gt;
+  
+  The RTS tables are single-buffer tables. The size of these tables are defined
+  by the configuration parameters #SC_RTS_BUFF_SIZE times #SC_BYTES_IN_WORD.
+  Each table contains a series of RTS commands defined by #SC_RtsEntryHeader_t. 
+
+  &lt;B&gt;NOTE:&lt;/B&gt; Headers must start on a 32-bit boundary.
+
+  &lt;B&gt;ATS Append Table&lt;/B&gt;
+  
+  The ATS Append table is a double-buffer table. The size of this table is
+  defined by the configuration parameters #SC_APPEND_BUFF_SIZE times
+  #SC_BYTES_IN_WORD. The table contains a series of ATS commands defined by
+  #SC_AtsEntryHeader_t. The structure of a single command is the same as the ATS
+  table command structure.
+
+  &lt;H2&gt;Dump-Only Tables&lt;/H2&gt;
+
+  SC uses the following dump-only tables for status information which can be
+  useful in debugging situations. These tables are defined as single buffer
+  tables with the structures defined below.
+
+  &lt;B&gt;Absolute Time Processor (ATP) Control Block Table&lt;/B&gt;
+
+  The ATP Control Block table is defined by #SC_AtpControlBlock_t. This table
+  contains data items to keep track of the execution of an ATS on the ATP.
+
+  &lt;B&gt;ATS Information Table&lt;/B&gt;
+
+  The ATS Information table is defined by #SC_AtsInfoTable_t. The SC application
+  defines one of these tables for each ATS table created. This table contains
+  data items that provide information about the ATS.
+
+  &lt;B&gt;ATS Append Information Table&lt;/B&gt;
+
+  The ATS Append Info table is defined by #SC_AtsInfoTable_t just like the ATS
+  Info tables described above. There is only one ATS Append Info Table defined
+  and it provides information about the ATS Append table described earlier.
+
+  &lt;B&gt;RTS Information Table&lt;/B&gt;
+
+  The RTS Information Table is used to keep the current status of each RTS
+  table. This table contains one record for each RTS table as defined by 
+  #SC_RtsInfoEntry_t.
+
+  &lt;B&gt;RTP Control Block Table&lt;/B&gt;
+
+  The RTP Control Block table is defined by #SC_RtpControlBlock_t. This table
+  contains data items to keep track of the RTS's executing on the RTP.
+**/
+
+/**
+  \page cfssccons CFS Stored Command Constraints
+
+  &lt;H2&gt;Adjusting Time&lt;/H2&gt;
+
+  Because the SC application depends on the spacecraft clock to schedule itself
+  and all of the active sequences, adjustments to spacecraft clock time
+  (depending on what time format is configured) will have an effect on those
+  active sequences. Adjusting the spacecraft clock time has different effects on
+  active ATSs and RTSs.
+
+  The effect that adjusting time has on an ATS is predictable. Because each
+  command has an absolute time tag associated with it, any sequence that is
+  running will have a new frame of reference when the time is adjusted. For
+  example, an ATS is started at 12:00 and it is waiting to send out commands
+  starting at 2:00pm. If SC is configured to use UTC time, and the ATS is
+  started and UTC time is adjusted to 1:00pm (by adjusting spacecraft time or
+  the UTCF or both), the first ATS command will execute in an hour instead of
+  two hours. If SC is conifured to use TAI time, and the ATS is started, and the
+  leap seconds are changed, SC time will not be affected.
+
+  The effect of adjusting time on Relative Time Sequences is a little more
+  complicated. As mentioned in the Scheduling section, the next RTS command for
+  each sequence actually has an absolute time associated with it. With this
+  absolute time, it is possible for SC to know when to send out each RTS
+  command. From the Absolute time a delay time is computed, which is used to
+  tell SC how long to delay. When time is adjusted on an RTS, the command that
+  is currently waiting to execute gets "thrown off". Depending on the time
+  adjustment, the command could go out sooner or later than expected. Once the 
+  "current" command is out, however, the remaining commands in the sequence will
+  execute as scheduled because they are relative to the previous command.
+
+  The point of this discussion is that SC will not react well to time changes.
+  It is recommended that SC be idle during large time adjustments (1 second or
+  greater). Small adjustments can be tolerated if there is not an exact second
+  tolerance for every command being executed.  
+
+  &lt;H2&gt;Over-scheduling the Stored Command Application&lt;/H2&gt;
+
+  Another way to stress SC is to send out many commands in one second from many 
+  sequences. The time tags for both ATS commands and RTS commands have one
+  second resolution. However, there is a way to send multiple commands in one
+  second. For ATS commands, set the time tags to the same second. For RTS
+  commands, set the delays to zero. As noted earlier, SC will send out the
+  commands as fast as possible up to a certain number of commands per second.
+  With this in mind, it is possible to pack the ATSs and a few RTSs with
+  commands that want to go out in the same second. When all of these sequences
+  are run, SC will get behind in sending out the commands. SC will keep going
+  until all of the commands are executed, but do not expect "to the second"
+  execution accuracy.
+
+  &lt;H2&gt;Unsorted ATS Loads&lt;/H2&gt;
+
+  Although there is no requirement for the ATS command loads to be sorted in
+  time order, having a full command load (Platform Defined ATS commands) of 
+  completely unsorted commands can cause the SC to block the execution of lower 
+  priority tasks until it is finished sorting. The recommendation is that
+  maximum unsorted loads are not used.
+
+  &lt;H2&gt;ATS Switching Buffers&lt;/H2&gt;
+  
+  Because the ATS switch is one of the most complicated SC operations, it is 
+  important to discuss the complete details of the ATS switch here. In normal 
+  operations, one ATS buffer will be running on the ATP, executing commands 
+  while the unused command buffer can be loaded and patched with the next 
+  sequence of commands. Because of the way the ATP skips commands that have 
+  time tags "in the past" when the ATS is started, the two ATS buffers can be 
+  built with some overlap in them. This allows a window of time during which 
+  the switch command could be sent. Figure 4.6 shows the overlapping buffer 
+  concept with the ATSs. As mentioned earlier, the ATP can execute commands 
+  with the same time tag. Because the resolution of the time tag only goes 
+  down to one second, in order to execute more than one command in one second, 
+  the commands should have the same time tag. Now suppose that the ATP receives 
+  the command to Switch ATSs while one ATS is in the middle of sending 8 
+  commands out with the same time tag, and only 5 of these commands were 
+  sent out before the buffer is switched (assuming a switch command coming 
+  from the ground, not the internal switch command). At first glance this 
+  seems to work because the other ATS buffer has an overlap with the same 8 
+  commands that want to go out in one second. This is where a problem occurs: 
+  when the new ATS is started, the ATP will walk down the list of commands 
+  until it finds a command with a time tag that is greater than or equal to 
+  the current time tag. Because the resolution of the time tags only goes 
+  down to a second, the ATP will execute all 8 commands in that one second, 
+  causing 5 of the eight commands to be sent out twice. In order to solve the 
+  problem of the ATS Switch sending out duplicate commands, the Switch ATS 
+  command received from the ground causes a wait condition until it is "safe" 
+  to switch the ATS buffer. So, when the Switch ATS command is received by the 
+  ATP, the command is validated and then a SWITCH_PEND flag is set. When it 
+  becomes safe for the ATS to switch (i.e. at a 1 second boundary in UTC Time),
+  the switch will be serviced. This method assures that sending the Switch ATS 
+  command from the ground will not cause any duplicate commands to be sent 
+  out to the data system, nor any missed commands. Note that all of this 
+  switch logic only comes into use when there are multiple commands per second. 
+  The safe switch will wait until all commands during the current second have 
+  been sent out, then it will switch. If there are no commands with the same 
+  time tag in the overlap region (including the switch command) this logic 
+  does not get used. In either case, the switch can be performed without 
+  sending any duplicate commands to be sent out. There are certain conditions 
+  that can cause an ATS switch that is pending to be canceled. If the ATP is 
+  stopped by the ground while the ATP is waiting for a "safe" time to switch, 
+  then the switch will not occur. Also if the ATP detects the end of the ATS 
+  buffer before there is a "safe" time to switch, the switch will be canceled. 
+  Note that the typical time frame for a "switch pend" is one second or less. 
+  The operation of the switch is transparent to the ground.
+
+  &lt;H2&gt;Updating ATS/RTS Loads&lt;/H2&gt;
+
+  When creating and loading a new ATS or RTS table, it is recommended that the
+  table to be updated is not executing. While updating an executing ATS or RTS
+  is allowed, unexpected results may arise since the contents of the updated ATS
+  or RTS will be executed after the table is activated.
+
+  &lt;H2&gt;Null ATS/RTS Loads&lt;/H2&gt;
+
+  Loading a NULL RTS or ATS is an invalid SC operation. In the event that 
+  the user does execute a NULL RTS the following happens:
+    - An SC event message will be sent out.
+    - The RTS that was being overwritten will NOT be cleared.
+
+  In the event that the user executes a NULL ATS the following happens:
+    - An SC event message will be sent out.
+    - The ATS and associated index and status tables will be cleared.
+
+  &lt;H2&gt;Table and File Naming Convention&lt;/H2&gt;
+
+  SC uses two types of loadable tables: ATS and RTS tables. Both the table file
+  names and the table names contained in the file header need to follow a
+  specific naming convention.
+
+  &lt;H3&gt;RTS's&lt;/H3&gt;
+  
+  Because RTS's can be loaded at startup, the files for the those RTS's must be
+  in a predetermined location as determined by the platform configuration
+  parameter #SC_RTS_FILE_NAME. This location must be in non-volatile memory.
+  Otherwise, the files would not exist upon a Power-On reset. Also, the RTS
+  table file must be named according to a specific convention. The file name
+  must start with whatever the #SC_RTS_TABLE_NAME platform configuration
+  parameter is set to. Next must be a three digit number indicating which RTS
+  this table file is, and the last must be ".tbl". An example of this for RTS
+  #1, with #SC_RTS_TABLE_NAME set to "RTS_TBL" would be: 'RTS_TBL001.tbl'. In
+  addition to the file naming convention, the name of the table contained within
+  the table file should be the same as the file name, without the path or
+  extension. Remember to also have the application name prefixed to the name of
+  the table. For the file 'RTS_TBL001.tbl', its table name should be
+  'SC.RTS_TBL001, if the name of the application is "SC".
+
+  &lt;H3&gt;ATS's&lt;/H3&gt;
+  
+  ATS's are not loaded at startup, nor are they loaded automatically at any
+  other time. Therefore, neither the name of the file of the ATS nor the file's 
+  location matter. All that matters to SC is the name of the table itself in the
+  header of the table file. The name should either be 'SC.ATS_TBL1' or 
+  'SC.ATS_TBL2' provided that the name of the the application is "SC" and which
+  ATS the table is meant for (1 is for A, 2 is for B).
+**/
+
+/**
+  \page cfsscfaqs CFS Stored Command Frequently Asked Questions
+
+  &lt;B&gt; (Q)
+     Is patching a capability of SC since it was in heritage missions?
+  &lt;/B&gt; &lt;BR&gt; &lt;BR&gt; &lt;I&gt;
+     Answer is no. cFE Table Services do not allow this at the time.
+  &lt;/I&gt; &lt;BR&gt;&lt;BR&gt;
+
+  &lt;B&gt; (Q)
+     Can an RTS start itself?
+  &lt;/B&gt; &lt;BR&gt; &lt;BR&gt; &lt;I&gt;
+     Answer is Yes. Since the RTS is just a collection of commands, an RTS can include the StartRTS command. 
+     However, it is recommended that this be the last command in the RTS.
+  &lt;/I&gt; &lt;BR&gt;&lt;BR&gt;
+
+  &lt;B&gt; (Q)
+    What precautions should be taken when using the ATP?
+  &lt;/B&gt; &lt;BR&gt; &lt;BR&gt; &lt;I&gt;
+    See the ATP Precaution section of this document
+  &lt;/I&gt; &lt;BR&gt;&lt;BR&gt;
+**/
+</pre></div>
+</div>
+</section>
+<section id="cmakelists-txt">
+<h2><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code><a class="headerlink" href="#cmakelists-txt" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sc/docs/dox_src/CMakeLists.txt</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>########################################################
+#
+# CMake Recipe to build doxygen documentation
+#
+########################################################
+
+# This CMake script currently defines a top-level target
+# to build the stand alone documentation.  This may be invoked either
+# from the main CMakeLists.txt as a subdirectory (useful in the
+# case of a self-contained/standalone build) or by a separate script
+# (useful if integrating into a larger project with a separate doc build)
+
+cmake_minimum_required(VERSION 3.5)
+project(SC_DOCS NONE)
+
+# generate the configuration files
+configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/sc-common.doxyfile.in
+        ${CMAKE_BINARY_DIR}/docs/sc-common.doxyfile
+        @ONLY
+)
+
+configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/sc-usersguide.doxyfile.in
+        ${CMAKE_CURRENT_BINARY_DIR}/sc-usersguide.doxyfile
+        @ONLY
+)
+
+add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/html/index.html" "${CMAKE_CURRENT_BINARY_DIR}/ALWAYSBUILD"
+    COMMAND doxygen ${CMAKE_CURRENT_BINARY_DIR}/sc-usersguide.doxyfile
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+)
+
+add_custom_target(sc-usersguide
+    COMMAND echo "SC UsersGuide: file://${CMAKE_CURRENT_BINARY_DIR}/html/index.html"
+    DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/ALWAYSBUILD"
+)
+</pre></div>
+</div>
+</section>
+<section id="sc-common-doxyfile-in">
+<h2><code class="docutils literal notranslate"><span class="pre">sc-common.doxyfile.in</span></code><a class="headerlink" href="#sc-common-doxyfile-in" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sc/docs/dox_src/sc-common.doxyfile.in</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#---------------------------------------------------------------------------
+# Common doxygen configuration items
+#---------------------------------------------------------------------------
+
+# Include front material followed by everything in fsw
+INPUT      += @sc_MISSION_DIR@/docs/dox_src/cfs_sc.dox
+INPUT      += @sc_MISSION_DIR@/fsw
+
+IMAGE_PATH += @sc_MISSION_DIR@/docs/dox_src
+</pre></div>
+</div>
+</section>
+<section id="sc-usersguide-doxyfile-in">
+<h2><code class="docutils literal notranslate"><span class="pre">sc-usersguide.doxyfile.in</span></code><a class="headerlink" href="#sc-usersguide-doxyfile-in" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/sc/docs/dox_src/sc-usersguide.doxyfile.in</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#---------------------------------------------------------------------------
+# Stand-alone users guide doxyfile
+#---------------------------------------------------------------------------
+
+# Allow overrides
+@INCLUDE_PATH          = @MISSION_SOURCE_DIR@
+
+# Common setup
+@INCLUDE               = @MISSION_BINARY_DIR@/docs/sc-common.doxyfile
+
+# OSAL and cfe to resolve references and provide default settings
+@INCLUDE               = @MISSION_BINARY_DIR@/docs/cfe-common.doxyfile
+@INCLUDE               = @MISSION_BINARY_DIR@/docs/osal-common.doxyfile
+
+# Use sample definitions for generic users guide
+INPUT                 += @MISSION_SOURCE_DIR@/cfe/cmake/sample_defs
+
+PROJECT_NAME           = "SC User's Guide"
+WARN_LOGFILE           = sc-usersguide-warnings.log
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="docs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../users_guide_historical/index.html" class="btn btn-neutral float-right" title="users_guide_historical" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

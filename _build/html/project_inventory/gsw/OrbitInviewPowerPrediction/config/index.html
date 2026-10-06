@@ -1,0 +1,1994 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>config &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../search.html" />
+    <link rel="next" title="example_output" href="../example_output/index.html" />
+    <link rel="prev" title="OrbitInviewPowerPrediction" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html">gsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">gsw</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">OrbitInviewPowerPrediction</a></li>
+      <li class="breadcrumb-item active">config</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/project_inventory/gsw/OrbitInviewPowerPrediction/config/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="config">
+<h1>config<a class="headerlink" href="#config" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="amsat-html-report-config">
+<h2><code class="docutils literal notranslate"><span class="pre">amsat_html_report.config</span></code><a class="headerlink" href="#amsat-html-report-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/amsat_html_report.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Ground Station HTML",
+    "base_output_directory":"/var/www/html/amsat",
+    "timezone":"US/Eastern",
+    "inviews":"True",
+    "num_aer_days":"2",
+    "start_day":"0",
+    "end_day":"1",
+    "ground_station": {
+        "name":"Fairmont",
+        "lat":"39.50417", 
+        "lon":"-80.218615", 
+        "el_meters":"359.664", 
+        "tz":"US/Eastern",
+        "minimum_elevation_angle":"0.0",
+        "show_operations_hours":"false"
+    },
+    "satellites": [
+        {
+            "name":"STF-1 468.000",
+            "number":"43852",
+            "url":"http://www.celestrak.com/NORAD/elements/cubesat.txt",
+            "receive_frequency":"450.000",
+            "transmit_frequency":"468.000"
+        },
+        {
+            "name":"SO-50 436.795",
+            "number":"27607",
+            "url":"http://www.celestrak.com/NORAD/elements/amateur.txt",
+            "transmit_frequency":"436.795"
+        },
+        {
+            "name":"AO-91 145.960",
+            "number":"43017",
+            "url":"http://www.celestrak.com/NORAD/elements/amateur.txt",
+            "transmit_frequency":"145.960"
+        },
+        {
+            "name":"AO-92 145.880",
+            "number":"43137",
+            "url":"http://www.celestrak.com/NORAD/elements/amateur.txt",
+            "transmit_frequency":"145.880"
+        }
+    ]
+}
+</pre></div>
+</div>
+</section>
+<section id="dellingr-html-report-config">
+<h2><code class="docutils literal notranslate"><span class="pre">dellingr_html_report.config</span></code><a class="headerlink" href="#dellingr-html-report-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/dellingr_html_report.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Satellite HTML",
+    "base_output_directory":"/var/www/html/dellingr",
+    "timezone":"US/Eastern",
+    "inviews":"True",
+    "insun":"False",
+    "start_day":"0",
+    "end_day":"75",
+    "satellite": {
+        "name":"DELLINGR (RBLE)",
+        "number":"43021",
+        "url":"http://www.celestrak.com/NORAD/elements/cubesat.txt"
+    },
+    "ground_stations": [
+        {
+            "name":"Wallops",
+            "lat":"37.854886", 
+            "lon":"-75.512936", 
+            "el_meters":"3.8", 
+            "tz":"US/Eastern",
+            "minimum_elevation_angle":"0.0",
+            "operations_start_hour":"6", 
+            "operations_start_minute":"0", 
+            "operations_end_hour":"23", 
+            "operations_end_minute":"30"
+        },
+        {
+            "name":"Greenbank 20m",
+            "lat":"38.43685028", 
+            "lon":"-79.825518056", 
+            "el_meters":"842.0", 
+            "tz":"US/Eastern",
+            "minimum_elevation_angle":"0.0"
+        }
+    ]
+}
+</pre></div>
+</div>
+</section>
+<section id="first-contact-20181219-golden-tle">
+<h2><code class="docutils literal notranslate"><span class="pre">first_contact_20181219_golden.tle</span></code><a class="headerlink" href="#first-contact-20181219-golden-tle" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/first_contact_20181219_golden.tle</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>STF1
+1 43852U 18104D   18352.73692558 +.00000040 +00000-0 +00000-0 0  9994
+2 43852 085.0329 176.6844 0012968 297.1185 062.8724 15.20212664000363
+</pre></div>
+</div>
+</section>
+<section id="gbo-xb1-html-report-config">
+<h2><code class="docutils literal notranslate"><span class="pre">gbo_xb1_html_report.config</span></code><a class="headerlink" href="#gbo-xb1-html-report-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/gbo_xb1_html_report.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Ground Station HTML",
+    "base_output_directory":"/var/www/html/gbo_xb1",
+    "timezone":"US/Eastern",
+    "inviews":"True",
+    "start_day":"0",
+    "end_day":"14",
+    "ground_station": {
+        "name":"Greenbank 20m",
+        "lat":"38.43685028", 
+        "lon":"-79.825518056", 
+        "el_meters":"842.0", 
+        "tz":"US/Eastern",
+        "minimum_elevation_angle":"0.0"
+    },
+    "satellites": [
+        {
+            "name":"CubeRRT",
+            "number":"43546",
+            "url":"http://www.celestrak.com/NORAD/elements/stations.txt"
+        },
+        {
+            "name":"TempestD",
+            "number":"43547",
+            "url":"http://www.celestrak.com/NORAD/elements/stations.txt"
+        },
+        {
+            "name":"HaloSat",
+            "number":"43549",
+            "url":"http://www.celestrak.com/NORAD/elements/stations.txt"
+        }
+    ]
+}
+</pre></div>
+</div>
+</section>
+<section id="icecube-html-report-config">
+<h2><code class="docutils literal notranslate"><span class="pre">icecube_html_report.config</span></code><a class="headerlink" href="#icecube-html-report-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/icecube_html_report.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Satellite HTML",
+    "base_output_directory":"/var/www/html/icecube",
+    "timezone":"US/Eastern",
+    "inviews":"True",
+    "insun":"True",
+    "start_day":"-1",
+    "end_day":"14",
+    "satellite": {
+        "name":"ICECUBE",
+        "number":"42705",
+        "url":"http://www.celestrak.com/NORAD/elements/cubesat.txt"
+    },
+    "ground_stations": [
+        {
+            "predefined":"wallops"
+        }
+    ]
+}
+</pre></div>
+</div>
+</section>
+<section id="iss-html-report-config">
+<h2><code class="docutils literal notranslate"><span class="pre">iss_html_report.config</span></code><a class="headerlink" href="#iss-html-report-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/iss_html_report.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Satellite HTML",
+    "base_output_directory":"/var/www/html/iss",
+    "timezone":"US/Eastern",
+    "inviews":"True",
+    "insun":"True",
+    "start_day":"-1",
+    "end_day":"1",
+    "satellite": {
+        "number":"25544",
+        "url":"http://www.celestrak.com/NORAD/elements/stations.txt"
+    },
+    "ground_stations": [
+        {
+            "name":"Fairmont",
+            "lat":"39.50417", 
+            "lon":"-80.218615", 
+            "el_meters":"359.664", 
+            "tz":"US/Eastern",
+            "minimum_elevation_angle":"10.0",
+            "show_operations_hours":"False"
+        }
+    ]
+}
+</pre></div>
+</div>
+</section>
+<section id="noaa-html-report-config">
+<h2><code class="docutils literal notranslate"><span class="pre">noaa_html_report.config</span></code><a class="headerlink" href="#noaa-html-report-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/noaa_html_report.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Ground Station HTML",
+    "base_output_directory":"/var/www/html/noaa",
+    "timezone":"US/Eastern",
+    "inviews":"True",
+    "start_day":"0",
+    "end_day":"7",
+    "ground_station": {
+        "name":"Fairmont",
+        "lat":"39.50417", 
+        "lon":"-80.218615", 
+        "el_meters":"359.664", 
+        "tz":"US/Eastern",
+        "minimum_elevation_angle":"10.0",
+        "show_operations_hours":"false"
+    },
+    "satellites": [
+        {
+            "name":"NOAA 15 137.62",
+            "number":"25338",
+            "url":"http://www.celestrak.com/NORAD/elements/weather.txt"
+        },
+        {
+            "name":"NOAA 18 137.9125",
+            "number":"28654",
+            "url":"http://www.celestrak.com/NORAD/elements/weather.txt"
+        },
+        {
+            "name":"NOAA 19 137.1",
+            "number":"33591",
+            "url":"http://www.celestrak.com/NORAD/elements/weather.txt"
+        },
+        {
+            "name":"METEOR-M 2 137.9",
+            "number":"40069",
+            "url":"http://www.celestrak.com/NORAD/elements/weather.txt"
+        }
+    ]
+}
+</pre></div>
+</div>
+</section>
+<section id="rap2-stf1-html-report-config">
+<h2><code class="docutils literal notranslate"><span class="pre">rap2_stf1_html_report.config</span></code><a class="headerlink" href="#rap2-stf1-html-report-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/rap2_stf1_html_report.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Satellite HTML",
+    "base_output_directory":"/home/itc/Desktop/oipp-data/stf1",
+    "timezone":"US/Eastern",
+    "inviews":"True",
+    "insun":"True",
+    "num_aer_days":"2",
+    "time_step_seconds":"15",
+    "start_day":"0",
+    "end_day":"12",
+    "satellite": {
+        "name":"STF-1",
+        "number":"43852",
+        "file":"/home/itc/Desktop/oipp-data/stf1/stf1/electrontles.tle"
+    },
+    "ground_stations": [
+        {
+            "name":"Wallops",
+            "lat":"37.854886", 
+            "lon":"-75.512936", 
+            "el_meters":"3.8", 
+            "tz":"US/Eastern",
+            "weather_url":"https://forecast.weather.gov/MapClick.php?lat=37.9407&amp;lon=-75.4674#.XEng_FxKi71",
+            "minimum_elevation_angle":"0.0",
+            "show_operations_hours":"False",
+            "operations_start_hour":"6", 
+            "operations_start_minute":"0", 
+            "operations_end_hour":"23", 
+            "operations_end_minute":"30",
+            "aer_min_el":"10",
+            "aer_keyhole_el":"75",
+            "good_sectors": [
+                {
+
+                    "min_az":"0",
+                    "max_az":"10",
+                    "min_el":"50",
+                    "max_el":"75"
+                },
+                {
+
+                    "min_az":"10",
+                    "max_az":"35",
+                    "min_el":"45",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"35",
+                    "max_az":"45",
+                    "min_el":"25",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"45",
+                    "max_az":"135",
+                    "min_el":"10",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"135",
+                    "max_az":"145",
+                    "min_el":"25",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"145",
+                    "max_az":"170",
+                    "min_el":"45",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"170",
+                    "max_az":"180",
+                    "min_el":"50",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"180",
+                    "max_az":"190",
+                    "min_el":"50",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"190",
+                    "max_az":"215",
+                    "min_el":"45",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"215",
+                    "max_az":"225",
+                    "min_el":"25",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"225",
+                    "max_az":"315",
+                    "min_el":"10",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"315",
+                    "max_az":"325",
+                    "min_el":"25",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"325",
+                    "max_az":"350",
+                    "min_el":"45",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"350",
+                    "max_az":"360",
+                    "min_el":"50",
+                    "max_el":"75"
+                }
+            ],
+            "bad_sectors": [
+                {
+                    "min_az":"251",
+                    "max_az":"253",
+                    "min_el":"0",
+                    "max_el":"20"
+                }
+            ]
+        },
+        {
+            "name":"Morehead Antenna",
+            "lat":"38.191834", 
+            "lon":"-83.438841", 
+            "el_meters":"353", 
+            "tz":"US/Eastern",
+            "minimum_elevation_angle":"0.0",
+            "show_operations_hours":"False",
+            "operations_start_hour":"6", 
+            "operations_start_minute":"0", 
+            "operations_end_hour":"23", 
+            "operations_end_minute":"30"
+        }
+    ]
+}
+</pre></div>
+</div>
+</section>
+<section id="sat-html-report-config">
+<h2><code class="docutils literal notranslate"><span class="pre">sat_html_report.config</span></code><a class="headerlink" href="#sat-html-report-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/sat_html_report.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Satellite HTML",
+    "base_output_directory":"/var/www/html/test",
+    "timezone":"US/Eastern",
+    "inviews":"True",
+    "insun":"True",
+    "start_day":"-1",
+    "end_day":"1",
+    "satellite": {
+        "name":"IceCube",
+        "number":"42705",
+        "url":"http://www.celestrak.com/NORAD/elements/cubesat.txt"
+    },
+    "ground_stations": [
+        {
+            "predefined":"wallops"
+        },
+        {
+            "predefined":"Morehead"
+        },
+        {
+            "name":"Fairmont",
+            "lat":"39.50417", 
+            "lon":"-80.218615", 
+            "el_meters":"359.664", 
+            "tz":"US/Eastern", 
+            "minimum_elevation_angle":"0.0", 
+            "operations_start_hour":"8", 
+            "operations_start_minute":"0", 
+            "operations_end_hour":"16", 
+            "operations_end_minute":"30"
+        }
+    ]
+}
+</pre></div>
+</div>
+</section>
+<section id="sgp4-ver-tle">
+<h2><code class="docutils literal notranslate"><span class="pre">sgp4-ver.tle</span></code><a class="headerlink" href="#sgp4-ver-tle" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/sgp4-ver.tle</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#   ------------------ Verification test cases ----------------------
+#                       # TEME example
+1 00005U 58002B   00179.78495062  .00000023  00000-0  28098-4 0  4753
+2 00005  34.2682 348.7242 1859667 331.7664  19.3264 10.82419157413667
+#                       ## fig show lyddane fix error with gsfc ver
+1 04632U 70093B   04031.91070959 -.00000084  00000-0  10000-3 0  9955
+2 04632  11.4628 273.1101 1450506 207.6000 143.9350  1.20231981 44145
+#   DELTA 1 DEB         # near earth normal drag equation
+#                       # perigee = 377.26km, so moderate drag case
+1 06251U 62025E   06176.82412014  .00008885  00000-0  12808-3 0  3985
+2 06251  58.0579  54.0425 0030035 139.1568 221.1854 15.56387291  6774
+#   MOLNIYA 2-14        # 12h resonant ecc in 0.65 to 0.7 range
+1 08195U 75081A   06176.33215444  .00000099  00000-0  11873-3 0   813
+2 08195  64.1586 279.0717 6877146 264.7651  20.2257  2.00491383225656
+#   MOLNIYA 1-36        ## fig 12h resonant ecc in 0.7 to 0.715 range
+1 09880U 77021A   06176.56157475  .00000421  00000-0  10000-3 0  9814
+2 09880  64.5968 349.3786 7069051 270.0229  16.3320  2.00813614112380
+#   SMS 1 AKM           # show the integrator problem with gsfc ver
+1 09998U 74033F   05148.79417928 -.00000112  00000-0  00000+0 0  4480
+2 09998   9.4958 313.1750 0270971 327.5225  30.8097  1.16186785 45878
+#   EUTELSAT 1-F1 (ECS1)## fig lyddane choice in GSFC at 2080 min
+1 14128U 83058A   06176.02844893 -.00000158  00000-0  10000-3 0  9627
+2 14128  11.4384  35.2134 0011562  26.4582 333.5652  0.98870114 46093
+#   SL-6 R/B(2)         # Deep space, perigee = 82.48 (&lt;98) for
+#                       # s4 &gt; 20 mod
+1 16925U 86065D   06151.67415771  .02550794 -30915-6  18784-3 0  4486
+2 16925  62.0906 295.0239 5596327 245.1593  47.9690  4.88511875148616
+#   SL-12 R/B           # Shows Lyddane choice at 1860 and 4700 min
+1 20413U 83020D   05363.79166667  .00000000  00000-0  00000+0 0  7041
+2 20413  12.3514 187.4253 7864447 196.3027 356.5478  0.24690082  7978
+#   MOLNIYA 1-83        # 12h resonant, ecc &gt; 0.715 (negative BSTAR)
+1 21897U 92011A   06176.02341244 -.00001273  00000-0 -13525-3 0  3044
+2 21897  62.1749 198.0096 7421690 253.0462  20.1561  2.01269994104880
+#   SL-6 R/B(2)         # last tle given, decayed 2006-04-04, day 94
+1 22312U 93002D   06094.46235912  .99999999  81888-5  49949-3 0  3953
+2 22312  62.1486  77.4698 0308723 267.9229  88.7392 15.95744531 98783  
+#   SL-6 R/B(2)         # 12h resonant ecc in the &gt; 0.715 range
+1 22674U 93035D   06176.55909107  .00002121  00000-0  29868-3 0  6569
+2 22674  63.5035 354.4452 7541712 253.3264  18.7754  1.96679808 93877 
+#   ARIANE 44L+ R/B     # Lyddane bug at &lt;= 70 min for atan2(),
+#                       # no quadrant fix
+1 23177U 94040C   06175.45752052  .00000386  00000-0  76590-3 0    95
+2 23177   7.0496 179.8238 7258491 296.0482   8.3061  2.25906668 97438 
+#   WIND                # STR#3 Kepler failes past about 200 min
+1 23333U 94071A   94305.49999999 -.00172956  26967-3  10000-3 0    15
+2 23333  28.7490   2.3720 9728298  30.4360   1.3500  0.07309491    70  
+#   ARIANE 42P+3 R/B    ## fig Lyddane bug at &gt; 280.5 min for AcTan()
+1 23599U 95029B   06171.76535463  .00085586  12891-6  12956-2 0  2905
+2 23599   6.9327   0.2849 5782022 274.4436  25.2425  4.47796565123555 
+#   ITALSAT 2           # 24h resonant GEO, inclination &gt; 3 deg
+1 24208U 96044A   06177.04061740 -.00000094  00000-0  10000-3 0  1600
+2 24208   3.8536  80.0121 0026640 311.0977  48.3000  1.00778054 36119 
+#   AMC-4               ## fig low incl, show incl shift with
+#                       ## gsfc version from 240 to 1440 min
+1 25954U 99060A   04039.68057285 -.00000108  00000-0  00000-0 0  6847
+2 25954   0.0004 243.8136 0001765  15.5294  22.7134  1.00271289 15615 
+#   INTELSAT 902        # negative incl at 9313 min then
+#                       # 270 deg Lyddane bug at 37606 min
+1 26900U 01039A   06106.74503247  .00000045  00000-0  10000-3 0  8290
+2 26900   0.0164 266.5378 0003319  86.1794 182.2590  1.00273847 16981 
+#   COSMOS 1024 DEB     # 12h resonant ecc in 0.5 to 0.65 range
+1 26975U 78066F   06174.85818871  .00000620  00000-0  10000-3 0  6809
+2 26975  68.4714 236.1303 5602877 123.7484 302.5767  2.05657553 67521 
+#   CBERS 2                     # Near Earth, ecc = 8.84E-5 (&lt; 1.0e-4)
+#                       # drop certain normal drag terms
+1 28057U 03049A   06177.78615833  .00000060  00000-0  35940-4 0  1836
+2 28057  98.4283 247.6961 0000884  88.1964 271.9322 14.35478080140550
+#   NAVSTAR 53 (USA 175)# 12h non-resonant GPS (ecc &lt; 0.5 ecc)
+1 28129U 03058A   06175.57071136 -.00000104  00000-0  10000-3 0   459
+2 28129  54.7298 324.8098 0048506 266.2640  93.1663  2.00562768 18443 
+#   COSMOS 2405         # Near Earth, perigee = 127.20 (&lt; 156) s4 mod
+1 28350U 04020A   06167.21788666  .16154492  76267-5  18678-3 0  8894
+2 28350  64.9977 345.6130 0024870 260.7578  99.9590 16.47856722116490 
+#   H-2 R/B             # Deep space, perigee = 135.75 (&lt;156) s4 mod
+1 28623U 05006B   06177.81079184  .00637644  69054-6  96390-3 0  6000
+2 28623  28.5200 114.9834 6249053 170.2550 212.8965  3.79477162 12753
+#   XM-3                # 24h resonant geo, incl &lt; 3 deg goes
+#                       # negative around 1130 min
+1 28626U 05008A   06176.46683397 -.00000205  00000-0  10000-3 0  2190
+2 28626   0.0019 286.9433 0000335  13.7918  55.6504  1.00270176  4891
+#   MINOTAUR R/B        # Sub-orbital case - Decayed 2005-11-29
+#                       #(perigee = -51km), lost in 50 minutes
+1 28872U 05037B   05333.02012661  .25992681  00000-0  24476-3 0  1534
+2 28872  96.4736 157.9986 0303955 244.0492 110.6523 16.46015938 10708
+#   SL-14 DEB           # Last stage of decay - lost in under 420 min
+1 29141U 85108AA  06170.26783845  .99999999  00000-0  13519-0 0   718
+2 29141  82.4288 273.4882 0015848 277.2124  83.9133 15.93343074  6828 
+#   SL-12 DEB           # Near Earth, perigee = 212.24 &lt; 220
+#                       # simplified drag eq
+1 29238U 06022G   06177.28732010  .00766286  10823-4  13334-2 0   101
+2 29238  51.5595 213.7903 0202579  95.2503 267.9010 15.73823839  1061 
+#COURIER 1B
+1 00058U 60013A   97142.85906518  .00000093  00000-0 +10762-4 0  274
+2 00058 028.3286 356.4726 0164991 158.6392 202.1128 13.4602145880282
+#INTELSAT 1-F1
+1 01317U 65028A   96319.00000000 -.00000073  00000-0 +10000-3 0 0497
+2 01317  14.3842 342.1674 0001104 344.6118 333.1881  1.0036445301882
+#OPS 3662 (VELA 3)
+1 00836U 64040  A 68333.71805548  .00000000  00000-0 +00000-0 0 00218
+2 00836  37.9564 182.1088 0145101 215.8663 266.6045  0.23924182003816
+#EXPLORER 50 (IMP-8)
+1 06893U 73078A   04097.00000000 -.00000307  00000-0 +00000-0 0 0009
+2 06893  50.5548  69.6045 1624818 111.1032 181.3477  0.0820374100863
+#ESA-GEOS 1
+1 09931U 77029A   01309.17453186 -.00000329  00000-0 +10000-3 0 05967
+2 09931  26.4846 264.1300 6609654  82.2734 342.9061  1.96179522175451
+#NOAA-06 (originally had convergence problem on single state vector)
+1 11416U          79318.07850216  .00002502           11328-2 0   681
+2 11416  98.7380 345.8233 0011358 235.3731 124.6417 14.22344451 19915
+#Original report SGP4 test
+1 11801U          80230.29629788  .01431103  00000-0  14311-1      13
+2 11801  46.7916 230.4354 7318036  47.4722  10.4117  2.28537848    13
+#Cosmos 1191
+1 11871U 80057A   01309.36911127 -.00000499  00000-0 +10000-3 0 08380
+2 11871  67.5731   1.8936 6344778 181.9632 173.2224  2.00993562062886
+#Cosmos 1217
+1 12032U 80085A   01309.42683181  .00000182  00000-0  10000-3 0  3499
+2 12032  65.2329  86.7607 7086222 172.0967 212.4632  2.00879501101699
+#Molniya 3-19Rk
+1 13446U 82083E   01283.10818257  .00098407  45745-7  54864-3 0  6240
+2 13446  62.1717  83.8458 7498877 273.9677 320.2568  2.06357523137203
+#GSTAR 3
+1 19483U 88081A   97137.45030508 -.00000097  00000-0 +10000-3 0 0521
+2 19483   7.9373  57.7037 0002226 205.5811  28.9554  1.0027272402809
+#SBS 5
+1 19484U 88081B   97142.34600701  .00000026  00000-0 +10000-3 0 0582
+2 19484   0.0718  90.9764 0001184 309.3037 201.3786  1.0027491902338
+#CS 3B
+1 19508U 88086A   97136.58827615 -.00000172  00000-0 +10000-3 0 0150
+2 19508   0.0090 342.0093 0002420 132.0143 125.8497  1.0027267703182
+#MOLNIYA 3-33
+1 19541U 88090A   97140.93749050  .00001389  00000-0 +10000-3 0 0348
+2 19541  64.5823  50.3507 7304063 252.7222  21.5082  2.0087196206334
+#TDRS 3
+1 19548U 88091B   97141.69944100 -.00000180  00000-0 +10000-3 0 0288
+2 19548   3.1655  70.0997 0001830  39.5613 106.2873  1.0026561301892
+#RADUGA 22
+1 19596U 88095A   97141.90851079  .00000073  00000-0 +00000-0 0 0006
+2 19596   5.5272  57.1219 0000648 263.9197 257.3937  1.0026075801522
+#TDF 1
+1 19621U 88098A   97140.87069484 -.00000215  00000-0 +10000-3 0 0047
+2 19621   0.7802  81.7901 0004939 302.6242 335.6246  0.9919847602843
+#EKRAN 19 
+1 19683U 88108A   97125.35657144 -.00000028  00000-0 +00000-0 0 0848
+2 19683   5.4585  59.1499 0005594 156.1624 203.7351  1.0022068203075
+#GORIZONT 17
+1 19765U 89004A   97131.62338924 -.00000257  00000-0 +00000-0 0 0013
+2 19765   5.2955  57.7160 0018016 248.1114 111.5186  0.9906756003028
+#MOLNIYA 3-36 
+1 20338U 89094A   97142.09744901  .00000391  00000-0 +00000-0 0 0025
+2 20338  64.7304 159.0283 7050852 257.7144 021.7192  2.0059514805480
+#USA 55 
+1 20547U 90028B   97143.01993828 -.00000107  00000-0 -57012-5 0 0595
+2 20547  94.1277 126.6788 0121488 214.5866 144.7378 15.0176434139040
+#SCD 1 
+1 22490U 93009B   97142.96910273  .00000385  00000-0 +62296-4 0 0573
+2 22490  24.9657 339.7066 0045151 174.3619 185.7429 14.4065988222567
+#Ariane Debris
+1 23246U 91015G   01311.70347086  .00004957  00000-0  43218-2 0  8190
+2 23246   7.1648 263.6949 5661268 241.8299  50.5793  4.44333001129208
+#GOES 9
+1 23581U 95025A   01311.43599209 -.00000094  00000-0  00000+0 0  8214
+2 23581   1.1236  93.7945 0005741 214.4722 151.5103  1.00270260 23672
+#PROGNOZ M2
+1 23632U 95039A   95215.05103721  .00000252  00000-0  10000-4 0    11
+2 23632  63.8240 259.6684 9332704 314.5662   1.9243  0.26200872    02
+#ARIANE 44L+3 R/B 
+1 23866U 96030C   08064.47394878 +.00001642  00000-0 +10591-2 0 0481
+2 23866   4.5577 359.7906 7076151 309.1284   7.0534  2.5170366410325
+#TURKSAT 1C
+1 23949U 96040B   08064.69560088  .00000144  00000-0  10000-3 0  785
+2 23949   0.0606 303.8447 0000431 150.1243   1.7326  1.00273524 4269
+#MOLNIYA 3-48
+1 24640U 96060A   97142.99892724  .00000137  00000-0 -34143-2 0 0172
+2 24640  63.0016 126.1251 7338280 288.3170   9.5717  2.0066749200422
+#GONETS D1 5
+1 24729U 97006E   97143.07478940  .00000011  00000-0 +00000-0 0 0046
+2 24729  82.6021 165.6659 0001797 176.5724 183.5388 12.6272439301232
+#IRIDIUM 8
+1 24792U 97020A   97143.07862317 -.02618709  00000-0 -98679-0 0 0034
+2 24792  86.3890 141.4411 0009126  89.7444 270.6053 14.3601161200256
+#THOR 2A
+1 24808U 97025A   97142.38550799 -.00000113  00000-0 +00000-0 0 0007
+2 24808  19.5851  31.8603 6974523 359.4112   0.2569  2.1557125200003
+#EQUATOR S 
+1 25068U 97075B   08063.44758622  .00000013  00000-0  17097-2 0  831
+2 25068   7.5609 312.0304 8286575 329.2092   2.0830  1.07707867 4044
+#TL BIRD 4 (HOT BIRD 4
+1 25237U 98013A   08065.07893157 -.00000060  00000-0  10000-3 0  778
+2 25237   0.0192 266.3179 0006306  97.2228 180.8628  1.00272785 3700
+#XMM
+1 25989U 99066A   07119.20833333  .00000327  00000-0 +00000-0 0 03385
+2 25989  54.6654 111.3750 5996711 125.4529 353.4507  0.50131974002323
+#NOAA-16
+1 26536U 00055A   04021.31559085  .00000045  00000-0  48966-4 0  7146
+2 26536  98.9441 332.9210 0011258  75.8813 284.3609 14.12070705171679
+#NOAA-17
+1 27453U 02032A   03159.44074193  .00000223  00000-0  11792-3 0  4397
+2 27453  98.7410 229.9790 0012568  43.3290 316.8875 14.23359968 49598
+#INTELSAT 1002
+1 28358U 04022A   08151.13080160  .00000004  00000-0  10000-3 0  5824
+2 28358   0.0130 357.0652 0001105   8.7095 288.3925  1.00273874 14527
+#SINAH 1
+1 28893U 05043D   08064.84183463  .00000001  00000-0  97820-5 0  640
+2 28893  98.1063 321.4268 0016274  19.4105 340.7706 14.6003153312542
+#THEMIS C
+1 30582U 07004C   08065.75000000 -.00000721  00000-0  00000+0 0  212
+2 30582   4.7533 308.4897 8699271   6.9855 355.4695  0.50380244  256
+#Original report SGP4 test
+1 88888U          80275.98708465  .00073094  13844-3  66816-4 0    87
+2 88888  72.8435 115.9689 0086731  52.6988 110.5714 16.05824518  1058
+</pre></div>
+</div>
+</section>
+<section id="stf1-like-html-report-config">
+<h2><code class="docutils literal notranslate"><span class="pre">stf1-like_html_report.config</span></code><a class="headerlink" href="#stf1-like-html-report-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/stf1-like_html_report.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Satellite HTML",
+    "base_output_directory":"/var/www/html/stf1-like",
+    "timezone":"US/Eastern",
+    "inviews":"True",
+    "insun":"False",
+    "start_day":"0",
+    "end_day":"42",
+    "satellite": {
+        "number":"43693",
+        "url":"http://www.celestrak.com/NORAD/elements/tle-new.txt"
+    },
+    "ground_stations": [
+        {
+            "name":"Wallops",
+            "lat":"37.854886", 
+            "lon":"-75.512936", 
+            "el_meters":"3.8", 
+            "tz":"US/Eastern",
+            "minimum_elevation_angle":"0.0",
+            "show_operations_hours":"False",
+            "operations_start_hour":"6", 
+            "operations_start_minute":"0", 
+            "operations_end_hour":"23", 
+            "operations_end_minute":"30"
+        },
+        {
+            "name":"Greenbank 20m",
+            "lat":"38.43685028", 
+            "lon":"-79.825518056", 
+            "el_meters":"842.0", 
+            "tz":"US/Eastern",
+            "minimum_elevation_angle":"0.0",
+            "show_operations_hours":"False"
+        }
+    ]
+}
+</pre></div>
+</div>
+</section>
+<section id="stf1-over-wv-config">
+<h2><code class="docutils literal notranslate"><span class="pre">stf1-over-wv.config</span></code><a class="headerlink" href="#stf1-over-wv-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/stf1-over-wv.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Satellite Overflight",
+    "base_output_directory":"/var/www/html/stf1-over-wv",
+    "timezone":"US/Eastern",
+    "common_satellite_name":"STF-1",
+    "common_ground_station_name":"West Virginia",
+    "satellite": {
+        "number":"43852",
+        "url":"http://192.168.2.4/stf1/stf1/electrontles.tle"
+    },
+    "ground_station": {
+        "name":"Fairmont",
+        "lat":"39.50417", 
+        "lon":"-80.218615", 
+        "el_meters":"359.664", 
+        "tz":"US/Eastern",
+        "minimum_elevation_angle":"0.0",
+        "show_operations_hours":"False"
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="stf1-simple-config">
+<h2><code class="docutils literal notranslate"><span class="pre">stf1-simple.config</span></code><a class="headerlink" href="#stf1-simple-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/stf1-simple.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Satellite HTML",
+    "base_output_directory":"/var/www/html/test/stf1",
+    "timezone":"US/Eastern",
+    "inviews":"True",
+    "contacts":"True",
+    "insun":"True",
+    "num_aer_days":"0",
+    "time_step_seconds":"15",
+    "start_day":"0",
+    "end_day":"0",
+    "satellite": {
+        "name":"STF-1",
+        "number":"43852",
+        "url":"https://celestrak.org/NORAD/elements/gp.php?CATNR=43852&amp;FORMAT=tle",
+        "contact_name":"stf1",
+        "receive_frequency":"450.0"
+    },
+    "ground_stations": [
+        {
+            "name":"Wallops",
+            "lat":"37.854886", 
+            "lon":"-75.512936", 
+            "el_meters":"3.8", 
+            "tz":"US/Eastern",
+            "weather_url":"https://forecast.weather.gov/MapClick.php?lat=37.9407&amp;lon=-75.4674#.XEng_FxKi71",
+            "minimum_elevation_angle":"0.0",
+            "show_operations_hours":"False",
+            "operations_start_hour":"6", 
+            "operations_start_minute":"0", 
+            "operations_end_hour":"23", 
+            "operations_end_minute":"30",
+            "contact_schedule_directory":"/home/mark/googledrive/STF1/WFF-Schedule/",
+            "aer_min_el":"10",
+            "aer_keyhole_el":"75",
+            "good_sectors": [
+                {
+                    "min_az":"0",
+                    "max_az":"360",
+                    "min_el":"10",
+                    "max_el":"75"
+                }
+            ],
+            "bad_sectors": [
+                {
+                    "min_az":"246",
+                    "max_az":"258",
+                    "min_el":"0",
+                    "max_el":"12"
+                }
+            ]
+        },
+        {
+            "name":"Greenbank 20m",
+            "lat":"38.43685028", 
+            "lon":"-79.825518056", 
+            "el_meters":"842.0", 
+            "tz":"US/Eastern",
+            "weather_url":"https://forecast.weather.gov/MapClick.php?lat=38.43685&amp;lon=-79.82552",
+            "minimum_elevation_angle":"0.0",
+            "show_operations_hours":"False"
+        }
+    ]
+}
+</pre></div>
+</div>
+</section>
+<section id="stf1-wallops-inviewlist-config">
+<h2><code class="docutils literal notranslate"><span class="pre">stf1-wallops-inviewlist.config</span></code><a class="headerlink" href="#stf1-wallops-inviewlist-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/stf1-wallops-inviewlist.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Inview List",
+    "base_output_directory":"/var/www/html/stf1-wallops-inviews",
+    "timezone":"US/Eastern",
+    "start_day":"1",
+    "end_day":"1",
+    "satellite": {
+        "number":"43852",
+        "url":"http://www.celestrak.com/NORAD/elements/tle-new.txt"
+    },
+    "ground_station": {
+        "name":"Wallops",
+        "lat":"37.854886", 
+        "lon":"-75.512936", 
+        "el_meters":"3.8", 
+        "minimum_elevation_angle":"0.0"
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="stf1-aer-report-config">
+<h2><code class="docutils literal notranslate"><span class="pre">stf1_aer_report.config</span></code><a class="headerlink" href="#stf1-aer-report-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/stf1_aer_report.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"AzEl Tabular Text",
+    "base_output_directory":"/var/www/html/stf1",
+    "timezone":"US/Eastern",
+    "start_day":"0",
+    "end_day":"0",
+    "time_step_seconds":"15",
+    "satellite": {
+        "number":"43852",
+        "url":"http://marksuder.ddns.net/stf1/stf1/electrontles.tle"
+    },
+    "ground_station": {
+        "name":"Wallops",
+        "lat":"37.854886", 
+        "lon":"-75.512936", 
+        "el_meters":"3.8", 
+        "tz":"US/Eastern",
+        "minimum_elevation_angle":"0.0"
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="stf1-cmdtlm-report-config">
+<h2><code class="docutils literal notranslate"><span class="pre">stf1_cmdtlm_report.config</span></code><a class="headerlink" href="#stf1-cmdtlm-report-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/stf1_cmdtlm_report.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"AzElCmdTelem",
+    "debug":"False",
+    "summary":"True",
+    "table":"False",
+    "base_output_directory":"/home/msuder/stf1",
+    "timezone":"US/Eastern",
+    "start_day":"0",
+    "end_day":"0",
+    "time_step_seconds":"15",
+    "tlm_file": "temp.txt",
+    "tle_dir": "/home/itc/Desktop/oipp-data/stf1/",
+    "satellite": {
+        "number":"43852",
+        "file":"/home/itc/Desktop/oipp-data/stf1/stf1/electrontles.tle"
+    },
+    "ground_station": {
+        "name":"Wallops",
+        "lat":"37.854886", 
+        "lon":"-75.512936", 
+        "el_meters":"3.8", 
+        "tz":"US/Eastern",
+        "weather_url":"https://forecast.weather.gov/MapClick.php?lat=37.9407&amp;lon=-75.4674#.XEng_FxKi71",
+        "minimum_elevation_angle":"0.0",
+        "show_operations_hours":"False",
+        "operations_start_hour":"6", 
+        "operations_start_minute":"0", 
+        "operations_end_hour":"23", 
+        "operations_end_minute":"30",
+        "aer_min_el":"10",
+        "aer_keyhole_el":"75",
+        "good_sectors": [
+            {
+
+                "min_az":"0",
+                "max_az":"10",
+                "min_el":"50",
+                "max_el":"75"
+            },
+            {
+
+                "min_az":"10",
+                "max_az":"35",
+                "min_el":"45",
+                "max_el":"75"
+            },
+            {
+                "min_az":"35",
+                "max_az":"45",
+                "min_el":"25",
+                "max_el":"75"
+            },
+            {
+                "min_az":"45",
+                "max_az":"135",
+                "min_el":"10",
+                "max_el":"75"
+            },
+            {
+                "min_az":"135",
+                "max_az":"145",
+                "min_el":"25",
+                "max_el":"75"
+            },
+            {
+                "min_az":"145",
+                "max_az":"170",
+                "min_el":"45",
+                "max_el":"75"
+            },
+            {
+                "min_az":"170",
+                "max_az":"180",
+                "min_el":"50",
+                "max_el":"75"
+            },
+            {
+                "min_az":"180",
+                "max_az":"190",
+                "min_el":"50",
+                "max_el":"75"
+            },
+            {
+                "min_az":"190",
+                "max_az":"215",
+                "min_el":"45",
+                "max_el":"75"
+            },
+            {
+                "min_az":"215",
+                "max_az":"225",
+                "min_el":"25",
+                "max_el":"75"
+            },
+            {
+                "min_az":"225",
+                "max_az":"315",
+                "min_el":"10",
+                "max_el":"75"
+            },
+            {
+                "min_az":"315",
+                "max_az":"325",
+                "min_el":"25",
+                "max_el":"75"
+            },
+            {
+                "min_az":"325",
+                "max_az":"350",
+                "min_el":"45",
+                "max_el":"75"
+            },
+            {
+                "min_az":"350",
+                "max_az":"360",
+                "min_el":"50",
+                "max_el":"75"
+            }
+        ],
+        "bad_sectors": [
+            {
+                "min_az":"251",
+                "max_az":"253",
+                "min_el":"0",
+                "max_el":"20"
+            }
+        ]
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="stf1-gbo-html-report-config">
+<h2><code class="docutils literal notranslate"><span class="pre">stf1_gbo_html_report.config</span></code><a class="headerlink" href="#stf1-gbo-html-report-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/stf1_gbo_html_report.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Satellite HTML",
+    "base_output_directory":"/var/www/html/stf1_gbo",
+    "timezone":"US/Eastern",
+    "inviews":"True",
+    "insun":"True",
+    "num_aer_days":"0",
+    "time_step_seconds":"15",
+    "start_day":"0",
+    "end_day":"72",
+    "satellite": {
+        "name":"STF-1",
+        "number":"43852",
+        "url":"http://192.168.2.4/stf1/stf1/electrontles.tle"
+    },
+    "ground_stations": [
+        {
+            "name":"Wallops",
+            "lat":"37.854886", 
+            "lon":"-75.512936", 
+            "el_meters":"3.8", 
+            "tz":"US/Eastern",
+            "weather_url":"https://forecast.weather.gov/MapClick.php?lat=37.9407&amp;lon=-75.4674#.XEng_FxKi71",
+            "minimum_elevation_angle":"0.0",
+            "show_operations_hours":"False",
+            "operations_start_hour":"6", 
+            "operations_start_minute":"0", 
+            "operations_end_hour":"23", 
+            "operations_end_minute":"30",
+            "aer_min_el":"10",
+            "aer_keyhole_el":"75",
+            "good_sectors": [
+                {
+
+                    "min_az":"0",
+                    "max_az":"10",
+                    "min_el":"50",
+                    "max_el":"75"
+                },
+                {
+
+                    "min_az":"10",
+                    "max_az":"35",
+                    "min_el":"45",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"35",
+                    "max_az":"45",
+                    "min_el":"25",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"45",
+                    "max_az":"135",
+                    "min_el":"10",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"135",
+                    "max_az":"145",
+                    "min_el":"25",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"145",
+                    "max_az":"170",
+                    "min_el":"45",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"170",
+                    "max_az":"180",
+                    "min_el":"50",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"180",
+                    "max_az":"190",
+                    "min_el":"50",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"190",
+                    "max_az":"215",
+                    "min_el":"45",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"215",
+                    "max_az":"225",
+                    "min_el":"25",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"225",
+                    "max_az":"315",
+                    "min_el":"10",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"315",
+                    "max_az":"325",
+                    "min_el":"25",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"325",
+                    "max_az":"350",
+                    "min_el":"45",
+                    "max_el":"75"
+                },
+                {
+                    "min_az":"350",
+                    "max_az":"360",
+                    "min_el":"50",
+                    "max_el":"75"
+                }
+            ],
+            "bad_sectors": [
+                {
+                    "min_az":"251",
+                    "max_az":"253",
+                    "min_el":"0",
+                    "max_el":"20"
+                }
+            ]
+        },
+        {
+            "name":"Greenbank 20m",
+            "lat":"38.43685028", 
+            "lon":"-79.825518056", 
+            "el_meters":"842.0", 
+            "tz":"US/Eastern",
+            "minimum_elevation_angle":"0.0",
+            "show_operations_hours":"False"
+        }
+    ]
+}
+</pre></div>
+</div>
+</section>
+<section id="stf1-html-report-config">
+<h2><code class="docutils literal notranslate"><span class="pre">stf1_html_report.config</span></code><a class="headerlink" href="#stf1-html-report-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/stf1_html_report.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Satellite HTML",
+    "base_output_directory":"/var/www/html/stf1",
+    "timezone":"US/Eastern",
+    "inviews":"True",
+    "contacts":"True",
+    "insun":"True",
+    "num_aer_days":"5",
+    "time_step_seconds":"15",
+    "start_day":"0",
+    "end_day":"14",
+    "satellite": {
+        "name":"STF-1",
+        "number":"43852",
+        "url":"http://192.168.2.4/stf1/stf1/electrontles.tle",
+        "contact_name":"stf1",
+        "receive_frequency":"450.0"
+    },
+    "ground_stations": [
+        {
+            "name":"Wallops",
+            "lat":"37.85573",
+            "lon":"-75.51203",
+            "el_meters":"3.8",
+            "tz":"US/Eastern",
+            "weather_url":"https://forecast.weather.gov/MapClick.php?lat=37.9407&amp;lon=-75.4674#.XEng_FxKi71",
+            "minimum_elevation_angle":"0.0",
+            "show_operations_hours":"False",
+            "operations_start_hour":"6", 
+            "operations_start_minute":"0", 
+            "operations_end_hour":"23", 
+            "operations_end_minute":"30",
+            "contact_schedule_directory":"/home/mark/googledrive/STF1/WFF-Schedule/",
+            "aer_min_el":"10",
+            "aer_keyhole_el":"83",
+            "good_sectors": [
+                {
+                    "min_az":"0",
+                    "max_az":"360",
+                    "min_el":"10",
+                    "max_el":"83"
+                }
+            ],
+            "bad_sectors": [
+                {
+                    "min_az":"246",
+                    "max_az":"258",
+                    "min_el":"0",
+                    "max_el":"12"
+                }
+            ]
+        }
+    ]
+}
+</pre></div>
+</div>
+</section>
+<section id="stf1-html-report-simple-config">
+<h2><code class="docutils literal notranslate"><span class="pre">stf1_html_report_simple.config</span></code><a class="headerlink" href="#stf1-html-report-simple-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/stf1_html_report_simple.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Satellite HTML",
+    "base_output_directory":"/var/www/html/stf1_simple",
+    "timezone":"US/Eastern",
+    "inviews":"True",
+    "contacts":"False",
+    "insun":"False",
+    "num_aer_days":"0",
+    "time_step_seconds":"15",
+    "start_day":"0",
+    "end_day":"2",
+    "satellite": {
+        "name":"STF-1",
+        "number":"43852",
+        "url":"http://192.168.2.4/stf1/stf1/electrontles.tle",
+        "contact_name":"stf1",
+        "receive_frequency":"450.0"
+    },
+    "ground_stations": [
+        {
+            "name":"Wallops",
+            "lat":"37.85573",
+            "lon":"-75.51203",
+            "el_meters":"3.8",
+            "tz":"US/Eastern",
+            "weather_url":"https://forecast.weather.gov/MapClick.php?lat=37.9407&amp;lon=-75.4674#.XEng_FxKi71",
+            "minimum_elevation_angle":"0.0",
+            "show_operations_hours":"False",
+            "operations_start_hour":"6", 
+            "operations_start_minute":"0", 
+            "operations_end_hour":"23", 
+            "operations_end_minute":"30",
+            "contact_schedule_directory":"/home/mark/googledrive/STF1/WFF-Schedule/",
+            "aer_min_el":"10",
+            "aer_keyhole_el":"75",
+            "good_sectors": [
+                {
+                    "min_az":"0",
+                    "max_az":"360",
+                    "min_el":"10",
+                    "max_el":"83"
+                }
+            ],
+            "bad_sectors": [
+                {
+                    "min_az":"246",
+                    "max_az":"258",
+                    "min_el":"0",
+                    "max_el":"12"
+                }
+            ]
+        }
+    ]
+}
+</pre></div>
+</div>
+</section>
+<section id="wallops-angular-separation-report-config">
+<h2><code class="docutils literal notranslate"><span class="pre">wallops_angular_separation_report.config</span></code><a class="headerlink" href="#wallops-angular-separation-report-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/wallops_angular_separation_report.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Angular Separation CSV",
+    "base_output_directory":"/var/www/html/wallops",
+    "timezone":"US/Eastern",
+    "inviews":"True",
+    "start_day":"1",
+    "end_day":"1",
+    "ground_station": {
+        "name":"Wallops",
+        "lat":"37.854886", 
+        "lon":"-75.512936", 
+        "el_meters":"3.8", 
+        "tz":"US/Eastern",
+        "minimum_elevation_angle":"0.0",
+        "show_operations_hours":"True",
+        "operations_start_hour":"00", 
+        "operations_start_minute":"0", 
+        "operations_end_hour":"23", 
+        "operations_end_minute":"59"
+    },
+    "satellite_of_interest":
+    {
+        "name":"2018-104D",
+        "number":"43852",
+        "url":"http://www.celestrak.com/NORAD/elements/tle-new.txt"
+    },
+    "other_satellites": [
+        {
+            "name":"2018-104B",
+            "number":"43850",
+            "url":"http://www.celestrak.com/NORAD/elements/tle-new.txt"
+        },
+        {
+            "name":"2018-104J",
+            "number":"43857",
+            "url":"http://www.celestrak.com/NORAD/elements/tle-new.txt"
+        }
+    ]
+}
+</pre></div>
+</div>
+</section>
+<section id="wallops-html-report-config">
+<h2><code class="docutils literal notranslate"><span class="pre">wallops_html_report.config</span></code><a class="headerlink" href="#wallops-html-report-config" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/OrbitInviewPowerPrediction/config/wallops_html_report.config</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+    "report_type":"Ground Station HTML",
+    "base_output_directory":"/var/www/html/wallops",
+    "timezone":"US/Eastern",
+    "inviews":"True",
+    "start_day":"0",
+    "end_day":"10",
+    "ground_station": {
+        "name":"Wallops",
+        "lat":"37.854886", 
+        "lon":"-75.512936", 
+        "el_meters":"3.8", 
+        "tz":"US/Eastern",
+        "minimum_elevation_angle":"0.0",
+        "show_operations_hours":"False"
+    },
+    "satellites": [
+        {
+            "name":"STF-1",
+            "number":"43852",
+            "url":"https://celestrak.com/NORAD/elements/gp.php?CATNR=43852"
+        },
+        {
+            "name":"SHIELDS",
+            "number":"43850",
+            "url":"https://celestrak.com/NORAD/elements/gp.php?CATNR=43850"
+        }
+    ]
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="OrbitInviewPowerPrediction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../example_output/index.html" class="btn btn-neutral float-right" title="example_output" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

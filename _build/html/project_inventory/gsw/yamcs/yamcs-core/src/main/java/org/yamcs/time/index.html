@@ -1,0 +1,2219 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>time &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../../search.html" />
+    <link rel="next" title="timeline" href="../timeline/index.html" />
+    <link rel="prev" title="templating" href="../templating/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../../index.html">gsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">gsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">yamcs-core</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">main</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">java</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">org</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">yamcs</a></li>
+      <li class="breadcrumb-item active">time</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../../_sources/project_inventory/gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="time">
+<h1>time<a class="headerlink" href="#time" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="fixedsizetimedecoder-java">
+<h2><code class="docutils literal notranslate"><span class="pre">FixedSizeTimeDecoder.java</span></code><a class="headerlink" href="#fixedsizetimedecoder-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/FixedSizeTimeDecoder.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.time;
+
+import java.nio.BufferUnderflowException;
+import java.nio.ByteOrder;
+
+import org.yamcs.utils.ByteArrayUtils;
+
+/**
+ * Decodes time on a fixed number of bytes.
+ * 
+ * &lt;p&gt;
+ * Parameters are the size in bytes of the encoded time as well as a multiplier.
+ * &lt;p&gt;
+ * The multiplier is used to convert the extracted value to milliseconds in the {@link #decode(byte[], int)}} method.
+ * The multiplier is not used in the {@link #decodeRaw(byte[], int)} method.
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class FixedSizeTimeDecoder implements TimeDecoder {
+    final ByteOrder byteOrder;
+    final double multiplier;
+    final int size;
+
+    /**
+     * @param byteOrder
+     *            byte order of the encoded integer value
+     * @param size
+     *            how many bytes to be used to decode the time. Has to be maximum 8, otherwise a
+     *            IllegalArgumentException will be thrown
+     * @param multiplier
+     *            the multiplier to convert the extracted value to milliseconds.
+     *
+     */
+    public FixedSizeTimeDecoder(ByteOrder byteOrder, int size, double multiplier) {
+        this.byteOrder = byteOrder;
+        this.multiplier = multiplier;
+        if (size != 4 &amp;&amp; size != 8) {
+            throw new IllegalArgumentException("Invalid size " + size + " (should be between 4 or 8)");
+        }
+        this.size = size;
+
+    }
+
+    private long get(byte[] buf, int offset) {
+        if (offset + size &gt; buf.length) {
+            throw new BufferUnderflowException();
+        }
+        switch (size) {
+        case 4:
+            return (byteOrder == ByteOrder.BIG_ENDIAN)
+                    ? ByteArrayUtils.decodeInt(buf, offset)
+                    : ByteArrayUtils.decodeIntLE(buf, offset);
+        case 8:
+            return (byteOrder == ByteOrder.BIG_ENDIAN)
+                    ? ByteArrayUtils.decodeLong(buf, offset)
+                    : ByteArrayUtils.decodeLongLE(buf, offset);
+        default:
+            throw new IllegalStateException("unknown size " + size);
+        }
+    }
+
+    @Override
+    public long decode(byte[] buf, int offset) {
+        return (long) (get(buf, offset) * multiplier);
+    }
+
+    @Override
+    public long decodeRaw(byte[] buf, int offset) {
+        return get(buf, offset);
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="float64timedecoder-java">
+<h2><code class="docutils literal notranslate"><span class="pre">Float64TimeDecoder.java</span></code><a class="headerlink" href="#float64timedecoder-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/Float64TimeDecoder.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.time;
+
+import java.nio.BufferUnderflowException;
+import java.nio.ByteOrder;
+
+import org.yamcs.utils.ByteArrayUtils;
+
+/**
+ * Decodes milliseconds from fractional seconds stored in a 64-bit float
+ */
+public class Float64TimeDecoder implements TimeDecoder {
+
+    private final ByteOrder byteOrder;
+
+    public Float64TimeDecoder(ByteOrder byteOrder) {
+        this.byteOrder = byteOrder;
+    }
+
+    private double get(byte[] buf, int offset) {
+        if (offset + 8 &gt; buf.length) {
+            throw new BufferUnderflowException();
+        }
+
+        var longBits = (byteOrder == ByteOrder.LITTLE_ENDIAN)
+                ? ByteArrayUtils.decodeLongLE(buf, offset)
+                : ByteArrayUtils.decodeLong(buf, offset);
+        return Double.longBitsToDouble(longBits);
+    }
+
+    @Override
+    public long decode(byte[] buf, int offset) {
+        // Return the value in milliseconds
+        return (long) (get(buf, offset) * 1000);
+    }
+
+    @Override
+    public long decodeRaw(byte[] buf, int offset) {
+        // Same as normal decode
+        return decode(buf, offset);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="instant-java">
+<h2><code class="docutils literal notranslate"><span class="pre">Instant.java</span></code><a class="headerlink" href="#instant-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/Instant.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.time;
+
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Yamcs high resolution instant storing milliseconds since 1970-01-01T00:00:00 TAI (including leap seconds) and
+ * picoseconds.
+ * &lt;p&gt;
+ * Most of the Yamcs classes use just the milliseconds.
+ * 
+ * @author nm
+ *
+ */
+public class Instant implements Comparable&lt;Instant&gt; {
+    public static final Instant INVALID_INSTANT = new Instant(TimeEncoding.INVALID_INSTANT);
+    static final long PICOS_PER_MILLIS = 1000_000_000;
+
+    public static final long MIN_INSTANT = TimeEncoding.MIN_INSTANT;
+    public static final long MAX_INSTANT = TimeEncoding.MAX_INSTANT;
+
+    private final long millis;
+    private final int picos;
+
+    private Instant(long millis, int picos) {
+
+        this.millis = millis;
+        this.picos = picos;
+    }
+
+    private Instant(long millis) {
+        this(millis, 0);
+    }
+
+    /**
+     * Create a new instant given the number of milliseconds and the number of picoseconds
+     * 
+     * @param millis
+     * @param picos
+     * @return
+     */
+    public static Instant get(long millis, long picos) {
+        int picos1;
+
+        if (picos &gt;= PICOS_PER_MILLIS || picos &lt; 0) {
+            millis = Math.addExact(millis, Math.floorDiv(picos, PICOS_PER_MILLIS));
+            picos1 = (int) Math.floorMod(picos, PICOS_PER_MILLIS);
+        } else {
+            picos1 = (int) picos;
+        }
+        if (millis &gt; MAX_INSTANT || millis &lt; MIN_INSTANT) {
+            throw new IllegalArgumentException("instant exceeds the limit");
+        }
+        return new Instant(millis, picos1);
+    }
+
+    /**
+     * Returns a new instant with the given milliseconds and the picos 0
+     * 
+     * @param millis
+     * @return
+     */
+    public static Instant get(long millis) {
+        if(millis == TimeEncoding.INVALID_INSTANT) {
+            return INVALID_INSTANT;
+        }
+        if (millis &gt; MAX_INSTANT || millis &lt; MIN_INSTANT) {
+            throw new IllegalArgumentException("instant exceeds the limit");
+        }
+        return new Instant(millis, 0);
+    }
+
+    public long getMillis() {
+        return millis;
+    }
+
+    public int getPicos() {
+        return picos;
+    }
+
+    /**
+     * Add the given instant to this and return the result.
+     * 
+     * @param t
+     * @return
+     */
+    public Instant plus(Instant t) {
+        if ((t.millis | t.picos) == 0) {
+            return this;
+        }
+
+        long millis = Math.addExact(this.millis, t.millis);
+        int picos = this.picos + t.picos;
+
+        return get(millis, picos);
+    }
+
+    /**
+     * Add the given number of seconds to this and return the result
+     * 
+     * @param secs
+     * @return
+     */
+    public Instant plus(double secs) {
+        double millis = 1000 * secs;
+        if (millis &gt; Long.MAX_VALUE || millis &lt; Long.MIN_VALUE) {
+            throw new IllegalArgumentException("seconds value exceeds the limit");
+        }
+
+        long m = (long) millis;
+        int p = (int) Math.round((millis - m) * PICOS_PER_MILLIS);
+        return get(Math.addExact(this.millis, m), this.picos + p);
+    }
+
+    /**
+     * Compute the distance in seconds between this instant and the given instant.
+     * 
+     * @param t
+     * @return
+     */
+    public double deltaFrom(Instant t) {
+        double d = 0.001 * (this.millis - t.millis);
+        d += (this.picos - t.picos) * 1e-12;
+
+        return d;
+    }
+
+    @Override
+    public int compareTo(Instant o) {
+        int cmp = Long.compare(millis, o.millis);
+        if (cmp != 0) {
+            return cmp;
+        }
+        return Integer.compare(picos, o.picos);
+    }
+
+    @Override
+    public int hashCode() {
+        return ((int) (millis ^ (millis &gt;&gt;&gt; 32))) + 51 * picos;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+
+        Instant other = (Instant) obj;
+        if (millis != other.millis)
+            return false;
+        if (picos != other.picos)
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        if (TimeEncoding.isSetUp()) {
+            return TimeEncoding.toString(this.millis);
+        } else {
+            return "Instant [millis=" + millis + ", picos=" + picos + "]";
+        }
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="realtimetimeservice-java">
+<h2><code class="docutils literal notranslate"><span class="pre">RealtimeTimeService.java</span></code><a class="headerlink" href="#realtimetimeservice-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/RealtimeTimeService.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.time;
+
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Simple model from TimeService implementing the mission time as the wallclock time
+ * 
+ *
+ */
+public class RealtimeTimeService implements TimeService {
+    @Override
+    public long getMissionTime() {
+        return TimeEncoding.getWallclockTime();
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="simulationtimeservice-java">
+<h2><code class="docutils literal notranslate"><span class="pre">SimulationTimeService.java</span></code><a class="headerlink" href="#simulationtimeservice-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/SimulationTimeService.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.time;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.tctm.AbstractTmDataLink;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Simulation time model. Can be used by configuring in the yamcs.instance.yaml:
+ * 
+ * &lt;pre&gt;
+ * timeService:
+ *     class: org.yamcs.time.SimulationTimeService
+ *     args:
+ *         time0: "2020-10-02T18:10:00.000Z"
+ *         speed: 1.0
+ * &lt;/pre&gt;
+ * 
+ * By default the time0 is initialised with the time at the instance startup and the speed is 1.
+ * &lt;p&gt;
+ * The service maintains a simulated time which is running based on the computer clock according to speed (e.g. speed =
+ * 2
+ * means it runs two times realtime speed). If the speed is 0, the simulated time never advances and it has to be
+ * advanced externally (see below).
+ * &lt;p&gt;
+ * The simulation time service (as well as the speed) can be updated by various means:
+ * &lt;ul&gt;
+ * &lt;li&gt;Using the http time API; see
+ * &lt;a href="https://docs.yamcs.org/yamcs-http-api/time/"&gt;https://docs.yamcs.org/yamcs-http-api/time/&lt;/a&gt; for
+ * details.&lt;/li&gt;
+ * &lt;li&gt;Setting the option {@code updateSimulationTime: true} on a TM Data Link (this is implemented in
+ * {@link AbstractTmDataLink}) and will cause the simulation time to be updated with the packet generation time each
+ * time a packet is received on the corresponding link.
+ * &lt;li&gt;By a custom service.
+ * &lt;/ul&gt;
+ * &lt;p&gt;
+ * Note: using a time0 configured with a fixed value will cause the Yamcs to start always with the same simulation time
+ * and that might cause undesired effects such as packets overwriting eachother in the archive.
+ * &lt;p&gt;
+ * Such an option is better to be used in a template which
+ * can then be used to create always new Yamcs instances (corresponding to test sessions) such that the data is
+ * separated. See the &lt;a href="https://docs.yamcs.org/yamcs-http-api/management/"&gt;instance and templates API&lt;/a&gt; .
+ *
+ * @author nm
+ *
+ */
+public class SimulationTimeService implements TimeService {
+    double speed;
+    long time0;
+    long javaTime; // this is the java time when the last simElapsedTime has been set
+    long simElapsedTime;
+
+    public SimulationTimeService(String yamcsInstance, YConfiguration config) {
+        if (config.containsKey("time0")) {
+            time0 = TimeEncoding.parse(config.getString("time0"));
+        } else {
+            time0 = TimeEncoding.getWallclockTime();
+        }
+        speed = config.getDouble("speed", 1);
+
+        javaTime = System.currentTimeMillis();
+        simElapsedTime = 0;
+    }
+
+    public SimulationTimeService(String yamcsInstance) {
+        this(yamcsInstance, YConfiguration.emptyConfig());
+
+    }
+
+    /**
+     * The mission time returned is:
+     * &lt;p&gt;
+     * {@code time0 + simElapsedTime + speed * (System.currentTimeMillis() - javaTime)}
+     * &lt;p&gt;
+     * where time0 is the value set with {@link #setTime0(long)}, speed is the value set with
+     * {@link #setSimSpeed(double)} and javaTime are the values set with {@link #setSimElapsedTime(long, long)}.
+     */
+    @Override
+    public long getMissionTime() {
+        return (long) (time0 + simElapsedTime + speed * (System.currentTimeMillis() - javaTime));
+    }
+
+    /**
+     * Sets the javaTime and simElapsedTime used to compute the mission time by {@link #getMissionTime()}
+     *
+     * @param javaTime
+     * @param simElapsedTime
+     */
+    public void setSimElapsedTime(long javaTime, long simElapsedTime) {
+        this.javaTime = javaTime;
+        this.simElapsedTime = simElapsedTime;
+    }
+
+    /**
+     * Same as setSimElapsedTime(System.currentTimeMillis(), simElapsedTime).
+     *
+     * @param simElapsedTime
+     */
+    public void setSimElapsedTime(long simElapsedTime) {
+        setSimElapsedTime(System.currentTimeMillis(), simElapsedTime);
+    }
+
+    /**
+     * Set the time0
+     * 
+     * @param time0
+     */
+    public void setTime0(long time0) {
+        this.time0 = time0;
+    }
+
+    /**
+     * Set the simulation speed. If greater than 0, the time passes even without the update of the simElapsedTime.
+     * 
+     * @param simSpeed
+     */
+    public void setSimSpeed(double simSpeed) {
+        this.speed = simSpeed;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="timecorrelationservice-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimeCorrelationService.java</span></code><a class="headerlink" href="#timecorrelationservice-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/TimeCorrelationService.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.time;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.external.SimpleRegression;
+import org.yamcs.parameter.ParameterStatus;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.SystemParametersService;
+import org.yamcs.parameter.SystemParametersProducer;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.protobuf.TcoConfig;
+import org.yamcs.protobuf.TcoSample;
+import org.yamcs.protobuf.TcoStatus;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.xtce.SystemParameter;
+import org.yamcs.xtce.UnitType;
+import org.yamcs.xtce.util.DoubleRange;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+
+/**
+ * On-board time correlation service (inspired from SCOS2K (ESA MCS)).
+ * &lt;p&gt;
+ * It receives samples {@code (obt, ert, tof)} where:
+ * &lt;ul&gt;
+ * &lt;li&gt;obt - onboard time considered to be a counter starting at 0 when an on-board computer starts. This service uses
+ * an 64bits integer.&lt;/li&gt;
+ * &lt;li&gt;ert - Earth Reception Time - the timestamp when the signal has been received on the ground - it is typically
+ * provided by a ground station. This service expects the time to be provided in the {@link Instant} format which has
+ * picoseconds resolution.&lt;/li&gt;
+ * &lt;/ul&gt;
+ * 
+ * In addition it takes two other parameters:
+ * 
+ * &lt;ul&gt;
+ * &lt;li&gt;onboardDelay - configurable in the service configuration. It covers any delay happening on-board (sampling time,
+ * radiation time)
+ * &lt;li&gt;tof - time of flight - the time it takes for the signal to reach the ground.&lt;/li&gt;
+ * &lt;/ul&gt;
+ * 
+ * The time of flight can be fixed or computed by the {@link TimeOfFlightEstimator} by dynamically interpolating from
+ * data provided by a flight dynamics system.
+ * &lt;p&gt;
+ * Computes {@code m} = gradient and {@code c} = offset such that
+ * &lt;p&gt;
+ * {@code ob_time = m*obt + c}
+ * &lt;p&gt;
+ * The determination of the gradient and offset is done using the least squares method.
+ * &lt;p&gt;
+ * The number of samples used for computing the coefficients is configurable and has to be minimum 2.
+ * &lt;h2&gt;Accuracy and validity&lt;/h2&gt; Once the coefficients have been calculated, for each new sample received a deviation
+ * is calculated as the delta between the OBT computed using the coefficients and the OBT which is part of the sample
+ * (after adjusting for delays). The deviation is compared with the accuracy and validity parameters:
+ *
+ * &lt;ul&gt;
+ * &lt;li&gt;If the deviation is greater than {@code accuracy} but smaller than {@code validity}, then a recalculation of the
+ * coefficients is performed based on the last received samples.&lt;/li&gt;
+ *
+ * &lt;li&gt;If the deviation is greater than {@code validity} then the coefficients are declared as invalid and all the
+ * samples from the buffer except the last one are dropped. The time returned by {@link #getTime(long)} will be invalid
+ * until the required number of new samples is received and the next recalculation is performed&lt;/li&gt;
+ * &lt;/ul&gt;
+ * 
+ * &lt;h2&gt;Historical coefficients&lt;/h2&gt; The service keeps track of multiple intervals corresponding to different on-board
+ * time resets. At Yamcs startup the service loads a list of intervals from the tco table.
+ * &lt;p&gt;
+ * If using the historical recording to insert some old data into the Yamcs, in order to get the correct coefficients
+ * one has to know the approximate time when the data has been generated.
+ *
+ * &lt;h2&gt;Verify Only Mode&lt;/h2&gt; If the on-board clock is synchronized via a different method, this service can still be
+ * used to verify the synchronization.
+ *
+ * &lt;p&gt;
+ * The method {@link #verify} will check the difference between the packet generation time and the expected generation
+ * time (using ert - delays) and in case the difference is greater than the validity, the packet will be changed with
+ * the local computed time and the flag {@link TmPacket#setLocalGenTimeFlag()} will also be set.
+ * 
+ * &lt;h2&gt;Usage&lt;/h2&gt;
+ * 
+ * &lt;p&gt;
+ * To use this service there will be typically one component which adds samples using the
+ * {@link #addSample(long, Instant)} each time it receives a correlation sample from on-board. How the on-board system
+ * will send such samples is mission specific (for example the PUS protocol defines some specific time packets for this
+ * purpose).
+ * &lt;p&gt;
+ * In addition there will be other components (preprocessors or other services) which can use the class to get a Yamcs
+ * time associated to a specific OBT.
+ * 
+ * 
+ * &lt;p&gt;
+ * This class is thread safe: the synchronised methods {@link #addSample} and {@link #reset} are the only one where the
+ * state is changed and thus the {@link #getTime(long)} can be used from multiple threads concurrently.
+ * 
+ */
+public class TimeCorrelationService extends AbstractYamcsService implements SystemParametersProducer {
+    static public final String TABLE_NAME = "tco_";
+    static public final int MAX_HISTCOEF = 1000;
+
+    public static final TupleDefinition TDEF = new TupleDefinition();
+    static {
+        TDEF.addColumn("obi0", DataType.HRES_TIMESTAMP);
+        TDEF.addColumn("obt0", DataType.LONG);
+        TDEF.addColumn("gradient", DataType.DOUBLE);
+        TDEF.addColumn("offset", DataType.DOUBLE);
+    }
+    volatile TcoCoefficients curCoefficients;
+
+    TimeOfFlightEstimator tofEstimator;
+    List&lt;TcoCoefficients&gt; coefHist = new CopyOnWriteArrayList&lt;&gt;();
+
+    SimpleRegression sg;
+
+    ArrayDeque&lt;Sample&gt; sampleQueue;
+    TimeService timeService;
+    ParameterStatus nominalStatus, watchStatus, warningStatus;
+
+    /**
+     * how long (in seconds) it takes to sample the clock on-board, pack the data in the frame, etc.
+     */
+    double onboardDelay;
+
+    double accuracy;
+    double validity;
+    /**
+     * how many samples are used for the regression
+     */
+    int numSamples;
+
+    /**
+     * default time of flight, used if cannot be obtained from the tofEstimator
+     */
+    double defaultTof;
+
+    /**
+     * last computed deviation
+     */
+    volatile double lastDeviation = Double.NaN;
+
+    /**
+     * Last time when the coefficients have been computed
+     */
+    long coefficientsTime = TimeEncoding.INVALID_INSTANT;
+
+    Stream tcoStream;
+    EventProducer eventProducer;
+    private SystemParameter spDeviation;
+    private ParameterValue deviationPv;
+    String tableName;
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("onboardDelay", OptionType.FLOAT).withDefault(0.0);
+        spec.addOption("numSamples", OptionType.INTEGER).withDefault(3);
+        spec.addOption("accuracy", OptionType.FLOAT).withDefault(0.1);
+        spec.addOption("validity", OptionType.FLOAT).withDefault(0.2);
+        spec.addOption("saveCoefficients", OptionType.BOOLEAN).withDefault(true);
+        spec.addOption("saveTofPolynomials", OptionType.BOOLEAN).withDefault(true);
+        spec.addOption("defaultTof", OptionType.FLOAT).withDefault(0.0);
+        spec.addOption("useTofEstimator", OptionType.BOOLEAN).withDefault(false);
+
+        return spec;
+    }
+
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        onboardDelay = config.getDouble("onboardDelay", 0);
+        numSamples = config.getInt("numSamples", 3);
+        sampleQueue = new ArrayDeque&lt;&gt;(numSamples);
+        accuracy = config.getDouble("accuracy", 0.1);
+        validity = config.getDouble("validity", 0.2);
+        defaultTof = config.getDouble("defaultTof", 0.0);
+
+        boolean saveCoefficients = config.getBoolean("saveCoefficients", true);
+        boolean saveTofPolynomials = config.getBoolean("saveTofPolynomials", true);
+        boolean useTofEstimator = config.getBoolean("useTofEstimator", false);
+
+        if (useTofEstimator) {
+            tofEstimator = new TimeOfFlightEstimator(yamcsInstance, serviceName, saveTofPolynomials);
+        } else {
+            tofEstimator = null;
+        }
+
+        this.timeService = YamcsServer.getTimeService(yamcsInstance);
+        if (saveCoefficients) {
+            tableName = TABLE_NAME + serviceName;
+
+            String streamName = tableName + "_in";
+            YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+            try {
+                if (ydb.getTable(tableName) == null) {
+                    String query = "create table " + tableName + "(" + TDEF.getStringDefinition1()
+                            + ", primary key(obi0))";
+                    ydb.execute(query);
+                } else {
+                    retrieveArchivedCoefficients(ydb);
+                }
+                if (ydb.getStream(streamName) == null) {
+                    ydb.execute("create stream " + streamName + TDEF.getStringDefinition());
+                }
+                ydb.execute("insert into " + tableName + " select * from " + streamName);
+            } catch (ParseException | StreamSqlException e) {
+                throw new InitException(e);
+            }
+            tcoStream = ydb.getStream(streamName);
+        } else {
+            tcoStream = null;
+        }
+        eventProducer = EventProducerFactory.getEventProducer(yamcsInstance, this.getClass().getName(), 10000);
+    }
+
+    private void retrieveArchivedCoefficients(YarchDatabaseInstance ydb) throws InitException {
+        try {
+            // we add them to a temporary list because CopyOnWriteArrayList is not very efficient at adding one by one
+            List&lt;TcoCoefficients&gt; tmpl = new ArrayList&lt;&gt;();
+            StreamSqlStatement stmt = ydb.createStatement(
+                    "select * from " + tableName + " order desc limit " + MAX_HISTCOEF,
+                    serviceName);
+
+            StreamSqlResult res = ydb.execute(stmt);
+            while (res.hasNext()) {
+                tmpl.add(TcoCoefficients.fromTuple(res.next()));
+            }
+            res.close();
+            if (!tmpl.isEmpty()) {
+                curCoefficients = tmpl.get(0);
+            }
+            coefHist.addAll(tmpl);
+        } catch (Exception e) {
+            throw new InitException(e);
+        }
+
+    }
+
+    /**
+     * 
+     * Add a time synchronisation sample.
+     * &lt;p&gt;
+     * If the coefficients are already computed, the sample will be used to asses the accuracy of the computation. If
+     * the accuracy is lower than {@link #accuracy}, the coefficients will be recomputed based on the latest samples.
+     * &lt;p&gt;
+     * If the coefficients are not yet computed, the sample will be simply added to the sample buffer. If there are
+     * enough samples in the buffer, the coefficients will be calculated.
+     * 
+     * 
+     * @param obt
+     *            - On-Board Time
+     * @param ert
+     *            - Earth Reception Time
+     * @throws IllegalArgumentException
+     *             if the obt or ert are smaller than the ones in the previous sample
+     */
+    public synchronized void addSample(long obt, Instant ert) {
+        double delay = getTof(ert) + onboardDelay;
+        Instant obi = ert.plus(-delay);
+
+        if (!sampleQueue.isEmpty()) {
+            Sample last = sampleQueue.getLast();
+            if (obt &lt; last.obt || obi.compareTo(last.obi) &lt; 0) {
+                throw new IllegalArgumentException("Sample (" + obt + ", " + obi + ") is preceeding the previous one ("
+                        + last.obt + ", " + last.obi + ")");
+            }
+        }
+        Sample s = new Sample(obt, obi);
+
+        if (curCoefficients == null) {
+            sampleQueue.addLast(s);
+            if (sampleQueue.size() == numSamples) {
+                computeCoefficients();
+            }
+        } else {// state=SYNC
+            if (sampleQueue.size() &gt;= numSamples) {
+                sampleQueue.removeFirst();
+            }
+            sampleQueue.addLast(s);
+            // verify accuracy
+            Instant obi1 = curCoefficients.getInstant(obt);
+            double deviation = obi1.deltaFrom(obi);
+            double dev = Math.abs(deviation);
+
+            if (dev &gt; validity) {
+                eventProducer.sendWarning(String.format("Deviation %f sec "
+                        + "greater than the allowed validity %f sec, reseting correlation", dev,
+                        validity));
+                curCoefficients = null;
+                sampleQueue.clear();
+                sampleQueue.addLast(s);
+            } else if (dev &gt; accuracy) {
+                eventProducer.sendInfo(String.format("Deviation %f sec "
+                        + "greater than the allowed accuracy %f sec, recomputing coefficients", dev,
+                        accuracy));
+                computeCoefficients();
+            }
+            publishDeviation(deviation);
+        }
+    }
+
+    /**
+     * Forgets about the computed coefficients and the stored tuples.
+     * &lt;p&gt;
+     * Should be called when the on-board clock resets.
+     */
+    public synchronized void reset() {
+        curCoefficients = null;
+        sampleQueue.clear();
+        lastDeviation = Double.NaN;
+    }
+
+    /**
+     * 
+     * Returns the time when the on-board clock had the given value. If the coefficients are not computed yet, it will
+     * return {@link Instant#INVALID_INSTANT}
+     * 
+     * @param obt
+     * @return the time instant corresponding to the on-board obt tick.
+     * 
+     */
+    public Instant getTime(long obt) {
+        TcoCoefficients c = curCoefficients;
+
+        if (c == null) {
+            return Instant.INVALID_INSTANT;
+        } else {
+            return c.getInstant(obt);
+        }
+    }
+
+    /**
+     * Returns the on-board time corresponding to the given on-board clock
+     * &lt;p&gt;
+     * If the coefficients are not computed yet, it will return Long.MIN_VALUE
+     * 
+     * @param scheduleTime
+     * @return
+     */
+    public long getObt(long scheduleTime) {
+        TcoCoefficients c = curCoefficients;
+
+        if (c == null) {
+            return Long.MIN_VALUE;
+        } else {
+            return c.getObt(Instant.get(scheduleTime));
+        }
+    }
+
+    /**
+     * Set the generation time of the packet based on the computed coefficients.
+     * &lt;p&gt;
+     * If the coefficients are not valid, set the generation time to gentime = ert-delays and also set the flag
+     * {@link TmPacket#setLocalGenTimeFlag()}
+     * 
+     * &lt;p&gt;
+     * The packet has to have the ert set, otherwise an exception is thrown
+     * 
+     * @param obt
+     * @param pkt
+     * @throws IllegalArgumentException
+     *             if the packet has no ert set
+     */
+    public void timestamp(long obt, TmPacket pkt) {
+        Instant ert = pkt.getEarthReceptionTime();
+
+        if (ert == null) {
+            throw new IllegalArgumentException("no ert available");
+        }
+
+        TcoCoefficients c = curCoefficients;
+        if (c == null) {
+            double delay = getTof(ert) + onboardDelay;
+            Instant genTime = ert.plus(-delay);
+            pkt.setGenerationTime(genTime.getMillis());
+            pkt.setLocalGenTimeFlag();
+        } else {
+            Instant genTime = c.getInstant(obt);
+            pkt.setGenerationTime(genTime.getMillis());
+        }
+    }
+
+    double getTof(Instant ert) {
+        if (tofEstimator == null) {
+            return defaultTof;
+        }
+        double d = tofEstimator.getTof(ert);
+        if (Double.isNaN(d)) {
+            return defaultTof;
+        } else {
+            return d;
+        }
+    }
+
+    /**
+     * Verify the time synchronization of the packet. This assumes that the packet generation time has already been
+     * computed (by a packet pre-processor).
+     * &lt;p&gt;
+     * If the deviation between the provided generation time and the expected generation time (computed based on the ert
+     * - delays) is greater than the validity threshold, the generation time is changed to the expected time and the
+     * {@link TmPacket#setLocalGenTimeFlag()} is also set.
+     * &lt;p&gt;
+     * The computed deviation is also published as a processed parameter.
+     * 
+     * @param pkt
+     * @throws IllegalArgumentException
+     *             if the packet has no ert set
+     */
+    public void verify(TmPacket pkt) {
+
+        Instant ert = pkt.getEarthReceptionTime();
+
+        if (ert == null || ert == Instant.INVALID_INSTANT) {
+            throw new IllegalArgumentException("no ert available");
+        }
+        double delay = getTof(ert) + onboardDelay;
+        Instant expectedGenTime = ert.plus(-delay);
+
+        double deviation = expectedGenTime.deltaFrom(Instant.get(pkt.getGenerationTime()));
+        if (Math.abs(deviation) &gt; validity) {
+            pkt.setGenerationTime(expectedGenTime.getMillis());
+            pkt.setLocalGenTimeFlag();
+        }
+
+        publishDeviation(deviation);
+    }
+
+    /**
+     * Returns the time when the on-board clock had the given value. obi is an approximative time used to search in
+     * history for the coefficients applicable at that time.
+     * &lt;p&gt;
+     * Returns {@link Instant#INVALID_INSTANT} if no historical coefficients are found.
+     * 
+     * @param obi
+     * @param obt
+     * @return
+     */
+    public Instant getHistoricalTime(Instant obi, long obt) {
+        for (TcoCoefficients tc : coefHist) {
+            if (tc.obi0.compareTo(obi) &lt;= 0) {
+                return tc.getInstant(obt);
+            }
+        }
+        return Instant.INVALID_INSTANT;
+    }
+
+    private void publishDeviation(double deviation) {
+        lastDeviation = deviation;
+
+        if (spDeviation == null) {
+            return;// no system parameter collector configured
+        }
+        long time = timeService.getMissionTime();
+        double dabs = Math.abs(deviation);
+        ParameterValue pv = SystemParametersService.getPV(spDeviation, time, deviation);
+        if (dabs &gt; validity) {
+            pv.setStatus(warningStatus);
+        } else if (dabs &gt; accuracy) {
+            pv.setStatus(watchStatus);
+        } else {
+            pv.setStatus(nominalStatus);
+        }
+        deviationPv = pv;
+    }
+
+    @Override
+    protected void doStart() {
+        setupSystemParameters();
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        notifyStopped();
+    }
+
+    public TimeOfFlightEstimator getTofEstimator() {
+        return tofEstimator;
+    }
+
+    private void computeCoefficients() {
+        TcoCoefficients c = new TcoCoefficients();
+        Sample s0 = sampleQueue.getFirst();
+        c.obi0 = s0.obi;
+        c.obt0 = s0.obt;
+        SimpleRegression sr = new SimpleRegression();
+        for (Sample s : sampleQueue) {
+            sr.addData(s.obt - c.obt0, s.obi.deltaFrom(c.obi0));
+        }
+        c.gradient = sr.getSlope();
+        c.offset = sr.getIntercept();
+        if (tcoStream != null) {
+            tcoStream.emitTuple(c.toTuple());
+        }
+        curCoefficients = c;
+        coefHist.add(0, c);
+        if (coefHist.size() &gt; MAX_HISTCOEF) {
+            coefHist.remove(coefHist.size() - 1);
+        }
+
+        eventProducer.sendInfo("Computed new coefficients: " + c);
+    }
+
+    void setupSystemParameters() {
+        SystemParametersService collector = SystemParametersService.getInstance(yamcsInstance);
+        if (collector != null) {
+            makeParameterStatus();
+            spDeviation = collector.createSystemParameter(serviceName + "/deviation", Type.DOUBLE, new UnitType("sec"),
+                    "delta between the OBT computed using the coefficients and the OBT which is part of a time sample"
+                            + " (after adjusting for delays)");
+            collector.registerProducer(this);
+        }
+    }
+
+    @Override
+    public List&lt;ParameterValue&gt; getSystemParameters(long gentime) {
+        if (deviationPv != null) {
+            return Arrays.asList(deviationPv);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    private void makeParameterStatus() {
+        nominalStatus = getParaStatus();
+        nominalStatus.setMonitoringResult(MonitoringResult.IN_LIMITS);
+        watchStatus = getParaStatus();
+        watchStatus.setMonitoringResult(MonitoringResult.WATCH);
+        warningStatus = getParaStatus();
+        warningStatus.setMonitoringResult(MonitoringResult.WARNING);
+    }
+
+    private ParameterStatus getParaStatus() {
+        ParameterStatus status = new ParameterStatus();
+        status.setWatchRange(new DoubleRange(-accuracy, accuracy));
+        status.setWarningRange(new DoubleRange(-validity, validity));
+
+        return status;
+    }
+
+    public synchronized void setAccuracy(double accuracy) {
+        this.accuracy = accuracy;
+    }
+
+    public synchronized void setValidity(double validity) {
+        this.validity = validity;
+    }
+
+    public synchronized void setOnboardDelay(double onboardDelay) {
+        this.onboardDelay = onboardDelay;
+    }
+
+    public synchronized void setDefaultTof(double defaultTof) {
+        this.defaultTof = defaultTof;
+    }
+
+    public synchronized void forceCoefficients(Instant obi, long obt, double offset, double gradient) {
+        TcoCoefficients tcoef = new TcoCoefficients();
+        tcoef.obt0 = obt;
+        tcoef.obi0 = obi;
+        tcoef.offset = offset;
+        tcoef.gradient = gradient;
+        curCoefficients = tcoef;
+        coefficientsTime = timeService.getMissionTime();
+    }
+
+    static class TcoCoefficients {
+        Instant obi0;
+        long obt0;
+        double gradient;
+        double offset;
+
+        /**
+         * Returns the Yamcs Instant corresponding to the given obt
+         * 
+         * @param obt
+         * @return
+         */
+        Instant getInstant(long obt) {
+            return obi0.plus(gradient * (obt - obt0) + offset);
+        }
+
+        /**
+         * Returns the obt corresponding to the given Yamcs instant
+         */
+        long getObt(Instant instant) {
+            return (long) ((instant.deltaFrom(obi0) - offset) / gradient) + obt0;
+        }
+
+        Tuple toTuple() {
+            Tuple t = new Tuple(TDEF, Arrays.asList(obi0, obt0, gradient, offset));
+            return t;
+        }
+
+        static TcoCoefficients fromTuple(Tuple t) {
+            TcoCoefficients c = new TcoCoefficients();
+            c.obi0 = (Instant) t.getColumn("obi0");
+            c.obt0 = (Long) t.getColumn("obt0");
+            c.gradient = (Double) t.getColumn("gradient");
+            c.offset = (Double) t.getColumn("offset");
+
+            return c;
+        }
+
+        @Override
+        public String toString() {
+            return "TcoCoefficients [obi0=" + obi0 + ", obt0=" + obt0 + ", gradient=" + gradient + ", offset=" + offset
+                    + "]";
+        }
+
+        public double getOffset() {
+            return offset;
+        }
+    }
+
+    static class Sample {
+        final long obt;
+        final Instant obi;
+
+        public Sample(long obt, Instant obi) {
+            this.obt = obt;
+            this.obi = obi;
+        }
+    }
+
+    public synchronized TcoConfig getTcoConfig() {
+        TcoConfig.Builder tcb = TcoConfig.newBuilder();
+        tcb.setAccuracy(accuracy).setValidity(validity).setOnboardDelay(onboardDelay).setDefaultTof(defaultTof);
+        return tcb.build();
+    }
+
+    public synchronized TcoStatus getStatus() {
+        TcoStatus.Builder status = TcoStatus.newBuilder();
+        double d = lastDeviation;
+        if (!Double.isNaN(d)) {
+            status.setDeviation(d);
+        }
+
+        TcoCoefficients c = curCoefficients;
+        if (c != null) {
+            status.setCoefficients(toProto(c));
+        }
+
+        long ct = coefficientsTime;
+        if (ct != TimeEncoding.INVALID_INSTANT) {
+            status.setCoefficientsTime(TimeEncoding.toProtobufTimestamp(ct));
+        }
+
+        for (Sample sample : sampleQueue) {
+            status.addSamples(toProto(sample));
+        }
+        return status.build();
+    }
+
+    private TcoSample toProto(Sample sample) {
+        return TcoSample.newBuilder().setObt(sample.obt).setUtc(TimeEncoding.toProtobufTimestamp(sample.obi)).build();
+    }
+
+    private org.yamcs.protobuf.TcoCoefficients toProto(TcoCoefficients c) {
+        org.yamcs.protobuf.TcoCoefficients.Builder tcb = org.yamcs.protobuf.TcoCoefficients.newBuilder();
+        tcb.setOffset(c.offset).setGradient(c.gradient)
+                .setUtc(TimeEncoding.toProtobufTimestamp(c.obi0)).setObt(c.obt0);
+
+        return tcb.build();
+    }
+
+
+}
+</pre></div>
+</div>
+</section>
+<section id="timedecoder-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimeDecoder.java</span></code><a class="headerlink" href="#timedecoder-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/TimeDecoder.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.time;
+
+import org.yamcs.tctm.PacketPreprocessor;
+
+/**
+ * Interface for time decoders used in the {@link PacketPreprocessor}
+ * 
+ */
+public interface TimeDecoder {
+
+    /**
+     * Decodes the time from the binary buffer and returns the time in milliseconds. The value returned can be either
+     * absolute or relative (this has to be known by the caller)
+     * &lt;p&gt;
+     * It is assumed that the buffer will contain enough data; if not, an {@link ArrayIndexOutOfBoundsException} will be
+     * thrown.
+     * 
+     * @param buf
+     *            - where to read the data from
+     * @param offset
+     *            - offset in the buffer where the decoding will begin
+     * @return decoded time in milliseconds
+     * 
+     */
+    public long decode(byte[] buf, int offset);
+
+    /**
+     * Returns the time in an unspecified unit.
+     * &lt;p&gt;
+     * Can be used when the on-board time is free running.
+     * 
+     * &lt;p&gt;
+     * It is assumed that the buffer will contain enough data; if not, an {@link ArrayIndexOutOfBoundsException} will be
+     * thrown.
+     * 
+     * @param buf
+     *            - where to read the data from
+     * 
+     * @param offset
+     *            - offset in the buffer where the decoding will begin
+     * @return time
+     * 
+     */
+    public long decodeRaw(byte[] buf, int offset);
+}
+</pre></div>
+</div>
+</section>
+<section id="timeencoder-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimeEncoder.java</span></code><a class="headerlink" href="#timeencoder-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/TimeEncoder.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.time;
+
+import org.yamcs.tctm.PacketPreprocessor;
+
+/**
+ * Interface for time encoders used in the {@link PacketPreprocessor}
+ */
+public interface TimeEncoder {
+
+    /**
+     * Encodes the Yamcs instant into the binary buffer.
+     * &lt;p&gt;
+     * It is assumed that the buffer will have enough space; if not, an {@link ArrayIndexOutOfBoundsException} will be
+     * thrown.
+     * 
+     * @param instant
+     *            - time in milliseconds to be encoded
+     * @param buf
+     *            - where to write the encoded time
+     * @param offset
+     *            - offset in the buffer where the encoding will begin
+     * @return the number of bytes encoded
+     */
+    public int encode(long instant, byte[] buf, int offset);
+
+    /**
+     * Encodes the time in an unspecified unit.
+     * &lt;p&gt;
+     * This can be used when the on-board time is free running.
+     * 
+     * &lt;p&gt;
+     * It is assumed that the buffer will have enough space; if not, an {@link ArrayIndexOutOfBoundsException} will be
+     * thrown.
+     * 
+     * @param time
+     *            - time in unspecified units to be encoded
+     * @param buf
+     *            - where to write the encoded time
+     * @param offset
+     *            - offset in the buffer where the encoding will begin
+     * 
+     * @return the number of bytes encoded
+     */
+    public int encodeRaw(long time, byte[] buf, int offset);
+
+    /**
+     * Returns the size in bytes of the encoded time.
+     * &lt;p&gt;
+     * If the size is variable return -1
+     */
+    public int getEncodedLength();
+
+}
+</pre></div>
+</div>
+</section>
+<section id="timeofflightestimator-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimeOfFlightEstimator.java</span></code><a class="headerlink" href="#timeofflightestimator-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/TimeOfFlightEstimator.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.time;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.yamcs.InitException;
+import org.yamcs.YamcsServer;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+/**
+ * Time of flight estimator.
+ * &lt;p&gt;
+ * It returns time of flight between a spacecraft and a ground antenna by interpolating using user defined spline
+ * polynomials.
+ * 
+ * @author nm
+ *
+ */
+public class TimeOfFlightEstimator {
+    // currently we only support one antenna, in the future we may have one object of this class for each antenna
+    final static String DEFAULT_ANTENNA = "gs1";
+    final static String TABLE_NAME = "tof_";
+
+    public static final TupleDefinition TDEF = new TupleDefinition();
+    static {
+        TDEF.addColumn("ertStart", DataType.HRES_TIMESTAMP);
+        TDEF.addColumn("ertStop", DataType.HRES_TIMESTAMP);
+        TDEF.addColumn("polCoef", DataType.BINARY);
+    }
+
+    CopyOnWriteArrayList&lt;TofInterval&gt; calibIntervals = new CopyOnWriteArrayList&lt;&gt;();
+    final String clockName;
+    final String antenna = DEFAULT_ANTENNA;
+    final boolean savePolynomials;
+    final String yamcsInstance;
+    final Stream tofStream;
+    String tableName;
+
+    public TimeOfFlightEstimator(String yamcsInstance, String clockName, boolean savePolynomials) throws InitException {
+        this.clockName = clockName;
+        this.savePolynomials = savePolynomials;
+        this.yamcsInstance = yamcsInstance;
+
+        if (savePolynomials) {
+            tableName = TABLE_NAME + clockName;
+
+            String streamName = tableName + "_in";
+            YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+            try {
+                if (ydb.getTable(tableName) == null) {
+                    String query = "create table " + tableName + "(" + TDEF.getStringDefinition1()
+                            + ", primary key(ertStart, ertStop))";
+                    ydb.execute(query);
+                } else {
+                    retrieveArchivedCoefficients(ydb);
+                }
+                if (ydb.getStream(streamName) == null) {
+                    ydb.execute("create stream " + streamName + TDEF.getStringDefinition());
+                }
+                ydb.execute("insert into " + tableName + " select * from " + streamName);
+            } catch (ParseException | StreamSqlException e) {
+                throw new InitException(e);
+            }
+            tofStream = ydb.getStream(streamName);
+        } else {
+            tofStream = null;
+        }
+
+    }
+
+    private void retrieveArchivedCoefficients(YarchDatabaseInstance ydb) throws InitException {
+        TimeService timeService = YamcsServer.getTimeService(ydb.getName());
+        long now = timeService.getMissionTime();
+        try {
+            List&lt;TofInterval&gt; tmpl = new ArrayList&lt;&gt;();
+            StreamSqlResult res = ydb.execute(
+                    "select * from " + tableName + " where ertStart&gt;? order desc ", now);
+            while (res.hasNext()) {
+                tmpl.add(TofInterval.fromTuple(res.next()));
+            }
+
+            calibIntervals.addAll(tmpl);
+        } catch (Exception e) {
+            throw new InitException(e);
+        }
+    }
+
+    /**
+     * Returns time of flight of the signal received at ert at the ground station
+     * 
+     * @param ert
+     * @return time of flight in seconds or NaN if it cannot be computed
+     */
+    public double getTof(Instant ert) {
+        // this iteration assumes that it is more likely to find the wanted ert in front of the list
+        for (TofInterval ti : calibIntervals) {
+            if (ti.ertStart.compareTo(ert) &lt;= 0 &amp;&amp; ti.ertStop.compareTo(ert) &gt; 0) {
+                return ti.getTof(ert);
+            }
+        }
+
+        return Double.NaN;
+    }
+
+    public void addInterval(Instant ertStart, Instant ertStop, double[] polCoefficients) {
+        TofInterval ti = new TofInterval(ertStart, ertStop, polCoefficients);
+        calibIntervals.add(ti);
+        calibIntervals.sort(new IntervalComparator());
+        if (tofStream != null) {
+            tofStream.emitTuple(ti.toTuple());
+        }
+    }
+
+    public void addIntervals(Collection&lt;TofInterval&gt; intervals) {
+        calibIntervals.addAll(intervals);
+        calibIntervals.sort(new IntervalComparator());
+        if (tofStream != null) {
+            for (TofInterval ti : intervals) {
+                tofStream.emitTuple(ti.toTuple());
+            }
+        }
+    }
+
+    class IntervalComparator implements Comparator&lt;TofInterval&gt; {
+        @Override
+        public int compare(TofInterval p1, TofInterval p2) {
+            int c = p2.ertStart.compareTo(p1.ertStart);
+            if (c == 0) {// in case of intervals with the same start, we put the shorter one in front
+                return p1.ertStop.compareTo(p2.ertStop);
+            } else {
+                return c;
+            }
+        }
+    }
+
+    public void deleteSplineIntervals(Instant start, Instant stop) {
+        List&lt;TofInterval&gt; tiList = new ArrayList&lt;&gt;();
+        for (TofInterval ti : calibIntervals) {
+            Instant d = ti.ertStart;
+            if (d.compareTo(start) &gt;= 0 &amp;&amp; d.compareTo(stop) &lt;= 0) {
+                tiList.add(ti);
+            }
+        }
+        calibIntervals.removeAll(tiList);
+    }
+
+    /**
+     * Used for polynomial interpolation of time of flight based on ERT.
+     * &lt;p&gt;
+     * Each interval has a start/stop and a set of polynomial coefficients.
+     * &lt;p&gt;
+     * The time of flight {@code tof} corresponding to a given earth reception time {@code ert} is given by the formula:
+     * 
+     * &lt;pre&gt;
+     * delta = ert - ertStart
+     * tof =c[0] + c[1]*delta + c[2]*delta^2 + ...
+     * &lt;/pre&gt;
+     * 
+     * where {@code ertStart} is the start of the interval and {@code c} are the polynomial coefficients. {@code delta}
+     * is the duration of the given {@code ert} from the interval start.
+     * &lt;p&gt;
+     * {@code delta} as well as {@code tof} are expressed in seconds.
+     *
+     */
+    static public class TofInterval {
+        final Instant ertStart;
+        final Instant ertStop;
+        final double[] polCoef;
+
+        public TofInterval(Instant ertStart, Instant ertStop, double[] polCoefficients) {
+            this.ertStart = ertStart;
+            this.ertStop = ertStop;
+            this.polCoef = polCoefficients;
+        }
+
+        double getTof(Instant ert) {
+            double d = ert.deltaFrom(ertStart);
+            double r = 0;
+
+            for (int i = polCoef.length - 1; i &gt;= 0; i--) {
+                r = d * r + polCoef[i];
+            }
+            return r;
+        }
+
+        public static TofInterval fromTuple(Tuple tuple) {
+            return new TofInterval((Instant) tuple.getColumn("ertStart"),
+                    (Instant) tuple.getColumn("ertStop"),
+                    decodeCoefficients((byte[]) tuple.getColumn("polCoef")));
+        }
+
+        Tuple toTuple() {
+            return new Tuple(TDEF, Arrays.asList(ertStart, ertStop, encodeCoefficients(polCoef)));
+        }
+
+    }
+
+    static double[] decodeCoefficients(byte[] data) {
+        double[] d = new double[data.length / 8];
+        ByteBuffer bb = ByteBuffer.wrap(data);
+        for (int i = 0; i &lt; d.length; i++) {
+            d[i] = bb.getDouble();
+        }
+        return d;
+    }
+
+    static byte[] encodeCoefficients(double[] polCoef) {
+        ByteBuffer bb = ByteBuffer.allocate(polCoef.length * 8);
+        for (double d : polCoef) {
+            bb.putDouble(d);
+        }
+        return bb.array();
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="timeservice-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TimeService.java</span></code><a class="headerlink" href="#timeservice-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/TimeService.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.time;
+
+/**
+ * The time service provides the so call mission time.
+ * &lt;p&gt;
+ * There is one such service for each Yamcs instance.
+ *
+ * &lt;p&gt;
+ * Different implementations of these can alow to simulate time in the past or in the future or provide a time
+ * synchronized with a simulator.
+ * 
+ */
+public interface TimeService {
+    /**
+     * @return the mission time in Yamcs millisecond resolution
+     */
+    public long getMissionTime();
+    
+    /**
+     * 
+     * @return the mission time in high resolution. When there is no high resolution time available, this returns an
+     *         Instant equivalent with {@link #getMissionTime()}
+     */
+    default public Instant getHresMissionTime() {
+        return Instant.get(getMissionTime());
+    }
+
+    /**
+     * If the time service is a simulated time, this gives the relation between the (simulated) mission time and the
+     * wall clock time:
+     * &lt;ul&gt;
+     * &lt;li&gt;1.0 = realtime speed.&lt;/li&gt;
+     * &lt;li&gt;&amp;gt;1.0 = faster than realtime&lt;/li&gt;
+     * &lt;li&gt;&amp;lt;1.0 = slower than realtime.&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @return the relation between the mission time and the wall clock time
+     *
+     */
+    default public double getSpeed() {
+        return 1.0;
+    }
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../templating/index.html" class="btn btn-neutral float-left" title="templating" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../timeline/index.html" class="btn btn-neutral float-right" title="timeline" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

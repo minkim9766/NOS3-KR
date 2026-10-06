@@ -1,0 +1,2700 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../search.html" />
+    <link rel="next" title="sim_terminal" href="../../sim_terminal/index.html" />
+    <link rel="prev" title="inc" href="../inc/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html">sims</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">sims</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">sim_common</a></li>
+      <li class="breadcrumb-item active">src</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/project_inventory/sims/sim_common/src/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="src">
+<h1>src<a class="headerlink" href="#src" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">sims/sim_common/src/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="all-simulators-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">all_simulators.cpp</span></code><a class="headerlink" href="#all-simulators-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">sims/sim_common/src/all_simulators.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&amp;V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;thread&gt;
+#include &lt;ItcLogger/Logger.hpp&gt;
+#include &lt;sim_config.hpp&gt;
+
+namespace Nos3
+{
+    ItcLogger::Logger *sim_logger;
+}
+
+int
+main(int argc, char *argv[])
+{
+    // Determine the configuration and run all simulators
+    Nos3::SimConfig sc(argc, argv);
+    std::vector&lt;std::thread *&gt; threads;
+    std::vector&lt;std::string&gt; names = sc.get_simulator_names();
+    if (names.size() &gt; 0) {
+        for(std::vector&lt;std::string&gt;::size_type i = 1; i &lt; names.size(); i++) {
+            Nos3::sim_logger-&gt;info("main:  Spawning thread for simulator \"%s\"", names[i].c_str());
+            threads.push_back(new std::thread(std::bind(&amp;Nos3::SimConfig::run_simulator, sc, names[i]), NULL)); // Spawn thread to run simulator
+        }
+
+        sc.run_simulator(names[0]); // run the first simulator name in the main thread
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="ascii-msg-server-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">ascii_msg_server.cpp</span></code><a class="headerlink" href="#ascii-msg-server-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">sims/sim_common/src/ascii_msg_server.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2015 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&amp;V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include &lt;sys/time.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;netinet/in.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;netdb.h&gt;
+
+#include &lt;ItcLogger/Logger.hpp&gt;
+
+#include &lt;ascii_msg_server.hpp&gt;
+
+namespace Nos3
+{
+    extern ItcLogger::Logger *sim_logger;
+
+    /*************************************************************************
+     * Constructors / Destructors
+     *************************************************************************/
+
+    AsciiMsgServer::AsciiMsgServer(const uint16_t port)
+        : _port(port),
+          _socket_fd(-1)
+    {
+        for (int i=0 ; i&lt;MAX_CLIENT_CONNECTIONS ; ++i)
+        {
+            _client_conn[i].fd = -1;
+            reset_buffer(_client_conn[i]);
+        }
+    }
+
+    AsciiMsgServer::~AsciiMsgServer(void)
+    {
+        sim_logger-&gt;info("Ascii Msg Server: closing");
+
+        // Stop incoming connections
+        close(_socket_fd);
+
+        // Close all active client connections
+        for (int i=0 ; i&lt;MAX_CLIENT_CONNECTIONS ; ++i)
+        {
+            if (_client_conn[i].fd &gt; 0)
+                close(_client_conn[i].fd);
+        }
+    }
+
+    /*************************************************************************
+     * Public methods
+     *************************************************************************/
+
+     bool AsciiMsgServer::init()
+     {
+         bool ok_to_continue = true;
+
+         /**
+           * Create the client connection listener socket
+         **/
+         _socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+
+         if (_socket_fd == -1)
+         {
+             sim_logger-&gt;error("Ascii Msg Server socket creation failed:  %s", strerror(errno));
+             ok_to_continue = false;
+         }
+         else
+         {
+             sim_logger-&gt;debug("ASCII Msg Server socket successfully created");
+         }
+
+         /**
+           * Bind the listener socket to the specified address
+         **/
+         if (ok_to_continue)
+         {
+             struct sockaddr_in server;
+             bzero(&amp;server, sizeof(server));
+
+             server.sin_family = AF_INET;
+             server.sin_addr.s_addr = htonl(INADDR_ANY);
+             server.sin_port = htons(_port);
+
+             int bind_result = bind(_socket_fd, (sockaddr*)&amp;server, sizeof(server));
+
+             if (bind_result != 0)
+             {
+                 sim_logger-&gt;error("socket bind failed: %s", strerror(errno));
+                 ok_to_continue = false;
+             }
+             else if (ok_to_continue)
+             {
+                  sim_logger-&gt;debug("Socket successfully bound");
+             }
+         }
+
+         /**
+           * Start listening for incoming connection requests
+         **/
+         if (ok_to_continue)
+         {
+             int listen_result = listen(_socket_fd, 5);
+
+             if (listen_result != 0)
+             {
+                 sim_logger-&gt;error("listen failed:  %s", strerror(errno));
+                 ok_to_continue = false;
+             }
+             else if (ok_to_continue)
+             {
+                 sim_logger-&gt;info("ASCII Msg Server listening on port %d", _port);
+             }
+         }
+
+         return ok_to_continue;
+     }
+
+     bool AsciiMsgServer::listen_for_data()
+     {
+         int prev_msg_queue_size = _rcv_msg_queue.size();
+
+         fd_set read_fds;
+
+         /**
+           * Wait for any data to become available on both the main socket and all
+           * active client connections.
+         **/
+         bool select_success = wait_for_data(read_fds);
+
+         /**
+           * Service the main socket to handle any new client connection requests
+         **/
+         bool connection_request = FD_ISSET(_socket_fd, &amp;read_fds);
+
+         if (select_success &amp;&amp; connection_request)
+         {
+             sockaddr_in client;
+             socklen_t client_addr_len = sizeof(client);
+
+             int client_fd = accept(_socket_fd, (sockaddr*)&amp;client, &amp;client_addr_len);
+
+             // Ignore EAGAIN.  Since we're using select, we only get EAGAIN when
+             // the application is shutting down.
+             if (client_fd &lt; 0 &amp;&amp; errno != EAGAIN)
+             {
+                 sim_logger-&gt;error("Ascii Msg Server socket accept failed: %s: %d", strerror(errno), errno);
+             }
+             else if (client_fd &gt; 0)
+             {
+                 bool client_accepted = false;
+
+                 for (uint32_t i=0; i&lt;MAX_CLIENT_CONNECTIONS ; ++i)
+                 {
+                     if (_client_conn[i].fd == -1)
+                     {
+                         _client_conn[i].fd = client_fd;
+                         reset_buffer(_client_conn[i]);
+
+                         client_accepted = true;
+
+                         sim_logger-&gt;debug("Added new client connection fd=%d", client_fd);
+
+                         break;
+                     }
+                 }
+
+                 if (! client_accepted)
+                 {
+                     sim_logger-&gt;error("Max number of client connections exceeded (%d).  "
+                        "Rejecting connection request.", MAX_CLIENT_CONNECTIONS);
+                 }
+             }
+         }
+
+         /**
+           * Service any data available on client connection sockets
+         **/
+         if (select_success)
+         {
+             for (uint32_t i=0; i&lt;MAX_CLIENT_CONNECTIONS ; ++i)
+             {
+                 // Only want active connections
+                 if (_client_conn[i].fd &lt; 0)
+                    continue;
+
+                 bool data_available = FD_ISSET(_client_conn[i].fd, &amp;read_fds);
+
+                 if (data_available)
+                 {
+                     read_socket_data(_client_conn[i]);
+                 }
+             }
+         }
+
+         /**
+           * If the message queue size changed since we read it at the begning
+           * of the function, then a new message was succesfully received on
+           * one of the client connections.
+         **/
+         return (prev_msg_queue_size != (int) _rcv_msg_queue.size());
+     }
+
+    /*************************************************************************
+    * Private helper methods
+    *************************************************************************/
+
+    bool AsciiMsgServer::wait_for_data (fd_set &amp;read_fds)
+    {
+        /**
+          * Initialize the structs needed for select.  select also requires the
+          * max file descriptor.
+          *
+          * We add the fild descriptor for the connection socket and client
+          * sockets.
+        **/
+        int max_fd = _socket_fd;
+
+        FD_ZERO(&amp;read_fds);
+        FD_SET(_socket_fd, &amp;read_fds);
+
+        for (uint32_t i = 0 ; i &lt; MAX_CLIENT_CONNECTIONS ; ++i)
+        {
+            int fd = _client_conn[i].fd;
+
+            // Only process active connections
+            if (fd &lt; 0)
+                continue;
+
+            FD_SET(fd, &amp;read_fds);
+
+            if(fd &gt; max_fd)
+                max_fd = fd;
+        }
+
+        /**
+          * Wait for read data available on connection request socket and client
+          * sockets.  No timeout needed since a signal will interrupt this call.
+        **/
+        int result = select(max_fd+1, &amp;read_fds, NULL, NULL, NULL);
+
+        if (result &lt; 0)
+        {
+            // Log error if select returned error but not from a signal.
+            if (errno != EINTR)
+            {
+                sim_logger-&gt;error("Ascii Msg Server 'select' error: %d/%d %s\n",
+                    result, errno, strerror(errno));
+            }
+            else // we're shutting down if we get EINTR
+            {
+                sim_logger-&gt;info("Ascii Msg Server: 'select' EINTR, prepare for shutdown");
+            }
+        }
+
+        // specify if select was succesful so we can evaluate the fd_set
+        return result &gt; -1;
+     }
+
+     void AsciiMsgServer::read_socket_data(ClientConnection &amp;client_conn)
+     {
+        int num_bytes = 0;
+
+        /**
+          * Calculate number of bytes avaialable in the client connection receive
+          * buffer.  If the buffer is empty then the tail is pointing to the first
+          * element and all bytes are avaialable
+        **/
+        int buffer_size = client_conn.rcv_buff + sizeof(client_conn.rcv_buff) - client_conn.buff_tail;
+
+        sim_logger-&gt;debug("Ascii Msg Server: read_socket_data: client=%d status=%d", client_conn.fd, buffer_size);
+
+        if (buffer_size &gt; 0)
+        {
+            num_bytes = read(client_conn.fd, client_conn.buff_tail, buffer_size);
+
+            if (num_bytes &gt; 0) // Got data, try to parse messages
+            {
+                client_conn.buff_tail += num_bytes;
+                parse_message(client_conn);
+            }
+            else if (num_bytes &lt; 0) // Error occured, reset the receive buffer
+            {
+                sim_logger-&gt;error("Ascii Msg Server: socket 'read' error:  %s\n", strerror(errno));
+
+                // Reset buffer pointers
+                reset_buffer(client_conn);
+            }
+            else // Client disconnect
+            {
+                sim_logger-&gt;debug("Ascii Msg Server: Client disconnect for fd=%d", client_conn.fd);
+
+                close(client_conn.fd);
+                client_conn.fd = -1;
+            }
+        }
+        else
+        {
+            sim_logger-&gt;error("Ascii Msg Server: receive buffer full for client fd %d.  Dumping buffer...", client_conn.fd);
+
+            reset_buffer(client_conn);
+        }
+     }
+
+     void AsciiMsgServer::parse_message(ClientConnection &amp;client_conn)
+     {
+         char* curr_char = client_conn.rcv_buff;
+
+         // Keeps track of the character that starts the next incomplete message
+         // in the receive buffer.  When a message is found, this pointer is updated
+         // to one character past new line character of the found message.
+         char *next_msg_start = client_conn.rcv_buff;
+
+         /**
+           * Search for the new line character.  This is our message delimiter.
+           * If found, we copy the buffer from the last msg -&gt; tail to a string
+           * and add it to the mssage queue.
+           *
+           * The last_msg pointer is then moved to 1 character past the newline
+           * character in the array.  This allows us to keep searching for more
+           * messsages in case multiple messages were returned in a single read call.
+         **/
+         while (curr_char &lt; client_conn.buff_tail)
+         {
+             if (*curr_char == '\n')
+             {
+                 // Don't add 1 here because we don't want to include the new line
+                 // character as part of the message.
+                 int message_size = curr_char - next_msg_start;
+
+                 if (message_size &gt; 0)
+                 {
+                     std::string msg(next_msg_start, message_size);
+
+                     _rcv_msg_queue.push(msg);
+
+                     sim_logger-&gt;debug("New msg %d/%ld", message_size, msg.size());
+                 }
+
+                 // New line character is the end of this message.  So next
+                 // character is the start of the next message.
+                 next_msg_start = curr_char + 1;
+             }
+
+             curr_char++;
+         }
+
+         sim_logger-&gt;debug("Ascii Msg Server: ---Buffer status: base=%p next_msg=%p tail=%p",
+            client_conn.rcv_buff, next_msg_start, client_conn.buff_tail);
+
+         /**
+           * If there are any remaining bytes in the buffer, then we didn't find
+           * a new line character for them.  Move the reamining bytes to the begining
+           * of the buffer and set the tail to one past the last remaining byte.
+           * This will allow subsequent reads to append their data to the remaining
+           * bytes.
+         **/
+         int remaining_bytes = 0;
+
+         if (next_msg_start != client_conn.buff_tail)
+         {
+             remaining_bytes = client_conn.buff_tail - next_msg_start;
+
+             sim_logger-&gt;debug("Ascii Msg Server: %d bytes remaining in buffer", remaining_bytes);
+
+             memmove(client_conn.rcv_buff, next_msg_start, remaining_bytes);
+
+             client_conn.buff_tail = client_conn.rcv_buff + remaining_bytes;
+        }
+
+        // Update our tail - will go back to beginning of buffer if remaining bytes is 0
+        client_conn.buff_tail = client_conn.rcv_buff + remaining_bytes;
+
+        sim_logger-&gt;debug("Ascii Msg Server: ++++Buffer update: base=%p tail=%p",
+           client_conn.rcv_buff, client_conn.buff_tail);
+     }
+
+    void AsciiMsgServer::reset_buffer(ClientConnection &amp;client_conn)
+    {
+        client_conn.buff_tail = client_conn.rcv_buff;
+
+        memset(client_conn.rcv_buff, '\0', sizeof(client_conn.rcv_buff));
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="sim-42data-point-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">sim_42data_point.cpp</span></code><a class="headerlink" href="#sim-42data-point-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">sims/sim_common/src/sim_42data_point.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2015 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&amp;V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include &lt;iomanip&gt;
+#include &lt;limits&gt;
+
+#include &lt;boost/algorithm/string.hpp&gt;
+#include &lt;boost/tokenizer.hpp&gt;
+#include &lt;boost/lexical_cast.hpp&gt;
+
+#include &lt;ItcLogger/Logger.hpp&gt;
+
+#include &lt;sim_42data_point.hpp&gt;
+
+namespace Nos3
+{
+
+    extern ItcLogger::Logger *sim_logger;
+
+    /*************************************************************************
+     * Constructors
+     *************************************************************************/
+
+    Sim42DataPoint::Sim42DataPoint(std::vector&lt;std::string&gt; &amp;message) : _lines(message)
+    {
+        for (std::vector&lt;std::string&gt;::const_iterator iter = _lines.begin(); iter != _lines.end(); iter++) {
+            size_t equals = iter-&gt;find("=");
+            if (equals != std::string::npos) {
+                std::string key(iter-&gt;substr(0, equals));
+                boost::trim(key);
+                std::string value(iter-&gt;substr(equals+1));
+                boost::trim(value);
+                _key_values.insert({key, value});
+            } else if(iter-&gt;compare(0, 4, "TIME") == 0) {
+                std::string value(iter-&gt;substr(4));
+                boost::trim(value);
+                _key_values.insert({"TIME", value});
+                parse_time(value);
+                long Month, Day;
+                DOY2MD(std::stol(_key_values["YEAR"]), std::stol(_key_values["DOY"]), &amp;Month, &amp;Day);
+                _key_values.insert({"MONTH", std::to_string(Month)});
+                _key_values.insert({"DAY", std::to_string(Day)});
+                _key_values.insert({"ABSTIME", 
+                    std::to_string(DateToTime(std::stol(_key_values["YEAR"]), Month, Day, 
+                    std::stol(_key_values["HOUR"]), std::stol(_key_values["MINUTE"]), std::stod(_key_values["SECOND"])))});
+            } else {
+                std::string key(*iter);
+                boost::trim(key);
+                _key_values.insert({key, ""});
+            }
+        }
+        sim_logger-&gt;trace("Sim42DataPoint::Sim42DataPoint:  Constructed data point with:  %s", to_string().c_str());
+        sim_logger-&gt;trace("Sim42DataPoint::Sim42DataPoint - key/values:");
+        for (std::map&lt;std::string, std::string&gt;::const_iterator iter = _key_values.begin(); iter != _key_values.end(); iter++) {
+            sim_logger-&gt;trace("  %s, %s", iter-&gt;first.c_str(), iter-&gt;second.c_str());
+        }
+    }
+
+    /*************************************************************************
+     * Accessors
+     *************************************************************************/
+
+    void Sim42DataPoint::parse_time(const std::string&amp; value)
+    {
+        std::vector&lt;std::string&gt; tokens;
+        std::istringstream iss(value);
+        std::string token;
+        while (std::getline(iss, token, '-')) {
+            tokens.push_back(token);
+        }
+        std::string key = "YEAR";
+        _key_values.insert({key, tokens[0]});
+        key = "DOY";
+        _key_values.insert({key, tokens[1]});
+        std::string time(tokens[2]);
+
+        tokens.clear();
+        std::istringstream iss2(time);
+        while (std::getline(iss2, token, ':')) {
+            tokens.push_back(token);
+        }
+        key = "HOUR";
+        _key_values.insert({key, tokens[0]});
+        key = "MINUTE";
+        _key_values.insert({key, tokens[1]});
+        key = "SECOND";
+        _key_values.insert({key, tokens[2]});
+    }
+
+    /**********************************************************************/
+    /*  Find Month, Day, given Day of Year                                */
+    /*  Ref. Jean Meeus, 'Astronomical Algorithms', QB51.3.E43M42, 1991.  */
+    /*   This function is agnostic to the TT-to-UTC offset.  You get out  */
+    /*   what you put in.                                                 */
+    void Sim42DataPoint::DOY2MD(long Year, long DayOfYear, long *Month, long *Day)
+    {
+        long K;
+
+        if (Year % 4 == 0) {
+            K = 1;
+        }
+        else {
+            K = 2;
+        }
+
+        if (DayOfYear &lt; 32) {
+            *Month = 1;
+        }
+        else {
+            *Month = (long) (9.0*(K+DayOfYear)/275.0+0.98);
+        }
+
+        *Day = DayOfYear - 275*(*Month)/9 + K*(((*Month)+9)/12) + 30;
+
+    }
+
+    /**********************************************************************/
+    /*  Convert Year, Month, Day, Hour, Minute and Second to              */
+    /*  "Time", i.e. seconds elapsed since J2000 epoch.                   */
+    /*  Year, Month, Day assumed in Gregorian calendar. (Not true &lt; 1582) */
+    /*  Ref. Jean Meeus, 'Astronomical Algorithms', QB51.3.E43M42, 1991.  */
+    /*  This function is agnostic to the TT-to-UTC offset.  You get out   */
+    /*  what you put in.                                                  */
+
+    double Sim42DataPoint::DateToTime(long Year, long Month, long Day,
+                long Hour, long Minute, double Second)
+    {
+        long A,B;
+        double Days;
+        
+        if (Month &lt; 3) {
+            Year--;
+            Month+=12;
+        }
+
+        A = Year/100;
+        B = 2 - A + A/4;
+
+        /* Days since J2000 Epoch (01 Jan 2000 12:00:00.0) */
+        Days = floor(365.25*(Year-2000))
+                    + floor(30.6001*(Month+1))
+                    + Day + B - 50.5;
+
+        /* Add fractional day */
+        return(86400.0*Days + 3600.0*((double) Hour)
+            + 60.0*((double) Minute) + Second);
+    }
+
+    std::string Sim42DataPoint::to_string(void) const
+    {
+        std::stringstream ss;
+
+        ss &lt;&lt; std::fixed &lt;&lt; std::setfill(' ');
+        ss &lt;&lt; "42 Data Point: ";
+        for (std::vector&lt;std::string&gt;::const_iterator it = _lines.begin(); it != _lines.end(); ++it) {
+            ss &lt;&lt; *it;
+        }
+        return ss.str();
+    }
+
+    std::string Sim42DataPoint::get_value_for_key(std::string key) {
+        return _key_values[key];
+    }
+
+    /*************************************************************************
+     * Static methods
+     *************************************************************************/
+
+    void Sim42DataPoint::parse_double_vector(const std::string&amp; text, std::vector&lt;double&gt;&amp; dv) 
+    {
+        dv.clear();
+        std::string t = text;
+        t.erase(std::remove(t.begin(), t.end(), '['), t.end());
+        t.erase(std::remove(t.begin(), t.end(), ']'), t.end());
+        std::istringstream iss(t);
+        for (std::string s; iss &gt;&gt; s; )
+            dv.push_back(std::stod(s));
+    }
+    
+
+}
+</pre></div>
+</div>
+</section>
+<section id="sim-cmdbus-bridge-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">sim_cmdbus_bridge.cpp</span></code><a class="headerlink" href="#sim-cmdbus-bridge-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">sims/sim_common/src/sim_cmdbus_bridge.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#include &lt;signal.h&gt;
+#include &lt;sstream&gt;
+
+#include &lt;boost/property_tree/json_parser.hpp&gt;
+
+#include &lt;sim_cmdbus_bridge.hpp&gt;
+
+namespace Nos3
+{
+    REGISTER_HARDWARE_MODEL(SimCmdBusBridge,"SIM_CMDBUS_BRIDGE");
+
+    ItcLogger::Logger *sim_logger;
+
+    SimCmdBusBridge::SimCmdBusBridge(const boost::property_tree::ptree&amp; config)
+    :   SimIHardwareModel(config),
+        _msg_svr(
+            config.get("simulator.hardware-model.server-PORT", 12020))
+    {
+        if (! _msg_svr.init())
+        {
+            throw std::runtime_error("Command bus bridge server failed to initialize");
+        }
+    }
+
+    SimCmdBusBridge::~SimCmdBusBridge()
+    {}
+
+    void SimCmdBusBridge::run(void)
+    {
+        while (_keep_running.load())
+        {
+            /* This will block until
+             * 1) New client connection
+             * 2) New message from connected client
+             * 3) OS signal interrupts the program
+            **/
+            bool data_available = _msg_svr.listen_for_data();
+
+            if (data_available)
+            {
+                std::string msg;
+                while (_msg_svr.get_next_message(msg))
+                {
+                    process_msg(msg);
+                }
+            }
+        }
+    }
+
+    void SimCmdBusBridge::process_msg(std::string &amp;msg)
+    {
+        /**
+          * Try to parse the string as a JSON message.  If this fails
+          * then don't process it.
+        **/
+        try
+        {
+            std::stringstream stream(msg);
+            boost::property_tree::ptree pt;
+            std::string node_name = "";
+            std::string cmd = "";
+
+            boost::property_tree::read_json(stream, pt);
+
+            /**
+              * Determine if the node name specified in the message exists
+              * on the command bus.  If it does, send the message.
+            **/
+            try
+            {
+                node_name = pt.get&lt;std::string&gt;("node");
+                cmd = pt.get&lt;std::string&gt;("cmd");
+
+                sim_logger-&gt;info("Received new message destined for %s with command %s",
+                    node_name.c_str(), cmd.c_str());
+                
+                // Add 1 since C++ string size does not include null termination character.
+                // We want this character sent so the buffer on the receive side is
+                // interpreted as a valid C string.
+                _command_node-&gt;send_non_confirmed_message_async(node_name, cmd.size()+1, cmd.c_str());;
+            }
+            catch(const std::exception&amp; e)
+            {
+                sim_logger-&gt;error("Unable to send message to %s: %s", node_name.c_str(), e.what());
+            }
+            catch(...)
+            {
+                sim_logger-&gt;error("Unable to send message to %s: unspecified error", node_name.c_str());
+            }
+        }
+        catch(const std::exception&amp; parse_ex)
+        {
+            sim_logger-&gt;error("Could not parse message '%s' as JSON: %s", msg.c_str(), parse_ex.what());
+        }
+    }
+}
+
+//==============================================================================
+// Main
+//==============================================================================
+
+Nos3::SimConfig* sim_cfg;
+
+void signal_handler(int signum)
+{
+    signum = signum; // TODO: unused-parameter
+    sim_cfg-&gt;stop_simulator();
+}
+
+int main(int argc, char *argv[])
+{
+    signal(SIGINT, signal_handler);
+
+    std::string simulator_name = "cmdbus-bridge";
+
+    // Determine the configuration and run the simulator
+    sim_cfg = new Nos3::SimConfig(argc, argv);
+
+    Nos3::sim_logger-&gt;info("main:  %s simulator starting", simulator_name.c_str());
+
+    try
+    {
+        sim_cfg-&gt;run_simulator(simulator_name);
+    }
+    catch(const std::exception&amp; e)
+    {
+        Nos3::sim_logger-&gt;error("main: exception caught: %s", e.what());
+    }
+    catch(...)
+    {
+        Nos3::sim_logger-&gt;error("Unspecified exception\n");
+    }
+
+    delete sim_cfg;
+    Nos3::sim_logger-&gt;info("main:  %s simulator terminating", simulator_name.c_str());
+}
+</pre></div>
+</div>
+</section>
+<section id="sim-config-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">sim_config.cpp</span></code><a class="headerlink" href="#sim-config-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">sims/sim_common/src/sim_config.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&amp;V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include &lt;iostream&gt;
+#include &lt;dlfcn.h&gt;
+
+#include &lt;boost/program_options/variables_map.hpp&gt;
+#include &lt;boost/program_options/options_description.hpp&gt;
+#include &lt;boost/program_options/parsers.hpp&gt;
+#include &lt;boost/filesystem.hpp&gt;
+#include &lt;boost/exception/diagnostic_information.hpp&gt;
+#include &lt;boost/property_tree/xml_parser.hpp&gt;
+#include &lt;boost/foreach.hpp&gt;
+
+#include &lt;ItcLogger/Logger.hpp&gt;
+
+#include &lt;sim_hardware_model_factory.hpp&gt;
+#include &lt;sim_i_hardware_model.hpp&gt;
+
+#include &lt;sim_config.hpp&gt;
+
+namespace Nos3
+{
+
+    extern ItcLogger::Logger *sim_logger;
+
+    /*************************************************************************
+     * Constructors
+     *************************************************************************/
+
+    SimConfig::SimConfig(int argc, char *argv[]) : _hardware_model(0)
+    {
+        parse_options(argc, argv);
+
+        std::string log_config_file = _config.get("nos3-configuration.common.log-config-file", "sim_log_config.xml");
+        if(boost::filesystem::exists(log_config_file)) // key should exist, but specify default just in case
+        {
+            ItcLogger::Logger::configure(log_config_file.c_str());
+        }
+
+        sim_logger = ItcLogger::Logger::get(SIM_LOGGER);
+        //sim_logger-&gt;debug("SimConfig::SimConfig:  Constructing simulator configuration with %d arguments.", argc - 1);
+        sim_logger-&gt;debug("SimConfig::SimConfig:  sim_logger is NOW valid.");
+        //sim_logger-&gt;debug("SimConfig::SimConfig:  Configuration values:\n%s", to_string().c_str());
+    }
+
+    SimConfig::~SimConfig()
+    {
+        if (_hardware_model)
+            delete _hardware_model;
+    }
+
+    /*************************************************************************
+     * Accessors
+     *************************************************************************/
+
+    void SimConfig::run_simulator(std::string simulator_name)
+    {
+        sim_logger-&gt;debug("SimConfig::run_simulator:  SimConfig is created, logger is valid, and run_simulator is starting.");
+
+        boost::property_tree::ptree config = get_config_for_simulator(simulator_name);
+        if (config.get("simulator.active", false)) 
+        {
+            std::string model_type = config.get("simulator.hardware-model.type", "");
+
+            // Create an instance of the simulator hardware model and run it
+            _hardware_model = SimHardwareModelFactory::Instance().Create(model_type, config);
+            _hardware_model-&gt;run();
+        } 
+        else 
+        {
+            sim_logger-&gt;warning("SimConfig::run_simulator:  Simulator \"%s\" is not active in \"%s\".  Not running.\nTry --help", simulator_name.c_str(), _config_filename.c_str());
+        }
+    }
+
+    void SimConfig::stop_simulator()
+    {
+        _hardware_model-&gt;stop();
+    }
+
+	std::vector&lt;std::string&gt; SimConfig::get_simulator_names(void) const
+	{
+		std::vector&lt;std::string&gt; simulator_names;
+        if (_config.get_child_optional("nos3-configuration.simulators")) 
+        {
+            BOOST_FOREACH(const boost::property_tree::ptree::value_type &amp;v, _config.get_child("nos3-configuration.simulators")) 
+            {
+                std::string name = v.second.get("name", "");
+                if (name.compare("") != 0) {
+    				simulator_names.push_back(v.second.get("name", ""));
+                }
+			}
+		}
+		return simulator_names;
+	}
+	
+    boost::property_tree::ptree SimConfig::get_config_for_simulator(std::string simulator_name) const
+    {
+        boost::property_tree::ptree sim_config;
+
+        if (boost::optional&lt;const boost::property_tree::ptree &amp;&gt; common = _config.get_child_optional("nos3-configuration.common"))
+        {
+            sim_config.add_child("common", common.get());
+        }
+
+        if (_config.get_child_optional("nos3-configuration.simulators")) 
+        {
+            BOOST_FOREACH(const boost::property_tree::ptree::value_type &amp;v, _config.get_child("nos3-configuration.simulators")) 
+            {
+                // v.first is the name of the child.
+                // v.second is the child tree.
+                if (simulator_name.compare(v.second.get("name", "")) == 0) 
+                {
+                    sim_config.add_child("simulator", v.second);
+                    std::string library = v.second.get("library", "");
+                    if (library.compare("") == 0) 
+                    {
+                        library = "lib" + simulator_name + "_sim.so"; // guess a name
+                    }
+                    sim_logger-&gt;info("SimConfig::get_config_for_simulator:  Loading plug-in library %s", library.c_str());
+                    if (dlopen(library.c_str(), RTLD_LAZY | RTLD_LOCAL) == NULL)
+                    {   // Try to load the library so any plug-ins get registered
+                        sim_logger-&gt;warning("SimConfig::get_config_for_simulator:  WARNING, did NOT load plug-in library %s.  Error: %s", library.c_str(), dlerror());
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (sim_logger-&gt;is_level_enabled(ItcLogger::LOGGER_DEBUG)) 
+        {
+            sim_logger-&gt;debug("SimConfig::get_config_for_simulator:  Configuration for simulator \"%s\" is:\n", simulator_name.c_str());
+            std::ostringstream oss;
+            #if BOOST_VERSION / 100 % 1000 &lt; 56
+                write_xml(oss, sim_config, boost::property_tree::xml_writer_make_settings&lt;char&gt;(' ', 4));
+            #else
+                write_xml(oss, sim_config, boost::property_tree::xml_writer_make_settings&lt;std::string&gt;(' ', 4));
+            #endif
+            sim_logger-&gt;debug("\n%s", oss.str().c_str());
+        }
+
+        return sim_config;
+    }
+
+    boost::property_tree::ptree SimConfig::get_config(void) const
+    {
+        return _config;
+    }
+
+    std::string SimConfig::get_simulator(void) const
+    {
+        return _simulator;
+    }
+
+    std::string SimConfig::to_string(void) const
+    {
+        std::ostringstream oss;
+
+        oss &lt;&lt; "config-filename=" &lt;&lt; _config_filename &lt;&lt; std::endl;
+        #if BOOST_VERSION / 100 % 1000 &lt; 56
+            write_xml(oss, _config, boost::property_tree::xml_writer_make_settings&lt;char&gt;(' ', 4));
+        #else
+            write_xml(oss, _config, boost::property_tree::xml_writer_make_settings&lt;std::string&gt;(' ', 4));
+        #endif
+
+        return oss.str();
+    }
+
+    /*************************************************************************
+     * Private helper methods
+     *************************************************************************/
+
+    void SimConfig::parse_options(int argc, char *argv[])
+    {
+        try
+        {
+            // Generic options that can be on the command line
+            boost::program_options::options_description generic("Generic options");
+            generic.add_options()
+            ("help,h", "produce help message")
+            ("config-file,f",
+             boost::program_options::value&lt;std::string&gt;(&amp;_config_filename)-&gt;
+             default_value("nos3-simulator.xml"), "configuration file")
+            ("simulator,s", 
+             boost::program_options::value&lt;std::string&gt;(&amp;_simulator), "simulator to run (-s is not required)")
+            ;
+
+            // Options that can be on the command line or (more likely) in a configuration file
+            boost::program_options::options_description config("Configuration");
+            // Logging
+            std::string cmd_line_log_config_filename;
+            config.add_options()
+            ("log-config-file,l",
+             boost::program_options::value&lt;std::string&gt;(&amp;cmd_line_log_config_filename)-&gt;
+             default_value("sim_log_config.xml")-&gt;
+             composing(), "specify log configuration file name");
+
+            generic.add(config);
+
+            // Positional options
+            boost::program_options::positional_options_description pd;
+            pd.add("simulator", 1);
+
+            // Ok, the option descriptions are created... now go get the options!
+            boost::program_options::variables_map vm;
+            //boost::program_options::store(boost::program_options::parse_command_line(argc, argv, generic.add(config)), vm);
+            boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(generic).positional(pd).run(), vm);
+            boost::program_options::notify(vm);
+
+            // Ok, that's all the options that can be specified on the command line... now go get any others (and all but the first one if they are
+            // not specified on the command line) from a config file
+
+            if(boost::filesystem::exists(_config_filename))
+            {
+                boost::property_tree::xml_parser::read_xml(_config_filename, _config, boost::property_tree::xml_parser::trim_whitespace);
+            }
+
+            // Set the common.log-config-file value in the ptree... order:  command line, config file, default
+            std::string cfg_file_log_config_filename = _config.get("nos3-configuration.common.log-config-file", "");
+            if (cmd_line_log_config_filename.compare("") != 0) 
+            { // Use command line if specified
+                _config.put("nos3-configuration.common.log-config-file", cmd_line_log_config_filename);
+            } 
+            else if (cfg_file_log_config_filename.compare("") == 0) 
+            { // Use default if command line and config file not specified
+                _config.put("nos3-configuration.common.log-config-file", "sim_log_config.xml");
+            }
+
+            if (vm.count("help")) {
+                std::cout &lt;&lt; generic &lt;&lt; std::endl;
+                exit(1);
+            }
+        }
+        catch(boost::exception const &amp;e)
+        {
+            std::cerr &lt;&lt; "SimConfig::parse_options:  Error during option parsing prior to logger availability.  Error:  " &lt;&lt;
+                      boost::diagnostic_information(e) &lt;&lt; std::endl &lt;&lt; "Try --help" &lt;&lt; std::endl;
+            exit(3);
+        }
+        catch(std::exception &amp;e)
+        {
+            std::cerr &lt;&lt; "SimConfig::parse_options:  Error during option parsing prior to logger availability.  Error:  " &lt;&lt;
+                      e.what() &lt;&lt; std::endl &lt;&lt; "Try --help" &lt;&lt; std::endl;
+            exit(4);
+        }
+        catch(...)
+        {
+            std::cerr &lt;&lt; "SimConfig::parse_options:  Exception of unknown type." &lt;&lt; std::endl &lt;&lt; "Try --help" &lt;&lt; std::endl;
+            exit(5);
+        }
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="sim-coordinate-transformations-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">sim_coordinate_transformations.cpp</span></code><a class="headerlink" href="#sim-coordinate-transformations-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">sims/sim_common/src/sim_coordinate_transformations.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&amp;V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include &lt;cmath&gt;
+
+#include &lt;ItcLogger/Logger.hpp&gt;
+
+#include &lt;sim_coordinate_transformations.hpp&gt;
+
+namespace Nos3
+{
+
+    extern ItcLogger::Logger *sim_logger;
+
+    /*************************************************************************
+     * Constructors
+     *************************************************************************/
+    const SimCoordinateTransformations::SimConstants SimCoordinateTransformations::SIM_CONSTANTS;
+
+    /*************************************************************************
+     * Static Methods
+     *************************************************************************/
+    /* This function is agnostic to the TT-to-UTC offset.  You get out    */
+    /* what you put in. */
+    void SimCoordinateTransformations::AbsTime2YMDHMS(double abs_time, int32_t&amp; year, int32_t&amp; month, int32_t&amp; day,
+                                 int32_t&amp; hour, int32_t&amp; minute, double&amp; second)
+    {
+        JD2YMDHMS(AbsTimeToJD(abs_time), year, month, day, hour, minute, second);
+    }
+
+    /**********************************************************************/
+    /* AbsTime is elapsed seconds since J2000 epoch                       */
+    /* This function is agnostic to the TT-to-UTC offset.  You get out    */
+    /* what you put in. */
+    double SimCoordinateTransformations::AbsTimeToJD(double abs_time)
+    {
+        return (abs_time/86400.0 + 2451545.0);
+    }
+
+    /**********************************************************************/
+    /* AbsTime is elapsed seconds since J2000 epoch                       */
+    /* This function is agnostic to the TT-to-UTC offset.  You get out    */
+    /* what you put in. */
+    double SimCoordinateTransformations::JDToAbsTime(double jd)
+    {
+        return ((jd - 2451545.0) * 86400.0);
+    }
+
+    /**********************************************************************/
+    /* Convert Julian Day to Year, Month, Day, Hour, Minute, and Second   */
+    /* Ref. Jean Meeus, 'Astronomical Algorithms', QB51.3.E43M42, 1991.   */
+    /* This function is agnostic to the TT-to-UTC offset.  You get out    */
+    /* what you put in. */
+
+    void SimCoordinateTransformations::JD2YMDHMS(double jd, int32_t&amp; year, int32_t&amp; month, int32_t&amp; day,
+                                 int32_t&amp; hour, int32_t&amp; minute, double&amp; second)
+    {
+          double Z,F,A,B,C,D,E,alpha;
+            double FD;
+
+          Z= floor(jd+0.5);
+          F=(jd+0.5)-Z;
+
+          if (Z &lt; 2299161.0) 
+          {
+             A = Z;
+          }
+          else 
+          {
+             alpha = floor((Z-1867216.25)/36524.25);
+             A = Z+1.0+alpha - floor(alpha/4.0);
+          }
+
+          B = A + 1524.0;
+          C = floor((B-122.1)/365.25);
+          D = floor(365.25*C);
+          E = floor((B-D)/30.6001);
+
+          FD = B - D - floor(30.6001*E) + F;
+          day = (int32_t) FD;
+
+          if (E &lt; 14.0) 
+          {
+             month = (int32_t) (E - 1.0);
+             year = (int32_t) (C - 4716.0);
+          }
+          else 
+          {
+             month = (int32_t) (E - 13.0);
+             year = (int32_t) (C - 4715.0);
+          }
+
+            FD = FD - floor(FD);
+            FD = FD * 24.0;
+            hour = (int32_t) FD;
+            FD = FD - floor(FD);
+            FD = FD * 60.0;
+            minute = (int32_t) FD;
+            FD = FD - floor(FD);
+            second = FD * 60.0;
+
+    }
+
+    /**********************************************************************/
+    /*  Find Month, Day, given Day of Year                                */
+    /*  Ref. Jean Meeus, 'Astronomical Algorithms', QB51.3.E43M42, 1991.  */
+    /*  Chapter 7, pp. 62, 66                                             */
+
+    void SimCoordinateTransformations::DOY2MD(int16_t Year, int16_t DayOfYear, int16_t &amp;Month, int16_t &amp;Day)
+    {
+          int16_t K;
+
+          if (Year % 4 == 0) 
+          {
+              if (Year % 100 == 0) 
+              {
+                  if (Year % 400 == 0)
+                  {
+                      K = 1;
+                  }
+                  else 
+                  {
+                      K = 2;
+                  }
+              }
+              else
+              {
+                  K = 1;
+              }
+          }
+          else 
+          {
+             K = 2;
+          }
+
+          if (DayOfYear &lt; 32) 
+          {
+             Month = 1;
+          }
+          else 
+          {
+             Month = (int16_t) (9.0*(K+DayOfYear)/275.0+0.98);
+          }
+
+          Day = DayOfYear - 275*(Month)/9 + K*(((Month)+9)/12) + 30;
+
+    }
+
+    /**********************************************************************/
+    /* Convert Year, Month, Day, Hour, Minute and Second to               */
+    /* "Absolute Time", i.e. seconds elapsed since J2000 epoch.           */
+    /* J2000 = 2451545.0 TT  =  01 Jan 2000 12:00:00.00 TT                */
+    /* Year, Month, Day assumed in Gregorian calendar. (Not true &lt; 1582)  */
+    /* Ref. Jean Meeus, 'Astronomical Algorithms', QB51.3.E43M42, 1991.   */
+    /* This function is agnostic to the TT-to-UTC offset.  You get out    */
+    /* what you put in. */
+
+    double SimCoordinateTransformations::DateToAbsTime(int32_t Year, int32_t Month, int32_t Day, int32_t Hour,
+       int32_t Minute, double Second)
+    {
+          int32_t A,B;
+          double Days;
+
+          if (Month &lt; 3) 
+          {
+             Year--;
+             Month+=12;
+          }
+
+          A = Year/100;
+          B = 2 - A + A/4;
+
+          /* Days since J2000 Epoch (01 Jan 2000 12:00:00.0) */
+          Days = floor(365.25*(Year+4716))
+                      + floor(30.6001*(Month+1))
+                      + Day + B - 1524.5 - 2451545.0;
+
+          /* Add fractional day */
+          return(86400.0*Days + 3600.0*((double) Hour)
+             + 60.0*((double) Minute) + Second);
+    }
+
+    /**********************************************************************/
+    /* GPS Epoch is 6 Jan 1980 00:00:00.0 which is JD = 2444244.5         */
+    /* GPS Time is expressed in weeks and seconds                         */
+    /* GPS Time rolls over every 1024 weeks                               */
+    /* This function requires JD in TT                                    */
+    void SimCoordinateTransformations::JDToGpsTime(double JD, int32_t &amp;GpsRollover, int16_t &amp;GpsWeek, double &amp;GpsSecond)
+    {
+          double DaysSinceEpoch, DaysSinceRollover, DaysSinceWeek;
+
+          DaysSinceEpoch = JD - 2444244.5;
+          GpsRollover = (int32_t) (DaysSinceEpoch/7168.0);
+          DaysSinceRollover = DaysSinceEpoch - 7168.0*((double) GpsRollover);
+          GpsWeek = (int32_t) (DaysSinceRollover/7.0);
+          DaysSinceWeek = DaysSinceRollover - 7.0*((double) GpsWeek);
+          GpsSecond = DaysSinceWeek*86400.0;
+    }
+
+    /* This function yields JD in TT                                      */
+    void SimCoordinateTransformations::GpsTimeToJD(int32_t GpsRollover, int16_t GpsWeek, double GpsSecond, double &amp;JD)
+    {
+        JD = GpsRollover * 7168.0 + GpsWeek * 7.0 + GpsSecond/86400.0 + 2444244.5;
+    }
+
+    /* Fundamentals of Astrodynamics and Applications, 3rd edition, David A. Vallado,
+     * Space Technology Library, Microcosm Press / Springer, Hawthorne, CA / New York, NY, 2007.
+     * Section 3.4, Algorithm 12, p. 179 */
+    void SimCoordinateTransformations::ECEF2LLA(double x, double y, double z, double&amp; phi_gd, double&amp; lambda, double&amp; h_ellp)
+    {
+        sim_logger-&gt;trace("SimCoordinateTransformations::ECEF2LLA:  Inputs: x = %12.4f, y = %12.4f, z = %12.4f",
+            x, y, z);
+        double r_I = x / SIM_CONSTANTS.R_plus;
+        double r_J = y / SIM_CONSTANTS.R_plus;
+        double r_K_sat = z / SIM_CONSTANTS.R_plus;
+
+        sim_logger-&gt;trace("SimCoordinateTransformations::ECEF2LLA:  Converted: r_I = %12.4f, r_J = %12.4f, r_K_sat = %12.4f",
+            r_I, r_J, r_K_sat);
+
+        double r_delta_sat, sin_alpha, cos_alpha, r, delta, r_delta, r_K, phi_gd_old, sin_phi_gd, C_plus, tan_phi_gd;
+        double tolerance = 0.000000001;
+
+        r = sqrt(r_I * r_I + r_J * r_J + r_K_sat * r_K_sat);
+        r_delta_sat = sqrt(r_I * r_I + r_J * r_J);
+        sin_alpha = r_J / r_delta_sat;
+        cos_alpha = r_I / r_delta_sat;
+
+        if (sin_alpha &gt;= 0) 
+        { // 1st or 2nd quadrant, 0 &lt;= alpha &lt;= PI
+            lambda = acos(cos_alpha); // Result of acos is between 0 and PI
+        } 
+        else 
+        { // 3rd or 4th quadrant, 0 -PI &lt; alpha &lt; PI
+            lambda = asin(sin_alpha); // Result of asin is between -PI/2 and 0, so this is only correct if we are in 4th quadrant
+            if (cos_alpha &lt; 0) 
+            { // 3rd quadrant, so we need to fix the result
+                lambda = -1 * SIM_CONSTANTS.PI - lambda;
+            }
+        }
+        lambda = lambda * 180.0 / SIM_CONSTANTS.PI; // convert to degrees for output
+
+        delta = asin(r_K_sat / r);
+        sim_logger-&gt;trace("SimCoordinateTransformations::ECEF2LLA:  Fixed Computations: r_delta_sat = %12.4f (%12.4f m), alpha = %12.8f, delta = %12.8f",
+            r_delta_sat, r_delta_sat * SIM_CONSTANTS.R_plus, lambda, delta * 180.0 / SIM_CONSTANTS.PI);
+
+
+        phi_gd = delta;
+        r_delta = r_delta_sat;
+        r_K = r_K_sat;
+
+        do {
+            sin_phi_gd = sin(phi_gd);
+
+            C_plus = 1 / sqrt(1 - SIM_CONSTANTS.e_plus * SIM_CONSTANTS.e_plus * sin_phi_gd * sin_phi_gd);
+            tan_phi_gd = (r_K + C_plus * SIM_CONSTANTS.e_plus * SIM_CONSTANTS.e_plus * sin_phi_gd) / r_delta;
+
+            phi_gd_old = phi_gd;
+            phi_gd = atan(tan_phi_gd);
+
+            sim_logger-&gt;trace("SimCoordinateTransformations::ECEF2LLA:  Iteration: C_plus = %12.8f, phi_gd = %12.8f (phi_gd_old = %12.8f), phi_gd - phi_gd_old = %12.8f",
+                C_plus, phi_gd * 180.0 / SIM_CONSTANTS.PI, phi_gd_old * 180.0 / SIM_CONSTANTS.PI, phi_gd - phi_gd_old);
+        } while ((phi_gd - phi_gd_old) &gt; tolerance);
+
+        h_ellp = (r_delta / cos(phi_gd) - C_plus) * SIM_CONSTANTS.R_plus;
+
+        phi_gd = phi_gd * 180.0 / SIM_CONSTANTS.PI; // convert to degrees for output
+
+        sim_logger-&gt;trace("SimCoordinateTransformations::ECEF2LLA:  Outputs: lambda = %12.8f, phi_gd = %12.8f, h_ellp = %12.4f",
+            lambda, phi_gd, h_ellp);
+    }
+
+    /*
+    ** HELPERS FOR IN SUN CALCULATIONS - pulled from utilities.rb
+    */
+
+    /*
+    ** Q2C - Turns Quaternion Vector into Matrix form
+    */
+    void SimCoordinateTransformations::Q2C(std::vector&lt;double&gt; quaternion, std::vector&lt;std::vector&lt;double&gt;&gt;&amp; matrix)
+    {  
+        //calculate necessary numbers
+        double twoQ00 = 2.0*quaternion[0]*quaternion[0];
+        double twoQ11 = 2.0*quaternion[1]*quaternion[1];
+        double twoQ22 = 2.0*quaternion[2]*quaternion[2];
+        double twoQ01 = 2.0*quaternion[0]*quaternion[1];
+        double twoQ02 = 2.0*quaternion[0]*quaternion[2];
+        double twoQ03 = 2.0*quaternion[0]*quaternion[3];
+        double twoQ12 = 2.0*quaternion[1]*quaternion[2];
+        double twoQ13 = 2.0*quaternion[1]*quaternion[3];
+        double twoQ23 = 2.0*quaternion[2]*quaternion[3];
+        
+        //initialize output to an identity matrix 
+        matrix.resize(3, std::vector&lt;double&gt;(3));
+
+        matrix[0][0] = 1.0;
+        matrix[1][1] = 1.0;
+        matrix[2][2] = 1.0;
+
+        matrix[0][0] = 1.0-(twoQ11+twoQ22);
+        matrix[0][1] = twoQ01+twoQ23;
+        matrix[0][2] = twoQ02-twoQ13;
+        matrix[1][0] = twoQ01-twoQ23;
+        matrix[1][1] = 1.0-(twoQ22+twoQ00);
+        matrix[1][2] = twoQ12+twoQ03;
+        matrix[2][0] = twoQ02+twoQ13;
+        matrix[2][1] = twoQ12-twoQ03;
+        matrix[2][2] = 1.0-(twoQ00+twoQ11);
+    }
+
+    /*
+    ** MTxV - Multiplies Matrix Transverse by Vector
+    */
+    void SimCoordinateTransformations::MTxV(std::vector&lt;std::vector&lt;double&gt;&gt; matrix, std::vector&lt;double&gt; vector, std::vector&lt;double&gt;&amp; output)
+    {   
+        output.resize(3);
+
+        output[0] = matrix[0][0]*vector[0] + matrix[1][0]*vector[1] + matrix[2][0]*vector[2];
+        output[1] = matrix[0][1]*vector[0] + matrix[1][1]*vector[1] + matrix[2][1]*vector[2];
+        output[2] = matrix[0][2]*vector[0] + matrix[1][2]*vector[1] + matrix[2][2]*vector[2];
+    }
+
+    /*
+    ** Calculate the Dot Product of the input Vectors
+    */
+    double SimCoordinateTransformations::dot(std::vector&lt;double&gt; u, std::vector&lt;double&gt; v)
+    {
+        return u[0]*v[0] + u[1]*v[1] + u[2]*v[2];
+    }
+
+    /*
+    ** norm - Gives the scalar value of a vector
+    */
+    double SimCoordinateTransformations::norm(std::vector&lt;double&gt; u)
+    {
+        return sqrt(dot(u,u));
+    }
+
+    /*
+    ** SxV - Multiplies a Vector by a Scalar and gives the resultant Vector
+    */
+    void SimCoordinateTransformations::SxV(double scalar, std::vector&lt;double&gt; vector, std::vector&lt;double&gt;&amp; output)
+    {   
+        output.resize(3);
+
+        output[0] = scalar*vector[0];
+        output[1] = scalar*vector[1];
+        output[2] = scalar*vector[2];
+    }
+
+    /*************************************************************************
+     * Private helper methods
+     *************************************************************************/
+
+
+}
+</pre></div>
+</div>
+</section>
+<section id="sim-data-42socket-provider-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">sim_data_42socket_provider.cpp</span></code><a class="headerlink" href="#sim-data-42socket-provider-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">sims/sim_common/src/sim_data_42socket_provider.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2015 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&amp;V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include &lt;sys/socket.h&gt;
+#include &lt;netinet/in.h&gt;
+#include &lt;netdb.h&gt;
+#include &lt;unistd.h&gt;
+//#include &lt;fcntl.h&gt;
+
+#include &lt;ItcLogger/Logger.hpp&gt;
+
+#include &lt;sim_data_42socket_provider.hpp&gt;
+
+namespace Nos3
+{
+    //REGISTER_DATA_PROVIDER(SimData42SocketProvider,"42SOCKET");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    /*************************************************************************
+     * Constructors / Destructors
+     *************************************************************************/
+
+    SimData42SocketProvider::SimData42SocketProvider(const boost::property_tree::ptree&amp; config)
+        : SimIDataProvider(config),
+          _server_host(config.get("simulator.hardware-model.data-provider.hostname", "localhost")),
+          _server_command_port(config.get("simulator.hardware-model.data-provider.command-port", 0)), // default is no command port needed (0)... e.g. for sensor only hardware like IMUs, Star Trackers, etc.
+          _max_connection_attempts(config.get("simulator.hardware-model.data-provider.max-connection-attempts", 5)),
+          _retry_wait_seconds(config.get("simulator.hardware-model.data-provider.retry-wait-seconds", 5)),
+          _absolute_start_time(config.get("common.absolute-start-time", 552110400.0)), _telemetry_socket_client_thread(NULL), _not_terminating(true), _command_port_connected(false)
+    {
+        SimData42SocketProvider::connect_command_socket_as_42_socket_client();
+    }
+
+    SimData42SocketProvider::~SimData42SocketProvider(void)
+    {
+        _not_terminating = false;
+        if (_telemetry_socket_client_thread != NULL) {
+            _telemetry_socket_client_thread-&gt;join();
+            delete _telemetry_socket_client_thread;
+        }
+        close(_telemetry_socket_fd); // close the socket
+        close(_command_socket_fd); // close the socket
+    }
+
+    /*************************************************************************
+     * Non-mutating public worker methods
+     *************************************************************************/
+
+     void SimData42SocketProvider::send_command_to_socket(const std::string&amp; message)
+     {
+        if (_command_port_connected) {
+            ssize_t bytes_sent = send(_command_socket_fd, message.c_str(), message.length(), 0);
+            if (bytes_sent == (ssize_t)message.length()) {
+                sim_logger-&gt;debug("SimData42SocketProvider::send_command_to_socket:  Successfully sent command to host %s, port %u.  Command %s", _server_host.c_str(), _server_command_port, message.c_str());
+            } else {
+                sim_logger-&gt;error("SimData42SocketProvider::send_command_to_socket:  Unsuccessful sending command to host %s, port %u.  Bytes to send %lu, bytes sent/return value %lu.  Command %s",
+                    _server_host.c_str(), _server_command_port, message.length(), bytes_sent, message.c_str());
+            }
+        } else {
+            sim_logger-&gt;error("SimData42SocketProvider::send_command_to_socket:  Not connected.  Not sending command to host %s, port %u.  Command %s", _server_host.c_str(), _server_command_port, message.c_str());
+        }
+     }
+
+    /*************************************************************************
+     * Protected mutating worker methods
+     *************************************************************************/
+
+    void SimData42SocketProvider::connect_reader_thread_as_42_socket_client(std::string server_host, uint16_t server_telemetry_port)
+    {
+        bool connected = connect_as_42_socket_client(server_host, server_telemetry_port, _telemetry_socket_fd);
+        if (connected) {
+            _telemetry_socket_client_thread = new std::thread(std::bind(&amp;SimData42SocketProvider::telemetry_socket_reader, this), NULL); // Spawn thread to listen to/read from socket
+            sim_logger-&gt;debug("SimData42SocketProvider::connect_reader_thread_as_42_socket_client:  Successfully connected TELEMETRY host %s, port %u to 42 and started listener thread!",
+                server_host.c_str(), server_telemetry_port);
+        } else {
+            sim_logger-&gt;error("SimData42SocketProvider::connect_reader_thread_as_42_socket_client:  Unable to connect TELEMETRY host %s, port %u to 42, no thread will be started to listen :-(",
+                server_host.c_str(), server_telemetry_port);
+        }
+        return;
+    }
+
+    /*************************************************************************
+     * Private helper methods
+     *************************************************************************/
+
+    void SimData42SocketProvider::connect_command_socket_as_42_socket_client(void)
+    {
+        if (_server_command_port &gt; 0) {
+            _command_port_connected = connect_as_42_socket_client(_server_host, _server_command_port, _command_socket_fd);
+            if (_command_port_connected) sim_logger-&gt;debug("SimData42SocketProvider::SimData42SocketProvider:  Successfully connected COMMAND host %s, port %u to 42!", _server_host.c_str(), _server_command_port);
+            else sim_logger-&gt;error("SimData42SocketProvider::SimData42SocketProvider:  Unable to connect COMMAND host %s, port %u to 42 :-(", _server_host.c_str(), _server_command_port);
+        } else sim_logger-&gt;debug("SimData42SocketProvider::SimData42SocketProvider:  No COMMAND port (%u) to 42 requested, none connected.", _server_command_port);
+    }
+
+    bool SimData42SocketProvider::connect_as_42_socket_client(std::string a_42_host, uint16_t a_42_port, int &amp;socket_fd)
+    {
+        // http://stackoverflow.com/questions/8257714/how-to-convert-an-int-to-string-in-c/8257728#8257728
+        int length = (int)((ceil(log10(a_42_port))+1)*sizeof(char));
+        char a_42_port_string[length];
+        snprintf(a_42_port_string, length, "%ud", a_42_port);
+
+        // http://beej.us/guide/bgnet/output/html/singlepage/bgnet.html
+        struct addrinfo hints, *servinfo, *p;
+        int rv;
+
+        memset(&amp;hints, 0, sizeof hints);
+        hints.ai_family = AF_UNSPEC;
+        hints.ai_socktype = SOCK_STREAM;
+
+        for (int i = 0; i &lt; _max_connection_attempts + 1; i++)
+        {
+            if ((rv = getaddrinfo(a_42_host.c_str(), a_42_port_string, &amp;hints, &amp;servinfo)) != 0)
+            {
+                sim_logger-&gt;error("SimData42SocketProvider::connect_as_42_socket_client:  Error getting address for host %s, port %u: %s", a_42_host.c_str(), a_42_port, gai_strerror(rv));
+                return false;
+            }
+
+            // loop through all the results and connect to the first we can
+            for(p = servinfo; p != NULL; p = p-&gt;ai_next)
+            {
+                if ((socket_fd = socket(p-&gt;ai_family, p-&gt;ai_socktype, p-&gt;ai_protocol)) == -1)
+                {
+                    sim_logger-&gt;warning("SimData42SocketProvider::connect_as_42_socket_client:  Continuing, but could not create socket for host %s, port %u: %s", a_42_host.c_str(), a_42_port, strerror(errno));
+                    continue;
+                }
+                if (connect(socket_fd, p-&gt;ai_addr, p-&gt;ai_addrlen) == -1)
+                {
+                    close(socket_fd);
+                    sim_logger-&gt;warning("SimData42SocketProvider::connect_as_42_socket_client:  Continuing, but could not connect socket for host %s, port %u: %s", a_42_host.c_str(), a_42_port, strerror(errno));
+                    continue;
+                } else break; // got a good connection
+            }
+
+            if (p != NULL) // got a good connection
+            {
+                break;
+            } else
+            {
+                if (i == _max_connection_attempts)
+                {
+                    sim_logger-&gt;error("SimData42SocketProvider::connect_as_42_socket_client:  Maximum number of connection attempts reached.   Host %s, port %u failed to connect!", a_42_host.c_str(), a_42_port);
+                    return false;
+                }
+                else
+                {
+                    sim_logger-&gt;warning("SimData42SocketProvider::connect_as_42_socket_client:  Warning... failed to connect host %s, port %d... retrying in %u seconds.", a_42_host.c_str(), a_42_port,
+                                        _retry_wait_seconds);
+                    sleep(_retry_wait_seconds);
+                }
+            }
+        }
+        return true; // connection succeeded... may have taken a while, but it succeeded
+    }
+
+    void SimData42SocketProvider::telemetry_socket_reader(void)
+    {
+        std::vector&lt;std::string&gt; message;
+
+        while (_not_terminating)
+        {
+            read_telemetry_socket_data(message);
+
+            {
+                std::lock_guard&lt;std::mutex&gt; lock(_data_point_mutex);
+                Sim42DataPoint dp(message);
+                _data_point = dp;
+                // Lock is released when scope ends
+            }
+
+            //sim_logger-&gt;debug("SimData42SocketProvider::socket_reader:  Data Point=%s\n", _data_point.to_formatted_string().c_str());
+        }
+    }
+
+    void SimData42SocketProvider::read_telemetry_socket_data(std::vector&lt;std::string&gt;&amp; message)
+    {
+        long Done = 0;
+        char line[512] = "Blank";
+        char *LineIsValid;
+
+        message.clear();
+        while(!Done)
+        {
+            LineIsValid = rgets(line, 511, _telemetry_socket_fd);
+            sim_logger-&gt;trace("SimData42SocketProvider::read_socket_data:  Line=%s", line);
+            if (LineIsValid == NULL)
+            {
+                Done = 1;
+            } else {
+                message.push_back(line);
+                if (!strncmp(line,"[ENDMSG]",8)) Done = 1;
+            }
+        }
+    }
+
+    char SimData42SocketProvider::rgetc(int fd)
+    {
+        char buf;
+        if (read(fd, &amp;buf, 1) != 1)
+            return EOF;
+        return buf;
+    }
+
+    char* SimData42SocketProvider::rgets(char *s, int n, int fd) /* K&amp;R, 2nd, p. 165 */
+    {
+        register int c;
+        register char *cs;
+
+        cs = s;
+        while (--n &gt; 0 &amp;&amp; (c = rgetc(fd)) != EOF) // ssize_t read(int fd, void *buf, size_t count);
+            if ((*cs++ = c) == '\n')
+                break;
+        *cs = '\0';
+        if (cs != s) *(cs-1) = '\0'; // Hack off the \n
+        return (c == EOF &amp;&amp; cs == s) ? NULL : s;
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="sim-data-provider-factory-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">sim_data_provider_factory.cpp</span></code><a class="headerlink" href="#sim-data-provider-factory-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">sims/sim_common/src/sim_data_provider_factory.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&amp;V
+   ivv-itc@lists.nasa.gov
+*/
+
+// See:  http://www.codeproject.com/Articles/751869/Abstract-Factory-Step-by-Step-Implementation-in-Cp
+
+#include &lt;ItcLogger/Logger.hpp&gt;
+
+#include &lt;sim_data_provider_factory.hpp&gt;
+#include &lt;sim_i_data_provider_maker.hpp&gt;
+#include &lt;sim_i_data_provider.hpp&gt;
+
+namespace Nos3
+{
+    extern ItcLogger::Logger *sim_logger;
+
+	SimDataProviderFactory&amp; SimDataProviderFactory::Instance()
+	{
+		// So called Meyers Singleton implementation,
+		// In C++ 11 it is in fact thread-safe
+		// In older versions you should ensure thread-safety here
+		static SimDataProviderFactory factory;
+		return factory;
+	}
+
+	void SimDataProviderFactory::RegisterMaker(const std::string&amp; key, SimIDataProviderMaker* maker)
+	{
+		// Validate uniquness and add to the map
+		if (_makers.find(key) != _makers.end())
+		{
+            if (sim_logger != nullptr) 
+			{
+                sim_logger-&gt;warning("SimDataProviderFactory::RegisterMaker:  Ignoring key.  Multiple data providers for given key:  %s",
+                    key.c_str());
+            }
+		} 
+		else 
+		{
+            _makers[key] = maker;
+            if (sim_logger != nullptr) 
+			{
+                sim_logger-&gt;info("SimDataProviderFactory::RegisterMaker:  Registered data provider for key %s", key.c_str());
+            }
+		}
+	}
+
+    SimIDataProvider* SimDataProviderFactory::Create(const std::string&amp; key, const boost::property_tree::ptree&amp; config) const
+	{
+		// Look up the maker by nodes name
+		std::map&lt;std::string, SimIDataProviderMaker*&gt;::const_iterator i = _makers.find(key);
+		if (i == _makers.end())
+		{
+            sim_logger-&gt;fatal("SimDataProviderFactory::Create:  Unrecognized data provider key:  %s", key.c_str());
+			throw new std::runtime_error("SimDataProviderFactory::Create:  Unrecognized data provider key:  " + key);
+		}
+		sim_logger-&gt;info("SimDataProviderFactory::Create:  Creating data provider for key %s", key.c_str());
+		SimIDataProviderMaker* maker = i-&gt;second;
+		// Invoke create polymorphically
+		return maker-&gt;Create(config);
+	}
+}
+</pre></div>
+</div>
+</section>
+<section id="sim-data-shmem-provider-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">sim_data_shmem_provider.cpp</span></code><a class="headerlink" href="#sim-data-shmem-provider-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">sims/sim_common/src/sim_data_shmem_provider.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2015 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&amp;V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include &lt;sim_data_shmem_provider.hpp&gt;
+
+#include &lt;ItcLogger/Logger.hpp&gt;
+
+namespace Nos3
+{
+    REGISTER_DATA_PROVIDER(SimDataShmemProvider,"SHMEMPROVIDER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    /*************************************************************************
+     * Constructors / Destructors
+     *************************************************************************/
+    SimDataShmemProvider::SimDataShmemProvider(const boost::property_tree::ptree&amp; config) : SimIDataProvider(config)
+    {
+        const std::string shm_name = config.get("simulator.hardware-model.shared-memory-name", "Blackboard");
+        const size_t shm_size = sizeof(BlackboardData);
+        bip::shared_memory_object shm(bip::open_or_create, shm_name.c_str(), bip::read_write);
+        shm.truncate(shm_size);
+        bip::mapped_region shm_region(shm, bip::read_write);
+        _shm_region = std::move(shm_region); // don't let this go out of scope/get destroyed
+        _blackboard_data = static_cast&lt;BlackboardData*&gt;(_shm_region.get_address());    
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="sim-hardware-model-factory-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">sim_hardware_model_factory.cpp</span></code><a class="headerlink" href="#sim-hardware-model-factory-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">sims/sim_common/src/sim_hardware_model_factory.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&amp;V
+   ivv-itc@lists.nasa.gov
+*/
+
+// See:  http://www.codeproject.com/Articles/751869/Abstract-Factory-Step-by-Step-Implementation-in-Cp
+
+#include &lt;ItcLogger/Logger.hpp&gt;
+
+#include &lt;sim_hardware_model_factory.hpp&gt;
+#include &lt;sim_i_hardware_model_maker.hpp&gt;
+#include &lt;sim_i_hardware_model.hpp&gt;
+
+namespace Nos3
+{
+    extern ItcLogger::Logger *sim_logger;
+
+	SimHardwareModelFactory&amp; SimHardwareModelFactory::Instance()
+	{
+		// So called Meyers Singleton implementation,
+		// In C++ 11 it is in fact thread-safe
+		// In older versions you should ensure thread-safety here
+		static SimHardwareModelFactory factory;
+		return factory;
+	}
+
+	void SimHardwareModelFactory::RegisterMaker(const std::string&amp; key, SimIHardwareModelMaker* maker)
+	{
+		// Validate uniquness and add to the map
+		if (_makers.find(key) != _makers.end())
+		{
+            if (sim_logger != nullptr) 
+			{
+                sim_logger-&gt;warning("SimHardwareModelFactory::RegisterMaker:  Ignoring key.  Multiple hardware models for given key:  %s",
+                    key.c_str());
+            }
+		} 
+		else 
+		{
+            _makers[key] = maker;
+            if (sim_logger != nullptr) 
+			{
+                sim_logger-&gt;info("SimHardwareModelFactory::RegisterMaker:  Registered hardware model for key %s", key.c_str());
+            }
+		}
+	}
+
+	SimIHardwareModel* SimHardwareModelFactory::Create(const std::string&amp; key, const boost::property_tree::ptree&amp; config) const
+	{
+		// Look up the maker by nodes name
+		std::map&lt;std::string, SimIHardwareModelMaker*&gt;::const_iterator i = _makers.find(key);
+		if (i == _makers.end())
+		{
+            sim_logger-&gt;fatal("SimHardwareModelFactory::Create:  Unrecognized hardware model key:  %s", key.c_str());
+			throw new std::runtime_error("SimHardwareModelFactory::Create:  Unrecognized hardware model key:  " + key);
+		}
+		sim_logger-&gt;info("SimHardwareModelFactory::Create:  Creating hardware model for key %s", key.c_str());
+		SimIHardwareModelMaker* maker = i-&gt;second;
+		// Invoke create polymorphically
+		return maker-&gt;Create(config);
+	}
+}
+</pre></div>
+</div>
+</section>
+<section id="sim-shmem-data-point-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">sim_shmem_data_point.cpp</span></code><a class="headerlink" href="#sim-shmem-data-point-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">sims/sim_common/src/sim_shmem_data_point.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2015 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&amp;V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include &lt;iomanip&gt;
+#include &lt;limits&gt;
+
+#include &lt;boost/algorithm/string.hpp&gt;
+#include &lt;boost/tokenizer.hpp&gt;
+#include &lt;boost/lexical_cast.hpp&gt;
+
+#include &lt;ItcLogger/Logger.hpp&gt;
+
+#include &lt;sim_shmem_data_point.hpp&gt;
+
+namespace Nos3
+{
+
+    extern ItcLogger::Logger *sim_logger;
+
+    /*************************************************************************
+     * Constructors
+     *************************************************************************/
+    SimShmemDataPoint::SimShmemDataPoint(double svb[3], double bvb[3], double Hvb[3], double GyroRate[3], int CSSValid[6], double CSSIllum[6], int FSSValid, 
+        double FSSSunAng[2], int STValid, double STqn[4], double GPSPosN[3], double GPSVelN[3], double AccelAcc[3], double WhlH[3])
+    {
+        _svb[0] = svb[0];
+        _svb[1] = svb[1];
+        _svb[2] = svb[2];
+        _bvb[0] = bvb[0];
+        _bvb[1] = bvb[1];
+        _bvb[2] = bvb[2];
+        _Hvb[0] = Hvb[0];
+        _Hvb[1] = Hvb[1];
+        _Hvb[2] = Hvb[2];
+        _GyroRate[0] = GyroRate[0];
+        _GyroRate[1] = GyroRate[1];
+        _GyroRate[2] = GyroRate[2];
+        _CSSValid[0] = CSSValid[0];
+        _CSSValid[1] = CSSValid[1];
+        _CSSValid[2] = CSSValid[2];
+        _CSSValid[3] = CSSValid[3];
+        _CSSValid[4] = CSSValid[4];
+        _CSSValid[5] = CSSValid[5];
+        _CSSIllum[0] = CSSIllum[0];
+        _CSSIllum[1] = CSSIllum[1];
+        _CSSIllum[2] = CSSIllum[2];
+        _CSSIllum[3] = CSSIllum[3];
+        _CSSIllum[4] = CSSIllum[4];
+        _CSSIllum[5] = CSSIllum[5];
+        _FSSValid = FSSValid;
+        _FSSSunAng[0] = FSSSunAng[0];
+        _FSSSunAng[1] = FSSSunAng[1];
+        _STValid = STValid;
+        _STqn[0] = STqn[0];
+        _STqn[1] = STqn[1];
+        _STqn[2] = STqn[2];
+        _STqn[3] = STqn[3];
+        _GPSPosN[0] = GPSPosN[0];
+        _GPSPosN[1] = GPSPosN[1];
+        _GPSPosN[2] = GPSPosN[2];
+        _GPSVelN[0] = GPSVelN[0];
+        _GPSVelN[1] = GPSVelN[1];
+        _GPSVelN[2] = GPSVelN[2];
+        _AccelAcc[0] = AccelAcc[0];
+        _AccelAcc[1] = AccelAcc[1];
+        _AccelAcc[2] = AccelAcc[2];
+        _WhlH[0] = WhlH[0];
+        _WhlH[1] = WhlH[1];
+        _WhlH[2] = WhlH[2];
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="single-simulator-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">single_simulator.cpp</span></code><a class="headerlink" href="#single-simulator-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">sims/sim_common/src/single_simulator.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/* Copyright (C) 2015 - 2021 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&amp;V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include &lt;iostream&gt;
+#include &lt;ItcLogger/Logger.hpp&gt;
+#include &lt;sim_config.hpp&gt;
+
+namespace Nos3
+{
+    ItcLogger::Logger *sim_logger;
+}
+
+int
+main(int argc, char *argv[])
+{
+    // Determine the configuration and run the simulator
+    Nos3::SimConfig sc(argc, argv);
+    std::string simulator_name = sc.get_simulator();
+    Nos3::sim_logger-&gt;info("main:  \"%s\" simulator starting", simulator_name.c_str());
+    sc.run_simulator(simulator_name);
+    Nos3::sim_logger-&gt;info("main:  \"%s\" simulator terminating", simulator_name.c_str());
+    return 0;
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../inc/index.html" class="btn btn-neutral float-left" title="inc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../sim_terminal/index.html" class="btn btn-neutral float-right" title="sim_terminal" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

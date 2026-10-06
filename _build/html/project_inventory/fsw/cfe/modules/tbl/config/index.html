@@ -1,0 +1,2256 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>config &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="eds" href="../eds/index.html" />
+    <link rel="prev" title="tbl" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">cfe</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">modules</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">tbl</a></li>
+      <li class="breadcrumb-item active">config</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/fsw/cfe/modules/tbl/config/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="config">
+<h1>config<a class="headerlink" href="#config" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/tbl/config/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="default-cfe-tbl-extern-typedefs-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_tbl_extern_typedefs.h</span></code><a class="headerlink" href="#default-cfe-tbl-extern-typedefs-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/tbl/config/default_cfe_tbl_extern_typedefs.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Declarations and prototypes for cfe_tbl_extern_typedefs module
+ */
+
+#ifndef CFE_TBL_EXTERN_TYPEDEFS_H
+#define CFE_TBL_EXTERN_TYPEDEFS_H
+
+#include "common_types.h"
+#include "cfe_es_extern_typedefs.h"
+#include "cfe_mission_cfg.h" /* for CFE_MISSION_TBL_MAX_FULL_NAME_LEN */
+
+/**
+ * @brief Label definitions associated with CFE_TBL_BufferSelect_Enum_t
+ */
+enum CFE_TBL_BufferSelect
+{
+    /**
+     * @brief Select the Inactive buffer for validate or dump
+     */
+    CFE_TBL_BufferSelect_INACTIVE = 0,
+
+    /**
+     * @brief Select the Active buffer for validate or dump
+     */
+    CFE_TBL_BufferSelect_ACTIVE = 1
+};
+
+/**
+ * @brief Selects the buffer to operate on for validate or dump commands
+ *
+ * @sa enum CFE_TBL_BufferSelect
+ */
+typedef uint16 CFE_TBL_BufferSelect_Enum_t;
+
+/**
+ * @brief The definition of the header fields that are included in CFE Table Data files.
+ *
+ * This header follows the CFE_FS header and precedes the actual table data.
+ *
+ * @note The Offset and NumBytes fields in the table header are to 32 bits for
+ * backward compatibility with existing CFE versions.  This means that even on
+ * 64-bit CPUs, individual table files will be limited to 4GiB in size.
+ */
+typedef struct CFE_TBL_File_Hdr
+{
+    uint32 Reserved;                                     /**&lt; Future Use: NumTblSegments in File?   */
+    uint32 Offset;                                       /**&lt; Byte Offset at which load should commence */
+    uint32 NumBytes;                                     /**&lt; Number of bytes to load into table */
+    char   TableName[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**&lt; Fully qualified name of table to load */
+} CFE_TBL_File_Hdr_t;
+
+#endif /* CFE_TBL_EXTERN_TYPEDEFS_H */
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-tbl-fcncodes-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_tbl_fcncodes.h</span></code><a class="headerlink" href="#default-cfe-tbl-fcncodes-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/tbl/config/default_cfe_tbl_fcncodes.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFE Event Services (CFE_TBL) command function codes
+ *
+ * @note
+ *   This file should be strictly limited to the command/function code (CC)
+ *   macro definitions.  Other definitions such as enums, typedefs, or other
+ *   macros should be placed in the msgdefs.h or msg.h files.
+ */
+#ifndef CFE_TBL_FCNCODES_H
+#define CFE_TBL_FCNCODES_H
+
+/*
+** Table task command packet command codes
+*/
+/** \name Table Services Command Codes */
+/** \{ */
+
+/** \cfetblcmd Table No-Op
+**
+**  \par Description
+**       This command performs no other function than to increment the
+**       command execution counter. The command may be used to verify
+**       general aliveness of the Table Services task.
+**
+**  \cfecmdmnemonic \TBL_NOOP
+**
+**  \par Command Structure
+**       #CFE_TBL_NoopCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TBL_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_TBL_NOOP_INF_EID informational event message will
+**         be generated
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Table
+**       Services receives the command, the event is sent (although it
+**       may be filtered by EVS) and the counter is incremented
+**       unconditionally.
+**
+**  \par Criticality
+**       None
+**
+**  \sa
+*/
+#define CFE_TBL_NOOP_CC 0
+
+/** \cfetblcmd Table Reset Counters
+**
+**  \par Description
+**       This command resets the following counters within the Table
+**       Services housekeeping telemetry:
+**       - Command Execution Counter (\TBL_CMDPC)
+**       - Command Error Counter (\TBL_CMDEC)
+**       - Successful Table Validations Counter (\TBL_VALSUCCESSCTR)
+**       - Failed Table Validations Counter (\TBL_VALFAILEDCTR)
+**       - Number of Table Validations Requested (\TBL_VALREQCTR)
+**       - Number of completed table validations (\TBL_VALCOMPLTDCTR)
+**
+**  \cfecmdmnemonic \TBL_RESETCTRS
+**
+**  \par Command Structure
+**       #CFE_TBL_ResetCountersCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \TBL_CMDPC - command execution counter will
+**         be reset to 0
+**       - The #CFE_TBL_RESET_INF_EID debug event message will be
+**         generated
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Table
+**       Services receives the command, the event is sent (although it
+**       may be filtered by EVS) and the counter is incremented
+**       unconditionally.
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  However, it is
+**       possible for ground systems and on-board safing procedures
+**       to be designed such that they react to changes in the counter
+**       values that are reset by this command.
+**
+**  \sa
+*/
+#define CFE_TBL_RESET_COUNTERS_CC 1
+
+/** \cfetblcmd Load Table
+**
+**  \par Description
+**       This command loads the contents of the specified file into
+**       an inactive buffer for the table specified within the file.
+**
+**  \cfecmdmnemonic \TBL_LOAD
+**
+**  \par Command Structure
+**       #CFE_TBL_LoadCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \TBL_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_TBL_FILE_LOADED_INF_EID informational event message
+**         will be generated
+**
+**  \par Error Conditions
+**       This command can fail for the following reasons:
+**       - Table name found in table image file's table header is not found
+**         in table registry (ie - The table associated with the table image
+**         in the file has not been registered by an application).
+**       - The table image file has an invalid or incorrect size.  The size of
+**         the image file must match the size field within in the header, and
+**         must also match the expected size of the table indicated in the registry.
+**       - No working buffers are available for the load.  This would indicate
+**         that too many single-buffered table loads are in progress at the same
+**         time.
+**       - An attempt is being made to load an uninitialized table with a file
+**         containing only a partial table image.
+**       - The table image file was unable to be opened.  Either the file does
+**         not exist at the specified location, the filename is in error, or
+**         the file system has been corrupted.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \TBL_CMDEC - command error counter will increment
+**       - Command specific error event messages are issued for all error cases
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It is performing the first
+**       step of loading a table and can be aborted (using the Abort Table Load
+**       command described below) without affecting the contents of the active
+**       table image.
+**
+**  \sa  #CFE_TBL_DUMP_CC, #CFE_TBL_VALIDATE_CC, #CFE_TBL_ACTIVATE_CC, #CFE_TBL_ABORT_LOAD_CC
+*/
+#define CFE_TBL_LOAD_CC 2
+
+/** \cfetblcmd Dump Table
+**
+**  \par Description
+**       This command will cause the Table Services to put the contents
+**       of the specified table buffer into the command specified file.
+**
+**  \cfecmdmnemonic \TBL_DUMP
+**
+**  \par Command Structure
+**       #CFE_TBL_DumpCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TBL_CMDPC - command execution counter will
+**         increment
+**       - Either the #CFE_TBL_OVERWRITE_DUMP_INF_EID OR the
+**         #CFE_TBL_WRITE_DUMP_INF_EID informational event message will
+**         be generated
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - A single buffered table's inactive buffer was requested to be
+**         dumped and no such buffer is currently allocated.
+**       - Error occurred during write operation to file. Possible causes
+**         might be insufficient space in the file system or the filename
+**         or file path is improperly specified.
+**       - The specified table name was not found in the table registry.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \TBL_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It will create a new
+**       file in the file system and could, if performed repeatedly without
+**       sufficient file management by the operator, fill the file system.
+**
+**  \sa  #CFE_TBL_LOAD_CC, #CFE_TBL_VALIDATE_CC, #CFE_TBL_ACTIVATE_CC, #CFE_TBL_ABORT_LOAD_CC
+*/
+#define CFE_TBL_DUMP_CC 3
+
+/** \cfetblcmd Validate Table
+**
+**  \par Description
+**       This command will cause Table Services to calculate the Data Integrity
+**       Value for the specified table and to notify the owning application that
+**       the table's validation function should be executed.  The results of both
+**       the Data Integrity Value computation and the validation function are
+**       reported in Table Services Housekeeping Telemetry.
+**
+**  \cfecmdmnemonic \TBL_VALIDATE
+**
+**  \par Command Structure
+**       #CFE_TBL_ValidateCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the following
+**       telemetry:
+**       - \b \c \TBL_CMDPC -  command execution counter will increment
+**       - \b \c \TBL_VALREQCTR - table validation request counter will increment
+**       - \b \c \TBL_LASTVALCRC - calculated data integrity value will be updated
+**       - The #CFE_TBL_VAL_REQ_MADE_INF_EID debug event message (indicating the
+**         application is being notified of a validation request)
+**
+**       If the specified table has an associated validation function, then the
+**       following telemetry will also change:
+**       - Either \b \c \TBL_VALSUCCESSCTR OR \b \c \TBL_VALFAILEDCTR will
+**         increment
+**       - \b \c \TBL_VALCOMPLTDCTR - table validations performed counter will
+**         increment
+**       - \b \c \TBL_LASTVALS - table validation function return status will
+**         update
+**       - The #CFE_TBL_VALIDATION_INF_EID informational event message (indicating the
+**         validation function return status) will be generated
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - A single buffered table's inactive buffer was requested to be validated
+**         and no such buffer is currently allocated.
+**       - Too many validations have been requested simultaneously.  The operator
+**         must wait for one or more applications to perform their table validation
+**         functions before trying again.
+**       - The specified table name was not found in the table registry.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \TBL_CMDEC - command error counter will increment
+**       - Command specific error event message are issued for all error cases
+**
+**  \par Criticality
+**       The success or failure of a table validation does not have any immediate
+**       impact on table contents.  The results are sent to the operator in telemetry
+**       and the operator must determine whether the results are acceptable and send a
+**       command to activate the validated table image.
+**
+**  \sa  #CFE_TBL_LOAD_CC, #CFE_TBL_DUMP_CC, #CFE_TBL_ACTIVATE_CC, #CFE_TBL_ABORT_LOAD_CC
+*/
+#define CFE_TBL_VALIDATE_CC 4
+
+/** \cfetblcmd Activate Table
+**
+**  \par Description
+**       This command will cause Table Services to notify a table's owner
+**       that an update is pending.  The owning application will then update
+**       the contents of the active table buffer with the contents of the
+**       associated inactive table buffer at a time of their convenience.
+**
+**  \cfecmdmnemonic \TBL_ACTIVATE
+**
+**  \par Command Structure
+**       #CFE_TBL_ActivateCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TBL_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_TBL_UPDATE_SUCCESS_INF_EID informational event message
+**         will be generated
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The specified table name was not found in the table registry.
+**       - The table was registered as a "dump only" type and thus cannot be activated
+**       - The table buffer has not been validated.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \TBL_CMDEC - command error counter will increment
+**       - Command specific error event message are issued for all
+**         error cases
+**
+**  \par Criticality
+**       This command will cause the contents of the specified table to be
+**       updated with the contents in the inactive table buffer.
+**
+**  \sa  #CFE_TBL_LOAD_CC, #CFE_TBL_DUMP_CC, #CFE_TBL_VALIDATE_CC, #CFE_TBL_ABORT_LOAD_CC
+*/
+#define CFE_TBL_ACTIVATE_CC 5
+
+/** \cfetblcmd Dump Table Registry
+**
+**  \par Description
+**       This command will cause Table Services to write some of the
+**       contents of the Table Registry to the command specified file.
+**       This allows the operator to see the current state and configuration
+**       of all tables that have been registered with the cFE.
+**
+**  \cfecmdmnemonic \TBL_WRITEREG2FILE
+**
+**  \par Command Structure
+**       #CFE_TBL_DumpRegistryCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TBL_CMDPC -  command execution counter will
+**         increment
+**       - The generation of either #CFE_TBL_OVERWRITE_REG_DUMP_INF_EID
+**         or #CFE_TBL_WRITE_REG_DUMP_INF_EID debug event messages
+**       - The specified file should appear (or be updated) at the
+**         specified location in the file system
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - A table registry dump is already in progress, not yet completed
+**       - The specified DumpFilename could not be parsed
+**       - Error occurred during write operation to file. Possible
+**         causes might be insufficient space in the file system
+**         or the filename or file path is improperly specified.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \TBL_CMDEC - command error counter will increment
+**       - An Error specific event message
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It will create a new
+**       file in the file system and could, if performed repeatedly without
+**       sufficient file management by the operator, fill the file system.
+**
+**  \sa  #CFE_TBL_SEND_REGISTRY_CC
+*/
+#define CFE_TBL_DUMP_REGISTRY_CC 6
+
+/** \cfetblcmd Telemeter One Table Registry Entry
+**
+**  \par Description
+**       This command will cause Table Services to telemeter the contents
+**       of the Table Registry for the command specified table.
+**
+**  \cfecmdmnemonic \TBL_TLMREG
+**
+**  \par Command Structure
+**       #CFE_TBL_SendRegistryCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TBL_CMDPC -  command execution counter will increment
+**       - Receipt of a Table Registry Info Packet (see #CFE_TBL_TableRegistryTlm_t)
+**       - The #CFE_TBL_TLM_REG_CMD_INF_EID debug event message will
+**         be generated
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The specified table name was not found in the table registry.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \TBL_CMDEC - command error counter will increment
+**       - Error specific event message
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It will generate
+**       additional telemetry.
+**
+**  \sa  #CFE_TBL_DUMP_REGISTRY_CC
+*/
+#define CFE_TBL_SEND_REGISTRY_CC 7
+
+/** \cfetblcmd Delete Critical Table from Critical Data Store
+**
+**  \par Description
+**       This command will delete the Critical Data Store (CDS) associated
+**       with the specified Critical Table.  Note that any table still
+**       present in the Table Registry is unable to be deleted from
+**       the Critical Data Store.  All Applications that are accessing
+**       the critical table must release and unregister their access
+**       before the CDS can be deleted.
+**
+**  \cfecmdmnemonic \TBL_DELETECDS
+**
+**  \par Command Structure
+**       #CFE_TBL_DeleteCDSCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TBL_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_TBL_CDS_DELETED_INFO_EID informational event message
+**         will be generated
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The specified table name was not found in the critical data
+**         store registry
+**       - The specified table name WAS found in the table registry (all
+**         registrations/sharing of the table must be unregistered before
+**         the table's CDS can be deleted)
+**       - The table's owning application is still active
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \TBL_CMDEC - command error counter will increment
+**       - Error specific event message
+**
+**  \par Criticality
+**       This command will cause the loss of the specified table's contents
+**       before the owning Application was terminated.
+**
+**  \sa  #CFE_ES_DUMP_CDS_REGISTRY_CC, #CFE_ES_DELETE_CDS_CC
+*/
+#define CFE_TBL_DELETE_CDS_CC 8
+
+/** \cfetblcmd Abort Table Load
+**
+**  \par Description
+**       This command will cause Table Services to discard the contents of
+**       a table buffer that was previously loaded with the data in a file
+**       as specified by a Table Load command.  For single buffered tables,
+**       the allocated shared working buffer is freed and becomes available
+**       for other Table Load commands.
+**
+**  \cfecmdmnemonic \TBL_LOADABORT
+**
+**  \par Command Structure
+**       #CFE_TBL_AbortLoadCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TBL_CMDPC -  command execution counter will increment
+**       - The #CFE_TBL_LOAD_ABORT_INF_EID informational event message
+**         is generated
+**       - If the load was aborted for a single buffered table, the
+**         \b \c \TBL_NUMFREESHRBUF telemetry point should increment
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The specified table name was not found in the table registry.
+**       - The specified table did not have a load in progress to be aborted.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \TBL_CMDEC - command error counter will increment
+**       - Error specific event message
+**
+**  \par Criticality
+**       This command will cause the loss of data put into an inactive table buffer.
+**
+**  \sa  #CFE_TBL_LOAD_CC, #CFE_TBL_DUMP_CC, #CFE_TBL_VALIDATE_CC, #CFE_TBL_ACTIVATE_CC
+*/
+#define CFE_TBL_ABORT_LOAD_CC 9
+/** \} */
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-tbl-interface-cfg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_tbl_interface_cfg.h</span></code><a class="headerlink" href="#default-cfe-tbl-interface-cfg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/tbl/config/default_cfe_tbl_interface_cfg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Table Services (CFE_TBL) Application Public Definitions
+ *
+ * This provides default values for configurable items that affect
+ * the interface(s) of this module.  This includes the CMD/TLM message
+ * interface, tables definitions, and any other data products that
+ * serve to exchange information with other entities.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_TBL_INTERFACE_CFG_H
+#define CFE_TBL_INTERFACE_CFG_H
+
+/**
+**  \cfetblcfg Maximum Table Name Length
+**
+**  \par Description:
+**      Indicates the maximum length (in characters) of the table name
+**      ('TblName') portion of a Full Table Name of the following
+**      form: "ApplicationName.TblName"
+**
+**      This length does not need to include an extra character for NULL termination.
+**
+**  \par Limits
+**       This value should be kept as a multiple of 4, to maintain alignment of
+**       any possible neighboring fields without implicit padding.
+*/
+#define CFE_MISSION_TBL_MAX_NAME_LENGTH 16
+
+/**
+**  \cfetblcfg Maximum Length of Full Table Name in messages
+**
+**  \par Description:
+**      Indicates the maximum length (in characters) of the entire table name
+**      within software bus messages, in "AppName.TableName" notation.
+**
+**      This affects the layout of command/telemetry messages but does not affect run
+**      time behavior or internal allocation.
+**
+**  \par Limits
+**       All CPUs within the same SB domain (mission) must share the same definition
+**       Note this affects the size of messages, so it must not cause any message
+**       to exceed the max length.
+**
+**       This value should be kept as a multiple of 4, to maintain alignment of
+**       any possible neighboring fields without implicit padding.
+*/
+#define CFE_MISSION_TBL_MAX_FULL_NAME_LEN (CFE_MISSION_TBL_MAX_NAME_LENGTH + CFE_MISSION_MAX_API_LEN + 4)
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-tbl-internal-cfg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_tbl_internal_cfg.h</span></code><a class="headerlink" href="#default-cfe-tbl-internal-cfg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/tbl/config/default_cfe_tbl_internal_cfg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Table Services (CFE_TBL) Application Private Config Definitions
+ *
+ * This provides default values for configurable items that are internal
+ * to this module and do NOT affect the interface(s) of this module.  Changes
+ * to items in this file only affect the local module and will be transparent
+ * to external entities that are using the public interface(s).
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_TBL_INTERNAL_CFG_H
+#define CFE_TBL_INTERNAL_CFG_H
+
+/**
+**  \cfeescfg Define TBL Task Priority
+**
+**  \par Description:
+**       Defines the cFE_TBL Task priority.
+**
+**  \par Limits
+**       Not Applicable
+*/
+#define CFE_PLATFORM_TBL_START_TASK_PRIORITY 70
+
+/**
+**  \cfeescfg Define TBL Task Stack Size
+**
+**  \par Description:
+**       Defines the cFE_TBL Task Stack Size
+**
+**  \par Limits
+**       There is a lower limit of 2048 on this configuration parameter.  There
+**       are no restrictions on the upper limit however, the maximum stack size
+**       is system dependent and should be verified.  Most operating systems provide
+**       tools for measuring the amount of stack used by a task during operation. It
+**       is always a good idea to verify that no more than 1/2 of the stack is used.
+*/
+#define CFE_PLATFORM_TBL_START_TASK_STACK_SIZE CFE_PLATFORM_ES_DEFAULT_STACK_SIZE
+
+/* Platform Configuration Parameters for Table Service (TBL) */
+
+/**
+**  \cfetblcfg Size of Table Services Table Memory Pool
+**
+**  \par Description:
+**       Defines the TOTAL size of the memory pool that cFE Table Services allocates
+**       from the system.  The size must be large enough to provide memory for each
+**       registered table, the inactive buffers for double buffered tables and for
+**       the shared inactive buffers for single buffered tables.
+**
+**  \par Limits
+**       The cFE does not place a limit on the size of this parameter.
+*/
+#define CFE_PLATFORM_TBL_BUF_MEMORY_BYTES 524288
+
+/**
+**  \cfetblcfg Maximum Size Allowed for a Double Buffered Table
+**
+**  \par Description:
+**       Defines the maximum allowed size (in bytes) of a double buffered table.
+**
+**  \par Limits
+**       The cFE does not place a limit on the size of this parameter but it must be
+**       less than half of #CFE_PLATFORM_TBL_BUF_MEMORY_BYTES.
+*/
+#define CFE_PLATFORM_TBL_MAX_DBL_TABLE_SIZE 16384
+
+/**
+**  \cfetblcfg Maximum Size Allowed for a Single Buffered Table
+**
+**  \par Description:
+**       Defines the maximum allowed size (in bytes) of a single buffered table.
+**       \b NOTE: This size determines the size of all shared table buffers.
+**       Therefore, this size will be multiplied by #CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS
+**       below when allocating memory for shared tables.
+**
+**  \par Limits
+**       The cFE does not place a limit on the size of this parameter but it must be
+**       small enough to allow for #CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS number of tables
+**       to fit into #CFE_PLATFORM_TBL_BUF_MEMORY_BYTES.
+*/
+#define CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE 16384
+
+/**
+**  \cfetblcfg Maximum Number of Tables Allowed to be Registered
+**
+**  \par Description:
+**       Defines the maximum number of tables supported by this processor's Table Services.
+**
+**  \par Limits
+**       This number must be less than 32767.  It should be recognized that this parameter
+**       determines the size of the Table Registry.  An excessively high number will waste
+**       memory.
+*/
+#define CFE_PLATFORM_TBL_MAX_NUM_TABLES 128
+
+/**
+**  \cfetblcfg Maximum Number of Critical Tables that can be Registered
+**
+**  \par Description:
+**       Defines the maximum number of critical tables supported by this processor's Table Services.
+**
+**  \par Limits
+**       This number must be less than 32767.  It should be recognized that this parameter
+**       determines the size of the Critical Table Registry which is maintained in the Critical
+**       Data Store.  An excessively high number will waste Critical Data Store memory.  Therefore,
+**       this number must not exceed the value defined in CFE_ES_CDS_MAX_CRITICAL_TABLES.
+*/
+#define CFE_PLATFORM_TBL_MAX_CRITICAL_TABLES 32
+
+/**
+**  \cfetblcfg Maximum Number of Table Handles
+**
+**  \par Description:
+**       Defines the maximum number of Table Handles.
+**
+**  \par Limits
+**       This number must be less than 32767.  This number must be at least as big as
+**       the number of tables (#CFE_PLATFORM_TBL_MAX_NUM_TABLES) and should be set higher if tables
+**       are shared between applications.
+*/
+#define CFE_PLATFORM_TBL_MAX_NUM_HANDLES 256
+
+/**
+**  \cfetblcfg Maximum Number of Simultaneous Loads to Support
+**
+**  \par Description:
+**       Defines the maximum number of single buffered tables that can be
+**       loaded simultaneously.  This number is used to determine the number
+**       of shared buffers to allocate.
+**
+**  \par Limits
+**       This number must be less than 32767.  An excessively high number will
+**       degrade system performance and waste memory.  A number less than 5 is
+**       suggested but not required.
+*/
+#define CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS 4
+
+/**
+**  \cfetblcfg Maximum Number of Simultaneous Table Validations
+**
+**  \par Description:
+**       Defines the maximum number of pending validations that
+**       the Table Services can handle at any one time.  When a
+**       table has a validation function, a validation request is
+**       made of the application to perform that validation.  This
+**       number determines how many of those requests can be
+**       outstanding at any one time.
+**
+**  \par Limits
+**       This number must be less than 32767.  An excessively high number will
+**       degrade system performance and waste memory.  A number less than 20 is
+**       suggested but not required.
+*/
+#define CFE_PLATFORM_TBL_MAX_NUM_VALIDATIONS 10
+
+/**
+**  \cfetblcfg Default Filename for a Table Registry Dump
+**
+**  \par Description:
+**       Defines the file name used to store the table registry when
+**       no filename is specified in the dump registry command.
+**
+**  \par Limits
+**       The length of each string, including the NULL terminator cannot exceed the
+**       #OS_MAX_PATH_LEN value.
+*/
+#define CFE_PLATFORM_TBL_DEFAULT_REG_DUMP_FILE "/ram/cfe_tbl_reg.log"
+
+/**
+**  \cfetblcfg Number of Spacecraft ID's specified for validation
+**
+**  \par Description:
+**       Defines the number of specified spacecraft ID values that
+**       are verified during table loads.  If the number is zero
+**       then no validation of the spacecraft ID field in the table
+**       file header is performed when tables are loaded.  Non-zero
+**       values indicate how many values from the list of spacecraft
+**       ID's defined below are compared to the spacecraft ID field
+**       in the table file header.  The ELF2CFETBL tool may be used
+**       to create table files with specified spacecraft ID values.
+**
+**  \par Limits
+**       This number must be greater than or equal to zero and
+**       less than or equal to 2.
+*/
+#define CFE_PLATFORM_TBL_VALID_SCID_COUNT 0
+
+/* macro to construct 32 bit value from 4 chars */
+#define CFE_PLATFORM_TBL_U32FROM4CHARS(_C1, _C2, _C3, _C4) \
+    ((uint32)(_C1) &lt;&lt; 24 | (uint32)(_C2) &lt;&lt; 16 | (uint32)(_C3) &lt;&lt; 8 | (uint32)(_C4))
+
+/**
+**  \cfetblcfg Spacecraft ID values used for table load validation
+**
+**  \par Description:
+**       Defines the spacecraft ID values used for validating the
+**       spacecraft ID field in the table file header.  To be valid,
+**       the spacecraft ID specified in the table file header must
+**       match one of the values defined here.
+**
+**  \par Limits
+**       This value can be any 32 bit unsigned integer.
+*/
+#define CFE_PLATFORM_TBL_VALID_SCID_1 (0x42)
+#define CFE_PLATFORM_TBL_VALID_SCID_2 (CFE_PLATFORM_TBL_U32FROM4CHARS('a', 'b', 'c', 'd'))
+
+/**
+**  \cfetblcfg Number of Processor ID's specified for validation
+**
+**  \par Description:
+**       Defines the number of specified processor ID values that
+**       are verified during table loads.  If the number is zero
+**       then no validation of the processor ID field in the table
+**       file header is performed when tables are loaded.  Non-zero
+**       values indicate how many values from the list of processor
+**       ID's defined below are compared to the processor ID field
+**       in the table file header.  The ELF2CFETBL tool may be used
+**       to create table files with specified processor ID values.
+**
+**  \par Limits
+**       This number must be greater than or equal to zero and
+**       less than or equal to 4.
+*/
+#define CFE_PLATFORM_TBL_VALID_PRID_COUNT 0
+
+/**
+**  \cfetblcfg Processor ID values used for table load validation
+**
+**  \par Description:
+**       Defines the processor ID values used for validating the
+**       processor ID field in the table file header.  To be valid,
+**       the spacecraft ID specified in the table file header must
+**       match one of the values defined here.
+**
+**  \par Limits
+**       This value can be any 32 bit unsigned integer.
+*/
+#define CFE_PLATFORM_TBL_VALID_PRID_1 (1)
+#define CFE_PLATFORM_TBL_VALID_PRID_2 (CFE_PLATFORM_TBL_U32FROM4CHARS('a', 'b', 'c', 'd'))
+#define CFE_PLATFORM_TBL_VALID_PRID_3 0
+#define CFE_PLATFORM_TBL_VALID_PRID_4 0
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-tbl-mission-cfg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_tbl_mission_cfg.h</span></code><a class="headerlink" href="#default-cfe-tbl-mission-cfg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/tbl/config/default_cfe_tbl_mission_cfg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * CFE Event Services (CFE_TBL) Application Mission Configuration Header File
+ *
+ * This is a compatibility header for the "mission_cfg.h" file that has
+ * traditionally provided public config definitions for each CFS app.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_TBL_MISSION_CFG_H
+#define CFE_TBL_MISSION_CFG_H
+
+#include "cfe_tbl_interface_cfg.h"
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-tbl-msg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_tbl_msg.h</span></code><a class="headerlink" href="#default-cfe-tbl-msg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/tbl/config/default_cfe_tbl_msg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFE Event Services (CFE_TBL) command and telemetry
+ *   message data types.
+ *
+ * This is a compatibility header for the "cfe_tbl_msg.h" file that has
+ * traditionally provided the message definitions for cFS apps.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_TBL_MSG_H
+#define CFE_TBL_MSG_H
+
+#include "cfe_mission_cfg.h"
+#include "cfe_tbl_msgdefs.h"
+#include "cfe_tbl_msgstruct.h"
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-tbl-msgdefs-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_tbl_msgdefs.h</span></code><a class="headerlink" href="#default-cfe-tbl-msgdefs-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/tbl/config/default_cfe_tbl_msgdefs.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFE Event Services (CFE_TBL) command and telemetry
+ *   message constant definitions.
+ *
+ *  For CFE_TBL this is only the function/command code definitions
+ */
+#ifndef CFE_TBL_MSGDEFS_H
+#define CFE_TBL_MSGDEFS_H
+
+#include "cfe_tbl_fcncodes.h"
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-tbl-msgids-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_tbl_msgids.h</span></code><a class="headerlink" href="#default-cfe-tbl-msgids-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/tbl/config/default_cfe_tbl_msgids.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Event Services (CFE_TBL) Application Message IDs
+ */
+#ifndef CFE_TBL_MSGIDS_H
+#define CFE_TBL_MSGIDS_H
+
+#include "cfe_core_api_base_msgids.h"
+#include "cfe_tbl_topicids.h"
+
+/*
+** cFE Command Message Id's
+*/
+#define CFE_TBL_CMD_MID     CFE_PLATFORM_CMD_MID_BASE + CFE_MISSION_TBL_CMD_MSG     /* 0x1804 */
+#define CFE_TBL_SEND_HK_MID CFE_PLATFORM_CMD_MID_BASE + CFE_MISSION_TBL_SEND_HK_MSG /* 0x180C */
+
+/*
+** CFE Telemetry Message Id's
+*/
+#define CFE_TBL_HK_TLM_MID  CFE_PLATFORM_TLM_MID_BASE + CFE_MISSION_TBL_HK_TLM_MSG  /* 0x0804 */
+#define CFE_TBL_REG_TLM_MID CFE_PLATFORM_TLM_MID_BASE + CFE_MISSION_TBL_REG_TLM_MSG /* 0x080C */
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-tbl-msgstruct-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_tbl_msgstruct.h</span></code><a class="headerlink" href="#default-cfe-tbl-msgstruct-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/tbl/config/default_cfe_tbl_msgstruct.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Purpose:
+ *  cFE Executive Services (TBL) Command and Telemetry packet definition file.
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *     cFE Flight Software Application Developers Guide
+ *
+ *  Notes:
+ *
+ */
+#ifndef CFE_TBL_MSGSTRUCT_H
+#define CFE_TBL_MSGSTRUCT_H
+
+/************************************************************************
+ * Includes
+ ************************************************************************/
+#include "cfe_mission_cfg.h"
+#include "cfe_tbl_msgdefs.h"
+#include "cfe_msg_hdr.h"
+
+/********************************/
+/* Command Message Data Formats */
+/********************************/
+/**
+** \brief Generic "no arguments" command
+**
+** This command structure is used for commands that do not have any parameters.
+** This includes:
+** -# The Housekeeping Request Message
+** -# The No-Op Command (For details, see #CFE_TBL_NOOP_CC)
+** -# The Reset Counters Command (For details, see #CFE_TBL_RESET_COUNTERS_CC)
+*/
+typedef struct CFE_TBL_NoArgsCmd
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief Command header */
+} CFE_TBL_NoArgsCmd_t;
+
+/*
+ * Typedefs for each of the messages that share the command format
+ * Allows each command to evolve independently, while following the command
+ * handler prototype convention
+ */
+typedef CFE_TBL_NoArgsCmd_t CFE_TBL_NoopCmd_t;
+typedef CFE_TBL_NoArgsCmd_t CFE_TBL_ResetCountersCmd_t;
+typedef CFE_TBL_NoArgsCmd_t CFE_TBL_SendHkCmd_t;
+
+/**
+** \brief Load Table Command Payload
+**
+** For command details, see #CFE_TBL_LOAD_CC
+**
+**/
+typedef struct CFE_TBL_LoadCmd_Payload
+{
+    char LoadFilename[CFE_MISSION_MAX_PATH_LEN]; /**&lt; \brief Filename (and path) of data to be loaded */
+} CFE_TBL_LoadCmd_Payload_t;
+
+/**
+ * \brief Load Table Command
+ */
+typedef struct CFE_TBL_LoadCmd
+{
+    CFE_MSG_CommandHeader_t   CommandHeader; /**&lt; \brief Command header */
+    CFE_TBL_LoadCmd_Payload_t Payload;       /**&lt; \brief Command payload */
+} CFE_TBL_LoadCmd_t;
+
+/**
+** \brief Dump Table Command Payload
+**
+** For command details, see #CFE_TBL_DUMP_CC
+*/
+typedef struct CFE_TBL_DumpCmd_Payload
+{
+    uint16 ActiveTableFlag;                            /**&lt; \brief #CFE_TBL_BufferSelect_INACTIVE=Inactive Table,
+                                                                 #CFE_TBL_BufferSelect_ACTIVE=Active Table */
+                                                       /**&lt; Selects either the "Inactive"
+                                                            (#CFE_TBL_BufferSelect_INACTIVE) buffer or the
+                                                            "Active" (#CFE_TBL_BufferSelect_ACTIVE) buffer
+                                                            to be dumped */
+    char TableName[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**&lt; \brief Full name of table to be dumped */
+                                                       /**&lt; ASCII string containing full table name
+                                                            identifier of table to be dumped */
+    char DumpFilename[CFE_MISSION_MAX_PATH_LEN];       /**&lt; \brief Full Filename where data is to be written */
+                                                       /**&lt; ASCII string containing full path of filename
+                                                            where data is to be dumped */
+} CFE_TBL_DumpCmd_Payload_t;
+
+/**
+ * /brief Dump Table Command
+ */
+typedef struct CFE_TBL_DumpCmd
+{
+    CFE_MSG_CommandHeader_t   CommandHeader; /**&lt; \brief Command header */
+    CFE_TBL_DumpCmd_Payload_t Payload;       /**&lt; \brief Command payload */
+} CFE_TBL_DumpCmd_t;
+
+/**
+** \brief Validate Table Command Payload
+**
+** For command details, see #CFE_TBL_VALIDATE_CC
+*/
+typedef struct CFE_TBL_ValidateCmd_Payload
+{
+    uint16 ActiveTableFlag;                            /**&lt; \brief #CFE_TBL_BufferSelect_INACTIVE=Inactive Table,
+                                                                 #CFE_TBL_BufferSelect_ACTIVE=Active Table */
+                                                       /**&lt; Selects either the "Inactive"
+                                                            (#CFE_TBL_BufferSelect_INACTIVE) buffer or the
+                                                            "Active" (#CFE_TBL_BufferSelect_ACTIVE) buffer
+                                                            to be validated */
+    char TableName[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**&lt; \brief Full Name of Table to be validated */
+                                                       /**&lt; ASCII string containing full table name
+                                                            identifier of table to be validated */
+} CFE_TBL_ValidateCmd_Payload_t;
+
+/**
+ * \brief Validate Table Command
+ */
+typedef struct CFE_TBL_ValidateCmd
+{
+    CFE_MSG_CommandHeader_t       CommandHeader; /**&lt; \brief Command header */
+    CFE_TBL_ValidateCmd_Payload_t Payload;       /**&lt; \brief Command payload */
+} CFE_TBL_ValidateCmd_t;
+
+/**
+** \brief Activate Table Command Payload
+**
+** For command details, see #CFE_TBL_ACTIVATE_CC
+*/
+typedef struct CFE_TBL_ActivateCmd_Payload
+{
+    char TableName[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**&lt; \brief Full Name of Table to be activated */
+                                                       /**&lt; ASCII string containing full table name
+                                                            identifier of table to be activated */
+} CFE_TBL_ActivateCmd_Payload_t;
+
+/**
+ * \brief Activate Table Command
+ */
+typedef struct CFE_TBL_ActivateCmd
+{
+    CFE_MSG_CommandHeader_t       CommandHeader; /**&lt; \brief Command header */
+    CFE_TBL_ActivateCmd_Payload_t Payload;       /**&lt; \brief Command payload */
+} CFE_TBL_ActivateCmd_t;
+
+/**
+** \brief Dump Registry Command Payload
+**
+** For command details, see #CFE_TBL_DUMP_REGISTRY_CC
+*/
+typedef struct CFE_TBL_DumpRegistryCmd_Payload
+{
+    char DumpFilename[CFE_MISSION_MAX_PATH_LEN]; /**&lt; \brief Full Filename where dumped data is to be
+                                             written */
+                                                 /**&lt; ASCII string containing full path of filename
+                                                      where registry is to be dumped */
+} CFE_TBL_DumpRegistryCmd_Payload_t;
+
+/**
+ * \brief Dump Registry Command
+ */
+typedef struct CFE_TBL_DumpRegistryCmd
+{
+    CFE_MSG_CommandHeader_t           CommandHeader; /**&lt; \brief Command header */
+    CFE_TBL_DumpRegistryCmd_Payload_t Payload;       /**&lt; \brief Command payload */
+} CFE_TBL_DumpRegistryCmd_t;
+
+/**
+** \brief Send Table Registry Command Payload
+**
+** For command details, see #CFE_TBL_SEND_REGISTRY_CC
+*/
+typedef struct CFE_TBL_SendRegistryCmd_Payload
+{
+    char TableName[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**&lt; \brief Full Name of Table whose registry entry
+                                                    is to be telemetered */
+                                                       /**&lt; ASCII string containing full table name
+                                                            identifier of table whose registry entry is
+                                                            to be telemetered via #CFE_TBL_TableRegistryTlm_t */
+} CFE_TBL_SendRegistryCmd_Payload_t;
+
+/**
+ * \brief Send Table Registry Command
+ */
+typedef struct CFE_TBL_SendRegistryCmd
+{
+    CFE_MSG_CommandHeader_t           CommandHeader; /**&lt; \brief Command header */
+    CFE_TBL_SendRegistryCmd_Payload_t Payload;       /**&lt; \brief Command payload */
+} CFE_TBL_SendRegistryCmd_t;
+
+/**
+** \brief Delete Critical Table CDS Command Payload
+**
+** For command details, see #CFE_TBL_DELETE_CDS_CC
+*/
+typedef struct CFE_TBL_DelCDSCmd_Payload
+{
+    char TableName[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**&lt; \brief Full Name of Table whose CDS is
+                                                    to be deleted */
+                                                       /**&lt; ASCII string containing full table name
+                                                            identifier of a critical table whose
+                                                            CDS is to be deleted */
+} CFE_TBL_DelCDSCmd_Payload_t;
+
+/**
+ * \brief Delete Critical Table CDS Command
+ */
+typedef struct CFE_TBL_DeleteCDSCmd
+{
+    CFE_MSG_CommandHeader_t     CommandHeader; /**&lt; \brief Command header */
+    CFE_TBL_DelCDSCmd_Payload_t Payload;       /**&lt; \brief Command payload */
+} CFE_TBL_DeleteCDSCmd_t;
+
+/**
+** \brief Abort Load Command Payload
+**
+** For command details, see #CFE_TBL_ABORT_LOAD_CC
+*/
+typedef struct CFE_TBL_AbortLoadCmd_Payload
+{
+    char TableName[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**&lt; \brief Full Name of Table whose load is to be aborted */
+                                                       /**&lt; ASCII string containing full table name
+                                                            identifier of a table whose load is to be aborted */
+} CFE_TBL_AbortLoadCmd_Payload_t;
+
+/**
+ * \brief Abort Load Command
+ */
+typedef struct CFE_TBL_AbortLoadCmd
+{
+    CFE_MSG_CommandHeader_t        CommandHeader; /**&lt; \brief Command header */
+    CFE_TBL_AbortLoadCmd_Payload_t Payload;       /**&lt; \brief Command payload */
+} CFE_TBL_AbortLoadCmd_t;
+
+/*************************************************************************/
+/******************************************/
+/* Generated Command Message Data Formats */
+/******************************************/
+/**
+** \brief Table Management Notification Command Payload
+**
+** \par Description
+**      Whenever an application that owns a table calls the #CFE_TBL_NotifyByMessage API
+**      following the table registration, Table services will generate the following
+**      command message with the application specified message ID, command code and
+**      parameter whenever the table requires management (e.g. - loads and validations).
+*/
+typedef struct CFE_TBL_NotifyCmd_Payload
+{
+    uint32 Parameter; /**&lt; \brief Application specified command parameter */
+} CFE_TBL_NotifyCmd_Payload_t;
+
+/**
+ * /brief Table Management Notification Command
+ */
+typedef struct CFE_TBL_NotifyCmd
+{
+    CFE_MSG_CommandHeader_t     CommandHeader; /**&lt; \brief Command header */
+    CFE_TBL_NotifyCmd_Payload_t Payload;       /**&lt; \brief Command payload */
+} CFE_TBL_NotifyCmd_t;
+
+/*************************************************************************/
+/**********************************/
+/* Telemetry Message Data Formats */
+/**********************************/
+/**
+**  \cfetbltlm Table Services Housekeeping Packet
+**/
+typedef struct CFE_TBL_HousekeepingTlm_Payload
+{
+    /*
+    ** Task command interface counters...
+    */
+    uint8 CommandCounter;      /**&lt; \cfetlmmnemonic \TBL_CMDPC
+                                \brief Count of valid commands received */
+    uint8 CommandErrorCounter; /**&lt; \cfetlmmnemonic \TBL_CMDEC
+                           \brief Count of invalid commands received */
+
+    /*
+    ** Table Registry Statistics
+    */
+    uint16 NumTables;      /**&lt; \cfetlmmnemonic \TBL_NUMTABLES
+                                \brief Number of Tables Registered */
+    uint16 NumLoadPending; /**&lt; \cfetlmmnemonic \TBL_NUMUPDATESPEND
+                                \brief Number of Tables pending on Applications for their update */
+
+    /*
+    ** Last Table Validation Results
+    */
+    uint16 ValidationCounter;                                 /**&lt; \cfetlmmnemonic \TBL_VALCOMPLTDCTR
+                                                               \brief Number of completed table validations */
+    uint32 LastValCrc;                                        /**&lt; \cfetlmmnemonic \TBL_LASTVALCRC
+                                                                   \brief Data Integrity Value computed for last table validated */
+    int32 LastValStatus;                                      /**&lt; \cfetlmmnemonic \TBL_LASTVALS
+                                                                   \brief Returned status from validation function for last table validated */
+    bool ActiveBuffer;                                        /**&lt; \cfetlmmnemonic \TBL_LASTVALBUF
+                                                                   \brief Indicator of whether table buffer validated was 0=Inactive, 1=Active */
+    char LastValTableName[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**&lt; \cfetlmmnemonic \TBL_LASTVALTBLNAME
+                                                           \brief Name of last table validated */
+    uint8 SuccessValCounter;                                  /**&lt; \cfetlmmnemonic \TBL_VALSUCCESSCTR
+                                                               \brief Total number of successful table validations */
+    uint8 FailedValCounter;                                   /**&lt; \cfetlmmnemonic \TBL_VALFAILEDCTR
+                                                               \brief Total number of unsuccessful table validations */
+    uint8 NumValRequests;                                     /**&lt; \cfetlmmnemonic \TBL_VALREQCTR
+                                                                   \brief Number of times Table Services has requested validations from Apps */
+
+    /*
+    ** Ground system interface information
+    */
+    uint8 NumFreeSharedBufs;                                  /**&lt; \cfetlmmnemonic \TBL_NUMFREESHRBUF
+                                                                   \brief Number of free Shared Working Buffers */
+    uint8 ByteAlignPad1;                                      /**&lt; \cfetlmmnemonic \TBL_BYTEALIGNPAD1
+                                                                   \brief Spare byte to ensure longword alignment */
+    CFE_ES_MemHandle_t MemPoolHandle;                         /**&lt; \cfetlmmnemonic \TBL_MEMPOOLHANDLE
+                                                                   \brief Handle to TBL's memory pool */
+    CFE_TIME_SysTime_t LastUpdateTime;                        /**&lt; \cfetlmmnemonic \TBL_LASTUPDTIME
+                                                                   \brief Time of last table update */
+    char LastUpdatedTable[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**&lt; \cfetlmmnemonic \TBL_LASTUPDTBLNAME
+                                                         \brief Name of the last table updated */
+    char LastFileLoaded[CFE_MISSION_MAX_PATH_LEN];            /**&lt; \cfetlmmnemonic \TBL_LASTFILELOADED
+                                                          \brief Path and Name of last table image file loaded */
+    char LastFileDumped[CFE_MISSION_MAX_PATH_LEN];            /**&lt; \cfetlmmnemonic \TBL_LASTFILEDUMPED
+                                                          \brief Path and Name of last file dumped to */
+    char LastTableLoaded[CFE_MISSION_TBL_MAX_FULL_NAME_LEN];  /**&lt; \cfetlmmnemonic \TBL_LASTTABLELOADED
+                                                          \brief Name of the last table loaded */
+} CFE_TBL_HousekeepingTlm_Payload_t;
+
+typedef struct CFE_TBL_HousekeepingTlm
+{
+    CFE_MSG_TelemetryHeader_t         TelemetryHeader; /**&lt; \brief Telemetry header */
+    CFE_TBL_HousekeepingTlm_Payload_t Payload;         /**&lt; \brief Telemetry payload */
+} CFE_TBL_HousekeepingTlm_t;
+
+/**
+**  \cfetbltlm Table Registry Info Packet
+**/
+typedef struct CFE_TBL_TblRegPacket_Payload
+{
+    CFE_ES_MemOffset_t Size;                       /**&lt; \cfetlmmnemonic \TBL_SIZE
+                                                        \brief Size, in bytes, of Table */
+    uint32 Crc;                                    /**&lt; \cfetlmmnemonic \TBL_CRC
+                                                        \brief Most recently calculated CRC of Table */
+    CFE_ES_MemAddress_t ActiveBufferAddr;          /**&lt; \cfetlmmnemonic \TBL_ACTBUFADD
+                                                        \brief Address of Active Buffer */
+    CFE_ES_MemAddress_t InactiveBufferAddr;        /**&lt; \cfetlmmnemonic \TBL_IACTBUFADD
+                                                        \brief Address of Inactive Buffer */
+    CFE_ES_MemAddress_t ValidationFuncPtr;         /**&lt; \cfetlmmnemonic \TBL_VALFUNCPTR
+                                                        \brief Ptr to Owner App's function that validates tbl contents */
+    CFE_TIME_SysTime_t TimeOfLastUpdate;           /**&lt; \cfetlmmnemonic \TBL_TIMELASTUPD
+                                                        \brief Time when Table was last updated */
+    uint32 FileCreateTimeSecs;                     /**&lt; \cfetlmmnemonic \TBL_FILECSECONDS
+                                                        \brief File creation time from last file loaded into table */
+    uint32 FileCreateTimeSubSecs;                  /**&lt; \cfetlmmnemonic \TBL_FILECSUBSECONDS
+                                                        \brief File creation time from last file loaded into table */
+    bool TableLoadedOnce;                          /**&lt; \cfetlmmnemonic \TBL_LOADEDONCE
+                                                        \brief Flag indicating whether table has been loaded once or not */
+    bool LoadPending;                              /**&lt; \cfetlmmnemonic \TBL_UPDATEPNDNG
+                                                        \brief Flag indicating an inactive buffer is ready to be copied */
+    bool DumpOnly;                                 /**&lt; \cfetlmmnemonic \TBL_DUMPONLY
+                                                        \brief Flag indicating Table is NOT to be loaded */
+    bool DoubleBuffered;                           /**&lt; \cfetlmmnemonic \TBL_DBLBUFFERED
+                                                     \brief Flag indicating Table has a dedicated inactive buffer */
+    char Name[CFE_MISSION_TBL_MAX_FULL_NAME_LEN];  /**&lt; \cfetlmmnemonic \TBL_NAME
+                                                \brief Processor specific table name */
+    char LastFileLoaded[CFE_MISSION_MAX_PATH_LEN]; /**&lt; \cfetlmmnemonic \TBL_LASTFILEUPD
+                                               \brief Filename of last file loaded into table */
+    char OwnerAppName[CFE_MISSION_MAX_API_LEN];    /**&lt; \cfetlmmnemonic \TBL_OWNERAPP
+                                                \brief Name of owning application */
+    bool Critical;                                 /**&lt; \cfetlmmnemonic \TBL_CRITICAL
+                                                        \brief Indicates whether table is Critical or not */
+    uint8 ByteAlign4;                              /**&lt; \cfetlmmnemonic \TBL_SPARE4
+                                                        \brief Spare byte to maintain byte alignment */
+} CFE_TBL_TblRegPacket_Payload_t;
+
+typedef struct CFE_TBL_TableRegistryTlm
+{
+    CFE_MSG_TelemetryHeader_t      TelemetryHeader; /**&lt; \brief Telemetry header */
+    CFE_TBL_TblRegPacket_Payload_t Payload;         /**&lt; \brief Telemetry payload */
+} CFE_TBL_TableRegistryTlm_t;
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-tbl-platform-cfg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_tbl_platform_cfg.h</span></code><a class="headerlink" href="#default-cfe-tbl-platform-cfg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/tbl/config/default_cfe_tbl_platform_cfg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * CFE Table Services (CFE_TBL) Application Platform Configuration Header File
+ *
+ * This is a compatibility header for the "platform_cfg.h" file that has
+ * traditionally provided both public and private config definitions
+ * for each CFS app.
+ *
+ * These definitions are now provided in two separate files, one for
+ * the public/mission scope and one for internal scope.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_TBL_PLATFORM_CFG_H
+#define CFE_TBL_PLATFORM_CFG_H
+
+#include "cfe_tbl_mission_cfg.h"
+#include "cfe_tbl_internal_cfg.h"
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="default-cfe-tbl-topicids-h">
+<h2><code class="docutils literal notranslate"><span class="pre">default_cfe_tbl_topicids.h</span></code><a class="headerlink" href="#default-cfe-tbl-topicids-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/cfe/modules/tbl/config/default_cfe_tbl_topicids.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Table Services (CFE_TBL) Application Topic IDs
+ */
+#ifndef CFE_TBL_TOPICIDS_H
+#define CFE_TBL_TOPICIDS_H
+
+/**
+**  \cfemissioncfg cFE Portable Message Numbers for Commands
+**
+**  \par Description:
+**      Portable message numbers for the cFE command messages
+**
+**  \par Limits
+**      Not Applicable
+*/
+#define CFE_MISSION_TBL_CMD_MSG     4
+#define CFE_MISSION_TBL_SEND_HK_MSG 12
+
+/**
+**  \cfemissioncfg cFE Portable Message Numbers for Telemetry
+**
+**  \par Description:
+**      Portable message numbers for the cFE telemetry messages
+**
+**  \par Limits
+**      Not Applicable
+*/
+#define CFE_MISSION_TBL_HK_TLM_MSG  4
+#define CFE_MISSION_TBL_REG_TLM_MSG 12
+
+#endif
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="tbl" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../eds/index.html" class="btn btn-neutral float-right" title="eds" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

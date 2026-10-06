@@ -1,0 +1,2848 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../search.html" />
+    <link rel="next" title="shared" href="../../shared/index.html" />
+    <link rel="prev" title="src" href="../adaptors/src/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">osal</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">unit-test-coverage</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">portable</a></li>
+      <li class="breadcrumb-item active">src</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../_sources/project_inventory/fsw/osal/src/unit-test-coverage/portable/src/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="src">
+<h1>src<a class="headerlink" href="#src" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/portable/src/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="coveragetest-bsd-select-c">
+<h2><code class="docutils literal notranslate"><span class="pre">coveragetest-bsd-select.c</span></code><a class="headerlink" href="#coveragetest-bsd-select-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/portable/src/coveragetest-bsd-select.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-portable-coveragetest.h"
+#include "ut-adaptor-portable-posix-io.h"
+#include "os-shared-select.h"
+#include "os-shared-idmap.h"
+
+#include "OCS_sys_select.h"
+#include "OCS_errno.h"
+
+void Test_OS_SelectSingle_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_SelectSingle_Impl(uint32 stream_id, uint32 *SelectFlags, int32 msecs)
+     */
+    uint32              SelectFlags;
+    OS_object_token_t   token;
+    struct OCS_timespec nowtime;
+    struct OCS_timespec latertime;
+    struct OCS_timespec latertime2;
+
+    memset(&amp;token, 0, sizeof(token));
+
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, false);
+    SelectFlags = OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&amp;token, &amp;SelectFlags, 0), OS_ERR_OPERATION_NOT_SUPPORTED);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, true);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&amp;token, &amp;SelectFlags, 0), OS_SUCCESS);
+
+    /* Cover FD_ISSET true branches and pend */
+    UT_SetDeferredRetcode(UT_KEY(OCS_FD_ISSET), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(OCS_FD_ISSET), 1, true);
+    SelectFlags = OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&amp;token, &amp;SelectFlags, -1), OS_SUCCESS);
+
+    /* No flags and non-read/write flag branches */
+    SelectFlags = 0;
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&amp;token, &amp;SelectFlags, 0), OS_SUCCESS);
+    SelectFlags = OS_STREAM_STATE_BOUND;
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&amp;token, &amp;SelectFlags, 0), OS_SUCCESS);
+
+    /* try a case where select() needs to be repeated to achieve the desired wait time */
+    UT_ResetState(UT_KEY(OCS_clock_gettime));
+    UT_ResetState(UT_KEY(OCS_select));
+    UT_SetDefaultReturnValue(UT_KEY(OCS_select), -1);
+    OCS_errno = OCS_EINTR;
+    UT_SetDeferredRetcode(UT_KEY(OCS_select), 2, 0);
+    SelectFlags        = OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    nowtime.tv_sec     = 1;
+    nowtime.tv_nsec    = 0;
+    latertime.tv_sec   = 1;
+    latertime.tv_nsec  = 800000000;
+    latertime2.tv_sec  = 2;
+    latertime2.tv_nsec = 200000000;
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &amp;nowtime, sizeof(nowtime), false);
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &amp;latertime, sizeof(latertime), false);
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &amp;latertime2, sizeof(latertime2), false);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&amp;token, &amp;SelectFlags, 1200), OS_ERROR_TIMEOUT);
+    UtAssert_STUB_COUNT(OCS_clock_gettime, 3);
+    UtAssert_STUB_COUNT(OCS_select, 2);
+
+    /* Repeated select with alternate branches */
+    OCS_errno          = OCS_EAGAIN;
+    SelectFlags        = OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    latertime2.tv_nsec = 300000000;
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &amp;nowtime, sizeof(nowtime), false);
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &amp;latertime, sizeof(latertime), false);
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &amp;latertime2, sizeof(latertime2), false);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&amp;token, &amp;SelectFlags, 1200), OS_ERROR_TIMEOUT);
+    UtAssert_STUB_COUNT(OCS_clock_gettime, 6);
+    UtAssert_STUB_COUNT(OCS_select, 3);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_select), 0);
+    SelectFlags       = OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    nowtime.tv_sec    = 1;
+    nowtime.tv_nsec   = 500000000;
+    latertime.tv_sec  = 10;
+    latertime.tv_nsec = 0;
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &amp;nowtime, sizeof(nowtime), false);
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &amp;latertime, sizeof(latertime), false);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&amp;token, &amp;SelectFlags, 999), OS_ERROR_TIMEOUT);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_select), -1);
+    OCS_errno         = OCS_ETIMEDOUT;
+    SelectFlags       = OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    nowtime.tv_sec    = 1;
+    nowtime.tv_nsec   = 0;
+    latertime.tv_sec  = 2;
+    latertime.tv_nsec = 600000000;
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &amp;nowtime, sizeof(nowtime), false);
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &amp;latertime, sizeof(latertime), false);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&amp;token, &amp;SelectFlags, 2100), OS_ERROR);
+
+    /* Test cases where the FD exceeds FD_SETSIZE */
+    SelectFlags = OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    UT_PortablePosixIOTest_Set_FD(UT_INDEX_0, OCS_FD_SETSIZE);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, true);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&amp;token, &amp;SelectFlags, 0), OS_ERR_OPERATION_NOT_SUPPORTED);
+}
+
+void Test_OS_SelectMultiple_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_SelectMultiple_Impl(OS_FdSet *ReadSet, OS_FdSet *WriteSet, int32 msecs)
+     */
+    OS_FdSet ReadSet;
+    OS_FdSet WriteSet;
+    int      i;
+
+    UT_PortablePosixIOTest_Set_FD(UT_INDEX_0, 0);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, true);
+
+    memset(&amp;ReadSet, 0, sizeof(ReadSet));
+    memset(&amp;WriteSet, 0, sizeof(WriteSet));
+    WriteSet.object_ids[0] = 1;
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (NULL, &amp;WriteSet, 0), OS_SUCCESS);
+    ReadSet.object_ids[0] = 1;
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (&amp;ReadSet, NULL, 0), OS_SUCCESS);
+
+    /* Branches for processing the set */
+    UT_SetDeferredRetcode(UT_KEY(OCS_FD_ISSET), 1, true);
+    WriteSet.object_ids[0] = 0x0D;
+    UT_PortablePosixIOTest_Set_FD(OSAL_INDEX_C(2), -1);
+    UT_PortablePosixIOTest_Set_FD(OSAL_INDEX_C(3), 0);
+    UT_PortablePosixIOTest_Set_Selectable(OSAL_INDEX_C(3), true);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (&amp;ReadSet, &amp;WriteSet, 0), OS_SUCCESS);
+
+    memset(&amp;ReadSet, 0, sizeof(ReadSet));
+    memset(&amp;WriteSet, 0, sizeof(WriteSet));
+    ReadSet.object_ids[0] = 1;
+    UT_SetDeferredRetcode(UT_KEY(OCS_select), 1, 0);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (&amp;ReadSet, &amp;WriteSet, 1), OS_ERROR_TIMEOUT);
+
+    /* Test where the FD set is empty */
+    memset(&amp;ReadSet, 0, sizeof(ReadSet));
+    memset(&amp;WriteSet, 0, sizeof(WriteSet));
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (NULL, NULL, 0), OS_ERR_INVALID_ID);
+
+    /* Test cases where the FD exceeds FD_SETSIZE in the read set */
+    UT_PortablePosixIOTest_Set_FD(UT_INDEX_0, OCS_FD_SETSIZE);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, true);
+    memset(&amp;ReadSet, 0xff, sizeof(ReadSet));
+    memset(&amp;WriteSet, 0, sizeof(WriteSet));
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (&amp;ReadSet, &amp;WriteSet, 0), OS_ERR_OPERATION_NOT_SUPPORTED);
+
+    /* Test cases where the FD exceeds FD_SETSIZE in the write set */
+    memset(&amp;ReadSet, 0, sizeof(ReadSet));
+    memset(&amp;WriteSet, 0xff, sizeof(WriteSet));
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (&amp;ReadSet, &amp;WriteSet, 0), OS_ERR_OPERATION_NOT_SUPPORTED);
+
+    /* Test cases where additional bits are set in the OS_FdSet */
+    UT_PortablePosixIOTest_Set_FD(UT_INDEX_0, 0);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, true);
+    memset(&amp;ReadSet, 0xff, sizeof(ReadSet));
+    memset(&amp;WriteSet, 0xff, sizeof(WriteSet));
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (&amp;ReadSet, &amp;WriteSet, 0), OS_ERR_OPERATION_NOT_SUPPORTED);
+
+    /*
+     * Cover OS_FdSet_ConvertOut_Impl for id &lt; OS_MAX_NUM_OPEN_FILES, requires no errors from in conversion
+     * NOTE - coverage only possible if OS_MAX_NUM_OPEN_FILES is not a multiple of 8 (exact fit)
+     */
+    for (i = 1; i &lt; OS_MAX_NUM_OPEN_FILES; i++)
+    {
+        UT_PortablePosixIOTest_Set_FD(OSAL_INDEX_C(i), -1);
+    }
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (&amp;ReadSet, &amp;WriteSet, 0), OS_SUCCESS);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_SelectSingle_Impl);
+    ADD_TEST(OS_SelectMultiple_Impl);
+}
+</pre></div>
+</div>
+</section>
+<section id="coveragetest-bsd-sockets-c">
+<h2><code class="docutils literal notranslate"><span class="pre">coveragetest-bsd-sockets.c</span></code><a class="headerlink" href="#coveragetest-bsd-sockets-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/portable/src/coveragetest-bsd-sockets.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \brief Coverage test for no network implementation
+ * \ingroup  portable
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-sockets.h"
+#include "os-shared-idmap.h"
+#include "os-shared-file.h"
+#include "os-shared-select.h"
+#include "os-impl-io.h"
+
+#include "OCS_sys_socket.h"
+#include "OCS_errno.h"
+#include "OCS_fcntl.h"
+#include "OCS_arpa_inet.h"
+
+#include "ut-adaptor-portable-posix-io.h"
+
+/* Unique error code for return testing */
+#define UT_ERR_UNIQUE 0xDEADBEEF
+
+/* Buffer size */
+#define UT_BUFFER_SIZE 16
+
+/* OS_SelectSingle_Impl hook to set SelectFlags per input */
+static int32 UT_Hook_OS_SelectSingle_Impl(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                          const UT_StubContext_t *Context)
+{
+    uint32 *SelectFlags;
+
+    SelectFlags = UT_Hook_GetArgValueByName(Context, "SelectFlags", uint32 *);
+
+    if (SelectFlags != NULL)
+    {
+        *SelectFlags = *((uint32 *)UserObj);
+    }
+
+    return 0;
+}
+
+/* OCS_getsockopt hook to set sockopt per input */
+static int32 UT_Hook_OCS_getsockopt(void *UserObj, int32 StubRetcode, uint32 CallCount, const UT_StubContext_t *Context)
+{
+    int *optval;
+
+    optval = UT_Hook_GetArgValueByName(Context, "optval", int *);
+
+    if (optval != NULL)
+    {
+        *optval = *((int *)UserObj);
+    }
+
+    return 0;
+}
+
+void Test_OS_SocketOpen_Impl(void)
+{
+    OS_object_token_t token = {0};
+
+    /* Set up token for index 0 */
+    token.obj_idx = UT_INDEX_0;
+    UT_PortablePosixIOTest_ResetImpl(token.obj_idx);
+
+    /* Invalid socket type */
+    OS_stream_table[0].socket_type = -1;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketOpen_Impl, (&amp;token), OS_ERR_NOT_IMPLEMENTED);
+
+    /* Invalid domain type */
+    OS_stream_table[0].socket_type   = OS_SocketType_DATAGRAM;
+    OS_stream_table[0].socket_domain = -1;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketOpen_Impl, (&amp;token), OS_ERR_NOT_IMPLEMENTED);
+
+    /* Fail socket */
+    OS_stream_table[0].socket_domain = OS_SocketDomain_INET;
+    UT_SetDeferredRetcode(UT_KEY(OCS_socket), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketOpen_Impl, (&amp;token), OS_ERROR);
+
+    /* Success case */
+    OS_stream_table[0].socket_type   = OS_SocketType_STREAM;
+    OS_stream_table[0].socket_domain = OS_SocketDomain_INET6;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketOpen_Impl, (&amp;token), OS_SUCCESS);
+}
+
+void Test_OS_SetSocketDefaultFlags_Impl(void)
+{
+    OS_object_token_t token = {0};
+
+    /* Failure in fcntl() GETFL */
+    UT_PortablePosixIOTest_ResetImpl(token.obj_idx);
+    UT_ResetState(UT_KEY(OCS_fcntl));
+    UT_SetDeferredRetcode(UT_KEY(OCS_fcntl), 1, -1);
+    UtAssert_VOIDCALL(OS_SetSocketDefaultFlags_Impl(&amp;token));
+    UtAssert_STUB_COUNT(OCS_fcntl, 1);
+    UtAssert_True(UT_PortablePosixIOTest_Get_Selectable(token.obj_idx), "Socket is selectable");
+
+    /* Failure in fcntl() SETFL */
+    UT_PortablePosixIOTest_ResetImpl(token.obj_idx);
+    UT_ResetState(UT_KEY(OCS_fcntl));
+    UT_SetDeferredRetcode(UT_KEY(OCS_fcntl), 2, -1);
+    UtAssert_VOIDCALL(OS_SetSocketDefaultFlags_Impl(&amp;token));
+    UtAssert_STUB_COUNT(OCS_fcntl, 2);
+    UtAssert_True(UT_PortablePosixIOTest_Get_Selectable(token.obj_idx), "Socket is selectable");
+
+    /* Nominal path */
+    UT_PortablePosixIOTest_ResetImpl(token.obj_idx);
+    UT_ResetState(UT_KEY(OCS_fcntl));
+    UtAssert_VOIDCALL(OS_SetSocketDefaultFlags_Impl(&amp;token));
+    UtAssert_STUB_COUNT(OCS_fcntl, 2);
+    UtAssert_True(UT_PortablePosixIOTest_Get_Selectable(token.obj_idx), "Socket is selectable");
+}
+
+void Test_OS_SocketBindAddress_Impl(void)
+{
+    OS_object_token_t    token = {0};
+    OS_SockAddr_t        addr  = {0};
+    struct OCS_sockaddr *sa    = (struct OCS_sockaddr *)&amp;addr.AddrData;
+
+    /* Set up token for index 0 */
+    token.obj_idx = UT_INDEX_0;
+
+    /* Default family case */
+    sa-&gt;sa_family = -1;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBindAddress_Impl, (&amp;token, &amp;addr), OS_ERR_BAD_ADDRESS);
+
+    /* Note - not attempting to hit addrlen &gt; OS_SOCKADDR_MAX_LEN at this point (NOT MC/DC)
+     * would require compiling with a small OS_SOCKADDR_MAX_LEN or bigger structure */
+
+    /* Fail bind */
+    sa-&gt;sa_family = OCS_AF_INET;
+    UT_SetDeferredRetcode(UT_KEY(OCS_bind), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBindAddress_Impl, (&amp;token, &amp;addr), OS_ERROR);
+
+    /* Success with INET address */
+    sa-&gt;sa_family = OCS_AF_INET;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBindAddress_Impl, (&amp;token, &amp;addr), OS_SUCCESS);
+
+    /* Success with INET6 address */
+    sa-&gt;sa_family = OCS_AF_INET6;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBindAddress_Impl, (&amp;token, &amp;addr), OS_SUCCESS);
+}
+
+void Test_OS_SocketListen_Impl(void)
+{
+    OS_object_token_t token = {0};
+
+    /* Set up token for index 0 */
+    token.obj_idx = UT_INDEX_0;
+
+    /* Nominal Success */
+    OS_stream_table[0].socket_type = OS_SocketType_STREAM;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketListen_Impl, (&amp;token), OS_SUCCESS);
+
+    /* Fail listen */
+    UT_SetDeferredRetcode(UT_KEY(OCS_listen), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketListen_Impl, (&amp;token), OS_ERROR);
+}
+
+void Test_OS_SocketConnect_Impl(void)
+{
+    OS_object_token_t    token = {0};
+    OS_SockAddr_t        addr  = {0};
+    struct OCS_sockaddr *sa    = (struct OCS_sockaddr *)&amp;addr.AddrData;
+    int32                selectflags;
+    int                  sockopt;
+
+    /* Set up token for index 0 */
+    token.obj_idx = UT_INDEX_0;
+
+    /* Default family case */
+    sa-&gt;sa_family     = -1;
+    addr.ActualLength = sizeof(struct OCS_sockaddr_in);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&amp;token, &amp;addr, 0), OS_ERR_BAD_ADDRESS);
+
+    /* Successful connect */
+    sa-&gt;sa_family = OCS_AF_INET;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&amp;token, &amp;addr, 0), OS_SUCCESS);
+
+    /* Fail connect, errno ! EINPROGRESS */
+    OCS_errno = ~OCS_EINPROGRESS;
+    UT_SetDefaultReturnValue(UT_KEY(OCS_connect), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&amp;token, &amp;addr, 0), OS_ERROR);
+
+    /* Fail OS_SelectSingle_Impl, errno == EINPROGRESS */
+    OCS_errno                              = OCS_EINPROGRESS;
+    sa-&gt;sa_family                          = OCS_AF_INET6;
+    addr.ActualLength                      = sizeof(struct OCS_sockaddr_in6);
+    OS_impl_filehandle_table[0].selectable = true;
+    UT_SetDeferredRetcode(UT_KEY(OS_SelectSingle_Impl), 1, UT_ERR_UNIQUE);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&amp;token, &amp;addr, 0), UT_ERR_UNIQUE);
+
+    /* Timeout error by clearing select flags with hook */
+    selectflags = 0;
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), UT_Hook_OS_SelectSingle_Impl, &amp;selectflags);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&amp;token, &amp;addr, 0), OS_ERROR_TIMEOUT);
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), NULL, NULL);
+
+    /* Fail getsockopt status */
+    UT_SetDeferredRetcode(UT_KEY(OCS_getsockopt), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&amp;token, &amp;addr, 0), OS_ERROR);
+
+    /* Nonzero getsockopt sockopt */
+    sockopt = 1;
+    UT_SetHookFunction(UT_KEY(OCS_getsockopt), UT_Hook_OCS_getsockopt, &amp;sockopt);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&amp;token, &amp;addr, 0), OS_ERROR);
+    UT_SetHookFunction(UT_KEY(OCS_getsockopt), NULL, NULL);
+
+    /* Success case with selectable */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&amp;token, &amp;addr, 0), OS_SUCCESS);
+
+    /* Success case with not selectable */
+    OS_impl_filehandle_table[0].selectable = false;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&amp;token, &amp;addr, 0), OS_SUCCESS);
+}
+
+void Test_OS_SocketShutdown_Impl(void)
+{
+    OS_object_token_t token = {0};
+
+    /* Set up token for index 0 */
+    token.obj_idx = UT_INDEX_0;
+
+    /* Check all 3 valid modes */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown_Impl, (&amp;token, OS_SocketShutdownMode_SHUT_READ), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown_Impl, (&amp;token, OS_SocketShutdownMode_SHUT_WRITE), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown_Impl, (&amp;token, OS_SocketShutdownMode_SHUT_READWRITE), OS_SUCCESS);
+
+    /* Check OS call failure */
+    UT_SetDeferredRetcode(UT_KEY(OCS_shutdown), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown_Impl, (&amp;token, OS_SocketShutdownMode_SHUT_READ), OS_ERROR);
+}
+
+void Test_OS_SocketAccept_Impl(void)
+{
+    OS_object_token_t sock_token = {0};
+    OS_object_token_t conn_token = {0};
+    OS_SockAddr_t     addr       = {0};
+    int32             selectflags;
+
+    /* Set up tokens */
+    sock_token.obj_idx = UT_INDEX_0;
+    conn_token.obj_idx = UT_INDEX_1;
+
+    /* Fail OS_SelectSingle_Impl with sock_token selectable */
+    OS_impl_filehandle_table[0].selectable = true;
+    UT_SetDeferredRetcode(UT_KEY(OS_SelectSingle_Impl), 1, UT_ERR_UNIQUE);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept_Impl, (&amp;sock_token, &amp;conn_token, &amp;addr, 0), UT_ERR_UNIQUE);
+
+    /* Timeout by clearing select flags with hook */
+    selectflags = 0;
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), UT_Hook_OS_SelectSingle_Impl, &amp;selectflags);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept_Impl, (&amp;sock_token, &amp;conn_token, &amp;addr, 0), OS_ERROR_TIMEOUT);
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), NULL, NULL);
+
+    /* Clear selectable and fail accept */
+    OS_impl_filehandle_table[0].selectable = false;
+    UT_SetDeferredRetcode(UT_KEY(OCS_accept), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept_Impl, (&amp;sock_token, &amp;conn_token, &amp;addr, 0), OS_ERROR);
+
+    /* Success case */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept_Impl, (&amp;sock_token, &amp;conn_token, &amp;addr, 0), OS_SUCCESS);
+}
+
+void Test_OS_SocketRecvFrom_Impl(void)
+{
+    OS_object_token_t token = {0};
+    uint8             buffer[UT_BUFFER_SIZE];
+    OS_SockAddr_t     addr = {0};
+    int32             selectflags;
+
+    /* Set up token */
+    token.obj_idx = UT_INDEX_0;
+
+    /* NULL RemoteAddr, selectable, fail OS_SelectSingle_Impl */
+    OS_impl_filehandle_table[0].selectable = true;
+    UT_SetDeferredRetcode(UT_KEY(OS_SelectSingle_Impl), 1, UT_ERR_UNIQUE);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom_Impl, (&amp;token, buffer, sizeof(buffer), NULL, 0), UT_ERR_UNIQUE);
+
+    /* Timeout by clearing select flags with hook */
+    selectflags = 0;
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), UT_Hook_OS_SelectSingle_Impl, &amp;selectflags);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom_Impl, (&amp;token, buffer, sizeof(buffer), &amp;addr, 0), OS_ERROR_TIMEOUT);
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), NULL, NULL);
+
+    /* Not selectable, 0 timeout, EAGAIN error from recvfrom error */
+    OS_impl_filehandle_table[0].selectable = false;
+    OCS_errno                              = OCS_EAGAIN;
+    UT_SetDeferredRetcode(UT_KEY(OCS_recvfrom), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom_Impl, (&amp;token, buffer, sizeof(buffer), &amp;addr, 0), OS_QUEUE_EMPTY);
+
+    /* With timeout, other error from recvfrom error */
+    OCS_errno = 0;
+    UT_SetDeferredRetcode(UT_KEY(OCS_recvfrom), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom_Impl, (&amp;token, buffer, sizeof(buffer), &amp;addr, 1), OS_ERROR);
+
+    /* With timeout, EWOULDBLOCK error from recvfrom error */
+    OCS_errno = OCS_EWOULDBLOCK;
+    UT_SetDeferredRetcode(UT_KEY(OCS_recvfrom), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom_Impl, (&amp;token, buffer, sizeof(buffer), &amp;addr, 1), OS_QUEUE_EMPTY);
+
+    /* Success with NULL RemoteAddr */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom_Impl, (&amp;token, buffer, sizeof(buffer), NULL, 0), OS_SUCCESS);
+
+    /* Success with non-NULL RemoteAddr */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom_Impl, (&amp;token, buffer, sizeof(buffer), &amp;addr, 0), OS_SUCCESS);
+}
+
+void Test_OS_SocketSendTo_Impl(void)
+{
+    OS_object_token_t    token                  = {0};
+    const uint8          buffer[UT_BUFFER_SIZE] = {0};
+    OS_SockAddr_t        addr                   = {0};
+    struct OCS_sockaddr *sa                     = (struct OCS_sockaddr *)&amp;addr.AddrData;
+
+    /* Set up token */
+    token.obj_idx = UT_INDEX_0;
+
+    /* Bad address length */
+    sa-&gt;sa_family     = -1;
+    addr.ActualLength = sizeof(struct OCS_sockaddr_in);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketSendTo_Impl, (&amp;token, buffer, sizeof(buffer), &amp;addr), OS_ERR_BAD_ADDRESS);
+
+    /* AF_INET, failed sendto */
+    sa-&gt;sa_family = OCS_AF_INET;
+    UT_SetDeferredRetcode(UT_KEY(OCS_sendto), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketSendTo_Impl, (&amp;token, buffer, sizeof(buffer), &amp;addr), OS_ERROR);
+
+    /* AF_INET6, success */
+    sa-&gt;sa_family     = OCS_AF_INET6;
+    addr.ActualLength = sizeof(struct OCS_sockaddr_in6);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketSendTo_Impl, (&amp;token, buffer, sizeof(buffer), &amp;addr), OS_SUCCESS);
+}
+
+void Test_OS_SocketGetInfo_Impl(void)
+{
+    OSAPI_TEST_FUNCTION_RC(OS_SocketGetInfo_Impl, (NULL, NULL), OS_SUCCESS);
+}
+
+void Test_OS_SocketAddrInit_Impl(void)
+{
+    OS_SockAddr_t        addr = {0};
+    struct OCS_sockaddr *sa   = (struct OCS_sockaddr *)&amp;addr.AddrData;
+
+    /* Unknown domain */
+    sa-&gt;sa_family     = -1;
+    addr.ActualLength = 5;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrInit_Impl, (&amp;addr, -1), OS_ERR_NOT_IMPLEMENTED);
+    UtAssert_INT32_EQ(sa-&gt;sa_family, 0);
+    UtAssert_INT32_EQ(addr.ActualLength, 0);
+
+    /* Note - not attempting to hit addrlen &gt; OS_SOCKADDR_MAX_LEN at this point (NOT MC/DC)
+     * would require compiling with a small OS_SOCKADDR_MAX_LEN or bigger structure */
+
+    /* INET, success */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrInit_Impl, (&amp;addr, OS_SocketDomain_INET), OS_SUCCESS);
+    UtAssert_INT32_EQ(sa-&gt;sa_family, OCS_AF_INET);
+    UtAssert_INT32_EQ(addr.ActualLength, sizeof(struct OCS_sockaddr_in));
+
+    /* AF_INET6, success */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrInit_Impl, (&amp;addr, OS_SocketDomain_INET6), OS_SUCCESS);
+    UtAssert_INT32_EQ(sa-&gt;sa_family, OCS_AF_INET6);
+    UtAssert_INT32_EQ(addr.ActualLength, sizeof(struct OCS_sockaddr_in6));
+}
+
+void Test_OS_SocketAddrToString_Impl(void)
+{
+    char                 buffer[UT_BUFFER_SIZE];
+    OS_SockAddr_t        addr = {0};
+    struct OCS_sockaddr *sa   = (struct OCS_sockaddr *)&amp;addr.AddrData;
+
+    /* Bad family */
+    sa-&gt;sa_family = -1;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrToString_Impl, (buffer, sizeof(buffer), &amp;addr), OS_ERR_BAD_ADDRESS);
+
+    /* AF_INET6 failed inet_ntop */
+    sa-&gt;sa_family = OCS_AF_INET6;
+    UT_SetDeferredRetcode(UT_KEY(OCS_inet_ntop), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrToString_Impl, (buffer, sizeof(buffer), &amp;addr), OS_ERROR);
+
+    /* AF_INET, success */
+    sa-&gt;sa_family = OCS_AF_INET;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrToString_Impl, (buffer, sizeof(buffer), &amp;addr), OS_SUCCESS);
+}
+
+void Test_OS_SocketAddrFromString_Impl(void)
+{
+    const char           buffer[UT_BUFFER_SIZE] = "UT";
+    OS_SockAddr_t        addr                   = {0};
+    struct OCS_sockaddr *sa                     = (struct OCS_sockaddr *)&amp;addr.AddrData;
+
+    /* Bad family */
+    sa-&gt;sa_family = -1;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrFromString_Impl, (&amp;addr, buffer), OS_ERR_BAD_ADDRESS);
+
+    /* AF_INET6 failed inet_ntop */
+    sa-&gt;sa_family = OCS_AF_INET6;
+    UT_SetDeferredRetcode(UT_KEY(OCS_inet_pton), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrFromString_Impl, (&amp;addr, buffer), OS_ERROR);
+
+    /* AF_INET, unable to convert (note inet_pton returns 0 if it failed) */
+    sa-&gt;sa_family = OCS_AF_INET;
+    UT_SetDeferredRetcode(UT_KEY(OCS_inet_pton), 1, 0);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrFromString_Impl, (&amp;addr, buffer), OS_ERROR);
+
+    /* AF_INET, success */
+    UT_SetDeferredRetcode(UT_KEY(OCS_inet_pton), 1, 1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrFromString_Impl, (&amp;addr, buffer), OS_SUCCESS);
+}
+
+void Test_OS_SocketAddrGetPort_Impl(void)
+{
+    uint16               port;
+    OS_SockAddr_t        addr = {0};
+    struct OCS_sockaddr *sa   = (struct OCS_sockaddr *)&amp;addr.AddrData;
+
+    /* Bad family */
+    sa-&gt;sa_family = -1;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrGetPort_Impl, (&amp;port, &amp;addr), OS_ERR_BAD_ADDRESS);
+
+    /* AF_INET6, success */
+    sa-&gt;sa_family = OCS_AF_INET6;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrGetPort_Impl, (&amp;port, &amp;addr), OS_SUCCESS);
+
+    /* AF_INET, success */
+    sa-&gt;sa_family = OCS_AF_INET;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrGetPort_Impl, (&amp;port, &amp;addr), OS_SUCCESS);
+}
+
+void Test_OS_SocketAddrSetPort_Impl(void)
+{
+    uint16               port = 1;
+    OS_SockAddr_t        addr = {0};
+    struct OCS_sockaddr *sa   = (struct OCS_sockaddr *)&amp;addr.AddrData;
+
+    /* Bad family */
+    sa-&gt;sa_family = -1;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrSetPort_Impl, (&amp;addr, port), OS_ERR_BAD_ADDRESS);
+
+    /* AF_INET6, success */
+    sa-&gt;sa_family = OCS_AF_INET6;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrSetPort_Impl, (&amp;addr, port), OS_SUCCESS);
+
+    /* AF_INET, success */
+    sa-&gt;sa_family = OCS_AF_INET;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrSetPort_Impl, (&amp;addr, port), OS_SUCCESS);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+    memset(OS_stream_table, 0, sizeof(OS_stream_table));
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_SocketOpen_Impl);
+    ADD_TEST(OS_SetSocketDefaultFlags_Impl);
+    ADD_TEST(OS_SocketBindAddress_Impl);
+    ADD_TEST(OS_SocketListen_Impl);
+    ADD_TEST(OS_SocketConnect_Impl);
+    ADD_TEST(OS_SocketShutdown_Impl);
+    ADD_TEST(OS_SocketAccept_Impl);
+    ADD_TEST(OS_SocketRecvFrom_Impl);
+    ADD_TEST(OS_SocketSendTo_Impl);
+    ADD_TEST(OS_SocketGetInfo_Impl);
+    ADD_TEST(OS_SocketAddrInit_Impl);
+    ADD_TEST(OS_SocketAddrToString_Impl);
+    ADD_TEST(OS_SocketAddrFromString_Impl);
+    ADD_TEST(OS_SocketAddrGetPort_Impl);
+    ADD_TEST(OS_SocketAddrSetPort_Impl);
+}
+</pre></div>
+</div>
+</section>
+<section id="coveragetest-console-bsp-c">
+<h2><code class="docutils literal notranslate"><span class="pre">coveragetest-console-bsp.c</span></code><a class="headerlink" href="#coveragetest-console-bsp-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/portable/src/coveragetest-console-bsp.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  portable
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-printf.h"
+#include "os-shared-idmap.h"
+
+#include "OCS_stdio.h"
+#include "OCS_bsp-impl.h"
+
+#define TEST_BUFFER_LEN 16
+
+const char TEST_BUF_INITIALIZER[1 + TEST_BUFFER_LEN] = "abcdefghijklmnop";
+
+void Test_OS_ConsoleOutput_Impl(void)
+{
+    char              TestConsoleBspBuffer[TEST_BUFFER_LEN];
+    char              TestOutputBuffer[32];
+    OS_object_token_t token;
+
+    memset(&amp;token, 0, sizeof(token));
+
+    memcpy(TestConsoleBspBuffer, TEST_BUF_INITIALIZER, sizeof(TestConsoleBspBuffer));
+    memset(TestOutputBuffer, 0, sizeof(TestOutputBuffer));
+
+    OS_console_table[0].BufBase = TestConsoleBspBuffer;
+    OS_console_table[0].BufSize = sizeof(TestConsoleBspBuffer);
+
+    UT_SetDataBuffer(UT_KEY(OCS_OS_BSP_ConsoleOutput_Impl), TestOutputBuffer, sizeof(TestOutputBuffer), false);
+
+    OS_console_table[0].WritePos = 4;
+    OS_ConsoleOutput_Impl(&amp;token);
+    UtAssert_True(strcmp(TestOutputBuffer, "abcd") == 0, "TestOutputBuffer (%s) == abcd", TestOutputBuffer);
+
+    OS_console_table[0].WritePos = 2;
+    OS_ConsoleOutput_Impl(&amp;token);
+    UtAssert_True(strcmp(TestOutputBuffer, "abcdefghijklmnopab") == 0, "TestOutputBuffer (%s) == abcdefghijklmnopab",
+                  TestOutputBuffer);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+    memset(OS_console_table, 0, sizeof(OS_console_table));
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_ConsoleOutput_Impl);
+}
+</pre></div>
+</div>
+</section>
+<section id="coveragetest-no-condvar-c">
+<h2><code class="docutils literal notranslate"><span class="pre">coveragetest-no-condvar.c</span></code><a class="headerlink" href="#coveragetest-no-condvar-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-condvar.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  portable
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-condvar.h"
+
+void Test_OS_CondVarCreate_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarCreate_Impl(const OS_object_token_t *token, uint32 options)
+     */
+
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarCreate_Impl, (UT_INDEX_0, 0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_CondVarLock_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarLock_Impl(const OS_object_token_t *token)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarLock_Impl, (UT_INDEX_0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_CondVarUnlock_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarUnlock_Impl(const OS_object_token_t *token)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarUnlock_Impl, (UT_INDEX_0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_CondVarSignal_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarSignal_Impl(const OS_object_token_t *token)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarSignal_Impl, (UT_INDEX_0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_CondVarBroadcast_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarBroadcast_Impl(const OS_object_token_t *token)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarBroadcast_Impl, (UT_INDEX_0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_CondVarWait_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarWait_Impl(const OS_object_token_t *token)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarWait_Impl, (UT_INDEX_0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_CondVarTimedWait_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarTimedWait_Impl(const OS_object_token_t *token, const OS_time_t *abs_wakeup_time)
+     */
+    OS_time_t wakeup_time;
+
+    wakeup_time = OS_TimeAssembleFromMilliseconds(100, 100);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarTimedWait_Impl, (UT_INDEX_0, &amp;wakeup_time), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_CondVarDelete_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarDelete_Impl(const OS_object_token_t *token)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarDelete_Impl, (UT_INDEX_0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_CondVarGetInfo_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarGetInfo_Impl(const OS_object_token_t *token, OS_condvar_prop_t *condvar_prop)
+     */
+    OS_condvar_prop_t cv_prop;
+
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarGetInfo_Impl, (UT_INDEX_0, &amp;cv_prop), OS_ERR_NOT_IMPLEMENTED);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_CondVarCreate_Impl);
+    ADD_TEST(OS_CondVarLock_Impl);
+    ADD_TEST(OS_CondVarUnlock_Impl);
+    ADD_TEST(OS_CondVarSignal_Impl);
+    ADD_TEST(OS_CondVarBroadcast_Impl);
+    ADD_TEST(OS_CondVarWait_Impl);
+    ADD_TEST(OS_CondVarTimedWait_Impl);
+    ADD_TEST(OS_CondVarDelete_Impl);
+    ADD_TEST(OS_CondVarGetInfo_Impl);
+}
+</pre></div>
+</div>
+</section>
+<section id="coveragetest-no-loader-c">
+<h2><code class="docutils literal notranslate"><span class="pre">coveragetest-no-loader.c</span></code><a class="headerlink" href="#coveragetest-no-loader-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-loader.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-module.h"
+
+void Test_OS_ModuleLoad_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_ModuleLoad_Impl ( uint32 module_id, char *translated_path )
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad_Impl, (UT_INDEX_0, "local"), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_ModuleUnload_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_ModuleUnload_Impl ( uint32 module_id )
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleUnload_Impl, (UT_INDEX_0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_ModuleGetInfo_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_ModuleGetInfo_Impl ( uint32 module_id, OS_module_prop_t *module_prop )
+     */
+    OS_module_prop_t module_prop;
+
+    memset(&amp;module_prop, 0, sizeof(module_prop));
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleGetInfo_Impl, (UT_INDEX_0, &amp;module_prop), OS_ERR_NOT_IMPLEMENTED);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_ModuleLoad_Impl);
+    ADD_TEST(OS_ModuleUnload_Impl);
+    ADD_TEST(OS_ModuleGetInfo_Impl);
+}
+</pre></div>
+</div>
+</section>
+<section id="coveragetest-no-network-c">
+<h2><code class="docutils literal notranslate"><span class="pre">coveragetest-no-network.c</span></code><a class="headerlink" href="#coveragetest-no-network-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-network.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \brief Coverage test for no network implementation
+ * \ingroup  portable
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-network.h"
+
+void Test_No_Network(void)
+{
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkGetID_Impl, (NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkGetHostName_Impl, (NULL, 0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(No_Network);
+}
+</pre></div>
+</div>
+</section>
+<section id="coveragetest-no-shell-c">
+<h2><code class="docutils literal notranslate"><span class="pre">coveragetest-no-shell.c</span></code><a class="headerlink" href="#coveragetest-no-shell-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-shell.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  portable
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-shell.h"
+
+void Test_OS_ShellOutputToFile_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_ShellOutputToFile_Impl(uint32 stream_id, const char* Cmd)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_ShellOutputToFile_Impl, (UT_INDEX_0, "ut"), OS_ERR_NOT_IMPLEMENTED);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_ShellOutputToFile_Impl);
+}
+</pre></div>
+</div>
+</section>
+<section id="coveragetest-no-sockets-c">
+<h2><code class="docutils literal notranslate"><span class="pre">coveragetest-no-sockets.c</span></code><a class="headerlink" href="#coveragetest-no-sockets-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-sockets.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \brief Coverage test for no socket implementation
+ * \ingroup  portable
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-sockets.h"
+
+void Test_No_Sockets(void)
+{
+    OSAPI_TEST_FUNCTION_RC(OS_SocketOpen_Impl, (NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBindAddress_Impl, (NULL, NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketListen_Impl, (NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (NULL, NULL, 0), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept_Impl, (NULL, NULL, NULL, 0), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown_Impl, (NULL, 0), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom_Impl, (NULL, NULL, 0, NULL, 0), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketSendTo_Impl, (NULL, NULL, 0, NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketGetInfo_Impl, (NULL, NULL), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrInit_Impl, (NULL, 0), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrToString_Impl, (NULL, 0, NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrFromString_Impl, (NULL, NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrGetPort_Impl, (NULL, NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrSetPort_Impl, (NULL, 0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(No_Sockets);
+}
+</pre></div>
+</div>
+</section>
+<section id="coveragetest-no-symtab-c">
+<h2><code class="docutils literal notranslate"><span class="pre">coveragetest-no-symtab.c</span></code><a class="headerlink" href="#coveragetest-no-symtab-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-symtab.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \brief Coverage test for no symtab implementation
+ * \ingroup  portable
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-module.h"
+
+void Test_No_Symtab(void)
+{
+    OSAPI_TEST_FUNCTION_RC(OS_SymbolLookup_Impl, (NULL, NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleSymbolLookup_Impl, (NULL, NULL, NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SymbolTableDump_Impl, (NULL, 0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(No_Symtab);
+}
+</pre></div>
+</div>
+</section>
+<section id="coveragetest-posix-dirs-c">
+<h2><code class="docutils literal notranslate"><span class="pre">coveragetest-posix-dirs.c</span></code><a class="headerlink" href="#coveragetest-posix-dirs-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/portable/src/coveragetest-posix-dirs.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-portable-coveragetest.h"
+
+#include "os-shared-dir.h"
+#include "os-shared-idmap.h"
+
+#include "OCS_stdlib.h"
+#include "OCS_dirent.h"
+#include "OCS_unistd.h"
+#include "OCS_fcntl.h"
+#include "OCS_stat.h"
+#include "OCS_errno.h"
+
+void Test_OS_DirCreate_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirCreate_Impl(const char *local_path, uint32 access)
+     */
+    struct OCS_stat statbuf;
+
+    OSAPI_TEST_FUNCTION_RC(OS_DirCreate_Impl, ("dir", 0), OS_SUCCESS);
+
+    /* With errno other than EEXIST it should return OS_ERROR */
+    OCS_errno = OCS_EROFS;
+    UT_SetDefaultReturnValue(UT_KEY(OCS_mkdir), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_DirCreate_Impl, ("dir", 0), OS_ERROR);
+
+    /* If the errno is EEXIST it should return success */
+    OCS_errno = OCS_EEXIST;
+    memset(&amp;statbuf, 0, sizeof(statbuf));
+    statbuf.st_mode = OCS_S_IFDIR;
+    UT_SetDataBuffer(UT_KEY(OCS_stat), &amp;statbuf, sizeof(statbuf), false);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_mkdir), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_DirCreate_Impl, ("dir", 0), OS_SUCCESS);
+
+    /* EEXIST but not a dir */
+    statbuf.st_mode = 0;
+    UT_SetDataBuffer(UT_KEY(OCS_stat), &amp;statbuf, sizeof(statbuf), false);
+    OSAPI_TEST_FUNCTION_RC(OS_DirCreate_Impl, ("dir", 0), OS_ERROR);
+
+    /* stat failure */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_stat), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_DirCreate_Impl, ("dir", 0), OS_ERROR);
+}
+
+void Test_OS_DirOpen_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirOpen_Impl(uint32 local_id, const char *local_path)
+     */
+    OS_object_token_t token;
+
+    memset(&amp;token, 0, sizeof(token));
+
+    OSAPI_TEST_FUNCTION_RC(OS_DirOpen_Impl, (&amp;token, "dir"), OS_SUCCESS);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_opendir), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_DirOpen_Impl, (&amp;token, "dir"), OS_ERROR);
+}
+
+void Test_OS_DirClose_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirClose_Impl(uint32 local_id)
+     */
+    OS_object_token_t token;
+
+    memset(&amp;token, 0, sizeof(token));
+
+    OSAPI_TEST_FUNCTION_RC(OS_DirClose_Impl, (&amp;token), OS_SUCCESS);
+}
+
+void Test_OS_DirRead_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirRead_Impl(uint32 local_id, os_dirent_t *dirent)
+     */
+    os_dirent_t       dirent_buff;
+    OS_object_token_t token;
+
+    memset(&amp;token, 0, sizeof(token));
+
+    OSAPI_TEST_FUNCTION_RC(OS_DirRead_Impl, (&amp;token, &amp;dirent_buff), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_readdir), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_DirRead_Impl, (&amp;token, &amp;dirent_buff), OS_ERROR);
+}
+
+void Test_OS_DirRewind_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirRewind_Impl(uint32 local_id)
+     */
+    OS_object_token_t token;
+
+    memset(&amp;token, 0, sizeof(token));
+
+    OSAPI_TEST_FUNCTION_RC(OS_DirRewind_Impl, (&amp;token), OS_SUCCESS);
+}
+
+void Test_OS_DirRemove_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirRemove_Impl(const char *local_path)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_DirRemove_Impl, ("dir"), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_rmdir), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_DirRemove_Impl, ("dir"), OS_ERROR);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_DirCreate_Impl);
+    ADD_TEST(OS_DirOpen_Impl);
+    ADD_TEST(OS_DirClose_Impl);
+    ADD_TEST(OS_DirRead_Impl);
+    ADD_TEST(OS_DirRewind_Impl);
+    ADD_TEST(OS_DirRemove_Impl);
+}
+</pre></div>
+</div>
+</section>
+<section id="coveragetest-posix-files-c">
+<h2><code class="docutils literal notranslate"><span class="pre">coveragetest-posix-files.c</span></code><a class="headerlink" href="#coveragetest-posix-files-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/portable/src/coveragetest-posix-files.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-portable-coveragetest.h"
+#include "ut-adaptor-portable-posix-files.h"
+
+#include "os-shared-file.h"
+#include "os-shared-idmap.h"
+
+#include "OCS_stdio.h"
+#include "OCS_stdlib.h"
+#include "OCS_unistd.h"
+#include "OCS_fcntl.h"
+#include "OCS_stat.h"
+#include "OCS_errno.h"
+
+void Test_OS_FileOpen_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileOpen_Impl(uint32 local_id, const char *local_path, int32 flags, int32 access_mode)
+     */
+    OS_object_token_t token;
+
+    memset(&amp;token, 0, sizeof(token));
+
+    OSAPI_TEST_FUNCTION_RC(OS_FileOpen_Impl, (&amp;token, "local", OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_FileOpen_Impl, (&amp;token, "local", 0, OS_READ_ONLY), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_FileOpen_Impl, (&amp;token, "local", OS_FILE_FLAG_CREATE, OS_READ_WRITE), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_FileOpen_Impl, (&amp;token, "local", 0, -1234), OS_ERROR);
+
+    /* failure mode */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_open), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileOpen_Impl, (&amp;token, "local", 0, OS_READ_ONLY), OS_ERROR);
+}
+
+void Test_OS_FileStat_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileStat_Impl(const char *local_path, os_fstat_t *FileStats)
+     */
+    os_fstat_t      FileStats;
+    struct OCS_stat RefStat;
+
+    /* failure mode */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_stat), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileStat_Impl, ("local", &amp;FileStats), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_stat));
+
+    /* nominal, no permission bits */
+    memset(&amp;FileStats, 0, sizeof(FileStats));
+    OSAPI_TEST_FUNCTION_RC(OS_FileStat_Impl, ("local", &amp;FileStats), OS_SUCCESS);
+    UtAssert_True(FileStats.FileModeBits == 0, "File Mode Bits unset");
+
+    /* all permission bits with uid/gid match */
+    RefStat.st_uid   = UT_PortablePosixFileTest_GetSelfEUID();
+    RefStat.st_gid   = UT_PortablePosixFileTest_GetSelfEGID();
+    RefStat.st_mode  = ~((OCS_mode_t)0);
+    RefStat.st_size  = 1234;
+    RefStat.st_mtime = 5678;
+    /* Also set the full resolution timespec */
+    RefStat.st_mtim.tv_sec  = 5678;
+    RefStat.st_mtim.tv_nsec = 3456;
+    UT_SetDataBuffer(UT_KEY(OCS_stat), &amp;RefStat, sizeof(RefStat), false);
+    OSAPI_TEST_FUNCTION_RC(OS_FileStat_Impl, ("local", &amp;FileStats), OS_SUCCESS);
+
+    /* Test that the result checking macros work */
+    UtAssert_True(OS_FILESTAT_EXEC(FileStats), "File Exec Bit set");
+    UtAssert_True(OS_FILESTAT_WRITE(FileStats), "File Write Bit set");
+    UtAssert_True(OS_FILESTAT_READ(FileStats), "File Read Bit set");
+    UtAssert_True(OS_FILESTAT_ISDIR(FileStats), "Directory Bit set");
+    UtAssert_True(OS_FILESTAT_SIZE(FileStats) == 1234, "Size match");
+    UtAssert_True(OS_FILESTAT_TIME(FileStats) == 5678, "Time match (seconds)");
+
+    /* Repeat without matching uid/gid */
+    RefStat.st_uid = ~RefStat.st_uid;
+    RefStat.st_gid = ~RefStat.st_gid;
+    UT_SetDataBuffer(UT_KEY(OCS_stat), &amp;RefStat, sizeof(RefStat), false);
+    OSAPI_TEST_FUNCTION_RC(OS_FileStat_Impl, ("local", &amp;FileStats), OS_SUCCESS);
+}
+
+void Test_OS_FileChmod_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileChmod_Impl(const char *local_path, uint32 access_mode)
+     */
+    struct OCS_stat RefStat;
+
+    /* Read only fail, write succeeds */
+    UT_SetDeferredRetcode(UT_KEY(OCS_open), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_SUCCESS);
+
+    /* Both opens fail */
+    UT_SetDeferredRetcode(UT_KEY(OCS_open), 1, -1);
+    UT_SetDeferredRetcode(UT_KEY(OCS_open), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_ERROR);
+
+    /* failure mode 1 (fstat) */
+    UT_SetDeferredRetcode(UT_KEY(OCS_fstat), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_ERROR);
+
+    /* failure mode 2 (fchmod) */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_fchmod), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_ERROR);
+
+    /* non implemented error, e.g. such as DOS Filesystem with no perms  */
+    OCS_errno = OCS_ENOTSUP;
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_ERR_NOT_IMPLEMENTED);
+    OCS_errno = OCS_ENOSYS;
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_ERR_NOT_IMPLEMENTED);
+    OCS_errno = OCS_EROFS;
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_ERR_NOT_IMPLEMENTED);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_fchmod));
+
+    /* all permission bits with uid/gid match */
+    RefStat.st_uid   = UT_PortablePosixFileTest_GetSelfEUID();
+    RefStat.st_gid   = UT_PortablePosixFileTest_GetSelfEGID();
+    RefStat.st_mode  = ~((OCS_mode_t)0);
+    RefStat.st_size  = 1234;
+    RefStat.st_mtime = 5678;
+    /* Also set the full resolution timespec */
+    RefStat.st_mtim.tv_sec  = 5678;
+    RefStat.st_mtim.tv_nsec = 3456;
+    UT_SetDataBuffer(UT_KEY(OCS_fstat), &amp;RefStat, sizeof(RefStat), false);
+
+    /* nominal 1 - full permissions with file owned by own uid/gid */
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_SUCCESS);
+
+    /* nominal 2 - partial permissions */
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_ONLY), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_WRITE_ONLY), OS_SUCCESS);
+
+    /* nominal 3 - non-owned file */
+    ++RefStat.st_uid;
+    ++RefStat.st_gid;
+    UT_SetDataBuffer(UT_KEY(OCS_fstat), &amp;RefStat, sizeof(RefStat), false);
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_SUCCESS);
+}
+
+void Test_OS_FileRemove_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileRemove_Impl(const char *local_path)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_FileRemove_Impl, ("local"), OS_SUCCESS);
+
+    /* failure mode */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_remove), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileRemove_Impl, ("local"), OS_ERROR);
+}
+
+void Test_OS_FileRename_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileRename_Impl(const char *old_path, const char *new_path)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_FileRename_Impl, ("old", "new"), OS_SUCCESS);
+
+    /* failure mode */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_rename), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileRename_Impl, ("old", "new"), OS_ERROR);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+    memset(OS_stream_table, 0, sizeof(OS_stream_table));
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+#define ADD_TEST(test) UtTest_Add((Test_##test), Osapi_Test_Setup, Osapi_Test_Teardown, #test)
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_FileOpen_Impl);
+    ADD_TEST(OS_FileStat_Impl);
+    ADD_TEST(OS_FileChmod_Impl);
+    ADD_TEST(OS_FileRemove_Impl);
+    ADD_TEST(OS_FileRename_Impl);
+}
+</pre></div>
+</div>
+</section>
+<section id="coveragetest-posix-gettime-c">
+<h2><code class="docutils literal notranslate"><span class="pre">coveragetest-posix-gettime.c</span></code><a class="headerlink" href="#coveragetest-posix-gettime-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/portable/src/coveragetest-posix-gettime.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-clock.h"
+
+#include "OCS_time.h"
+
+void Test_OS_GetLocalTime_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_GetLocalTime_Impl(OS_time_t *time_struct)
+     */
+    OS_time_t timeval = {0};
+
+    OSAPI_TEST_FUNCTION_RC(OS_GetLocalTime_Impl, (&amp;timeval), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_clock_gettime), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_GetLocalTime_Impl, (&amp;timeval), OS_ERROR);
+}
+
+void Test_OS_SetLocalTime_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SetLocalTime_Impl(const OS_time_t *time_struct)
+     */
+    OS_time_t timeval = {0};
+
+    OSAPI_TEST_FUNCTION_RC(OS_SetLocalTime_Impl, (&amp;timeval), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_clock_settime), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SetLocalTime_Impl, (&amp;timeval), OS_ERROR);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+#define ADD_TEST(test) UtTest_Add((Test_##test), Osapi_Test_Setup, Osapi_Test_Teardown, #test)
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_GetLocalTime_Impl);
+    ADD_TEST(OS_SetLocalTime_Impl);
+}
+</pre></div>
+</div>
+</section>
+<section id="coveragetest-posix-io-c">
+<h2><code class="docutils literal notranslate"><span class="pre">coveragetest-posix-io.c</span></code><a class="headerlink" href="#coveragetest-posix-io-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/portable/src/coveragetest-posix-io.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  portable
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-portable-coveragetest.h"
+#include "ut-adaptor-portable-posix-io.h"
+
+#include "os-shared-file.h"
+#include "os-shared-idmap.h"
+#include "os-shared-select.h"
+
+#include "OCS_stdlib.h"
+#include "OCS_unistd.h"
+#include "OCS_fcntl.h"
+#include "OCS_errno.h"
+
+/* OS_SelectSingle_Impl hook to clear SelectFlags */
+static int32 UT_Hook_OS_SelectSingle_Impl(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                          const UT_StubContext_t *Context)
+{
+    uint32 *SelectFlags;
+
+    SelectFlags = UT_Hook_GetArgValueByName(Context, "SelectFlags", uint32 *);
+
+    if (SelectFlags != NULL)
+    {
+        *SelectFlags = 0;
+    }
+
+    return 0;
+}
+
+void Test_OS_GenericClose_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_GenericClose_Impl(uint32 local_id)
+     */
+    OS_object_token_t token;
+
+    memset(&amp;token, 0, sizeof(token));
+
+    OSAPI_TEST_FUNCTION_RC(OS_GenericClose_Impl, (&amp;token), OS_SUCCESS);
+
+    /*
+     * Test path where underlying close() fails.
+     * Should still return success.
+     */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_close), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericClose_Impl, (&amp;token), OS_SUCCESS);
+}
+
+void Test_OS_GenericSeek_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_GenericSeek_Impl (uint32 local_id, int32 offset, uint32 whence)
+     */
+    OS_object_token_t token;
+
+    memset(&amp;token, 0, sizeof(token));
+
+    /* note on success this wrapper returns the result of lseek(), not OS_SUCCESS */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_lseek), 111);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericSeek_Impl, (&amp;token, 0, OS_SEEK_CUR), 111);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_lseek), 222);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericSeek_Impl, (&amp;token, 0, OS_SEEK_SET), 222);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_lseek), 333);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericSeek_Impl, (&amp;token, 0, OS_SEEK_END), 333);
+
+    /* bad whence */
+    OSAPI_TEST_FUNCTION_RC(OS_GenericSeek_Impl, (&amp;token, 0, 1234), OS_ERROR);
+
+    /* generic failure of lseek() */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_lseek), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericSeek_Impl, (&amp;token, 0, OS_SEEK_END), OS_ERROR);
+
+    /* The seek implementation also checks for this specific pipe errno */
+    OCS_errno = OCS_ESPIPE;
+    OSAPI_TEST_FUNCTION_RC(OS_GenericSeek_Impl, (&amp;token, 0, OS_SEEK_END), OS_ERR_OPERATION_NOT_SUPPORTED);
+}
+
+void Test_OS_GenericRead_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_GenericRead_Impl (uint32 local_id, void *buffer, uint32 nbytes, int32 timeout)
+     */
+    char              SrcData[]                 = "ABCDEFGHIJK";
+    char              DestData[sizeof(SrcData)] = {0};
+    OS_object_token_t token;
+
+    memset(&amp;token, 0, sizeof(token));
+
+    UT_SetDataBuffer(UT_KEY(OCS_read), SrcData, sizeof(SrcData), false);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, false);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericRead_Impl, (&amp;token, DestData, sizeof(DestData), 0), sizeof(DestData));
+    UtAssert_MemCmp(SrcData, DestData, sizeof(SrcData), "read() data Valid");
+
+    /* test invocation of select() in nonblocking mode */
+    UT_ResetState(UT_KEY(OCS_read));
+    UT_SetDataBuffer(UT_KEY(OCS_read), SrcData, sizeof(SrcData), false);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, true);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericRead_Impl, (&amp;token, DestData, sizeof(DestData), 0), sizeof(DestData));
+    UtAssert_True(UT_GetStubCount(UT_KEY(OS_SelectSingle_Impl)) == 1, "OS_SelectSingle() called");
+
+    /* Read 0 bytes */
+    OSAPI_TEST_FUNCTION_RC(OS_GenericRead_Impl, (&amp;token, DestData, 0, 0), OS_SUCCESS);
+
+    /* read() failure */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_read), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericRead_Impl, (&amp;token, DestData, sizeof(DestData), 0), OS_ERROR);
+
+    /* Fail select */
+    UT_SetDeferredRetcode(UT_KEY(OS_SelectSingle_Impl), 1, OS_ERROR_TIMEOUT);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericRead_Impl, (&amp;token, DestData, sizeof(DestData), 0), OS_ERROR_TIMEOUT);
+
+    /* Not readable */
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), UT_Hook_OS_SelectSingle_Impl, NULL);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericRead_Impl, (&amp;token, DestData, sizeof(DestData), 0), OS_SUCCESS);
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), NULL, NULL);
+}
+
+void Test_OS_GenericWrite_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_GenericWrite_Impl(uint32 local_id, const void *buffer, uint32 nbytes, int32 timeout)
+     */
+    char              SrcData[]                 = "ABCDEFGHIJKL";
+    char              DestData[sizeof(SrcData)] = {0};
+    OS_object_token_t token;
+
+    memset(&amp;token, 0, sizeof(token));
+
+    UT_SetDataBuffer(UT_KEY(OCS_write), DestData, sizeof(DestData), false);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, false);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericWrite_Impl, (&amp;token, SrcData, sizeof(SrcData), 0), sizeof(SrcData));
+    UtAssert_MemCmp(SrcData, DestData, sizeof(SrcData), "write() data valid");
+
+    /* test invocation of select() in nonblocking mode */
+    UT_ResetState(UT_KEY(OCS_write));
+    UT_SetDataBuffer(UT_KEY(OCS_write), DestData, sizeof(DestData), false);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, true);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericWrite_Impl, (&amp;token, SrcData, sizeof(SrcData), 0), sizeof(SrcData));
+    UtAssert_True(UT_GetStubCount(UT_KEY(OS_SelectSingle_Impl)) == 1, "OS_SelectSingle() called");
+
+    /* Fail select */
+    UT_SetDeferredRetcode(UT_KEY(OS_SelectSingle_Impl), 1, OS_ERROR_TIMEOUT);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericWrite_Impl, (&amp;token, SrcData, sizeof(SrcData), 0), OS_ERROR_TIMEOUT);
+
+    /* Write 0 bytes */
+    OSAPI_TEST_FUNCTION_RC(OS_GenericWrite_Impl, (&amp;token, SrcData, 0, 0), OS_SUCCESS);
+
+    /* write() failure */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_write), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericWrite_Impl, (&amp;token, DestData, sizeof(DestData), 0), OS_ERROR);
+
+    /* Not writeable */
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), UT_Hook_OS_SelectSingle_Impl, NULL);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericWrite_Impl, (&amp;token, SrcData, sizeof(SrcData), 0), OS_SUCCESS);
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), NULL, NULL);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+    memset(OS_stream_table, 0, sizeof(OS_stream_table));
+    memset(OS_global_stream_table, 0, sizeof(OS_common_record_t) * OS_MAX_NUM_OPEN_FILES);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+#define ADD_TEST(test) UtTest_Add((Test_##test), Osapi_Test_Setup, Osapi_Test_Teardown, #test)
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_GenericClose_Impl);
+    ADD_TEST(OS_GenericSeek_Impl);
+    ADD_TEST(OS_GenericRead_Impl);
+    ADD_TEST(OS_GenericWrite_Impl);
+}
+</pre></div>
+</div>
+</section>
+<section id="os-portable-coveragetest-h">
+<h2><code class="docutils literal notranslate"><span class="pre">os-portable-coveragetest.h</span></code><a class="headerlink" href="#os-portable-coveragetest-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/src/unit-test-coverage/portable/src/os-portable-coveragetest.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup portable
+ *
+ * Declarations and prototypes for os-portable-coveragetest
+ */
+
+#ifndef OS_PORTABLE_COVERAGETEST_H
+#define OS_PORTABLE_COVERAGETEST_H
+
+/*
+ * Includes
+ */
+
+#include "utassert.h"
+#include "uttest.h"
+#include "utstubs.h"
+
+#include "os-shared-globaldefs.h"
+
+#define OSAPI_TEST_FUNCTION_RC(func, args, exp)                                                                \
+    {                                                                                                          \
+        int32 rcexp = exp;                                                                                     \
+        int32 rcact = func args;                                                                               \
+        UtAssert_True(rcact == rcexp, "%s%s (%ld) == %s (%ld)", #func, #args, (long)rcact, #exp, (long)rcexp); \
+    }
+
+#define ADD_TEST(test) UtTest_Add((Test_##test), Osapi_Test_Setup, Osapi_Test_Teardown, #test)
+
+/*
+ * The default/primary table index used by most coverage tests.
+ */
+#define UT_INDEX_0 OSAL_INDEX_C(0)
+
+/*
+ * A secondary table index for coverage tests which require
+ * more than one entry
+ */
+#define UT_INDEX_1 OSAL_INDEX_C(1)
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void);
+void Osapi_Test_Teardown(void);
+
+#endif /* OS_PORTABLE_COVERAGETEST_H */
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../adaptors/src/index.html" class="btn btn-neutral float-left" title="src" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../shared/index.html" class="btn btn-neutral float-right" title="shared" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

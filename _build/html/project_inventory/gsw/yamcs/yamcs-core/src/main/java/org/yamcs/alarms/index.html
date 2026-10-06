@@ -1,0 +1,3084 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>alarms &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../../search.html" />
+    <link rel="next" title="algo" href="../algo/index.html" />
+    <link rel="prev" title="activities" href="../activities/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../../index.html">gsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">gsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">yamcs-core</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">main</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">java</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">org</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">yamcs</a></li>
+      <li class="breadcrumb-item active">alarms</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../../_sources/project_inventory/gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="alarms">
+<h1>alarms<a class="headerlink" href="#alarms" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="abstractalarmmirrorserver-java">
+<h2><code class="docutils literal notranslate"><span class="pre">AbstractAlarmMirrorServer.java</span></code><a class="headerlink" href="#abstractalarmmirrorserver-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AbstractAlarmMirrorServer.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+import static org.yamcs.alarms.AlarmStreamer.CNAME_LAST_VALUE;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_VALUE_COUNT;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_VIOLATION_COUNT;
+
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+
+abstract class AbstractAlarmMirrorServer&lt;S, T&gt; extends AbstractAlarmServer&lt;S, T&gt; {
+
+    AbstractAlarmMirrorServer(String yamcsInstance, double alarmLoadDays) {
+        super(yamcsInstance);
+        if (alarmLoadDays &gt; 0) {
+            loadAlarmsFromDb(alarmLoadDays, activeAlarms);
+        }
+        log.info("Restored {} alarms from the database", activeAlarms.size());
+    }
+
+    void processTuple(Stream stream, Tuple tuple) {
+        S subject = getSubject(tuple);
+
+        var activeAlarm = activeAlarms.get(subject);
+        if (activeAlarm == null) {
+            // first see if we have enough information in the tuple to make the alarm
+            activeAlarm = createNewAlarm(subject, tuple);
+            if (activeAlarm != null) {
+                activeAlarms.put(subject, activeAlarm);
+                if (activeAlarm.isPending()) {
+                    notifyUpdate(AlarmNotificationType.TRIGGERED_PENDING, activeAlarm);
+                } else {
+                    notifyUpdate(AlarmNotificationType.TRIGGERED, activeAlarm);
+                }
+            } else {
+                log.info("Ignoring tuple as no active or restored alarm has been found: {}", tuple);
+            }
+            return;
+        }
+
+        if (tuple.hasColumn(AlarmStreamer.CNAME_VIOLATION_COUNT)) {
+            activeAlarm.setViolations(tuple.getIntColumn(AlarmStreamer.CNAME_VIOLATION_COUNT));
+        }
+
+        if (tuple.hasColumn(getColNameLastEvent())) {
+            var notificationType = AlarmNotificationType.valueOf(
+                    tuple.getColumn(getColNameLastEvent()));
+            switch (notificationType) {
+            case TRIGGERED:
+                activeAlarm.trigger();
+                break;
+            case ACKNOWLEDGED:
+                long ackTime = tuple.getTimestampColumn(AlarmStreamer.CNAME_ACK_TIME);
+                activeAlarm.acknowledge(tuple.getColumn(AlarmStreamer.CNAME_ACK_BY), ackTime,
+                        tuple.getColumn(AlarmStreamer.CNAME_ACK_MSG));
+                notifyUpdate(notificationType, activeAlarm);
+                break;
+            case CLEARED:
+                long clearTime = tuple.getTimestampColumn(AlarmStreamer.CNAME_CLEARED_TIME);
+                String clearedBy = tuple.getColumn(AlarmStreamer.CNAME_CLEARED_BY);
+                String clearMessage = tuple.getColumn(AlarmStreamer.CNAME_CLEAR_MSG);
+                activeAlarm.clear(clearedBy, clearTime, clearMessage);
+                activeAlarms.remove(subject);
+                notifyUpdate(notificationType, activeAlarm);
+                break;
+            case RESET:
+                // TODO reset not yet implemented in the AlarmServer
+                notifyUpdate(notificationType, activeAlarm);
+                break;
+            case RTN:
+                notifyUpdate(notificationType, activeAlarm);
+                break;
+            case SEVERITY_INCREASED:
+                processSeverityIncrease(subject, activeAlarm, tuple);
+                notifySeverityIncrease(activeAlarm);
+                break;
+            case SHELVED:
+                long shelveTime = tuple.getTimestampColumn(AlarmStreamer.CNAME_SHELVED_TIME);
+                activeAlarm.shelve(shelveTime, tuple.getColumn(AlarmStreamer.CNAME_SHELVED_BY),
+                        tuple.getColumn(AlarmStreamer.CNAME_SHELVED_MSG),
+                        tuple.getLongColumn(AlarmStreamer.CNAME_SHELVE_DURATION));
+                notifyUpdate(notificationType, activeAlarm);
+                break;
+            case UNSHELVED:
+                activeAlarm.unshelve();
+                notifyUpdate(notificationType, activeAlarm);
+                break;
+            case VALUE_UPDATED:
+                processValueUpdate(subject, activeAlarm, tuple);
+                notifyValueUpdate(activeAlarm);
+                break;
+            default:
+                log.warn("Unexpected alarm notification type {}", notificationType);
+                break;
+
+            }
+        } else {
+            // yamcs older than 5.11
+            processValueUpdate(subject, activeAlarm, tuple);
+            notifyValueUpdate(activeAlarm);
+        }
+    }
+
+    protected void processValueUpdate(S subject, ActiveAlarm&lt;T&gt; activeAlarm, Tuple tuple) {
+        activeAlarm.setViolations(tuple.getIntColumn(CNAME_VIOLATION_COUNT));
+        activeAlarm.setValueCount(tuple.getIntColumn(CNAME_VALUE_COUNT));
+        activeAlarm.setCurrentValue(tuple.getColumn(CNAME_LAST_VALUE));
+    }
+
+    protected void processSeverityIncrease(S subject, ActiveAlarm&lt;T&gt; activeAlarm, Tuple tuple) {
+        activeAlarm.setMostSevereValue(tuple
+                .getColumn(ParameterAlarmStreamer.CNAME_SEVERITY_INCREASED));
+    }
+
+    @Override
+    protected void doStart() {
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        notifyStopped();
+    }
+
+    abstract S getSubject(Tuple tuple);
+
+    protected abstract ActiveAlarm&lt;T&gt; createNewAlarm(S subject, Tuple tuple);
+
+    protected abstract String getColNameLastEvent();
+}
+</pre></div>
+</div>
+</section>
+<section id="abstractalarmserver-java">
+<h2><code class="docutils literal notranslate"><span class="pre">AbstractAlarmServer.java</span></code><a class="headerlink" href="#abstractalarmserver-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AbstractAlarmServer.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+import static org.yamcs.alarms.AlarmStreamer.CNAME_TRIGGER_TIME;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+import com.google.common.util.concurrent.AbstractService;
+
+public abstract class AbstractAlarmServer&lt;S, T&gt; extends AbstractService {
+    final protected Log log;
+    final protected String yamcsInstance;
+    final protected TimeService timeService;
+
+    Map&lt;Stream, StreamSubscriber&gt; susbscribers = new HashMap&lt;&gt;();
+
+    // NUM_LOCKS has to be power of 2
+    static final int NUM_LOCKS = 32;
+    Object[] locks;
+
+    protected Map&lt;S, ActiveAlarm&lt;T&gt;&gt; activeAlarms = new ConcurrentHashMap&lt;&gt;();
+    protected CopyOnWriteArrayList&lt;AlarmListener&lt;T&gt;&gt; alarmListeners = new CopyOnWriteArrayList&lt;&gt;();
+
+    public AbstractAlarmServer(String yamcsInstance) {
+        this.yamcsInstance = yamcsInstance;
+        this.timeService = YamcsServer.getTimeService(yamcsInstance);
+
+        log = new Log(getClass(), yamcsInstance);
+
+        locks = new Object[NUM_LOCKS];
+        for (int i = 0; i &lt; NUM_LOCKS; i++) {
+            locks[i] = new Object();
+        }
+    }
+
+    /**
+     * Returns the current set of active alarms
+     * &lt;p&gt;
+     * 
+     */
+    public Map&lt;S, ActiveAlarm&lt;T&gt;&gt; getActiveAlarms() {
+        return activeAlarms;
+    }
+
+    /**
+     * Register for alarm notices
+     * 
+     * @return the current set of active alarms
+     */
+    public Map&lt;S, ActiveAlarm&lt;T&gt;&gt; addAlarmListener(AlarmListener&lt;T&gt; listener) {
+        alarmListeners.addIfAbsent(listener);
+        return activeAlarms;
+    }
+
+    public void removeAlarmListener(AlarmListener&lt;T&gt; listener) {
+        alarmListeners.remove(listener);
+    }
+
+    void notifyUpdate(AlarmNotificationType notificationType, ActiveAlarm&lt;T&gt; alarm) {
+        if (alarm.getTriggerValue() != null) {
+            alarmListeners.forEach(l -&gt; l.notifyUpdate(notificationType, alarm));
+        } // else the alarm has never been triggered probably due to the minViolatios not being met
+    }
+
+    void notifySeverityIncrease(ActiveAlarm&lt;T&gt; alarm) {
+        if (alarm.getTriggerValue() != null) {
+            alarmListeners.forEach(l -&gt; l.notifySeverityIncrease(alarm));
+        } // else the alarm has never been triggered probably due to the minViolatios not being met
+    }
+
+    void notifyValueUpdate(ActiveAlarm&lt;T&gt; alarm) {
+        if (alarm.getTriggerValue() != null) {
+            alarmListeners.forEach(l -&gt; l.notifyValueUpdate(alarm));
+        } // else the alarm has never been triggered probably due to the minViolatios not being met
+    }
+
+    protected void loadAlarmsFromDb(double numDays, Map&lt;S, ActiveAlarm&lt;T&gt;&gt; alarms) {
+        Mdb mdb = MdbFactory.getInstance(yamcsInstance);
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        String tblName = alarmTableName();
+        var table = ydb.getTable(tblName);
+        if (table == null) {
+            log.debug("Cannot load alarms since table {} does not exist", tblName);
+            return;
+        }
+        if (table.getColumnDefinition(getColNameLastEvent()) == null) {
+            log.debug("Cannot load alarms since table {} does not have the column {} (probably it is empty)", tblName,
+                    getColNameLastEvent());
+            return;
+        }
+        StreamSqlResult result = null;
+        try {
+            long startTime = timeService.getMissionTime() - (long) (numDays * 24 * 3600_000);
+            result = ydb.execute(
+                    "select * from " + tblName + " where " + CNAME_TRIGGER_TIME + " &gt; ? AND " + getColNameLastEvent()
+                            + " != 'CLEARED'",
+                    startTime);
+
+            while (result.hasNext()) {
+                var tuple = result.next();
+                try {
+                    addActiveAlarmFromTuple(mdb, tuple, alarms);
+                } catch (Exception e) {
+                    log.warn("Unable to load active alarm from tuple {}: {}", tuple, e);
+                }
+            }
+
+        } catch (ParseException | StreamSqlException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (result != null) {
+                result.close();
+            }
+        }
+    }
+
+    protected Object getLock(S alarmId) {
+        return locks[alarmId.hashCode() &amp; (NUM_LOCKS - 1)];
+    }
+
+    protected abstract void addActiveAlarmFromTuple(Mdb mdb, Tuple t, Map&lt;S, ActiveAlarm&lt;T&gt;&gt; alarms);
+
+    protected abstract S getSubject(T value);
+
+    protected abstract String alarmTableName();
+
+    protected abstract String getColNameLastEvent();
+
+}
+</pre></div>
+</div>
+</section>
+<section id="activealarm-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ActiveAlarm.java</span></code><a class="headerlink" href="#activealarm-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/ActiveAlarm.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.yarch.protobuf.Db.Event;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Keeps track of the alarm for one parameter or event.
+ * &lt;p&gt;
+ * This will only exist for an alarm that has been triggered. A parameter that has limits definition but never had an
+ * out of limits value, will not have an active alarm.
+ * &lt;p&gt;
+ * Note: generics parameter T can effectively be either {@link ParameterValue} or {@link Event}
+ * 
+ */
+public class ActiveAlarm&lt;T&gt; {
+    static AtomicInteger counter = new AtomicInteger();
+    /**
+     * If the alarm should auto acknowledge once the values are back within limits
+     */
+    final boolean autoAcknowledge;
+
+    /**
+     * Latching means that the alarm will stay triggered even if the value comes back within limits
+     */
+    final boolean latching;
+
+    /**
+     * unique identifier for the alarm (used to store it in the database also for the REST API)
+     */
+    private final int id;
+
+    /**
+     * If the process that generates the alarm is OK or not (i.e. if the latest value of the parameter is within limits)
+     */
+    boolean processOK = true;
+    /**
+     * If the alarm is latching triggered will stay true even when processOK becomes true
+     */
+    boolean triggered = false;
+
+    /**
+     * If a user has acknowledged the alarm
+     */
+    boolean acknowledged = true;
+
+    // the value that triggered the alarm
+    private T triggerValue;
+
+    // most severe value
+    private T mostSevereValue;
+
+    // current value of the parameter
+    private T currentValue;
+
+    private long shelveTime;
+
+    private int violations = 1;
+    private int valueCount = 1;
+
+    ChangeEvent ackEvent;
+    ChangeEvent clearEvent;
+    ChangeEvent resetEvent;
+    ChangeEvent shelveEvent;
+
+    boolean shelved;
+    private long shelveDuration;
+
+    /**
+     * Pending is when the minViolations has not been reached
+     */
+    boolean pending = true;
+
+    ActiveAlarm(T pv, boolean autoAck, boolean latching, int id) {
+        this.autoAcknowledge = autoAck;
+        this.latching = latching;
+
+        this.triggerValue = this.currentValue = this.setMostSevereValue(pv);
+        this.id = id;
+    }
+
+    ActiveAlarm(T pv, boolean autoAck, boolean latching) {
+        this(pv, autoAck, latching, counter.getAndIncrement());
+    }
+
+    public boolean isAutoAcknowledge() {
+        return autoAcknowledge;
+    }
+
+    public boolean isAcknowledged() {
+        return acknowledged;
+    }
+
+    public boolean isPending() {
+        return pending;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getAckMessage() {
+        return ackEvent == null ? null : ackEvent.message;
+    }
+
+    public boolean triggered() {
+        return triggered;
+    }
+
+    /**
+     * Clear the alarm
+     * &lt;p&gt;
+     * Note: only the Alarm Server is allowed to call this after acquiring the lock
+     */
+    void clear(String username, long time, String message) {
+        this.processOK = true;
+        this.triggered = false;
+        this.acknowledged = true;
+        this.clearEvent = new ChangeEvent(username, time, message);
+    }
+
+    /**
+     * Trigger the alarm if not already triggered
+     * &lt;p&gt;
+     * Note: only the Alarm Server is allowed to call this after acquiring the lock
+     */
+    synchronized void trigger() {
+        if (!triggered) {
+            pending = false;
+            processOK = false;
+            triggered = true;
+            acknowledged = false;
+        }
+    }
+
+    /**
+     * Acknowledge the alarm. This method does nothing if the alarm is already acknowledged.
+     * 
+     * &lt;p&gt;
+     * Note: only the Alarm Server is allowed to call this after acquiring the lock
+     */
+    void acknowledge(String username, long ackTime, String message) {
+        if (acknowledged) {
+            return;
+        }
+        this.acknowledged = true;
+
+        this.ackEvent = new ChangeEvent(username, ackTime, message);
+
+        if (isNormal()) {
+            this.clearEvent = new ChangeEvent("yamcs", ackTime, "cleared due to ack");
+        }
+
+    }
+
+    /**
+     * Called when the process returns to normal (i.e. parameter is back in limits)
+     * 
+     * &lt;p&gt;
+     * Note: only the Alarm Server is allowed to call this after acquiring the lock
+     */
+    boolean processRTN(long time) {
+        if (processOK) {
+            return false;
+        }
+
+        processOK = true;
+        if (!latching) {
+            triggered = false;
+        }
+        if (autoAcknowledge) {
+            this.ackEvent = new ChangeEvent("yamcs", time, "auto-acknowledged");
+            acknowledged = true;
+        }
+        if (!triggered &amp;&amp; acknowledged) {
+            new ChangeEvent("yamcs", time, "cleared due to ack");
+        }
+
+        return true;
+    }
+
+    /**
+     * Called when the operator resets a latching alarm
+     * &lt;p&gt;
+     * Note: only the Alarm Server is allowed to call this after acquiring the lock
+     */
+    void reset(String username, long time, String message) {
+        triggered = processOK;
+        this.resetEvent = new ChangeEvent(username, time, message);
+    }
+
+    /**
+     * Shelve the alarm. Uses the wallckock time
+     * &lt;p&gt;
+     * Note: only the Alarm Server is allowed to call this after acquiring the lock
+     */
+    void shelve(String username, String message, long shelveDuration) {
+        shelve(TimeEncoding.getWallclockTime(), username, message, shelveDuration);
+    }
+
+    /**
+     * Shelve the alarm
+     * &lt;p&gt;
+     * Note: only the Alarm Server is allowed to call this after acquiring the lock
+     */
+    void shelve(long shelveTime, String username, String message, long shelveDuration) {
+        this.shelved = true;
+        this.shelveEvent = new ChangeEvent(username, TimeEncoding.getWallclockTime(), message);
+        this.shelveTime = shelveTime;
+        this.shelveDuration = shelveDuration;
+    }
+
+    public boolean isShelved() {
+        return shelved;
+    }
+
+    public void unshelve() {
+        this.shelved = false;
+    }
+
+    public String getShelveUsername() {
+        return getUsernameThatShelved();
+    }
+
+    public long getShelveTime() {
+        return shelveTime;
+    }
+
+    public String getShelveMessage() {
+        return shelveEvent == null ? null : shelveEvent.message;
+    }
+
+    public long getShelveDuration() {
+        return shelveDuration;
+    }
+
+    /**
+     * 
+     * Returns true if the alarm is back to normal: processOK=true, acknowledged=true and triggered=false
+     * &lt;p&gt;
+     * Note that when latching is enabled, triggered can be true even if processOK=true
+     */
+    public boolean isNormal() {
+        return processOK &amp;&amp; !triggered &amp;&amp; acknowledged;
+    }
+
+    public long getShelveExpiration() {
+        if (shelveDuration == -1) {
+            return -1;
+        } else {
+            return shelveTime + shelveDuration;
+        }
+    }
+
+    public boolean isProcessOK() {
+        return processOK;
+    }
+
+    public boolean isTriggered() {
+        return triggered;
+    }
+
+    public long getClearTime() {
+        return clearEvent == null ? TimeEncoding.INVALID_INSTANT : clearEvent.time;
+    }
+
+    public String getUsernameThatShelved() {
+        return shelveEvent == null ? null : shelveEvent.username;
+    }
+
+    public String getClearMessage() {
+        return clearEvent == null ? null : clearEvent.message;
+    }
+
+    public String getUsernameThatCleared() {
+        return clearEvent == null ? null : clearEvent.username;
+    }
+
+    public String getUsernameThatAcknowledged() {
+        return ackEvent == null ? null : ackEvent.username;
+    }
+
+    public long getAcknowledgeTime() {
+        return ackEvent == null ? TimeEncoding.INVALID_INSTANT : ackEvent.time;
+    }
+
+    public T getTriggerValue() {
+        return triggerValue;
+    }
+
+    public T getCurrentValue() {
+        return currentValue;
+    }
+
+    public void setCurrentValue(T value) {
+        this.currentValue = value;
+    }
+
+    public T getMostSevereValue() {
+        return mostSevereValue;
+    }
+
+    public void incrementValueCount() {
+        valueCount++;
+    }
+
+    public int getValueCount() {
+        return valueCount;
+    }
+
+    public void setValueCount(int valueCount) {
+        this.valueCount = valueCount;
+    }
+
+    public void incrementViolations() {
+        violations++;
+    }
+
+    public int getViolations() {
+        return violations;
+    }
+
+    void setViolations(int count) {
+        this.violations = count;
+    }
+
+    public T setMostSevereValue(T mostSevereValue) {
+        this.mostSevereValue = mostSevereValue;
+        return mostSevereValue;
+    }
+
+    void setAcknowledged(boolean ack) {
+        this.acknowledged = ack;
+    }
+
+    public void setPending(boolean pending) {
+        this.pending = pending;
+    }
+
+    @Override
+    public String toString() {
+        return "ActiveAlarm [autoAcknowledge=" + autoAcknowledge + ", latching=" + latching + ", id=" + id
+                + ", processOK=" + processOK + ", triggered=" + triggered + ", ackEvent=" + ackEvent
+                + ", clearEvent=" + clearEvent + ", triggerValue=" + triggerValue
+                + ", mostSevereValue=" + getMostSevereValue() + ", currentValue=" + currentValue
+                + ", violations=" + violations + ", valueCount=" + valueCount + ", usernameThatAcknowledged="
+                + ", shelved=" + shelved + ", shelveEvent=" + shelveEvent + ", shelveTime=" + shelveTime
+                + ", shelveDuration=" + shelveDuration + ", pending: " + pending + "]";
+    }
+
+
+    static class ChangeEvent {
+        final String username;
+        final long time;
+        final String message;
+
+        public ChangeEvent(String username, long time, String message) {
+            this.username = username;
+            this.time = time;
+            this.message = message;
+        }
+
+        public String toString() {
+            return "[username: " + username + " time: " + TimeEncoding.toString(time) + " message: " + message + "]";
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="alarmlistener-java">
+<h2><code class="docutils literal notranslate"><span class="pre">AlarmListener.java</span></code><a class="headerlink" href="#alarmlistener-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmListener.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+public interface AlarmListener&lt;T&gt; {
+    public void notifyUpdate(AlarmNotificationType notificationType, ActiveAlarm&lt;T&gt; activeAlarm) ;
+    public void notifySeverityIncrease(ActiveAlarm&lt;T&gt; activeAlarm);    
+    public void notifyValueUpdate(ActiveAlarm&lt;T&gt; activeAlarm);
+
+    /**
+     * Called when the alarm server is shutting down.
+     */
+    default void notifyShutdown(ActiveAlarm&lt;T&gt; alarm) {
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="alarmmirrorservice-java">
+<h2><code class="docutils literal notranslate"><span class="pre">AlarmMirrorService.java</span></code><a class="headerlink" href="#alarmmirrorservice-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmMirrorService.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InitException;
+import org.yamcs.StreamConfig;
+import org.yamcs.YConfiguration;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.StreamConfig.StandardStreamType;
+import org.yamcs.StreamConfig.StreamConfigEntry;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+/**
+ * This service is used in a replication setup to mirror the active alarms from a master instance. It works by
+ * monitoring the replicated alarms_realtime and event_alarms_realtime and maintaining a list of active alarms.
+ * &lt;p&gt;
+ * Only reading alarms is allowed (including websocket subscription), no editing (ack, clear, shelve, etc).
+ * &lt;p&gt;
+ * Both parameters and events are supported.
+ */
+public class AlarmMirrorService extends AbstractYamcsService {
+
+    Map&lt;Stream, StreamSubscriber&gt; susbscribers = new HashMap&lt;&gt;();
+    Mdb mdb;
+    ParameterAlarmMirrorServer parameterServer;
+    EventAlarmMirrorServer eventServer;
+    double alarmLoadDays = 30;
+
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        mdb = MdbFactory.getInstance(yamcsInstance);
+        this.alarmLoadDays = config.getDouble("alarmLoadDays", alarmLoadDays);
+        parameterServer = new ParameterAlarmMirrorServer(yamcsInstance, alarmLoadDays);
+        eventServer = new EventAlarmMirrorServer(yamcsInstance, alarmLoadDays);
+    }
+
+    @Override
+    protected void doStart() {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        StreamConfig sc = StreamConfig.getInstance(yamcsInstance);
+
+
+        List&lt;StreamConfigEntry&gt; sceList = sc.getEntries(StandardStreamType.PARAMETER_ALARM);
+        for (StreamConfigEntry sce : sceList) {
+            Stream inputStream = ydb.getStream(sce.getName());
+            if (inputStream == null) {
+                throw new ConfigurationException("Cannot find stream '" + sce.getName() + "'");
+            }
+            StreamSubscriber subscr = parameterServer::processTuple;
+            inputStream.addSubscriber(subscr);
+            susbscribers.put(inputStream, subscr);
+        }
+
+        sceList = sc.getEntries(StandardStreamType.EVENT_ALARM);
+        for (StreamConfigEntry sce : sceList) {
+            Stream inputStream = ydb.getStream(sce.getName());
+            if (inputStream == null) {
+                throw new ConfigurationException("Cannot find stream '" + sce.getName() + "'");
+            }
+            StreamSubscriber subscr = eventServer::processTuple;
+            inputStream.addSubscriber(subscr);
+            susbscribers.put(inputStream, subscr);
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        for (Map.Entry&lt;Stream, StreamSubscriber&gt; entry : susbscribers.entrySet()) {
+            Stream stream = entry.getKey();
+            StreamSubscriber subscriber = entry.getValue();
+            stream.removeSubscriber(subscriber);
+        }
+        susbscribers.clear();
+        notifyStopped();
+    }
+
+
+    public AbstractAlarmServer&lt;Parameter, ParameterValue&gt; getParameterServer() {
+        return parameterServer;
+    }
+
+    public AbstractAlarmServer&lt;EventId, Event&gt; getEventServer() {
+        return eventServer;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="alarmnotificationtype-java">
+<h2><code class="docutils literal notranslate"><span class="pre">AlarmNotificationType.java</span></code><a class="headerlink" href="#alarmnotificationtype-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmNotificationType.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+ 
+
+public enum AlarmNotificationType {
+    TRIGGERED_PENDING, // when the alarm was created but the not yet triggered because the minViolations has not been reached
+    TRIGGERED, //when the alarm has been initially triggered
+    ACKNOWLEDGED, //when the operator acknowledges the alarm
+    RTN, //when the process (parameter) has returned to normal (in limits)
+    CLEARED, //when the alarm has been cleared (it is not anymore triggered)
+    RESET, //for latched alarms, when the operator resets it
+    SHELVED, //when the operator shelves the alarm (disable temporarily)
+    UNSHELVED, //when the operator shelves the alarm (disable temporarily)
+    VALUE_UPDATED, //when a new value has been received for a parameter and the value does not change the alarm state 
+    SEVERITY_INCREASED; //when the severity has increased
+}
+</pre></div>
+</div>
+</section>
+<section id="alarmreporter-java">
+<h2><code class="docutils literal notranslate"><span class="pre">AlarmReporter.java</span></code><a class="headerlink" href="#alarmreporter-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmReporter.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.yamcs.AbstractProcessorService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorService;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterProcessorManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.protobuf.Pvalue.RangeCondition;
+import org.yamcs.xtce.AlarmReportType;
+import org.yamcs.xtce.AlarmType;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterType;
+import org.yamcs.mdb.Mdb;
+
+/**
+ * Generates events for parameters out of limits.
+ * &lt;p&gt;
+ * This was used when Yamcs did not have the {@link AlarmServer}. It may be removed in the future.
+ */
+public class AlarmReporter extends AbstractProcessorService implements ProcessorService {
+
+    private EventProducer eventProducer;
+    private Map&lt;Parameter, ActiveAlarm&gt; activeAlarms = new HashMap&lt;&gt;();
+    // Last value of each param (for detecting changes in value)
+    private Map&lt;Parameter, ParameterValue&gt; lastValuePerParameter = new HashMap&lt;&gt;();
+
+    @Override
+    public void init(Processor processor, YConfiguration config, Object spec) {
+        super.init(processor, config, spec);
+        eventProducer = EventProducerFactory.getEventProducer(processor.getInstance());
+        String source = config.getString("source", "AlarmChecker");
+        eventProducer.setSource(source);
+    }
+
+    @Override
+    public void doStart() {
+        ParameterProcessorManager ppm = processor.getParameterProcessorManager();
+        ppm.getAlarmChecker().enableReporting(this);
+
+        // Auto-subscribe to parameters with alarms
+        Set&lt;Parameter&gt; requiredParameters = new HashSet&lt;&gt;();
+        try {
+            Mdb mdb = MdbFactory.getInstance(getYamcsInstance());
+            for (Parameter parameter : mdb.getParameters()) {
+                ParameterType ptype = parameter.getParameterType();
+                if (ptype != null &amp;&amp; ptype.hasAlarm()) {
+                    requiredParameters.add(parameter);
+                    requiredParameters.addAll(ptype.getDependentParameters());
+                }
+            }
+        } catch (ConfigurationException e) {
+            notifyFailed(e);
+            return;
+        }
+
+        if (!requiredParameters.isEmpty()) {
+            ppm.subscribeToProviders(requiredParameters);
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void doStop() {
+        notifyStopped();
+    }
+
+    /**
+     * Sends an event if an alarm condition for the active context has been triggered {@code minViolations} times. This
+     * configuration does not affect events for parameters that go back to normal, or that change severity levels while
+     * the alarm is already active.
+     */
+    public void reportNumericParameterEvent(ParameterValue pv, AlarmType alarmType, int minViolations) {
+        boolean sendUpdateEvent = false;
+
+        if (alarmType == null) {
+            // TODO: do something with more interesting
+            return;
+        }
+
+        if (alarmType.getAlarmReportType() == AlarmReportType.ON_VALUE_CHANGE) {
+            ParameterValue oldPv = lastValuePerParameter.get(pv.getParameter());
+            if (oldPv != null &amp;&amp; hasChanged(oldPv, pv)) {
+                sendUpdateEvent = true;
+            }
+            lastValuePerParameter.put(pv.getParameter(), pv);
+        }
+
+        if (pv.getMonitoringResult() == MonitoringResult.IN_LIMITS) {
+            if (activeAlarms.containsKey(pv.getParameter())) {
+                eventProducer.sendInfo(null,
+                        "Parameter " + pv.getParameter().getQualifiedName() + " is back to normal");
+                activeAlarms.remove(pv.getParameter());
+            }
+        } else { // out of limits
+            MonitoringResult previousMonitoringResult = null;
+            ActiveAlarm activeAlarm = activeAlarms.get(pv.getParameter());
+            if (activeAlarm == null || activeAlarm.alarmType != alarmType) {
+                activeAlarm = new ActiveAlarm(alarmType, pv.getMonitoringResult());
+            } else {
+                previousMonitoringResult = activeAlarm.monitoringResult;
+                activeAlarm.monitoringResult = pv.getMonitoringResult();
+                activeAlarm.violations++;
+            }
+
+            if (activeAlarm.violations == minViolations || (activeAlarm.violations &gt; minViolations
+                    &amp;&amp; previousMonitoringResult != activeAlarm.monitoringResult)) {
+                sendUpdateEvent = true;
+            }
+
+            activeAlarms.put(pv.getParameter(), activeAlarm);
+        }
+
+        if (sendUpdateEvent) {
+            sendValueChangeEvent(pv);
+        }
+    }
+
+    public void reportEnumeratedParameterEvent(ParameterValue pv, AlarmType alarmType, int minViolations) {
+        boolean sendUpdateEvent = false;
+
+        if (alarmType == null) {
+            // TODO: something more interesting
+            return;
+        }
+
+        if (alarmType.getAlarmReportType() == AlarmReportType.ON_VALUE_CHANGE) {
+            ParameterValue oldPv = lastValuePerParameter.get(pv.getParameter());
+            if (oldPv != null &amp;&amp; hasChanged(oldPv, pv)) {
+                sendUpdateEvent = true;
+            }
+            lastValuePerParameter.put(pv.getParameter(), pv);
+        }
+
+        if (pv.getMonitoringResult() == MonitoringResult.IN_LIMITS) {
+            if (activeAlarms.containsKey(pv.getParameter())) {
+                eventProducer.sendInfo(null, "Parameter " + pv.getParameter().getQualifiedName()
+                        + " is back to a normal state (" + pv.getEngValue().getStringValue() + ")");
+                activeAlarms.remove(pv.getParameter());
+            }
+        } else { // out of limits
+            MonitoringResult previousMonitoringResult = null;
+            ActiveAlarm activeAlarm = activeAlarms.get(pv.getParameter());
+            if (activeAlarm == null || activeAlarm.alarmType != alarmType) {
+                activeAlarm = new ActiveAlarm(alarmType, pv.getMonitoringResult());
+            } else {
+                previousMonitoringResult = activeAlarm.monitoringResult;
+                activeAlarm.monitoringResult = pv.getMonitoringResult();
+                activeAlarm.violations++;
+            }
+
+            if (activeAlarm.violations == minViolations || (activeAlarm.violations &gt; minViolations
+                    &amp;&amp; previousMonitoringResult != activeAlarm.monitoringResult)) {
+                sendUpdateEvent = true;
+            }
+
+            activeAlarms.put(pv.getParameter(), activeAlarm);
+        }
+
+        if (sendUpdateEvent) {
+            sendStateChangeEvent(pv);
+        }
+    }
+
+    private void sendValueChangeEvent(ParameterValue pv) {
+        if (pv.getMonitoringResult() == null) {
+            eventProducer.sendInfo(null,
+                    "Parameter " + pv.getParameter().getQualifiedName() + " has changed to value " + pv.getEngValue());
+            return;
+        }
+
+        if (pv.getMonitoringResult() == MonitoringResult.IN_LIMITS) {
+            eventProducer.sendInfo(null,
+                    "Parameter " + pv.getParameter().getQualifiedName() + " has changed to value " + pv.getEngValue());
+        } else {
+            String message;
+            if (pv.getRangeCondition() == RangeCondition.LOW) {
+                message = "Parameter " + pv.getParameter().getQualifiedName() + " is too low";
+            } else if (pv.getRangeCondition() == RangeCondition.HIGH) {
+                message = "Parameter " + pv.getParameter().getQualifiedName() + " is too high";
+            } else {
+                throw new IllegalStateException("Unexpected range condition: " + pv.getRangeCondition());
+            }
+
+            EventSeverity severity = getEventSeverity(pv.getMonitoringResult());
+            eventProducer.sendEvent(severity, null, message);
+        }
+    }
+
+    private void sendStateChangeEvent(ParameterValue pv) {
+        EventSeverity severity = getEventSeverity(pv.getMonitoringResult());
+        eventProducer.sendEvent(severity, null, "Parameter " + pv.getParameter().getQualifiedName()
+                + " transitioned to state " + pv.getEngValue().getStringValue());
+    }
+
+    EventSeverity getEventSeverity(MonitoringResult mr) {
+        switch (mr) {
+        case WATCH:
+            return EventSeverity.WATCH;
+        case WARNING:
+            return EventSeverity.WARNING;
+        case DISTRESS:
+            return EventSeverity.DISTRESS;
+        case CRITICAL:
+            return EventSeverity.CRITICAL;
+        case SEVERE:
+            return EventSeverity.SEVERE;
+        case IN_LIMITS:
+            return EventSeverity.INFO;
+        default:
+            throw new IllegalStateException("Unexpected monitoring result: " + mr);
+        }
+    }
+
+    private boolean hasChanged(ParameterValue pvOld, ParameterValue pvNew) {
+        // Crude string value comparison.
+        return !pvOld.getEngValue().equals(pvNew.getEngValue());
+    }
+
+    private static class ActiveAlarm {
+        MonitoringResult monitoringResult;
+        AlarmType alarmType;
+        int violations = 1;
+
+        ActiveAlarm(AlarmType alarmType, MonitoringResult monitoringResult) {
+            this.alarmType = alarmType;
+            this.monitoringResult = monitoringResult;
+        }
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="alarmsequenceexception-java">
+<h2><code class="docutils literal notranslate"><span class="pre">AlarmSequenceException.java</span></code><a class="headerlink" href="#alarmsequenceexception-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmSequenceException.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+import org.yamcs.YamcsException;
+
+/**
+ * Used by AlarmServer to indicate that a specified alarm instance does not have the expected sequence number.
+ */
+@SuppressWarnings("serial")
+public class AlarmSequenceException extends YamcsException {
+
+    public AlarmSequenceException(int expectedId, int actualId) {
+        super(String.format("Alarm sequence number does not match active alarm."
+                + " Was: %s, expected %s", actualId, expectedId));
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="alarmserver-java">
+<h2><code class="docutils literal notranslate"><span class="pre">AlarmServer.java</span></code><a class="headerlink" href="#alarmserver-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmServer.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.mdb.ParameterAlarmChecker;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+/**
+ * Maintains a list of active alarms.
+ * &lt;p&gt;
+ * (S,T) can be one of: (Parameter,ParamerValue) or (EventId, Event)
+ * &lt;p&gt;
+ * This class implements functionality common for parameter alarms and event alarms.
+ * &lt;p&gt;
+ * Specific functionality for each alarm type (e.g. disabling alarms) should be implemented in the respective
+ * {@link ParameterAlarmChecker} or {@link EventAlarmServer}.
+ * 
+ */
+public abstract class AlarmServer&lt;S, T&gt; extends AbstractAlarmServer&lt;S, T&gt; {
+    static private final Logger log = LoggerFactory.getLogger(AlarmServer.class);
+
+    final private ScheduledThreadPoolExecutor timer;
+
+    public AlarmServer(String yamcsInstance, ProcessorConfig procConfig, ScheduledThreadPoolExecutor timer) {
+        super(yamcsInstance);
+        this.timer = timer;
+        if (procConfig.getAlarmLoadDays() &gt; 0) {
+            loadAlarmsFromDb(procConfig.getAlarmLoadDays(), activeAlarms);
+        }
+    }
+
+    /**
+     * Returns the active alarm for the specified {@code subject} if it also matches the specified {@code id}.
+     * 
+     * @param subject
+     *            the subject to look for.
+     * @param id
+     *            the expected id of the active alarm.
+     * @return the active alarm, or {@code null} if no alarm was found
+     * @throws AlarmSequenceException
+     *             when the specified id does not match the id of the active alarm
+     */
+    public ActiveAlarm&lt;T&gt; getActiveAlarm(S subject, int id) throws AlarmSequenceException {
+        var lock = getLock(subject);
+        synchronized (lock) {
+            ActiveAlarm&lt;T&gt; alarm = activeAlarms.get(subject);
+            if (alarm != null) {
+                if (alarm.getId() != id) {
+                    throw new AlarmSequenceException(alarm.getId(), id);
+                }
+                return alarm;
+            }
+            return null;
+        }
+    }
+
+    /**
+     * Returns the active alarm for the specified {@code subject}.
+     * 
+     * @param subject
+     *            the subject to look for.
+     * @return the active alarm, or {@code null} if no alarm was found
+     */
+    public ActiveAlarm&lt;T&gt; getActiveAlarm(S subject) {
+        return activeAlarms.get(subject);
+    }
+
+    /**
+     * Acknowledges an active alarm instance. If the alarm state is no longer applicable, the alarm is also cleared,
+     * otherwise the alarm will remain active.
+     * 
+     * @param alarm
+     *            the alarm to acknowledge
+     * @param username
+     *            the acknowledging user
+     * @param ackTime
+     *            the time associated with the acknowledgment
+     * @param message
+     *            reason message. Leave &lt;code&gt;null&lt;/code&gt; when no reason is given.
+     * @return the updated alarm instance or null if the alarm was not found
+     */
+    public ActiveAlarm&lt;T&gt; acknowledge(ActiveAlarm&lt;T&gt; alarm, String username, long ackTime, String message) {
+        var subject = getSubject(alarm.getTriggerValue());
+
+        var lock = getLock(subject);
+        synchronized (lock) {
+            var alarm1 = activeAlarms.get(subject);
+
+            if (alarm1 != alarm) {
+                return null;
+            }
+
+            alarm.acknowledge(username, ackTime, message);
+            notifyUpdate(AlarmNotificationType.ACKNOWLEDGED, alarm);
+
+            if (alarm.isNormal()) {
+                activeAlarms.remove(subject);
+                notifyUpdate(AlarmNotificationType.CLEARED, alarm);
+            }
+
+            return alarm;
+        }
+    }
+
+    /**
+     * Reset a latched alarm
+     * 
+     * @param alarm
+     * @param username
+     * @param resetTime
+     * @param message
+     * @return the updated alarm instance or null if the alarm was not found
+     */
+    public ActiveAlarm&lt;T&gt; reset(ActiveAlarm&lt;T&gt; alarm, String username, long resetTime, String message) {
+        S subject = getSubject(alarm.getTriggerValue());
+
+        var lock = getLock(subject);
+        synchronized (lock) {
+            var alarm1 = activeAlarms.get(subject);
+            if (alarm1 != alarm) {
+                return null;
+            }
+
+            alarm.reset(username, resetTime, message);
+            return alarm;
+        }
+    }
+
+    /**
+     * Clears an active alarm instance.
+     * 
+     * @param alarm
+     *            the alarm to clear
+     * @param username
+     *            the user that cleared the alarm
+     * @param message
+     *            reason message. Leave &lt;code&gt;null&lt;/code&gt; when no reason is given.
+     * @return the updated alarm instance or null if the alarm was not found
+     */
+    public ActiveAlarm&lt;T&gt; clear(ActiveAlarm&lt;T&gt; alarm, String username, long clearTime, String message) {
+        S subject = getSubject(alarm.getTriggerValue());
+        var lock = getLock(subject);
+        synchronized (lock) {
+            if (!activeAlarms.remove(subject, alarm)) {
+                return null;
+            }
+
+            alarm.clear(username, clearTime, message);
+            notifyUpdate(AlarmNotificationType.CLEARED, alarm);
+
+            return alarm;
+        }
+    }
+
+    /**
+     * Shelve an alarm
+     * 
+     * @param alarm
+     * @param username
+     * @param message
+     * @param shelveDuration
+     *            shelve duration in milliseconds
+     * 
+     * @return the updated alarm instance or null if the alarm was not found
+     */
+    public ActiveAlarm&lt;T&gt; shelve(ActiveAlarm&lt;T&gt; alarm, String username, String message,
+            long shelveDuration) {
+        S subject = getSubject(alarm.getTriggerValue());
+        var lock = getLock(subject);
+
+        synchronized (lock) {
+            var alarm1 = activeAlarms.get(subject);
+            if (alarm1 != alarm) {
+                return null;
+            }
+
+            alarm.shelve(username, message, shelveDuration);
+            notifyUpdate(AlarmNotificationType.SHELVED, alarm);
+            timer.schedule(this::checkShelved, shelveDuration, TimeUnit.MILLISECONDS);
+
+            return alarm;
+        }
+    }
+
+    private void checkShelved() {
+        long t = TimeEncoding.getWallclockTime();
+
+        for (ActiveAlarm&lt;T&gt; alarm : activeAlarms.values()) {
+            if (alarm.isShelved()) {
+                long exp = alarm.getShelveExpiration();
+                if (exp == -1) {
+                    continue;
+                }
+                if (exp &lt;= t) {
+                    alarm.unshelve();
+                    notifyUpdate(AlarmNotificationType.UNSHELVED, alarm);
+                }
+            }
+        }
+    }
+
+    /**
+     * Un-shelve an alarm
+     * 
+     * @param alarm
+     * @param username
+     * @return the updated alarm instance or null if the alarm was not found
+     */
+    public ActiveAlarm&lt;T&gt; unshelve(ActiveAlarm&lt;T&gt; alarm, String username) {
+        S subject = getSubject(alarm.getTriggerValue());
+
+        var lock = getLock(subject);
+        synchronized (lock) {
+
+            var alarm1 = activeAlarms.get(subject);
+            if (alarm1 != alarm) {
+                return null;
+            }
+
+            alarm.unshelve();
+            notifyUpdate(AlarmNotificationType.UNSHELVED, alarm);
+            return alarm;
+        }
+    }
+
+    public void update(T pv, int minViolations) {
+        update(pv, minViolations, false, false);
+    }
+
+    public void update(T value, int minViolations, boolean autoAck, boolean latching) {
+        S subject = getSubject(value);
+        var lock = getLock(subject);
+
+        boolean noAlarm = isOkNoAlarm(value);
+        if (noAlarm &amp;&amp; !activeAlarms.containsKey(subject)) {
+            // fast return path for parameters in limits and not in an alarm state from a previous value
+            // no locking necessary
+            return;
+        }
+
+        synchronized (lock) {
+            ActiveAlarm&lt;T&gt; activeAlarm = activeAlarms.get(subject);
+            if (noAlarm) {
+                if (activeAlarm == null) {
+                    // this check was already performed above but another thread may have removed the
+                    // alarm before the lock acquisition
+                    return;
+                }
+                if (activeAlarm.isPending()) {
+                    log.debug("Clearing glitch for {}", getName(subject));
+                    activeAlarms.remove(subject);
+                    notifyUpdate(AlarmNotificationType.CLEARED, activeAlarm);
+                    return;
+                }
+                boolean updated = activeAlarm.processRTN(timeService.getMissionTime());
+
+                activeAlarm.setCurrentValue(value);
+                activeAlarm.incrementValueCount();
+                notifyValueUpdate(activeAlarm);
+
+                if (updated) {
+                    notifyUpdate(AlarmNotificationType.RTN, activeAlarm);
+
+                    if (activeAlarm.isNormal()) {
+                        activeAlarms.remove(subject);
+                        notifyUpdate(AlarmNotificationType.CLEARED, activeAlarm);
+                    }
+                }
+            } else { // alarm
+                if (activeAlarm == null) {
+                    activeAlarm = new ActiveAlarm&lt;&gt;(value, autoAck, latching);
+                    activeAlarms.put(subject, activeAlarm);
+
+                    if (activeAlarm.getViolations() &gt;= minViolations) {
+                        activeAlarm.trigger();
+                        notifyUpdate(AlarmNotificationType.TRIGGERED, activeAlarm);
+                    } else {
+                        notifyUpdate(AlarmNotificationType.TRIGGERED_PENDING, activeAlarm);
+                    }
+                } else {
+                    activeAlarm.setCurrentValue(value);
+                    activeAlarm.incrementViolations();
+                    activeAlarm.incrementValueCount();
+                    boolean notifySimpleUpdate = true;
+                    if (activeAlarm.isPending() &amp;&amp; activeAlarm.getViolations() &gt;= minViolations) {
+                        activeAlarm.trigger();
+                        notifyUpdate(AlarmNotificationType.TRIGGERED, activeAlarm);
+                        notifySimpleUpdate = false;
+                    }
+                    if (moreSevere(value, activeAlarm.getMostSevereValue())) {
+                        activeAlarm.setMostSevereValue(value);
+                        notifySeverityIncrease(activeAlarm);
+                        notifySimpleUpdate = false;
+                    }
+                    if (notifySimpleUpdate) {
+                        notifyValueUpdate(activeAlarm);
+                    }
+                }
+            }
+        }
+    }
+
+    static private String getName(Object subject) {
+        if (subject instanceof Parameter) {
+            return ((Parameter) subject).getQualifiedName();
+        } else if (subject instanceof EventId) {
+            EventId eid = (EventId) subject;
+            return eid.source + "." + eid.type;
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    static private boolean isOkNoAlarm(Object value) {
+        if (value instanceof ParameterValue) {
+            ParameterValue pv = (ParameterValue) value;
+            return (pv.getMonitoringResult() == null
+                    || pv.getMonitoringResult() == MonitoringResult.IN_LIMITS
+                    || pv.getMonitoringResult() == MonitoringResult.DISABLED);
+        } else if (value instanceof Event) {
+            Event ev = (Event) value;
+            return ev.getSeverity() == null || ev.getSeverity() == EventSeverity.INFO;
+        } else {
+            throw new IllegalStateException("Unknown value " + value.getClass());
+        }
+    }
+
+    protected static boolean moreSevere(Object newValue, Object oldValue) {
+        if (newValue instanceof ParameterValue) {
+            return moreSevere(((ParameterValue) newValue).getMonitoringResult(),
+                    ((ParameterValue) oldValue).getMonitoringResult());
+        } else if (newValue instanceof Event) {
+            return moreSevere(((Event) newValue).getSeverity(), ((Event) oldValue).getSeverity());
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    protected static boolean moreSevere(MonitoringResult mr1, MonitoringResult mr2) {
+        return mr1.getNumber() &gt; mr2.getNumber();
+    }
+
+    protected static boolean moreSevere(EventSeverity es1, EventSeverity es2) {
+        return es1.getNumber() &gt; es2.getNumber();
+    }
+
+    @Override
+    public void doStart() {
+        timer.execute(this::checkShelved);
+        notifyStarted();
+    }
+
+    @Override
+    public void doStop() {
+        // run the notifyShutdown in order to save the latest alarm information to the database
+        for (var alarm : activeAlarms.values()) {
+            alarmListeners.forEach(l -&gt; l.notifyShutdown(alarm));
+        }
+
+        notifyStopped();
+    }
+
+    /**
+     * Removes all active alarms without acknowledgement !use only for unit tests!
+     */
+    public void clearAll() {
+        activeAlarms.clear();
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="alarmstate-java">
+<h2><code class="docutils literal notranslate"><span class="pre">AlarmState.java</span></code><a class="headerlink" href="#alarmstate-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmState.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+/**
+ * Inspired from ANSI/ISA–18.2 Management Of Alarm Systems For The Process Industries
+ * 
+ * process is the entity that triggers the alarm, in our case parameters or events.
+ * 
+ * @author nm
+ *
+ */
+public enum AlarmState {
+    NORMAL,      //process : OK,   Alm: OK,    Ack: ack
+    UNACK_ALARM, //process: alarm, Alm: alarm, Ack: unack
+    ACK_ALARM,   //process: alarm, Alm: alarm, Ack: ack
+    RTN_UNACK,   //process: OK,    Alm: OK,    Ack: unack
+    LATCH_UNACK, //process: OK,    Alm: alarm, Ack: unack
+    LATCH_ACK,   //process: OK,    Alm: alarm, Ack: ack
+    SHELVED      //ignored temporarely at operator's request
+}
+</pre></div>
+</div>
+</section>
+<section id="alarmstreamer-java">
+<h2><code class="docutils literal notranslate"><span class="pre">AlarmStreamer.java</span></code><a class="headerlink" href="#alarmstreamer-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmStreamer.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+import java.util.ArrayList;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+
+public abstract class AlarmStreamer&lt;T&gt; implements AlarmListener&lt;T&gt; {
+    protected Stream stream;
+    final DataType dataType;
+    final TupleDefinition tdefTemplate;
+    public static final String CNAME_TRIGGER_TIME = "triggerTime";
+    public static final String CNAME_SEQ_NUM = "seqNum";
+    public static final String CNAME_CLEARED_BY = "clearedBy";
+    public static final String CNAME_CLEAR_MSG = "clearedMessage";
+    public static final String CNAME_CLEARED_TIME = "clearedTime";
+
+    public static final String CNAME_ACK_BY = "acknowledgedBy";
+    public static final String CNAME_ACK_MSG = "acknowledgeMessage";
+    public static final String CNAME_ACK_TIME = "acknowledgeTime";
+
+    public static final String CNAME_SHELVED_BY = "shelvedBy";
+    public static final String CNAME_SHELVED_MSG = "shelvedMessage";
+    public static final String CNAME_SHELVED_TIME = "shelvedTime";
+    public static final String CNAME_SHELVE_DURATION = "shelvedDuration";
+
+    public static final String CNAME_UPDATE_TIME = "updateTime";
+    public static final String CNAME_VALUE_COUNT = "valueCount";
+    public static final String CNAME_VIOLATION_COUNT = "violationCount";
+
+    public static final String CNAME_LAST_VALUE = "lastValue";
+    public static final String CNAME_PENDING = "pending";
+
+    public AlarmStreamer(Stream s, DataType dataType, TupleDefinition tdefTemplate) {
+        this.stream = s;
+        this.dataType = dataType;
+        this.tdefTemplate = tdefTemplate;
+    }
+
+    @Override
+    public void notifySeverityIncrease(ActiveAlarm&lt;T&gt; activeAlarm) {
+        TupleDefinition tdef = tdefTemplate.copy();
+        ArrayList&lt;Object&gt; al = getTupleKey(AlarmNotificationType.SEVERITY_INCREASED, activeAlarm);
+        addCommonColumns(activeAlarm, tdef, al);
+
+        tdef.addColumn(getColNameSeverityIncreased(), dataType);
+        al.add(activeAlarm.getMostSevereValue());
+
+        Tuple t = new Tuple(tdef, al);
+        stream.emitTuple(t);
+    }
+
+    @Override
+    public void notifyValueUpdate(ActiveAlarm&lt;T&gt; activeAlarm) {
+        TupleDefinition tdef = tdefTemplate.copy();
+        ArrayList&lt;Object&gt; al = getTupleKey(AlarmNotificationType.VALUE_UPDATED, activeAlarm);
+        addCommonColumns(activeAlarm, tdef, al);
+
+        tdef.addColumn(CNAME_LAST_VALUE, dataType);
+        al.add(activeAlarm.getCurrentValue());
+
+        Tuple t = new Tuple(tdef, al);
+        stream.emitTuple(t);
+    }
+
+    @Override
+    public void notifyUpdate(AlarmNotificationType notificationType, ActiveAlarm&lt;T&gt; activeAlarm) {
+        TupleDefinition tdef = tdefTemplate.copy();
+        ArrayList&lt;Object&gt; al = getTupleKey(notificationType, activeAlarm);
+        addCommonColumns(activeAlarm, tdef, al);
+
+        switch (notificationType) {
+        case TRIGGERED:
+        case TRIGGERED_PENDING:
+            tdef.addColumn(getColNameTrigger(), dataType);
+            al.add(activeAlarm.getTriggerValue());
+            break;
+        case ACKNOWLEDGED:
+            tdef.addColumn(CNAME_ACK_BY, DataType.STRING);
+            String username = activeAlarm.getUsernameThatAcknowledged();
+            if (activeAlarm.isAutoAcknowledge()) {
+                username = "autoAcknowledged";
+            }
+            al.add(username);
+
+            if (activeAlarm.getAckMessage() != null) {
+                tdef.addColumn(CNAME_ACK_MSG, DataType.STRING);
+                al.add(activeAlarm.getAckMessage());
+            }
+
+            tdef.addColumn(CNAME_ACK_TIME, DataType.TIMESTAMP);
+            al.add(activeAlarm.getAcknowledgeTime());
+
+            break;
+        case CLEARED:
+            tdef.addColumn(getColNameClear(), dataType);
+            al.add(activeAlarm.getCurrentValue());
+
+            if (activeAlarm.getUsernameThatCleared() != null) {
+                tdef.addColumn(CNAME_CLEARED_BY, DataType.STRING);
+                al.add(activeAlarm.getUsernameThatCleared());
+            }
+            if (activeAlarm.getClearMessage() != null) {
+                tdef.addColumn(CNAME_CLEAR_MSG, DataType.STRING);
+                al.add(activeAlarm.getClearMessage());
+            }
+
+            tdef.addColumn(CNAME_CLEARED_TIME, DataType.TIMESTAMP);
+            al.add(activeAlarm.getClearTime());
+            break;
+        case SHELVED:
+            tdef.addColumn(CNAME_SHELVED_BY, DataType.STRING);
+            username = activeAlarm.getUsernameThatShelved();
+            al.add(username);
+
+            if (activeAlarm.getShelveMessage() != null) {
+                tdef.addColumn(CNAME_SHELVED_MSG, DataType.STRING);
+                al.add(activeAlarm.getShelveMessage());
+            }
+            if (activeAlarm.getShelveDuration() != -1) {
+                tdef.addColumn(CNAME_SHELVE_DURATION, DataType.LONG);
+                al.add(activeAlarm.getShelveDuration());
+            }
+
+            tdef.addColumn(CNAME_SHELVED_TIME, DataType.TIMESTAMP);
+            al.add(activeAlarm.getShelveTime());
+            break;
+        default:
+            break;
+
+        }
+        Tuple t = new Tuple(tdef, al);
+        stream.emitTuple(t);
+    }
+
+    private void addCommonColumns(ActiveAlarm&lt;T&gt; activeAlarm,
+            TupleDefinition tdef, ArrayList&lt;Object&gt; al) {
+        tdef.addColumn(CNAME_UPDATE_TIME, DataType.TIMESTAMP);
+        al.add(getUpdateTime(activeAlarm.getCurrentValue()));
+
+        tdef.addColumn(CNAME_VALUE_COUNT, DataType.INT);
+        al.add(activeAlarm.getValueCount());
+
+        tdef.addColumn(CNAME_VIOLATION_COUNT, DataType.INT);
+        al.add(activeAlarm.getViolations());
+
+    }
+
+    protected abstract String getColNameLastEvent();
+
+    protected abstract String getColNameClear();
+
+    protected abstract String getColNameTrigger();
+
+    protected abstract ArrayList&lt;Object&gt; getTupleKey(AlarmNotificationType notificationType,
+            ActiveAlarm&lt;T&gt; activeAlarm);
+
+    protected abstract String getColNameSeverityIncreased();
+
+    protected abstract long getUpdateTime(T alarmDetail);
+}
+</pre></div>
+</div>
+</section>
+<section id="couldnotacknowledgealarmexception-java">
+<h2><code class="docutils literal notranslate"><span class="pre">CouldNotAcknowledgeAlarmException.java</span></code><a class="headerlink" href="#couldnotacknowledgealarmexception-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/CouldNotAcknowledgeAlarmException.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+import org.yamcs.YamcsException;
+
+/**
+ * Used by AlarmServer to indicate when the acknowledge on an alarm did not work.
+ */
+public class CouldNotAcknowledgeAlarmException extends YamcsException {
+
+    private static final long serialVersionUID = 1L;
+
+    public CouldNotAcknowledgeAlarmException(String message) {
+        super(message);
+    }
+
+    public CouldNotAcknowledgeAlarmException(Throwable t) {
+        super(t);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="eventalarmmirrorserver-java">
+<h2><code class="docutils literal notranslate"><span class="pre">EventAlarmMirrorServer.java</span></code><a class="headerlink" href="#eventalarmmirrorserver-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/EventAlarmMirrorServer.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+import static org.yamcs.alarms.EventAlarmStreamer.CNAME_TRIGGER;
+
+import java.util.Map;
+
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.archive.AlarmRecorder;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+class EventAlarmMirrorServer extends AbstractAlarmMirrorServer&lt;EventId, Event&gt; {
+    public EventAlarmMirrorServer(String yamcsInstance, double alarmLoadDays) {
+        super(yamcsInstance, alarmLoadDays);
+    }
+
+    EventId getSubject(Tuple tuple) {
+        String source = tuple.getColumn(StandardTupleDefinitions.EVENT_SOURCE_COLUMN);
+        String type = tuple.getColumn(StandardTupleDefinitions.EVENT_TYPE_COLUMN);
+        return new EventId(source, type);
+    }
+
+    @Override
+    protected ActiveAlarm&lt;Event&gt; createNewAlarm(EventId eventId, Tuple tuple) {
+        var o = tuple.getColumn(CNAME_TRIGGER);
+        if (o == null || !(o instanceof Event)) {
+            return null;
+        }
+
+        return EventAlarmServer.tupleToActiveAlarm((Event) o, tuple);
+    }
+
+    @Override
+    protected String getColNameLastEvent() {
+        return EventAlarmStreamer.CNAME_LAST_EVENT;
+    }
+
+    protected String alarmTableName() {
+        return AlarmRecorder.EVENT_ALARM_TABLE_NAME;
+    }
+
+    @Override
+    protected EventId getSubject(Event ev) {
+        return new EventId(ev.getSource(), ev.hasType() ? ev.getType() : null);
+    }
+
+    @Override
+    protected void addActiveAlarmFromTuple(Mdb mdb, Tuple tuple, Map&lt;EventId, ActiveAlarm&lt;Event&gt;&gt; alarms) {
+        var o = tuple.getColumn(CNAME_TRIGGER);
+        if (o == null || !(o instanceof Event)) {
+            log.info("Not adding alarm from tuple because could not extract the triggered Event: {}", tuple);
+            return;
+        }
+        var triggerValue = (Event) o;
+        var activeAlarm = EventAlarmServer.tupleToActiveAlarm(triggerValue, tuple);
+        alarms.put(getSubject(triggerValue), activeAlarm);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="eventalarmserver-java">
+<h2><code class="docutils literal notranslate"><span class="pre">EventAlarmServer.java</span></code><a class="headerlink" href="#eventalarmserver-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/EventAlarmServer.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+import java.util.Map;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ConfigurationException;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.archive.AlarmRecorder;
+import org.yamcs.archive.EventRecorder;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.yarch.protobuf.Db.Event;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import static org.yamcs.alarms.AlarmStreamer.CNAME_ACK_BY;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_ACK_MSG;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_ACK_TIME;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_PENDING;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_SEQ_NUM;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_SHELVED_BY;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_SHELVED_MSG;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_SHELVED_TIME;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_VIOLATION_COUNT;
+import static org.yamcs.alarms.EventAlarmStreamer.*;
+
+/**
+ * Handles alarms for events. These are generated whenever an event with a severity level different than INFO is
+ * received.
+ * &lt;p&gt;
+ * The events having the same (source, type) are considered to be part of the same alarm.
+ *
+ */
+// In the future we could implement some additional options like configuring events that never throw alarms or adding
+// the possibility to configure the minViolations for each event id (= event source+ type).
+public class EventAlarmServer extends AlarmServer&lt;EventId, Event&gt; {
+    static private final Logger log = LoggerFactory.getLogger(EventAlarmServer.class);
+    private StreamSubscriber eventStreamSubscriber;
+    private int eventAlarmMinViolations;
+    Stream eventStream;
+    static final String EVENT_ALARMS_REALTIME_STREAM = "event_alarms_realtime";
+
+    public EventAlarmServer(String yamcsInstance, ProcessorConfig procConfig, ScheduledThreadPoolExecutor timer) {
+        super(yamcsInstance, procConfig, timer);
+        eventAlarmMinViolations = procConfig.getEventAlarmMinViolations();
+    }
+
+    @Override
+    public void doStart() {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+
+        Stream s = ydb.getStream(EVENT_ALARMS_REALTIME_STREAM);
+        if (s == null) {
+            notifyFailed(
+                    new ConfigurationException("Cannot find a stream named '" + EVENT_ALARMS_REALTIME_STREAM + "'"));
+            return;
+        }
+        addAlarmListener(new EventAlarmStreamer(s));
+
+        eventStream = ydb.getStream(EventRecorder.REALTIME_EVENT_STREAM_NAME);
+        eventStreamSubscriber = new StreamSubscriber() {
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                Event event = (Event) tuple.getColumn("body");
+                update(event, eventAlarmMinViolations);
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                notifyFailed(new Exception("Stream " + stream.getName() + " closed"));
+            }
+        };
+        eventStream.addSubscriber(eventStreamSubscriber);
+
+        notifyStarted();
+    }
+
+    @Override
+    public void doStop() {
+        eventStream.removeSubscriber(eventStreamSubscriber);
+        notifyStopped();
+    }
+
+    protected String alarmTableName() {
+        return AlarmRecorder.EVENT_ALARM_TABLE_NAME;
+    }
+
+    @Override
+    protected EventId getSubject(Event ev) {
+        return new EventId(ev.getSource(), ev.hasType() ? ev.getType() : null);
+    }
+
+    protected void addActiveAlarmFromTuple(Mdb mdb, Tuple tuple, Map&lt;EventId, ActiveAlarm&lt;Event&gt;&gt; alarms) {
+        var o = tuple.getColumn(CNAME_TRIGGER);
+        if (o == null || !(o instanceof Event)) {
+            log.info("Not adding alarm from tuple because could not extract the triggered Event: {}", tuple);
+            return;
+        }
+        var triggerValue = (Event) o;
+        var activeAlarm = tupleToActiveAlarm(triggerValue, tuple);
+        alarms.put(getSubject(triggerValue), activeAlarm);
+    }
+
+    static ActiveAlarm&lt;Event&gt; tupleToActiveAlarm(Event triggerValue, Tuple tuple) {
+        var o = tuple.getColumn(CNAME_TRIGGER);
+
+        int seqNum = tuple.getIntColumn(CNAME_SEQ_NUM);
+
+        var activeAlarm = new ActiveAlarm&lt;Event&gt;(triggerValue, false, false, seqNum);
+        if (tuple.hasColumn(CNAME_PENDING) &amp;&amp; tuple.getBooleanColumn(CNAME_PENDING)) {
+            activeAlarm.setPending(true);
+        } else {
+            activeAlarm.trigger();
+        }
+
+        activeAlarm.setViolations(tuple.getIntColumn(CNAME_VIOLATION_COUNT));
+        if (tuple.hasColumn(CNAME_ACK_TIME)) {
+            long t = tuple.getTimestampColumn(CNAME_ACK_TIME);
+            activeAlarm.acknowledge(tuple.getColumn(CNAME_ACK_BY), t, tuple.getColumn(CNAME_ACK_MSG));
+        }
+
+        if (tuple.hasColumn(CNAME_SHELVED_TIME)) {
+            long t = tuple.getTimestampColumn(CNAME_SHELVED_TIME);
+            activeAlarm.shelve(t, tuple.getColumn(CNAME_SHELVED_BY), tuple.getColumn(CNAME_SHELVED_MSG), t);
+        }
+
+        o = tuple.getColumn(CNAME_SEVERITY_INCREASED);
+        if (o != null &amp;&amp; !(o instanceof Event)) {
+            activeAlarm.setMostSevereValue((Event) o);
+        }
+
+        if (tuple.hasColumn(CNAME_PENDING)) {
+            activeAlarm.setPending(tuple.getColumn(CNAME_PENDING));
+        }
+
+        return activeAlarm;
+    }
+
+    @Override
+    protected String getColNameLastEvent() {
+        return CNAME_LAST_EVENT;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="eventalarmstreamer-java">
+<h2><code class="docutils literal notranslate"><span class="pre">EventAlarmStreamer.java</span></code><a class="headerlink" href="#eventalarmstreamer-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/EventAlarmStreamer.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+import java.util.ArrayList;
+
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+/**
+ * Receives event alarms from the {@link AlarmServer} and sends them to the events_alarms stream to be recorded
+ * 
+ */
+public class EventAlarmStreamer extends AlarmStreamer&lt;Event&gt; {
+
+    public static final DataType EVENT_DATA_TYPE = DataType
+            .protobuf(Event.class.getName());
+    public static final String CNAME_LAST_EVENT = "event";
+    public static final String CNAME_TRIGGER = "triggerEvent";
+    public static final String CNAME_CLEAR = "clearEvent";
+    public static final String CNAME_SEVERITY_INCREASED = "severityIncreasedEvent";
+
+    public EventAlarmStreamer(Stream s) {
+        super(s, EVENT_DATA_TYPE, StandardTupleDefinitions.EVENT_ALARM);
+    }
+
+    @Override
+    protected ArrayList&lt;Object&gt; getTupleKey(AlarmNotificationType notificationType, ActiveAlarm&lt;Event&gt; activeAlarm) {
+        ArrayList&lt;Object&gt; al = new ArrayList&lt;&gt;(7);
+        Event triggerValue = activeAlarm.getTriggerValue();
+
+        // triggerTime
+        al.add(triggerValue.getGenerationTime());
+        // event source
+        al.add(triggerValue.getSource());
+        // seqNum
+        al.add(activeAlarm.getId());
+        // event
+        al.add(notificationType.toString());
+
+        // event type
+        al.add(triggerValue.getType());
+
+        // the AlarmRecorder checks for null
+        al.add(activeAlarm.isPending() ? Boolean.TRUE : null);
+
+        return al;
+    }
+
+    /**
+     * generate a tuple with the violation/value counters and the last value to be saved in the database before shutdown
+     */
+    @Override
+    public void notifyShutdown(ActiveAlarm&lt;Event&gt; alarm) {
+        Tuple t = new Tuple();
+
+        // primary key
+        t.addTimestampColumn(AlarmStreamer.CNAME_TRIGGER_TIME, alarm.getTriggerValue().getGenerationTime());
+        t.addColumn(StandardTupleDefinitions.EVENT_SOURCE_COLUMN,
+                alarm.getTriggerValue().getSource());
+        t.addColumn(StandardTupleDefinitions.SEQNUM_COLUMN, alarm.getId());
+
+        // values we are interested in
+        t.addColumn(CNAME_VIOLATION_COUNT, alarm.getViolations());
+        t.addColumn(CNAME_VALUE_COUNT, alarm.getValueCount());
+        t.addColumn(CNAME_LAST_VALUE, EVENT_DATA_TYPE, alarm.getCurrentValue());
+
+        stream.emitTuple(t);
+    }
+
+    @Override
+    protected String getColNameLastEvent() {
+        return CNAME_LAST_EVENT;
+    }
+
+    @Override
+    protected String getColNameClear() {
+        return CNAME_CLEAR;
+    }
+
+    @Override
+    protected String getColNameTrigger() {
+        return CNAME_TRIGGER;
+    }
+
+    @Override
+    protected String getColNameSeverityIncreased() {
+        return CNAME_SEVERITY_INCREASED;
+    }
+
+    @Override
+    protected long getUpdateTime(Event alarmDetail) {
+        return alarmDetail.getGenerationTime();
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="eventid-java">
+<h2><code class="docutils literal notranslate"><span class="pre">EventId.java</span></code><a class="headerlink" href="#eventid-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/EventId.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * The id of an event alarm is its (source,type)
+ * &lt;p&gt;
+ * This means if an alarm is active and an event is generated with the same (source,type) a new alarm will not be
+ * created but the old one updated
+ * 
+ */
+public class EventId {
+
+    private static final Pattern QNAME_PATTERN = Pattern.compile("(.+)\\/([^\\/]+)");
+    public static final String DEFAULT_NAMESPACE = "/yamcs/event/";
+
+    private static final String CA_NAME = "/yamcs/event/CustomAlgorithm/";
+    final String source;
+    final String type;
+
+    public EventId(String source, String type) {
+        if (source == null) {
+            throw new NullPointerException("Source cannot be null");
+        }
+
+        this.source = source;
+        this.type = type;
+    }
+
+    public EventId(String qualifiedName) {
+        if (qualifiedName.startsWith(CA_NAME)) {// FIXME: hack for events generated from custom algorithms
+            this.source = "CustomAlgorithm";
+            this.type = qualifiedName.substring(CA_NAME.length());
+        } else if (qualifiedName.startsWith(DEFAULT_NAMESPACE)) {
+            String withoutPrefix = qualifiedName.substring(DEFAULT_NAMESPACE.length());
+            Matcher matcher = QNAME_PATTERN.matcher(withoutPrefix);
+            if (matcher.matches()) {
+                source = matcher.group(1);
+                type = matcher.group(2);
+            } else {
+                source = withoutPrefix;
+                type = null;
+            }
+        } else {
+            Matcher matcher = QNAME_PATTERN.matcher(qualifiedName);
+            if (!matcher.matches()) {
+                throw new IllegalArgumentException("Invalid qualified name '" + qualifiedName + "'");
+            }
+            source = matcher.group(1);
+            type = matcher.group(2);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + source.hashCode();
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        EventId other = (EventId) obj;
+
+        if (!source.equals(other.source)) {
+            return false;
+        }
+        if (type == null) {
+            if (other.type != null) {
+                return false;
+            }
+        } else if (!type.equals(other.type)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        if (source.startsWith("/")) {
+            return source + (type != null ? "/" + type : "");
+        } else {
+            return DEFAULT_NAMESPACE + source + (type != null ? "/" + type : "");
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="parameteralarmmirrorserver-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ParameterAlarmMirrorServer.java</span></code><a class="headerlink" href="#parameteralarmmirrorserver-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/ParameterAlarmMirrorServer.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+import static org.yamcs.alarms.AlarmStreamer.CNAME_LAST_VALUE;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_VALUE_COUNT;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_VIOLATION_COUNT;
+
+import java.util.Map;
+
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.archive.AlarmRecorder;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.Tuple;
+
+class ParameterAlarmMirrorServer extends AbstractAlarmMirrorServer&lt;Parameter, ParameterValue&gt; {
+    Mdb mdb;
+
+    ParameterAlarmMirrorServer(String yamcsInstance, double alarmLoadDays) {
+        super(yamcsInstance, alarmLoadDays);
+        mdb = MdbFactory.getInstance(yamcsInstance);
+    }
+
+    Parameter getSubject(Tuple tuple) {
+        String pname = tuple.getColumn(StandardTupleDefinitions.PARAMETER_COLUMN);
+        var parameter = mdb.getParameter(pname);
+
+        if (parameter == null) {
+            log.info("Not processing alarm for {} because the parameter was not found in the MDB", pname);
+            return null;
+        }
+        return parameter;
+    }
+
+    @Override
+    protected ActiveAlarm&lt;ParameterValue&gt; createNewAlarm(Parameter parameter, Tuple tuple) {
+        String ev = tuple.getColumn(ParameterAlarmStreamer.CNAME_LAST_EVENT);
+        if (ev == null) {
+            return null;
+        }
+
+        var notificationType = AlarmNotificationType.valueOf(ev);
+        if (notificationType == AlarmNotificationType.TRIGGERED
+                || notificationType == AlarmNotificationType.TRIGGERED_PENDING) {
+            return ParameterAlarmServer.tupleToActiveAlarm(parameter, tuple);
+        } else {
+            return null;
+        }
+    }
+
+    protected void addActiveAlarmFromTuple(Mdb mdb, Tuple tuple, Map&lt;Parameter, ActiveAlarm&lt;ParameterValue&gt;&gt; alarms) {
+        String pname = tuple.getColumn(StandardTupleDefinitions.PARAMETER_COLUMN);
+        var parameter = mdb.getParameter(pname);
+
+        if (parameter == null) {
+            log.info("Not adding alarm for {} because parameter was not found in the MDB", pname);
+            return;
+        }
+        alarms.put(parameter, ParameterAlarmServer.tupleToActiveAlarm(parameter, tuple));
+    }
+
+    @Override
+    protected void processValueUpdate(Parameter parameter, ActiveAlarm&lt;ParameterValue&gt; activeAlarm, Tuple tuple) {
+        ParameterValue pv = tuple.getColumn(ParameterAlarmStreamer.CNAME_LAST_VALUE);
+        pv.setParameter(parameter);
+
+        activeAlarm.setViolations(tuple.getIntColumn(CNAME_VIOLATION_COUNT));
+        activeAlarm.setValueCount(tuple.getIntColumn(CNAME_VALUE_COUNT));
+        activeAlarm.setCurrentValue(tuple.getColumn(CNAME_LAST_VALUE));
+    }
+
+    @Override
+    protected void processSeverityIncrease(Parameter parameter, ActiveAlarm&lt;ParameterValue&gt; activeAlarm, Tuple tuple) {
+        ParameterValue pv = tuple.getColumn(ParameterAlarmStreamer.CNAME_SEVERITY_INCREASED);
+        pv.setParameter(parameter);
+        activeAlarm.setMostSevereValue(pv);
+    }
+
+    @Override
+    protected String getColNameLastEvent() {
+        return ParameterAlarmStreamer.CNAME_LAST_EVENT;
+    }
+
+    @Override
+    protected Parameter getSubject(ParameterValue pv) {
+        return pv.getParameter();
+    }
+
+    @Override
+    protected String alarmTableName() {
+        return AlarmRecorder.PARAMETER_ALARM_TABLE_NAME;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="parameteralarmserver-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ParameterAlarmServer.java</span></code><a class="headerlink" href="#parameteralarmserver-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/ParameterAlarmServer.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+import java.util.Map;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.archive.AlarmRecorder;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.Tuple;
+import static org.yamcs.alarms.ParameterAlarmStreamer.*;
+
+public class ParameterAlarmServer extends AlarmServer&lt;Parameter, ParameterValue&gt; {
+    static private final Logger log = LoggerFactory.getLogger(ParameterAlarmServer.class);
+
+    public ParameterAlarmServer(String yamcsInstance, ProcessorConfig procConfig, ScheduledThreadPoolExecutor timer) {
+        super(yamcsInstance, procConfig, timer);
+    }
+
+    protected void addActiveAlarmFromTuple(Mdb mdb, Tuple tuple, Map&lt;Parameter, ActiveAlarm&lt;ParameterValue&gt;&gt; alarms) {
+        String pname = tuple.getColumn(StandardTupleDefinitions.PARAMETER_COLUMN);
+        var parameter = mdb.getParameter(pname);
+
+        if (parameter == null) {
+            log.info("Not adding alarm for {} because parameter was not found in the MDB", pname);
+            return;
+        }
+        alarms.put(parameter, tupleToActiveAlarm(parameter, tuple));
+    }
+
+    protected static ActiveAlarm&lt;ParameterValue&gt; tupleToActiveAlarm(Parameter parameter, Tuple tuple) {
+        var o = tuple.getColumn(CNAME_TRIGGER);
+
+        if (o == null || !(o instanceof ParameterValue)) {
+            throw new RuntimeException("Cannot extract the triggered PV from the tuple: " + tuple);
+        }
+        var triggeredValue = (ParameterValue) o;
+        triggeredValue.setParameter(parameter);
+        int seqNum = tuple.getIntColumn(CNAME_SEQ_NUM);
+
+        var activeAlarm = new ActiveAlarm&lt;ParameterValue&gt;(triggeredValue, false, false, seqNum);
+
+        if (tuple.hasColumn(CNAME_PENDING) &amp;&amp; tuple.getBooleanColumn(CNAME_PENDING)) {
+            activeAlarm.setPending(true);
+        } else {
+            activeAlarm.trigger();
+        }
+
+        if (tuple.hasColumn(CNAME_VIOLATION_COUNT)) {
+            activeAlarm.setViolations(tuple.getIntColumn(CNAME_VIOLATION_COUNT));
+        }
+        if (tuple.hasColumn(CNAME_VALUE_COUNT)) {
+            activeAlarm.setValueCount(tuple.getIntColumn(CNAME_VALUE_COUNT));
+        }
+
+        if (tuple.hasColumn(CNAME_ACK_TIME)) {
+            long t = tuple.getTimestampColumn(CNAME_ACK_TIME);
+            activeAlarm.acknowledge(tuple.getColumn(CNAME_ACK_BY), t, tuple.getColumn(CNAME_ACK_MSG));
+        }
+
+        if (tuple.hasColumn(CNAME_SHELVED_TIME)) {
+            long t = tuple.getTimestampColumn(CNAME_SHELVED_TIME);
+            activeAlarm.shelve(t, tuple.getColumn(CNAME_SHELVED_BY), tuple.getColumn(CNAME_SHELVED_MSG),
+                    tuple.getLongColumn(CNAME_SHELVE_DURATION));
+        }
+        if (tuple.hasColumn(CNAME_LAST_VALUE)) {
+            ParameterValue pv = tuple.getColumn(CNAME_LAST_VALUE);
+            pv.setParameter(parameter);
+            activeAlarm.setCurrentValue(pv);
+        }
+
+        if (tuple.hasColumn(CNAME_SEVERITY_INCREASED)) {
+            ParameterValue pv = tuple.getColumn(CNAME_SEVERITY_INCREASED);
+            pv.setParameter(parameter);
+            activeAlarm.setMostSevereValue(pv);
+        }
+        return activeAlarm;
+    }
+
+    protected String alarmTableName() {
+        return AlarmRecorder.PARAMETER_ALARM_TABLE_NAME;
+    }
+
+    @Override
+    protected Parameter getSubject(ParameterValue pv) {
+        return pv.getParameter();
+    }
+
+    @Override
+    protected String getColNameLastEvent() {
+        return CNAME_LAST_EVENT;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="parameteralarmstreamer-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ParameterAlarmStreamer.java</span></code><a class="headerlink" href="#parameteralarmstreamer-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/ParameterAlarmStreamer.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.alarms;
+
+import java.util.ArrayList;
+
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+
+public class ParameterAlarmStreamer extends AlarmStreamer&lt;ParameterValue&gt; {
+    static public final String CNAME_LAST_EVENT = "alarmEvent";
+    static public final String CNAME_UPDATE_PV = "updatePV";
+    static public final String CNAME_TRIGGER = "triggerPV";
+    static public final String CNAME_CLEAR = "clearPV";
+    static public final String CNAME_SEVERITY_INCREASED = "severityIncreasedPV";
+
+    public ParameterAlarmStreamer(Stream s) {
+        super(s, DataType.PARAMETER_VALUE, StandardTupleDefinitions.PARAMETER_ALARM);
+    }
+
+    @Override
+    protected ArrayList&lt;Object&gt; getTupleKey(AlarmNotificationType notificationType,
+            ActiveAlarm&lt;ParameterValue&gt; activeAlarm) {
+        ArrayList&lt;Object&gt; al = new ArrayList&lt;&gt;();
+
+        // triggerTime
+        al.add(activeAlarm.getTriggerValue().getGenerationTime());
+        // parameter
+        al.add(activeAlarm.getTriggerValue().getParameter().getQualifiedName());
+        // seqNum
+        al.add(activeAlarm.getId());
+
+        // alarmEvent
+        al.add(notificationType.toString());
+
+        // the AlarmRecorder checks for null
+        al.add(activeAlarm.isPending() ? Boolean.TRUE : null);
+
+        return al;
+    }
+
+    /**
+     * generate a tuple with the violation/value counters and the last value to be saved in the database before shutdown
+     */
+    @Override
+    public void notifyShutdown(ActiveAlarm&lt;ParameterValue&gt; alarm) {
+        if (alarm.isPending()) {
+            return;
+        }
+        Tuple t = new Tuple();
+        // primary key
+        t.addTimestampColumn(AlarmStreamer.CNAME_TRIGGER_TIME, alarm.getTriggerValue().getGenerationTime());
+        t.addColumn(StandardTupleDefinitions.PARAMETER_COLUMN,
+                alarm.getTriggerValue().getParameter().getQualifiedName());
+        t.addColumn(StandardTupleDefinitions.SEQNUM_COLUMN, alarm.getId());
+
+        // values we are interested in
+        t.addColumn(CNAME_VIOLATION_COUNT, alarm.getViolations());
+        t.addColumn(CNAME_VALUE_COUNT, alarm.getValueCount());
+        t.addColumn(CNAME_LAST_VALUE, DataType.PARAMETER_VALUE, alarm.getCurrentValue());
+
+        stream.emitTuple(t);
+    }
+
+    @Override
+    protected String getColNameLastEvent() {
+        return CNAME_LAST_EVENT;
+    }
+
+    @Override
+    protected String getColNameClear() {
+        return CNAME_CLEAR;
+    }
+
+    @Override
+    protected String getColNameTrigger() {
+        return CNAME_TRIGGER;
+    }
+
+    @Override
+    protected String getColNameSeverityIncreased() {
+        return CNAME_SEVERITY_INCREASED;
+    }
+
+    @Override
+    protected long getUpdateTime(ParameterValue alarmDetail) {
+        return alarmDetail.getGenerationTime();
+    }
+
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../activities/index.html" class="btn btn-neutral float-left" title="activities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../algo/index.html" class="btn btn-neutral float-right" title="algo" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

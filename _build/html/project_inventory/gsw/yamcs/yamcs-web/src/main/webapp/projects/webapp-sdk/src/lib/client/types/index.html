@@ -1,0 +1,3402 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>types &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../../../../../search.html" />
+    <link rel="next" title="commanding" href="../../commanding/index.html" />
+    <link rel="prev" title="client" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../../../../../index.html">gsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../../../index.html">gsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../index.html">yamcs-web</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">main</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">webapp</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">projects</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">webapp-sdk</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">lib</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">client</a></li>
+      <li class="breadcrumb-item active">types</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../../../../../_sources/project_inventory/gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="types">
+<h1>types<a class="headerlink" href="#types" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="activities-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">activities.ts</span></code><a class="headerlink" href="#activities-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/activities.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { WebSocketCall } from '../WebSocketCall';
+
+export type ActivityStatus = 'RUNNING' | 'SUCCESSFUL' | 'CANCELLED' | 'FAILED';
+
+export interface Activity {
+  type: string;
+  args: { [key: string]: any };
+  detail: string;
+  id: string;
+  start: string;
+  seq: number;
+  status: string;
+  startedBy: string;
+  stop?: string;
+  stoppedBy?: string;
+  failureReason?: string;
+}
+
+export interface ActivitiesPage {
+  activities: Activity[];
+  continuationToken?: string;
+}
+
+export interface GetActivityLogResponse {
+  logs: ActivityLog[];
+}
+
+export interface ActivityLog {
+  time: string;
+  source: string;
+  level: string;
+  message: string;
+}
+
+export interface ExecutorsWrapper {
+  executors: Executor[];
+}
+
+export interface Executor {
+  type: string;
+  displayName: string;
+  description?: string;
+  icon?: string;
+}
+
+export interface ActivityScriptsPage {
+  scripts: string[];
+}
+
+export interface SubscribeActivitiesRequest {
+  instance: string;
+}
+
+export interface SubscribeActivityLogRequest {
+  instance: string;
+  activity: string;
+}
+
+export type GlobalActivityStatusSubscription = WebSocketCall&lt;
+  SubscribeGlobalActivityStatusRequest,
+  GlobalActivityStatus
+&gt;;
+export type ActivitySubscription = WebSocketCall&lt;
+  SubscribeActivitiesRequest,
+  Activity
+&gt;;
+export type ActivityLogSubscription = WebSocketCall&lt;
+  SubscribeActivityLogRequest,
+  ActivityLog
+&gt;;
+
+export class StartActivityOptions {
+  type: string;
+  args?: { [key: string]: any };
+  comment?: string;
+}
+
+export class CompleteManualActivityOptions {
+  failureReason?: string;
+}
+
+export interface SubscribeGlobalActivityStatusRequest {
+  instance: string;
+}
+
+export interface GlobalActivityStatus {
+  ongoingCount: number;
+}
+
+export interface GetActivitiesOptions {
+  /**
+   * Inclusive lower bound
+   */
+  start?: string;
+  /**
+   * Exclusive upper bound
+   */
+  stop?: string;
+  status?: string | string[];
+  q?: string;
+  type?: string | string[];
+  limit?: number;
+  order?: 'asc' | 'desc';
+  next?: string;
+}
+</pre></div>
+</div>
+</section>
+<section id="alarms-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">alarms.ts</span></code><a class="headerlink" href="#alarms-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/alarms.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { WebSocketCall } from '../WebSocketCall';
+import { Event } from './events';
+import { NamedObjectId, Parameter } from './mdb';
+import { ParameterValue } from './monitoring';
+
+export interface GlobalAlarmStatus {
+  unacknowledgedCount: number;
+  unacknowledgedActive: boolean;
+  unacknowledgedSeverity?: string;
+  acknowledgedCount: number;
+  acknowledgedActive: boolean;
+  acknowledgedSeverity?: string;
+  shelvedCount: number;
+  shelvedActive: boolean;
+  shelvedSeverity?: string;
+}
+
+export interface SubscribeGlobalAlarmStatusRequest {
+  instance: string;
+  processor: string;
+}
+
+export interface SubscribeAlarmsRequest {
+  instance: string;
+  processor: string;
+  includePending: boolean;
+}
+
+export interface ListAlarmsResponse {
+  alarms: Alarm[];
+}
+
+export type AlarmNotificationType =
+  | 'ACTIVE'
+  | 'TRIGGERED_PENDING'
+  | 'TRIGGERED'
+  | 'SEVERITY_INCREASED'
+  | 'VALUE_UPDATED'
+  | 'ACKNOWLEDGED'
+  | 'CLEARED'
+  | 'RTN'
+  | 'SHELVED'
+  | 'UNSHELVED'
+  | 'RESET';
+
+export type AlarmSeverity =
+  | 'WATCH'
+  | 'WARNING'
+  | 'DISTRESS'
+  | 'CRITICAL'
+  | 'SEVERE';
+
+export interface Alarm {
+  seqNum: number;
+  type: 'EVENT' | 'PARAMETER';
+  notificationType: AlarmNotificationType;
+  id: NamedObjectId;
+  updateTime: string;
+  triggerTime: string;
+  violations: number;
+  count: number;
+  acknowledgeInfo: AlarmAcknowledgeInfo;
+  shelveInfo: ShelveInfo;
+  clearInfo: ClearInfo;
+  severity: AlarmSeverity;
+  readonly: boolean;
+
+  latching: boolean;
+  processOK: boolean;
+  triggered: boolean;
+  acknowledged: boolean;
+  pending?: boolean;
+
+  parameterDetail?: ParameterAlarmData;
+  eventDetail?: EventAlarmData;
+}
+
+export interface ParameterAlarmData {
+  triggerValue: ParameterValue;
+  mostSevereValue: ParameterValue;
+  currentValue: ParameterValue;
+  parameter: Parameter;
+}
+
+export interface EventAlarmData {
+  triggerEvent: Event;
+  mostSevereEvent: Event;
+  currentEvent: Event;
+}
+
+export interface AlarmAcknowledgeInfo {
+  acknowledgedBy: string;
+  acknowledgeMessage: string;
+  acknowledgeTime: string;
+}
+
+export interface ShelveInfo {
+  shelvedBy: string;
+  shelveMessage: string;
+  shelveTime: string;
+  shelveExpiration: string;
+}
+
+export interface ClearInfo {
+  clearedBy: string;
+  clearTime: string;
+  clearMessage: string;
+}
+
+export interface GetAlarmsOptions {
+  start?: string;
+  stop?: string;
+  detail?: boolean;
+  pos?: number;
+  limit?: number;
+  order?: 'asc' | 'desc';
+}
+
+export interface AcknowledgeAlarmOptions {
+  comment?: string;
+}
+
+export interface ShelveAlarmOptions {
+  comment?: string;
+  shelveDuration?: number;
+}
+
+export interface ClearAlarmOptions {
+  comment?: string;
+}
+
+export type GlobalAlarmStatusSubscription = WebSocketCall&lt;
+  SubscribeGlobalAlarmStatusRequest,
+  GlobalAlarmStatus
+&gt;;
+export type AlarmSubscription = WebSocketCall&lt;SubscribeAlarmsRequest, Alarm&gt;;
+</pre></div>
+</div>
+</section>
+<section id="commandhistory-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">commandHistory.ts</span></code><a class="headerlink" href="#commandhistory-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/commandHistory.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { WebSocketCall } from '../WebSocketCall';
+import { CommandHistoryEntry } from './monitoring';
+
+export interface SubscribeCommandsRequest {
+  instance: string;
+  processor: string;
+  ignorePastCommands?: boolean;
+}
+
+export type CommandSubscription = WebSocketCall&lt;
+  SubscribeCommandsRequest,
+  CommandHistoryEntry
+&gt;;
+</pre></div>
+</div>
+</section>
+<section id="config-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">config.ts</span></code><a class="headerlink" href="#config-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/config.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>export interface Spec {
+  options: Option[];
+}
+
+export type OptionType = 'BOOLEAN' | 'FLOAT' | 'STRING' | 'INTEGER';
+
+export interface Option {
+  name: string;
+  type: OptionType;
+  default: any;
+  hidden: boolean;
+  required: boolean;
+  secret: boolean;
+  description?: string[];
+}
+</pre></div>
+</div>
+</section>
+<section id="cop1-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">cop1.ts</span></code><a class="headerlink" href="#cop1-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/cop1.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { WebSocketCall } from '../WebSocketCall';
+
+export type Cop1State =
+  | 'ACTIVE'
+  | 'RETRANSMIT_WITHOUT_WAIT'
+  | 'RETRANSMIT_WITH_WAIT'
+  | 'INITIALIZING_WITHOUT_BC'
+  | 'INITIALIZING_WITH_BC'
+  | 'UNINTIALIZED'
+  | 'SUSPENDED';
+
+export interface Clcw {
+  receptionTime: string;
+  lockout: boolean;
+  wait: boolean;
+  retransmit: boolean;
+  nR: number;
+}
+
+export interface Cop1Status {
+  link: string;
+  cop1Active: boolean;
+  setBypassAll: boolean;
+  clcw?: Clcw;
+  state: Cop1State;
+  vS: number;
+  nnR: number;
+  waitQueueNumTC: number;
+  sentQueueNumFrames: number;
+  outQueueNumFrames: number;
+  txCount: number;
+}
+
+export interface Cop1Config {
+  link: string;
+  vcId: number;
+  bdAbsolutePriority: boolean;
+  windowWidth: number;
+  timeoutType: string;
+  txLimit: number;
+  t1: number;
+}
+
+export interface InitiateCop1Request {
+  type: 'WITH_CLCW_CHECK' | 'WITHOUT_CLCW_CHECK' | 'UNLOCK' | 'SET_VR';
+  clcwCheckInitializeTimeout?: number;
+  vR?: number;
+}
+
+export interface DisableCop1Request {
+  setBypassAll?: boolean;
+}
+
+export interface SubscribeCop1Request {
+  instance: string;
+  link: string;
+}
+
+export type Cop1Subscription = WebSocketCall&lt;SubscribeCop1Request, Cop1Status&gt;;
+</pre></div>
+</div>
+</section>
+<section id="events-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">events.ts</span></code><a class="headerlink" href="#events-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/events.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { WebSocketCall } from '../WebSocketCall';
+
+export interface SubscribeEventsRequest {
+  instance: string;
+  filter?: string;
+}
+
+export type EventSeverity =
+  | 'INFO'
+  | 'WARNING'
+  | 'ERROR'
+  | 'WATCH'
+  | 'DISTRESS'
+  | 'CRITICAL'
+  | 'SEVERE';
+
+export interface Event {
+  source: string;
+  generationTime: string;
+  receptionTime: string;
+  seqNumber: number;
+  type: string;
+  message: string;
+  severity: EventSeverity;
+  extra?: { [key: string]: string };
+}
+
+export interface CreateEventRequest {
+  message: string;
+  type?: string;
+  severity?: EventSeverity;
+  time?: string;
+  extra?: { [key: string]: string };
+}
+
+export interface GetEventsOptions {
+  /**
+   * Inclusive lower bound
+   */
+  start?: string;
+  /**
+   * Exclusive upper bound
+   */
+  stop?: string;
+  /**
+   * Filter query
+   */
+  filter?: string;
+  severity?: EventSeverity;
+  source?: string[];
+  limit?: number;
+  order?: 'asc' | 'desc';
+}
+
+export interface DownloadEventsOptions {
+  /**
+   * Inclusive lower bound
+   */
+  start?: string;
+  /**
+   * Exclusive upper bound
+   */
+  stop?: string;
+  /**
+   * Filter query
+   */
+  filter?: string;
+  severity?: EventSeverity;
+  source?: string | string[];
+  delimiter?: 'COMMA' | 'SEMICOLON' | 'TAB';
+}
+
+export type EventSubscription = WebSocketCall&lt;SubscribeEventsRequest, Event&gt;;
+</pre></div>
+</div>
+</section>
+<section id="filetransfer-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">filetransfer.ts</span></code><a class="headerlink" href="#filetransfer-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/filetransfer.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { WebSocketCall } from '../WebSocketCall';
+import { ActionInfo } from './management';
+
+export type FileTransferDirection = 'UPLOAD' | 'DOWNLOAD';
+
+export type FileTransferStatus =
+  | 'RUNNING'
+  | 'PAUSED'
+  | 'FAILED'
+  | 'COMPLETED'
+  | 'CANCELLING'
+  | 'QUEUED';
+
+export interface FileTransferService {
+  instance: string;
+  name: string;
+  localEntities: Entity[];
+  remoteEntities: Entity[];
+  capabilities: FileTransferCapabilities;
+  transferOptions: FileTransferOption[];
+}
+
+export interface FileTransferOption {
+  name: string;
+  type: 'BOOLEAN' | 'DOUBLE' | 'STRING';
+  title?: string;
+  description?: string;
+  associatedText?: string;
+  default?: string;
+  values?: { value: string; verboseName?: string }[];
+  allowCustomOption?: boolean;
+}
+
+export interface FileTransferCapabilities {
+  upload: boolean;
+  download: boolean;
+  reliability: boolean;
+  remotePath: boolean;
+  hasTransferType: boolean;
+  pauseResume: boolean;
+  fileList: boolean;
+  fileListExtraColumns?: FileListExtraColumnInfo[];
+  fileActions?: ActionInfo[];
+}
+
+export interface GetFileTransfersOptions {
+  start?: string;
+  stop?: string;
+  state?: string | string[];
+  direction?: FileTransferDirection;
+  localEntityId?: number;
+  remoteEntityId?: number;
+  limit?: number;
+  order?: 'asc' | 'desc';
+}
+
+export interface FileListExtraColumnInfo {
+  id: string;
+  label: string;
+}
+
+export interface Entity {
+  name: string;
+  id: number;
+}
+
+export interface Transfer {
+  id: number;
+  startTime?: string;
+  creationTime: string;
+  state: FileTransferStatus;
+  bucket: string;
+  objectName: string;
+  remotePath: string;
+  direction: FileTransferDirection;
+  totalSize: number;
+  sizeTransferred: number;
+  failureReason?: string;
+  transferType?: string;
+  localEntity: Entity;
+  remoteEntity: Entity;
+}
+
+export interface CreateTransferRequest {
+  direction: FileTransferDirection;
+  bucket: string;
+  objectName: string;
+  remotePath: string;
+  source: string;
+  destination: string;
+  options: { [key: string]: boolean | number | string };
+}
+
+export interface TransfersPage {
+  transfers: Transfer[];
+}
+
+export interface ListFilesRequest {
+  source: string;
+  destination: string;
+  remotePath: string;
+  options?: { [key: string]: boolean | number | string };
+}
+
+export interface RemoteFile {
+  name: string;
+  displayName: string;
+  isDirectory: boolean;
+  size: number;
+  modified: string;
+  extra?: { [key: string]: any };
+}
+
+export interface ListFilesResponse {
+  files: RemoteFile[];
+  destination: string;
+  remotePath: string;
+  listTime: string;
+  state?: string;
+  progressMessage?: string;
+}
+
+export interface RunFileActionRequest {
+  remoteEntity: string;
+  file: string;
+  action: string;
+  message?: { [key: string]: any };
+}
+
+export interface ServicesPage {
+  services: FileTransferService[];
+}
+
+export interface SubscribeTransfersRequest {
+  instance: string;
+  serviceName: string;
+  ongoingOnly: true;
+}
+
+export interface SubscribeRemoteFileListRequest {
+  instance: string;
+  serviceName: string;
+}
+
+export type TransferSubscription = WebSocketCall&lt;
+  SubscribeTransfersRequest,
+  Transfer
+&gt;;
+export type RemoteFileListSubscription = WebSocketCall&lt;
+  SubscribeRemoteFileListRequest,
+  ListFilesResponse
+&gt;;
+</pre></div>
+</div>
+</section>
+<section id="internal-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">internal.ts</span></code><a class="headerlink" href="#internal-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/internal.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { Alarm } from './alarms';
+import { Event } from './events';
+import { Link } from './management';
+import { IndexGroup, Range, Sample } from './monitoring';
+import { Processor } from './processing';
+import { CommandQueue } from './queue';
+import {
+  Bucket,
+  GroupInfo,
+  Instance,
+  InstanceTemplate,
+  RocksDbDatabase,
+  RoleInfo,
+  Service,
+  SessionInfo,
+  UserInfo,
+} from './system';
+import { Record, Stream, Table } from './table';
+
+export interface EventsWrapper {
+  events: Event[];
+}
+
+export interface InstancesWrapper {
+  instances: Instance[];
+}
+
+export interface InstanceTemplatesWrapper {
+  templates: InstanceTemplate[];
+}
+
+export interface LinksWrapper {
+  links: Link[];
+}
+
+export interface ServicesWrapper {
+  services: Service[];
+}
+
+export interface AlarmsWrapper {
+  alarms: Alarm[];
+}
+
+export interface UsersWrapper {
+  users: UserInfo[];
+}
+
+export interface GroupsWrapper {
+  groups: GroupInfo[];
+}
+
+export interface RolesWrapper {
+  roles: RoleInfo[];
+}
+
+export interface SessionsWrapper {
+  sessions: SessionInfo[];
+}
+
+export interface CommandQueuesWrapper {
+  queues: CommandQueue[];
+}
+
+export interface ProcessorsWrapper {
+  processors: Processor[];
+}
+
+export interface StreamsWrapper {
+  streams: Stream[];
+}
+
+export interface TablesWrapper {
+  tables: Table[];
+}
+
+export interface RecordsWrapper {
+  record: Record[];
+}
+
+export interface SamplesWrapper {
+  sample: Sample[];
+}
+
+export interface RangesWrapper {
+  range: Range[];
+}
+
+export interface SourcesWrapper {
+  sources: string[];
+}
+
+export interface IndexResult {
+  group: IndexGroup[];
+}
+
+export interface BucketsWrapper {
+  buckets: Bucket[];
+}
+
+export interface RocksDbDatabasesWrapper {
+  databases: RocksDbDatabase[];
+}
+</pre></div>
+</div>
+</section>
+<section id="management-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">management.ts</span></code><a class="headerlink" href="#management-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/management.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { WebSocketCall } from '../WebSocketCall';
+import { Spec } from './config';
+import { Instance } from './system';
+
+export interface ListInstancesOptions {
+  filter?: string;
+}
+
+export interface CreateInstanceRequest {
+  name: string;
+  template: string;
+  templateArgs?: { [key: string]: string };
+  labels?: { [key: string]: string };
+}
+
+export interface LinkEvent {
+  type: string;
+  links: Link[];
+}
+
+export interface Link {
+  instance: string;
+  name: string;
+  type: string;
+  spec: string;
+  stream: string;
+  disabled: boolean;
+  dataInCount: number;
+  dataOutCount: number;
+  status: LinkStatus;
+  detailedStatus: string;
+  parentName?: string;
+  actions?: ActionInfo[];
+  extra?: { [key: string]: any };
+  parameters?: string[];
+}
+
+export interface ActionInfo {
+  id: string;
+  label: string;
+  style: 'CHECK_BOX' | 'PUSH_BUTTON';
+  enabled: boolean;
+  checked: boolean;
+  spec?: Spec;
+}
+
+export interface SubscribeLinksRequest {
+  instance: string;
+}
+
+export type LinkStatus = 'OK' | 'UNAVAIL' | 'DISABLED' | 'FAILED';
+
+export type InstancesSubscription = WebSocketCall&lt;{}, Instance&gt;;
+export type LinkSubscription = WebSocketCall&lt;SubscribeLinksRequest, LinkEvent&gt;;
+</pre></div>
+</div>
+</section>
+<section id="mdb-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">mdb.ts</span></code><a class="headerlink" href="#mdb-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/mdb.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { ParameterValue } from './monitoring';
+
+export interface MissionDatabase {
+  configName: string;
+  name: string;
+  version: string;
+  spaceSystems: SpaceSystem[];
+  parameterCount: number;
+  containerCount: number;
+  commandCount: number;
+  algorithmCount: number;
+  parameterTypeCount: number;
+}
+
+export interface NameDescription {
+  name: string;
+  qualifiedName: string;
+  alias?: NamedObjectId[];
+  shortDescription?: string;
+  longDescription?: string;
+}
+
+export interface SpaceSystem extends NameDescription {
+  version: string;
+  history?: HistoryInfo[];
+  sub: SpaceSystem[];
+}
+
+export interface SpaceSystemsPage {
+  spaceSystems?: SpaceSystem[];
+  continuationToken?: string;
+  totalSize: number;
+}
+
+export interface HistoryInfo {
+  version: string;
+  date: string;
+  message: string;
+  author: string;
+}
+
+export type DataSource =
+  | 'COMMAND'
+  | 'COMMAND_HISTORY'
+  | 'CONSTANT'
+  | 'DERIVED'
+  | 'EXTERNAL1'
+  | 'EXTERNAL2'
+  | 'EXTERNAL3'
+  | 'GROUND'
+  | 'LOCAL'
+  | 'SYSTEM'
+  | 'TELEMETERED';
+
+export interface Parameter extends NameDescription {
+  dataSource: DataSource;
+  type?: ParameterType;
+  usedBy?: UsedByInfo;
+  path?: string[];
+}
+
+export interface UsedByInfo {
+  algorithm?: Algorithm[];
+  container?: Container[];
+}
+
+export interface UnitInfo {
+  unit: string;
+}
+
+export interface NamedObjectId {
+  namespace?: string;
+  name: string;
+}
+
+export interface ParameterType {
+  name: string;
+  qualifiedName: string;
+  shortDescription: string;
+  longDescription: string;
+  alias: NamedObjectId[];
+  engType: string;
+  arrayInfo?: ArrayInfo;
+  dataEncoding?: DataEncoding;
+  unitSet?: UnitInfo[];
+  defaultAlarm?: AlarmInfo;
+  contextAlarm: ContextAlarmInfo[];
+  enumValues: EnumValue[];
+  enumRanges: EnumRange[];
+  absoluteTimeInfo: AbsoluteTimeInfo;
+  member: ParameterMember[];
+  signed?: boolean;
+  sizeInBits?: number;
+  oneStringValue?: string;
+  zeroStringValue?: string;
+  usedBy?: Parameter[];
+}
+
+export interface ArrayInfo {
+  type: ParameterType;
+  dimensions: number;
+}
+
+export interface Member {
+  name: string;
+  type: ParameterType | ArgumentType;
+  initialValue?: string;
+  shortDescription: string;
+  longDescription: string;
+  alias: NamedObjectId[];
+}
+
+export interface ParameterMember extends Member {
+  type: ParameterType;
+}
+
+export interface ArgumentMember extends Member {
+  type: ArgumentType;
+}
+
+export interface AbsoluteTimeInfo {
+  initialValue: string;
+  scale: number;
+  offset: number;
+  offsetFrom: Parameter;
+  epoch: string;
+}
+
+export interface AlarmInfo {
+  minViolations: number;
+  staticAlarmRanges: AlarmRange[];
+  enumerationAlarms: EnumerationAlarm[];
+  defaultLevel?: AlarmLevelType;
+}
+
+export interface ContextAlarmInfo {
+  context: string;
+  alarm: AlarmInfo;
+}
+
+export interface EnumerationAlarm {
+  level: AlarmLevelType;
+  label: string;
+}
+
+export interface DataEncoding {
+  type: string;
+  littleEndian: boolean;
+  sizeInBits: number;
+  encoding: string;
+  defaultCalibrator: Calibrator;
+  contextCalibrators: ContextCalibrator[];
+}
+
+export interface Calibrator {
+  type: string;
+  polynomialCalibrator: PolynomialCalibrator;
+  splineCalibrator: SplineCalibrator;
+  javaExpressionCalibrator: JavaExpressionCalibrator;
+}
+
+export interface ContextCalibrator {
+  context: string;
+  calibrator: Calibrator;
+}
+
+export interface PolynomialCalibrator {
+  coefficients: number[];
+}
+
+export interface SplineCalibrator {
+  points: SplinePoint[];
+}
+
+export interface SplinePoint {
+  raw: number;
+  calibrated: number;
+}
+
+export interface JavaExpressionCalibrator {
+  formula: string;
+}
+
+export interface Command extends NameDescription {
+  baseCommand?: Command;
+  abstract: boolean;
+  argument: Argument[];
+  argumentAssignment: ArgumentAssignment[];
+  significance: Significance;
+  effectiveSignificance: Significance;
+  constraint: TransmissionConstraint[];
+  commandContainer?: CommandContainer;
+  verifier?: Verifier[];
+}
+
+export type TerminationActionType = 'SUCCESS' | 'FAIL';
+
+export interface Verifier {
+  stage: string;
+  container?: Container;
+  algorithm?: Algorithm;
+  expression?: string;
+  onSuccess: TerminationActionType;
+  onFail: TerminationActionType;
+  onTimeout: TerminationActionType;
+  checkWindow: CheckWindow;
+}
+
+export interface CheckWindow {
+  timeToStartChecking?: number;
+  timeToStopChecking: number;
+  relativeTo: string;
+}
+
+export interface CommandContainer extends NameDescription {
+  sizeInBits: number;
+  baseContainer?: Container;
+  entry: SequenceEntry[];
+}
+
+export interface Argument {
+  name: string;
+  description: string;
+  initialValue?: string;
+  type: ArgumentType;
+}
+
+export interface ArgumentType {
+  engType: string;
+  dataEncoding?: DataEncoding;
+  unitSet: UnitInfo[];
+  enumValue: EnumValue[];
+  signed?: boolean;
+  rangeMin?: number;
+  rangeMax?: number;
+  minChars?: number;
+  maxChars?: number;
+  minBytes?: number;
+  maxBytes?: number;
+  member?: ArgumentMember[];
+  zeroStringValue?: string;
+  oneStringValue?: string;
+  dimensions?: ArgumentDimension[];
+  elementType?: ArgumentType;
+}
+
+export interface ArgumentDimension {
+  fixedValue: string;
+  argument: string;
+  parameter: Parameter;
+  slope: string;
+  intercept: string;
+}
+
+export interface ArgumentAssignment {
+  name: string;
+  value: string;
+}
+
+export interface Significance {
+  consequenceLevel:
+    | 'NONE'
+    | 'WATCH'
+    | 'WARNING'
+    | 'DISTRESS'
+    | 'CRITICAL'
+    | 'SEVERE';
+  reasonForWarning: string;
+}
+
+export interface TransmissionConstraint {
+  expression: string;
+  timeout: number;
+}
+
+export interface EnumValue {
+  value: number;
+  label: string;
+  description?: string;
+}
+
+export interface EnumRange {
+  min: number;
+  max: number;
+  minInclusive: boolean;
+  maxInclusive: boolean;
+  label: string;
+  description?: string;
+}
+
+export type AlarmLevelType =
+  | 'NORMAL'
+  | 'WATCH'
+  | 'WARNING'
+  | 'DISTRESS'
+  | 'CRITICAL'
+  | 'SEVERE';
+
+export interface AlarmRange {
+  level: AlarmLevelType;
+  minInclusive: number;
+  maxInclusive: number;
+  minExclusive: number;
+  maxExclusive: number;
+}
+
+export interface Algorithm extends NameDescription {
+  scope: 'GLOBAL' | 'COMMAND_VERIFICATION' | 'CONTAINER_PROCESSING';
+  type: 'CUSTOM' | 'MATH';
+  language: string;
+  text: string;
+  inputParameter: InputParameter[];
+  outputParameter: OutputParameter[];
+  onParameterUpdate: Parameter[];
+  onPeriodicRate: number[];
+  mathElements: any[];
+}
+
+export interface AlgorithmStatus {
+  active: boolean;
+  traceEnabled: boolean;
+  runCount: number;
+  lastRun?: string;
+  errorCount: number;
+  execTimeNs: number;
+  errorMessage?: string;
+  errorTime?: string;
+}
+
+export interface AlgorithmTrace {
+  runs?: AlgorithmRun[];
+  logs?: AlgorithmLog[];
+}
+
+export interface AlgorithmRun {
+  time: string;
+  inputs?: ParameterValue[];
+  outputs?: ParameterValue[];
+  returnValue: string;
+  error: string;
+}
+
+export interface AlgorithmLog {
+  time: string;
+  msg: string;
+}
+
+export interface AlgorithmOverrides {
+  textOverride?: AlgorithmTextOverride;
+}
+
+export interface AlgorithmTextOverride {
+  algorithm: string;
+  text: string;
+}
+
+export interface InputParameter {
+  parameter?: Parameter;
+  parameterInstance?: number;
+  argument?: Argument;
+  inputName: string;
+  mandatory: boolean;
+}
+
+export interface OutputParameter {
+  parameter: Parameter;
+  outputName: string;
+}
+
+export interface Container extends NameDescription {
+  maxInterval?: number;
+  sizeInBits?: number;
+  baseContainer?: Container;
+  archivePartition: boolean;
+  restrictionCriteriaExpression?: string;
+  entry?: SequenceEntry[];
+}
+
+export interface SequenceEntry {
+  locationInBits: number;
+  referenceLocation: 'CONTAINER_START' | 'PREVIOUS_ENTRY';
+  repeat?: RepeatInfo;
+
+  container?: Container;
+  parameter?: Parameter;
+  argument?: Argument;
+  fixedValue?: FixedValue;
+  indirectParameterRef?: IndirectParameterRef;
+}
+
+export interface FixedValue {
+  name: string;
+  hexValue: string;
+  sizeInBits: number;
+}
+
+export interface IndirectParameterRef {
+  parameter: Parameter;
+  aliasNamespace: string;
+}
+
+export interface RepeatInfo {
+  fixedCount: number;
+  dynamicCount: Parameter;
+  bitsBetween: number;
+}
+
+export interface GetParametersOptions {
+  type?: string;
+  source?: string;
+  q?: string;
+  system?: string;
+  searchMembers?: boolean;
+  details?: boolean;
+  pos?: number;
+  limit?: number;
+  next?: string;
+}
+
+export interface GetParameterTypesOptions {
+  q?: string;
+  system?: string;
+  pos?: number;
+  limit?: number;
+  next?: string;
+  fields?: Array&lt;keyof ParameterType&gt;;
+}
+
+export interface ParametersPage {
+  systems?: SpaceSystem[];
+  parameters?: Parameter[];
+  continuationToken?: string;
+  totalSize: number;
+}
+
+export interface ParameterTypesPage {
+  systems?: SpaceSystem[];
+  parameterTypes?: ParameterType[];
+  continuationToken?: string;
+  totalSize: number;
+}
+
+export interface GetAlgorithmsOptions {
+  scope?: string;
+  q?: string;
+  system?: string;
+  pos?: number;
+  limit?: number;
+}
+
+export interface AlgorithmsPage {
+  systems?: SpaceSystem[];
+  algorithms?: Algorithm[];
+  continuationToken?: string;
+  totalSize: number;
+}
+
+export interface GetContainersOptions {
+  q?: string;
+  system?: string;
+  pos?: number;
+  limit?: number;
+}
+
+export interface ContainersPage {
+  systems?: SpaceSystem[];
+  containers?: Container[];
+  continuationToken?: string;
+  totalSize: number;
+}
+
+export interface GetCommandsOptions {
+  noAbstract?: boolean;
+  q?: string;
+  system?: string;
+  pos?: number;
+  limit?: number;
+  details?: boolean;
+  fields?: Array&lt;keyof Command&gt;;
+}
+
+export interface CommandsPage {
+  systems?: SpaceSystem[];
+  commands?: Command[];
+  continuationToken?: string;
+  totalSize: number;
+}
+</pre></div>
+</div>
+</section>
+<section id="monitoring-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">monitoring.ts</span></code><a class="headerlink" href="#monitoring-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/monitoring.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { AlarmRange, NamedObjectId } from './mdb';
+
+export interface Value {
+  type:
+    | 'AGGREGATE'
+    | 'ARRAY'
+    | 'BINARY'
+    | 'BOOLEAN'
+    | 'DOUBLE'
+    | 'ENUMERATED'
+    | 'FLOAT'
+    | 'NONE'
+    | 'SINT32'
+    | 'SINT64'
+    | 'STRING'
+    | 'TIMESTAMP'
+    | 'UINT32'
+    | 'UINT64';
+  aggregateValue?: AggregateValue;
+  arrayValue?: Value[];
+  binaryValue?: string;
+  booleanValue?: boolean;
+  doubleValue?: number;
+  floatValue?: number;
+  sint32Value?: number;
+  sint64Value?: number;
+  stringValue?: string;
+  timestampValue?: number;
+  uint32Value?: number;
+  uint64Value?: number;
+}
+
+export interface AggregateValue {
+  name: string[];
+  value: Value[];
+}
+
+export type MonitoringResult =
+  | 'DISABLED'
+  | 'IN_LIMITS'
+  | 'WATCH'
+  | 'WARNING'
+  | 'DISTRESS'
+  | 'CRITICAL'
+  | 'SEVERE';
+
+export interface ParameterData {
+  parameter: ParameterValue[];
+  subscriptionId: number;
+}
+
+export interface ParameterValue {
+  numericId: number;
+  id: NamedObjectId;
+  rawValue: Value;
+  engValue: Value;
+  acquisitionTime: string;
+  generationTime: string;
+
+  acquisitionStatus: 'ACQUIRED' | 'NOT_RECEIVED' | 'INVALID' | 'EXPIRED';
+  monitoringResult: MonitoringResult;
+  alarmRange: AlarmRange[];
+  rangeCondition?: 'LOW' | 'HIGH';
+  expireMillis: number;
+}
+
+export interface Sample {
+  time: string;
+  avg: number;
+  min: number;
+  minTime: string;
+  max: number;
+  maxTime: string;
+  firstTime?: string;
+  lastTime?: string;
+  n: number;
+}
+
+export interface Range {
+  start: string;
+  stop: string;
+  engValues: Value[];
+  counts: number[];
+  otherCount: number;
+}
+
+export interface IssueCommandOptions {
+  args?: { [key: string]: any };
+  origin?: string;
+  sequenceNumber?: number;
+  dryRun?: boolean;
+  comment?: string;
+  stream?: string;
+  extra?: { [key: string]: Value };
+}
+
+export interface IssueCommandResponse {
+  id: string;
+  generationTime: string;
+  origin: string;
+  sequenceNumber: number;
+  commandName: string;
+  aliases?: { [key: string]: string };
+  binary: string;
+  username: string;
+  queue?: string;
+}
+
+export interface StartProcedureOptions {
+  arguments?: { [key: string]: string };
+}
+
+export interface ExecutorInfo {
+  id: string;
+}
+
+export interface CommandHistoryAttribute {
+  name: string;
+  value: Value;
+}
+
+export interface CommandAssignment {
+  name: string;
+  value: Value;
+  userInput: boolean;
+}
+
+export interface CommandHistoryEntry {
+  id: string;
+  commandName: string;
+  aliases?: { [key: string]: string };
+  origin: string;
+  sequenceNumber: number;
+  generationTime: string;
+  attr: CommandHistoryAttribute[];
+  assignments: CommandAssignment[];
+}
+
+export interface CommandHistoryPage {
+  commands?: CommandHistoryEntry[];
+  continuationToken?: string;
+}
+
+export interface GetCommandHistoryOptions {
+  start?: string;
+  stop?: string;
+  limit?: number;
+  next?: string;
+  q?: string;
+  queue?: string;
+  order?: 'asc' | 'desc';
+}
+
+export interface CreateProcessorRequest {
+  instance: string;
+  name: string;
+  type: string;
+  persistent?: boolean;
+  config?: string;
+}
+
+export interface EditReplayProcessorRequest {
+  state?: 'running' | 'paused';
+  seek?: string;
+  speed?: string;
+  start?: string;
+  stop?: string;
+  loop?: boolean;
+}
+
+export interface GetPacketsOptions {
+  /**
+   * Inclusive lower bound
+   */
+  start?: string;
+  /**
+   * Exclusive upper bound
+   */
+  stop?: string;
+  filter?: string;
+  name?: string[];
+  link?: string;
+  next?: string;
+  limit?: number;
+  order?: 'asc' | 'desc';
+  fields?: Array&lt;keyof Packet&gt;;
+}
+
+export interface ListPacketsResponse {
+  packets?: Packet[];
+  continuationToken?: string;
+}
+
+export interface Packet {
+  id: NamedObjectId;
+  receptionTime: string;
+  earthReceptionTime: string;
+  generationTime: string;
+  sequenceNumber: number;
+  packet: string;
+  size: number;
+  link: string;
+}
+
+export interface GetParameterValuesOptions {
+  start?: string;
+  stop?: string;
+  pos?: number;
+  limit?: number;
+  norepeat?: boolean;
+  format?: 'csv';
+  source?: 'ParameterArchive' | 'replay';
+  order?: 'asc' | 'desc';
+}
+
+export interface DownloadParameterValuesOptions {
+  parameters?: string | string[];
+  list?: string;
+  start?: string;
+  stop?: string;
+  norepeat?: boolean;
+  delimiter?: 'TAB' | 'COMMA' | 'SEMICOLON';
+  header?: 'QUALIFIED_NAME' | 'SHORT_NAME' | 'NONE';
+  interval?: number;
+  filename?: string;
+}
+
+export interface ExportParameterValuesOptions {
+  start?: string;
+  stop?: string;
+  parameters?: string[];
+  list?: string;
+  namespace?: string;
+  delimiter?: 'TAB' | 'COMMA' | 'SEMICOLON';
+  preserveLastValue?: boolean;
+  interval?: number;
+  limit?: number;
+  order?: 'asc' | 'desc';
+}
+
+export interface GetParameterSamplesOptions {
+  start?: string;
+  stop?: string;
+  count?: number;
+  gapTime?: number;
+  source?: 'ParameterArchive' | 'replay';
+  order?: 'asc' | 'desc';
+  fields?: Array&lt;keyof Sample&gt;;
+}
+
+export interface GetParameterRangesOptions {
+  start?: string;
+  stop?: string;
+  minGap?: number;
+  maxGap?: number;
+  minRange?: number;
+  maxValues?: number;
+  source?: 'ParameterArchive' | 'replay';
+}
+
+export interface GetPacketIndexOptions {
+  start?: string;
+  stop?: string;
+  limit?: number;
+  mergeTime?: number;
+}
+
+export interface StreamPacketIndexOptions {
+  start?: string;
+  stop?: string;
+  mergeTime?: number;
+}
+
+export interface GetParameterIndexOptions {
+  start?: string;
+  stop?: string;
+  mergeTime?: number;
+  limit?: number;
+}
+
+export interface StreamParameterIndexOptions {
+  start?: string;
+  stop?: string;
+  mergeTime?: number;
+}
+
+export interface GetCommandIndexOptions {
+  start?: string;
+  stop?: string;
+  mergeTime?: number;
+  limit?: number;
+}
+
+export interface StreamCommandIndexOptions {
+  start?: string;
+  stop?: string;
+  mergeTime?: number;
+}
+
+export interface GetEventIndexOptions {
+  start?: string;
+  stop?: string;
+  mergeTime?: number;
+  limit?: number;
+}
+
+export interface StreamEventIndexOptions {
+  start?: string;
+  stop?: string;
+  mergeTime?: number;
+}
+
+export interface GetCompletenessIndexOptions {
+  start?: string;
+  stop?: string;
+  limit?: number;
+}
+
+export interface StreamCompletenessIndexOptions {
+  start?: string;
+  stop?: string;
+  mergeTime?: number;
+}
+
+export interface DownloadPacketsOptions {
+  /**
+   * Inclusive lower bound
+   */
+  start?: string;
+  /**
+   * Exclusive upper bound
+   */
+  stop?: string;
+  name?: string | string[];
+  link?: string;
+  format?: 'raw';
+  order?: 'asc' | 'desc';
+}
+
+export interface IndexGroup {
+  id: NamedObjectId;
+  entry: IndexEntry[];
+}
+
+export interface IndexEntry {
+  start: string;
+  stop: string;
+  count: number;
+}
+
+export interface ArchiveRecord {
+  id: NamedObjectId;
+  first: string;
+  last: string;
+  num: number;
+}
+</pre></div>
+</div>
+</section>
+<section id="plists-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">plists.ts</span></code><a class="headerlink" href="#plists-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/plists.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { Parameter } from './mdb';
+
+export interface CreateParameterListRequest {
+  name: string;
+  description?: string;
+  patterns?: string[];
+}
+
+export interface ParameterList {
+  id: string;
+  name: string;
+  description: string;
+  patterns: string[];
+  match?: Parameter[];
+}
+
+export interface GetParameterListsResponse {
+  lists?: ParameterList[];
+}
+
+export interface UpdateParameterListRequest {
+  name?: string;
+  description?: string;
+  patternDefinition?: PatternDefinition;
+}
+
+export interface PatternDefinition {
+  patterns: string[];
+}
+</pre></div>
+</div>
+</section>
+<section id="processing-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">processing.ts</span></code><a class="headerlink" href="#processing-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/processing.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { WebSocketCall } from '../WebSocketCall';
+import {
+  AlgorithmStatus,
+  Container,
+  DataSource,
+  EnumRange,
+  EnumValue,
+  NamedObjectId,
+  Parameter,
+} from './mdb';
+import { ParameterValue, Value } from './monitoring';
+import { Service, ServiceState } from './system';
+
+export interface SubscribeTMStatisticsRequest {
+  instance: string;
+  processor: string;
+}
+
+export interface SubscribeAlgorithmStatusRequest {
+  instance: string;
+  processor: string;
+  name: string;
+}
+
+export interface Statistics {
+  instance: string;
+  processor: string;
+  tmstats: TmStatistics[];
+  lastUpdated: string;
+}
+
+export interface ExtractPacketResponse {
+  packetName: string;
+  parameterValues: ExtractedParameter[];
+  messages?: string[];
+}
+
+export interface ExtractedParameter {
+  parameter: Parameter;
+  entryContainer: Container;
+  location: number;
+  size: number;
+  rawValue: Value;
+  engValue: Value;
+}
+
+export interface TmStatistics {
+  packetName: string;
+  receivedPackets: number;
+  packetRate: number;
+  dataRate: number;
+  lastReceived: string;
+  lastPacketTime: string;
+  subscribedParameterCount: number;
+}
+
+export interface PacketNamesResponse {
+  packets: string[];
+  links: string[];
+}
+
+export interface SubscribeParametersRequest {
+  instance: string;
+  processor: string;
+  id: NamedObjectId[];
+  abortOnInvalid: boolean;
+  updateOnExpiration: boolean;
+  sendFromCache: boolean;
+  maxBytes?: number;
+  action: 'REPLACE' | 'ADD' | 'REMOVE';
+}
+
+export interface SubscribeParametersData {
+  mapping: { [key: number]: NamedObjectId };
+  info: { [key: number]: SubscribedParameterInfo };
+  invalid: NamedObjectId[];
+  values: ParameterValue[];
+}
+
+export interface SubscribedParameterInfo {
+  parameter: string;
+  dataSource: DataSource;
+  units?: string;
+  enumValues?: EnumValue[];
+  enumRanges?: EnumRange[];
+}
+
+export interface SubscribeProcessorsRequest {
+  instance?: string;
+  processor?: string;
+}
+
+export interface SubscribeBackfillingRequest {
+  instance: string;
+}
+
+export interface SubscribeBackfillingData {
+  finished?: BackfillFinished[];
+}
+
+export interface BackfillFinished {
+  start: string;
+  stop: string;
+  processedParameters: number;
+}
+
+export interface Processor {
+  instance: string;
+  name: string;
+  type: string;
+  creator: string;
+  hasAlarms: boolean;
+  hasCommanding: boolean;
+  checkCommandClearance: boolean;
+  state: ServiceState;
+  persistent: boolean;
+  protected: boolean;
+  time: string;
+  replay: boolean;
+  replayRequest?: ReplayRequest;
+  replayState?: string;
+  services: Service[];
+  acknowledgments: AcknowledgmentInfo[];
+}
+
+export interface AcknowledgmentInfo {
+  name: string;
+  description?: string;
+}
+
+export interface ReplayRequest {
+  start: string;
+  stop: string;
+  speed: ReplaySpeed;
+  endAction: string;
+}
+
+export interface ReplaySpeed {
+  type: 'AFAP' | 'FIXED_DELAY' | 'REALTIME';
+  param: number;
+}
+
+export interface DownloadCommandsOptions {
+  /**
+   * Inclusive lower bound
+   */
+  start?: string;
+  /**
+   * Exclusive upper bound
+   */
+  stop?: string;
+
+  delimiter?: 'COMMA' | 'SEMICOLON' | 'TAB';
+}
+
+export type TMStatisticsSubscription = WebSocketCall&lt;
+  SubscribeTMStatisticsRequest,
+  Statistics
+&gt;;
+
+export type AlgorithmStatusSubscription = WebSocketCall&lt;
+  SubscribeAlgorithmStatusRequest,
+  AlgorithmStatus
+&gt;;
+
+export type ParameterSubscription = WebSocketCall&lt;
+  SubscribeParametersRequest,
+  SubscribeParametersData
+&gt;;
+
+export type ProcessorSubscription = WebSocketCall&lt;
+  SubscribeProcessorsRequest,
+  Processor
+&gt;;
+
+export type BackfillingSubscription = WebSocketCall&lt;
+  SubscribeBackfillingRequest,
+  SubscribeBackfillingData
+&gt;;
+</pre></div>
+</div>
+</section>
+<section id="queue-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">queue.ts</span></code><a class="headerlink" href="#queue-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/queue.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { WebSocketCall } from '../WebSocketCall';
+import { CommandAssignment } from './monitoring';
+
+export interface SubscribeQueueStatisticsRequest {
+  instance: string;
+  processor: string;
+}
+
+export interface SubscribeQueueEventsRequest {
+  instance: string;
+  processor: string;
+}
+
+export interface CommandQueueEntry {
+  instance: string;
+  processorName: string;
+  queueName: string;
+  id: string;
+  commandName: string;
+  origin: string;
+  sequenceNumber: number;
+  assignments: CommandAssignment[];
+  binary: string;
+  username: string;
+  generationTime: string;
+  pendingTransmissionConstraints: boolean;
+}
+
+export interface CommandQueue {
+  instance: string;
+  processorName: string;
+  name: string;
+  state: 'BLOCKED' | 'DISABLED' | 'ENABLED';
+  users: string[];
+  groups: string[];
+  tcPatterns: string[];
+  minLevel: string;
+  entries: CommandQueueEntry[];
+  acceptedCommandsCount: number;
+  rejectedCommandsCount: number;
+  order: number;
+}
+
+export interface CommandQueueEvent {
+  type:
+    | 'COMMAND_ADDED'
+    | 'COMMAND_UPDATED'
+    | 'COMMAND_REJECTED'
+    | 'COMMAND_SENT';
+  data: CommandQueueEntry;
+}
+
+export type QueueStatisticsSubscription = WebSocketCall&lt;
+  SubscribeQueueStatisticsRequest,
+  CommandQueue
+&gt;;
+export type QueueEventsSubscription = WebSocketCall&lt;
+  SubscribeQueueEventsRequest,
+  CommandQueueEvent
+&gt;;
+</pre></div>
+</div>
+</section>
+<section id="session-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">session.ts</span></code><a class="headerlink" href="#session-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/session.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { WebSocketCall } from '../WebSocketCall';
+
+export interface SessionEvent {
+  endReason: string;
+}
+
+export type SessionSubscription = WebSocketCall&lt;{}, SessionEvent&gt;;
+</pre></div>
+</div>
+</section>
+<section id="system-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">system.ts</span></code><a class="headerlink" href="#system-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/system.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { WebSocketCall } from '../WebSocketCall';
+import { Processor } from './processing';
+
+export interface AuthInfo {
+  requireAuthentication: boolean;
+  spnego: boolean;
+  openid?: OpenIDConnectInfo;
+}
+
+export interface OpenIDConnectInfo {
+  clientId: string;
+  authorizationEndpoint: string;
+  scope: string;
+}
+
+export interface TokenResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  refresh_token: string;
+  user: UserInfo;
+}
+
+export interface InstanceConfig {
+  displayBucket: string;
+  stackBucket: string;
+  parameterArchive: boolean;
+  tcStreams?: string[];
+}
+
+export interface GeneralInfo {
+  yamcsVersion: string;
+  revision: string;
+  serverId: string;
+  plugins: PluginInfo[];
+  commandOptions: CommandOption[];
+}
+
+export interface ListRoutesResponse {
+  routes: Route[];
+}
+
+export interface ListTopicsResponse {
+  topics: Topic[];
+}
+
+export interface ListProcessorTypesResponse {
+  types: string[];
+}
+
+export interface ListThreadsResponse {
+  threads: ThreadInfo[];
+}
+
+export interface ThreadGroup {
+  name: string;
+  parent?: ThreadGroup;
+}
+
+export interface ThreadInfo {
+  id: number;
+  name: string;
+  state: string;
+  native: boolean;
+  suspended: boolean;
+  group?: ThreadGroup;
+  trace: TraceElementInfo[];
+}
+
+export interface TraceElementInfo {
+  className: string;
+  fileName: string;
+  methodName: string;
+  lineNumber: number;
+}
+
+export interface ListClearancesResponse {
+  clearances: Clearance[];
+}
+
+export interface Database {
+  name: string;
+  tablespace: string;
+  path: string;
+  tables: string[];
+  streams: string[];
+}
+
+export interface ListDatabasesResponse {
+  databases: Database[];
+}
+
+export interface Route {
+  service: string;
+  method: string;
+  description: string;
+  inputType: string;
+  outputType: string;
+  deprecated: boolean;
+  url: string;
+  httpMethod: string;
+  requestCount: number;
+  logFormat: string;
+}
+
+export interface Topic {
+  topic: string;
+  service: string;
+  method: string;
+  inputType: string;
+  outputType: string;
+  deprecated: boolean;
+}
+
+export interface PluginInfo {
+  name: string;
+  description: string;
+  version: string;
+  vendor: string;
+}
+
+export type CommandOptionType = 'BOOLEAN' | 'STRING' | 'NUMBER' | 'TIMESTAMP';
+
+export interface CommandOption {
+  id: string;
+  verboseName: string;
+  type: CommandOptionType;
+  help: string;
+}
+
+export type ServiceState =
+  | 'NEW'
+  | 'STARTING'
+  | 'RUNNING'
+  | 'STOPPING'
+  | 'TERMINATED'
+  | 'FAILED';
+
+export type InstanceState =
+  | 'OFFLINE'
+  | 'INITIALIZING'
+  | 'INITIALIZED'
+  | 'STARTING'
+  | 'RUNNING'
+  | 'STOPPING'
+  | 'FAILED';
+
+export interface Instance {
+  name: string;
+  state: InstanceState;
+  processors: Processor[];
+  labels?: { [key: string]: string };
+  missionTime: string;
+  capabilities: string[];
+  template?: string;
+  templateArgs?: { [key: string]: string };
+  templateAvailable: boolean;
+  templateChanged: boolean;
+}
+
+export interface InstanceTemplate {
+  name: string;
+  description: string;
+  variables: TemplateVariable[];
+}
+
+export interface TemplateVariable {
+  name: string;
+  label?: string;
+  help?: string;
+  required: boolean;
+  type: string;
+  initial?: string;
+  choices?: string[];
+}
+
+export interface ConnectionInfo {
+  instance: Instance;
+  processor?: Processor;
+}
+
+export interface HttpTraffic {
+  readBytes: number;
+  writtenBytes: number;
+  readThroughput: number;
+  writeThroughput: number;
+  connections: ClientConnectionInfo[];
+}
+
+export interface ClientConnectionInfo {
+  id: string;
+  open: boolean;
+  active: boolean;
+  writable: boolean;
+  remoteAddress: string;
+  localAddress: string;
+  readBytes: number;
+  writtenBytes: number;
+  readThroughput: number;
+  writeThroughput: number;
+  httpRequest: HttpRequestInfo;
+}
+
+export interface AuditRecordsPage {
+  records: AuditRecord[];
+}
+
+export interface GetAuditRecordsOptions {
+  start?: string;
+  stop?: string;
+  q?: string;
+  service?: string;
+}
+
+export interface AuditRecord {
+  time: string;
+  service: string;
+  method: string;
+  user: string;
+  summary: string;
+  request: any;
+}
+
+export interface SessionInfo {
+  id: string;
+  username: string;
+  ipAddress: string;
+  hostname: string;
+  startTime: string;
+  lastAccessTime: string;
+  expirationTime: string;
+}
+
+export interface ResultSet {
+  columns: any;
+  rows: any;
+}
+
+export interface HttpRequestInfo {
+  protocol: string;
+  method: string;
+  uri: string;
+  keepAlive: string;
+  userAgent: string;
+}
+
+export interface EditClearanceRequest {
+  level: string;
+}
+
+export interface CreateUserRequest {
+  name: string;
+  displayName?: string;
+  email?: string;
+  password?: string;
+}
+
+export interface EditUserRequest {
+  displayName?: string;
+  email?: string;
+  active?: boolean;
+  superuser?: boolean;
+  password?: string;
+  roleAssignment?: RoleAssignmentInfo;
+}
+
+export interface UserInfo {
+  name: string;
+  displayName: string;
+  email: string;
+  active: boolean;
+  superuser: boolean;
+  createdBy: UserInfo;
+  creationTime: string;
+  confirmationTime: string;
+  lastLoginTime: string;
+  groups?: GroupInfo[];
+  roles?: RoleInfo[];
+  identities?: ExternalIdentity[];
+  clearance: string;
+
+  systemPrivileges?: string[];
+  objectPrivileges?: ObjectPrivilege[];
+}
+
+export interface ExternalIdentity {
+  identity: string;
+  provider: string;
+}
+
+export interface ListServiceAccountsResponse {
+  serviceAccounts: ServiceAccount[];
+}
+
+export interface CreateServiceAccountRequest {
+  name: string;
+}
+
+export interface CreateServiceAccountResponse {
+  name: string;
+  applicationId: string;
+  applicationSecret: string;
+}
+
+export interface ServiceAccount {
+  name: string;
+  active: boolean;
+}
+
+export interface GroupInfo {
+  name: string;
+  description: string;
+  users?: UserInfo[];
+  serviceAccounts?: ServiceAccount[];
+}
+
+export interface GroupMemberInfo {
+  users?: string[];
+  serviceAccounts?: string[];
+}
+
+export interface EditGroupRequest {
+  newName?: string;
+  description?: string;
+  memberInfo?: GroupMemberInfo;
+}
+
+export interface RoleAssignmentInfo {
+  roles?: string[];
+}
+
+export interface ObjectPrivilege {
+  type: string;
+  objects: string[];
+}
+
+export interface RoleInfo {
+  name: string;
+  description: string;
+  default: boolean;
+  systemPrivileges?: string[];
+  objectPrivileges?: ObjectPrivilege[];
+}
+
+export interface Clearance {
+  username: string;
+  level: string;
+  issuedBy: string;
+  issueTime: string;
+  hasCommandPrivileges: boolean;
+}
+
+export type ClearanceSubscription = WebSocketCall&lt;void, Clearance&gt;;
+
+export type ReplicationInfoSubscription = WebSocketCall&lt;void, ReplicationInfo&gt;;
+
+export type SystemInfoSubscription = WebSocketCall&lt;void, SystemInfo&gt;;
+
+export type HttpTrafficSubscription = WebSocketCall&lt;void, HttpTraffic&gt;;
+
+export interface Service {
+  instance: string;
+  name: string;
+  state: ServiceState;
+  className: string;
+}
+
+export interface Bucket {
+  name: string;
+  location: BucketLocation;
+  size: number;
+  maxSize: number;
+  numObjects: number;
+  maxObjects: number;
+  created: string;
+  directory?: string;
+}
+
+export interface BucketLocation {
+  name: string;
+  description: string;
+}
+
+export interface ListObjectsResponse {
+  prefixes: string[];
+  objects: ObjectInfo[];
+}
+
+export interface ObjectInfo {
+  name: string;
+  created: string;
+  size: number;
+  metadata: { [key: string]: string };
+}
+
+export interface CreateBucketRequest {
+  name: string;
+}
+
+export interface ListObjectsOptions {
+  prefix?: string;
+  delimiter?: string;
+}
+
+export interface CreateGroupRequest {
+  name: string;
+  description?: string;
+  users?: string[];
+  serviceAccounts?: string[];
+}
+
+export interface RocksDbDatabase {
+  tablespace: string;
+  dbPath: string;
+  dataDir: string;
+}
+
+export interface CompactRocksDbDatabaseRequest {
+  cfname?: string;
+}
+
+export interface SystemInfo {
+  yamcsVersion: string;
+  revision: string;
+  serverId: string;
+  uptime: number;
+  jvm: string;
+  workingDirectory: string;
+  configDirectory: string;
+  dataDirectory: string;
+  cacheDirectory: string;
+  os: string;
+  arch: string;
+  availableProcessors: number;
+  loadAverage: number;
+  heapMemory: number;
+  usedHeapMemory: number;
+  maxHeapMemory: number;
+  nonHeapMemory: number;
+  usedNonHeapMemory: number;
+  usedMaxHeapMemory: number;
+  maxNonHeapMemory: number;
+  jvmThreadCount: number;
+  rootDirectories: RootDirectory[];
+  process: ProcessInfo;
+}
+
+export interface ProcessInfo {
+  pid: number;
+  user: string;
+  command: string;
+  arguments?: string[];
+  startTime: string;
+  totalCpuDuration: string;
+  children?: ProcessInfo[];
+}
+
+export interface RootDirectory {
+  directory: string;
+  type: string;
+  totalSpace: number;
+  unallocatedSpace: number;
+  usableSpace: number;
+}
+
+export interface LeapSecondsTable {
+  ranges: ValidityRange[];
+}
+
+export interface ValidityRange {
+  start: string;
+  stop: string;
+  leapSeconds: number;
+  taiDifference: number;
+}
+
+export interface ReplicationInfo {
+  masters: ReplicationMaster[];
+  slaves: ReplicationSlave[];
+}
+
+export interface ReplicationMaster {
+  instance: string;
+  streams: string[];
+  localAddress: string;
+  remoteAddress: string;
+  push: boolean;
+  pushTo?: string;
+  localTx: number;
+  nextTx: number;
+}
+
+export interface ReplicationSlave {
+  instance: string;
+  streams: string;
+  localAddress: string;
+  remoteAddress: string;
+  push: boolean;
+  pullFrom?: string;
+  tx: number;
+}
+
+export interface ParameterId {
+  pid: number;
+  parameter: string;
+  rawType: string;
+  engType: string;
+  gids?: number[];
+}
+
+export interface GetParameterArchivePidsOptions {
+  filter?: string;
+  limit?: number;
+  next?: string;
+}
+
+export interface GetParameterArchivePidsPage {
+  pids?: ParameterId[];
+  continuationToken?: string;
+}
+</pre></div>
+</div>
+</section>
+<section id="table-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">table.ts</span></code><a class="headerlink" href="#table-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/table.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { WebSocketCall } from '../WebSocketCall';
+import { Value } from './monitoring';
+
+export interface SubscribeStreamStatisticsRequest {
+  instance: string;
+}
+
+export interface SubscribeStreamRequest {
+  instance: string;
+  stream: string;
+}
+
+export interface StreamEvent {
+  type: string;
+  name: string;
+  dataCount: number;
+}
+
+export interface Stream {
+  name: string;
+  columns: Column[];
+  script: string;
+  dataCount: number;
+  subscribers: string[];
+}
+
+export interface StreamData {
+  stream: string;
+  column: ColumnData[];
+}
+
+export interface Column {
+  name: string;
+  type: string;
+  enumValue: SQLEnumValue[];
+  autoIncrement?: boolean;
+}
+
+export interface SQLEnumValue {
+  value: number;
+  label: string;
+}
+
+export interface Table {
+  name: string;
+  keyColumn: Column[];
+  valueColumn: Column[];
+  histogramColumn?: string[];
+  storageEngine: string;
+  formatVersion: number;
+  tablespace?: string;
+  compressed: boolean;
+  partitioningInfo?: PartitioningInfo;
+  script: string;
+}
+
+export interface PartitioningInfo {
+  type: 'TIME' | 'VALUE' | 'TIME_AND_VALUE';
+  timeColumn: string;
+  timePartitionSchema: string;
+  valueColumn: string;
+  valueColumnType: string;
+}
+
+export interface Record {
+  column: ColumnData[];
+}
+
+export interface ColumnData {
+  name: string;
+  value: Value;
+}
+
+export type StreamStatisticsSubscription = WebSocketCall&lt;
+  SubscribeStreamStatisticsRequest,
+  StreamEvent
+&gt;;
+export type StreamSubscription = WebSocketCall&lt;
+  SubscribeStreamRequest,
+  StreamData
+&gt;;
+</pre></div>
+</div>
+</section>
+<section id="time-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">time.ts</span></code><a class="headerlink" href="#time-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/time.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { WebSocketCall } from '../WebSocketCall';
+
+export interface SubscribeTimeRequest {
+  instance: string;
+  processor?: string;
+}
+
+export interface Time {
+  value: string;
+}
+
+export type TimeSubscription = WebSocketCall&lt;SubscribeTimeRequest, Time&gt;;
+</pre></div>
+</div>
+</section>
+<section id="timeline-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">timeline.ts</span></code><a class="headerlink" href="#timeline-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/timeline.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>export interface CreateTimelineItemRequest {
+  name: string;
+  start: string;
+  duration: string;
+  type: TimelineItemType;
+  tags?: string[];
+  properties?: { [key: string]: string };
+  activityDefinition?: ActivityDefinition;
+}
+
+export interface UpdateTimelineItemRequest {
+  name: string;
+  start: string;
+  duration: string;
+  tags?: string[];
+  properties?: { [key: string]: string };
+  clearTags?: boolean;
+  clearProperties?: boolean;
+}
+
+export type TimelineItemType = 'EVENT' | 'ACTIVITY';
+
+export interface TimelineItem {
+  id: string;
+  name: string;
+  start: string;
+  duration: string;
+  type: TimelineItemType;
+  tags?: string[];
+  properties?: { [key: string]: string };
+  status?: string;
+  activityDefinition?: ActivityDefinition;
+}
+
+export interface ActivityDefinition {
+  type: string;
+  args?: { [key: string]: any };
+}
+
+export interface TimelineViewsPage {
+  views: TimelineView[];
+}
+
+export interface TimelineBandsPage {
+  bands: TimelineBand[];
+}
+
+export interface TimelineTagsPage {
+  tags: string[];
+}
+
+export interface TimelineItemsPage {
+  items: TimelineItem[];
+}
+
+export interface GetTimelineItemsOptions {
+  source: string;
+  start?: string;
+  stop?: string;
+  band?: string;
+}
+
+export type TimelineBandType =
+  | 'TIME_RULER'
+  | 'ITEM_BAND'
+  | 'SPACER'
+  | 'COMMAND_BAND'
+  | 'PARAMETER_PLOT'
+  | 'PARAMETER_STATES';
+
+export interface CreateTimelineBandRequest {
+  name: string;
+  description: string;
+  type: TimelineBandType;
+  shared: boolean;
+  tags?: string[];
+  properties?: { [key: string]: string };
+}
+
+export interface TimelineBand {
+  id: string;
+  type: TimelineBandType;
+  shared: boolean;
+  name: string;
+  description: string;
+  tags?: string[];
+  properties?: { [key: string]: string };
+  username: string;
+}
+
+export interface UpdateTimelineBandRequest {
+  name: string;
+  description: string;
+  shared: boolean;
+  tags?: string[];
+  properties?: { [key: string]: string };
+}
+
+export interface TimelineView {
+  id: string;
+  name: string;
+  bands?: TimelineBand[];
+}
+
+export interface CreateTimelineViewRequest {
+  name: string;
+  bands?: string[];
+}
+
+export interface UpdateTimelineViewRequest {
+  name: string;
+  bands?: string[];
+}
+</pre></div>
+</div>
+</section>
+<section id="web-ts">
+<h2><code class="docutils literal notranslate"><span class="pre">web.ts</span></code><a class="headerlink" href="#web-ts" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/web.ts</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>import { WebSocketCall } from '../WebSocketCall';
+
+export interface CreateQueryRequest {
+  name: string;
+  query: { [key: string]: any };
+  shared: boolean;
+}
+
+export interface Query {
+  id: string;
+  name: string;
+  shared: boolean;
+  query: { [key: string]: any };
+}
+
+export interface ListQueriesResponse {
+  queries?: Query[];
+}
+
+export interface EditQueryRequest {
+  name: string;
+  shared: boolean;
+  query: { [key: string]: any };
+}
+
+export interface ParseFilterRequest {
+  resource: string;
+  filter: string;
+}
+
+export interface ParseFilterData {
+  errorMessage?: string;
+  beginLine?: number;
+  beginColumn?: number;
+  endLine?: number;
+  endColumn?: number;
+}
+
+export type ParseFilterSubscription = WebSocketCall&lt;
+  ParseFilterRequest,
+  ParseFilterData
+&gt;;
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="client" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../commanding/index.html" class="btn btn-neutral float-right" title="commanding" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,3476 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ut &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../../search.html" />
+    <link rel="next" title="FrameAccumulator" href="../../../FrameAccumulator/index.html" />
+    <link rel="prev" title="test" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">fprime-nos3</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">lib</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Svc</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">FpySequencer</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">test</a></li>
+      <li class="breadcrumb-item active">ut</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../../_sources/project_inventory/fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/test/ut/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="ut">
+<h1>ut<a class="headerlink" href="#ut" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/test/ut/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="fpysequencertester-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">FpySequencerTester.cpp</span></code><a class="headerlink" href="#fpysequencertester-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/test/ut/FpySequencerTester.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  FpySequencer.hpp
+// \author zimri.leisher
+// \brief  cpp file for FpySequencer test harness implementation class
+// ======================================================================
+
+#include "FpySequencerTester.hpp"
+#include "Os/FileSystem.hpp"
+#include "Svc/FpySequencer/FppConstantsAc.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+FpySequencerTester ::FpySequencerTester()
+    : FpySequencerGTestBase("FpySequencerTester", FpySequencerTester::MAX_HISTORY_SIZE),
+      cmp("FpySequencer"),
+      component(cmp) {
+    this-&gt;connectPorts();
+    this-&gt;initComponents();
+    clearSeq();
+}
+
+FpySequencerTester ::~FpySequencerTester() {}
+
+// dispatches events from the queue until the cmp reaches the given state
+void FpySequencerTester::dispatchUntilState(State state, U32 bound) {
+    U64 iters = 0;
+    while (cmp.sequencer_getState() != state &amp;&amp; iters &lt; bound) {
+        if (cmp.m_queue.getMessagesAvailable() == 0) {
+            break;
+        }
+        cmp.doDispatch();
+        iters++;
+    }
+    ASSERT_EQ(cmp.sequencer_getState(), state);
+}
+
+void FpySequencerTester::allocMem(FwSizeType bytes) {
+    if (bytes &gt; sizeof(internalSeqBuf)) {
+        bytes = sizeof(internalSeqBuf);
+    }
+    cmp.m_sequenceBuffer.setExtBuffer(internalSeqBuf, bytes);
+}
+
+void FpySequencerTester::clearSeq() {
+    seq = Fpy::Sequence();
+    seq.get_header().set_schemaVersion(Fpy::SCHEMA_VERSION);
+}
+
+// writes the sequence we're building to a file with the given name
+void FpySequencerTester::writeToFile(const char* name, FwSizeType maxBytes) {
+    Os::File outputFile;
+    ASSERT_EQ(outputFile.open(name, Os::FileInterface::OPEN_CREATE, Os::FileInterface::OverwriteType::OVERWRITE),
+              Os::File::Status::OP_OK);
+
+    // TODO is this okay to declare on stack? this could stack overflow, it's like 500 KB with default configs
+    U8 data[Fpy::Sequence::SERIALIZED_SIZE];
+    Fw::ExternalSerializeBuffer buf;
+    buf.setExtBuffer(data, sizeof(data));
+
+    // first let's calculate the size of the body. do this by just writing the body,
+    // then calculating how big that was, then clearing and writing the header, then writing the body again
+    for (U32 ii = 0; ii &lt; seq.get_header().get_argumentCount(); ii++) {
+        ASSERT_EQ(buf.serialize(seq.get_args()[ii]), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    }
+    for (U32 ii = 0; ii &lt; seq.get_header().get_statementCount(); ii++) {
+        ASSERT_EQ(buf.serialize(seq.get_statements()[ii]), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    }
+    seq.get_header().set_bodySize(static_cast&lt;U32&gt;(buf.getBuffLength()));
+    buf.resetSer();
+
+    ASSERT_EQ(buf.serialize(seq.get_header()), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    for (U32 ii = 0; ii &lt; seq.get_header().get_argumentCount(); ii++) {
+        ASSERT_EQ(buf.serialize(seq.get_args()[ii]), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    }
+    for (U32 ii = 0; ii &lt; seq.get_header().get_statementCount(); ii++) {
+        ASSERT_EQ(buf.serialize(seq.get_statements()[ii]), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    }
+
+    U32 crc = FpySequencer::CRC_INITIAL_VALUE;
+    FpySequencer::updateCrc(crc, buf.getBuffAddr(), buf.getBuffLength());
+
+    seq.get_footer().set_crc(~crc);
+
+    ASSERT_EQ(buf.serialize(seq.get_footer()), Fw::SerializeStatus::FW_SERIALIZE_OK);
+
+    FwSizeType intendedWriteSize = buf.getBuffLength();
+    if (intendedWriteSize &gt; maxBytes) {
+        intendedWriteSize = maxBytes;
+    }
+    FwSizeType actualWriteSize = intendedWriteSize;
+    ASSERT_EQ(outputFile.write(buf.getBuffAddr(), actualWriteSize), Os::File::Status::OP_OK);
+    ASSERT_EQ(intendedWriteSize, actualWriteSize);
+
+    outputFile.close();
+}
+
+void FpySequencerTester::removeFile(const char* name) {
+    Os::FileSystem::removeFile(name);
+}
+
+void FpySequencerTester::resetRuntime() {
+    // explicitly call dtor
+    cmp.m_runtime.~Runtime();
+    new (&amp;cmp.m_runtime) FpySequencer::Runtime();
+}
+
+void FpySequencerTester::addDirective(Fpy::DirectiveId id, Fw::StatementArgBuffer&amp; buf) {
+    Fpy::Statement stmt(id.e, buf);
+
+    // if fails, cannot add a new stmt (out of space)
+    FW_ASSERT(seq.get_header().get_statementCount() &lt; std::numeric_limits&lt;U16&gt;::max());
+
+    U16 stateCount = seq.get_header().get_statementCount();
+    seq.get_statements()[stateCount] = stmt;
+    seq.get_header().set_statementCount(static_cast&lt;U16&gt;(stateCount + 1));
+}
+
+void FpySequencerTester::add_WAIT_REL(U32 seconds, U32 uSeconds) {
+    add_WAIT_REL(FpySequencer_WaitRelDirective(seconds, uSeconds));
+}
+
+void FpySequencerTester::add_WAIT_REL(FpySequencer_WaitRelDirective dir) {
+    Fw::StatementArgBuffer buf;
+    FW_ASSERT(buf.serialize(dir) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    addDirective(Fpy::DirectiveId::WAIT_REL, buf);
+}
+
+void FpySequencerTester::add_WAIT_ABS(Fw::Time wakeupTime) {
+    add_WAIT_ABS(FpySequencer_WaitAbsDirective(wakeupTime));
+}
+
+void FpySequencerTester::add_WAIT_ABS(FpySequencer_WaitAbsDirective dir) {
+    Fw::StatementArgBuffer buf;
+    FW_ASSERT(buf.serialize(dir) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    addDirective(Fpy::DirectiveId::WAIT_ABS, buf);
+}
+
+void FpySequencerTester::add_GOTO(U32 stmtIdx) {
+    add_GOTO(FpySequencer_GotoDirective(stmtIdx));
+}
+
+void FpySequencerTester::add_GOTO(FpySequencer_GotoDirective dir) {
+    Fw::StatementArgBuffer buf;
+    FW_ASSERT(buf.serialize(dir) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    addDirective(Fpy::DirectiveId::GOTO, buf);
+}
+
+void FpySequencerTester::add_SET_SER_REG(U8 serRegIdx, Fw::StatementArgBuffer value) {
+    add_SET_SER_REG(FpySequencer_SetSerRegDirective(serRegIdx, *value.getBuffAddr(), value.getBuffLength()));
+}
+
+void FpySequencerTester::add_SET_SER_REG(FpySequencer_SetSerRegDirective dir) {
+    Fw::StatementArgBuffer buf;
+    FW_ASSERT(buf.serialize(dir.get_index()) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    FW_ASSERT(buf.serialize(dir.get_value(), dir.get__valueSize(), Fw::Serialization::OMIT_LENGTH) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    addDirective(Fpy::DirectiveId::SET_SER_REG, buf);
+}
+
+void FpySequencerTester::add_IF(U8 serRegIdx, U32 gotoIfFalse) {
+    add_IF(FpySequencer_IfDirective(serRegIdx, gotoIfFalse));
+}
+
+void FpySequencerTester::add_IF(FpySequencer_IfDirective dir) {
+    Fw::StatementArgBuffer buf;
+    FW_ASSERT(buf.serialize(dir) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    addDirective(Fpy::DirectiveId::IF, buf);
+}
+
+void FpySequencerTester::add_NO_OP() {
+    Fw::StatementArgBuffer buf;
+    addDirective(Fpy::DirectiveId::NO_OP, buf);
+}
+
+void FpySequencerTester::add_GET_TLM(U8 valueDestSerReg, U8 timeDestSerReg, FwChanIdType id) {
+    add_GET_TLM(FpySequencer_GetTlmDirective(valueDestSerReg, timeDestSerReg, id));
+}
+
+void FpySequencerTester::add_GET_TLM(FpySequencer_GetTlmDirective dir) {
+    Fw::StatementArgBuffer buf;
+    FW_ASSERT(buf.serialize(dir) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    addDirective(Fpy::DirectiveId::GET_TLM, buf);
+}
+
+void FpySequencerTester::add_GET_PRM(U8 serRegIdx, FwPrmIdType id) {
+    add_GET_PRM(FpySequencer_GetPrmDirective(serRegIdx, id));
+}
+
+void FpySequencerTester::add_GET_PRM(FpySequencer_GetPrmDirective dir) {
+    Fw::StatementArgBuffer buf;
+    FW_ASSERT(buf.serialize(dir) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    addDirective(Fpy::DirectiveId::GET_PRM, buf);
+}
+
+void FpySequencerTester::add_CMD(FwOpcodeType opcode) {
+    add_CMD(FpySequencer_CmdDirective(opcode, 0, 0));
+}
+
+void FpySequencerTester::add_CMD(FpySequencer_CmdDirective dir) {
+    Fw::StatementArgBuffer buf;
+    FW_ASSERT(buf.serialize(dir.get_opCode()) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    FW_ASSERT(buf.serialize(dir.get_argBuf(), dir.get__argBufSize(), Fw::Serialization::OMIT_LENGTH) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    addDirective(Fpy::DirectiveId::CMD, buf);
+}
+
+void FpySequencerTester::add_DESER_SER_REG(U8 srcSerRegIdx, FwSizeType srcOffset, U8 destReg, U8 deserSize) {
+    add_DESER_SER_REG(FpySequencer_DeserSerRegDirective(srcSerRegIdx, srcOffset, destReg, deserSize));
+}
+
+void FpySequencerTester::add_DESER_SER_REG(FpySequencer_DeserSerRegDirective dir) {
+    Fw::StatementArgBuffer buf;
+    FW_ASSERT(buf.serialize(dir.get_srcSerRegIdx()) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    FW_ASSERT(buf.serialize(dir.get_srcOffset()) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    FW_ASSERT(buf.serialize(dir.get_destReg()) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    Fpy::DirectiveId id;
+    if (dir.get__deserSize() == 1) {
+        id = Fpy::DirectiveId::DESER_SER_REG_1;
+    } else if (dir.get__deserSize() == 2) {
+        id = Fpy::DirectiveId::DESER_SER_REG_2;
+    } else if (dir.get__deserSize() == 4) {
+        id = Fpy::DirectiveId::DESER_SER_REG_4;
+    } else if (dir.get__deserSize() == 8) {
+        id = Fpy::DirectiveId::DESER_SER_REG_8;
+    } else {
+        FW_ASSERT(0, static_cast&lt;FwAssertArgType&gt;(dir.get__deserSize()));
+    }
+
+    addDirective(id, buf);
+}
+
+void FpySequencerTester::add_SET_REG(U8 dest, I64 value) {
+    add_SET_REG(FpySequencer_SetRegDirective(dest, value));
+}
+
+void FpySequencerTester::add_SET_REG(FpySequencer_SetRegDirective dir) {
+    Fw::StatementArgBuffer buf;
+    FW_ASSERT(buf.serialize(dir) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    addDirective(Fpy::DirectiveId::SET_REG, buf);
+}
+
+void FpySequencerTester::add_BINARY_REG_OP(U8 lhs, U8 rhs, U8 res, Fpy::DirectiveId op) {
+    add_BINARY_REG_OP(FpySequencer_BinaryRegOpDirective(lhs, rhs, res, op));
+}
+
+void FpySequencerTester::add_BINARY_REG_OP(FpySequencer_BinaryRegOpDirective dir) {
+    Fw::StatementArgBuffer buf;
+    FW_ASSERT(buf.serialize(dir.get_lhs()) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    FW_ASSERT(buf.serialize(dir.get_rhs()) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    FW_ASSERT(buf.serialize(dir.get_res()) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    addDirective(dir.get__op(), buf);
+}
+
+void FpySequencerTester::add_UNARY_REG_OP(U8 src, U8 res, Fpy::DirectiveId op) {
+    add_UNARY_REG_OP(FpySequencer_UnaryRegOpDirective(src, res, op));
+}
+
+void FpySequencerTester::add_UNARY_REG_OP(FpySequencer_UnaryRegOpDirective dir) {
+    Fw::StatementArgBuffer buf;
+    FW_ASSERT(buf.serialize(dir.get_src()) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    FW_ASSERT(buf.serialize(dir.get_res()) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    addDirective(dir.get__op(), buf);
+}
+void FpySequencerTester::add_EXIT(bool success) {
+    add_EXIT(FpySequencer_ExitDirective(success));
+}
+
+void FpySequencerTester::add_EXIT(FpySequencer_ExitDirective dir) {
+    Fw::StatementArgBuffer buf;
+    FW_ASSERT(buf.serialize(dir) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+    addDirective(Fpy::DirectiveId::EXIT, buf);
+}
+
+//! Handle a text event
+void FpySequencerTester::textLogIn(FwEventIdType id,                //!&lt; The event ID
+                                   const Fw::Time&amp; timeTag,         //!&lt; The time
+                                   const Fw::LogSeverity severity,  //!&lt; The severity
+                                   const Fw::TextLogString&amp; text    //!&lt; The event string
+) {
+    // printf("%s\n", text.toChar());
+}
+
+void FpySequencerTester::writeAndRun() {
+    removeFile("test.bin");
+    writeToFile("test.bin");
+    sendCmd_RUN(0, 0, Fw::String("test.bin"), FpySequencer_BlockState::BLOCK);
+    // dispatch cmd
+    cmp.doDispatch();
+    // dispatch sm sig
+    cmp.doDispatch();
+}
+
+//! Default handler implementation for from_getTlmChan
+Fw::TlmValid FpySequencerTester::from_getTlmChan_handler(
+    FwIndexType portNum,  //!&lt; The port number
+    FwChanIdType id,      //!&lt; Telemetry Channel ID
+    Fw::Time&amp; timeTag,    //!&lt; Time Tag
+    Fw::TlmBuffer&amp; val    //!&lt; Buffer containing serialized telemetry value.
+                          //!&lt; Size set to 0 if channel not found.
+) {
+    this-&gt;pushFromPortEntry_getTlmChan(id, timeTag, val);
+    if (id != nextTlmId) {
+        val.setBuffLen(0);
+        return Fw::TlmValid::INVALID;
+    }
+    val = nextTlmValue;
+    timeTag = nextTlmTime;
+    return Fw::TlmValid::VALID;
+}
+
+//! Default handler implementation for from_getParam
+Fw::ParamValid FpySequencerTester::from_getParam_handler(
+    FwIndexType portNum,  //!&lt; The port number
+    FwPrmIdType id,       //!&lt; Parameter ID
+    Fw::ParamBuffer&amp; val  //!&lt; Buffer containing serialized parameter value.
+                          //!&lt; Unmodified if param not found.
+) {
+    this-&gt;pushFromPortEntry_getParam(id, val);
+    if (id != nextPrmId) {
+        return Fw::ParamValid::INVALID;
+    }
+    val = nextPrmValue;
+    return Fw::ParamValid::VALID;
+}
+
+// Access to private and protected FpySequencer methods and members for UTs
+
+// Call cmp methods
+Signal FpySequencerTester::tester_noOp_directiveHandler(const FpySequencer_NoOpDirective&amp; directive,
+                                                        DirectiveError&amp; err) {
+    return this-&gt;cmp.noOp_directiveHandler(directive, err);
+}
+
+Signal FpySequencerTester::tester_waitRel_directiveHandler(const FpySequencer_WaitRelDirective&amp; directive,
+                                                           DirectiveError&amp; err) {
+    return this-&gt;cmp.waitRel_directiveHandler(directive, err);
+}
+
+Signal FpySequencerTester::tester_waitAbs_directiveHandler(const FpySequencer_WaitAbsDirective&amp; directive,
+                                                           DirectiveError&amp; err) {
+    return this-&gt;cmp.waitAbs_directiveHandler(directive, err);
+}
+
+Signal FpySequencerTester::tester_goto_directiveHandler(const Svc::FpySequencer_GotoDirective&amp; directive,
+                                                        DirectiveError&amp; err) {
+    return this-&gt;cmp.goto_directiveHandler(directive, err);
+}
+
+Signal FpySequencerTester::tester_setSerReg_directiveHandler(const FpySequencer_SetSerRegDirective&amp; directive,
+                                                               DirectiveError&amp; err) {
+    return this-&gt;cmp.setSerReg_directiveHandler(directive, err);
+}
+
+Signal FpySequencerTester::tester_if_directiveHandler(const FpySequencer_IfDirective&amp; directive, DirectiveError&amp; err) {
+    return this-&gt;cmp.if_directiveHandler(directive, err);
+}
+
+Signal FpySequencerTester::tester_getPrm_directiveHandler(const FpySequencer_GetPrmDirective&amp; directive,
+                                                          DirectiveError&amp; err) {
+    return this-&gt;cmp.getPrm_directiveHandler(directive, err);
+}
+
+Signal FpySequencerTester::tester_getTlm_directiveHandler(const FpySequencer_GetTlmDirective&amp; directive,
+                                                          DirectiveError&amp; err) {
+    return this-&gt;cmp.getTlm_directiveHandler(directive, err);
+}
+
+Signal FpySequencerTester::tester_exit_directiveHandler(const FpySequencer_ExitDirective&amp; directive,
+                                                        DirectiveError&amp; err) {
+    return this-&gt;cmp.exit_directiveHandler(directive, err);
+}
+
+Signal FpySequencerTester::tester_cmd_directiveHandler(const FpySequencer_CmdDirective&amp; directive,
+                                                       DirectiveError&amp; err) {
+    return this-&gt;cmp.cmd_directiveHandler(directive, err);
+}
+
+Signal FpySequencerTester::tester_deserSerReg_directiveHandler(const FpySequencer_DeserSerRegDirective&amp; directive,
+                                                                 DirectiveError&amp; err) {
+    return this-&gt;cmp.deserSerReg_directiveHandler(directive, err);
+}
+
+Signal FpySequencerTester::tester_binaryRegOp_directiveHandler(const FpySequencer_BinaryRegOpDirective&amp; directive,
+                                                             DirectiveError&amp; err) {
+    return this-&gt;cmp.binaryRegOp_directiveHandler(directive, err);
+}
+
+Signal FpySequencerTester::tester_unaryRegOp_directiveHandler(const FpySequencer_UnaryRegOpDirective&amp; directive,
+                                                             DirectiveError&amp; err) {
+    return this-&gt;cmp.unaryRegOp_directiveHandler(directive, err);
+}
+Signal FpySequencerTester::tester_setReg_directiveHandler(const FpySequencer_SetRegDirective&amp; directive,
+                                                          DirectiveError&amp; err) {
+    return this-&gt;cmp.setReg_directiveHandler(directive, err);
+}
+
+Fw::Success FpySequencerTester::tester_deserializeDirective(const Fpy::Statement&amp; stmt,
+                                                            Svc::FpySequencer::DirectiveUnion&amp; deserializedDirective) {
+    return this-&gt;cmp.deserializeDirective(stmt, deserializedDirective);
+}
+
+Svc::Signal FpySequencerTester::tester_dispatchStatement() {
+    return this-&gt;cmp.dispatchStatement();
+}
+
+Fw::Success FpySequencerTester::tester_validate() {
+    return this-&gt;cmp.validate();
+}
+
+Svc::Signal FpySequencerTester::tester_checkStatementTimeout() {
+    return this-&gt;cmp.checkStatementTimeout();
+}
+
+Svc::Signal FpySequencerTester::tester_checkShouldWake() {
+    return this-&gt;cmp.checkShouldWake();
+}
+
+Svc::FpySequencer::Telemetry* FpySequencerTester::tester_get_m_tlm_ptr() {
+    return &amp;this-&gt;cmp.m_tlm;
+}
+
+Fw::Success FpySequencerTester::tester_readBytes(Os::File&amp; file, FwSizeType readLen, FpySequencer_FileReadStage readStage, bool updateCrc) {
+    return this-&gt;cmp.readBytes(file, readLen, readStage, updateCrc);
+}
+
+Fw::Success FpySequencerTester::tester_readFooter() {
+    return this-&gt;cmp.readFooter();
+}
+
+Fw::Success FpySequencerTester::tester_readBody() {
+    return this-&gt;cmp.readBody();
+}
+
+Fw::Success FpySequencerTester::tester_readHeader() {
+    return this-&gt;cmp.readHeader();
+}
+
+// Get &amp; Set cmp variables
+Fw::String FpySequencerTester::tester_get_m_sequenceFilePath() {
+    return this-&gt;cmp.m_sequenceFilePath;
+}
+
+void FpySequencerTester::tester_set_m_sequenceFilePath(Fw::String str) {
+    this-&gt;cmp.m_sequenceFilePath = str;
+}
+
+U64 FpySequencerTester::tester_get_m_sequencesStarted() {
+    return this-&gt;cmp.m_sequencesStarted;
+}
+
+void FpySequencerTester::tester_set_m_sequencesStarted(U64 val) {
+    this-&gt;cmp.m_sequencesStarted = val;
+}
+
+U64 FpySequencerTester::tester_get_m_statementsDispatched() {
+    return this-&gt;cmp.m_statementsDispatched;
+}
+
+void FpySequencerTester::tester_set_m_statementsDispatched(U64 val) {
+    this-&gt;cmp.m_statementsDispatched = val;
+}
+
+void FpySequencerTester::tester_set_m_computedCRC(U32 crc) {
+    this-&gt;cmp.m_computedCRC = crc;
+}
+
+// Get cmp member pointers
+FpySequencer::Runtime* FpySequencerTester::tester_get_m_runtime_ptr() {
+    return &amp;(this-&gt;cmp.m_runtime);
+}
+
+Fpy::Sequence* FpySequencerTester::tester_get_m_sequenceObj_ptr() {
+    return &amp;(this-&gt;cmp.m_sequenceObj);
+}
+
+Fw::ExternalSerializeBuffer* FpySequencerTester::tester_get_m_sequenceBuffer_ptr() {
+    return &amp;(this-&gt;cmp.m_sequenceBuffer);
+}
+
+Svc::FpySequencer::Debug* FpySequencerTester::tester_get_m_debug_ptr() {
+    return &amp;(this-&gt;cmp.m_debug);
+}
+I64 FpySequencerTester::tester_binaryRegOp_or(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_or(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_and(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_and(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_ieq(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_ieq(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_ine(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_ine(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_ult(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_ult(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_ule(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_ule(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_ugt(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_ugt(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_uge(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_uge(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_slt(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_slt(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_sle(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_sle(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_sgt(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_sgt(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_sge(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_sge(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_feq(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_feq(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_fne(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_fne(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_flt(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_flt(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_fle(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_fle(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_fgt(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_fgt(lhs, rhs);
+}
+I64 FpySequencerTester::tester_binaryRegOp_fge(I64 lhs, I64 rhs) {
+    return this-&gt;cmp.binaryRegOp_fge(lhs, rhs);
+}
+I64 FpySequencerTester::tester_unaryRegOp_not(I64 src) {
+    return this-&gt;cmp.unaryRegOp_not(src);
+}
+I64 FpySequencerTester::tester_unaryRegOp_fpext(I64 src) {
+    return this-&gt;cmp.unaryRegOp_fpext(src);
+}
+I64 FpySequencerTester::tester_unaryRegOp_fptrunc(I64 src) {
+    return this-&gt;cmp.unaryRegOp_fptrunc(src);
+}
+I64 FpySequencerTester::tester_unaryRegOp_fptosi(I64 src) {
+    return this-&gt;cmp.unaryRegOp_fptosi(src);
+}
+I64 FpySequencerTester::tester_unaryRegOp_sitofp(I64 src) {
+    return this-&gt;cmp.unaryRegOp_sitofp(src);
+}
+I64 FpySequencerTester::tester_unaryRegOp_fptoui(I64 src) {
+    return this-&gt;cmp.unaryRegOp_fptoui(src);
+}
+I64 FpySequencerTester::tester_unaryRegOp_uitofp(I64 src) {
+    return this-&gt;cmp.unaryRegOp_uitofp(src);
+}
+void FpySequencerTester::tester_doDispatch() {
+    this-&gt;cmp.doDispatch();
+}
+
+Svc::FpySequencer_SequencerStateMachineStateMachineBase::State FpySequencerTester::tester_getState() {
+    return this-&gt;cmp.m_stateMachine_sequencer.getState();
+}
+
+void FpySequencerTester::tester_setState(Svc::FpySequencer_SequencerStateMachineStateMachineBase::State state) {
+    FpySequencer_SequencerStateMachineTester::setState(this-&gt;cmp.m_stateMachine_sequencer, state);
+}
+
+void FpySequencerTester::tester_dispatchDirective(const FpySequencer::DirectiveUnion&amp; directive, const Fpy::DirectiveId&amp; id) {
+    this-&gt;cmp.dispatchDirective(directive, id);
+}
+
+// End UT private/protected access
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="fpysequencertester-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">FpySequencerTester.hpp</span></code><a class="headerlink" href="#fpysequencertester-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/test/ut/FpySequencerTester.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  FpySequencer/test/ut/Tester.hpp
+// \author zimri.leisher
+// \brief  hpp file for FpySequencer test harness implementation class
+// ======================================================================
+
+#ifndef FPYSEQUENCER_TESTER_HPP
+#define FPYSEQUENCER_TESTER_HPP
+
+#include "FpySequencerGTestBase.hpp"
+#include "Svc/FpySequencer/FpySequencer.hpp"
+
+namespace Svc {
+
+class FpySequencerTester : public FpySequencerGTestBase, public ::testing::Test {
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    // Maximum size of histories storing events, telemetry, and port outputs
+    static const FwSizeType MAX_HISTORY_SIZE = 10;
+    // Instance ID supplied to the component instance under test
+    static const FwSizeType TEST_INSTANCE_ID = 0;
+    // Queue depth supplied to component instance under test
+    static const FwSizeType TEST_INSTANCE_QUEUE_DEPTH = 10;
+
+    //! Construct object FpySequencerTester
+    //!
+    FpySequencerTester();
+
+    //! Destroy object FpySequencerTester
+    //!
+    ~FpySequencerTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    //!
+    void connectPorts();
+
+    //! Initialize components
+    //!
+    void initComponents();
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    //!
+    FpySequencer cmp;
+    FpySequencer&amp; component;  // for compatibility
+
+    // dispatches events from the queue until the component reaches the given state
+    void dispatchUntilState(State state, U32 bound = 100);
+    void resetRuntime();
+
+    // a sequence that you can build with the following functions
+    Fpy::Sequence seq;
+    U8 internalSeqBuf[Fpy::Sequence::SERIALIZED_SIZE] = {0};
+
+    FwChanIdType nextTlmId;
+    Fw::Time nextTlmTime;
+    Fw::TlmBuffer nextTlmValue;
+
+    FwPrmIdType nextPrmId;
+    Fw::ParamBuffer nextPrmValue;
+
+    // clears the sequence we're currently building
+    void clearSeq();
+    void allocMem(FwSizeType bytes = Fpy::Sequence::SERIALIZED_SIZE);
+    // writes the sequence we're building to a file with the given name
+    // writes up to maxBytes bytes
+    void writeToFile(const char* name, FwSizeType maxBytes = Fpy::Sequence::SERIALIZED_SIZE);
+    void removeFile(const char* name);
+    void addDirective(Fpy::DirectiveId id, Fw::StatementArgBuffer&amp; buf);
+
+    void add_WAIT_REL(U32 seconds, U32 uSeconds);
+    void add_WAIT_REL(FpySequencer_WaitRelDirective dir);
+    void add_WAIT_ABS(Fw::Time wakeupTime);
+    void add_WAIT_ABS(FpySequencer_WaitAbsDirective dir);
+    void add_GOTO(U32 stmtIdx);
+    void add_GOTO(FpySequencer_GotoDirective dir);
+    void add_SET_SER_REG(U8 serRegIdx, Fw::StatementArgBuffer value);
+    void add_SET_SER_REG(FpySequencer_SetSerRegDirective dir);
+    void add_IF(U8 serRegIdx, U32 gotoIfFalse);
+    void add_IF(FpySequencer_IfDirective dir);
+    void add_NO_OP();
+    void add_GET_TLM(U8 valueDestSerReg, U8 timeDestSerReg, FwChanIdType id);
+    void add_GET_TLM(FpySequencer_GetTlmDirective dir);
+    void add_GET_PRM(U8 serRegIdx, FwPrmIdType id);
+    void add_GET_PRM(FpySequencer_GetPrmDirective dir);
+    void add_CMD(FwOpcodeType opcode);
+    void add_CMD(FpySequencer_CmdDirective dir);
+    void add_DESER_SER_REG(U8 srcSerRegIdx, FwSizeType srcOffset, U8 destReg, U8 deserSize);
+    void add_DESER_SER_REG(FpySequencer_DeserSerRegDirective dir);
+    void add_SET_REG(U8 dest, I64 value);
+    void add_SET_REG(FpySequencer_SetRegDirective dir);
+    void add_BINARY_REG_OP(U8 lhs, U8 rhs, U8 res, Fpy::DirectiveId op);
+    void add_BINARY_REG_OP(FpySequencer_BinaryRegOpDirective dir);
+    void add_UNARY_REG_OP(U8 src, U8 res, Fpy::DirectiveId op);
+    void add_UNARY_REG_OP(FpySequencer_UnaryRegOpDirective dir);
+    void add_EXIT(bool success);
+    void add_EXIT(FpySequencer_ExitDirective dir);
+    //! Handle a text event
+    void textLogIn(FwEventIdType id,                //!&lt; The event ID
+                   const Fw::Time&amp; timeTag,         //!&lt; The time
+                   const Fw::LogSeverity severity,  //!&lt; The severity
+                   const Fw::TextLogString&amp; text    //!&lt; The event string
+                   ) override;
+
+    void writeAndRun();
+
+    //! Default handler implementation for from_getTlmChan
+    Fw::TlmValid from_getTlmChan_handler(FwIndexType portNum,  //!&lt; The port number
+                                         FwChanIdType id,      //!&lt; Telemetry Channel ID
+                                         Fw::Time&amp; timeTag,    //!&lt; Time Tag
+                                         Fw::TlmBuffer&amp; val    //!&lt; Buffer containing serialized telemetry value.
+                                                               //!&lt; Size set to 0 if channel not found.
+                                         ) override;
+
+    //! Default handler implementation for from_getParam
+    Fw::ParamValid from_getParam_handler(FwIndexType portNum,  //!&lt; The port number
+                                         FwPrmIdType id,       //!&lt; Parameter ID
+                                         Fw::ParamBuffer&amp; val  //!&lt; Buffer containing serialized parameter value.
+                                                               //!&lt; Unmodified if param not found.
+                                         ) override;
+
+    // Access to private and protected FpySequencer methods and members for UTs
+    Signal tester_noOp_directiveHandler(const FpySequencer_NoOpDirective&amp; directive, DirectiveError&amp; err);
+    Signal tester_waitRel_directiveHandler(const FpySequencer_WaitRelDirective&amp; directive, DirectiveError&amp; err);
+    Signal tester_waitAbs_directiveHandler(const FpySequencer_WaitAbsDirective&amp; directive, DirectiveError&amp; err);
+    Signal tester_goto_directiveHandler(const Svc::FpySequencer_GotoDirective &amp;directive, DirectiveError&amp; err);
+    Signal tester_setSerReg_directiveHandler(const FpySequencer_SetSerRegDirective&amp; directive, DirectiveError&amp; err);
+    Signal tester_if_directiveHandler(const FpySequencer_IfDirective&amp; directive, DirectiveError&amp; err);
+    Signal tester_getPrm_directiveHandler(const FpySequencer_GetPrmDirective&amp; directive, DirectiveError&amp; err);
+    Signal tester_getTlm_directiveHandler(const FpySequencer_GetTlmDirective&amp; directive, DirectiveError&amp; err);
+    Signal tester_exit_directiveHandler(const FpySequencer_ExitDirective&amp; directive, DirectiveError&amp; err);
+    Signal tester_cmd_directiveHandler(const FpySequencer_CmdDirective&amp; directive, DirectiveError&amp; err);
+    Signal tester_deserSerReg_directiveHandler(const FpySequencer_DeserSerRegDirective&amp; directive, DirectiveError&amp; err);
+    Signal tester_unaryRegOp_directiveHandler(const FpySequencer_UnaryRegOpDirective&amp; directive, DirectiveError&amp; err);
+    Signal tester_binaryRegOp_directiveHandler(const FpySequencer_BinaryRegOpDirective&amp; directive, DirectiveError&amp; err);
+    Signal tester_setReg_directiveHandler(const FpySequencer_SetRegDirective&amp; directive, DirectiveError&amp; err);
+    I64 tester_binaryRegOp_or(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_and(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_ieq(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_ine(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_ult(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_ule(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_ugt(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_uge(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_slt(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_sle(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_sgt(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_sge(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_feq(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_fne(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_flt(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_fle(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_fgt(I64 lhs, I64 rhs);
+    I64 tester_binaryRegOp_fge(I64 lhs, I64 rhs);
+    I64 tester_unaryRegOp_not(I64 src);
+    I64 tester_unaryRegOp_fpext(I64 src);
+    I64 tester_unaryRegOp_fptrunc(I64 src);
+    I64 tester_unaryRegOp_fptoui(I64 src);
+    I64 tester_unaryRegOp_uitofp(I64 src);
+    I64 tester_unaryRegOp_fptosi(I64 src);
+    I64 tester_unaryRegOp_sitofp(I64 src);
+    FpySequencer::Runtime* tester_get_m_runtime_ptr();
+    Fw::ExternalSerializeBuffer* tester_get_m_sequenceBuffer_ptr();
+    void tester_set_m_sequencesStarted(U64 val);
+    void tester_set_m_statementsDispatched(U64 val);
+    U64 tester_get_m_sequencesStarted();
+    U64 tester_get_m_statementsDispatched();
+    Fw::Success tester_deserializeDirective(const Fpy::Statement&amp; stmt, Svc::FpySequencer::DirectiveUnion&amp; deserializedDirective);
+    Fpy::Sequence* tester_get_m_sequenceObj_ptr();
+    Svc::Signal tester_dispatchStatement();
+    Fw::Success tester_validate();
+    Fw::String tester_get_m_sequenceFilePath();
+    void tester_set_m_sequenceFilePath(Fw::String str);
+    Fw::Success tester_readBytes(Os::File&amp; file, FwSizeType readLen, FpySequencer_FileReadStage readStage, bool updateCrc = true);
+    Fw::Success tester_readFooter();
+    Fw::Success tester_readBody();
+    Fw::Success tester_readHeader();
+    void tester_set_m_computedCRC(U32 crc);
+    Svc::FpySequencer::Debug* tester_get_m_debug_ptr();
+    Svc::Signal tester_checkStatementTimeout();
+    Svc::Signal tester_checkShouldWake();
+    Svc::FpySequencer::Telemetry* tester_get_m_tlm_ptr();
+    void tester_doDispatch();
+    void tester_setState(Svc::FpySequencer_SequencerStateMachineStateMachineBase::State state);
+    Svc::FpySequencer_SequencerStateMachineStateMachineBase::State tester_getState();
+    void tester_dispatchDirective(const FpySequencer::DirectiveUnion&amp; directive, const Fpy::DirectiveId&amp; id);
+
+  public:
+    // ----------------------------------------------------------------------
+    // Static methods for accessing protected opcodes
+    // ----------------------------------------------------------------------
+
+    //! Get the OPCODE_RUN value
+    static FwOpcodeType get_OPCODE_RUN() {
+        return FpySequencerComponentBase::OPCODE_RUN;
+    }
+
+    //! Get the OPCODE_VALIDATE value
+    static FwOpcodeType get_OPCODE_VALIDATE() {
+        return FpySequencerComponentBase::OPCODE_VALIDATE;
+    }
+
+    //! Get the OPCODE_RUN_VALIDATED value
+    static FwOpcodeType get_OPCODE_RUN_VALIDATED() {
+        return FpySequencerComponentBase::OPCODE_RUN_VALIDATED;
+    }
+
+    //! Get the OPCODE_CANCEL value
+    static FwOpcodeType get_OPCODE_CANCEL() {
+        return FpySequencerComponentBase::OPCODE_CANCEL;
+    }
+
+    //! Get the OPCODE_DEBUG_CLEAR_BREAKPOINT value
+    static FwOpcodeType get_OPCODE_DEBUG_CLEAR_BREAKPOINT() {
+        return FpySequencerComponentBase::OPCODE_DEBUG_CLEAR_BREAKPOINT;
+    }
+
+    //! Get the OPCODE_DEBUG_SET_BREAKPOINT value
+    static FwOpcodeType get_OPCODE_DEBUG_SET_BREAKPOINT() {
+        return FpySequencerComponentBase::OPCODE_DEBUG_SET_BREAKPOINT;
+    }
+
+    //! Get the OPCODE_DEBUG_BREAK value
+    static FwOpcodeType get_OPCODE_DEBUG_BREAK() {
+        return FpySequencerComponentBase::OPCODE_DEBUG_BREAK;
+    }
+
+    //! Get the OPCODE_DEBUG_CONTINUE value
+    static FwOpcodeType get_OPCODE_DEBUG_CONTINUE() {
+        return FpySequencerComponentBase::OPCODE_DEBUG_CONTINUE;
+    }
+
+
+};
+
+class FpySequencer_SequencerStateMachineTester {
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    //! Construct object FpySequencer_SequencerStateMachineTester
+    //!
+    FpySequencer_SequencerStateMachineTester();
+
+    //! Destroy object FpySequencer_SequencerStateMachineTester
+    //!
+    ~FpySequencer_SequencerStateMachineTester();
+
+    // ----------------------------------------------------------------------
+    // Test access to private and protected methods and members
+    // ----------------------------------------------------------------------
+    static void setState(FpySequencer_SequencerStateMachineStateMachineBase&amp; sm, State s){
+        sm.m_state = s;
+    }
+
+};
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="fpysequencertestmain-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">FpySequencerTestMain.cpp</span></code><a class="headerlink" href="#fpysequencertestmain-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/test/ut/FpySequencerTestMain.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ----------------------------------------------------------------------
+// TestMain.cpp
+// ----------------------------------------------------------------------
+
+#include "FpySequencerTester.hpp"
+#include "Fw/Com/ComPacket.hpp"
+#include "Fw/Types/MallocAllocator.hpp"
+#include "Svc/FpySequencer/FppConstantsAc.hpp"
+
+namespace Svc {
+
+using Signal = FpySequencer_SequencerStateMachineStateMachineBase::Signal;
+using State = FpySequencer_SequencerStateMachineStateMachineBase::State;
+using DirectiveError = FpySequencer_DirectiveErrorCode;
+
+TEST_F(FpySequencerTester, waitRel) {
+    FpySequencer_WaitRelDirective directive(5, 123);
+    Fw::Time testTime(100, 100);
+    setTestTime(testTime);
+
+    DirectiveError err = DirectiveError::NO_ERROR;
+    Signal result = tester_waitRel_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_beginSleep);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;wakeupTime, Fw::Time(105, 223));
+}
+
+TEST_F(FpySequencerTester, waitAbs) {
+    FpySequencer_WaitAbsDirective directive(Fw::Time(5, 123));
+
+    DirectiveError err = DirectiveError::NO_ERROR;
+    Signal result = tester_waitAbs_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_beginSleep);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;wakeupTime, Fw::Time(5, 123));
+}
+
+TEST_F(FpySequencerTester, goto) {
+    FpySequencer_GotoDirective directive(123);
+    tester_get_m_sequenceObj_ptr()-&gt;get_header().set_statementCount(456);
+    DirectiveError err = DirectiveError::NO_ERROR;
+    Signal result = tester_goto_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;nextStatementIndex, 123);
+
+    tester_get_m_runtime_ptr()-&gt;nextStatementIndex = 0;
+    // out of bounds
+    directive.set_statementIndex(111111);
+    result = tester_goto_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_failure);
+    ASSERT_EQ(err, DirectiveError::STMT_OUT_OF_BOUNDS);
+    err = DirectiveError::NO_ERROR;
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;nextStatementIndex, 0);
+
+    tester_get_m_runtime_ptr()-&gt;nextStatementIndex = 0;
+    // just inside bounds
+    directive.set_statementIndex(456);
+    result = tester_goto_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;nextStatementIndex, 456);
+}
+
+TEST_F(FpySequencerTester, setSerReg) {
+    U8 buf[Fpy::MAX_SERIALIZABLE_REGISTER_SIZE];
+    memset(buf, 1, sizeof(buf));
+    FpySequencer_SetSerRegDirective directive(static_cast&lt;U8&gt;(0), 1, static_cast&lt;FwSizeType&gt;(sizeof(buf)));
+    DirectiveError err = DirectiveError::NO_ERROR;
+    Signal result = tester_setSerReg_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;serRegs[0].valueSize, sizeof(buf));
+    ASSERT_EQ(memcmp(buf, tester_get_m_runtime_ptr()-&gt;serRegs[0].value, sizeof(buf)), 0);
+
+    // outside of serReg range
+    directive.set_index(Fpy::NUM_SERIALIZABLE_REGISTERS);
+    result = tester_setSerReg_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_failure);
+    ASSERT_EQ(err, DirectiveError::SER_REG_OUT_OF_BOUNDS);
+
+    // check what happens if buf too big
+    directive = FpySequencer_SetSerRegDirective(static_cast&lt;U8&gt;(0), 1, Fpy::MAX_SERIALIZABLE_REGISTER_SIZE + 1);
+
+    ASSERT_DEATH_IF_SUPPORTED(tester_setSerReg_directiveHandler(directive, err), "Assert: ");
+}
+
+TEST_F(FpySequencerTester, if) {
+    tester_get_m_runtime_ptr()-&gt;nextStatementIndex = 100;
+    tester_get_m_sequenceObj_ptr()-&gt;get_header().set_statementCount(123);
+    tester_get_m_runtime_ptr()-&gt;regs[0] = 1;
+    FpySequencer_IfDirective directive(0, 111);
+    DirectiveError err = DirectiveError::NO_ERROR;
+    Signal result = tester_if_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    // should not have changed stmtidx
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;nextStatementIndex, 100);
+
+    tester_get_m_runtime_ptr()-&gt;regs[0] = 0;  // set it to false
+    result = tester_if_directiveHandler(directive, err);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    // should have changed stmtidx
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;nextStatementIndex, 111);
+
+    tester_get_m_runtime_ptr()-&gt;nextStatementIndex = 100;
+
+    directive.set_falseGotoStmtIndex(tester_get_m_sequenceObj_ptr()-&gt;get_header().get_statementCount());
+    result = tester_if_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    // should have succeeded
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;nextStatementIndex,
+              tester_get_m_sequenceObj_ptr()-&gt;get_header().get_statementCount());
+
+    tester_get_m_runtime_ptr()-&gt;nextStatementIndex = 100;
+
+    // check reg out of bounds
+    directive.set_conditionalReg(Fpy::NUM_REGISTERS);
+    result = tester_if_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_failure);
+    ASSERT_EQ(err, DirectiveError::REGISTER_OUT_OF_BOUNDS);
+    err = DirectiveError::NO_ERROR;
+    // should not have changed stmtidx
+    ASSERT_NE(tester_get_m_runtime_ptr()-&gt;nextStatementIndex, 111);
+
+    directive.set_conditionalReg(0);
+    directive.set_falseGotoStmtIndex(tester_get_m_sequenceObj_ptr()-&gt;get_header().get_statementCount() + 1);
+    result = tester_if_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_failure);
+    ASSERT_EQ(err, DirectiveError::STMT_OUT_OF_BOUNDS);
+    err = DirectiveError::NO_ERROR;
+    // should not have changed stmtidx
+    ASSERT_NE(tester_get_m_runtime_ptr()-&gt;nextStatementIndex, 111);
+}
+
+TEST_F(FpySequencerTester, noOp) {
+    FpySequencer_NoOpDirective directive;
+    DirectiveError err = DirectiveError::NO_ERROR;
+    Signal result = tester_noOp_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+}
+
+TEST_F(FpySequencerTester, getTlm) {
+    FpySequencer_GetTlmDirective directive(0, 1, 456);
+    nextTlmId = 456;
+    nextTlmValue.setBuffLen(1);
+    nextTlmValue.getBuffAddr()[0] = 200;
+    nextTlmTime.set(888, 777);
+    DirectiveError err = DirectiveError::NO_ERROR;
+    Signal result = tester_getTlm_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_from_getTlmChan_SIZE(1);
+    ASSERT_from_getTlmChan(0, 456, Fw::Time(), Fw::TlmBuffer());
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;serRegs[0].value[0], nextTlmValue.getBuffAddr()[0]);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;serRegs[0].valueSize, nextTlmValue.getBuffLength());
+    Fw::ExternalSerializeBuffer timeBuf(tester_get_m_runtime_ptr()-&gt;serRegs[1].value,
+                                        tester_get_m_runtime_ptr()-&gt;serRegs[1].valueSize);
+    timeBuf.setBuffLen(tester_get_m_runtime_ptr()-&gt;serRegs[1].valueSize);
+    Fw::Time resultTime;
+    ASSERT_EQ(timeBuf.deserialize(resultTime), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    ASSERT_EQ(resultTime, nextTlmTime);
+    clearHistory();
+
+    // try getting a nonexistent chan
+    directive.set_chanId(111);
+    result = tester_getTlm_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_failure);
+    ASSERT_EQ(err, DirectiveError::TLM_CHAN_NOT_FOUND);
+    err = DirectiveError::NO_ERROR;
+    directive.set_chanId(456);
+
+    // try setting bad value serReg
+    directive.set_valueDestSerReg(Fpy::NUM_SERIALIZABLE_REGISTERS);
+    result = tester_getTlm_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_failure);
+    ASSERT_EQ(err, DirectiveError::SER_REG_OUT_OF_BOUNDS);
+    err = DirectiveError::NO_ERROR;
+    directive.set_valueDestSerReg(0);
+
+    // try setting bad time serReg
+    directive.set_timeDestSerReg(Fpy::NUM_SERIALIZABLE_REGISTERS);
+    result = tester_getTlm_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_failure);
+    ASSERT_EQ(err, DirectiveError::SER_REG_OUT_OF_BOUNDS);
+    err = DirectiveError::NO_ERROR;
+    directive.set_timeDestSerReg(0);
+}
+
+TEST_F(FpySequencerTester, getPrm) {
+    FpySequencer_GetPrmDirective directive(0, 456);
+    nextPrmId = 456;
+    nextPrmValue.setBuffLen(1);
+    nextPrmValue.getBuffAddr()[0] = 200;
+    DirectiveError err = DirectiveError::NO_ERROR;
+    Signal result = tester_getPrm_directiveHandler(directive, err);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_from_getParam_SIZE(1);
+    ASSERT_from_getParam(0, 456, Fw::ParamBuffer());
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;serRegs[0].value[0], nextPrmValue.getBuffAddr()[0]);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;serRegs[0].valueSize, nextPrmValue.getBuffLength());
+    clearHistory();
+
+    // try getting a nonexistent param
+    directive.set_prmId(111);
+    result = tester_getPrm_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_failure);
+    ASSERT_EQ(err, DirectiveError::PRM_NOT_FOUND);
+    err = DirectiveError::NO_ERROR;
+    directive.set_prmId(456);
+
+    // try setting bad serReg
+    directive.set_destSerRegIndex(Fpy::NUM_SERIALIZABLE_REGISTERS);
+    result = tester_getPrm_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_failure);
+    ASSERT_EQ(err, DirectiveError::SER_REG_OUT_OF_BOUNDS);
+    err = DirectiveError::NO_ERROR;
+    directive.set_destSerRegIndex(0);
+}
+
+TEST_F(FpySequencerTester, cmd) {
+    U8 data[4] = {0x12, 0x23, 0x34, 0x45};
+    FpySequencer_CmdDirective directive(123, 0, sizeof(data));
+    memcpy(directive.get_argBuf(), data, sizeof(data));
+    DirectiveError err = DirectiveError::NO_ERROR;
+    Signal result = tester_cmd_directiveHandler(directive, err);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(result, Signal::stmtResponse_keepWaiting);
+
+    Fw::ComBuffer expected;
+    ASSERT_EQ(expected.serialize(Fw::ComPacketType::FW_PACKET_COMMAND), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    ASSERT_EQ(expected.serialize(directive.get_opCode()), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    ASSERT_EQ(expected.serialize(data, sizeof(data), Fw::Serialization::OMIT_LENGTH), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    ASSERT_from_cmdOut_SIZE(1);
+    ASSERT_from_cmdOut(0, expected, 0);
+    this-&gt;clearHistory();
+
+    // try dispatching again, make sure cmd uid is right
+    tester_set_m_statementsDispatched(123);
+    result = tester_cmd_directiveHandler(directive, err);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(result, Signal::stmtResponse_keepWaiting);
+    ASSERT_from_cmdOut(0, expected, tester_get_m_statementsDispatched());
+    this-&gt;clearHistory();
+
+    // modify sequences started, make sure correct
+    tester_set_m_sequencesStarted(456);
+    result = tester_cmd_directiveHandler(directive, err);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(result, Signal::stmtResponse_keepWaiting);
+    ASSERT_from_cmdOut(
+        0, expected,
+        (((tester_get_m_sequencesStarted() &amp; 0xFFFF) &lt;&lt; 16) | (tester_get_m_statementsDispatched() &amp; 0xFFFF)));
+}
+
+TEST_F(FpySequencerTester, deserSerReg) {
+    // Nominal case: Deserialize 1-byte value
+    FpySequencer_DeserSerRegDirective directive(0, 0, 0, 1);
+    tester_get_m_runtime_ptr()-&gt;serRegs[0].value[0] = 0x12;
+    tester_get_m_runtime_ptr()-&gt;serRegs[0].valueSize = 1;
+    DirectiveError err = DirectiveError::NO_ERROR;
+    Signal result = tester_deserSerReg_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;regs[0], 0x12);
+
+    // Deserialize 2-byte value
+    directive = FpySequencer_DeserSerRegDirective(0, 0, 0, 2);
+    tester_get_m_runtime_ptr()-&gt;serRegs[0].value[0] = 0x34;
+    tester_get_m_runtime_ptr()-&gt;serRegs[0].value[1] = 0x56;
+    tester_get_m_runtime_ptr()-&gt;serRegs[0].valueSize = 2;
+    result = tester_deserSerReg_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;regs[0], 0x3456);
+
+    // Deserialize 4-byte value
+    directive = FpySequencer_DeserSerRegDirective(0, 0, 0, 4);
+    tester_get_m_runtime_ptr()-&gt;serRegs[0].value[0] = 0x78;
+    tester_get_m_runtime_ptr()-&gt;serRegs[0].value[1] = 0x9A;
+    tester_get_m_runtime_ptr()-&gt;serRegs[0].value[2] = 0xBC;
+    tester_get_m_runtime_ptr()-&gt;serRegs[0].value[3] = 0xDE;
+    tester_get_m_runtime_ptr()-&gt;serRegs[0].valueSize = 4;
+    result = tester_deserSerReg_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;regs[0], 0x789ABCDE);
+
+    // Deserialize 8-byte value
+    directive = FpySequencer_DeserSerRegDirective(0, 0, 0, 8);
+    memcpy(tester_get_m_runtime_ptr()-&gt;serRegs[0].value, "\x01\x23\x45\x67\x89\xAB\xCD\xEF", 8);
+    tester_get_m_runtime_ptr()-&gt;serRegs[0].valueSize = 8;
+    result = tester_deserSerReg_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;regs[0], 0x0123456789ABCDEF);
+
+    // Error case: Out-of-bounds serializable register index
+    directive = FpySequencer_DeserSerRegDirective(Fpy::NUM_SERIALIZABLE_REGISTERS, 0, 0, 1);
+    result = tester_deserSerReg_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_failure);
+    ASSERT_EQ(err, DirectiveError::SER_REG_OUT_OF_BOUNDS);
+
+    // Error case: Out-of-bounds register index
+    directive = FpySequencer_DeserSerRegDirective(0, 0, Fpy::NUM_REGISTERS, 1);
+    result = tester_deserSerReg_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_failure);
+    ASSERT_EQ(err, DirectiveError::REGISTER_OUT_OF_BOUNDS);
+
+    // Error case: Offset + size exceeds serializable register size
+    directive = FpySequencer_DeserSerRegDirective(0, 1, 0, 1);
+    tester_get_m_runtime_ptr()-&gt;serRegs[0].valueSize = 1;
+    result = tester_deserSerReg_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_failure);
+    ASSERT_EQ(err, DirectiveError::SER_REG_ACCESS_OUT_OF_BOUNDS);
+}
+
+TEST_F(FpySequencerTester, binaryRegOp) {
+    // Test EQ (equal)
+    FpySequencer_BinaryRegOpDirective directiveEQ(0, 1, 2, Fpy::DirectiveId::IEQ);
+    tester_get_m_runtime_ptr()-&gt;regs[0] = 10;
+    tester_get_m_runtime_ptr()-&gt;regs[1] = 10;
+    DirectiveError err = DirectiveError::NO_ERROR;
+    Signal result = tester_binaryRegOp_directiveHandler(directiveEQ, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;regs[2], 1);
+
+    // Test NE (not equal)
+    FpySequencer_BinaryRegOpDirective directiveNE(0, 1, 2, Fpy::DirectiveId::INE);
+    tester_get_m_runtime_ptr()-&gt;regs[1] = 20;
+    result = tester_binaryRegOp_directiveHandler(directiveNE, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;regs[2], 1);
+
+    // Test OR (bitwise OR)
+    FpySequencer_BinaryRegOpDirective directiveOR(0, 1, 2, Fpy::DirectiveId::OR);
+    tester_get_m_runtime_ptr()-&gt;regs[0] = 10;  // 0b1010;
+    tester_get_m_runtime_ptr()-&gt;regs[1] = 5;   // 0b0101;
+    result = tester_binaryRegOp_directiveHandler(directiveOR, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;regs[2], 15);  // 0b1111
+
+    // Test AND (bitwise AND)
+    FpySequencer_BinaryRegOpDirective directiveAND(0, 1, 2, Fpy::DirectiveId::AND);
+    tester_get_m_runtime_ptr()-&gt;regs[0] = 10;  // 0b1010;
+    tester_get_m_runtime_ptr()-&gt;regs[1] = 12;  // 0b1100;
+    result = tester_binaryRegOp_directiveHandler(directiveAND, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;regs[2], 8);  // 0b1000
+
+    // Test signed comparison (SLT - signed less than)
+    FpySequencer_BinaryRegOpDirective directiveSLT(0, 1, 2, Fpy::DirectiveId::SLT);
+    tester_get_m_runtime_ptr()-&gt;regs[0] = -5;
+    tester_get_m_runtime_ptr()-&gt;regs[1] = 10;
+    result = tester_binaryRegOp_directiveHandler(directiveSLT, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;regs[2], 1);
+
+    // Test unsigned comparison (ULT - unsigned less than)
+    FpySequencer_BinaryRegOpDirective directiveULT(0, 1, 2, Fpy::DirectiveId::ULT);
+    tester_get_m_runtime_ptr()-&gt;regs[0] = 5;
+    tester_get_m_runtime_ptr()-&gt;regs[1] = 10;
+    result = tester_binaryRegOp_directiveHandler(directiveULT, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;regs[2], 1);
+
+    // Test unsigned comparison (UGT - unsigned greater than)
+    FpySequencer_BinaryRegOpDirective directiveUGT(0, 1, 2, Fpy::DirectiveId::UGT);
+    tester_get_m_runtime_ptr()-&gt;regs[0] = 10;
+    tester_get_m_runtime_ptr()-&gt;regs[1] = 5;
+    result = tester_binaryRegOp_directiveHandler(directiveUGT, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;regs[2], 1);
+
+    // Test floating-point comparison (FLT - floating-point less than)
+    FpySequencer_BinaryRegOpDirective directiveFLT(0, 1, 2, Fpy::DirectiveId::FLT);
+    double lhsValueFLT = 5.5;
+    double rhsValueFLT = 10.1;
+    tester_get_m_runtime_ptr()-&gt;regs[0] = *reinterpret_cast&lt;I64*&gt;(&amp;lhsValueFLT);
+    tester_get_m_runtime_ptr()-&gt;regs[1] = *reinterpret_cast&lt;I64*&gt;(&amp;rhsValueFLT);
+    result = tester_binaryRegOp_directiveHandler(directiveFLT, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;regs[2], 1);
+
+    // Test floating-point comparison (FGE - floating-point greater or equal)
+    FpySequencer_BinaryRegOpDirective directiveFGE(0, 1, 2, Fpy::DirectiveId::FGE);
+    double lhsValueFGE = 10.1;
+    double rhsValueFGE = 10.1;
+    tester_get_m_runtime_ptr()-&gt;regs[0] = *reinterpret_cast&lt;I64*&gt;(&amp;lhsValueFGE);
+    tester_get_m_runtime_ptr()-&gt;regs[1] = *reinterpret_cast&lt;I64*&gt;(&amp;rhsValueFGE);
+    result = tester_binaryRegOp_directiveHandler(directiveFGE, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;regs[2], 1);
+
+    // Test out-of-bounds register index
+    FpySequencer_BinaryRegOpDirective directiveOOB(Fpy::NUM_REGISTERS, 1, 2, Fpy::DirectiveId::IEQ);
+    result = tester_binaryRegOp_directiveHandler(directiveOOB, err);
+    ASSERT_EQ(result, Signal::stmtResponse_failure);
+    ASSERT_EQ(err, DirectiveError::REGISTER_OUT_OF_BOUNDS);
+
+    // Test invalid operation
+    FpySequencer_BinaryRegOpDirective directiveInvalid(0, 1, 2, Fpy::DirectiveId::NO_OP);
+    ASSERT_DEATH_IF_SUPPORTED(tester_binaryRegOp_directiveHandler(directiveInvalid, err), "Assert: ");
+}
+
+TEST_F(FpySequencerTester, ieq) {
+    I64 lhs = -1;
+    I64 rhs = -1;
+    ASSERT_EQ(tester_binaryRegOp_ieq(lhs, rhs), true);
+    rhs = 1;
+    ASSERT_EQ(tester_binaryRegOp_ieq(lhs, rhs), false);
+}
+
+TEST_F(FpySequencerTester, ine) {
+    I64 lhs = -1;
+    I64 rhs = -1;
+    ASSERT_EQ(tester_binaryRegOp_ine(lhs, rhs), false);
+    rhs = 1;
+    ASSERT_EQ(tester_binaryRegOp_ine(lhs, rhs), true);
+}
+
+TEST_F(FpySequencerTester, or) {
+    I64 lhs = static_cast&lt;I64&gt;(true);
+    I64 rhs = static_cast&lt;I64&gt;(true);
+    ASSERT_EQ(tester_binaryRegOp_or(lhs, rhs), true);
+    rhs = static_cast&lt;I64&gt;(false);
+    ASSERT_EQ(tester_binaryRegOp_or(lhs, rhs), true);
+    lhs = static_cast&lt;I64&gt;(false);
+    ASSERT_EQ(tester_binaryRegOp_or(lhs, rhs), false);
+}
+
+TEST_F(FpySequencerTester, and) {
+    I64 lhs = static_cast&lt;I64&gt;(false);
+    I64 rhs = static_cast&lt;I64&gt;(false);
+    ASSERT_EQ(tester_binaryRegOp_and(lhs, rhs), false);
+    rhs = static_cast&lt;I64&gt;(true);
+    ASSERT_EQ(tester_binaryRegOp_and(lhs, rhs), false);
+    lhs = static_cast&lt;I64&gt;(true);
+    ASSERT_EQ(tester_binaryRegOp_and(lhs, rhs), true);
+}
+
+TEST_F(FpySequencerTester, ult) {
+    U64 lhs = 0;
+    U64 rhs = std::numeric_limits&lt;U64&gt;::max();
+    ASSERT_EQ(tester_binaryRegOp_ult(static_cast&lt;I64&gt;(lhs), static_cast&lt;I64&gt;(rhs)), true);
+    rhs = 0;
+    ASSERT_EQ(tester_binaryRegOp_ult(static_cast&lt;I64&gt;(lhs), static_cast&lt;I64&gt;(rhs)), false);
+    rhs = 1;
+    ASSERT_EQ(tester_binaryRegOp_ult(static_cast&lt;I64&gt;(lhs), static_cast&lt;I64&gt;(rhs)), true);
+}
+
+TEST_F(FpySequencerTester, ule) {
+    U64 lhs = 0;
+    U64 rhs = std::numeric_limits&lt;U64&gt;::max();
+    ASSERT_EQ(tester_binaryRegOp_ule(static_cast&lt;I64&gt;(lhs), static_cast&lt;I64&gt;(rhs)), true);
+    rhs = 0;
+    ASSERT_EQ(tester_binaryRegOp_ule(static_cast&lt;I64&gt;(lhs), static_cast&lt;I64&gt;(rhs)), true);
+    rhs = 1;
+    ASSERT_EQ(tester_binaryRegOp_ule(static_cast&lt;I64&gt;(lhs), static_cast&lt;I64&gt;(rhs)), true);
+    lhs = 2;
+    ASSERT_EQ(tester_binaryRegOp_ule(static_cast&lt;I64&gt;(lhs), static_cast&lt;I64&gt;(rhs)), false);
+}
+
+TEST_F(FpySequencerTester, ugt) {
+    U64 rhs = 0;
+    U64 lhs = std::numeric_limits&lt;U64&gt;::max();
+    ASSERT_EQ(tester_binaryRegOp_ugt(static_cast&lt;I64&gt;(lhs), static_cast&lt;I64&gt;(rhs)), true);
+    lhs = 0;
+    ASSERT_EQ(tester_binaryRegOp_ugt(static_cast&lt;I64&gt;(lhs), static_cast&lt;I64&gt;(rhs)), false);
+    lhs = 1;
+    ASSERT_EQ(tester_binaryRegOp_ugt(static_cast&lt;I64&gt;(lhs), static_cast&lt;I64&gt;(rhs)), true);
+}
+
+TEST_F(FpySequencerTester, uge) {
+    U64 rhs = 0;
+    U64 lhs = std::numeric_limits&lt;U64&gt;::max();
+    ASSERT_EQ(tester_binaryRegOp_uge(static_cast&lt;I64&gt;(lhs), static_cast&lt;I64&gt;(rhs)), true);
+    lhs = 0;
+    ASSERT_EQ(tester_binaryRegOp_uge(static_cast&lt;I64&gt;(lhs), static_cast&lt;I64&gt;(rhs)), true);
+    lhs = 1;
+    ASSERT_EQ(tester_binaryRegOp_uge(static_cast&lt;I64&gt;(lhs), static_cast&lt;I64&gt;(rhs)), true);
+    rhs = 2;
+    ASSERT_EQ(tester_binaryRegOp_uge(static_cast&lt;I64&gt;(lhs), static_cast&lt;I64&gt;(rhs)), false);
+}
+
+TEST_F(FpySequencerTester, slt) {
+    I64 lhs = 0;
+    I64 rhs = std::numeric_limits&lt;I64&gt;::max();
+    ASSERT_EQ(tester_binaryRegOp_slt(lhs, rhs), true);
+    rhs = 0;
+    ASSERT_EQ(tester_binaryRegOp_slt(lhs, rhs), false);
+    rhs = 1;
+    ASSERT_EQ(tester_binaryRegOp_slt(lhs, rhs), true);
+}
+
+TEST_F(FpySequencerTester, sle) {
+    I64 lhs = 0;
+    I64 rhs = std::numeric_limits&lt;I64&gt;::max();
+    ASSERT_EQ(tester_binaryRegOp_sle(lhs, rhs), true);
+    rhs = 0;
+    ASSERT_EQ(tester_binaryRegOp_sle(lhs, rhs), true);
+    rhs = -1;
+    ASSERT_EQ(tester_binaryRegOp_sle(lhs, rhs), false);
+}
+
+TEST_F(FpySequencerTester, sgt) {
+    I64 lhs = 0;
+    I64 rhs = std::numeric_limits&lt;I64&gt;::max();
+    ASSERT_EQ(tester_binaryRegOp_sgt(lhs, rhs), false);
+    rhs = 0;
+    ASSERT_EQ(tester_binaryRegOp_sgt(lhs, rhs), false);
+    rhs = -1;
+    ASSERT_EQ(tester_binaryRegOp_sgt(lhs, rhs), true);
+}
+
+TEST_F(FpySequencerTester, sge) {
+    I64 lhs = 0;
+    I64 rhs = std::numeric_limits&lt;I64&gt;::max();
+    ASSERT_EQ(tester_binaryRegOp_sge(lhs, rhs), false);
+    rhs = 0;
+    ASSERT_EQ(tester_binaryRegOp_sge(lhs, rhs), true);
+    rhs = -1;
+    ASSERT_EQ(tester_binaryRegOp_sge(lhs, rhs), true);
+}
+
+TEST_F(FpySequencerTester, flt) {
+    F64 lhs = 0;
+    F64 rhs = std::numeric_limits&lt;F64&gt;::max();
+
+    I64 ilhs;
+    memcpy(&amp;ilhs, &amp;lhs, sizeof(ilhs));
+    I64 irhs;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_flt(ilhs, irhs), true);
+
+    rhs = 0;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_flt(ilhs, irhs), false);
+
+    rhs = -1;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_flt(ilhs, irhs), false);
+
+    rhs = std::numeric_limits&lt;F64&gt;::quiet_NaN();
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_flt(ilhs, irhs), false);
+}
+
+TEST_F(FpySequencerTester, fle) {
+    F64 lhs = 0;
+    F64 rhs = std::numeric_limits&lt;F64&gt;::max();
+
+    I64 ilhs;
+    memcpy(&amp;ilhs, &amp;lhs, sizeof(ilhs));
+    I64 irhs;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_fle(ilhs, irhs), true);
+
+    rhs = 0;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_fle(ilhs, irhs), true);
+
+    rhs = -1;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_fle(ilhs, irhs), false);
+
+    rhs = std::numeric_limits&lt;F64&gt;::quiet_NaN();
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_fle(ilhs, irhs), false);
+}
+
+TEST_F(FpySequencerTester, fgt) {
+    F64 lhs = 0;
+    F64 rhs = std::numeric_limits&lt;F64&gt;::max();
+
+    I64 ilhs;
+    memcpy(&amp;ilhs, &amp;lhs, sizeof(ilhs));
+    I64 irhs;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_fgt(ilhs, irhs), false);
+
+    rhs = 0;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_fgt(ilhs, irhs), false);
+
+    rhs = -1;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_fgt(ilhs, irhs), true);
+
+    rhs = std::numeric_limits&lt;F64&gt;::quiet_NaN();
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_fgt(ilhs, irhs), false);
+}
+
+TEST_F(FpySequencerTester, fge) {
+    F64 lhs = 0;
+    F64 rhs = std::numeric_limits&lt;F64&gt;::max();
+
+    I64 ilhs;
+    memcpy(&amp;ilhs, &amp;lhs, sizeof(ilhs));
+    I64 irhs;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_fge(ilhs, irhs), false);
+
+    rhs = 0;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_fge(ilhs, irhs), true);
+
+    rhs = -1;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_fge(ilhs, irhs), true);
+
+    rhs = std::numeric_limits&lt;F64&gt;::quiet_NaN();
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_fge(ilhs, irhs), false);
+}
+
+TEST_F(FpySequencerTester, feq) {
+    F64 lhs = 0;
+    F64 rhs = std::numeric_limits&lt;F64&gt;::max();
+
+    I64 ilhs;
+    memcpy(&amp;ilhs, &amp;lhs, sizeof(ilhs));
+    I64 irhs;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_feq(ilhs, irhs), false);
+
+    rhs = 0;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_feq(ilhs, irhs), true);
+
+    rhs = -1;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_feq(ilhs, irhs), false);
+
+    rhs = std::numeric_limits&lt;F64&gt;::quiet_NaN();
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_feq(ilhs, irhs), false);
+}
+
+TEST_F(FpySequencerTester, fne) {
+    F64 lhs = 0;
+    F64 rhs = std::numeric_limits&lt;F64&gt;::max();
+
+    I64 ilhs;
+    memcpy(&amp;ilhs, &amp;lhs, sizeof(ilhs));
+    I64 irhs;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_fne(ilhs, irhs), true);
+
+    rhs = 0;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_fne(ilhs, irhs), false);
+
+    rhs = -1;
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_fne(ilhs, irhs), true);
+
+    rhs = std::numeric_limits&lt;F64&gt;::quiet_NaN();
+    memcpy(&amp;irhs, &amp;rhs, sizeof(irhs));
+    ASSERT_EQ(tester_binaryRegOp_fne(ilhs, irhs), false);
+}
+
+TEST_F(FpySequencerTester, setReg) {
+    FpySequencer_SetRegDirective directive(0, -123);
+    DirectiveError err = DirectiveError::NO_ERROR;
+    Signal result = tester_setReg_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;regs[0], -123);
+
+    directive.set_dest(Fpy::NUM_REGISTERS);
+    result = tester_setReg_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_failure);
+    ASSERT_EQ(err, DirectiveError::REGISTER_OUT_OF_BOUNDS);
+}
+
+TEST_F(FpySequencerTester, unaryRegOp) {
+    // Test NOT
+    FpySequencer_UnaryRegOpDirective directiveNOT(0, 1, Fpy::DirectiveId::NOT);
+    tester_get_m_runtime_ptr()-&gt;regs[0] = true;
+    DirectiveError err = DirectiveError::NO_ERROR;
+    Signal result = tester_unaryRegOp_directiveHandler(directiveNOT, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;regs[1], false);
+
+    // Test out-of-bounds register index
+    FpySequencer_UnaryRegOpDirective directiveOOB(Fpy::NUM_REGISTERS, 1, Fpy::DirectiveId::FPEXT);
+    result = tester_unaryRegOp_directiveHandler(directiveOOB, err);
+    ASSERT_EQ(result, Signal::stmtResponse_failure);
+    ASSERT_EQ(err, DirectiveError::REGISTER_OUT_OF_BOUNDS);
+
+    // Test invalid operation
+    FpySequencer_UnaryRegOpDirective directiveInvalid(0, 1, Fpy::DirectiveId::NO_OP);
+    ASSERT_DEATH_IF_SUPPORTED(tester_unaryRegOp_directiveHandler(directiveInvalid, err), "Assert: ");
+}
+
+
+TEST_F(FpySequencerTester, not) {
+    ASSERT_EQ(tester_unaryRegOp_not(true), false);
+}
+
+TEST_F(FpySequencerTester, fptrunc) {
+    F64 src = 123.123;
+    F32 expected = static_cast&lt;F32&gt;(src);
+
+    I64 res = tester_unaryRegOp_fptrunc(*reinterpret_cast&lt;I64*&gt;(&amp;src));
+    I32 res_trunc = static_cast&lt;I32&gt;(res);
+    F32 res_f;
+    memcpy(&amp;res_f, &amp;res_trunc, sizeof(res_f));
+    ASSERT_EQ(res_f, expected);
+}
+
+TEST_F(FpySequencerTester, fpext) {
+    F32 src = 123.123f;
+    F64 expected = static_cast&lt;F64&gt;(src);
+
+    I32 isrc;
+    memcpy(&amp;isrc, &amp;src, sizeof(isrc));
+    I64 isrc_ext = static_cast&lt;I64&gt;(isrc);
+
+    I64 res = tester_unaryRegOp_fpext(isrc_ext);
+    F64 res_f;
+    memcpy(&amp;res_f, &amp;res, sizeof(res_f));
+    ASSERT_EQ(res_f, expected);
+}
+
+TEST_F(FpySequencerTester, fptosi) {
+    F64 src = 123.123;
+    I64 expected = static_cast&lt;I64&gt;(src);
+
+    I64 isrc;
+    memcpy(&amp;isrc, &amp;src, sizeof(isrc));
+
+    I64 res = tester_unaryRegOp_fptosi(isrc);
+    ASSERT_EQ(res, expected);
+}
+
+TEST_F(FpySequencerTester, sitofp) {
+    I64 src = 123;
+    F64 expected = static_cast&lt;F64&gt;(src);
+
+    I64 res = tester_unaryRegOp_sitofp(src);
+    F64 fres;
+    memcpy(&amp;fres, &amp;res, sizeof(res));
+    ASSERT_EQ(fres, expected);
+}
+
+TEST_F(FpySequencerTester, fptoui) {
+    F64 src = 123.123;
+    U64 expected = static_cast&lt;U64&gt;(src);
+
+    I64 isrc;
+    memcpy(&amp;isrc, &amp;src, sizeof(isrc));
+
+    I64 res = tester_unaryRegOp_fptoui(isrc);
+    ASSERT_EQ(static_cast&lt;U64&gt;(res), expected);
+}
+
+TEST_F(FpySequencerTester, uitofp) {
+    U64 src = std::numeric_limits&lt;U64&gt;::max();
+    F64 expected = static_cast&lt;F64&gt;(src);
+
+    I64 res = tester_unaryRegOp_uitofp(static_cast&lt;I64&gt;(src));
+    F64 fres;
+    memcpy(&amp;fres, &amp;res, sizeof(res));
+    ASSERT_EQ(fres, expected);
+}
+
+TEST_F(FpySequencerTester, exit) {
+    FpySequencer_ExitDirective directive(true);
+    DirectiveError err = DirectiveError::NO_ERROR;
+    tester_get_m_sequenceObj_ptr()-&gt;get_header().set_statementCount(123);
+    Signal result = tester_exit_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_success);
+    ASSERT_EQ(err, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_sequenceObj_ptr()-&gt;get_header().get_statementCount(), 123);
+
+    directive.set_success(false);
+    result = tester_exit_directiveHandler(directive, err);
+    ASSERT_EQ(result, Signal::stmtResponse_failure);
+    ASSERT_EQ(err, DirectiveError::DELIBERATE_FAILURE);
+}
+
+TEST_F(FpySequencerTester, checkShouldWakeMismatchBase) {
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 0, 100, 100);
+    setTestTime(testTime);
+    tester_get_m_runtime_ptr()-&gt;wakeupTime = Fw::Time(TimeBase::TB_DONT_CARE, 0, 100, 100);
+    Signal result = tester_checkShouldWake();
+    ASSERT_EQ(result, Signal::result_timeOpFailed);
+}
+
+TEST_F(FpySequencerTester, checkShouldWakeMismatchContext) {
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 0, 100, 100);
+    setTestTime(testTime);
+    tester_get_m_runtime_ptr()-&gt;wakeupTime = Fw::Time(TimeBase::TB_WORKSTATION_TIME, 10, 100, 100);
+    Signal result = tester_checkShouldWake();
+    ASSERT_EQ(result, Signal::result_checkShouldWake_wakeup);
+}
+
+TEST_F(FpySequencerTester, checkShouldWake) {
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 0, 100, 100);
+    setTestTime(testTime);
+
+    // wake up at 200, currently 100
+    tester_get_m_runtime_ptr()-&gt;wakeupTime = Fw::Time(TimeBase::TB_WORKSTATION_TIME, 0, 200, 100);
+    Signal result = tester_checkShouldWake();
+    ASSERT_EQ(result, Signal::result_checkShouldWake_keepSleeping);
+
+    // wake up at 50, currently 100
+    tester_get_m_runtime_ptr()-&gt;wakeupTime = Fw::Time(TimeBase::TB_WORKSTATION_TIME, 0, 50, 100);
+    result = tester_checkShouldWake();
+    ASSERT_EQ(result, Signal::result_checkShouldWake_wakeup);
+}
+
+TEST_F(FpySequencerTester, checkStatementTimeout) {
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 0, 300, 100);
+    setTestTime(testTime);
+
+    // no timeout
+    F32 timeout = 0;
+    paramSet_STATEMENT_TIMEOUT_SECS(timeout, Fw::ParamValid::VALID);
+    paramSend_STATEMENT_TIMEOUT_SECS(0, 0);
+    Signal result = tester_checkStatementTimeout();
+    ASSERT_EQ(result, Signal::result_checkStatementTimeout_noTimeout);
+
+    timeout = 10;
+    paramSet_STATEMENT_TIMEOUT_SECS(timeout, Fw::ParamValid::VALID);
+    paramSend_STATEMENT_TIMEOUT_SECS(0, 0);
+
+    // dispatched at 200, currently 300 (should time out)
+    tester_get_m_runtime_ptr()-&gt;currentStatementDispatchTime = Fw::Time(TimeBase::TB_WORKSTATION_TIME, 0, 200, 100);
+    result = tester_checkStatementTimeout();
+    ASSERT_EQ(result, Signal::result_checkStatementTimeout_statementTimeout);
+
+    // dispatched at 295, currently 300 (should not time out)
+    tester_get_m_runtime_ptr()-&gt;currentStatementDispatchTime = Fw::Time(TimeBase::TB_WORKSTATION_TIME, 0, 295, 100);
+    result = tester_checkStatementTimeout();
+    ASSERT_EQ(result, Signal::result_checkStatementTimeout_noTimeout);
+
+    // dispatched at 290, currently 300 (should time out)
+    tester_get_m_runtime_ptr()-&gt;currentStatementDispatchTime = Fw::Time(TimeBase::TB_WORKSTATION_TIME, 0, 290, 100);
+    result = tester_checkStatementTimeout();
+    ASSERT_EQ(result, Signal::result_checkStatementTimeout_statementTimeout);
+}
+
+TEST_F(FpySequencerTester, checkStatementTimeoutMismatchBase) {
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 0, 300, 100);
+    setTestTime(testTime);
+
+    F32 timeout = 10;
+    paramSet_STATEMENT_TIMEOUT_SECS(timeout, Fw::ParamValid::VALID);
+    paramSend_STATEMENT_TIMEOUT_SECS(0, 0);
+    tester_get_m_runtime_ptr()-&gt;currentStatementDispatchTime = Fw::Time(TimeBase::TB_DONT_CARE, 0, 200, 100);
+    Signal result = tester_checkStatementTimeout();
+    ASSERT_EQ(result, Signal::result_timeOpFailed);
+}
+
+TEST_F(FpySequencerTester, checkStatementTimeoutMismatchContext) {
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 0, 300, 100);
+    setTestTime(testTime);
+
+    F32 timeout = 10;
+    paramSet_STATEMENT_TIMEOUT_SECS(timeout, Fw::ParamValid::VALID);
+    paramSend_STATEMENT_TIMEOUT_SECS(0, 0);
+    tester_get_m_runtime_ptr()-&gt;currentStatementDispatchTime = Fw::Time(TimeBase::TB_WORKSTATION_TIME, 10, 200, 100);
+    Signal result = tester_checkStatementTimeout();
+    ASSERT_EQ(result, Signal::result_checkStatementTimeout_statementTimeout);
+}
+
+TEST_F(FpySequencerTester, cmd_RUN) {
+    allocMem();
+    add_NO_OP();
+    writeToFile("test.bin");
+    sendCmd_RUN(0, 0, Fw::String("test.bin"), FpySequencer_BlockState::BLOCK);
+    dispatchUntilState(State::VALIDATING);
+    ASSERT_EQ(tester_get_m_sequencesStarted(), 0);
+    ASSERT_EQ(tester_get_m_statementsDispatched(), 0);
+    dispatchUntilState(State::RUNNING_AWAITING_STATEMENT_RESPONSE);
+    ASSERT_from_seqStartOut_SIZE(1);
+    ASSERT_from_seqStartOut(0, Fw::String("test.bin"));
+    ASSERT_EQ(tester_get_m_sequencesStarted(), 1);
+    dispatchUntilState(State::IDLE);
+    ASSERT_EQ(tester_get_m_statementsDispatched(), 1);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_RUN(), 0, Fw::CmdResponse::OK);
+    ASSERT_from_seqDoneOut_SIZE(1);
+    ASSERT_from_seqDoneOut(0, 0, 0, Fw::CmdResponse::OK);
+    this-&gt;clearHistory();
+
+    sendCmd_RUN(0, 0, Fw::String("test.bin"), FpySequencer_BlockState::NO_BLOCK);
+    this-&gt;tester_doDispatch();
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_RUN(), 0, Fw::CmdResponse::OK);
+    ASSERT_from_seqDoneOut_SIZE(0);
+    dispatchUntilState(State::VALIDATING);
+    ASSERT_from_seqStartOut_SIZE(1);
+    ASSERT_from_seqStartOut(0, Fw::String("test.bin"));
+    dispatchUntilState(State::RUNNING_AWAITING_STATEMENT_RESPONSE);
+    dispatchUntilState(State::IDLE);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_from_seqDoneOut_SIZE(1);
+    ASSERT_from_seqDoneOut(0, 0, 0, Fw::CmdResponse::OK);
+
+    this-&gt;clearHistory();
+
+    // blocking will take some queue emptying to respond
+    sendCmd_RUN(0, 0, Fw::String("invalid seq"), FpySequencer_BlockState::BLOCK);
+
+    // should try validating, then go to idle cuz it failed
+    dispatchUntilState(State::VALIDATING);
+    dispatchUntilState(State::IDLE);
+
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_RUN(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    ASSERT_from_seqDoneOut_SIZE(1);
+    ASSERT_from_seqDoneOut(0, 0, 0, Fw::CmdResponse::EXECUTION_ERROR);
+
+    this-&gt;clearHistory();
+
+    // try running while already running
+    this-&gt;tester_setState(State::RUNNING_DISPATCH_STATEMENT);
+    sendCmd_RUN(0, 0, Fw::String("invalid seq"), FpySequencer_BlockState::BLOCK);
+    // dispatch cmd
+    this-&gt;tester_doDispatch();
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_RUN(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    removeFile("test.bin");
+}
+
+TEST_F(FpySequencerTester, cmd_VALIDATE) {
+    sendCmd_VALIDATE(0, 0, Fw::String("invalid seq"));
+    // should try validating, then go to idle cuz it failed
+    dispatchUntilState(State::VALIDATING);
+    dispatchUntilState(State::IDLE);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_VALIDATE(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    this-&gt;clearHistory();
+
+    allocMem();
+    add_NO_OP();
+    writeToFile("test.bin");
+    sendCmd_VALIDATE(0, 0, Fw::String("test.bin"));
+    dispatchUntilState(State::VALIDATING);
+    ASSERT_EQ(tester_get_m_sequencesStarted(), 0);
+    ASSERT_EQ(tester_get_m_statementsDispatched(), 0);
+    dispatchUntilState(State::AWAITING_CMD_RUN_VALIDATED);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_VALIDATE(), 0, Fw::CmdResponse::OK);
+    this-&gt;clearHistory();
+
+    this-&gt;tester_setState(State::VALIDATING);
+    sendCmd_VALIDATE(0, 0, Fw::String("test.bin"));
+    this-&gt;tester_doDispatch();
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_VALIDATE(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+}
+
+TEST_F(FpySequencerTester, cmd_RUN_VALIDATED) {
+    // should fail because in idle
+    this-&gt;tester_setState(State::IDLE);
+    sendCmd_RUN_VALIDATED(0, 0, FpySequencer_BlockState::NO_BLOCK);
+    dispatchCurrentMessages(cmp);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_RUN_VALIDATED(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    this-&gt;clearHistory();
+
+    allocMem();
+    add_NO_OP();
+    writeToFile("test.bin");
+    sendCmd_VALIDATE(0, 0, Fw::String("test.bin"));
+    dispatchUntilState(State::AWAITING_CMD_RUN_VALIDATED);
+    this-&gt;clearHistory();
+    // should succeed immediately
+    sendCmd_RUN_VALIDATED(0, 0, FpySequencer_BlockState::NO_BLOCK);
+    this-&gt;tester_doDispatch();
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_RUN_VALIDATED(), 0, Fw::CmdResponse::OK);
+    // should go back to IDLE because sequence is bad
+    dispatchUntilState(State::IDLE);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    clearHistory();
+
+    sendCmd_VALIDATE(0, 0, Fw::String("test.bin"));
+    dispatchUntilState(State::AWAITING_CMD_RUN_VALIDATED);
+    this-&gt;clearHistory();
+    // should succeed immediately
+    sendCmd_RUN_VALIDATED(0, 0, FpySequencer_BlockState::BLOCK);
+    this-&gt;tester_doDispatch();
+    ASSERT_CMD_RESPONSE_SIZE(0);
+    // should go back to IDLE because sequence is bad
+    dispatchUntilState(State::IDLE);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_RUN_VALIDATED(), 0, Fw::CmdResponse::OK);
+}
+
+TEST_F(FpySequencerTester, cmd_CANCEL) {
+    this-&gt;tester_setState(State::IDLE);
+    sendCmd_CANCEL(0, 0);
+    this-&gt;tester_doDispatch();
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    // should fail if we're in IDLE
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_CANCEL(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+
+    dispatchCurrentMessages(cmp);
+    ASSERT_EQ(this-&gt;tester_getState(), State::IDLE);
+
+    this-&gt;clearHistory();
+    this-&gt;tester_setState(State::RUNNING_SLEEPING);
+    sendCmd_CANCEL(0, 0);
+    this-&gt;tester_doDispatch();
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    // should succeed instantly
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_CANCEL(), 0, Fw::CmdResponse::OK);
+    // should go back to idle
+    dispatchUntilState(State::IDLE);
+}
+
+TEST_F(FpySequencerTester, cmd_DEBUG_CLEAR_BREAKPOINT) {
+    tester_get_m_debug_ptr()-&gt;breakOnBreakpoint = true;
+    sendCmd_DEBUG_CLEAR_BREAKPOINT(0, 0);
+    // dispatch cmd
+    this-&gt;tester_doDispatch();
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    // should always work
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_DEBUG_CLEAR_BREAKPOINT(), 0, Fw::CmdResponse::OK);
+    // dispatch signal
+    this-&gt;tester_doDispatch();
+    ASSERT_FALSE(tester_get_m_debug_ptr()-&gt;breakOnBreakpoint);
+}
+
+TEST_F(FpySequencerTester, cmd_DEBUG_SET_BREAKPOINT) {
+    sendCmd_DEBUG_SET_BREAKPOINT(0, 0, 123, true);
+    // dispatch cmd handler
+    this-&gt;tester_doDispatch();
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    // should always work
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_DEBUG_SET_BREAKPOINT(), 0, Fw::CmdResponse::OK);
+    // dispatch signal
+    this-&gt;tester_doDispatch();
+    ASSERT_TRUE(tester_get_m_debug_ptr()-&gt;breakOnBreakpoint);
+    ASSERT_TRUE(tester_get_m_debug_ptr()-&gt;breakOnlyOnceOnBreakpoint);
+    ASSERT_EQ(tester_get_m_debug_ptr()-&gt;breakpointIndex, 123);
+}
+
+TEST_F(FpySequencerTester, cmd_DEBUG_BREAK) {
+    this-&gt;tester_setState(State::IDLE);
+    tester_get_m_debug_ptr()-&gt;breakOnBreakpoint = false;
+    tester_get_m_debug_ptr()-&gt;breakOnlyOnceOnBreakpoint = false;
+    sendCmd_DEBUG_BREAK(0, 0, true);
+    dispatchCurrentMessages(cmp);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    // should fail in idle
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_DEBUG_BREAK(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    ASSERT_FALSE(tester_get_m_debug_ptr()-&gt;breakOnBreakpoint);
+
+    // now try while running
+    this-&gt;clearHistory();
+    this-&gt;tester_setState(State::RUNNING_AWAITING_STATEMENT_RESPONSE);
+    sendCmd_DEBUG_BREAK(0, 0, true);
+    // dispatch cmd handler
+    dispatchCurrentMessages(cmp);
+    // dispatch signal handler
+    dispatchCurrentMessages(cmp);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    // should work in running
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_DEBUG_BREAK(), 0, Fw::CmdResponse::OK);
+    ASSERT_TRUE(tester_get_m_debug_ptr()-&gt;breakOnBreakpoint);
+    ASSERT_TRUE(tester_get_m_debug_ptr()-&gt;breakOnlyOnceOnBreakpoint);
+}
+
+TEST_F(FpySequencerTester, cmd_DEBUG_CONTINUE) {
+    this-&gt;tester_setState(State::IDLE);
+    sendCmd_DEBUG_CONTINUE(0, 0);
+    this-&gt;tester_doDispatch();
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    // should fail in IDLE
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_DEBUG_CONTINUE(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    this-&gt;clearHistory();
+
+    this-&gt;tester_setState(State::RUNNING_DEBUG_BROKEN);
+    sendCmd_DEBUG_CONTINUE(0, 0);
+    // dispatch cmd handler
+    this-&gt;tester_doDispatch();
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    // should work in debug_broken
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_DEBUG_CONTINUE(), 0, Fw::CmdResponse::OK);
+    // dispatch signal handler
+    this-&gt;tester_doDispatch();
+    // should have gone to dispatch stmt
+    ASSERT_EQ(this-&gt;tester_getState(), State::RUNNING_DISPATCH_STATEMENT);
+}
+
+TEST_F(FpySequencerTester, readHeader) {
+    U8 seqBuf[Fpy::Header::SERIALIZED_SIZE] = {0};
+    tester_get_m_sequenceBuffer_ptr()-&gt;setExtBuffer(seqBuf, sizeof(seqBuf));
+    Fpy::Header header;
+    header.set_argumentCount(Fpy::MAX_SEQUENCE_ARG_COUNT);
+    header.set_bodySize(50);
+    header.set_schemaVersion(Fpy::SCHEMA_VERSION);
+    header.set_statementCount(Fpy::MAX_SEQUENCE_STATEMENT_COUNT);
+
+    ASSERT_EQ(tester_get_m_sequenceBuffer_ptr()-&gt;serialize(header), Fw::SerializeStatus::FW_SERIALIZE_OK);
+
+    ASSERT_EQ(tester_readHeader(), Fw::Success::SUCCESS);
+    ASSERT_EQ(tester_get_m_sequenceObj_ptr()-&gt;get_header(), header);
+
+    // check not enough bytes
+    tester_get_m_sequenceBuffer_ptr()-&gt;resetDeser();
+    tester_get_m_sequenceBuffer_ptr()-&gt;setBuffLen(tester_get_m_sequenceBuffer_ptr()-&gt;getBuffLength() - 1);
+    ASSERT_EQ(tester_readHeader(), Fw::Success::FAILURE);
+    ASSERT_EVENTS_FileReadDeserializeError_SIZE(1);
+
+    // check wrong schema version
+    tester_get_m_sequenceBuffer_ptr()-&gt;resetSer();
+    header.set_schemaVersion(Fpy::SCHEMA_VERSION + 1);
+    ASSERT_EQ(tester_get_m_sequenceBuffer_ptr()-&gt;serialize(header), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    ASSERT_EQ(tester_readHeader(), Fw::Success::FAILURE);
+    ASSERT_EVENTS_WrongSchemaVersion_SIZE(1);
+    header.set_schemaVersion(Fpy::SCHEMA_VERSION);
+    clearHistory();
+
+    // check too many args
+    tester_get_m_sequenceBuffer_ptr()-&gt;resetSer();
+    header.set_argumentCount(Fpy::MAX_SEQUENCE_ARG_COUNT + 1);
+    ASSERT_EQ(tester_get_m_sequenceBuffer_ptr()-&gt;serialize(header), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    ASSERT_EQ(tester_readHeader(), Fw::Success::FAILURE);
+    ASSERT_EVENTS_TooManySequenceArgs_SIZE(1);
+    header.set_argumentCount(Fpy::MAX_SEQUENCE_ARG_COUNT);
+
+    // check too many stmts
+    tester_get_m_sequenceBuffer_ptr()-&gt;resetSer();
+    header.set_statementCount(Fpy::MAX_SEQUENCE_STATEMENT_COUNT + 1);
+    ASSERT_EQ(tester_get_m_sequenceBuffer_ptr()-&gt;serialize(header), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    ASSERT_EQ(tester_readHeader(), Fw::Success::FAILURE);
+    ASSERT_EVENTS_TooManySequenceStatements_SIZE(1);
+}
+
+TEST_F(FpySequencerTester, readBody) {
+    U8 data[Fpy::MAX_SEQUENCE_ARG_COUNT + Fpy::MAX_SEQUENCE_STATEMENT_COUNT * Fpy::Statement::SERIALIZED_SIZE];
+
+    tester_get_m_sequenceBuffer_ptr()-&gt;setExtBuffer(data, sizeof(data));
+    // write some args mappings
+    for (U32 ii = 0; ii &lt; Fpy::MAX_SEQUENCE_ARG_COUNT; ii++) {
+        // map arg idx ii to serReg pos 123
+        ASSERT_EQ(tester_get_m_sequenceBuffer_ptr()-&gt;serialize(static_cast&lt;U8&gt;(123)),
+                  Fw::SerializeStatus::FW_SERIALIZE_OK);
+    }
+    // write some statements
+    Fpy::Statement stmt(Fpy::DirectiveId::NO_OP, Fw::StatementArgBuffer());
+    for (U32 ii = 0; ii &lt; Fpy::MAX_SEQUENCE_STATEMENT_COUNT; ii++) {
+        ASSERT_EQ(tester_get_m_sequenceBuffer_ptr()-&gt;serialize(stmt), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    }
+    tester_get_m_sequenceObj_ptr()-&gt;get_header().set_argumentCount(Fpy::MAX_SEQUENCE_ARG_COUNT);
+    tester_get_m_sequenceObj_ptr()-&gt;get_header().set_statementCount(Fpy::MAX_SEQUENCE_STATEMENT_COUNT);
+
+    ASSERT_EQ(tester_readBody(), Fw::Success::SUCCESS);
+
+    for (U32 ii = 0; ii &lt; Fpy::MAX_SEQUENCE_ARG_COUNT; ii++) {
+        ASSERT_EQ(tester_get_m_sequenceObj_ptr()-&gt;get_args()[ii], 123);
+    }
+
+    for (U32 ii = 0; ii &lt; Fpy::MAX_SEQUENCE_STATEMENT_COUNT; ii++) {
+        ASSERT_EQ(tester_get_m_sequenceObj_ptr()-&gt;get_statements()[ii], stmt);
+    }
+
+    tester_get_m_sequenceBuffer_ptr()-&gt;resetSer();
+    tester_get_m_sequenceObj_ptr()-&gt;get_header().set_statementCount(0);
+    // now see what happens if we don't write enough args
+    for (U32 ii = 0; ii &lt; Fpy::MAX_SEQUENCE_ARG_COUNT - 1; ii++) {
+        // map arg idx ii to serReg pos 123
+        ASSERT_EQ(tester_get_m_sequenceBuffer_ptr()-&gt;serialize(static_cast&lt;U8&gt;(123)),
+                  Fw::SerializeStatus::FW_SERIALIZE_OK);
+    }
+    // don't write any stmts otherwise their bytes will be interpreted as arg mappings and it will trigger
+    // the wrong branch
+    ASSERT_EQ(tester_readBody(), Fw::Success::FAILURE);
+
+    // now see what happens if we don't write enough stmts
+    tester_get_m_sequenceBuffer_ptr()-&gt;resetSer();
+    tester_get_m_sequenceObj_ptr()-&gt;get_header().set_argumentCount(Fpy::MAX_SEQUENCE_ARG_COUNT);
+    tester_get_m_sequenceObj_ptr()-&gt;get_header().set_statementCount(Fpy::MAX_SEQUENCE_STATEMENT_COUNT);
+    for (U32 ii = 0; ii &lt; Fpy::MAX_SEQUENCE_ARG_COUNT; ii++) {
+        // map arg idx ii to serReg pos 123
+        ASSERT_EQ(tester_get_m_sequenceBuffer_ptr()-&gt;serialize(static_cast&lt;U8&gt;(123)),
+                  Fw::SerializeStatus::FW_SERIALIZE_OK);
+    }
+    // the -1 here is the intended mistake
+    for (U32 ii = 0; ii &lt; Fpy::MAX_SEQUENCE_STATEMENT_COUNT - 1; ii++) {
+        ASSERT_EQ(tester_get_m_sequenceBuffer_ptr()-&gt;serialize(stmt), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    }
+    ASSERT_EQ(tester_readBody(), Fw::Success::FAILURE);
+}
+
+TEST_F(FpySequencerTester, readFooter) {
+    U8 data[Fpy::Footer::SERIALIZED_SIZE];
+
+    tester_get_m_sequenceBuffer_ptr()-&gt;setExtBuffer(data, sizeof(data));
+
+    tester_set_m_computedCRC(0x12345678);
+    Fpy::Footer footer(static_cast&lt;U32&gt;(~0x12345678));
+    ASSERT_EQ(tester_get_m_sequenceBuffer_ptr()-&gt;serialize(footer), Fw::SerializeStatus::FW_SERIALIZE_OK);
+
+    ASSERT_EQ(tester_readFooter(), Fw::Success::SUCCESS);
+    ASSERT_EQ(tester_get_m_sequenceObj_ptr()-&gt;get_footer(), footer);
+
+    tester_get_m_sequenceBuffer_ptr()-&gt;resetDeser();
+    // try wrong crc
+    tester_set_m_computedCRC(0x44444444);
+    ASSERT_EQ(tester_readFooter(), Fw::Success::FAILURE);
+    ASSERT_EVENTS_WrongCRC_SIZE(1);
+
+    // try not enough remaining
+    ASSERT_EQ(tester_get_m_sequenceBuffer_ptr()-&gt;setBuffLen(tester_get_m_sequenceBuffer_ptr()-&gt;getBuffLength() - 1),
+              Fw::SerializeStatus::FW_SERIALIZE_OK);
+    ASSERT_EQ(tester_readFooter(), Fw::Success::FAILURE);
+}
+
+TEST_F(FpySequencerTester, readBytes) {
+    // no statements, just header and footer
+    writeToFile("test.bin");
+    U8 data[Fpy::Sequence::SERIALIZED_SIZE] = {0};
+    tester_get_m_sequenceBuffer_ptr()-&gt;setExtBuffer(data, sizeof(data));
+    Os::File seqFile;
+    ASSERT_EQ(seqFile.open("test.bin", Os::File::OPEN_READ), Os::File::OP_OK);
+    ASSERT_EQ(tester_readBytes(seqFile, Fpy::Header::SERIALIZED_SIZE, FpySequencer_FileReadStage::HEADER, true), Fw::Success::SUCCESS);
+    seqFile.close();
+
+    // check capacity too low
+    tester_get_m_sequenceBuffer_ptr()-&gt;setExtBuffer(data, Fpy::Header::SERIALIZED_SIZE - 1);
+    ASSERT_EQ(seqFile.open("test.bin", Os::File::OPEN_READ), Os::File::OP_OK);
+    ASSERT_EQ(tester_readBytes(seqFile, Fpy::Header::SERIALIZED_SIZE, FpySequencer_FileReadStage::HEADER, true), Fw::Success::FAILURE);
+    seqFile.close();
+
+    // check not enough bytes
+    tester_get_m_sequenceBuffer_ptr()-&gt;setExtBuffer(data,
+                                                    Fpy::Header::SERIALIZED_SIZE + Fpy::Footer::SERIALIZED_SIZE + 1);
+    ASSERT_EQ(seqFile.open("test.bin", Os::File::OPEN_READ), Os::File::OP_OK);
+    ASSERT_EQ(tester_readBytes(seqFile, Fpy::Header::SERIALIZED_SIZE + Fpy::Footer::SERIALIZED_SIZE + 1, FpySequencer_FileReadStage::HEADER, true),
+              Fw::Success::FAILURE);
+
+    seqFile.close();
+    removeFile("test.bin");
+
+    // read after close
+    ASSERT_DEATH_IF_SUPPORTED(
+        tester_readBytes(seqFile, Fpy::Header::SERIALIZED_SIZE + Fpy::Footer::SERIALIZED_SIZE, FpySequencer_FileReadStage::HEADER, true), "Assert: ");
+}
+
+TEST_F(FpySequencerTester, validate) {
+    // nominal
+    add_NO_OP();
+    writeToFile("test.bin");
+    U8 data[Fpy::Sequence::SERIALIZED_SIZE] = {0};
+    tester_get_m_sequenceBuffer_ptr()-&gt;setExtBuffer(data, sizeof(data));
+    tester_set_m_sequenceFilePath("test.bin");
+    ASSERT_EQ(tester_validate(), Fw::Success::SUCCESS);
+
+    // cause validation failure to open
+    removeFile("test.bin");
+    ASSERT_EQ(tester_validate(), Fw::Success::FAILURE);
+    ASSERT_EVENTS_FileOpenError_SIZE(1);
+    this-&gt;clearHistory();
+
+    // cause not enough bytes for header
+    tester_get_m_sequenceBuffer_ptr()-&gt;resetSer();
+    writeToFile("test.bin", Fpy::Header::SERIALIZED_SIZE - 1);
+    ASSERT_EQ(tester_validate(), Fw::Success::FAILURE);
+    ASSERT_EVENTS_EndOfFileError_SIZE(1);
+    this-&gt;clearHistory();
+    removeFile("test.bin");
+
+    tester_get_m_sequenceBuffer_ptr()-&gt;resetSer();
+    // cause fail to validate header
+    seq.get_header().set_schemaVersion(Fpy::SCHEMA_VERSION + 1);
+    writeToFile("test.bin");
+    ASSERT_EQ(tester_validate(), Fw::Success::FAILURE);
+    ASSERT_EVENTS_WrongSchemaVersion_SIZE(1);
+    seq.get_header().set_schemaVersion(Fpy::SCHEMA_VERSION);
+    this-&gt;clearHistory();
+    removeFile("test.bin");
+
+    // cause not enough bytes for body
+    writeToFile("test.bin", Fpy::Header::SERIALIZED_SIZE + 1);
+    ASSERT_EQ(tester_validate(), Fw::Success::FAILURE);
+    ASSERT_EVENTS_EndOfFileError_SIZE(1);
+    this-&gt;clearHistory();
+    removeFile("test.bin");
+
+    // cause body deser error
+    // TODO cannot figure out how to cause this
+    // // bad statement arg buf len
+    // seq.get_statements()[0].get_argBuf().m_serLoc = Fpy::Sequence::SERIALIZED_SIZE + 1;
+    // writeToFile("test.bin");
+    // ASSERT_EQ(cmp.validate(), Fw::Success::FAILURE);
+    // ASSERT_EVENTS_FileReadDeserializeError_SIZE(1);
+    // this-&gt;clearHistory();
+    // removeFile("test.bin");
+
+    // write some more bytes after the file end
+    writeToFile("test.bin");
+    Os::File file;
+    file.open("test.bin", Os::FileInterface::OPEN_APPEND);
+    U8 extraByte[1] = {0};
+    FwSizeType size = 1;
+    ASSERT_EQ(file.write(extraByte, size), Os::File::OP_OK);
+    file.close();
+    ASSERT_EQ(tester_validate(), Fw::Success::FAILURE);
+    ASSERT_EVENTS_ExtraBytesInSequence_SIZE(1);
+}
+
+TEST_F(FpySequencerTester, allocateBuffer) {
+    Fw::MallocAllocator alloc;
+    cmp.allocateBuffer(0, alloc, 100);
+    ASSERT_NE(tester_get_m_sequenceBuffer_ptr()-&gt;getBuffAddr(), nullptr);
+    ASSERT_EQ(tester_get_m_sequenceBuffer_ptr()-&gt;getBuffCapacity(), 100);
+    cmp.deallocateBuffer(alloc);
+    ASSERT_EQ(tester_get_m_sequenceBuffer_ptr()-&gt;getBuffAddr(), nullptr);
+    ASSERT_EQ(tester_get_m_sequenceBuffer_ptr()-&gt;getBuffCapacity(), 0);
+}
+
+// caught a bug
+TEST_F(FpySequencerTester, dispatchStatement) {
+    Fw::Time time(123, 123);
+    setTestTime(time);
+
+    add_NO_OP();
+    *(tester_get_m_sequenceObj_ptr()) = seq;
+    Signal result = tester_dispatchStatement();
+    ASSERT_EQ(result, Signal::result_dispatchStatement_success);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;currentStatementOpcode, Fpy::DirectiveId::NO_OP);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;currentStatementDispatchTime, time);
+    ASSERT_EQ(tester_get_m_statementsDispatched(), 1);
+    // try dispatching again, should fail cuz no more stmts
+    result = tester_dispatchStatement();
+    ASSERT_EQ(result, Signal::result_dispatchStatement_noMoreStatements);
+    ASSERT_EQ(tester_get_m_statementsDispatched(), 1);
+    // reset counter, try dispatching a bad statement
+    // TODO can't figure out how to do this without triggering compiler warning
+    // cmp.m_runtime.nextStatementIndex = 0;
+    // cmp.m_sequenceObj.get_statements()[0].set_opCode(reinterpret_cast&lt;Svc::Fpy::DirectiveId::T&gt;(200));
+    // result = cmp.dispatchStatement();
+    // ASSERT_EQ(result, Signal::result_dispatchStatement_failure);
+
+    clearSeq();
+    time = Fw::Time(456, 123);
+    setTestTime(time);
+    // okay try adding a command
+    add_CMD(123);
+    *(tester_get_m_sequenceObj_ptr()) = seq;
+    tester_get_m_runtime_ptr()-&gt;nextStatementIndex = 0;
+    result = tester_dispatchStatement();
+    ASSERT_EQ(result, Signal::result_dispatchStatement_success);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;currentStatementOpcode, Fpy::DirectiveId::CMD);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;currentCmdOpcode, 123);
+    ASSERT_EQ(tester_get_m_runtime_ptr()-&gt;currentStatementDispatchTime, time);
+
+    tester_get_m_runtime_ptr()-&gt;nextStatementIndex =
+        tester_get_m_sequenceObj_ptr()-&gt;get_header().get_statementCount() + 1;
+    ASSERT_DEATH_IF_SUPPORTED(tester_dispatchStatement(), "Assert: ");
+}
+
+TEST_F(FpySequencerTester, deserialize_waitRel) {
+    FpySequencer::DirectiveUnion actual;
+    FpySequencer_WaitRelDirective waitRel(123, 123);
+    add_WAIT_REL(waitRel);
+    Fw::Success result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::SUCCESS);
+    ASSERT_EQ(actual.waitRel, waitRel);
+    // write some junk after buf, make sure it fails
+    seq.get_statements()[0].get_argBuf().serialize(123);
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+    this-&gt;clearHistory();
+    // clear args, make sure it fails
+    seq.get_statements()[0].get_argBuf().resetSer();
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+}
+TEST_F(FpySequencerTester, deserialize_waitAbs) {
+    FpySequencer::DirectiveUnion actual;
+    FpySequencer_WaitAbsDirective waitAbs(Fw::Time(123, 123));
+    add_WAIT_ABS(waitAbs);
+    Fw::Success result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::SUCCESS);
+    ASSERT_EQ(actual.waitAbs, waitAbs);
+    // write some junk after buf, make sure it fails
+    seq.get_statements()[0].get_argBuf().serialize(123);
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+    this-&gt;clearHistory();
+    // clear args, make sure it fails
+    seq.get_statements()[0].get_argBuf().resetSer();
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+}
+
+TEST_F(FpySequencerTester, deserialize_setSerReg) {
+    FpySequencer::DirectiveUnion actual;
+    FpySequencer_SetSerRegDirective setSerReg(0, 123, 10);
+    add_SET_SER_REG(setSerReg);
+    Fw::Success result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::SUCCESS);
+    // for some reason, can't just use the equality method here... i get a huge asan err
+    ASSERT_EQ(actual.setSerReg.get__valueSize(), setSerReg.get__valueSize());
+    ASSERT_EQ(actual.setSerReg.get_index(), setSerReg.get_index());
+    ASSERT_EQ(memcmp(actual.setSerReg.get_value(), setSerReg.get_value(), setSerReg.get__valueSize()), 0);
+    // write some junk after buf, setserReg should eat it up and succeed
+    seq.get_statements()[0].get_argBuf().serialize(123);
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::SUCCESS);
+    this-&gt;clearHistory();
+    // clear buf, should fail cuz no valueSize or whatever
+    seq.get_statements()[0].get_argBuf().resetSer();
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+
+    this-&gt;clearHistory();
+    clearSeq();
+    // run with valueSize too big
+    if (Fpy::MAX_SERIALIZABLE_REGISTER_SIZE + 6 &lt;= FW_STATEMENT_ARG_BUFFER_MAX_SIZE) {
+        // we can test this
+        setSerReg = FpySequencer_SetSerRegDirective(0, 123, Fpy::MAX_SERIALIZABLE_REGISTER_SIZE + 1);
+        add_SET_SER_REG(setSerReg);
+        result = tester_deserializeDirective(seq.get_statements()[0], actual);
+        ASSERT_EQ(result, Fw::Success::FAILURE);
+        ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+    }
+}
+
+TEST_F(FpySequencerTester, deserialize_goto) {
+    FpySequencer::DirectiveUnion actual;
+    FpySequencer_GotoDirective gotoDir(123);
+    add_GOTO(gotoDir);
+    Fw::Success result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::SUCCESS);
+    ASSERT_EQ(actual.gotoDirective, gotoDir);
+    // write some junk after buf, make sure it fails
+    seq.get_statements()[0].get_argBuf().serialize(123);
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+    this-&gt;clearHistory();
+    // clear args, make sure it fails
+    seq.get_statements()[0].get_argBuf().resetSer();
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+}
+
+TEST_F(FpySequencerTester, deserialize_if) {
+    FpySequencer::DirectiveUnion actual;
+    FpySequencer_IfDirective ifDir(123, 9999);
+    add_IF(ifDir);
+    Fw::Success result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::SUCCESS);
+    ASSERT_EQ(actual.ifDirective, ifDir);
+    // write some junk after buf, make sure it fails
+    seq.get_statements()[0].get_argBuf().serialize(123);
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+    this-&gt;clearHistory();
+    // clear args, make sure it fails
+    seq.get_statements()[0].get_argBuf().resetSer();
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+}
+
+TEST_F(FpySequencerTester, deserialize_noOp) {
+    FpySequencer::DirectiveUnion actual;
+    FpySequencer_NoOpDirective noOp;
+    add_NO_OP();
+    Fw::Success result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::SUCCESS);
+    ASSERT_EQ(actual.noOp, noOp);
+    // write some junk after buf, make sure it fails
+    seq.get_statements()[0].get_argBuf().serialize(123);
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+    this-&gt;clearHistory();
+    // clear args, should succeed
+    seq.get_statements()[0].get_argBuf().resetSer();
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::SUCCESS);
+}
+
+TEST_F(FpySequencerTester, deserialize_getTlm) {
+    FpySequencer::DirectiveUnion actual;
+    FpySequencer_GetTlmDirective dir(123, 234, 456);
+    add_GET_TLM(dir);
+    Fw::Success result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::SUCCESS);
+    ASSERT_EQ(actual.getTlm, dir);
+    // write some junk after buf, make sure it fails
+    seq.get_statements()[0].get_argBuf().serialize(123);
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+    this-&gt;clearHistory();
+    // clear args, make sure it fails
+    seq.get_statements()[0].get_argBuf().resetSer();
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+}
+
+TEST_F(FpySequencerTester, deserialize_getPrm) {
+    FpySequencer::DirectiveUnion actual;
+    FpySequencer_GetPrmDirective dir(123, 456);
+    add_GET_PRM(dir);
+    Fw::Success result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::SUCCESS);
+    ASSERT_EQ(actual.getPrm, dir);
+    // write some junk after buf, make sure it fails
+    seq.get_statements()[0].get_argBuf().serialize(123);
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+    this-&gt;clearHistory();
+    // clear args, make sure it fails
+    seq.get_statements()[0].get_argBuf().resetSer();
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+}
+
+TEST_F(FpySequencerTester, deserialize_binaryRegOp) {
+    FpySequencer::DirectiveUnion actual;
+    FpySequencer_BinaryRegOpDirective dir(0, 1, 2, Fpy::DirectiveId::AND);
+    add_BINARY_REG_OP(dir);
+    Fw::Success result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::SUCCESS);
+    ASSERT_EQ(actual.binaryRegOp, dir);
+    // write some junk after buf, make sure it fails
+    seq.get_statements()[0].get_argBuf().serialize(123);
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    // caught two bugs (one here, and it reminded me of this somewhere else)
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+    this-&gt;clearHistory();
+    // clear args, make sure it fails
+    seq.get_statements()[0].get_argBuf().resetSer();
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+}
+
+TEST_F(FpySequencerTester, deserialize_unaryRegOp) {
+    FpySequencer::DirectiveUnion actual;
+    FpySequencer_UnaryRegOpDirective dir(0, 1, Fpy::DirectiveId::NOT);
+    add_UNARY_REG_OP(dir);
+    Fw::Success result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::SUCCESS);
+    ASSERT_EQ(actual.unaryRegOp, dir);
+    // write some junk after buf, make sure it fails
+    seq.get_statements()[0].get_argBuf().serialize(123);
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+    this-&gt;clearHistory();
+    // clear args, make sure it fails
+    seq.get_statements()[0].get_argBuf().resetSer();
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+}
+
+TEST_F(FpySequencerTester, deserialize_exit) {
+    FpySequencer::DirectiveUnion actual;
+    FpySequencer_ExitDirective dir(false);
+    add_EXIT(dir);
+    Fw::Success result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::SUCCESS);
+    ASSERT_EQ(actual.exit, dir);
+    // write some junk after buf, make sure it fails
+    seq.get_statements()[0].get_argBuf().serialize(123);
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+    this-&gt;clearHistory();
+    // clear args, make sure it fails
+    seq.get_statements()[0].get_argBuf().resetSer();
+    result = tester_deserializeDirective(seq.get_statements()[0], actual);
+    ASSERT_EQ(result, Fw::Success::FAILURE);
+    ASSERT_EVENTS_DirectiveDeserializeError_SIZE(1);
+}
+
+// caught a bug
+TEST_F(FpySequencerTester, checkTimers) {
+    allocMem();
+    add_WAIT_REL(FpySequencer_WaitRelDirective(10, 0));
+    writeToFile("test.bin");
+    sendCmd_RUN(0, 0, Fw::String("test.bin"), FpySequencer_BlockState::BLOCK);
+    Fw::Time time(0, 0);
+    setTestTime(time);
+    dispatchUntilState(State::RUNNING_SLEEPING);
+
+    time = Fw::Time(5, 0);
+    setTestTime(time);
+    invoke_to_checkTimers(0, 0);
+    dispatchCurrentMessages(cmp);
+    // should not leave sleep
+    ASSERT_EQ(this-&gt;tester_getState(), State::RUNNING_SLEEPING);
+
+    time = Fw::Time(10, 0);
+    setTestTime(time);
+    invoke_to_checkTimers(0, 0);
+    // should leave sleep
+    dispatchUntilState(State::IDLE);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_RUN(), 0, Fw::CmdResponse::OK);
+    clearHistory();
+
+    // okay now make sure it also works for checking timeout
+    paramSet_STATEMENT_TIMEOUT_SECS(5, Fw::ParamValid::VALID);
+    paramSend_STATEMENT_TIMEOUT_SECS(0, 0);
+    clearHistory();
+
+    sendCmd_RUN(0, 0, Fw::String("test.bin"), FpySequencer_BlockState::BLOCK);
+    dispatchUntilState(State::RUNNING_SLEEPING);
+    time = Fw::Time(12, 0);
+    setTestTime(time);
+    invoke_to_checkTimers(0, 0);
+    dispatchCurrentMessages(cmp);
+    // should not leave sleep
+    ASSERT_EQ(this-&gt;tester_getState(), State::RUNNING_SLEEPING);
+    time = Fw::Time(15, 0);
+    setTestTime(time);
+    invoke_to_checkTimers(0, 0);
+    dispatchUntilState(State::IDLE);
+    // timed out, should give exec error
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_RUN(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+}
+
+TEST_F(FpySequencerTester, ping) {
+    invoke_to_pingIn(0, 0);
+    this-&gt;tester_doDispatch();
+    ASSERT_from_pingOut_SIZE(1);
+}
+
+TEST_F(FpySequencerTester, cmdResponse) {
+    invoke_to_cmdResponseIn(0, 0, 0, Fw::CmdResponse::OK);
+    this-&gt;tester_doDispatch();
+    ASSERT_EVENTS_CmdResponseWhileNotRunningSequence_SIZE(1);
+    clearHistory();
+
+    allocMem();
+    add_CMD(123);
+    writeToFile("test.bin");
+    tester_set_m_sequencesStarted(255);
+    tester_set_m_statementsDispatched(255);
+    sendCmd_RUN(0, 0, Fw::String("test.bin"), FpySequencer_BlockState::BLOCK);
+    dispatchUntilState(State::RUNNING_AWAITING_STATEMENT_RESPONSE);
+    // once we're here, we should have just added the cmd dir to the queue
+    this-&gt;tester_doDispatch();
+    // dispatch once more to execute the cmd dir, sending out the command
+
+    // should be 256 for seq idx and 256 for cmd idx
+    invoke_to_cmdResponseIn(0, 123, 0x01000100, Fw::CmdResponse::OK);
+    // should be successful
+    dispatchUntilState(State::IDLE);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_RUN(), 0, Fw::CmdResponse::OK);
+    clearHistory();
+    // let's try that again but with a command that fails
+    tester_set_m_sequencesStarted(255);
+    tester_set_m_statementsDispatched(255);
+    sendCmd_RUN(0, 0, Fw::String("test.bin"), FpySequencer_BlockState::BLOCK);
+    dispatchUntilState(State::RUNNING_AWAITING_STATEMENT_RESPONSE);
+
+    invoke_to_cmdResponseIn(0, 123, 0x010000FF, Fw::CmdResponse::EXECUTION_ERROR);
+    dispatchUntilState(State::IDLE);
+    // should fail seq
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_RUN(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    clearHistory();
+
+    tester_set_m_sequencesStarted(255);
+    tester_set_m_statementsDispatched(255);
+    sendCmd_RUN(0, 0, Fw::String("test.bin"), FpySequencer_BlockState::BLOCK);
+    dispatchUntilState(State::RUNNING_AWAITING_STATEMENT_RESPONSE);
+    // send wrong cmd uid
+    // should be 256 for seq idx and 256 for cmd idx
+    // but we're gonna send 255 for seq idx and 256 for cmd idx
+    invoke_to_cmdResponseIn(0, 123, 0x00FF0100, Fw::CmdResponse::OK);
+    // should fail on seq idx, but should stay in running
+    dispatchCurrentMessages(cmp);
+    ASSERT_EQ(this-&gt;tester_getState(), State::RUNNING_AWAITING_STATEMENT_RESPONSE);
+
+    // okay now send right seq idx but wrong cmd idx
+    invoke_to_cmdResponseIn(0, 123, 0x01000101, Fw::CmdResponse::OK);
+    // should fail on cmd idx and go back to IDLE
+    dispatchUntilState(State::IDLE);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_RUN(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    clearHistory();
+
+    // okay now have a command response come in from this seq
+    // while sleeping (coding err)
+    clearSeq();
+    add_WAIT_REL(FpySequencer_WaitRelDirective(10, 0));
+    add_CMD(123);
+    writeToFile("test.bin");
+    tester_set_m_sequencesStarted(255);
+    tester_set_m_statementsDispatched(255);
+    sendCmd_RUN(0, 0, Fw::String("test.bin"), FpySequencer_BlockState::BLOCK);
+    dispatchUntilState(State::RUNNING_SLEEPING);
+    invoke_to_cmdResponseIn(0, 123, 0x01000100, Fw::CmdResponse::OK);
+    dispatchUntilState(State::IDLE);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_RUN(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    clearHistory();
+
+    // okay now have the wrong opcode come in
+    clearSeq();
+    add_CMD(123);
+    writeToFile("test.bin");
+    tester_set_m_sequencesStarted(255);
+    tester_set_m_statementsDispatched(255);
+    sendCmd_RUN(0, 0, Fw::String("test.bin"), FpySequencer_BlockState::BLOCK);
+    dispatchUntilState(State::RUNNING_AWAITING_STATEMENT_RESPONSE);
+    invoke_to_cmdResponseIn(0, 456, 0x01000100, Fw::CmdResponse::OK);
+    dispatchUntilState(State::IDLE);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, Svc::FpySequencerTester::get_OPCODE_RUN(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    clearHistory();
+}
+
+TEST_F(FpySequencerTester, tlmWrite) {
+    invoke_to_tlmWrite(0, 0);
+    this-&gt;tester_doDispatch();
+    // make sure that all tlm is written every call
+    ASSERT_TLM_SIZE(10);
+}
+
+TEST_F(FpySequencerTester, seqRunIn) {
+    allocMem();
+    add_NO_OP();
+    writeToFile("test.bin");
+
+    invoke_to_seqRunIn(0, Fw::String("test.bin"));
+    this-&gt;tester_doDispatch();
+    dispatchUntilState(State::VALIDATING);
+    dispatchUntilState(State::RUNNING_AWAITING_STATEMENT_RESPONSE);
+    dispatchUntilState(State::IDLE);
+
+    ASSERT_from_seqStartOut_SIZE(1);
+    ASSERT_from_seqStartOut(0, Fw::String("test.bin"));
+    ASSERT_from_seqDoneOut_SIZE(1);
+    ASSERT_from_seqDoneOut(0, 0, 0, Fw::CmdResponse::OK);
+
+    this-&gt;clearHistory();
+
+    // try running while already running
+    this-&gt;tester_setState(State::RUNNING_DISPATCH_STATEMENT);
+    invoke_to_seqRunIn(0, Fw::String("test.bin"));
+    // dispatch cmd
+    this-&gt;tester_doDispatch();
+    ASSERT_EVENTS_InvalidSeqRunCall_SIZE(1);
+    removeFile("test.bin");
+}
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="fpysequencertestsequences-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">FpySequencerTestSequences.cpp</span></code><a class="headerlink" href="#fpysequencertestsequences-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/test/ut/FpySequencerTestSequences.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#include "FpySequencerTester.hpp"
+
+namespace Svc {
+
+TEST_F(FpySequencerTester, Empty) {
+    allocMem();
+    writeAndRun();
+    dispatchUntilState(State::IDLE);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, FpySequencerTester::get_OPCODE_RUN(), 0, Fw::CmdResponse::OK);
+}
+
+TEST_F(FpySequencerTester, Full) {
+    allocMem();
+    for (U32 ii = 0; ii &lt; Fpy::MAX_SEQUENCE_STATEMENT_COUNT; ii++) {
+        add_NO_OP();
+    }
+    writeAndRun();
+    dispatchUntilState(State::IDLE, Fpy::MAX_SEQUENCE_STATEMENT_COUNT * 4);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, FpySequencerTester::get_OPCODE_RUN(), 0, Fw::CmdResponse::OK);
+}
+
+TEST_F(FpySequencerTester, ComplexControlFlow) {
+    allocMem();
+
+    nextTlmId = 123;
+    ASSERT_EQ(nextTlmValue.serialize(true), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    add_GET_TLM(0, 1, 123);
+    add_DESER_SER_REG(0, 0, 0, 1);
+    add_IF(0, 5);
+    // if true
+    add_NO_OP();
+    add_GOTO(8); // goto end
+    // else
+    add_NO_OP();
+    add_NO_OP();
+    add_NO_OP();
+
+
+    writeAndRun();
+    dispatchUntilState(State::IDLE);
+    ASSERT_EQ(tester_get_m_tlm_ptr()-&gt;lastDirectiveError, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_statementsDispatched(), 5);
+    nextTlmValue.resetSer();
+    nextTlmValue.serialize(false);
+    tester_set_m_statementsDispatched(0);
+    writeAndRun();
+    dispatchUntilState(State::IDLE);
+    ASSERT_EQ(tester_get_m_statementsDispatched(), 6);
+}
+
+TEST_F(FpySequencerTester, OrOfTlmAndReg) {
+    allocMem();
+
+    nextTlmId = 123;
+    ASSERT_EQ(nextTlmValue.serialize(true), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    add_GET_TLM(0, 1, 123);
+    add_DESER_SER_REG(0, 0, 0, 1);
+    add_SET_REG(1, 0);
+    // or between the stored const and the tlm val
+    add_BINARY_REG_OP(0, 1, 2, Fpy::DirectiveId::OR);
+    add_IF(2, 7);
+    // if true
+    add_NO_OP();
+    add_GOTO(10); // goto end
+    // else
+    add_NO_OP();
+    add_NO_OP();
+    add_NO_OP();
+
+    writeAndRun();
+    dispatchUntilState(State::IDLE);
+    ASSERT_EQ(tester_get_m_tlm_ptr()-&gt;lastDirectiveError, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_statementsDispatched(), 7);
+    nextTlmValue.resetSer();
+    nextTlmValue.serialize(false);
+    tester_set_m_statementsDispatched(0);
+    writeAndRun();
+    dispatchUntilState(State::IDLE);
+    ASSERT_EQ(tester_get_m_statementsDispatched(), 8);
+}
+
+TEST_F(FpySequencerTester, CmpIntTlm) {
+    allocMem();
+
+    nextTlmId = 123;
+    ASSERT_EQ(nextTlmValue.serialize(999), Fw::SerializeStatus::FW_SERIALIZE_OK);
+    add_GET_TLM(0, 1, 123);
+    add_DESER_SER_REG(0, 0, 0, 4);
+    add_SET_REG(1, 999);
+    // unsigned &gt;= between tlm and reg
+    add_BINARY_REG_OP(0, 1, 2, Fpy::DirectiveId::UGE);
+    add_IF(2, 7);
+    // if true
+    add_NO_OP();
+    add_GOTO(10); // goto end
+    // else
+    add_NO_OP();
+    add_NO_OP();
+    add_NO_OP();
+
+    writeAndRun();
+    dispatchUntilState(State::IDLE);
+    // should be equal on first try
+    ASSERT_EQ(tester_get_m_tlm_ptr()-&gt;lastDirectiveError, DirectiveError::NO_ERROR);
+    ASSERT_EQ(tester_get_m_statementsDispatched(), 7);
+    nextTlmValue.resetSer();
+    // should fail if tlm is 998
+    nextTlmValue.serialize(998);
+    tester_set_m_statementsDispatched(0);
+    writeAndRun();
+    dispatchUntilState(State::IDLE);
+    ASSERT_EQ(tester_get_m_statementsDispatched(), 8);
+}
+TEST_F(FpySequencerTester, NotTrueSeq) {
+    // this sequence caught one bug
+    allocMem();
+
+    add_SET_REG(0, 255);
+    add_UNARY_REG_OP(0, 1, Fpy::DirectiveId::NOT);
+    add_IF(1, 4);
+    // should not get here
+    add_EXIT(false);
+    add_EXIT(true);
+
+    writeAndRun();
+    dispatchUntilState(State::IDLE);
+    // not of 255 should be interpreted as false
+    ASSERT_EQ(tester_get_m_tlm_ptr()-&gt;lastDirectiveError, DirectiveError::NO_ERROR);
+}
+
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="test" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../../FrameAccumulator/index.html" class="btn btn-neutral float-right" title="FrameAccumulator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

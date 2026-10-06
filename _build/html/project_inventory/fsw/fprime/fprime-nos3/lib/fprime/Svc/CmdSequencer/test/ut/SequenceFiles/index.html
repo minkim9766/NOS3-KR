@@ -1,0 +1,2966 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SequenceFiles &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../../../search.html" />
+    <link rel="next" title="AMPCS" href="AMPCS/index.html" />
+    <link rel="prev" title="SeqF" href="../SeqF/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">fprime-nos3</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">lib</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Svc</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">CmdSequencer</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">test</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">ut</a></li>
+      <li class="breadcrumb-item active">SequenceFiles</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../../../_sources/project_inventory/fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="sequencefiles">
+<h1>SequenceFiles<a class="headerlink" href="#sequencefiles" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/</span></code></p>
+<section id="id1">
+<h2>하위 폴더<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="AMPCS/index.html">AMPCS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FPrime/index.html">FPrime</a></li>
+</ul>
+</div>
+</section>
+<section id="id2">
+<h2>이 폴더의 파일<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+</section>
+<section id="badcrcfile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">BadCRCFile.cpp</span></code><a class="headerlink" href="#badcrcfile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadCRCFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  BadCRCFile.cpp
+// \author Rob Bocchino
+// \brief  BadCRCFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/BadCRCFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+BadCRCFile ::BadCRCFile(const Format::t a_format) : File("bad_crc", a_format) {}
+
+void BadCRCFile ::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    const U32 recordData = 0x10;
+    const U32 dataSize = sizeof recordData + FPrime::CRCs::SIZE;
+    const U32 numRecords = 1;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, numRecords, timeBase, timeContext, buffer);
+    // Records
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(recordData));
+    // CRC
+    const U8* const addr = buffer.getBuffAddr();
+    const U32 size = buffer.getBuffLength();
+    this-&gt;crc.init();
+    this-&gt;crc.update(addr, size);
+    this-&gt;crc.finalize();
+    crc.m_stored = this-&gt;crc.m_computed + 1;
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(this-&gt;crc.m_stored));
+}
+
+void BadCRCFile ::serializeAMPCS(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    AMPCS::Headers::serialize(buffer);
+    // Records
+    const U32 recordData = 0x10;
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(recordData));
+    // CRC
+    AMPCS::CRCs::computeCRC(buffer, this-&gt;crc);
+    this-&gt;crc.m_stored = this-&gt;crc.m_computed + 1;
+    AMPCS::CRCs::writeCRC(this-&gt;crc.m_stored, this-&gt;getName().toChar());
+}
+
+const CmdSequencerComponentImpl::FPrimeSequence::CRC&amp; BadCRCFile ::getCRC() const {
+    return this-&gt;crc;
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="badcrcfile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">BadCRCFile.hpp</span></code><a class="headerlink" href="#badcrcfile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadCRCFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  BadCRCFile.hpp
+// \author Rob Bocchino
+// \brief  BadCRCFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_SequenceFiles_BadCRCFile_HPP
+#define Svc_SequenceFiles_BadCRCFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file with a bad CRC
+class BadCRCFile : public File {
+  public:
+    //! Construct a BadCRCFile
+    BadCRCFile(const Format::t a_format  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+    //! Get the CRC
+    const CmdSequencerComponentImpl::FPrimeSequence::CRC&amp; getCRC() const;
+
+  private:
+    //! The CRC
+    CmdSequencerComponentImpl::FPrimeSequence::CRC crc;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="baddescriptorfile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">BadDescriptorFile.cpp</span></code><a class="headerlink" href="#baddescriptorfile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadDescriptorFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  BadDescriptorFile.cpp
+// \author Rob Bocchino
+// \brief  BadDescriptorFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/BadDescriptorFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+BadDescriptorFile ::BadDescriptorFile(const U32 a_n, const Format::t a_format) : File(a_format), n(a_n) {
+    Fw::String baseName;
+    baseName.format("bad_descriptor_%u", a_n);
+    this-&gt;setName(baseName.toChar());
+}
+
+void BadDescriptorFile ::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    const U32 recordDataSize = this-&gt;n * SequenceFiles::FPrime::Records::STANDARD_SIZE;
+    const U32 dataSize = recordDataSize + FPrime::CRCs::SIZE;
+    FPrime::Headers::serialize(dataSize, this-&gt;n, timeBase, timeContext, buffer);
+    // Records
+    for (U32 record = 0; record &lt; this-&gt;n; record++) {
+        Fw::Time t(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+        // Force an invalid record descriptor
+        FPrime::Records::Descriptor descriptor = static_cast&lt;FPrime::Records::Descriptor&gt;(
+            10);  // NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange) intentional test
+        FPrime::Records::serialize(descriptor, t, record, record + 1, buffer);
+    }
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+void BadDescriptorFile ::serializeAMPCS(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    AMPCS::Headers::serialize(buffer);
+    // Records
+    for (U32 i = 0; i &lt; this-&gt;n; ++i) {
+        // Force an invalid time flag
+        const AMPCSSequence::Record::TimeFlag::t timeFlag = static_cast&lt;AMPCSSequence::Record::TimeFlag::t&gt;(
+            10);  // NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange) intentional test
+        const AMPCSSequence::Record::Time::t time = 0;
+        const AMPCSSequence::Record::Opcode::t opcode = i;
+        const U32 argument = i + 1;
+        AMPCS::Records::serialize(timeFlag, time, opcode, argument, buffer);
+    }
+    // CRC
+    AMPCS::CRCs::createFile(buffer, this-&gt;getName().toChar());
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="baddescriptorfile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">BadDescriptorFile.hpp</span></code><a class="headerlink" href="#baddescriptorfile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadDescriptorFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  BadDescriptorFile.hpp
+// \author Rob Bocchino
+// \brief  BadDescriptorFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_BadDescriptorFile_HPP
+#define Svc_SequenceFiles_BadDescriptorFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file with a bad record descriptor
+class BadDescriptorFile : public File {
+  public:
+    //! Construct a BadDescriptorFile
+    BadDescriptorFile(const U32 a_n,                              //!&lt; The number of records
+                      const Format::t a_format = Format::F_PRIME  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+  public:
+    //! The number of records
+    const U32 n;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="badtimebasefile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">BadTimeBaseFile.cpp</span></code><a class="headerlink" href="#badtimebasefile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeBaseFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  BadTimeBaseFile.cpp
+// \author Rob Bocchino
+// \brief  BadTimeBaseFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeBaseFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+BadTimeBaseFile ::BadTimeBaseFile(const U32 a_n, const Format::t a_format) : File(a_format), n(a_n) {
+    Fw::String s;
+    s.format("bad_time_base_%u", a_n);
+    this-&gt;setName(s.toChar());
+}
+
+void BadTimeBaseFile ::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    const U32 recordDataSize = (this-&gt;n - 1) * FPrime::Records::STANDARD_SIZE + FPrime::Records::RECORD_DESCRIPTOR_SIZE;
+    const U32 dataSize = recordDataSize + FPrime::CRCs::SIZE;
+    const TimeBase headerTimeBase = TimeBase::TB_PROC_TIME;
+    // Create an invalid time base by adding 1 to the stored value
+    const FwTimeBaseStoreType headerTimeBaseStore = static_cast&lt;FwTimeBaseStoreType&gt;(headerTimeBase) + 1;
+    // First cast to the raw enum type TimeBase::T, then create a TimeBase from that
+    const TimeBase recordTimeBase(static_cast&lt;TimeBase::T&gt;(headerTimeBaseStore));
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, this-&gt;n, headerTimeBase, timeContext, buffer);
+    // Records
+    Fw::Time t(recordTimeBase, 0, 0);
+    for (U32 i = 0; i &lt; this-&gt;n - 1; ++i) {
+        const FwOpcodeType opcode = i;
+        const U32 argument = i + 1;
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, opcode, argument, buffer);
+    }
+    FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::END_OF_SEQUENCE, t, buffer);
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="badtimebasefile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">BadTimeBaseFile.hpp</span></code><a class="headerlink" href="#badtimebasefile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeBaseFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  BadTimeBaseFile.hpp
+// \author Rob Bocchino
+// \brief  BadTimeBaseFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_BadTimeBaseFile_HPP
+#define Svc_SequenceFiles_BadTimeBaseFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+// A file containing records with bad time bases
+class BadTimeBaseFile : public File {
+  public:
+    //! Construct a BadTimeBaseFile
+    BadTimeBaseFile(const U32 a_n,            //!&lt; The number of records
+                    const Format::t a_format  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+  public:
+    //! The number of records
+    const U32 n;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="badtimecontextfile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">BadTimeContextFile.cpp</span></code><a class="headerlink" href="#badtimecontextfile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeContextFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  BadTimeContextFile.cpp
+// \author Rob Bocchino
+// \brief  BadTimeContextFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeContextFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+BadTimeContextFile ::BadTimeContextFile(const U32 a_n, const Format::t a_format) : File(a_format), n(a_n) {
+    Fw::String s;
+    s.format("bad_time_context_%u", n);
+    this-&gt;setName(s.toChar());
+}
+
+void BadTimeContextFile ::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    ASSERT_GE(this-&gt;n, 2U);
+    // Header
+    const U32 recordDataSize = (this-&gt;n - 1) * FPrime::Records::STANDARD_SIZE + FPrime::Records::EOS_SIZE;
+    const U32 dataSize = recordDataSize + FPrime::CRCs::SIZE;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 headerTimeContext = 1;
+    FPrime::Headers::serialize(dataSize, this-&gt;n, timeBase, headerTimeContext, buffer);
+    // Standard records
+    Fw::Time t(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+    for (U32 i = 0; i &lt; this-&gt;n - 1; ++i) {
+        const FwOpcodeType opcode = i;
+        const U32 argument = i + 1;
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, opcode, argument, buffer);
+    }
+    // EOS record
+    FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::END_OF_SEQUENCE, t, buffer);
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="badtimecontextfile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">BadTimeContextFile.hpp</span></code><a class="headerlink" href="#badtimecontextfile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeContextFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  BadTimeContextFile.hpp
+// \author Rob Bocchino
+// \brief  BadTimeContextFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_BadTimeContextFile_HPP
+#define Svc_SequenceFiles_BadTimeContextFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+// A file containing records with bad time bases
+class BadTimeContextFile : public File {
+  public:
+    //! Construct a BadTimeContextFile
+    BadTimeContextFile(const U32 a_n,            //!&lt; The number of records
+                       const Format::t a_format  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+  public:
+    //! The number of records
+    const U32 n;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="buffers-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Buffers.cpp</span></code><a class="headerlink" href="#buffers-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  Buffers.cpp
+// \author Rob Bocchino
+// \brief  F Prime sequence file headers
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Os/File.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+namespace Buffers {
+
+FwSizeType FileBuffer ::getBuffCapacity() const {
+    return sizeof(m_buff);
+}
+
+U8* FileBuffer ::getBuffAddr() {
+    return m_buff;
+}
+
+const U8* FileBuffer ::getBuffAddr() const {
+    return m_buff;
+}
+
+void write(const Fw::SerializeBufferBase&amp; buffer, const char* fileName) {
+    Os::File file;
+    ASSERT_EQ(file.open(fileName, Os::File::OPEN_WRITE), Os::File::OP_OK);
+    FwSizeType size = buffer.getBuffLength();
+    const U32 expectedSize = size;
+    const U8* const buffAddr = buffer.getBuffAddr();
+    ASSERT_EQ(file.write(buffAddr, size, Os::File::WaitType::WAIT), Os::File::OP_OK);
+    ASSERT_EQ(expectedSize, static_cast&lt;U32&gt;(size));
+    file.close();
+}
+
+}  // namespace Buffers
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="buffers-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">Buffers.hpp</span></code><a class="headerlink" href="#buffers-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  Buffers.hpp
+// \author Rob Bocchino
+// \brief  Sequence file buffers
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_SequenceFiles_Buffers_HPP
+#define Svc_SequenceFiles_Buffers_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+namespace Buffers {
+
+//! A file buffer
+class FileBuffer : public Fw::SerializeBufferBase {
+  public:
+    enum Constants { CAPACITY = 4096 };
+
+  public:
+    FwSizeType getBuffCapacity() const;
+
+    U8* getBuffAddr();
+
+    const U8* getBuffAddr() const;
+
+  private:
+    U8 m_buff[CAPACITY];
+};
+
+//! Write a buffer to a file
+void write(const Fw::SerializeBufferBase&amp; buffer,  //!&lt; The buffer
+           const char* fileName                    //!&lt; The file name
+);
+
+}  // namespace Buffers
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="dataafterrecordsfile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">DataAfterRecordsFile.cpp</span></code><a class="headerlink" href="#dataafterrecordsfile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/DataAfterRecordsFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  DataAfterRecordsFile.cpp
+// \author Rob Bocchino
+// \brief  DataAfterRecordsFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/DataAfterRecordsFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+DataAfterRecordsFile ::DataAfterRecordsFile(const U32 a_n, const Format::t a_format) : File(a_format), n(a_n) {
+    Fw::String s;
+    s.format("data_after_records_%u", n);
+    this-&gt;setName(s.toChar());
+}
+
+void DataAfterRecordsFile ::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    ASSERT_GE(this-&gt;n, 2U);
+    // Header
+    const U32 recordDataSize = (this-&gt;n - 1) * FPrime::Records::STANDARD_SIZE + FPrime::Records::EOS_SIZE;
+    const U32 junkDataSize = 2 * sizeof(U32);
+    const U32 dataSize = recordDataSize + junkDataSize + FPrime::CRCs::SIZE;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, this-&gt;n, timeBase, timeContext, buffer);
+    // Standard records
+    Fw::Time t(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+    for (U32 i = 0; i &lt; this-&gt;n - 1; ++i) {
+        const FwOpcodeType opcode = i;
+        const U32 argument = i + 1;
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, opcode, argument, buffer);
+    }
+    // EOS record
+    FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::END_OF_SEQUENCE, t, buffer);
+    // Extra junk data
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serialize(static_cast&lt;U32&gt;(0x12345678)));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serialize(static_cast&lt;U32&gt;(0x87654321)));
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="dataafterrecordsfile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">DataAfterRecordsFile.hpp</span></code><a class="headerlink" href="#dataafterrecordsfile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/DataAfterRecordsFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  DataAfterRecordsFile.hpp
+// \author Rob Bocchino
+// \brief  DataAfterRecordsFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_DataAfterRecordsFile_HPP
+#define Svc_SequenceFiles_DataAfterRecordsFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+// A file containing records with bad time bases
+class DataAfterRecordsFile : public File {
+  public:
+    //! Construct a DataAfterRecordsFile
+    DataAfterRecordsFile(const U32 a_n,            //!&lt; The number of records
+                         const Format::t a_format  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+  public:
+    //! The number of records
+    const U32 n;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="emptyfile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">EmptyFile.cpp</span></code><a class="headerlink" href="#emptyfile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/EmptyFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  EmptyFile.cpp
+// \author Rob Bocchino
+// \brief  EmptyFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/EmptyFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+EmptyFile ::EmptyFile(const Format::t a_format) : File("empty", a_format) {}
+
+void EmptyFile ::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    // Do nothing
+}
+
+void EmptyFile ::serializeAMPCS(Fw::SerializeBufferBase&amp; buffer) {
+    // CRC
+    AMPCS::CRCs::createFile(buffer, this-&gt;getName().toChar());
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="emptyfile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">EmptyFile.hpp</span></code><a class="headerlink" href="#emptyfile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/EmptyFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  EmptyFile.hpp
+// \author Rob Bocchino
+// \brief  EmptyFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_EmptyFile_HPP
+#define Svc_SequenceFiles_EmptyFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! An empty file
+class EmptyFile : public File {
+  public:
+    //! Construct an empty file
+    EmptyFile(const Format::t a_format  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize an empty file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+    //! Serialize an empty file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="file-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">File.cpp</span></code><a class="headerlink" href="#file-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/File.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  File.cpp
+// \author Rob Bocchino
+// \brief  File implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+#include "Fw/Types/String.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "gtest/gtest.h"
+
+#define BAD_FILE_FORMAT ASSERT_TRUE(0) &lt;&lt; "Bad file format " &lt;&lt; this-&gt;format &lt;&lt; "\n"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+File ::File(const Format::t a_format) : format(a_format) {}
+
+File ::File(const char* const baseName, const Format::t a_format) : format(a_format) {
+    this-&gt;setName(baseName);
+}
+
+File ::~File() {}
+
+void File ::setName(const char* const baseName) {
+    this-&gt;name = "bin/";
+    switch (this-&gt;format) {
+        case Format::F_PRIME:
+            this-&gt;name += "f_prime_";
+            break;
+        case Format::AMPCS:
+            this-&gt;name += "ampcs_";
+            break;
+        default:
+            BAD_FILE_FORMAT;
+            break;
+    }
+    this-&gt;name += baseName;
+    this-&gt;name += ".bin";
+}
+
+const Fw::StringBase&amp; File ::getName() const {
+    return this-&gt;name;
+}
+
+void File ::getErrorInfo(ErrorInfo&amp; errorInfo) {
+    switch (this-&gt;format) {
+        case Format::F_PRIME:
+            errorInfo.open.fileName = this-&gt;name;
+            errorInfo.headerRead.waitCount = 0;
+            errorInfo.headerRead.fileName = this-&gt;name;
+            errorInfo.dataRead.waitCount = 1;
+            errorInfo.dataRead.fileName = this-&gt;name;
+            break;
+        case Format::AMPCS:
+            errorInfo.open.fileName = this-&gt;name;
+            errorInfo.open.fileName += ".CRC32";
+            errorInfo.headerRead.waitCount = 1;
+            errorInfo.headerRead.fileName = this-&gt;name;
+            errorInfo.dataRead.waitCount = 2;
+            errorInfo.dataRead.fileName = this-&gt;name;
+            break;
+        default:
+            BAD_FILE_FORMAT;
+            break;
+    }
+}
+
+void File ::write() {
+    Buffers::FileBuffer buffer;
+    switch (this-&gt;format) {
+        case Format::F_PRIME:
+            this-&gt;serializeFPrime(buffer);
+            break;
+        case Format::AMPCS:
+            this-&gt;serializeAMPCS(buffer);
+            break;
+        default:
+            BAD_FILE_FORMAT;
+            break;
+    };
+    Buffers::write(buffer, this-&gt;name.toChar());
+}
+
+void File ::remove() {
+    Fw::String s("rm -f ");
+    s += this-&gt;getName();
+    int status = system(s.toChar());
+    ASSERT_EQ(0, status);
+}
+
+void File ::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    ASSERT_TRUE(0) &lt;&lt; "serializeFPrime is not implemented for " &lt;&lt; this-&gt;name &lt;&lt; "\n";
+}
+
+void File ::serializeAMPCS(Fw::SerializeBufferBase&amp; buffer) {
+    ASSERT_TRUE(0) &lt;&lt; "serializeAMPCS is not implemented for " &lt;&lt; this-&gt;name &lt;&lt; "\n";
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="file-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">File.hpp</span></code><a class="headerlink" href="#file-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  File.hpp
+// \author Rob Bocchino
+// \brief  File interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_SequenceFiles_File_HPP
+#define Svc_SequenceFiles_File_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A sequence file
+class File {
+  public:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! Binary file formats
+    struct Format {
+        typedef enum {
+            //! F Prime format
+            F_PRIME,
+            //! AMPCS format
+            AMPCS,
+        } t;
+    };
+
+    //! Information for error reporting
+    struct ErrorInfo {
+        //! The type of open errors
+        struct Open {
+            //! The name of the file for error reporting
+            Fw::String fileName;
+        };
+
+        //! The type of header read errors
+        struct HeaderRead {
+            //! The wait count
+            U32 waitCount;
+
+            //! The name of the file for error reporting
+            Fw::String fileName;
+        };
+
+        //! The type of data read errors
+        struct DataRead {
+            //! The wait count
+            U32 waitCount;
+
+            //! The name of the file for error reporting
+            Fw::String fileName;
+        };
+
+        //! Open errors
+        Open open;
+
+        //! Header read errors
+        HeaderRead headerRead;
+
+        //! Data read errors
+        DataRead dataRead;
+    };
+
+  public:
+    // ----------------------------------------------------------------------
+    // Constructors and destructors
+    // ----------------------------------------------------------------------
+
+    //! Construct a File with default initialization
+    File(const Format::t a_format = Format::F_PRIME  //!&lt; The file format
+    );
+
+    //! Construct a File with the given base name
+    File(const char* const baseName,                 //!&lt; The base name
+         const Format::t a_format = Format::F_PRIME  //!&lt; The file format
+    );
+
+    //! Destroy a file
+    virtual ~File();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public instance methods
+    // ----------------------------------------------------------------------
+
+    // Set the name from the given base name
+    void setName(const char* const baseName  //!&lt; The base name
+    );
+
+    //! Write the file to the disk
+    void write();
+
+    //! Remove the file from the disk
+    void remove();
+
+    //! Get the file name
+    const Fw::StringBase&amp; getName() const;
+
+    //! Get error info for the file
+    void getErrorInfo(ErrorInfo&amp; errorInfo  //!&lt; The error info
+    );
+
+  public:
+    // ----------------------------------------------------------------------
+    // Virtual interface
+    // ----------------------------------------------------------------------
+
+    //! Serialize the file in F Prime format
+    virtual void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    virtual void serializeAMPCS(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private member variables
+    // ----------------------------------------------------------------------
+
+    //! The file name
+    Fw::String name;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public member variables
+    // ----------------------------------------------------------------------
+
+    //! The file format
+    const Format::t format;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="immediateeosfile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">ImmediateEOSFile.cpp</span></code><a class="headerlink" href="#immediateeosfile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateEOSFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  ImmediateEOSFile.cpp
+// \author Rob Bocchino
+// \brief  ImmediateEOSFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateEOSFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+ImmediateEOSFile ::ImmediateEOSFile(const U32 a_n, const Format::t a_format) : File(a_format), n(a_n) {
+    Fw::String s;
+    s.format("immediate_%u_eos", n);
+    this-&gt;setName(s.toChar());
+}
+
+void ImmediateEOSFile ::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    ASSERT_GE(this-&gt;n, 2U);
+    // Header
+    const U32 recordDataSize =
+        // n - 1 standard records
+        (this-&gt;n - 1) * FPrime::Records::STANDARD_SIZE +
+        // 1 end-of-sequence record
+        FPrime::Records::EOS_SIZE;
+    const U32 dataSize = recordDataSize + FPrime::CRCs::SIZE;
+    FPrime::Headers::serialize(dataSize, this-&gt;n, TimeBase::TB_WORKSTATION_TIME, 0, buffer);
+    // Standard records
+    Fw::Time t(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+    for (U32 i = 0; i &lt; this-&gt;n - 1; i++) {
+        const FwOpcodeType opcode = i;
+        const U32 argument = i + 1;
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, opcode, argument, buffer);
+    }
+    // EOS record
+    FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::END_OF_SEQUENCE, t, buffer);
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="immediateeosfile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">ImmediateEOSFile.hpp</span></code><a class="headerlink" href="#immediateeosfile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateEOSFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  ImmediateEOSFile.hpp
+// \author Rob Bocchino
+// \brief  ImmediateEOSFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_ImmediateEOSFile_HPP
+#define Svc_SequenceFiles_ImmediateEOSFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file containing n records. Each of the first n-1 records
+//! is a relative command with a zero time tag.
+//! The last record is END_OF_SEQUENCE.
+class ImmediateEOSFile : public File {
+  public:
+    //! Construct an ImmediateEOSFile
+    ImmediateEOSFile(const U32 a_n,            //!&lt; The number of records
+                     const Format::t a_format  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+  public:
+    //! The number of records
+    const U32 n;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="immediatefile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">ImmediateFile.cpp</span></code><a class="headerlink" href="#immediatefile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  ImmediateFile.cpp
+// \author Rob Bocchino
+// \brief  ImmediateFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+ImmediateFile ::ImmediateFile(const U32 a_n, const Format::t a_format) : File(a_format), n(a_n) {
+    Fw::String s;
+    s.format("immediate_%u", a_n);
+    this-&gt;setName(s.toChar());
+}
+
+void ImmediateFile ::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    const U32 recordDataSize = this-&gt;n * FPrime::Records::STANDARD_SIZE;
+    const U32 dataSize = recordDataSize + FPrime::CRCs::SIZE;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, this-&gt;n, timeBase, timeContext, buffer);
+    // Records
+    for (U32 i = 0; i &lt; this-&gt;n; i++) {
+        Fw::Time t(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+        const FwOpcodeType opcode = i;
+        const U32 argument = i + 1;
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, opcode, argument, buffer);
+    }
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+void ImmediateFile ::serializeAMPCS(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    AMPCS::Headers::serialize(buffer);
+    // Records
+    for (U32 i = 0; i &lt; this-&gt;n; ++i) {
+        const AMPCSSequence::Record::Time::t time = 0;
+        const AMPCSSequence::Record::Opcode::t opcode = i;
+        const U32 argument = i + 1;
+        AMPCS::Records::serialize(AMPCSSequence::Record::TimeFlag::RELATIVE, time, opcode, argument, buffer);
+    }
+    // CRC
+    AMPCS::CRCs::createFile(buffer, this-&gt;getName().toChar());
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="immediatefile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">ImmediateFile.hpp</span></code><a class="headerlink" href="#immediatefile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  ImmediateFile.hpp
+// \author Rob Bocchino
+// \brief  ImmediateFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_ImmediateFile_HPP
+#define Svc_SequenceFiles_ImmediateFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+// A file containing three immediate commands (i.e.,
+// commands with zero time tags)
+class ImmediateFile : public File {
+  public:
+    //! Construct an ImmediateFile
+    ImmediateFile(const U32 a_n,            //!&lt; The number of records
+                  const Format::t a_format  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+  public:
+    //! The number of records
+    const U32 n;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="missingcrcfile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">MissingCRCFile.cpp</span></code><a class="headerlink" href="#missingcrcfile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MissingCRCFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  MissingCRCFile.cpp
+// \author Rob Bocchino
+// \brief  MissingCRCFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/MissingCRCFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+MissingCRCFile ::MissingCRCFile(const Format::t a_format) : File("invalid_record", a_format) {}
+
+void MissingCRCFile ::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    const U8 data = 1;
+    const U32 numRecords = 1;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(sizeof data, numRecords, timeBase, timeContext, buffer);
+    // Records + CRC
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(data));
+}
+
+void MissingCRCFile ::serializeAMPCS(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    AMPCS::Headers::serialize(buffer);
+    // Records
+    const U8 data = 1;
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(data));
+    // CRC
+    AMPCS::CRCs::removeFile(this-&gt;getName().toChar());
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="missingcrcfile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">MissingCRCFile.hpp</span></code><a class="headerlink" href="#missingcrcfile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MissingCRCFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  MissingCRCFile.hpp
+// \author Rob Bocchino
+// \brief  MissingCRCFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_MissingCRCFile_HPP
+#define Svc_SequenceFiles_MissingCRCFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+class MissingCRCFile : public File {
+  public:
+    //! Construct a MissingCRCFile
+    MissingCRCFile(const Format::t a_format  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="missingfile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">MissingFile.cpp</span></code><a class="headerlink" href="#missingfile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MissingFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  MissingFile.cpp
+// \author Rob Bocchino
+// \brief  MissingFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/MissingFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+MissingFile ::MissingFile(const Format::t a_format) : File("missing", a_format) {}
+
+void MissingFile ::serializeAMPCS(Fw::SerializeBufferBase&amp; buffer) {
+    // CRC
+    AMPCS::CRCs::createFile(buffer, this-&gt;getName().toChar());
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="missingfile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">MissingFile.hpp</span></code><a class="headerlink" href="#missingfile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MissingFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  MissingFile.hpp
+// \author Rob Bocchino
+// \brief  MissingFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_MissingFile_HPP
+#define Svc_SequenceFiles_MissingFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A missing file
+class MissingFile : public File {
+  public:
+    //! Construct a MissingFile
+    MissingFile(const Format::t a_format  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="mixedfile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">MixedFile.cpp</span></code><a class="headerlink" href="#mixedfile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MixedFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  MixedFile.cpp
+// \author Rob Bocchino
+// \brief  MixedFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/MixedFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+MixedFile ::MixedFile(const Format::t a_format) : File("mixed", a_format) {}
+
+void MixedFile ::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    const FwSizeType numRecs = 4;
+    const U32 recordDataSize = numRecs * FPrime::Records::STANDARD_SIZE;
+    const U32 dataSize = recordDataSize + FPrime::CRCs::SIZE;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, numRecs, timeBase, timeContext, buffer);
+    // Records
+    {
+        Fw::Time t;
+        // Record 1: Absolute command
+        t.set(TimeBase::TB_WORKSTATION_TIME, 2, 0);
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::ABSOLUTE, t, 0, 1, buffer);
+        // Record 2: Immediate command
+        t.set(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, 2, 3, buffer);
+        // Record 3: Relative command
+        t.set(TimeBase::TB_WORKSTATION_TIME, 1, 0);
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, 4, 5, buffer);
+        // Record 4: Immediate command
+        t.set(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, 6, 7, buffer);
+    }
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+void MixedFile ::serializeAMPCS(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    AMPCS::Headers::serialize(buffer);
+    // Records
+    {
+        // Record 1: Absolute command
+        const AMPCSSequence::Record::Time::t time = 2;
+        const AMPCSSequence::Record::Opcode::t opcode = 0;
+        const U32 argument = 1;
+        AMPCS::Records::serialize(AMPCSSequence::Record::TimeFlag::ABSOLUTE, time, opcode, argument, buffer);
+    }
+    {
+        // Record 2: Immediate command
+        const AMPCSSequence::Record::Time::t time = 0;
+        const AMPCSSequence::Record::Opcode::t opcode = 2;
+        const U32 argument = 3;
+        AMPCS::Records::serialize(AMPCSSequence::Record::TimeFlag::RELATIVE, time, opcode, argument, buffer);
+    }
+    {
+        // Record 3: Relative command
+        const AMPCSSequence::Record::Time::t time = 1;
+        const AMPCSSequence::Record::Opcode::t opcode = 4;
+        const U32 argument = 5;
+        AMPCS::Records::serialize(AMPCSSequence::Record::TimeFlag::RELATIVE, time, opcode, argument, buffer);
+    }
+    {
+        // Record 4: Immediate command
+        const AMPCSSequence::Record::Time::t time = 0;
+        const AMPCSSequence::Record::Opcode::t opcode = 6;
+        const U32 argument = 7;
+        AMPCS::Records::serialize(AMPCSSequence::Record::TimeFlag::RELATIVE, time, opcode, argument, buffer);
+    }
+    // CRC
+    AMPCS::CRCs::createFile(buffer, this-&gt;getName().toChar());
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="mixedfile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">MixedFile.hpp</span></code><a class="headerlink" href="#mixedfile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MixedFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  MixedFile.hpp
+// \author Rob Bocchino
+// \brief  MixedFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_MixedFile_HPP
+#define Svc_SequenceFiles_MixedFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file containing mixed immediate, relative, and absolute commands:
+// 1. An absolute command
+// 2. An immediate command
+// 3. A relative command
+// 4. An immediate command
+class MixedFile : public File {
+  public:
+    //! Construct a MixedFile
+    MixedFile(const Format::t a_format  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="norecordsfile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">NoRecordsFile.cpp</span></code><a class="headerlink" href="#norecordsfile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/NoRecordsFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  NoRecordsFile.cpp
+// \author Rob Bocchino
+// \brief  NoRecordsFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/NoRecordsFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+NoRecordsFile ::NoRecordsFile(const Format::t a_format) : File("norecords", a_format) {}
+
+void NoRecordsFile::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    const FwSizeType numRecs = 0;
+    const U32 recordDataSize = numRecs * FPrime::Records::STANDARD_SIZE;
+    const U32 dataSize = recordDataSize + FPrime::CRCs::SIZE;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, numRecs, timeBase, timeContext, buffer);
+
+    // No Records
+
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+void NoRecordsFile ::serializeAMPCS(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    AMPCS::Headers::serialize(buffer);
+    // No Records
+
+    // CRC
+    AMPCS::CRCs::createFile(buffer, this-&gt;getName().toChar());
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="norecordsfile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">NoRecordsFile.hpp</span></code><a class="headerlink" href="#norecordsfile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/NoRecordsFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  NoRecordsFile.hpp
+// \author Joaquim Silveira
+// \brief  NoRecords interface
+
+#ifndef Svc_SequenceFiles_NoRecordsFile_HPP
+#define Svc_SequenceFiles_NoRecordsFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file containing no records
+class NoRecordsFile : public File {
+  public:
+    //! Construct a NoRecordsFile
+    NoRecordsFile(const Format::t a_format  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="relativefile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">RelativeFile.cpp</span></code><a class="headerlink" href="#relativefile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/RelativeFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  RelativeFile.cpp
+// \author Rob Bocchino
+// \brief  RelativeFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/RelativeFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+RelativeFile ::RelativeFile(const U32 a_n, const Format::t a_format) : File(a_format), n(a_n) {
+    Fw::String s;
+    s.format("relative_%u", a_n);
+    this-&gt;setName(s.toChar());
+}
+
+void RelativeFile ::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    const U32 recordDataSize = this-&gt;n * FPrime::Records::STANDARD_SIZE;
+    const U32 dataSize = recordDataSize + FPrime::CRCs::SIZE;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, this-&gt;n, timeBase, timeContext, buffer);
+    // Records
+    for (U32 i = 0; i &lt; n; ++i) {
+        const U32 seconds = 2;
+        const U32 microseconds = 0;
+        const FwOpcodeType opcode = i;
+        const U32 argument = i + 1;
+        Fw::Time t(TimeBase::TB_WORKSTATION_TIME, seconds, microseconds);
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, opcode, argument, buffer);
+    }
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+void RelativeFile ::serializeAMPCS(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    AMPCS::Headers::serialize(buffer);
+    // Records
+    for (U32 i = 0; i &lt; this-&gt;n; ++i) {
+        const AMPCSSequence::Record::Time::t time = 2;
+        const AMPCSSequence::Record::Opcode::t opcode = i;
+        const U32 argument = i + 1;
+        AMPCS::Records::serialize(AMPCSSequence::Record::TimeFlag::RELATIVE, time, opcode, argument, buffer);
+    }
+    // CRC
+    AMPCS::CRCs::createFile(buffer, this-&gt;getName().toChar());
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="relativefile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">RelativeFile.hpp</span></code><a class="headerlink" href="#relativefile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/RelativeFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  RelativeFile.hpp
+// \author Rob Bocchino
+// \brief  RelativeFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_RelativeFile_HPP
+#define Svc_SequenceFiles_RelativeFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file containing n commands, each of which has a non-zero
+//! relative time.
+class RelativeFile : public File {
+  public:
+    //! Construct a RelativeFile
+    RelativeFile(const U32 a_n,            //!&lt; The number of records
+                 const Format::t a_format  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+  public:
+    //! The number of records
+    const U32 n;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="sequencefiles-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">SequenceFiles.hpp</span></code><a class="headerlink" href="#sequencefiles-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/SequenceFiles.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  SequenceFiles.hpp
+// \author Rob Bocchino
+// \brief  Interface for F Prime sequence files
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_SequenceFiles_HPP
+#define Svc_SequenceFiles_SequenceFiles_HPP
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/BadCRCFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/BadDescriptorFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeBaseFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeContextFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/DataAfterRecordsFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/EmptyFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateEOSFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/MissingCRCFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/MissingFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/MixedFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/RelativeFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooLargeFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooSmallFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/TooLargeFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/USecFieldTooShortFile.hpp"
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="sizefieldtoolargefile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">SizeFieldTooLargeFile.cpp</span></code><a class="headerlink" href="#sizefieldtoolargefile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooLargeFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  SizeFieldTooLargeFile.cpp
+// \author Rob Bocchino
+// \brief  SizeFieldTooLargeFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooLargeFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+SizeFieldTooLargeFile ::SizeFieldTooLargeFile(const U32 a_bufferSize, const Format::t a_format)
+    : File("size_field_too_large", a_format), bufferSize(a_bufferSize) {}
+
+void SizeFieldTooLargeFile ::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    const U32 recordSize = sizeof(U8) +   // Descriptor
+                           sizeof(U32) +  // Seconds
+                           sizeof(U32) +  // Microseconds
+                           sizeof(U32);   // Size
+    const U32 dataSize = recordSize + FPrime::CRCs::SIZE;
+    const U32 numRecs = 1;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, numRecs, timeBase, timeContext, buffer);
+    // Records
+    {
+        // Descriptor
+        const FPrime::Records::Descriptor descriptor = CmdSequencerComponentImpl::Sequence::Record::RELATIVE;
+        ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serialize(static_cast&lt;U8&gt;(descriptor)));
+        // Seconds
+        ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serialize(static_cast&lt;U32&gt;(0)));
+        // Microseconds
+        ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serialize(static_cast&lt;U32&gt;(0)));
+        // Record size
+        ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serialize(static_cast&lt;U32&gt;(2 * this-&gt;bufferSize)));
+    }
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="sizefieldtoolargefile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">SizeFieldTooLargeFile.hpp</span></code><a class="headerlink" href="#sizefieldtoolargefile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooLargeFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  SizeFieldTooLargeFile.hpp
+// \author Rob Bocchino
+// \brief  SizeFieldTooLargeFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_SizeFieldTooLargeFile_HPP
+#define Svc_SequenceFiles_SizeFieldTooLargeFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file with a size field that is too large
+class SizeFieldTooLargeFile : public File {
+  public:
+    //! Construct a SizeFieldTooLargeFile
+    SizeFieldTooLargeFile(const U32 a_bufferSize,   //!&lt; The buffer size
+                          const Format::t a_format  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+  public:
+    //! The buffer size
+    const U32 bufferSize;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="sizefieldtoosmallfile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">SizeFieldTooSmallFile.cpp</span></code><a class="headerlink" href="#sizefieldtoosmallfile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooSmallFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  SizeFieldTooSmallFile.cpp
+// \author Rob Bocchino
+// \brief  SizeFieldTooSmallFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooSmallFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+SizeFieldTooSmallFile ::SizeFieldTooSmallFile(const Format::t a_format) : File("size_field_too_small", a_format) {}
+
+void SizeFieldTooSmallFile ::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    const U32 dataSize = FPrime::Records::RECORD_DESCRIPTOR_SIZE + sizeof(U32) +  // seconds
+                         sizeof(U32) +                                            // subseconds (CRC should land here)
+                         sizeof(U16);                                             // short size
+    const U32 numRecs = 1;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, numRecs, timeBase, timeContext, buffer);
+    // Records
+    const FPrime::Records::Descriptor descriptor = CmdSequencerComponentImpl::Sequence::Record::RELATIVE;
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(static_cast&lt;U8&gt;(descriptor)));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(static_cast&lt;U32&gt;(0)));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(static_cast&lt;U16&gt;(0)));
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="sizefieldtoosmallfile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">SizeFieldTooSmallFile.hpp</span></code><a class="headerlink" href="#sizefieldtoosmallfile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooSmallFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  SizeFieldTooSmallFile.hpp
+// \author Rob Bocchino
+// \brief  SizeFieldTooSmallFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_SizeFieldTooSmallFile_HPP
+#define Svc_SequenceFiles_SizeFieldTooSmallFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file with a size field that is too small
+class SizeFieldTooSmallFile : public File {
+  public:
+    //! Construct a SizeFieldTooSmallFile
+    SizeFieldTooSmallFile(const Format::t m_format  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="toolargefile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">TooLargeFile.cpp</span></code><a class="headerlink" href="#toolargefile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/TooLargeFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  TooLargeFile.cpp
+// \author Rob Bocchino
+// \brief  TooLargeFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/TooLargeFile.hpp"
+#include "Fw/Types/SerialBuffer.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+TooLargeFile ::TooLargeFile(const U32 a_bufferSize, const Format::t a_format)
+    : File("too_large", a_format), bufferSize(a_bufferSize) {}
+
+void TooLargeFile ::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    const U32 dataSize = this-&gt;getDataSize();
+    const U32 numRecords = 16;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, numRecords, timeBase, timeContext, buffer);
+}
+
+void TooLargeFile ::serializeAMPCS(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    AMPCS::Headers::serialize(buffer);
+    // Data
+    const AMPCSSequence::Record::TimeFlag::t timeFlag = AMPCSSequence::Record::TimeFlag::RELATIVE;
+    const AMPCSSequence::Record::Time::t time = 0;
+    const U32 dataSize = this-&gt;getDataSize();
+    const U32 cmdFieldSize = dataSize - sizeof(AMPCSSequence::Record::TimeFlag::Serial::t) -
+                             sizeof(AMPCSSequence::Record::Time::t) - sizeof(AMPCSSequence::Record::CmdLength::t);
+    U8 cmdFieldBuffer[cmdFieldSize];
+    ::memset(cmdFieldBuffer, 0, cmdFieldSize);
+    Fw::SerialBuffer cmdField(cmdFieldBuffer, sizeof(cmdFieldBuffer));
+    cmdField.setBuffLen(cmdFieldSize);
+    AMPCS::Records::serialize(timeFlag, time, cmdField, buffer);
+    ASSERT_EQ(sizeof(AMPCSSequence::SequenceHeader::t) + dataSize, buffer.getBuffLength());
+    // CRC
+    AMPCS::CRCs::createFile(buffer, this-&gt;getName().toChar());
+}
+
+U32 TooLargeFile ::getDataSize() const {
+    return 2 * this-&gt;bufferSize;
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="toolargefile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">TooLargeFile.hpp</span></code><a class="headerlink" href="#toolargefile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/TooLargeFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  TooLargeFile.hpp
+// \author Rob Bocchino
+// \brief  TooLargeFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_SequenceFiles_TooLargeFile_HPP
+#define Svc_SequenceFiles_TooLargeFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file that is too large for the sequence buffer
+class TooLargeFile : public File {
+  public:
+    //! Construct a TooLargeFile
+    TooLargeFile(const U32 a_bufferSize,   //!&lt; The sequence buffer size
+                 const Format::t a_format  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+
+    //! Get the data size
+    U32 getDataSize() const;
+
+  public:
+    //! The sequence buffer size
+    const U32 bufferSize;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="usecfieldtooshortfile-cpp">
+<h2><code class="docutils literal notranslate"><span class="pre">USecFieldTooShortFile.cpp</span></code><a class="headerlink" href="#usecfieldtooshortfile-cpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/USecFieldTooShortFile.cpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  USecFieldTooShortFile.cpp
+// \author Rob Bocchino
+// \brief  USecFieldTooShortFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/USecFieldTooShortFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+USecFieldTooShortFile ::USecFieldTooShortFile(const Format::t a_format) : File("usec_field_too_short", a_format) {}
+
+void USecFieldTooShortFile ::serializeFPrime(Fw::SerializeBufferBase&amp; buffer) {
+    // Header
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    const U32 numRecords = 1;
+    const U32 recordSize = FPrime::Records::RECORD_DESCRIPTOR_SIZE +  // descriptor
+                           sizeof(U32) +                              // seconds (CRC should land here)
+                           sizeof(U16);                               // short microseconds
+    const U32 dataSize = numRecords * recordSize;
+    FPrime::Headers::serialize(dataSize, numRecords, timeBase, timeContext, buffer);
+    // Records
+    const FPrime::Records::Descriptor descriptor = CmdSequencerComponentImpl::Sequence::Record::RELATIVE;
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(static_cast&lt;U8&gt;(descriptor)));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(static_cast&lt;U16&gt;(0)));
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+</pre></div>
+</div>
+</section>
+<section id="usecfieldtooshortfile-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">USecFieldTooShortFile.hpp</span></code><a class="headerlink" href="#usecfieldtooshortfile-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/USecFieldTooShortFile.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  USecFieldTooShortFile.hpp
+// \author Rob Bocchino
+// \brief  USecFieldTooShortFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_USecFieldTooShortFile_HPP
+#define Svc_SequenceFiles_USecFieldTooShortFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file with a microseconds field that is too short
+class USecFieldTooShortFile : public File {
+  public:
+    //! Construct a USecFieldTooShortFile
+    USecFieldTooShortFile(const Format::t a_format  //!&lt; The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase&amp; buffer  //!&lt; The buffer
+    );
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../SeqF/index.html" class="btn btn-neutral float-left" title="SeqF" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="AMPCS/index.html" class="btn btn-neutral float-right" title="AMPCS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

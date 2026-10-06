@@ -1,0 +1,2238 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dox_src &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="fsw" href="../../fsw/index.html" />
+    <link rel="prev" title="docs" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">apps</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">cf</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">docs</a></li>
+      <li class="breadcrumb-item active">dox_src</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/fsw/apps/cf/docs/dox_src/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="dox-src">
+<h1>dox_src<a class="headerlink" href="#dox-src" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/cf/docs/dox_src/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="cf-common-doxyfile-in">
+<h2><code class="docutils literal notranslate"><span class="pre">cf-common.doxyfile.in</span></code><a class="headerlink" href="#cf-common-doxyfile-in" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/cf/docs/dox_src/cf-common.doxyfile.in</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#---------------------------------------------------------------------------
+# Common doxygen configuration items
+#---------------------------------------------------------------------------
+
+# Include front material followed by everything in fsw
+INPUT      += @cf_MISSION_DIR@/docs/dox_src/cfs_cf.dox
+INPUT      += @cf_MISSION_DIR@/fsw
+
+IMAGE_PATH += @cf_MISSION_DIR@/docs/dox_src
+</pre></div>
+</div>
+</section>
+<section id="cf-usersguide-doxyfile-in">
+<h2><code class="docutils literal notranslate"><span class="pre">cf-usersguide.doxyfile.in</span></code><a class="headerlink" href="#cf-usersguide-doxyfile-in" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/cf/docs/dox_src/cf-usersguide.doxyfile.in</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#---------------------------------------------------------------------------
+# Stand-alone users guide doxyfile
+#---------------------------------------------------------------------------
+
+# Allow overrides
+@INCLUDE_PATH          = @MISSION_SOURCE_DIR@
+
+# Common setup
+@INCLUDE               = @MISSION_BINARY_DIR@/docs/cf-common.doxyfile
+
+# OSAL and cfe to resolve references and provide default settings
+@INCLUDE               = @MISSION_BINARY_DIR@/docs/cfe-common.doxyfile
+@INCLUDE               = @MISSION_BINARY_DIR@/docs/osal-common.doxyfile
+
+# Use sample definitions for generic users guide
+INPUT                 += @MISSION_SOURCE_DIR@/cfe/cmake/sample_defs
+
+PROJECT_NAME           = "CF User's Guide"
+WARN_LOGFILE           = cf-usersguide-warnings.log
+</pre></div>
+</div>
+</section>
+<section id="cfs-cf-dox">
+<h2><code class="docutils literal notranslate"><span class="pre">cfs_cf.dox</span></code><a class="headerlink" href="#cfs-cf-dox" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/cf/docs/dox_src/cfs_cf.dox</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/**
+  \page cfscffrontpageCFS CFDP (CF) Documentation
+  &lt;UL&gt;
+     &lt;LI&gt; \subpage cfscfintro
+     &lt;LI&gt; \subpage cfscfovr
+     &lt;LI&gt; \subpage cfscfovrdsn
+     &lt;LI&gt; \subpage cfscfopr
+     &lt;LI&gt; \subpage cfscfdg
+     &lt;LI&gt; \subpage cfscfcfgpg
+     &lt;LI&gt; \subpage cfscftbl
+     &lt;LI&gt; \subpage cfscfcmdspg
+     &lt;LI&gt; \subpage cfscftlmpg
+     &lt;LI&gt; \subpage cfscfeventspg
+     &lt;LI&gt; \subpage cfscfcons
+     &lt;LI&gt; \subpage cfscffaqs
+  &lt;/UL&gt;
+**/
+
+/**
+  \page cfscfintro CFS CFDP Introduction
+
+  &lt;H1&gt; Scope &lt;/H1&gt;
+
+  This document provides a design and operational overview along with a complete specification
+  for the commands and telemetry associated with the CFS CFDP (CF) application software.
+
+  The document is intended primarily for users of the software (operations personal, test
+  engineers, and maintenance personnel).  The deployment guide section, is intended for mission
+  developers when deploying and configuring the CF application software for a mission
+  flight software build environment.
+
+  \ref cfscfversion
+
+  &lt;H1&gt; Acronyms &lt;/H1&gt;
+
+  &lt;TABLE BORDER="1" CELLPADDING="2" WIDTH="60%"&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; &lt;B&gt;Acronym&lt;/B&gt; &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; &lt;B&gt;Description&lt;/B&gt;                       &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; API     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Application Programming Interface               &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; ATP     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Absolute Time Processor                         &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; ATS     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Absolute Time tagged command Sequence           &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; CCSDS   &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Consultative Committee for Space Data Systems   &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; C&amp;DH    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Command and Data Handling                       &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; CFE     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Core Flight Executive                           &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; CFS     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Core Flight System                              &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; CI      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Command Ingest                                  &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; Cmd     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Command                                         &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; CPU     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Central Processing Unit                         &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; EDAC    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Error Detection and Correction                  &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; FDS     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Flight Data System                              &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; FM      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; File Manager                                    &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; FSW     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Flight Software                                 &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; GN&amp;C    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Guidance Navigation &amp; Control                   &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; GSFC    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Goddard Space Flight Center                     &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; HK      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Housekeeping                                    &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; HW, H/W &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Hardware                                        &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; ICD     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Interface Control Document                      &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; ISR     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Interrupt Service Routine                       &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; OS      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Operating System                                &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; OSAL    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Operating System Abstraction Layer              &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; Pkts    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Packets                                         &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; RAM     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Random-Access Memory                            &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; RTOS    &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Real Time Operating System                      &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; RTP     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Relative Time Processor                         &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; RTS     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Relative Time tagged command Sequence           &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; SB      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Software Bus Service                            &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; SBC     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Single Board Computer                           &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; SC      &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Stored Commands task                            &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; SW, S/W &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Software                                        &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; TBD     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; To Be Determined                                &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; TBL     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Table                                           &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; TLM     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Telemetry                                       &lt;/TD&gt;
+  &lt;TR&gt;&lt;TD WIDTH="20%"&gt; UTC     &lt;/TD&gt; &lt;TD WIDTH="40%"&gt; Universal time code                             &lt;/TD&gt;
+  &lt;/TABLE&gt;
+
+  Prev: \ref cfscffrontpageCFS &lt;BR&gt;
+  Next: \ref cfscfovr
+
+**/
+
+/**
+  \page cfscfovr CFS CFDP Overview
+
+  CF is a cFS application for providing CFDP (CCSDS File Delivery Protocol) services
+  that was designed to interface to the Core Flight Executive (cFE).
+  Its primary function is to provide file receive and transmit functionality to this
+  protocol. It works by mapping CFDP PDUs on and off cFS's software bus.
+
+  CF is a highly configurable application that is designed to be used on a wide
+  range of flight missions. CF obtains its initial configuration through a
+  configuration table and its platform and mission configuration files. The
+  table contains default configuration settings and is loaded during CF
+  initialization. The platform and mission configuration files are compile-time
+  configuration parameters.
+
+  To transfer files using CFDP, the CF application must communicate with a CFDP
+  compliant peer. CF may be configured to have any number of peers. The ASIST and
+  ITOS ground systems contain a compliant peer that may be used for flight to
+  ground (and ground to flight) transfers.
+
+  CF sends and receives file information and file-data in Protocol Data Units
+  (PDUs) that are compliant with the CFDP standard protocol defined in the CCSDS
+  727.0-B-4 Blue Book. The PDUs are transferred to and from the CF application
+  via CCSDS packets on the software bus. The system must be configured to get
+  the PDU packets from the peer to the software bus (and vice-versa).
+
+  On a typical spacecraft using the cFE, science files and engineering files are
+  continuously being created and queued for downlink. When transmission begins,
+  the files are converted into a series of PDUs by CF, one after another
+  essentially creating a continuous stream of file-data PDUs.
+
+  The CFS CFDP application is a CFDP implementation written specifically for CFS.
+  The goal was bounded, small,
+  time and space efficent implementation of the CFDP features necessary for flight.
+  CF implements Class 1 and 2 send and receive, as well as logic to cancel, suspend,
+  resume, abandon, freeze, etc.  Messages utilize "zero-copy" software bus buffers.
+  CF configuration is mainly through the configuration table.
+
+  There are special features listed in the CFDP standard that are not applicable
+  to flight software and are therefore not supported by this version of CF. See
+  the constraints section of this document for more information.
+
+  Prev: \ref cfscfintro &lt;BR&gt;
+  Next: \ref cfscfovrdsn
+
+**/
+
+/**
+  \page cfscfovrdsn CFS CFDP Design
+
+  The CF Application has an operational interface consisting of one table, two
+  different telemetry messages and twenty commands.
+
+  CF is an event driven, single threaded application that wakes up when one of
+  the following four messages are received on its software bus pipe. Ground
+  command, Housekeeping Request command, Incoming PDU or the Wake-up command.
+  The Wake-up command tells CF to do file transaction processing. This command
+  is typically sent periodically by the scheduler. The amount of
+  file-transaction processing that is executed when this command is received, is
+  configurable through the table parameter engine-cycles per wake-up.
+
+  &lt;H2&gt; Key differences from CF v2.X &lt;/H2&gt;
+
+  - There's no more text-based ground commands where strings are sent for commands.
+  - There's no more memory pool. Everything is set up with limits both in platform
+    config for static memory limits and the configuration table for dynamic timing and functionality limits.
+  - Much smaller code footprint. CF 3.0 is light-weight flight-only app. It does not provide any ground engine support.
+
+  For simplicity, the examples through-out this document refer to a typical
+  operational scenario whereby the peer to the CF application is located on the
+  ground. The CF applications knows only of incoming file transactions and
+  outgoing file transactions. The terms uplink, downlink and playback are
+  often used, but only apply when the peer is located on the ground. CF may be
+  configured to have more than one peer. One peer may be located onboard the
+  spacecraft while another is located on the ground.
+
+  Prev: \ref cfscfovr &lt;BR&gt;
+  Next: \ref cfscfopr
+
+**/
+
+/**
+  \page cfscfopr CFS CFDP Operation
+
+  &lt;H2&gt; Initialization &lt;/H2&gt;
+
+  CF initialization is the same for Power On Resets and Processor Resets.
+  Standard application initialization activites are performed such as status and
+  tracking initialization, message initialization and subscription, table
+  initialization and registering with event services.
+
+  &lt;H2&gt; Outgoing Messages &lt;/H2&gt;
+
+  The priority of CF's use of available outgoing messages on each wakeup is:
+
+  -# Send any pending message required for RX transaction
+  -# Re-send any message required for TX transaction if timer expired (for example,
+     send EOF, or re-send EOF if ack timer expired)
+  -# Send a filedata PDU in response to a NAK request. Per wakeup, one will be sent
+     per each transaction in the TX wait state.
+  -# Once all TX wait transactions have processed their needs to send, the currently
+     active TX transfer will send new filedata PDUs. It will keep sending them until
+     there are no more messages on that wakeup (or the throttling semaphore stops it.)
+
+  &lt;H2&gt; Incoming Messages &lt;/H2&gt;
+
+   Operationally, the flow of input packets from ground into CF
+   should be throttled at some rate appropriate for ingest. CF
+   has a per-channel configuration item for max number of RX messages
+   processed per wakeup, and both CF and the ingest app
+   need to be able to handle this.
+
+  &lt;H2&gt; Temporary file and directory use &lt;/H2&gt;
+
+   Currently the temporary directory is only used to store class 2 RX file data
+   in temporary files on a transaction that has not yet received a metadata PDU.
+   When/if the metadata is received for that transaction, OS_mv is used to transition
+   the temporary file to the desired destination location.  Note that OS_mv attempts
+   a rename first (faster but does not work across file systems), and if that
+   fails then attempts a copy/delete (slower).  Due to this the most efficent
+   temporary directory configuration is for it to be on the same file system as the
+   destination.  Note that currently this only impacts class 2 RX with an out
+   of order metadata packet, but there's future work being considered to
+   use the temporary location for all receipts with an atomic transfer of the
+   file after successful reception and verification (where applicable) of all the
+   file data.
+
+  &lt;H2&gt; Engine &lt;/H2&gt;
+
+  The CF application has a single internal core referred to as the engine. The
+  engine is capable of transmitting and receiving a configurable number of
+  transactions simultaneously.The engine builds outgoing Protocol Data Units
+  (PDUs) and interprets the incoming PDUs. It handles all details regarding the
+  CFDP standard protocol which is defined in the CCSDS 727.0-B-4 Blue Book. The
+  engine processes the file transactions when it is 'cycled'. The number of
+  engine cycles per wake up is a configuration parameter defined in the table.
+  At most one PDU will be sent on a single engine cycle.
+  Typically, the peer node also has an engine. When CF is transferring files to
+  and from the ground, the peer is sometimes referred to as the ground engine.
+  When faults and timeouts occur, it is important to indicate which engine
+  detected the event.
+
+  &lt;H2&gt; Starting a Transaction &lt;/H2&gt;
+
+  To transfer a file from the ground to the spacecraft, a 'put' request is given
+  to the ground engine. There is no ground command telling CF to 'get' a file.
+  The first indication to CF that an uplink transaction has started, is the
+  receipt of the first PDU sent by the ground and received by CF.
+
+  To transfer a file from the spacecraft to the ground, a transmit file ground
+  command is sent to CF. This ground command translates into a 'put' request to
+  the flight engine.
+
+  The CFDP protocol does not support the concept of a 'get' request. The request
+  to transfer a file is always made with a 'put' request at the source peer
+  (i.e. where the file is located).
+
+  &lt;H2&gt; Transaction Class &lt;/H2&gt;
+
+  All transfers are sent and received in one of two modes, class 1 or class 2.
+  The CF application is capable of sending and receiving in class 1 and class 2.
+  Class 1 transfers are similar to UDP in that they send the data once and
+  expect no feedback from the peer. Class 2 transfers are more reliable and
+  attempt to fill in data that may have been dropped on the first attempt.
+  Class 2 transfers are analogous to TCP.
+
+  &lt;H2&gt; Queue Entries &lt;/H2&gt;
+
+  The CF application keeps track of files in queue entries. There is one queue
+  entry per transaction. The queue entries contain information such as filename
+  and path, priority, class, channel etc. about each transaction. For incoming
+  file transactions, the queue entry starts on the incoming active queue and is
+  moved to the incoming history queue when the transaction is complete. For
+  outgoing transactions, all queue entries start out on the pending queue (in
+  response to a playback file command for example). The queue entry is then
+  moved to the outgoing active queue when the transaction begins and to the
+  history queue when complete.
+
+  &lt;H2&gt; Queues &lt;/H2&gt;
+
+  The CF application tracks pending transactions, active transactions and
+  completed transactions in its queues. For downlink (or outgoing) transactions
+  there are three queues per channel, a pending queue, an active queue and a
+  history queue. All queues hold queue entries that are described in the 'Queue
+  Entries' section of this document. When a request to downlink a file is
+  received, a queue entry is created and placed on the pending queue. When the
+  transaction begins, the corresponding queue entry is moved from the pending
+  queue to the active queue. After the transaction completes, (whether
+  successful or not) the queue entry is moved from the active queue to the
+  history queue. The history queue has a fixed depth, defined by the user in the
+  CF configuration table. If a transaction is added when the history queue is
+  full, the oldest queue entry is deleted.
+
+  For uplink (or incoming) transactions there are two queues, an active queue
+  and a history queue. Uplink transactions do not have a pending queue as with
+  outgoing transactions. When an uplink transaction begins, a queue entry is
+  added to the active queue. When the transaction completes, the queue entry is
+  moved from the active queue to the history queue. The history queue depth is
+  specified by the user in the CF configuration table. When the history queue is
+  full and an active transaction finishes, the oldest entry on the history queue
+  is deleted.
+
+  &lt;H2&gt; Incoming File Transactions &lt;/H2&gt;
+
+  When files are transferred in the uplink direction, the ground peer receives
+  the initial request to send the file. This action causes the ground peer to
+  send a series of PDUs that are routed to the CF application. The CF
+  application does not get a request to receive a file. The first indication to
+  the CF application that an uplink transaction has started, is the receipt of
+  the first PDU of the transaction.
+
+  The CF application is capable of receiving files in class 1 or class 2 mode on
+  a per-file basis. The class mode is embedded in the PDUs received.
+
+  The message ID for incoming PDUs is defined in the CF configuration table.
+
+  When a file is uploaded to the spacecraft in class 2 mode, the CF app must
+  acknowledge the receipt of the file by sending an acknowledgment PDU to the
+  ground. This response must be sent on a specified output channel (output
+  channels are described later). The channel number for this response is defined
+  by the user in the configuration table.
+
+  The CF application keeps a list of all incoming transactions in its internal
+  queues. There are two queues designated for incoming transfers. The incoming
+  active queue holds information about all incoming transactions that are
+  currently active. The incoming history queue holds information about all
+  incoming transactions that are complete. The full contents of either queue can
+  be viewed on command. The depth of the history queue is defined in the table.
+
+  &lt;H2&gt; Outgoing File Transactions &lt;/H2&gt;
+
+  All outgoing file transactions are initiated by the CF application in response
+  to a playback file command, a playback directory command or a file found in a
+  polling directory. The peer entity does not request to receive a file. All
+  outgoing file transactions are inserted into a pending queue by CF before they
+  are actually sent. The CF application reads the pending queue (if reading is
+  enabled) and starts the next transaction immediately after the data from the
+  previous file has been sent. This process of queueing files and sending them
+  sequentially, prevents the engine from being inundated when the user requests
+  to send multiple files. Once the transactions begins, the queue entry is moved
+  to the outgoing active queue and then to the outgoing history queue when it's
+  complete. The engine processes the outgoing file transactions when it is
+  'cycled'. The number of engine cycles per wake up is defined in the table. At
+  most one PDU will be sent on a single engine cycle.
+
+  &lt;H2&gt; Output Channels &lt;/H2&gt;
+
+  The CF application supports sending files to a configurable number of
+  destinations. The output channels are configured through table parameters.
+  Each channel has a pending queue, active queue and history queue.  All queue
+  entries for outgoing transactions start out on the pending queue, then get
+  moved to the active queue when the transaction begins. After the transaction
+  is complete the queue entry is moved to the history queue. The queues may be
+  viewed by command at any time. The pending queue reads may be enabled or
+  disabled at anytime. Each channel has a dedicated throttling semaphore, peer
+  entity ID, message ID for outgoing PDUs and a configurable number of polling
+  directories. File output transactions may occur simultaneously on different
+  channels. The engine processes all active outgoing transactions in a
+  round-robin fashion so as not to starve any one transaction. CF is not
+  capable of prioritizing across channels.
+
+  &lt;H2&gt; Queueing Files for Output &lt;/H2&gt;
+
+  There are three ways to request a file (or files) to be sent. The file
+  transmit command, the directory playback command or through poll directory
+  processing. The CF polling directory feature continually checks a directory
+  for files and after detecting a new file in the directory, inserts a queue
+  entry containing the file name (and other info) on the pending queue.
+
+  &lt;H2&gt; Priority &lt;/H2&gt;
+
+  Each file-send transaction has an associated priority which is specified by
+  the user. The priority of the transaction determines where it is inserted in
+  the pending queue. High priority transactions get inserted toward the front of
+  the queue. There are 256 levels of priority, zero being the highest. Priority
+  is given as a command parameter for the playback file command and the playback
+  directory command. For poll directory processing, each polling directory has
+  an associated priority given as a table parameter. Please note that this
+  priority applies only within a channel. CF does not support prioritization
+  across channels. Prioritization across channels (if needed) would typically be
+  implemented by the application receiving the PDUs.
+
+  &lt;H2&gt; Preserve Setting &lt;/H2&gt;
+
+  When an outgoing file transaction is successfully complete, the user may want
+  the file to be deleted by CF. The preserve setting allows the user to specify
+  whether the file is deleted or not. The preserve setting gives two choices,
+  delete or keep. This setting is specified as a parameter in the transmit file
+  command, the playback directory command and on each polling directory. If a
+  file transaction is not successful, the file cannot be deleted by CF.
+
+  &lt;H2&gt; Throttling Semaphore &lt;/H2&gt;
+
+  Throttling outgoing PDUs may be necessary when the application that receives
+  the outgoing PDUs (typically TO) needs to control the flow of packets. The
+  throttling semaphore is a counting semaphore that is shared between another
+  application and CF. Throttling may be configured as in-use or not-in-use on a
+  per-channel basis. To configure as in-use, the receiving app must create a
+  counting semaphore during initialization, using the name defined in the CF
+  table. After creation, the receiving app must 'give' the semaphore each time
+  it is ready to receive a PDU. On the CF side, CF attempts to get the semaphore
+  ID by calling an OSAL function to Get-SemaphoreID-by-Name during CF
+  initialization. The name defined in the table is given as a parameter to this
+  call. CF has code to ensure that this call is executed after the receiving app
+  initializes. If the attempt to Get-SemaphoreID-by-Name fails, then throttling
+  on that channel is not-in-use and PDUs are sent whenever the engine has a PDU
+  ready to output. If successful, each time the engine has a PDU to output, CF
+  will attempt a non-blocking 'take' on the throttling semaphore. If the 'take'
+  is successful, the green light counter in telemetry is incremented and the PDU
+  is sent on the software bus. If the 'take' is not successful, the PDU is held
+  by the engine, the red-light counter is incremented and the 'take' is called
+  again on the next engine cycle.
+
+  &lt;H2&gt; Polling Directories &lt;/H2&gt;
+
+  A polling directory is a directory that is polled by CF periodically. CF does
+  not create these directories. They must be created before they can be enabled.
+  When files are found in a polling directory that is enabled, the files are
+  automatically queued by CF for output. The polling rate is configurable and
+  each channel has a configurable number of polling directories.  Each polling
+  directory has an enable, a class setting, a priority setting, a preserve
+  setting and a destination directory. When enabled, CF will periodically check
+  the polling directories for files. When a file is found, CF will place the
+  file information on the pending queue if it is closed and not already on the
+  queue and not currently active. All polling directories are checked at the
+  same frequency which is defined by the table parameter
+  NumWakeupsPerPollDirChk. Setting this parameter to one will cause CF to check
+  the polling directories at the fastest possible rate, every time it receives a
+  'wake-up' command. Checking polling directories is a processor-intensive
+  effort, it is best to keep the polling rate as low as possible.
+
+  &lt;H2&gt; Efficiency &lt;/H2&gt;
+
+  The CF application can be a processor intensive application.  Some operating
+  systems have significant overhead associated with file system operations.
+  Opening and closing a file, querying the file system for file size, deleting
+  the file, opening directories, looping through a directory list can consume a
+  considerable amount of processor time. For this reason, transmitting small
+  files at a high rate for long periods of time may be a worst-case-timing
+  scenario. File system overhead is less of an issue when file sizes are large.
+  The terms 'large' and 'small' used here are relative to the downlink rate.
+  With a downlink rate of 1 Mbps for example, a good file size would be 1 MByte
+  or larger.
+
+  Also, it is best to keep the number of files on the pending queue to a
+  minimum. When the number of files on the pending queue is high, (such as
+  hundreds) prioritization and standard checking causes CF processing to be
+  significant each time a file is added to the queue.
+
+  Polling directory processing is also subject to file system overhead.  It is
+  recommended that the rate of poll processing be kept low and unused polling
+  directories should be disabled.
+
+  &lt;H2&gt; Memory Use &lt;/H2&gt;
+
+  CF uses statically allocated memory based on configuration parameters defined
+  in the platform configuration file. This static memory is used for queue entries.
+  The life cycle of a queue entry begins when a request to queue a file for downlink
+  is received. Or in the case of incoming transactions, the queue entry is reserved
+  when the meta-data PDU is received by CF. For the incoming transaction case, the
+  queue entry starts out on the incoming active queue, then the entry is moved to
+  the history queue when the transaction completes. For outgoing transactions, the
+  queue entry starts out on the pending queue, then moves to the active queue when
+  the transaction begins, then moves to the history queue when the transaction is
+  complete.
+
+  The history queue has a sliding window affect. When the queue is full and a
+  new transaction needs to be added, the oldest transaction will be removed,
+  making room for the new transaction.
+
+  The history queue depth is a configuration parameter and specified in the CF
+  configuration table. When the queue entry is 'pushed-off' the history queue,
+  the memory for the queue will be available.
+
+  For incoming file transactions, CF uses a statically allocated buffer for the
+  incoming pdu. The size of this buffer is defined by the platform configuration
+  parameter, CF_MAX_PDU_SIZE. The incoming PDU's are copied from the Software Bus
+  into this buffer and then passed to the engine.
+
+  For outgoing file transactions, the engine uses a statically allocated buffer for
+  PDUs. The size of this buffer is defined by platform configuration parameter,
+  CF_MAX_PDU_SIZE. The engine informs the CF app when it has a PDU
+  ready to go out. In response to this, the CF app checks with the downlink app
+  (e.g. TO) to see if it is ready to receive a PDU. This is done by the CF app
+  trying to 'take' the throttling semaphore defined in the CF configuration
+  table. If the CF app successfully 'takes' the semaphore, it gives a green
+  light to the engine and the PDU is then released by the engine and sent to the
+  software bus via the zero-copy delivery mode. There is a green light counter
+  and a red light counter for each output channel in telemetry.
+
+  Prev: \ref cfscfovrdsn &lt;BR&gt;
+  Next: \ref cfscfdg
+**/
+
+/**
+  \page cfscfdg CFS CFDP Deployment Guide
+
+  Follow the general guidelines below for platform deployment of the CFDP app.
+
+  &lt;H2&gt; Configuration &lt;/H2&gt;
+  CF uses two sets of configuration parameters: compile-time configurable parameters
+  in the cf_platform_cfg.h file and run-time configurable parameters in the cf_def_cfg.c
+  file.  Most parameters are included in the cf_def_cfg.c file for maximum flexibility.
+
+  CF expects to receive a CF_WAKEUP_MID message from the SCH (scheduler) app at a fixed
+  rate. The number of wakeups per second is reflected in the configuration table. This
+  drives CF's timing.
+
+  &lt;H3&gt; Channels &lt;/H3&gt;
+
+  CF version 3.0 has a concept of "channels" which have their own
+  configuration. The channel configuration is done in the cf_def_cfg and allows
+  message IDs for incoming and outgoing PDUs to be unique per channel. Each channel can be
+  configured with polling directories as well.
+
+  &lt;H3&gt; Flow Control &lt;/H3&gt;
+
+  By default, CF assumes that a per-channel semaphore is provided by the Telemetry Output
+  (TO) application or an equivalent application.  The semaphore name is defined in the
+  CF configuration table and must match the name of the semaphore created by TO. If
+  TO does not create a semaphore, the semaphore name can be left as an empty string
+  in the configuration table indicating that a semaphore should not be used.  If a
+  semaphore is expected and not found, the application will terminate during
+  initialization.  If no semaphore is used, the outgoing messages per wakeup may
+  need to be more limited. It's a valid configuration to have both the semaphore and maximum
+  outgoing messages per wakeup as well.
+
+  &lt;H2&gt; Integration &lt;/H2&gt;
+
+  &lt;H3&gt; Software Bus &lt;/H3&gt;
+
+  Each channel has an input message ID that is subscribed on, and a message ID to publish its messages on.
+
+  &lt;H3&gt; Scheduler &lt;/H3&gt;
+
+  CF as a whole expects the CF_WAKEUP_MID message as described earlier at a fixed rate.
+  If the number of wakeups per second is changed in SCH, then the ticks_per_second
+  configuration parameter in the CF configuration table must also be updated.
+
+  &lt;H3&gt; Endianness &lt;/H3&gt;
+
+  CF is endian agnostic and no longer requires specific compile time configuration/defines
+  to handle different endian systems.
+
+  &lt;H3&gt; Integration with TO &lt;/H3&gt;
+
+  TO's pipe needs to be able to receive packets of #CF_MAX_PDU_SIZE
+
+  Prev: \ref cfscfopr &lt;BR&gt;
+  Next: \ref cfscfcfgpg
+
+**/
+
+/**
+ * \page cfscfcfgpg CFS CFDP Configuration
+
+  The CF application provides the user with a set of compile-time configuration
+  parameters as well as a set of run-time configuration parameters. All
+  compile-time configuration parameters are specified in headers files. There
+  are three header files used by the CF application, cf_platform_cfg.h,
+  cf_perfids.h and cf_msgids.h. For details regarding the compile-time
+  configuration parameters, refer to the header files.
+
+ * \ref cfscfmissioncfg
+ *
+ * \ref cfscfplatformcfg
+
+  All run-time configuration parameters are specified in the CF configuration
+  table.
+
+ * \ref cfscftbl
+
+  Prev: \ref cfscfdg &lt;BR&gt;
+  Next: \ref cfscfcmdspg
+
+ */
+
+/**
+ * \page cfscfcmdspg CFS CFDP Commands
+ *
+ * \subpage cfscfcmddesc
+ *
+ * \ref cfscfcmdmid
+ *
+ * \ref cfscfcmdstructs
+ *
+ * \ref cfscfcmdcodes
+
+  Prev: \ref cfscftbl &lt;BR&gt;
+  Next: \ref cfscftlmpg
+
+ */
+
+/**
+  \page cfscfcmddesc CFS CFDP Command Descriptions
+
+  &lt;H2&gt; Noop Command &lt;/H2&gt;
+
+  The CF Noop command is sent to CF using message ID #CF_CMD_MID with command
+  code #CF_NOOP_CC. This command is useful for verifying that the command
+  interface to the CF Application is working. It also causes an event message
+  to be generated that contains the CF Application's version information.
+  It should be noted that the version information can also be obtained when the
+  Application starts up. After CF has successfully initialized itself, an event
+  message is generated that indicates successful initialization and also includes the
+  Application's version information.  Both of these event messages are
+  'Informational' and are NOT filtered by default.
+
+
+  &lt;H2&gt; Reset Counters Command &lt;/H2&gt;
+
+  The CF Reset counters command is sent to CF using message ID #CF_CMD_MID with
+  command code #CF_RESET_CC. This command is used to reset the counters in the
+  housekeeping telemetry packet. All counters can be reset or they can be reset
+  by category. The categories are command counters, fault counters, incoming
+  file counters and outgoing file counters.
+
+  When the command is executed successfully, the command counter will be zero
+  and an event message will be generated.
+
+  If the command is not successful, the command error counter will increment and
+  an error event will be generated indicating the reason for failure.
+
+  \verbatim
+     *  \par Command Structure
+     *       #CF_UnionArgs_Payload_t where byte[0] specifies the counters type, byte[1-3] don't care:
+     *       - 0 = all counters
+     *       - 1 = command counters
+     *       - 2 = fault counters
+     *       - 3 = up counters
+     *       - 4 = down counters
+     typedef union CF_UnionArgs_Payload
+     {
+         uint32 dword;    
+         uint16 hword[2]; 
+         uint8  byte[4];  
+     }
+CF_UnionArgs_Payload_t;
+\endverbatim
+
+    The command parameter byte[0] identifies which category of counters to
+        reset.counters.The value should be set to one of five possible values defined in the reset enumeration.
+
+  \verbatim typedef enum {
+            CF_Reset_all     = 0, 
+            CF_Reset_command = 1, 
+            CF_Reset_fault   = 2, 
+            CF_Reset_up      = 3, 
+            CF_Reset_down    = 4  
+        } CF_Reset_t;
+  \endverbatim
+
+
+
+  &lt;H2&gt; Transmit File Command &lt;/H2&gt;
+    
+  The CF Transmit File command is sent to CF using message ID #CF_CMD_MID with
+  command code #CF_TX_FILE_CC.
+  
+  This command is used to queue a file to be sent by the CF application. To
+  'transmit' a file means to output, or send a file.
+  
+  When the command is executed successfully, the command counter will increment
+  and an event will be generated.
+  
+  If the command is not successful, the command error counter will increment and
+  an error event will be generated indicating the reason for failure.
+
+  \verbatim
+  typedef struct CF_TxFileCmd
+  {
+      CFE_MSG_CommandHeader_t cmd_header;                        
+      uint8                   cfdp_class;                        
+      uint8                   keep;                              
+      uint8                   chan_num;                          
+      uint8                   priority;                          
+      CF_EntityId_t           dest_id;                           
+      char                    src_filename[CF_FILENAME_MAX_LEN]; 
+      char                    dst_filename[CF_FILENAME_MAX_LEN]; 
+  } CF_TxFileCmd_t;
+  \endverbatim
+  
+  The first parameter, \c cfdp_class, identifies whether the file will be transferred
+  using #CF_CFDP_CLASS_1 or #CF_CFDP_CLASS_2. For Class 1 transfers, CF will send the data
+  once and expect no feedback from the peer. Class 2 transfers are more reliable
+  and attempt to fill in data that may have been dropped on the first attempt.
+
+  The second parameter, \c keep, specifies whether the file will be deleted
+  or preserved by CF after the transfer successfully completes. To have the file
+  deleted by CF, set this parameter to zero. If this parameter is set to one,
+  the file will not be deleted. Regardless of the setting, if the file-transfer
+  is not successful the file will not be deleted. 
+  
+  The third parameter, \c chan_num, specifies the output channel in which the
+  file will be sent. The value range for this parameter is 0 to
+  (#CF_NUM_CHANNELS - 1). #CF_NUM_CHANNELS is specified in the
+  CF platform configuration file.
+    
+  The fourth parameter, \c priority, specifies where the file is placed on the
+  pending queue. High priority files are placed at the front of the queue. A 
+  value of zero is the highest priority. A value of 255 is the lowest priority.
+    
+  The fifth parameter, \c src_filename, specifies the path name and filename to
+  send. This parameter is a string with max size equal to #CF_FILENAME_MAX_LEN
+  bytes. The src_filename must be an existing file. The string must begin
+  with a forward slash, have no spaces and be properly terminated.
+  
+  The last parameter, \c dst_filename, specifies the destination path name and
+  filename. This parameter is a string with max size equal to #CF_FILENAME_MAX_LEN
+  bytes. This parameter is delivered to the peer so that the peer knows
+  where to store the file. The peer engine dictates the requirements of this
+  string. The CF application allows this string to be NULL in which case the
+  peer engine will store the incoming file in the default directory. If the
+  string is not NULL, CF requires that it is properly terminated and contains no
+  spaces. This parameter can be used to rename the file after it's received at
+  the destination.
+  
+  
+  
+  &lt;H2&gt; Playback Directory Command &lt;/H2&gt;
+  
+  The CF Playback Directory command is sent to CF using message ID #CF_CMD_MID
+  with command code #CF_PLAYBACK_DIR_CC.  The command causes an event message
+  to be generated. This command is used to queue the files that are located
+  in the specified directory at the time the command is received.
+  
+  If the command is not successful, the command error counter will increment and
+  an error event will be generated indicating the reason for failure.
+  
+  To 'playback' a directory means to send all files in that directory. To queue
+  the files for sending, the class must be 1 or 2, the channel must be in-use,
+  the files must be closed and not be active or pending, the preserve parameter
+  must be 0 (Delete) or 1 (Keep), the path names must include no spaces and be
+  properly terminated. The src_filename must begin and end with a forward slash. All
+  possible values for Priority are valid. A priority value of zero is the
+  highest priority.
+      
+  \verbatim
+  typedef CF_TxFileCmd_t CF_PlaybackDirCmd_t;
+  typedef struct CF_TxFileCmd
+  {
+      CFE_MSG_CommandHeader_t cmd_header;                        
+      uint8                   cfdp_class;                        
+      uint8                   keep;                              
+      uint8                   chan_num;                          
+      uint8                   priority;                          
+      CF_EntityId_t           dest_id;                           
+      char                    src_filename[CF_FILENAME_MAX_LEN]; 
+      char                    dst_filename[CF_FILENAME_MAX_LEN]; 
+  } CF_TxFileCmd_t;
+  \endverbatim
+    
+  The first parameter, \c cfdp_class, identifies whether the files will be
+  transferred using #CF_CFDP_CLASS_1 or #CF_CFDP_CLASS_2. For Class 1 transfers, CF will
+  send the data once and expect no feedback from the peer. Class 2 transfers are
+  more reliable and attempt to fill in data that may have been dropped on the
+  first attempt.
+
+  The second parameter, \c keep, specifies whether the files will be deleted
+  or preserved by CF after the transfer successfully completes. To have the
+  files deleted by CF, set this parameter to zero. If this parameter is set to
+  one, the file will not be deleted. Regardless of the setting, if the
+  file-transfer is not successful the file will not be deleted. 
+
+  The third parameter, \c chan_num, specifies the output channel in which the files
+  will be sent. All files in the directory will be sent on the specified
+  channel. The value range for this parameter is 0 to (#CF_NUM_CHANNELS
+  - 1). #CF_NUM_CHANNELS is specified in the CF platform configuration
+  file.
+  
+  The fourth parameter, \c priority, specifies where the files are placed on the
+  pending queue. All files in the directory will be queued with the given
+  priority. High priority files are placed at the front of the queue. A value of
+  zero is the highest priority. A value of 255 is the lowest priority.
+    
+  The fifth parameter, \c src_filename, specifies the path name where the files are
+  located. The string must have no spaces, be properly terminated and have a
+  forward slash as the last character. This parameter is a string with max size
+  equal to #CF_FILENAME_MAX_LEN characters.
+  
+  The last parameter, \c dst_filename, specifies where the files are to be stored
+  after they are received by the peer. This parameter is a string with max size
+  equal to #CF_FILENAME_MAX_LEN bytes. This parameter is delivered to the peer so
+  that the peer knows where to store the file. The peer engine dictates the requirements
+  of this string. The CF application allows this string to be NULL in which case the
+  peer engine will store the incoming files in the default directory. If the string 
+  is not NULL, CF requires that it is properly terminated, contains no spaces and ends
+  with a forward slash. There is no way to rename the files at the destination as in 
+  the Playback File command.
+
+  
+  &lt;H2&gt; Freeze Command &lt;/H2&gt;
+  
+  The CF Freeze command is sent to CF using message ID #CF_CMD_MID with command
+  code #CF_FREEZE_CC. The freeze command has no command parameters. This command
+  is used to freeze all transactions. The freeze command should be applied to
+  both the source and destination peers at nearly the same time. 
+  
+  When the command is executed successfully, the command counter is incremented
+  and an event message will be generated. This event message is an
+  'Informational' type and is NOT filtered by default. If the command is not successful,
+  the command error counter will increment and an error event will be generated
+  indicating the reason for failure.
+   
+ 
+  &lt;H2&gt; Thaw Command &lt;/H2&gt;
+  
+  The CF Thaw command is sent to CF using message ID #CF_CMD_MID with command
+  code #CF_THAW_CC. The thaw command has no command parameters. This command is
+  used to thaw all transactions that were commanded to 'freeze' earlier. The
+  thaw command should be applied to both the source and destination peers at
+  nearly the same time.
+  
+  When the command is executed successfully, the command counter is incremented
+  and an event message will be generated. This event message is an
+  'Informational' type and is NOT filtered by default. If the command is not successful,
+  the command error counter will increment and an error event will be generated
+  indicating the reason for failure.
+
+  
+  &lt;H2&gt; Suspend Command &lt;/H2&gt;
+  
+  The CF Suspend command is sent to CF using message ID #CF_CMD_MID with command
+  code #CF_SUSPEND_CC. This command is used to suspend one or all transactions.
+  The suspend command has one command parameter that indicates what transaction
+  to suspend. See details below.  The suspend command should be applied to both
+  the source and destination peers at nearly the same time.  
+  
+  When the command is executed successfully, the command counter is incremented
+  and an event message will be generated. This event message is an
+  'Informational' type and is NOT filtered by default. If the command is not successful,
+  the command error counter will increment and an error event will be generated
+  indicating the reason for failure.
+  
+  NOTE: Suspending an outgoing transaction before EOF is sent, will pause the
+  flow of PDUs on that channel. This happens because the next file is started
+  when the current file EOF is sent. If a user wishes to stop the current transaction
+  (before the EOF is sent) and still allow the next pending file to begin, the
+  current transaction should be cancelled (or abandoned) in lieu of being
+  suspended. Canceling is always a better option than abandoning. 
+  
+  NOTE: When a suspended transaction is cancelled, the cancel does not take 
+  affect until the transaction is resumed.
+
+  \verbatim 
+  typedef struct CF_TransactionCmd
+  {
+      CFE_MSG_CommandHeader_t cmd_header; 
+      CF_TransactionSeq_t     ts;         
+      CF_EntityId_t           eid;        
+      uint8                   chan;       
+      uint8                   spare[3];   
+  } CF_TransactionCmd_t;
+
+  \endverbatim
+
+  The \c ts parameter specifies the transaction sequence number to suspend.
+  The \c eid parameter specifies the entity id used in the transaction.
+  The \c chan parameter can specify a single channel, all channels, or the channel
+  corresponding to the transaction sequence number.  
+    
+  
+  &lt;H2&gt; Resume Command &lt;/H2&gt;
+  
+  The CF Resume command is sent to CF using message ID #CF_CMD_MID with command
+  code #CF_RESUME_CC. This command is used to resume a suspended transaction or
+  all transactions. The resume command has one command parameter that indicates
+  what transaction to resume. See details below.  The resume command should be
+  applied to both the source and destination peers at nearly the same time.
+  
+  When the command is executed successfully, the command counter is incremented
+  and an event message will be generated. This event message is an
+  'Informational' type and is NOT filtered by default. If the command is not successful,
+  the command error counter will increment and an error event will be generated
+  indicating the reason for failure.
+
+  \verbatim 
+  typedef struct CF_TransactionCmd
+  {
+      CFE_MSG_CommandHeader_t cmd_header; 
+      CF_TransactionSeq_t     ts;         
+      CF_EntityId_t           eid;        
+      uint8                   chan;       
+      uint8                   spare[3];   
+  } CF_TransactionCmd_t;
+
+  \endverbatim
+
+  The \c ts parameter specifies the transaction sequence number to resume.
+  The \c eid parameter specifies the entity id used in the transaction.
+  The \c chan parameter can specify a single channel, all channels, or the channel
+  corresponding to the transaction sequence number.  
+    
+  
+  &lt;H2&gt; Cancel Command &lt;/H2&gt;
+
+  The CF Cancel command is sent to CF using message ID #CF_CMD_MID with command
+  code #CF_CANCEL_CC. This command is used to cancel a transaction or all
+  transactions. The cancel command has one command parameter that indicates what
+  transaction to cancel. See details below.  The cancel command should be sent
+  to the source entity only. For example, uplink transactions should be
+  cancelled at the ground engine. The CF application should not receive a cancel
+  command in this case. The CF application will learn of the cancel request
+  through the protocol messages. Downlink transactions and outgoing transactions 
+  (with respect to CF)  should be cancelled by sending this CF cancel command.
+
+  When the command is executed successfully, the command counter is incremented
+  and an event message will be generated. This event message is an
+  'Informational' type and is NOT filtered by default. If the command is not successful,
+  the command error counter will increment and an error event will be generated
+  indicating the reason for failure.
+  
+  NOTE: If a Cancel command is received by CF on an outgoing transaction that 
+  is suspended, the cancel does not take affect until the transaction is 
+  resumed.  
+
+
+  \verbatim 
+  typedef struct CF_TransactionCmd
+  {
+      CFE_MSG_CommandHeader_t cmd_header; 
+      CF_TransactionSeq_t     ts;         
+      CF_EntityId_t           eid;        
+      uint8                   chan;       
+      uint8                   spare[3];   
+  } CF_TransactionCmd_t;
+
+  \endverbatim
+
+  The \c ts parameter specifies the transaction sequence number to cancel.
+  The \c eid parameter specifies the entity id used in the transaction.
+  The \c chan parameter can specify a single channel, all channels, or the channel
+  corresponding to the transaction sequence number.  
+
+  
+  &lt;H2&gt; Abandon Command &lt;/H2&gt;
+  
+  The CF Abandon command is sent to CF using message ID #CF_CMD_MID with command
+  code #CF_ABANDON_CC. This command is used to abandon a transaction or all
+  transactions. The abandon command has one command parameter that indicates
+  what transaction to abandon. See details below.  The abandon command should be
+  applied to both the source and destination peers at nearly the same time. 
+
+  When the command is executed successfully, the command counter is incremented
+  and an event message will be generated. This event message is an 'Informational' 
+  type and is NOT filtered by default.
+  
+  If the command is not successful, the command error counter will increment and 
+  an error event will be generated indicating the reason for failure.
+  When the command is executed successfully, the command counter is incremented
+  and an event message will be generated. This event message is an
+  'Informational' type and is NOT filtered by default. If the command is not successful,
+  the command error counter will increment and an error event will be generated
+  indicating the reason for failure.
+  
+  NOTE: Unlike the cancel command, if a suspended transaction is abandoned, the
+  transaction will be abandoned at the time the abandon command is received.
+  Likewise, if a frozen transaction is abandoned, the transaction will be
+  abandoned when the abandoned cmd is received.
+    
+  \verbatim 
+  typedef struct CF_TransactionCmd
+  {
+      CFE_MSG_CommandHeader_t cmd_header; 
+      CF_TransactionSeq_t     ts;         
+      CF_EntityId_t           eid;        
+      uint8                   chan;       
+      uint8                   spare[3];   
+  } CF_TransactionCmd_t;
+
+  \endverbatim
+
+  The \c ts parameter specifies the transaction sequence number to abandon.
+  The \c eid parameter specifies the entity id used in the transaction.
+  The \c chan parameter can specify a single channel, all channels, or the channel
+  corresponding to the transaction sequence number.  
+  
+  
+  
+  &lt;H2&gt; Set MIB Parameter Command &lt;/H2&gt;
+  
+  The CF Set MIB Parameter command is sent to CF using message ID #CF_CMD_MID
+  with command code #CF_SET_MIB_PARAM_CC. This command is used to change the
+  flight engine Message Information Base (MIB). The MIB is a term used in the
+  CCSDS blue book that can be interpreted as the engine configuration
+  parameters. The command has two command parameters, Param indicates which
+  parameter to change, and Value indicates the new setting. 
+  
+  When the command is executed successfully, the command counter is incremented
+  and an event message will be generated displaying the parameter values received. 
+  This event message is an 'Informational' type and is NOT filtered by default.
+  
+  If the command is not successful, the command error counter will increment and
+  an error event will be generated indicating the reason for failure.
+    
+  This command may be used to change any flight MIB parameter.
+  
+  NOTE: Changing these parameters will change the actual table values, thereby 
+  changing the checksum of the CF configuration table.
+      
+  \verbatim 
+  typedef struct CF_SetParamCmd
+  {
+      CFE_MSG_CommandHeader_t cmd_header; 
+      uint32                  value;      
+      uint8                   key;        
+      uint8                   chan_num;   
+      uint8                   spare[2];   
+  } CF_SetParamCmd_t;
+
+  \endverbatim
+
+  The \c value parameter specifies the new value of the engine
+  parameter.
+    
+  The \c key parameter specifies which engine parameter to set.
+  
+  The \c chan_num parameter specifies the channel number to set.
+    
+  
+  &lt;H2&gt; Get MIB Parameter Command &lt;/H2&gt;
+  
+  The CF Set MIB Parameter command is sent to CF using message ID #CF_CMD_MID
+  with command code #CF_GET_MIB_PARAM_CC. This command is used to view a single
+  Message Information Base (MIB) parameter. The MIB is a term used in the CCSDS
+  blue book that can be interpreted as the engine configuration parameters. 
+    
+  The command has two command parameter, key indicates which parameter to
+  view and the channel number specifies the channel configuration to use.
+  The parameter given and its current setting will be displayed in the event.
+  
+  When the command is executed successfully, the command counter is incremented
+  and an event message will be generated displaying the given parameter value 
+  and the current setting for that parameter. This event message is an 'Informational' 
+  type and is NOT filtered by default. 
+  
+  If the command is not successful, the command error counter will increment and
+  an error event will be generated indicating the reason for failure.
+      
+  This command may be used to view any flight MIB parameter.  
+     
+  \verbatim 
+  typedef struct CF_GetParamCmd
+  {
+      CFE_MSG_CommandHeader_t cmd_header; 
+      uint8                   key;        
+      uint8                   chan_num;   
+  } CF_GetParamCmd_t;
+
+  \endverbatim
+    
+  The \c key parameter specifies which engine parameter to get.
+  
+  The \c chan_num parameter specifies the channel number to get the data from.
+    
+    
+  &lt;H2&gt; Write Queue Information Command &lt;/H2&gt;
+  
+
+  The CF Write Queue Information command is sent to CF using message ID
+#CF_CMD_MID with command code #CF_WRITE_QUEUE_CC.  
+  
+  This command is used to write the contents of a single queue to a file. CF has
+  a pending, queue, an active queue and a history queue for each output channel.
+  CF also has an active queue and a history queue for incoming transactions.
+
+  When the command is executed successfully, the command counter is incremented
+  and an event message will be generated.
+
+  If the command is not successful, the command error counter will increment and
+  an error event will be generated indicating the reason for failure.  
+    
+  \verbatim
+  typedef struct CF_WriteQueueCmd
+  {
+      CFE_MSG_CommandHeader_t cmd_header; 
+      uint8                   type;       
+      uint8                   chan;       
+      uint8                   queue;      
+      uint8                   spare;      
+
+      char filename[CF_FILENAME_MAX_LEN]; 
+  } CF_WriteQueueCmd_t;
+
+  \endverbatim
+  
+  The first parameter, \c type, specifies the queue type. The queue type may be 
+  uplink (incoming), or downlink (outgoing), or both,
+
+  The second parameter, \c chan, is necessary only if the type parameter is set
+  to a value of two (downlink). If the Type parameter is set to a value of one
+  (uplink), the code does not read this parameter. Chan specifies the downlink 
+  channel that owns the queue. The value range for this parameter is 0 to 
+  (#CF_NUM_CHANNELS - 1). #CF_NUM_CHANNELS is specified in the 
+  CF platform configuration file.
+  
+  The third parameter, \c queue, identifies which queue contents will be written 
+  to the file. A value of 0 for pending queue, 1 for active and 2 for history.  
+  Because there is no uplink pending queue, a value of zero is not valid when 
+  the Type parameter is set to one (uplink). 
+
+  The fourth parameter, \c filename, specifies the name of the file that will
+  receive the queue data. This parameter is a string with max size equal to
+#CF_FILENAME_MAX_LEN bytes specified in the CF platform configuration file.
+
+  
+  &lt;H2&gt; Enable Dequeue Command &lt;/H2&gt;
+  
+  The CF Enable Dequeue command is sent to CF using message ID #CF_CMD_MID with
+  command code #CF_ENABLE_DEQUEUE_CC. 
+  
+  This command is used to enable reading from the pending queue on a particular
+  channel. It has one parameter (channel) and is sent when the pending queue
+  reads are disabled for that channel. The pending queue holds the names of the
+  files that are waiting to be sent out by CF. This command has no affect on
+  incoming file transactions.
+
+  When the command is executed successfully, the command counter is incremented
+  and an event message will be generated.
+
+  If the command is not successful, the command error counter will increment and
+  an error event will be generated indicating the reason for failure.  
+  
+  \verbatim
+       *       Command Structure
+       *       #CF_UnionArgs_Payload_t where byte[0] specifies the channel number or all channels
+       *       - 255 = all channels
+       *       - else = single channel  
+       typedef union CF_UnionArgs_Payload
+  {
+      uint32 dword;    
+      uint16 hword[2]; 
+      uint8  byte[4];  
+  } CF_UnionArgs_Payload_t;
+  \endverbatim  
+
+  The first and only parameter, \c byte[0], specifies which pending queue to enable.
+  Each channel has one pending queue. The value range for this parameter is 0 to 
+  255. A value of 255 specifies all channels. All other values are for a single channel.
+
+
+  &lt;H2&gt; Disable Dequeue Command &lt;/H2&gt;
+ 
+  The CF Enable Dequeue command is sent to CF using message ID #CF_CMD_MID with
+  command code #CF_DISABLE_DEQUEUE_CC. 
+  
+  This command is used to disable reading from the pending queue on a particular
+  channel. It has one parameter (channel) and sent when the user would like to 
+  stop sending files on a particular channel. 
+  
+  NOTE: This command does not stop a file transaction that is in progress on the 
+  specified channel. Use the cancel command to stop a file transaction that is 
+  in progress.
+  
+
+  When the command is executed successfully, the command counter is incremented
+  and the an event message will be generated.
+
+  If the command is not successful, the command error counter will increment and
+  an error event will be generated indicating the reason for failure.  
+  
+  \verbatim
+       *       Command Structure
+       *       #CF_UnionArgs_Payload_t where byte[0] specifies the channel number or all channels
+       *       - 255 = all channels
+       *       - else = single channel  
+
+       typedef union CF_UnionArgs_Payload
+  {
+      uint32 dword;    
+      uint16 hword[2]; 
+      uint8  byte[4];  
+  } CF_UnionArgs_Payload_t;
+  \endverbatim  
+
+  The first and only parameter, \c byte[0], specifies which pending queue to enable.
+  Each channel has one pending queue. The value range for this parameter is 0 to 
+  255. A value of 255 specifies all channels. All other values are for a single channel.
+
+
+  &lt;H2&gt; Enable Directory Polling Command &lt;/H2&gt;
+  
+  The CF Enable Directory Polling command is sent to CF using message ID
+#CF_CMD_MID with command code #CF_ENABLE_DIR_POLLING_CC. 
+  
+  This command is used to enable one or all polling directories on a particular
+  channel. CF will check polling directories for filenames and queue them for
+  output, only if the polling directory is enabled. Polling directory processing
+  consumes a fair amount of CPU utilization. Opening directories periodically
+  and looping through hidden files, closed files and files that have already
+  been queued can take a substantial amount of CPU time. It is recommended to
+  keep polling directories disabled when they are not actively receiving files.
+  
+  When the command is executed successfully, the command counter is incremented
+  and an event message will be generated.  
+
+  If the command is not successful, the command error counter will increment and
+  an error event will be generated indicating the reason for failure.  
+  
+  \verbatim
+     *       Command Structure
+     *       #CF_UnionArgs_Payload_t
+     *
+     *       byte[0] specifies the channel number or all channels
+     *       - 255 = all channels
+     *       - else = single channel
+     *
+     *       byte[1] specifies the polling directory index
+     *       - 255 = all polling directories
+     *       - else = single polling directory index
+     *
+
+     typedef union CF_UnionArgs_Payload
+  {
+      uint32 dword;    
+      uint16 hword[2]; 
+      uint8  byte[4];  
+  } CF_UnionArgs_Payload_t;
+  \endverbatim  
+
+  The first parameter, \c byte[0], specifies which channel contains the polling 
+  directory to enable. The value range for this parameter is 0 to 255. A value 
+  of 255 specifies all channels. All other values are for a single channel.
+  
+  The second parameter, \c byte[1], specifies which polling directory to enable. To
+  enable all polling directories on a specific channel, set this parameter to
+  0xFF. The polling directories are numbered from zero to
+  (CF_MAX_POLLING_DIRS_PER_CHAN - 1). CF_MAX_POLLING_DIRS_PER_CHAN is specified
+  in the CF platform configuration file. The polling directory number may be obtained
+  by viewing the contents of the CF configuration table.  
+  
+
+  &lt;H2&gt; Disable Directory Polling Command &lt;/H2&gt;
+  
+  The CF Enable Directory Polling command is sent to CF using message ID
+#CF_CMD_MID with command code #CF_DISABLE_DIR_POLLING_CC. 
+  
+  This command is used to disable one or all polling directories on a particular
+  channel. CF will check polling directories for filenames and queue them for
+  output, only if the polling directory is enabled. Polling directory processing
+  consumes a fair amount of CPU utilization. Opening directories periodically
+  and looping through hidden files, closed files and files that have already
+  been queued can take a substantial amount of CPU time. It is recommended to
+  keep polling directories disabled when they are not actively receiving files.
+  
+  When the command is executed successfully, the command counter is incremented
+  and and event message will be generated.
+
+  If the command is not successful, the command error counter will increment and
+  an error event will be generated indicating the reason for failure.  
+  
+  \verbatim
+     *       Command Structure
+     *       #CF_UnionArgs_Payload_t
+     *
+     *       byte[0] specifies the channel number or all channels
+     *       - 255 = all channels
+     *       - else = single channel
+     *
+     *       byte[1] specifies the polling directory index
+     *       - 255 = all polling directories
+     *       - else = single polling directory index
+     *
+
+     typedef union CF_UnionArgs_Payload
+  {
+      uint32 dword;    
+      uint16 hword[2]; 
+      uint8  byte[4];  
+  } CF_UnionArgs_Payload_t;
+  \endverbatim  
+
+  The first parameter, \c byte[0], specifies which channel contains the polling 
+  directory to disable. The value range for this parameter is 0 to 255. A value 
+  of 255 specifies all channels. All other values are for a single channel.
+  
+  The second parameter, \c byte[1], specifies which polling directory to disable. To
+  disable all polling directories on a specific channel, set this parameter to
+  0xFF. The polling directories are numbered from zero to
+  (CF_MAX_POLLING_DIRS_PER_CHAN - 1). CF_MAX_POLLING_DIRS_PER_CHAN is specified
+  in the CF platform configuration file. The polling directory number may be obtained
+  by viewing the contents of the CF configuration table.  
+
+
+  &lt;H2&gt; Purge Queue Command &lt;/H2&gt;
+  
+  The CF Write Queue Information command is sent to CF using message ID
+#CF_CMD_MID with command code #CF_PURGE_QUEUE_CC.  
+  
+  This command is used to remove all entries on a single queue. CF has a
+  pending queue, an active queue, and a history queue for each channel.
+  Only the pending and history queues can be purged.
+
+  When the command is executed successfully, the command counter is incremented
+  and an event message will be generated indicating that the node has been removed.
+
+  If the command is not successful, the command error counter will increment and
+  an error event will be generated indicating the reason for failure.  
+
+  \verbatim
+     *       Command Structure
+     *       #CF_UnionArgs_Payload_t
+     *
+     *       byte[0] specifies the channel number or all channels
+     *       - 255 = all channels
+     *       - else = single channel
+     *
+     *       byte[1] specifies the queue
+     *       - 0 = Pending queue
+     *       - 1 = History queue
+     *       - 2 = Both pending and history queue
+     *
+
+     typedef union CF_UnionArgs_Payload
+  {
+      uint32 dword;    
+      uint16 hword[2]; 
+      uint8  byte[4];  
+  } CF_UnionArgs_Payload_t;
+  \endverbatim  
+
+  The first parameter, \c byte[0], specifies a single channel id or a value
+  indicating all channels.
+      
+  The second parameter, \c byte[1], identifies which queue will be purged. 
+  A value of 0 for pending queue, 1 for history and 2 for both.  
+ 
+  &lt;H2&gt; Enable Engine Command &lt;/H2&gt;
+  
+  The CF Enable Engine command is sent to CF using message ID
+#CF_CMD_MID with command code #CF_ENABLE_ENGINE_CC. The command has no
+  command parameters and is used to reinitialize engine and enable processing.  
+  Note configuration table updates are not processed while the engine is enabled.
+
+
+  &lt;H2&gt; Enable Disable Command &lt;/H2&gt;
+  
+  The CF Enable Engine command is sent to CF using message ID
+#CF_CMD_MID with command code #CF_DISABLE_ENGINE_CC. The command has no
+  command parameters and is used to disable engine processing.  
+  Note configuration table updates can be performed while the engine is disabled, 
+  and when the engine is re-enabled the new configuration will take affect.
+  
+  Prev: \ref cfscfcfgpg &lt;BR&gt;
+  Next: \ref cfscftlmpg
+**/
+
+/**
+ * \page cfscftlmpg CFS CFDP Telemetry
+ *
+ * \subpage cfscftlmdesc
+ *
+ * \ref cfscftlmmid
+ *
+ * \ref cfscftlm
+ *
+ 
+  Prev: \ref cfscfcmdspg &lt;BR&gt;
+  Next: \ref cfscfeventspg
+ */
+
+/**
+  \page cfscftlmdesc CFS CFDP Telemetry Descriptions
+  
+  &lt;H2&gt; CF Housekeeping Telemetry Packet &lt;/H2&gt;
+  
+  The Housekeeping Telemetry packet is sent by CF to the software bus on
+  command. When CF receives the CF_SEND_HK_MID command, a packet is constructed
+  and sent by CF. CF typically receives this command every four or five seconds.
+  
+  
+  &lt;H2&gt; CF End of Transaction Packet &lt;/H2&gt;
+  
+  The End of Transaction packet is sent to the software bus upon completion 
+  of a file send or receive transaction. A packet with message ID #CF_EOT_TLM_MID is
+  constructed and sent by CF. The packet contains information about the last
+  completed transaction which includes sequence number, channel, direction, state,
+  status, EID, file size, CRC result, and filenames.
+    
+  Prev: \ref cfscftlmpg &lt;BR&gt;
+  Next: \ref cfscftbl
+**/
+
+
+
+/**
+ * \page cfscfeventspg CFS CFDP Events
+ *
+ * \ref cfscfevents
+ *
+  Prev: \ref cfscftlmpg &lt;BR&gt;
+  Next: \ref cfscfcons
+ */
+
+
+/**
+  \page cfscftbl CFS CFDP Table Definitions
+
+  The CF application has one table used for configuration. This table is
+  accessed during initialization and updated by CF when changes to the table
+  parameters are made through CF commands or CFE table services. 
+  
+  The table contains default configuration settings. Many table configuration
+  settings can be adjusted by command. These adjustments will modify the table
+  and are therefore reflected if the table is dumped. These adjustments will
+  also change the table checksum. The configuration table is loaded at the time
+  the application is started. CF supports table updates during runtime only when
+  the engine is disabled.
+      
+  CF utilzes a CFS table for run-time configuration defined by #CF_ConfigTable_t.  The channel
+  configuration is in #CF_ConfigTable_t.chan which contains a polling element defined by
+  #CF_PollDir_t.
+
+  Prev: \ref cfscfcfgpg &lt;BR&gt;
+  Next: \ref cfscfcons
+
+**/
+
+/**
+  \page cfscfcons CFS CFDP Constraints
+
+  CF is currently limited by the Software Bus performance.  Future work may
+  include implementing a point-to-point interface for high speed transfers.
+
+  The CFDP standard CCSDS 727.0-B-4 allows a variety of data-type sizes for
+  Source and Destination Entity ID's, Transaction ID and PDU Header length.
+  Currently, this application does not support the following:
+  1. an Entity ID length other than the size defined in cf_platform_cfg.h
+  2. a transaction ID length other than the size defined in cf_platform_cfg.h
+  3. a PDU header size greater than CF_CFDP_MAX_HEADER_SIZE bytes 
+
+  The stack size for the CF application must be monitored and must be no less
+  than 16384 bytes. Depending on the CF configuration, the stack size may need
+  to be set higher than 16384. The stack size is specified int he cfe_es_startup.scr
+  file that is located in the /mission/build/xxx/exe area.
+  
+  Poll directories must not have subdirectories, otherwise errors will occur
+  at put request time.
+
+  All files in polling directories must be closed. 
+
+  The same file cannot be sent on two channels at same time. 
+
+  Spaces are not allowed in filenames.
+
+  Segmentation control as described in the blue book is not supported by this
+  version of CFS CF application. All outgoing transactions will have the
+  segmentation control bit in the meta-data PDU set to - 'Recorded Boundaries
+  Not Respected'.
+  
+  This version of CF does not support keep alive procedures that are detailed in
+  section 4.1.6.5 of CFDP CCSDS 727.0-B-4 Blue Book.
+  
+  Invalid file structures are not supported by this version of the CF
+  application. Invalid file structures are described in 4.1.6.1.1.8 of CFDP
+  CCSDS 727.0-B-4 Blue Book and apply only when record boundaries are respected
+  (see segmentation control above).
+
+  Only transmission modes unacknowledged (class 1) and acknowledged (class 2) are
+  supported by the CF application.
+  
+  The CFDP Application will fail on startup if the following conditions are not met:
+  
+  &lt;UL&gt;
+    &lt;LI&gt; Unable to create a Software Bus Pipe  &lt;BR&gt;
+    &lt;LI&gt; Unable to subscribe to the CF Command Message  &lt;BR&gt;
+    &lt;LI&gt; Unable to subscribe to the CF Housekeeping Request Message  &lt;BR&gt;
+    &lt;LI&gt; Unable to register for cFE Event Services  &lt;BR&gt;
+    &lt;LI&gt; Unable to register the CF Configuration Table with cFE Table Services  &lt;BR&gt;
+    &lt;LI&gt; Unable to load the CF Configuration Table with a defaut table file  &lt;BR&gt;
+    &lt;LI&gt; Unable to acquire a pointer to the CF Configuration Table  &lt;BR&gt;
+  &lt;/UL&gt;
+  
+  Each one of these conditions will generate a unique event message and will cause the CF
+  Application to terminate before processing any CF command pipe messages.
+  
+  Prev: \ref cfscfeventspg &lt;BR&gt;
+  Next: \ref cfscffaqs
+
+**/
+
+/**
+  \page cfscffaqs CFS CFDP Frequently Asked Questions
+
+  No CF specific FAQ's have been identified/documented.
+**/
+</pre></div>
+</div>
+</section>
+<section id="cmakelists-txt">
+<h2><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code><a class="headerlink" href="#cmakelists-txt" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/cf/docs/dox_src/CMakeLists.txt</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>########################################################
+#
+# CMake Recipe to build doxygen documentation
+#
+########################################################
+
+# This CMake script currently defines a top-level target
+# to build the stand alone documentation.  This may be invoked either
+# from the main CMakeLists.txt as a subdirectory (useful in the
+# case of a self-contained/standalone build) or by a separate script
+# (useful if integrating into a larger project with a separate doc build)
+
+cmake_minimum_required(VERSION 3.5)
+project(CF_DOCS NONE)
+
+# generate the configuration files
+configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/cf-common.doxyfile.in
+        ${CMAKE_BINARY_DIR}/docs/cf-common.doxyfile
+        @ONLY
+)
+
+configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/cf-usersguide.doxyfile.in
+        ${CMAKE_CURRENT_BINARY_DIR}/cf-usersguide.doxyfile
+        @ONLY
+)
+
+add_custom_target(cf-usersguide-html
+    COMMAND doxygen ${CMAKE_CURRENT_BINARY_DIR}/cf-usersguide.doxyfile
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+)
+
+# This requires some of the intermediate files from the CFE doc build to be
+# in place prior to running doxygen for CF
+add_dependencies(cf-usersguide-html doc-prebuild)
+
+add_custom_target(cf-usersguide
+    COMMAND echo "CF UsersGuide: file://${CMAKE_CURRENT_BINARY_DIR}/html/index.html"
+    DEPENDS cf-usersguide-html
+)
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="docs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../fsw/index.html" class="btn btn-neutral float-right" title="fsw" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

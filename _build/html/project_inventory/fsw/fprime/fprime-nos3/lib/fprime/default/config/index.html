@@ -1,0 +1,1943 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>config &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../search.html" />
+    <link rel="next" title="docs" href="../../docs/index.html" />
+    <link rel="prev" title="default" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fprime-nos3</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">lib</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">fprime</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">default</a></li>
+      <li class="breadcrumb-item active">config</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../_sources/project_inventory/fsw/fprime/fprime-nos3/lib/fprime/default/config/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="config">
+<h1>config<a class="headerlink" href="#config" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="acconstants-fpp">
+<h2><code class="docutils literal notranslate"><span class="pre">AcConstants.fpp</span></code><a class="headerlink" href="#acconstants-fpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/AcConstants.fpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># ======================================================================
+# AcConstants.fpp
+# F Prime configuration constants
+# ======================================================================
+
+@ Number of rate group member output ports for ActiveRateGroup
+constant ActiveRateGroupOutputPorts = 30
+
+@ Number of rate group member output ports for PassiveRateGroup
+constant PassiveRateGroupOutputPorts = 10
+
+@ Used to drive rate groups
+constant RateGroupDriverRateGroupPorts = 4
+
+@ Used for command and registration ports
+constant CmdDispatcherComponentCommandPorts = 30
+
+@ Used for uplink/sequencer buffer/response ports
+constant CmdDispatcherSequencePorts = 5
+
+@ Used for dispatching sequences to command sequencers
+constant SeqDispatcherSequencerPorts = 2
+
+@ Used for sizing the command splitter input arrays
+constant CmdSplitterPorts = CmdDispatcherSequencePorts
+
+@ Number of static memory allocations
+constant StaticMemoryAllocations = 4
+
+@ Used to ping active components
+constant HealthPingPorts = 25
+
+@ Used for broadcasting completed file downlinks
+constant FileDownCompletePorts = 1
+
+@ Used for number of Fw::Com type ports supported by Svc::ComQueue
+constant ComQueueComPorts = 2
+
+@ Used for number of Fw::Buffer type ports supported by Svc::ComQueue
+constant ComQueueBufferPorts = 1
+
+@ Used for maximum number of connected buffer repeater consumers
+constant BufferRepeaterOutputPorts = 10
+
+@ Size of port array for DpManager
+constant DpManagerNumPorts = 5
+
+@ Size of processing port array for DpWriter
+constant DpWriterNumProcPorts = 5
+
+@ The size of a file name string
+constant FileNameStringSize = 200
+
+@ The size of an assert text string
+constant FwAssertTextSize = 256
+
+@ The size of a file name in an AssertFatalAdapter event
+@ Note: File names in assertion failures are also truncated by
+@ the constants FW_ASSERT_TEXT_SIZE and FW_LOG_STRING_MAX_SIZE, set
+@ in FpConfig.h.
+constant AssertFatalAdapterEventFileSize = FileNameStringSize
+
+# ----------------------------------------------------------------------
+# Hub connections. Connections on all deployments should mirror these settings.
+# ----------------------------------------------------------------------
+
+constant GenericHubInputPorts = 10
+constant GenericHubOutputPorts = 10
+constant GenericHubInputBuffers = 10
+constant GenericHubOutputBuffers = 10
+</pre></div>
+</div>
+</section>
+<section id="activerategroupcfg-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">ActiveRateGroupCfg.hpp</span></code><a class="headerlink" href="#activerategroupcfg-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/ActiveRateGroupCfg.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+* \author: Tim Canham
+* \file:
+* \brief
+*
+* This file has configuration settings for the ActiveRateGroup component.
+*
+*
+*   Copyright 2014-2015, by the California Institute of Technology.
+*   ALL RIGHTS RESERVED. United States Government Sponsorship
+*   acknowledged.
+*
+*/
+
+#ifndef ACTIVERATEGROUP_ACTIVERATEGROUPCFG_HPP_
+#define ACTIVERATEGROUP_ACTIVERATEGROUPCFG_HPP_
+
+namespace Svc {
+
+    enum {
+        //! Number of overruns allowed before overrun event is throttled
+        ACTIVE_RATE_GROUP_OVERRUN_THROTTLE = 5,
+    };
+
+}
+
+
+
+#endif /* ACTIVERATEGROUP_ACTIVERATEGROUPCFG_HPP_ */
+</pre></div>
+</div>
+</section>
+<section id="buffermanagercomponentimplcfg-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">BufferManagerComponentImplCfg.hpp</span></code><a class="headerlink" href="#buffermanagercomponentimplcfg-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/BufferManagerComponentImplCfg.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#ifndef __BUFFERMANAGERCOMPONENTIMPLCFG_HPP__
+#define __BUFFERMANAGERCOMPONENTIMPLCFG_HPP__
+
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+
+namespace Svc {
+    static const U16 BUFFERMGR_MAX_NUM_BINS = 10;
+}
+
+
+#endif // __BUFFERMANAGERCOMPONENTIMPLCFG_HPP__
+</pre></div>
+</div>
+</section>
+<section id="cmakelists-txt">
+<h2><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code><a class="headerlink" href="#cmakelists-txt" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/CMakeLists.txt</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>####
+# default/config/CMakeLists.txt:
+#
+# Sets a list of source files for cmake to process as part of autocoding.
+####
+register_fprime_config(
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/AcConstants.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/DpCfg.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/ComCfg.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/FpConfig.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/FpySequencerCfg.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/PolyDbCfg.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/VersionCfg.fpp"
+    HEADERS
+        "${CMAKE_CURRENT_LIST_DIR}/EventManagerCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/ActiveRateGroupCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/BufferManagerComponentImplCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/CommandDispatcherImplCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/DpCatalogCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/DpCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/FileDownlinkCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/FpConfig.h"
+        "${CMAKE_CURRENT_LIST_DIR}/FpConfig.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/FPrimeNumericalConfig.h"
+        "${CMAKE_CURRENT_LIST_DIR}/IpCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/PrmDbImplCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/PrmDbImplTesterCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/StaticMemoryConfig.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/TlmChanImplCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/TlmPacketizerCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/CRCCheckerConfig.hpp"
+    BASE_CONFIG
+)
+</pre></div>
+</div>
+</section>
+<section id="comcfg-fpp">
+<h2><code class="docutils literal notranslate"><span class="pre">ComCfg.fpp</span></code><a class="headerlink" href="#comcfg-fpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/ComCfg.fpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># ======================================================================
+# FPP file for configuration of the communications stack
+#
+# The only reason to modify these definitions is if you are writing your own
+# Framer/Deframer implementations and need more contextual data than what is
+# defined
+# ======================================================================
+
+module ComCfg {
+
+    # Needed in dictionary:
+    # - spacecraftId
+    # - TmFrameFixedSize
+    # - potentially APID enum ?
+    constant SpacecraftId = 0x0044    # Spacecraft ID (10 bits)
+    constant TmFrameFixedSize = 1024  # Needs to be at least COM_BUFFER_MAX_SIZE + (2 * SpacePacketHeaderSize) + 1
+
+    @ APIDs are 11 bits in the Space Packet protocol, so we use U16. Max value 7FF
+    enum APID : U16 {
+        # APIDs prefixed with FW are reserved for F Prime and need to be present
+        # in the enumeration. Their values can be changed
+        FW_PACKET_COMMAND        = 0x0000  @&lt; Command packet type - incoming
+        FW_PACKET_TELEM          = 0x0001  @&lt; Telemetry packet type - outgoing
+        FW_PACKET_LOG            = 0x0002  @&lt; Log type - outgoing
+        FW_PACKET_FILE           = 0x0003  @&lt; File type - incoming and outgoing
+        FW_PACKET_PACKETIZED_TLM = 0x0004  @&lt; Packetized telemetry packet type
+        FW_PACKET_DP             = 0x0005  @&lt; Data Product packet type
+        FW_PACKET_IDLE           = 0x0006  @&lt; F Prime idle
+        FW_PACKET_HAND           = 0x00FE  @&lt; F Prime handshake
+        FW_PACKET_UNKNOWN        = 0x00FF  @&lt; F Prime unknown packet
+        SPP_IDLE_PACKET          = 0x07FF  @&lt; Per Space Packet Standard, all 1s (11bits) is reserved for Idle Packets
+        INVALID_UNINITIALIZED    = 0x0800  @&lt; Anything equal or higher value is invalid and should not be used
+    } default INVALID_UNINITIALIZED
+
+    @ Type used to pass context info between components during framing/deframing
+    struct FrameContext {
+        comQueueIndex: FwIndexType  @&lt; Queue Index used by the ComQueue, other components shall not modify
+        apid: APID                  @&lt; 11 bits APID in CCSDS
+        sequenceCount: U16          @&lt; 14 bit Sequence count - sequence count is incremented per APID
+        vcId: U8                    @&lt; 6 bit Virtual Channel ID - used for TC and TM
+    } default {
+        comQueueIndex = 0
+        apid = APID.FW_PACKET_UNKNOWN
+        sequenceCount = 0
+        vcId = 1
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="commanddispatcherimplcfg-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">CommandDispatcherImplCfg.hpp</span></code><a class="headerlink" href="#commanddispatcherimplcfg-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/CommandDispatcherImplCfg.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * CmdDispatcherImplCfg.hpp
+ *
+ *  Created on: May 6, 2015
+ *      Author: tcanham
+ */
+
+#ifndef CMDDISPATCHER_COMMANDDISPATCHERIMPLCFG_HPP_
+#define CMDDISPATCHER_COMMANDDISPATCHERIMPLCFG_HPP_
+
+// Define configuration values for dispatcher
+
+enum {
+    CMD_DISPATCHER_DISPATCH_TABLE_SIZE = 200, // !&lt; The size of the table holding opcodes to dispatch
+    CMD_DISPATCHER_SEQUENCER_TABLE_SIZE = 50, // !&lt; The size of the table holding commands in progress
+};
+
+
+
+#endif /* CMDDISPATCHER_COMMANDDISPATCHERIMPLCFG_HPP_ */
+</pre></div>
+</div>
+</section>
+<section id="crccheckerconfig-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">CRCCheckerConfig.hpp</span></code><a class="headerlink" href="#crccheckerconfig-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/CRCCheckerConfig.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  CRCCheckerConfig.hpp
+// \brief  Configuration file for CRCChecker module
+// ======================================================================
+
+#ifndef CONFIG_CRC_CHECKER_CONFIG_HPP
+#define CONFIG_CRC_CHECKER_CONFIG_HPP
+
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;  
+
+
+// Default block size used when reading files for CRC calculation
+constexpr FwSignedSizeType CONFIG_CRC_FILE_READ_BLOCK = 2048;
+
+#endif 
+</pre></div>
+</div>
+</section>
+<section id="dpcatalogcfg-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">DpCatalogCfg.hpp</span></code><a class="headerlink" href="#dpcatalogcfg-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/DpCatalogCfg.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * FileDownlinkCfg.hpp:
+ *
+ * Configuration settings for file downlink component.
+ */
+
+#ifndef SVC_DPCATALOG_CONFIG_HPP_
+#define SVC_DPCATALOG_CONFIG_HPP_
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+
+namespace Svc {
+    // Sets the maximum number of directories where
+    // data products can be stored. The array passed
+    // to the initializer for DpCatalog cannot exceed
+    // this size.
+    static const FwIndexType DP_MAX_DIRECTORIES = 2;
+    static const FwIndexType DP_MAX_FILES = 127;
+}
+
+#endif /* SVC_DPCATALOG_CONFIG_HPP_ */
+</pre></div>
+</div>
+</section>
+<section id="dpcfg-fpp">
+<h2><code class="docutils literal notranslate"><span class="pre">DpCfg.fpp</span></code><a class="headerlink" href="#dpcfg-fpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/DpCfg.fpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># ======================================================================
+# FPP file for data products configuration
+# ======================================================================
+
+module Fw {
+
+  module DpCfg {
+
+    @ The size in bytes of the user-configurable data in the container
+    @ packet header
+    constant CONTAINER_USER_DATA_SIZE = 32;
+
+    @ A bit mask for selecting the type of processing to perform on
+    @ a container before writing it to disk.
+    enum ProcType: U8 {
+      @ Processing type 0
+      PROC_TYPE_ZERO = 0x01
+      @ Processing type 1
+      PROC_TYPE_ONE = 0x02
+      @ Processing type 2
+      PROC_TYPE_TWO = 0x04
+    }
+
+  }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="dpcfg-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">DpCfg.hpp</span></code><a class="headerlink" href="#dpcfg-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/DpCfg.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  DpCfg.hpp
+// \author bocchino
+// \brief  hpp file for data product configuration
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef DPCFG_HPP
+#define DPCFG_HPP
+
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+
+// The format string for a file name
+// The format arguments are base directory, container ID, time seconds, and time microseconds
+#define DP_EXT ".fdp"
+constexpr const char *DP_FILENAME_FORMAT = "%s/Dp_%08" PRI_FwDpIdType "_%08" PRIu32 "_%08" PRIu32 DP_EXT;
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="eventmanagercfg-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">EventManagerCfg.hpp</span></code><a class="headerlink" href="#eventmanagercfg-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/EventManagerCfg.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * EventManagerCfg.hpp
+ *
+ *  Created on: Apr 16, 2015
+ *      Author: tcanham
+ */
+
+#ifndef Config_EventManagerCfg_HPP_
+#define Config_EventManagerCfg_HPP_
+
+// set default filters
+
+enum {
+    FILTER_WARNING_HI_DEFAULT = true, //!&lt; WARNING HI events are filtered at input
+    FILTER_WARNING_LO_DEFAULT = true, //!&lt; WARNING LO events are filtered at input
+    FILTER_COMMAND_DEFAULT = true, //!&lt; COMMAND events are filtered at input
+    FILTER_ACTIVITY_HI_DEFAULT = true, //!&lt; ACTIVITY HI events are filtered at input
+    FILTER_ACTIVITY_LO_DEFAULT = true, //!&lt; ACTIVITY LO  events are filtered at input
+    FILTER_DIAGNOSTIC_DEFAULT = false, //!&lt; DIAGNOSTIC events are filtered at input
+};
+
+
+enum {
+    TELEM_ID_FILTER_SIZE = 25, //!&lt; Size of telemetry ID filter
+};
+
+#endif /* Config_EventManagerCfg_HPP_ */
+</pre></div>
+</div>
+</section>
+<section id="filedownlinkcfg-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">FileDownlinkCfg.hpp</span></code><a class="headerlink" href="#filedownlinkcfg-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/FileDownlinkCfg.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * FileDownlinkCfg.hpp:
+ *
+ * Configuration settings for file downlink component.
+ */
+
+#ifndef SVC_FILEDOWNLINK_FILEDOWNLINKCFG_HPP_
+#define SVC_FILEDOWNLINK_FILEDOWNLINKCFG_HPP_
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+
+namespace Svc {
+    // If this is set to true, the run handler will look to
+    // see if a packet is ready. If it is false, the next packet
+    // will be sent as soon as the previous is complete.
+    static const bool FILEDOWNLINK_PACKETS_BY_RUN = false;
+    // If this is set, errors that would cause FileDownlink to return an error response, such as a
+    // missing file or attempting to send a partial chunk past the end of the file will instead
+    // return success. This is recommended to avoid a non-serious FileDownlink error aborting a
+    // sequence early. These errors will still be logged as events.
+    static const bool FILEDOWNLINK_COMMAND_FAILURES_DISABLED = true;
+    // Size of the internal file downlink buffer. This must now be static as
+    // file down maintains its own internal buffer.
+    static const U32 FILEDOWNLINK_INTERNAL_BUFFER_SIZE = FW_FILE_BUFFER_MAX_SIZE;
+}
+
+#endif /* SVC_FILEDOWNLINK_FILEDOWNLINKCFG_HPP_ */
+</pre></div>
+</div>
+</section>
+<section id="fpconfig-fpp">
+<h2><code class="docutils literal notranslate"><span class="pre">FpConfig.fpp</span></code><a class="headerlink" href="#fpconfig-fpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/FpConfig.fpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># ======================================================================
+# \title  config/FpConfig.fpp
+# \author mstarch
+# \brief  FPP alias configuration file
+#
+# \copyright
+# Copyright 2025, by the California Institute of Technology.
+# ALL RIGHTS RESERVED.  United States Government Sponsorship
+# acknowledged.
+#
+# FPrime uses FPP to define a set of type aliases for various named types
+# used throughout the system. This file is used to configure those types.
+# ======================================================================
+
+####
+# Integer type aliases:
+# Used for the project to override types supplied by the platform for things like sizes, indices, etc.
+####
+
+@ The unsigned type of larger sizes internal to the software,
+@ e.g., memory buffer sizes, file sizes. Must be unsigned.
+type FwSizeType = PlatformSizeType
+
+@ The signed type of larger sizes internal to the software, used
+@ for signed offsets, e.g., file seek offsets. Must be signed.
+type FwSignedSizeType = PlatformSignedSizeType
+
+@ The type of smaller indices internal to the software, used
+@ for array indices, e.g., port indices. Must be signed.
+type FwIndexType = PlatformIndexType
+
+@ The type of arguments to assert functions.
+type FwAssertArgType = PlatformAssertArgType
+
+@ The type of task priorities used.
+type FwTaskPriorityType = PlatformTaskPriorityType
+
+@ The type of queue priorities used.
+type FwQueuePriorityType = PlatformQueuePriorityType
+
+@ The id type.
+type FwIdType = U32
+
+@ The type of task priorities used.
+type FwTaskIdType = PlatformTaskIdType
+
+####
+# GDS type aliases:
+# Used for the project to override types shared with GDSes and other remote systems.
+####
+
+@ The type of a telemetry channel identifier
+type FwChanIdType = FwIdType
+
+@ The type of a data product identifier
+type FwDpIdType = FwIdType
+
+@ The type of a data product priority
+type FwDpPriorityType = U32
+
+@ The type of an event identifier
+type FwEventIdType = FwIdType
+
+@ The type of a command opcode
+type FwOpcodeType = FwIdType
+
+@ The type of a com packet descriptor
+type FwPacketDescriptorType = FwIdType
+
+@ The type of a parameter identifier
+type FwPrmIdType = FwIdType
+
+@ The type used to serialize a size value
+type FwSizeStoreType = U16
+
+
+@ The type used to serialize a time context value
+type FwTimeContextStoreType = U8
+
+@ The type of a telemetry packet identifier
+type FwTlmPacketizeIdType = U16
+
+@ The type of a trace identifier
+type FwTraceIdType = U32
+
+@ The type used to serialize a C++ enumeration constant
+@ FPP enumerations are serialized according to their representation types
+type FwEnumStoreType = I32
+
+
+@ The type used to serialize a time base value
+type FwTimeBaseStoreType = U16
+
+@ Define enumeration for Time base types
+enum TimeBase : FwTimeBaseStoreType {
+    TB_NONE = 0              @&lt; No time base has been established (Required)
+    TB_PROC_TIME = 1         @&lt; Indicates time is processor cycle time. Not tied to external time
+    TB_WORKSTATION_TIME = 2  @&lt; Time as reported on workstation where software is running. For testing. (Required)
+    TB_DONT_CARE = 0xFFFF    @&lt; Don't care value for sequences. If FwTimeBaseStoreType is changed, value should be changed (Required)
+} default TB_NONE;
+</pre></div>
+</div>
+</section>
+<section id="fpconfig-h">
+<h2><code class="docutils literal notranslate"><span class="pre">FpConfig.h</span></code><a class="headerlink" href="#fpconfig-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/FpConfig.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/**
+ * \file: FpConfig.h
+ * \author T. Canham, mstarch
+ * \brief C-compatible configuration header for fprime configuration
+ *
+ * \copyright
+ * Copyright 2009-2015, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ */
+#ifndef FPCONFIG_H_
+#define FPCONFIG_H_
+
+#ifdef  __cplusplus
+extern "C" {
+#endif
+#include &lt;Platform/PlatformTypes.h&gt;
+#include &lt;Fw/Types/BasicTypes.h&gt;
+
+#define FW_ASSERT_LEVEL FW_FILENAME_ASSERT
+// ----------------------------------------------------------------------
+// Type aliases
+// ----------------------------------------------------------------------
+#define FW_CONTEXT_DONT_CARE 0xFF  //!&lt; Don't care value for time contexts in sequences
+
+// ----------------------------------------------------------------------
+// Configuration switches
+// ----------------------------------------------------------------------
+
+// Boolean values for serialization
+#ifndef FW_SERIALIZE_TRUE_VALUE
+#define FW_SERIALIZE_TRUE_VALUE (0xFF)  //!&lt; Value encoded during serialization for boolean true
+#endif
+
+#ifndef FW_SERIALIZE_FALSE_VALUE
+#define FW_SERIALIZE_FALSE_VALUE (0x00)  //!&lt; Value encoded during serialization for boolean false
+#endif
+
+// Allow objects to have names. Allocates storage for each instance
+#ifndef FW_OBJECT_NAMES
+#define FW_OBJECT_NAMES \
+    1  //!&lt; Indicates whether or not object names are stored (more memory, can be used for tracking objects)
+#endif
+
+// To reduce binary size, FW_OPTIONAL_NAME(&lt;string&gt;) can be used to substitute strings with an empty string
+// when running with FW_OBJECT_NAMES disabled
+#if FW_OBJECT_NAMES == 1
+#define FW_OPTIONAL_NAME(name) name
+#else
+#define FW_OPTIONAL_NAME(name) ""
+#endif
+
+// Add methods to query an object about its name. Can be overridden by derived classes
+// For FW_OBJECT_TO_STRING to work, FW_OBJECT_NAMES must be enabled
+#if FW_OBJECT_NAMES == 1
+#ifndef FW_OBJECT_TO_STRING
+#define FW_OBJECT_TO_STRING \
+    1  //!&lt; Indicates whether or not generated objects have toString() methods to dump internals (more code)
+#endif
+#else
+#define FW_OBJECT_TO_STRING 0
+#endif
+
+// Adds the ability for all component related objects to register
+// centrally.
+#ifndef FW_OBJECT_REGISTRATION
+#define FW_OBJECT_REGISTRATION \
+    1  //!&lt; Indicates whether or not objects can register themselves (more code, more object tracking)
+#endif
+
+#ifndef FW_QUEUE_REGISTRATION
+#define FW_QUEUE_REGISTRATION 1  //!&lt; Indicates whether or not queue registration is used
+#endif
+
+// On some systems, use of *printf family functions (snprintf, printf, etc) require a prohibitive amount of program
+// space. Setting this to `0` indicates that the Fw/String methods should stop using these functions to conserve
+// program size. However, this comes at the expense of discarding format parameters. i.e. the format string is returned
+// unchanged.
+#ifndef FW_USE_PRINTF_FAMILY_FUNCTIONS_IN_STRING_FORMATTING
+#define FW_USE_PRINTF_FAMILY_FUNCTIONS_IN_STRING_FORMATTING 1
+#endif
+
+// Port Facilities
+
+// This allows tracing calls through ports for debugging
+#ifndef FW_PORT_TRACING
+#define FW_PORT_TRACING 1  //!&lt; Indicates whether port calls are traced (more code, more visibility into execution)
+#endif
+
+// This generates code to connect to serialized ports
+#ifndef FW_PORT_SERIALIZATION
+#define FW_PORT_SERIALIZATION \
+    1  //!&lt; Indicates whether there is code in ports to serialize the call (more code, but ability to serialize calls
+       //!&lt; for multi-note systems)
+#endif
+
+// Component Facilities
+
+// Serialization
+
+// Add a type id when serialization is done. More storage,
+// but better detection of errors
+// TODO: Not working yet
+
+#ifndef FW_SERIALIZATION_TYPE_ID
+#define FW_SERIALIZATION_TYPE_ID \
+    0  //!&lt; Indicates if type id is stored when type is serialized. (More storage, but more type safety)
+#endif
+
+// Number of bytes to use for serialization IDs. More
+// bytes is more storage, but greater number of IDs
+#if FW_SERIALIZATION_TYPE_ID
+#ifndef FW_SERIALIZATION_TYPE_ID_BYTES
+#define FW_SERIALIZATION_TYPE_ID_BYTES 4  //!&lt; Number of bytes used to represent type id - more bytes, more ids
+#endif
+#endif
+
+// Set assertion form. Options:
+//   1. FW_NO_ASSERT: assertions are compiled out, side effects are kept
+//   2. FW_FILEID_ASSERT: asserts report a file CRC and line number
+//   3. FW_FILENAME_ASSERT: asserts report a file path (__FILE__) and line number
+//   4. FW_RELATIVE_PATH_ASSERT: asserts report a relative path within F´ or F´ library and line number
+//
+// Note: users who want alternate asserts should set assert level to FW_NO_ASSERT and define FW_ASSERT in this header
+// #ifndef FW_ASSERT_LEVEL
+// #define FW_ASSERT_LEVEL FW_FILENAME_ASSERT  //!&lt; Defines the type of assert used
+// #endif
+
+// Adjust various configuration parameters in the architecture. Some of the above enables may disable some of the values
+
+// The size of the object name stored in the object base class. Larger names will be truncated.
+#if FW_OBJECT_NAMES
+#ifndef FW_OBJ_NAME_BUFFER_SIZE
+#define FW_OBJ_NAME_BUFFER_SIZE \
+    80  //!&lt; Size of object name (if object names enabled). AC Limits to 80, truncation occurs above 80.
+#endif
+#endif
+
+#if FW_OBJECT_REGISTRATION
+// For the simple object registry provided with the framework, this specifies how many objects the registry will store.
+#ifndef FW_OBJ_SIMPLE_REG_ENTRIES
+#define FW_OBJ_SIMPLE_REG_ENTRIES 500  //!&lt; Number of objects stored in simple object registry
+#endif
+// When dumping the contents of the registry, this specifies the size of the buffer used to store object names. Should
+// be &gt;= FW_OBJ_NAME_BUFFER_SIZE.
+#ifndef FW_OBJ_SIMPLE_REG_BUFF_SIZE
+#define FW_OBJ_SIMPLE_REG_BUFF_SIZE 255  //!&lt; Size of object registry dump string
+#endif
+#endif
+
+#if FW_QUEUE_REGISTRATION
+// For the simple queue registry provided with the framework, this specifies how many queues the registry will store.
+#ifndef FW_QUEUE_SIMPLE_QUEUE_ENTRIES
+#define FW_QUEUE_SIMPLE_QUEUE_ENTRIES 100  //!&lt; Number of queues stored in simple queue registry
+#endif
+#endif
+
+// Specifies the size of the string holding the queue name for queues
+#ifndef FW_QUEUE_NAME_BUFFER_SIZE
+#define FW_QUEUE_NAME_BUFFER_SIZE 80  //!&lt; Max size of message queue name
+#endif
+
+// Specifies the size of the string holding the task name for active components and tasks
+#ifndef FW_TASK_NAME_BUFFER_SIZE
+#define FW_TASK_NAME_BUFFER_SIZE 80  //!&lt; Max size of task name
+#endif
+
+// Specifies the size of the buffer that contains a communications packet.
+#ifndef FW_COM_BUFFER_MAX_SIZE
+#define FW_COM_BUFFER_MAX_SIZE 512
+#endif
+
+// Specifies the size of the buffer attached to state machine signals.
+#ifndef FW_SM_SIGNAL_BUFFER_MAX_SIZE
+#define FW_SM_SIGNAL_BUFFER_MAX_SIZE 128  // Not to exceed max value of FwSizeType
+#endif
+
+// Specifies the size of the buffer that contains the serialized command arguments.
+
+#ifndef FW_CMD_ARG_BUFFER_MAX_SIZE
+#define FW_CMD_ARG_BUFFER_MAX_SIZE (FW_COM_BUFFER_MAX_SIZE - sizeof(FwOpcodeType) - sizeof(FwPacketDescriptorType))
+#endif
+
+// Specifies the maximum size of a string in a command argument
+#ifndef FW_CMD_STRING_MAX_SIZE
+#define FW_CMD_STRING_MAX_SIZE 40  //!&lt; Max character size of command string arguments
+#endif
+
+// Normally when a command is deserialized, the handler checks to see if there are any leftover
+// bytes in the buffer. If there are, it assumes that the command was corrupted somehow since
+// the serialized size should match the serialized size of the argument list. In some cases,
+// command buffers are padded so the data can be larger than the serialized size of the command.
+// Setting the below to zero will disable the check at the cost of not detecting commands that
+// are too large.
+#ifndef FW_CMD_CHECK_RESIDUAL
+#define FW_CMD_CHECK_RESIDUAL 1  //!&lt; Check for leftover command bytes
+#endif
+
+// Specifies the size of the buffer that contains the serialized log arguments.
+#ifndef FW_LOG_BUFFER_MAX_SIZE
+#define FW_LOG_BUFFER_MAX_SIZE (FW_COM_BUFFER_MAX_SIZE - sizeof(FwEventIdType) - sizeof(FwPacketDescriptorType))
+#endif
+
+// Specifies the maximum size of a string in a log event
+// Note: This constant truncates file names in assertion failure event reports
+#ifndef FW_LOG_STRING_MAX_SIZE
+#define FW_LOG_STRING_MAX_SIZE 200  //!&lt; Max size of log string parameter type
+#endif
+
+// Specifies the size of the buffer that contains the serialized telemetry value.
+#ifndef FW_TLM_BUFFER_MAX_SIZE
+#define FW_TLM_BUFFER_MAX_SIZE (FW_COM_BUFFER_MAX_SIZE - sizeof(FwChanIdType) - sizeof(FwPacketDescriptorType))
+#endif
+
+// Specifies the size of the buffer that contains statement args for the FpySequencer
+#ifndef FW_STATEMENT_ARG_BUFFER_MAX_SIZE
+#define FW_STATEMENT_ARG_BUFFER_MAX_SIZE (FW_CMD_ARG_BUFFER_MAX_SIZE)
+#endif
+
+// Specifies the maximum size of a string in a telemetry channel
+#ifndef FW_TLM_STRING_MAX_SIZE
+#define FW_TLM_STRING_MAX_SIZE 40  //!&lt; Max size of channelized telemetry string type
+#endif
+
+// Specifies the size of the buffer that contains the serialized parameter value.
+#ifndef FW_PARAM_BUFFER_MAX_SIZE
+#define FW_PARAM_BUFFER_MAX_SIZE (FW_COM_BUFFER_MAX_SIZE - sizeof(FwPrmIdType) - sizeof(FwPacketDescriptorType))
+#endif
+
+// Specifies the maximum size of a string in a parameter
+#ifndef FW_PARAM_STRING_MAX_SIZE
+#define FW_PARAM_STRING_MAX_SIZE 40  //!&lt; Max size of parameter string type
+#endif
+
+// Specifies the maximum size of a file downlink chunk
+#ifndef FW_FILE_BUFFER_MAX_SIZE
+#define FW_FILE_BUFFER_MAX_SIZE FW_COM_BUFFER_MAX_SIZE  //!&lt; Max size of file buffer (i.e. chunk of file)
+#endif
+
+// Specifies the maximum size of a string in an interface call
+#ifndef FW_INTERNAL_INTERFACE_STRING_MAX_SIZE
+#define FW_INTERNAL_INTERFACE_STRING_MAX_SIZE 256  //!&lt; Max size of interface string parameter type
+#endif
+
+// Enables text logging of events as well as data logging. Adds a second logging port for text output.
+// In order to set this to 0, FPRIME_ENABLE_TEXT_LOGGERS must be set to OFF.
+#ifndef FW_ENABLE_TEXT_LOGGING
+#define FW_ENABLE_TEXT_LOGGING 1  //!&lt; Indicates whether text logging is turned on
+#endif
+
+// Define the size of the text log string buffer. Should be large enough for format string and arguments
+#ifndef FW_LOG_TEXT_BUFFER_SIZE
+#define FW_LOG_TEXT_BUFFER_SIZE 256  //!&lt; Max size of string for text log message
+#endif
+
+// Define if serializables have toString() method. Turning off will save code space and
+// string constants. Must be enabled if text logging enabled
+#ifndef FW_SERIALIZABLE_TO_STRING
+#define FW_SERIALIZABLE_TO_STRING 1  //!&lt; Indicates if autocoded serializables have toString() methods
+#endif
+
+// Some settings to enable AMPCS compatibility. This breaks regular ISF GUI compatibility
+#ifndef FW_AMPCS_COMPATIBLE
+#define FW_AMPCS_COMPATIBLE 0  //!&lt; Whether or not JPL AMPCS ground system support is enabled.
+#endif
+
+// Configuration for Fw::String
+#ifndef FW_FIXED_LENGTH_STRING_SIZE
+#define FW_FIXED_LENGTH_STRING_SIZE 256  //!&lt; Character array size for Fw::String
+#endif
+
+// OS configuration
+#ifndef FW_CONSOLE_HANDLE_MAX_SIZE
+#define FW_CONSOLE_HANDLE_MAX_SIZE 24  //!&lt; Maximum size of a handle for OS queues
+#endif
+
+#ifndef FW_TASK_HANDLE_MAX_SIZE
+#define FW_TASK_HANDLE_MAX_SIZE 24  //!&lt; Maximum size of a handle for OS queues
+#endif
+
+#ifndef FW_FILE_HANDLE_MAX_SIZE
+#define FW_FILE_HANDLE_MAX_SIZE 16  //!&lt; Maximum size of a handle for OS queues
+#endif
+
+#ifndef FW_MUTEX_HANDLE_MAX_SIZE
+#define FW_MUTEX_HANDLE_MAX_SIZE 72  //!&lt; Maximum size of a handle for OS queues
+#endif
+
+#ifndef FW_QUEUE_HANDLE_MAX_SIZE
+#define FW_QUEUE_HANDLE_MAX_SIZE 352  //!&lt; Maximum size of a handle for OS queues
+#endif
+
+#ifndef FW_DIRECTORY_HANDLE_MAX_SIZE
+#define FW_DIRECTORY_HANDLE_MAX_SIZE 16  //!&lt; Maximum size of a handle for OS resources (files, queues, locks, etc.)
+#endif
+
+#ifndef FW_FILESYSTEM_HANDLE_MAX_SIZE
+#define FW_FILESYSTEM_HANDLE_MAX_SIZE 16  //!&lt; Maximum size of a handle for OS resources (files, queues, locks, etc.)
+#endif
+
+#ifndef FW_RAW_TIME_HANDLE_MAX_SIZE
+#define FW_RAW_TIME_HANDLE_MAX_SIZE 56  //!&lt; Maximum size of a handle for OS::RawTime objects
+#endif
+
+#ifndef FW_RAW_TIME_SERIALIZATION_MAX_SIZE
+#define FW_RAW_TIME_SERIALIZATION_MAX_SIZE 8  //!&lt; Maximum allowed serialization size for Os::RawTime objects
+#endif
+
+#ifndef FW_CONDITION_VARIABLE_HANDLE_MAX_SIZE
+#define FW_CONDITION_VARIABLE_HANDLE_MAX_SIZE 56  //!&lt; Maximum size of a handle for OS condition variables
+#endif
+
+#ifndef FW_CPU_HANDLE_MAX_SIZE
+#define FW_CPU_HANDLE_MAX_SIZE 16  //!&lt; Maximum size of a handle for OS cpu
+#endif
+
+#ifndef FW_MEMORY_HANDLE_MAX_SIZE
+#define FW_MEMORY_HANDLE_MAX_SIZE 16  //!&lt; Maximum size of a handle for OS memory
+#endif
+
+#ifndef FW_HANDLE_ALIGNMENT
+#define FW_HANDLE_ALIGNMENT 8  //!&lt; Alignment of handle storage
+#endif
+
+// Note: One buffer of this size will be stack-allocated during certain OSAL operations e.g. when copying a file
+#ifndef FW_FILE_CHUNK_SIZE
+#define FW_FILE_CHUNK_SIZE 512  //!&lt; Chunk size for working with files in the OSAL layer
+#endif
+
+// *** NOTE configuration checks are in Fw/Cfg/ConfigCheck.cpp in order to have
+// the type definitions in Fw/Types/BasicTypes available.
+#ifdef  __cplusplus
+}
+#endif
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="fpconfig-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">FpConfig.hpp</span></code><a class="headerlink" href="#fpconfig-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/FpConfig.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/**
+ * \file: FpConfig.hpp
+ * \author T. Canham, mstarch
+ * \brief C++-compatible configuration header for fprime configuration
+ *
+ * \copyright
+ * Copyright 2009-2015, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ */
+// #include &lt;Fw/Types/BasicTypes.hpp&gt;
+// #include &lt;FppConstantsAc.hpp&gt;
+extern "C" {
+#include &lt;config/FpConfig.h&gt;
+}
+
+// // Define max length of assert string
+// // Note: This constant truncates file names in assertion failure event reports
+// #ifndef FW_ASSERT_TEXT_SIZE
+// #define FW_ASSERT_TEXT_SIZE FwAssertTextSize  //!&lt; Size of string used to store assert description
+</pre></div>
+</div>
+</section>
+<section id="fprimenumericalconfig-h">
+<h2><code class="docutils literal notranslate"><span class="pre">FPrimeNumericalConfig.h</span></code><a class="headerlink" href="#fprimenumericalconfig-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/FPrimeNumericalConfig.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  FPrimeNumericalConfig.hpp
+// \author mstarch
+// \brief  hpp file for FPrime integer configuration
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// FPrime projects are allowed to turn on or off the use of 16, 32, and 64
+// bit integers. This is done to allow projects to disable support for types
+// that are not supported by the target platform, or perform inefficient
+// computations to synthesize these types.
+//
+// Users should set the properties in this file to 1 or 0 to enable or disable
+// the feature.
+//
+// This header is intended to be C-compatible.
+//
+// ======================================================================
+
+#ifndef FPRIME_INTEGER_CONFIG_H
+#define FPRIME_INTEGER_CONFIG_H
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
+#define FW_HAS_64_BIT 1                   //!&lt; Architecture supports 64 bit integers
+#define FW_HAS_32_BIT 1                   //!&lt; Architecture supports 32 bit integers
+#define FW_HAS_16_BIT 1                   //!&lt; Architecture supports 16 bit integers
+#define SKIP_FLOAT_IEEE_754_COMPLIANCE 0  //!&lt;  Check IEEE 754 compliance of floating point arithmetic
+
+#ifdef  __cplusplus
+}
+#endif
+#endif  // FPRIME_INTEGER_CONFIG_H
+</pre></div>
+</div>
+</section>
+<section id="fpysequencercfg-fpp">
+<h2><code class="docutils literal notranslate"><span class="pre">FpySequencerCfg.fpp</span></code><a class="headerlink" href="#fpysequencercfg-fpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/FpySequencerCfg.fpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>module Svc {
+    module Fpy {
+        @ The maximum number of arguments a sequence can have
+        constant MAX_SEQUENCE_ARG_COUNT = 16
+        @ The maximum number of statements a sequence can have
+        constant MAX_SEQUENCE_STATEMENT_COUNT = 1024
+        @ The maximum number of serializable registers a sequence can have
+        constant NUM_SERIALIZABLE_REGISTERS = 16
+        @ The maximum size a serializable register's buffer can be
+        # FW_COM_BUFFER_MAX_SIZE - sizeof(FwChanIdType) - sizeof(FwPacketDescriptorType)
+        constant MAX_SERIALIZABLE_REGISTER_SIZE = 512 - 4 - 4
+
+        @ The number of registers available to a sequence
+        constant NUM_REGISTERS = 128
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="ipcfg-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">IpCfg.hpp</span></code><a class="headerlink" href="#ipcfg-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/IpCfg.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>// ======================================================================
+// \title  IpCfg.hpp
+// \author mstarch
+// \brief  hpp file for SocketIpDriver component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#include &lt;Fw/Time/TimeInterval.hpp&gt;
+#ifndef REF_IPCFG_HPP
+#define REF_IPCFG_HPP
+
+enum IpCfg {
+    SOCKET_SEND_TIMEOUT_SECONDS = 1,       // Seconds component of timeout to an individual send
+    SOCKET_SEND_TIMEOUT_MICROSECONDS = 0,  // Milliseconds component of timeout to an individual send
+    SOCKET_IP_SEND_FLAGS = 0,              // send, sendto FLAGS argument
+    SOCKET_IP_RECV_FLAGS = 0,              // recv FLAGS argument
+    SOCKET_MAX_ITERATIONS = 0xFFFF,        // Maximum send/recv attempts before an error is returned
+    SOCKET_MAX_HOSTNAME_SIZE = 256         // Maximum stored hostname
+};
+static const Fw::TimeInterval SOCKET_RETRY_INTERVAL = Fw::TimeInterval(1, 0);
+
+
+#endif //REF_IPCFG_HPP
+</pre></div>
+</div>
+</section>
+<section id="polydbcfg-fpp">
+<h2><code class="docutils literal notranslate"><span class="pre">PolyDbCfg.fpp</span></code><a class="headerlink" href="#polydbcfg-fpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/PolyDbCfg.fpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># ======================================================================
+# FPP file for PolyDb configuration
+# ======================================================================
+
+module Svc {
+
+  module PolyDbCfg {
+
+    @ Define a set of PolyDb entries on a project-specific
+    @ basis. 
+    enum PolyDbEntry: U32 {
+      @ Entry 0
+      POLYDB_ENTRY_00
+      @ Entry 1
+      POLYDB_ENTRY_01
+      @ Entry 2
+      POLYDB_ENTRY_03
+      @ Entry 4
+      POLYDB_ENTRY_04
+      @ Entry 5
+      POLYDB_ENTRY_05
+      @ Entry 6
+      POLYDB_ENTRY_06
+      @ Entry 7
+      POLYDB_ENTRY_07
+      @ Entry 8
+      POLYDB_ENTRY_08
+      @ Entry 9
+      POLYDB_ENTRY_09
+    }
+
+  }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="prmdbimplcfg-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">PrmDbImplCfg.hpp</span></code><a class="headerlink" href="#prmdbimplcfg-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/PrmDbImplCfg.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * PrmDblImplCfg.hpp
+ *
+ *  Created on: Mar 13, 2015
+ *      Author: tcanham
+ */
+
+#ifndef PRMDB_PRMDBLIMPLCFG_HPP_
+#define PRMDB_PRMDBLIMPLCFG_HPP_
+
+// Anonymous namespace for configuration parameters
+namespace {
+
+    enum {
+        PRMDB_NUM_DB_ENTRIES = 25, // !&lt; Number of entries in the parameter database
+        PRMDB_ENTRY_DELIMITER = 0xA5 // !&lt; Byte value that should precede each parameter in file; sanity check against file integrity. Should match ground system.
+    };
+
+}
+
+
+
+#endif /* PRMDB_PRMDBLIMPLCFG_HPP_ */
+</pre></div>
+</div>
+</section>
+<section id="prmdbimpltestercfg-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">PrmDbImplTesterCfg.hpp</span></code><a class="headerlink" href="#prmdbimpltestercfg-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/PrmDbImplTesterCfg.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * PrmDbImplTesterCfg.hpp
+ *
+ *  Created on: Sep 30, 2015
+ *      Author: tcanham
+ */
+
+#ifndef PRMDB_TEST_UT_PRMDBIMPLTESTERCFG_HPP_
+#define PRMDB_TEST_UT_PRMDBIMPLTESTERCFG_HPP_
+
+enum {
+    PRMDB_IMPL_TESTER_MAX_READ_BUFFER = 256
+};
+
+
+
+#endif /* PRMDB_TEST_UT_PRMDBIMPLTESTERCFG_HPP_ */
+</pre></div>
+</div>
+</section>
+<section id="staticmemoryconfig-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">StaticMemoryConfig.hpp</span></code><a class="headerlink" href="#staticmemoryconfig-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/StaticMemoryConfig.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * StaticMemoryCfg.hpp:
+ *
+ * Configuration settings for the static memory component.
+ */
+
+#ifndef SVC_STATIC_MEMORY_CFG_HPP_
+#define SVC_STATIC_MEMORY_CFG_HPP_
+
+namespace Svc {
+    enum StaticMemoryConfig {
+        STATIC_MEMORY_ALLOCATION_SIZE = 2048
+    };
+}
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="tlmchanimplcfg-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">TlmChanImplCfg.hpp</span></code><a class="headerlink" href="#tlmchanimplcfg-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/TlmChanImplCfg.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/**
+ * \file
+ * \author T. Canham
+ * \brief Configuration file for Telemetry Channel component
+ *
+ * \copyright
+ * Copyright 2009-2015, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ * &lt;br /&gt;&lt;br /&gt;
+ */
+
+#ifndef TLMCHANIMPLCFG_HPP_
+#define TLMCHANIMPLCFG_HPP_
+
+// Anonymous namespace for configuration parameters
+
+
+// The parameters below provide for tuning of the hash function used to
+// write and read entries in the database. The has function is very simple;
+// It first takes the telemetry ID and does a modulo computation with
+// TLMCHAN_HASH_MOD_VALUE. It then does a second modulo with the number
+// of slots to make sure the value lands in the provided slots.
+// The values can be experimented with to try and balance the number
+// of slots versus the number of buckets.
+// To test the set of telemetry ID in the system to see if the hash is
+// balanced, do the following:
+//  1) From the deployment directory (e.g Ref), do a full build then type:
+//      "make comp_report_gen"
+//     This will generate a list in "&lt;deployment dir&gt;/ComponentReport.txt"
+//     with all the telemetry IDs in the deployment.
+//  2) Cut and paste the ID list to the array declared in the TlmChan unit test
+//     file TelemChanImplTester.cpp in the runMultiChannel() method.
+//  3) Run the unit test ("make ut run_ut")
+//  4) After writing all the telemetry IDs to the component, the
+//     unit test will dump the hash table. The output looks like the following:
+//        Slot: &lt;n&gt; - slot number
+//        Entry - a bucket assigned to the slot
+//        ... (Other buckets in the slot)
+//     The number of buckets assigned to each slot can be checked for balance.
+
+namespace {
+
+    enum {
+        TLMCHAN_NUM_TLM_HASH_SLOTS = 30, // !&lt; Number of slots in the hash table.
+                                        // Works best when set to about twice the number of components producing telemetry
+        TLMCHAN_HASH_MOD_VALUE = 99,    // !&lt; The modulo value of the hashing function.
+                                        // Should be set to a little below the ID gaps to spread the entries around
+
+        TLMCHAN_HASH_BUCKETS = 800       // !&lt; Buckets assignable to a hash slot.
+                                        // Buckets must be &gt;= number of telemetry channels in system
+    };
+
+
+}
+
+#endif /* TLMCHANIMPLCFG_HPP_ */
+</pre></div>
+</div>
+</section>
+<section id="tlmpacketizercfg-hpp">
+<h2><code class="docutils literal notranslate"><span class="pre">TlmPacketizerCfg.hpp</span></code><a class="headerlink" href="#tlmpacketizercfg-hpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/TlmPacketizerCfg.hpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/*
+ * TlmPacketizerComponentImplCfg.hpp
+ *
+ *  Created on: Dec 10, 2017
+ *      Author: tim
+ */
+
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef SVC_TLMPACKETIZER_TLMPACKETIZERCOMPONENTIMPLCFG_HPP_
+#define SVC_TLMPACKETIZER_TLMPACKETIZERCOMPONENTIMPLCFG_HPP_
+
+#include &lt;Fw/FPrimeBasicTypes.hpp&gt;
+
+namespace Svc {
+static const FwChanIdType MAX_PACKETIZER_PACKETS = 200;
+static const FwChanIdType TLMPACKETIZER_NUM_TLM_HASH_SLOTS =
+    15;  // !&lt; Number of slots in the hash table.
+         // Works best when set to about twice the number of components producing telemetry
+static const FwChanIdType TLMPACKETIZER_HASH_MOD_VALUE =
+    99;  // !&lt; The modulo value of the hashing function.
+         // Should be set to a little below the ID gaps to spread the entries around
+
+static const FwChanIdType TLMPACKETIZER_HASH_BUCKETS =
+    1000;  // !&lt; Buckets assignable to a hash slot.
+           // Buckets must be &gt;= number of telemetry channels in system
+static const FwChanIdType TLMPACKETIZER_MAX_MISSING_TLM_CHECK =
+    25;  // !&lt; Maximum number of missing telemetry channel checks
+
+// packet update mode
+enum PacketUpdateMode {
+    PACKET_UPDATE_ALWAYS,              // Always send packets, even if no changes to channel data
+    PACKET_UPDATE_ON_CHANGE,           // Only send packets if any of the channels updates
+    PACKET_UPDATE_AFTER_FIRST_CHANGE,  // Always send packets, but only after first channel has been updated
+};
+
+static const PacketUpdateMode PACKET_UPDATE_MODE = PACKET_UPDATE_ON_CHANGE;
+}  // namespace Svc
+
+#endif /* SVC_TLMPACKETIZER_TLMPACKETIZERCOMPONENTIMPLCFG_HPP_ */
+</pre></div>
+</div>
+</section>
+<section id="versioncfg-fpp">
+<h2><code class="docutils literal notranslate"><span class="pre">VersionCfg.fpp</span></code><a class="headerlink" href="#versioncfg-fpp" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/fprime/fprime-nos3/lib/fprime/default/config/VersionCfg.fpp</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># ======================================================================
+# FPP file for Version configuration
+# ======================================================================
+
+module Svc {
+
+  module VersionCfg {
+
+    @ Define a set of Version entries on a project-specific
+    @ basis. 
+    enum VersionEnum: U32 {
+      @ Entry 0
+      PROJECT_VERSION_00
+      @ Entry 1
+      PROJECT_VERSION_01
+      @ Entry 2
+      PROJECT_VERSION_02
+      @ Entry 3
+      PROJECT_VERSION_03
+      @ Entry 4
+      PROJECT_VERSION_04
+      @ Entry 5
+      PROJECT_VERSION_05
+      @ Entry 6
+      PROJECT_VERSION_06
+      @ Entry 7
+      PROJECT_VERSION_07
+      @ Entry 8
+      PROJECT_VERSION_08
+      @ Entry 9
+      PROJECT_VERSION_09
+    }
+
+  }
+
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="default" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../docs/index.html" class="btn btn-neutral float-right" title="docs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

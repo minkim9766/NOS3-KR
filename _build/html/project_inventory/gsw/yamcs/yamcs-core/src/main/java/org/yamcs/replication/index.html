@@ -1,0 +1,3726 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>replication &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../../../../../search.html" />
+    <link rel="next" title="rs" href="../rs/index.html" />
+    <link rel="prev" title="pus" href="../pus/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../../../../../index.html">gsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../../../../../index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../../index.html">gsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../../index.html">yamcs</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../../index.html">yamcs-core</a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">src</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">main</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">java</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">org</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">yamcs</a></li>
+      <li class="breadcrumb-item active">replication</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../../../../../_sources/project_inventory/gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="replication">
+<h1>replication<a class="headerlink" href="#replication" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="corruptedfileexception-java">
+<h2><code class="docutils literal notranslate"><span class="pre">CorruptedFileException.java</span></code><a class="headerlink" href="#corruptedfileexception-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/CorruptedFileException.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.replication;
+
+import java.nio.file.Path;
+
+public class CorruptedFileException extends RuntimeException {
+    Path path;
+    public CorruptedFileException(Path path,String message) {
+        super(message);
+        this.path = path;
+    }
+    
+    public String toString() {
+        String msg = getMessage();
+        return "Corrupted file " + path + (msg == null ? "" : ": " + msg);
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="masterchannelhandler-java">
+<h2><code class="docutils literal notranslate"><span class="pre">MasterChannelHandler.java</span></code><a class="headerlink" href="#masterchannelhandler-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/MasterChannelHandler.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.replication;
+
+import static org.yamcs.replication.ReplicationServer.workerGroup;
+
+import java.nio.ByteBuffer;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.logging.Log;
+import org.yamcs.replication.ReplicationMaster.SlaveServer;
+import org.yamcs.replication.protobuf.Request;
+import org.yamcs.replication.protobuf.Response;
+import org.yamcs.replication.protobuf.TimeMessage;
+import org.yamcs.replication.protobuf.Wakeup;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.DecodingException;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.concurrent.ScheduledFuture;
+
+/**
+ * 
+ * runs on the master side sending data to slave
+ *
+ */
+public class MasterChannelHandler extends ChannelInboundHandlerAdapter {
+    final ReplicationMaster replMaster;
+    final TimeService timeService;
+    final Log log;
+
+    Request req;
+    private ChannelHandlerContext channelHandlerContext;
+    ChannelFuture dataHandlingFuture;
+    ReplicationFile currentFile;
+    long nextTxToSend;
+    ReplicationTail fileTail;
+    SlaveServer slaveServer;
+    private ScheduledFuture&lt;?&gt; timeMsgFuture;
+
+
+    // called when we are TCP client
+    public MasterChannelHandler(TimeService timeService, ReplicationMaster master, SlaveServer slaveServer) {
+        this.replMaster = master;
+        this.slaveServer = slaveServer;
+        this.req = null;
+        this.timeService = timeService;
+        log = new Log(MasterChannelHandler.class, master.getYamcsInstance());
+    }
+
+    // called when we are connected to a TCP server
+    public MasterChannelHandler(TimeService timeService, ReplicationMaster master, Request req) {
+        this.replMaster = master;
+        this.req = req;
+        this.timeService = timeService;
+        log = new Log(MasterChannelHandler.class, master.getYamcsInstance());
+    }
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object o) {
+        ByteBuf nettyBuf = (ByteBuf) o;
+        try {
+            doChannelRead(ctx, nettyBuf);
+        } finally {
+            nettyBuf.release();
+        }
+    }
+
+    private void doChannelRead(ChannelHandlerContext ctx, ByteBuf nettyBuf) {
+        ByteBuffer buf = nettyBuf.nioBuffer();
+        Message msg;
+        try {
+            msg = Message.decode(buf);
+        } catch (DecodingException e) {
+            log.warn("Failed to decode message", e);
+            ctx.close();
+            return;
+        }
+
+        if (msg.type == Message.REQUEST) {
+            this.req = (Request) msg.protoMsg;
+            processRequest();
+        } else if (msg.type == Message.RESPONSE) {
+            Response resp = (Response) msg.protoMsg;
+            if (resp.getResult() != 0) {
+                log.warn("Received negative response: {}, closing the connection", resp.getErrorMsg());
+                ctx.close();
+                return;
+            } else {
+                log.info("Received response {}", resp);
+            }
+        } else {
+            log.warn("Unexpected message type {} received, closing the connection", msg.type);
+            ctx.close();
+        }
+    }
+
+    // if tcpRole=Server, called when we have been added to the pipeline by the ReplicationServer
+    // if tcpRole=Client, called when we have been added to the pipeline by the ReplicationClient
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+        super.handlerAdded(ctx);
+        this.channelHandlerContext = ctx;
+        if (req != null) {// this is the request in the constructor, if tcpRole=Server
+            processRequest();
+        }
+    }
+
+    public void shutdown() {
+        channelHandlerContext.close();
+        if (timeMsgFuture != null) {
+            timeMsgFuture.cancel(true);
+        }
+    }
+
+    private void processRequest() {
+        if (dataHandlingFuture != null) {
+            dataHandlingFuture.cancel(true);
+        }
+        if (req.hasStartTxId()) {
+            nextTxToSend = req.getStartTxId();
+        } else {
+            log.info("The slave did not provide a startTxId, starting from 0");
+            nextTxToSend = 0;
+        }
+        scheduleTimeMsgs();
+        goToNextFile();
+    }
+
+    private void scheduleTimeMsgs() {
+        long timeMsgFreqMillis = replMaster.timeMsgFreqMillis;
+        this.timeMsgFuture = channelHandlerContext.executor().scheduleAtFixedRate(this::sendTimeMsg,
+                0, timeMsgFreqMillis, TimeUnit.MILLISECONDS);
+    }
+
+    void goToNextFile() {
+        if (!channelHandlerContext.channel().isActive()) {
+            return;
+        }
+        log.trace("Looking for a new file for transaction {}", nextTxToSend);
+        currentFile = replMaster.getFile(nextTxToSend);
+        if (currentFile == null) {
+            log.warn("next TX to send {} is in the future, checking back in 60 seconds", nextTxToSend);
+            workerGroup.schedule(() -&gt; goToNextFile(), 60, TimeUnit.SECONDS);
+            return;
+        }
+        log.trace("Found file with firstTxId={} nextTxId={}", currentFile.getFirstId(), currentFile.getNextTxId());
+        if (nextTxToSend &lt; currentFile.getFirstId()) {
+            log.warn("Requested start from {} but the first available transaction is {}. Replaying from there",
+                    nextTxToSend, currentFile.getFirstId());
+            nextTxToSend = currentFile.getFirstId();
+        } else if (nextTxToSend &gt; currentFile.getFirstId()) {
+            // start from the middle of the file, write first the metadata
+            Iterator&lt;ByteBuffer&gt; it = currentFile.metadataIterator();
+            while (it.hasNext()) {
+                ByteBuffer buf = it.next();
+                long txId = buf.getLong(buf.position() + 8);
+                if (txId &gt;= nextTxToSend) {
+                    break;
+                }
+                log.debug("Sending metadata TX{} length: {} ", txId, buf.remaining());
+                ByteBuf bb = Unpooled.wrappedBuffer(buf);
+                channelHandlerContext.writeAndFlush(bb);
+            }
+        }
+        fileTail = null;
+        sendMoreData();
+    }
+
+    void sendMoreData() {
+        if (!channelHandlerContext.channel().isActive()) {
+            return;
+        }
+        if (fileTail == null) {
+            fileTail = currentFile.tail(nextTxToSend);
+        } else {
+            currentFile.getNewData(fileTail);
+        }
+
+        log.trace("nextTxToSend: {}, FileTail: {} ", nextTxToSend, fileTail);
+        if (fileTail.nextTxId == nextTxToSend) {// no more data available
+            if (fileTail.eof) { // file, full, go to next file
+                goToNextFile();
+            } else { // check back in 200 millisec
+                workerGroup.schedule(() -&gt; sendMoreData(), 200, TimeUnit.MILLISECONDS);
+            }
+        } else {// got some data, send it and check back for more once the data has been sent
+            ByteBuf buf = Unpooled.wrappedBuffer(fileTail.buf);
+            dataHandlingFuture = channelHandlerContext.writeAndFlush(buf).addListener(a -&gt; {
+                fileTail.buf.position(fileTail.buf.limit());
+                nextTxToSend = fileTail.nextTxId;
+                sendMoreData();
+            });
+        }
+    }
+
+    public long getNextTxId() {
+        return nextTxToSend;
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        log.warn("Caught exception {}", cause.getMessage());
+    }
+
+    private void sendTimeMsg() {
+        TimeMessage tm = TimeMessage.newBuilder()
+                .setLocalTime(System.currentTimeMillis())
+                .setMissionTime(timeService.getMissionTime())
+                .setSpeed(timeService.getSpeed())
+                .build();
+        Message msg = Message.get(tm);
+        ByteBuf bb = Unpooled.wrappedBuffer(msg.encode());
+        channelHandlerContext.writeAndFlush(bb);
+    }
+
+    /**
+     * this is called when the TCP connection is established, only when we are working as TCP client in the other case
+     * the ReplicationServer adds us to the pipeline after the connection is established)
+     * &lt;p&gt;
+     * Send a Wakeup message
+     */
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+        log.debug("Connection {} opened, sending a wakeup message", ctx.channel().remoteAddress());
+        Wakeup wp = Wakeup.newBuilder().setYamcsInstance(slaveServer.instance).build();
+        Message msg = Message.get(wp);
+        ctx.writeAndFlush(Unpooled.wrappedBuffer(msg.encode()));
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        log.info("Replication connection {} closed", ctx.channel().remoteAddress());
+        super.channelInactive(ctx);
+        if (dataHandlingFuture != null) {
+            dataHandlingFuture.cancel(true);
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="message-java">
+<h2><code class="docutils literal notranslate"><span class="pre">Message.java</span></code><a class="headerlink" href="#message-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/Message.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.replication;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.zip.CRC32;
+
+import org.yamcs.replication.protobuf.Request;
+import org.yamcs.replication.protobuf.Response;
+import org.yamcs.replication.protobuf.StreamInfo;
+import org.yamcs.replication.protobuf.TimeMessage;
+import org.yamcs.replication.protobuf.Wakeup;
+import org.yamcs.utils.DecodingException;
+
+import com.google.protobuf.CodedInputStream;
+import com.google.protobuf.MessageLite;
+
+/**
+ * Defines all the message types that are exchanged between master and slave.
+ * 
+ * &lt;p&gt;
+ * Message format:
+ * 
+ * &lt;pre&gt;
+ * 1 byte type
+ * 3 bytes message size (size of data to follow) = n+4
+ * n bytes data
+ * 4 bytes CRC.
+ * &lt;/pre&gt;
+ * &lt;p&gt;
+ * This is the same structure used in the replication file to be able to play it directly over the network.
+ * &lt;p&gt;
+ * The replication file contains only STREAM_INFO and DATA messages (and we call them transactions)
+ */
+public class Message {
+    public final static byte WAKEUP = 1;
+    public final static byte REQUEST = 2;
+    public final static byte RESPONSE = 3;
+    public final static byte STREAM_INFO = 4;
+    public final static byte DATA = 5;
+    public final static byte TIME = 6;
+
+    final byte type;
+    MessageLite protoMsg;
+
+    public static Message decode(ByteBuffer buf) throws DecodingException {
+        verifyCrc(buf);
+
+        int lengthtype = buf.getInt();
+        int length = lengthtype &amp; 0xFFFFFF;
+        byte type = (byte) (lengthtype &gt;&gt; 24);
+
+        if (length != buf.remaining()) {// netty will split the messages based on this length so if this
+            // message has been received via netty, this error cannot really happen
+            throw new DecodingException(
+                    "Message length does not match. header length: " + length + " buffer length:" + buf.remaining());
+        }
+
+        Message msg;
+
+        buf.limit(buf.limit() - 4); // get rid of CRC
+
+        switch (type) {
+        case DATA:
+            msg = new TransactionMessage(type, buf.getInt(), buf.getLong());
+            ((TransactionMessage) msg).buf = buf;
+            break;
+        case WAKEUP:
+            msg = new Message(type);
+            msg.protoMsg = decodeProto(buf, Wakeup.newBuilder()).build();
+            break;
+        case REQUEST:
+            msg = new Message(type);
+            msg.protoMsg = decodeProto(buf, Request.newBuilder()).build();
+            break;
+        case RESPONSE:
+            msg = new Message(type);
+            msg.protoMsg = decodeProto(buf, Response.newBuilder()).build();
+            break;
+        case STREAM_INFO:
+            msg = new TransactionMessage(type, buf.getInt(), buf.getLong());
+            buf.getInt();// pointer to next metadata
+            msg.protoMsg = decodeProto(buf, StreamInfo.newBuilder()).build();
+            break;
+        case TIME:
+            msg = new Message(type);
+            msg.protoMsg = decodeProto(buf, TimeMessage.newBuilder()).build();
+            break;
+        default:
+            throw new DecodingException("unknown message type " + type);
+
+        }
+
+        return msg;
+    }
+
+    Message(byte type) {
+        this.type = type;
+    }
+
+    public byte type() {
+        return type;
+    }
+
+    public MessageLite protoMsg() {
+        return protoMsg;
+    }
+
+    private static void verifyCrc(ByteBuffer buf) throws DecodingException {
+        int pos = buf.position();
+        buf.limit(buf.limit() - 4);
+        CRC32 crc = new CRC32();
+        crc.update(buf);
+        int ccrc = (int) crc.getValue();
+
+        buf.limit(buf.limit() + 4);
+        int rcrc = buf.getInt();
+
+        if (ccrc != rcrc) {
+            throw new DecodingException("CRC verification failed");
+        }
+        buf.position(pos);
+    }
+
+    /**
+     * decodes the proto message. buf has to be positioned before the size.
+     * 
+     * &lt;p&gt;
+     * the CRC is the last 4 bytes and is not checked.
+     */
+    private static &lt;T extends MessageLite.Builder&gt; T decodeProto(ByteBuffer buf, T builder)
+            throws DecodingException {
+        try {
+            builder.mergeFrom(CodedInputStream.newInstance(buf));
+            return builder;
+        } catch (IOException e) {
+            throw new DecodingException(e);
+        }
+    }
+
+    public static Message get(Wakeup wp) {
+        Message msg = new Message(WAKEUP);
+        msg.protoMsg = wp;
+        return msg;
+    }
+
+    public static Message get(TimeMessage tm) {
+        Message msg = new Message(TIME);
+        msg.protoMsg = tm;
+        return msg;
+    }
+
+    public static Message get(Response resp) {
+        Message msg = new Message(RESPONSE);
+        msg.protoMsg = resp;
+        return msg;
+    }
+
+    public static Message get(Request req) {
+        Message msg = new Message(REQUEST);
+        msg.protoMsg = req;
+        return msg;
+    }
+
+    public ByteBuffer encode() {
+        byte[] b = protoMsg.toByteArray();
+        ByteBuffer buf = ByteBuffer.allocate(b.length + 8);
+
+        buf.putInt((type &lt;&lt; 24) | (b.length + 4));
+        buf.put(b);
+        CRC32 crc = new CRC32();
+        buf.position(0);
+        buf.limit(b.length + 4);
+        crc.update(buf);
+
+        buf.limit(b.length + 8);
+        buf.putInt((int) crc.getValue());
+        buf.position(0);
+        return buf;
+    }
+
+    // this is a message that comes from a replication file
+    public static class TransactionMessage extends Message {
+        long txId;
+        int instanceId;
+        ByteBuffer buf;
+
+        TransactionMessage(byte type, int instanceId, long txId) {
+            super(type);
+            this.instanceId = instanceId;
+            this.txId = txId;
+        }
+
+        public ByteBuffer encode() {
+            throw new UnsupportedOperationException();
+        }
+
+        public long txId() {
+            return txId;
+        }
+
+        public ByteBuffer buf() {
+            return buf;
+        }
+
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="replicationclient-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ReplicationClient.java</span></code><a class="headerlink" href="#replicationclient-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationClient.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.replication;
+
+import static org.yamcs.replication.ReplicationServer.workerGroup;
+
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
+
+import org.yamcs.logging.Log;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.ssl.SslContext;
+import io.netty.util.concurrent.ScheduledFuture;
+
+/**
+ * Replication TCP client - works both on the master and on the slave side depending on the config
+ * 
+ */
+public class ReplicationClient {
+    final String host;
+    final int port;
+    final Supplier&lt;ChannelHandler&gt; channelHandlerSupplier;
+    final Log log;
+    final long reconnectionInterval;
+    final int maxTupleSize;
+    Channel channel;
+    ScheduledFuture&lt;?&gt; reconnectFuture;
+    Bootstrap bootstrap;
+    volatile boolean quitting = false;
+    SslContext sslCtx = null;
+
+    public ReplicationClient(String yamcsInstance, String host, int port, SslContext sslCtx,
+            long reconnectionInterval, int maxTupleSize,
+            Supplier&lt;ChannelHandler&gt; channelHandlerSupplier) {
+        this.port = port;
+        this.host = host;
+        this.channelHandlerSupplier = channelHandlerSupplier;
+        this.reconnectionInterval = reconnectionInterval;
+        log = new Log(getClass(), yamcsInstance);
+        this.sslCtx = sslCtx;
+        this.maxTupleSize = maxTupleSize;
+    }
+
+    public void start() {
+        bootstrap = new Bootstrap();
+        bootstrap.group(workerGroup)
+                .channel(NioSocketChannel.class)
+                .handler(new ChannelInitializer&lt;SocketChannel&gt;() {
+                    @Override
+                    public void initChannel(SocketChannel ch) throws Exception {
+                        if (sslCtx != null) {
+                            ch.pipeline().addLast(sslCtx.newHandler(ch.alloc()));
+                        }
+                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(maxTupleSize, 1, 3));
+                        ch.pipeline().addLast(channelHandlerSupplier.get());
+                    }
+                });
+        doConnect();
+    }
+
+    private void doConnect() {
+        log.debug("Connecting for replication to {}:{}", host, port);
+        bootstrap.connect(host, port).addListener((ChannelFuture f) -&gt; {
+            if (f.isSuccess()) {
+                channel = f.channel();
+                log.info("Connected to server at {}:{}", host, port);
+                channel.closeFuture().addListener(f1 -&gt; {
+                    scheduleReconnect();
+                });
+            } else {
+                log.warn("Failed to connect: {}", f.cause().getMessage(), f.cause());
+                scheduleReconnect();
+            }
+        });
+    }
+
+    void scheduleReconnect() {
+        if (quitting || reconnectionInterval &lt; 0) {
+            return;
+        }
+
+        if (reconnectFuture != null) {
+            reconnectFuture.cancel(true);
+        }
+        reconnectFuture = workerGroup.schedule(() -&gt; doConnect(), reconnectionInterval, TimeUnit.MILLISECONDS);
+    }
+
+    public void stop() {
+        quitting = true;
+        if (reconnectFuture != null) {
+            reconnectFuture.cancel(true);
+        }
+        if (channel != null) {
+            channel.close();
+        }
+    }
+
+    public Channel getChannel() {
+        return channel;
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="replicationfile-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ReplicationFile.java</span></code><a class="headerlink" href="#replicationfile-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationFile.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.replication;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.BufferOverflowException;
+import java.nio.ByteBuffer;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileChannel.MapMode;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.zip.CRC32;
+
+import org.yamcs.logging.Log;
+import org.yamcs.utils.StringConverter;
+
+import io.netty.util.internal.PlatformDependent;
+
+/**
+ * Stores transactions in a memory mapped file. The data is split into pages, each page has a fixed number of
+ * transactions.
+ * &lt;p&gt;
+ * An index gives a pointer to the beginning of each page to allow to jump faster to a given transaction number.
+ * &lt;p&gt;
+ * The metadata transactions form a linked list in order to allow to send them all when a client connects.
+ * 
+ * &lt;p&gt;
+ * Header:
+ * 
+ * &lt;pre&gt;
+ * 12 bytes magic "YAMCS_STREAM"
+ *  1 byte version
+ *  3 bytes spare
+ *  8 bytes first_id =  first transaction in the file = file_id - used for consistency check(if someone renames the file)
+ *  4 bytes page_size - number of transactions per page 
+ *  4 bytes max_pages - max number of pages (and the size of the index)
+ * 
+ *  8 bytes last_mod = last modification time
+ *  4 bytes n =  number of full pages. If n=max_pages, the file is full, cannot be written to it
+ *  4 bytes m = number of transactions on page n
+ *  4 bytes firstMetadataPos - position of the first metadata transaction
+ *  (max_pages+1) x 4 bytes idx - transaction index 
+ *      idx[i] (i=0..max_pages) - offset in the file where transaction with id id_first + i*page_size starts
+ *      idx[i] = 0 -&gt; no such transaction. this means num_tx &lt; i*m
+ *      idx[max_pages] -&gt; pointer to the end of the file.
+ * &lt;/pre&gt;
+ * 
+ * transaction data:
+ * 
+ * &lt;pre&gt;
+ * 
+ * 1 byte type - the type can be DATA or STREAM_INFO with the constants defined in {@link Message}
+ * 3 bytes - size of the data that follows including the CRC (or alternatively including the first 4 bytes type+size but excluding the crc)
+ * 4 bytes instance_id
+ * 8 bytes transaction_id
+ * n bytes data
+ * 4 bytes CRC32 calculated over the data including the type and length
+ * 
+ *  for metadata the first 4 bytes of the data is the position of the next metadata record
+ * 
+ * &lt;/pre&gt;
+ * 
+ * &lt;p&gt;
+ * The methods of this class throw {@link UncheckedIOException} instead of {@link IOException}. When working with memory
+ * mapped files in java, an IO error will cause an unspecified unchecked exception or even crash of Java (because file
+ * data is accessed using memory reads/writes). Therefore we prefer not to give a false sense of security by throwing
+ * IOException only in some limited situations and converted all these to {@link UncheckedIOException}..
+ * 
+ * &lt;p&gt;
+ * The one occasion when Java may crash while no hardware failure is present is when the disk is full.
+ * &lt;p&gt;
+ * TODO: add a checker and stop writing data if the disk usage is above a threshold.
+ * 
+ */
+public class ReplicationFile implements Closeable {
+    static final String RPL_FILENAME_PREFIX = "RPL";
+    final static byte[] MAGIC = { 'Y', 'A', 'M', 'C', 'S', '_', 'S', 'T', 'R', 'E', 'A', 'M' };
+
+    // the position inside the record where the metadata position pointer sits
+    // it is after size, instanceId, txid
+    final static int METADATA_POS_OFFSET = 16;
+    final static int MIN_RECORD_SIZE = 20; // size, instanceId, txId, crc
+
+    final Log log;
+
+    ReadWriteLock rwlock = new ReentrantReadWriteLock();
+
+    private MappedByteBuffer buf;
+    private int lastMetadataTxStart;
+    private FileChannel fc;
+    final private boolean readOnly;
+    final private Header1 hdr1;
+    final private Header2 hdr2;
+    private boolean fileFull = false;
+    final Path path;
+    CRC32 crc32 = new CRC32();
+    private boolean syncRequired;
+
+    class Header1 { // this is the first part - fixed - of the header
+
+        final static byte VERSION = 0;
+        final static int LENGTH = 32;
+        final long firstId; // first transaction id
+        final int pageSize, maxPages;
+
+        // new file
+        Header1(long firstId, int pageSize, int maxPages) {
+            this.firstId = firstId;
+            this.pageSize = pageSize;
+            this.maxPages = maxPages;
+            buf.put(MAGIC);
+            buf.putInt(VERSION &lt;&lt; 24);
+            buf.putLong(firstId);
+            buf.putInt(pageSize);
+            buf.putInt(maxPages);
+        }
+
+        // open existing file
+        Header1(long firstTxId) {
+            checkHdr1(firstTxId);
+            firstId = firstTxId;
+            pageSize = buf.getInt();
+            maxPages = buf.getInt();
+        }
+
+        private void checkHdr1(long firstTxId) {
+            byte[] magic = new byte[MAGIC.length];
+            buf.get(magic);
+            if (!Arrays.equals(magic, MAGIC)) {
+                throw new CorruptedFileException(path,
+                        "bad file, magic entry does not match: " + StringConverter.arrayToHexString(magic)
+                                + ". Expected " + StringConverter.arrayToHexString(MAGIC));
+            }
+            int version = buf.getInt() &gt;&gt; 24;
+            if (version != VERSION) {
+                throw new CorruptedFileException(path, "bad version: " + version + ". Expected " + VERSION);
+            }
+            long id = buf.getLong();
+            if (id != firstTxId) {
+                throw new CorruptedFileException(path, "bad firstId " + id + " expected " + firstTxId);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "Header1 [firstId=" + firstId + ", pageSize=" + pageSize + ", maxPages=" + maxPages + "]";
+        }
+    }
+
+    class Header2 {
+        final static int HDR_IDX_OFFSET = Header1.LENGTH + 20;
+
+        int numFullPages; // number of full pages
+        int lastPageNumTx; // number of transaction on the last page
+        long lastMod; // last modification
+
+        Header2(boolean newFile) {
+            if (newFile) {
+                this.numFullPages = 0;
+                this.lastPageNumTx = 0;
+                this.lastMod = System.currentTimeMillis();
+                write();
+                buf.position(HDR_IDX_OFFSET - 4);
+                buf.putInt(0);// first metadata pointer
+
+                writeIndex(0, endOffset());
+                buf.putInt(endOffset());// position of the transaction 0
+                for (int i = 1; i &lt;= hdr1.maxPages; i++) {
+                    writeIndex(i, 0);
+                }
+            } else {
+                buf.position(Header1.LENGTH);
+                lastMod = buf.getLong();
+                numFullPages = buf.getInt();
+                lastPageNumTx = buf.getInt();
+            }
+        }
+
+        void write() {
+            buf.putLong(Header1.LENGTH, lastMod);
+            buf.putInt(Header1.LENGTH + 8, numFullPages);
+            buf.putInt(Header1.LENGTH + 12, lastPageNumTx);
+        }
+
+        public int firstMetadataPointer() {
+            return buf.getInt(HDR_IDX_OFFSET - 4);
+        }
+
+        /**
+         * returns the offset of the end of hdr2 - where data begins
+         */
+        public int endOffset() {
+            return HDR_IDX_OFFSET + 4 * (hdr1.maxPages + 1);
+        }
+
+        public int getIndex(int n) {
+            return buf.getInt(HDR_IDX_OFFSET + n * 4);
+        }
+
+        void writeIndex(int n, int txPos) {
+            buf.putInt(HDR_IDX_OFFSET + n * 4, txPos);
+        }
+
+        void incrNumTx() {
+            hdr2.lastPageNumTx++;
+            if (hdr2.lastPageNumTx == hdr1.pageSize) {
+                hdr2.numFullPages++;
+                hdr2.lastPageNumTx = 0;
+                if (!readOnly) {
+                    hdr2.writeIndex(hdr2.numFullPages, buf.position());
+                } // else this method is called from recover when reading an old file which cannot be modified
+            }
+        }
+
+        int numTx() {
+            return hdr1.pageSize * hdr2.numFullPages + hdr2.lastPageNumTx;
+        }
+
+        @Override
+        public String toString() {
+            return "Header2 [numFullPages=" + numFullPages + ", lastPageNumTx=" + lastPageNumTx + ", lastMod="
+                    + Instant.ofEpochMilli(lastMod)
+                    + "]";
+        }
+    }
+
+    public long getFirstId() {
+        return hdr1.firstId;
+    }
+
+    /**
+     * Creates a new empty file
+     * 
+     * @param dir
+     * @param id
+     * @param pageSize
+     * @param maxPages
+     * @param maxFileSize
+     */
+    private ReplicationFile(String yamcsInstance, Path path, long id, int pageSize, int maxPages, int maxFileSize) {
+        log = new Log(this.getClass(), yamcsInstance);
+        this.path = path;
+        if (Files.exists(path)) {
+            throw new IllegalArgumentException("File " + path + " exists. Refusing to overwrite");
+        }
+        try {
+            fc = FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE,
+                    StandardOpenOption.READ);
+            buf = fc.map(MapMode.READ_WRITE, 0, maxFileSize);
+            hdr1 = new Header1(id, pageSize, maxPages);
+            hdr2 = new Header2(true);
+            this.readOnly = false;
+            this.lastMetadataTxStart = Header2.HDR_IDX_OFFSET - METADATA_POS_OFFSET - 4;
+            buf.position(hdr2.endOffset());
+            log.info("Created new replication file {} pageSize: {}, maxPages:{}, maxFileSize: {}", path, hdr1.pageSize,
+                    hdr1.maxPages, maxFileSize);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    /**
+     * Open an existing file for append
+     */
+    private ReplicationFile(String yamcsInstance, Path path, long firstTxId, int maxFileSize) {
+        log = new Log(this.getClass(), yamcsInstance);
+        this.path = path;
+        this.readOnly = false;
+        try {
+            fc = FileChannel.open(path, StandardOpenOption.READ, StandardOpenOption.WRITE);
+            buf = fc.map(MapMode.READ_WRITE, 0, maxFileSize);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        hdr1 = new Header1(firstTxId);
+        hdr2 = new Header2(false);
+
+        log.debug("{}, {}", hdr1, hdr2);
+        // recover any non indexed good transactions at the end of the file and set the position at the end
+        recover();
+
+        long endOffset = buf.position();
+        // find the offset where the next metadata has to be written
+        lastMetadataTxStart = Header2.HDR_IDX_OFFSET - METADATA_POS_OFFSET - 4;
+        while (true) {
+            int nextMetadataTxStart = buf.getInt(lastMetadataTxStart + METADATA_POS_OFFSET);
+            if (nextMetadataTxStart == 0 || nextMetadataTxStart + METADATA_POS_OFFSET &gt; endOffset) {
+                break;
+            }
+            if (nextMetadataTxStart &lt;= lastMetadataTxStart) {
+                throw new UncheckedIOException(
+                        new IOException("Corrupted file " + path + " at position " + lastMetadataTxStart
+                                + " the metadata pointer points in the past"));
+            }
+            lastMetadataTxStart = nextMetadataTxStart;
+        }
+        log.info("Opened for append {} pageSize: {}, maxPages:{}, num_tx: {}", path, hdr1.pageSize, hdr1.maxPages,
+                hdr2.numTx());
+    }
+
+    /**
+     * Open an existing file read only
+     */
+    private ReplicationFile(String yamcsInstance, Path path, long firstTxId) {
+        log = new Log(this.getClass(), yamcsInstance);
+        this.readOnly = true;
+        this.path = path;
+
+        try {
+            fc = FileChannel.open(path, StandardOpenOption.READ);
+            buf = fc.map(MapMode.READ_ONLY, 0, fc.size());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        hdr1 = new Header1(firstTxId);
+        hdr2 = new Header2(false);
+        log.debug("hdr1: {}, hdr2: {}", hdr1, hdr2);
+
+        this.lastMetadataTxStart = Header2.HDR_IDX_OFFSET - 4;
+
+        // set the filefull
+        this.fileFull = true;
+        recover();
+
+        log.info("Opened read-only {} pageSize: {}, maxPages:{}, num_tx: {}", path, hdr1.pageSize, hdr1.maxPages,
+                hdr2.numTx());
+    }
+
+    public static ReplicationFile newFile(String yamcsInstance, Path path, long firstTxId, int pageSize, int maxPages,
+            int maxFileSize) {
+        checkSize(pageSize, maxPages, maxFileSize);
+        return new ReplicationFile(yamcsInstance, path, firstTxId, pageSize, maxPages, maxFileSize);
+    }
+
+    private static void checkSize(int pageSize, int maxPages, int maxFileSize) {
+        int minSize = headerSize(pageSize, maxPages) + MIN_RECORD_SIZE;
+        if (maxFileSize &lt; minSize) {
+            throw new IllegalArgumentException(
+                    "maxFileSize=" + maxFileSize + " too small; " + minSize
+                            + " bytes required for storing an empty transaction");
+        }
+
+    }
+
+    public static ReplicationFile openReadOnly(String yamcsInstance, Path path, long firstTxId) {
+        return new ReplicationFile(yamcsInstance, path, firstTxId);
+    }
+
+    public static ReplicationFile openReadWrite(String yamcsInstance, Path path, long firstTxId, int maxFileSize) {
+        return new ReplicationFile(yamcsInstance, path, firstTxId, maxFileSize);
+    }
+
+    /**
+     * Write transaction to the file and returns the transaction id.
+     * &lt;p&gt;
+     * returns -1 if the transaction could not be written because the file is full.
+     * 
+     * @param tx
+     * @return
+     */
+    public long writeData(Transaction tx) {
+        if (readOnly) {
+            throw new IllegalStateException("Read only file");
+        } else if (!fc.isOpen()) {
+            // this may happen if the thread writing to the replication file is interrupted when writing
+            log.warn("Attempting to write to a closed file");
+            return -1;
+        }
+
+        rwlock.writeLock().lock();
+        final int txStartPos = buf.position();
+
+        try {
+            if (fileFull) {
+                return -1;
+            } else if (hdr2.numFullPages == hdr1.maxPages) {
+                return abortWriteFileFull(txStartPos);
+            } else if (buf.remaining() &lt; MIN_RECORD_SIZE) {
+                return abortWriteFileFull(txStartPos);
+            }
+
+            long txid = hdr1.firstId + hdr2.numTx();
+            log.trace("Writing transaction {} at position {}", txid, buf.position());
+
+            buf.putInt(0);// this is where the the type and size is written below
+            buf.putInt(tx.getInstanceId());
+            buf.putLong(txid);
+
+            byte type = tx.getType();
+
+            if (Transaction.isMetadata(type)) {
+                buf.putInt(0);// next metadata position
+            }
+
+            try {
+                tx.marshall(buf);
+            } catch (BufferOverflowException | IndexOutOfBoundsException e) {// end of file
+                return abortWriteFileFull(txStartPos);
+            }
+
+            if (buf.remaining() &lt; 4) {// no space left for CRC
+                return abortWriteFileFull(txStartPos);
+            }
+
+            int size = buf.position() - txStartPos;
+            buf.putInt(txStartPos, (type &lt;&lt; 24) | (size));
+            int crc = compute_crc(buf, txStartPos);
+            buf.putInt(crc);
+
+            if (Transaction.isMetadata(type)) {
+                buf.putInt(lastMetadataTxStart + METADATA_POS_OFFSET, txStartPos);
+
+                // update crc of the modified metadata record
+                if (lastMetadataTxStart &gt;= hdr2.endOffset()) {
+                    updateCrc(lastMetadataTxStart);
+                }
+                if (log.isTraceEnabled()) {
+                    log.trace("Wrote at offset {} the pointer to the next metadata at {}",
+                            lastMetadataTxStart + METADATA_POS_OFFSET, txStartPos);
+                }
+
+                lastMetadataTxStart = txStartPos;
+            }
+
+            hdr2.lastMod = System.currentTimeMillis();
+            log.trace("Wrote transaction {} of type {} at position {}, total size: {}", txid, type, txStartPos,
+                    size + 4);
+            hdr2.incrNumTx();
+            return txid;
+        } catch (Throwable e) {
+            buf.position(txStartPos);
+            log.error("Caught exception when writing the replication file ", e);
+            throw e;
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    // starts from latest known transaction (according to the header) and checks for new ones
+    private void recover() {
+        int n = hdr2.numTx();
+
+        int startTxPos = getPosition(n);
+        buf.position(startTxPos);
+        int k = 0;
+        while (buf.remaining() &gt; MIN_RECORD_SIZE) {
+            n = hdr2.numTx();
+            startTxPos = buf.position();
+
+            int size = buf.getInt() &amp; 0xFFFFFF;
+
+            if (size &gt; buf.remaining() || size &lt; 12) {
+                break;
+            }
+
+            buf.getInt();// serverId
+            long txId = buf.getLong();
+            if (txId != hdr1.firstId + n) {
+                break;
+            }
+            buf.position(startTxPos + size);
+            int crc = compute_crc(buf, startTxPos);
+            if (crc != buf.getInt()) {
+                log.debug("Trying to recover TX{}: CRC does not match", txId);
+                break;
+            }
+            log.debug("Recovered TX{}", txId);
+            hdr2.incrNumTx();
+            k++;
+        }
+        log.debug("Found {} transactions more than indicated in the header", k);
+        buf.position(startTxPos);
+    }
+
+    private int abortWriteFileFull(int txStartPos) {
+        fileFull = true;
+        buf.position(txStartPos);
+        log.debug("File {} full, numTx: {}", path, hdr2.numTx());
+        return -1;
+    }
+
+    // update the CRC of the record starting at the position
+    private void updateCrc(int pos) {
+        ByteBuffer buf1 = buf.duplicate();
+        buf1.position(pos);
+        int size = buf1.getInt() &amp; 0xFFFFFF;
+        buf1.position(pos);
+        buf1.limit(pos + size);
+        crc32.reset();
+        crc32.update(buf1);
+        buf1.limit(buf1.limit() + 4);
+        buf1.putInt((int) crc32.getValue());
+    }
+
+    // compute checksum from start to the current position
+    private int compute_crc(ByteBuffer buf, int start) {
+        int prevLimit = buf.limit();
+        buf.limit(buf.position());
+        buf.position(start);
+        crc32.reset();
+        crc32.update(buf);
+        buf.limit(prevLimit);
+
+        return (int) crc32.getValue();
+    }
+
+    /**
+     * Returns a {@link ReplicationTail} containing a read only {@link ByteBuffer} having the position on given txId and
+     * with the limit set to the current end of tx data.
+     * 
+     * &lt;p&gt;
+     * The tail can be sent back in {@link #getNewData(ReplicationTail)} to obtain more data if available.
+     * &lt;p&gt;
+     * {@link ReplicationTail#eof} = true means the file is full so no more data will be available in the future.
+     *
+     * &lt;p&gt;
+     * if the txId is smaller than the first transaction of this file, an {@link IllegalArgumentException} is thrown.
+     * &lt;p&gt;
+     * If the txId is greater than the highest transaction in this file plus 1, null is returned
+     * &lt;p&gt;
+     * If the txId is the highest transaction in this file plus one, a tail with 0 transactions (i.e. position=limit in
+     * the buffer) is returned; it can be used later to get more data.
+     * 
+     * @param txId
+     * @return
+     */
+    public ReplicationTail tail(long txId) {
+        int txNum = (int) (txId - hdr1.firstId);
+        if (txNum &lt; 0) {
+            throw new IllegalArgumentException(txId + " is smaller than " + hdr1.firstId);
+        }
+        rwlock.readLock().lock();
+        try {
+
+            int pos = getPosition(txNum);
+            if (pos &lt; 0) {
+                return null;
+            }
+
+            ByteBuffer buf1 = buf.duplicate().asReadOnlyBuffer();
+            buf1.position(pos);
+            buf1.limit(buf.position());
+            ReplicationTail rfe = new ReplicationTail();
+            rfe.buf = buf1;
+            rfe.nextTxId = getNextTxId();
+            if (fileFull) {
+                rfe.eof = true;
+            }
+            return rfe;
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Change the limit inside the file tail to the current position in the file buffer. Update the nextTxId
+     * &lt;p&gt;
+     * Also update the eof flag if the file filled up since the last call.
+     * 
+     * @param rfe
+     */
+    public void getNewData(ReplicationTail rfe) {
+        rwlock.readLock().lock();
+        try {
+            rfe.buf.limit(buf.position());
+            if (fileFull) {
+                rfe.eof = true;
+            }
+            rfe.nextTxId = getNextTxId();
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Get the position of the txNum th transaction in the file according to the index
+     * &lt;p&gt;
+     * return -1 if the transaction is beyond the end of the file.
+     */
+    private int getPosition(int txNum) {
+        // number of full pages
+        int nfp = txNum / hdr1.pageSize;
+        int m1 = txNum - nfp * hdr1.pageSize;
+
+        if ((nfp &gt; hdr2.numFullPages) || (nfp == hdr2.numFullPages &amp;&amp; m1 &gt; hdr2.lastPageNumTx)) {
+            return -1;
+        }
+
+        // first jump to the right page
+        int pos = hdr2.getIndex(nfp);
+
+        long expectedTxId = hdr1.firstId + hdr1.pageSize * nfp;
+        // then skip m1 transactions
+        for (int i = 0; i &lt; m1; i++) {
+            pos = skipTransaction(pos, expectedTxId++);
+        }
+        return pos;
+    }
+
+    private int skipTransaction(int pos, long expectedTxId) {
+        int typeSize = buf.getInt(pos);
+        long txId = buf.getLong(pos + 8);
+        if (txId != expectedTxId) {// consistency check
+            throw new CorruptedFileException(path, "at offset " + pos + " expected txId " + expectedTxId
+                    + " but found " + txId + " instead");
+        }
+        return pos + 4 + (typeSize &amp; 0xFFFFFF);
+    }
+
+    public boolean isFull() {
+        return fileFull;
+    }
+
+    /**
+     * Iterate through the metadata
+     */
+    public Iterator&lt;ByteBuffer&gt; metadataIterator() {
+        return new MetadataIterator();
+    }
+
+    /**
+     * Iterate through the data
+     */
+    public Iterator&lt;ByteBuffer&gt; iterator() {
+        return new TxIterator();
+    }
+
+    public void close() {
+        try {
+            if (!readOnly) {
+                hdr2.write();
+
+                // Required to unmap on Windows, else truncate fails
+                PlatformDependent.freeDirectBuffer(buf);
+
+                fc.truncate(buf.position());
+            } else {
+                // Required on Windows
+                PlatformDependent.freeDirectBuffer(buf);
+            }
+            fc.close();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    /**
+     * Force writing the content on disk.
+     * &lt;p&gt;
+     * The method will call first {@link FileChannel#force(boolean)}, write the number of transactions to the header and
+     * then call again {@link FileChannel#force(boolean)} to force also the header on the disk.
+     * &lt;p&gt;
+     * This way should guarantee that the transaction data is written on the disk before the header
+     */
+    public void sync() throws IOException {
+        if (!readOnly) {
+            rwlock.readLock().lock();
+            try {
+                fc.force(true);
+                hdr2.write();
+                fc.force(true);
+            } finally {
+                rwlock.readLock().unlock();
+            }
+        }
+    }
+
+    public static int headerSize(int pageSize, int maxPages) {
+        return Header2.HDR_IDX_OFFSET + 4 * (maxPages + 1);
+    }
+
+    public int numTx() {
+        return hdr2.numTx();
+    }
+
+    public boolean isSyncRequired() {
+        return syncRequired;
+    }
+
+    /**
+     * Set the sync required flag such that the file is synchronized by the ReplicationMaster
+     * 
+     * @param syncRequired
+     */
+    public void setSyncRequired(boolean syncRequired) {
+        this.syncRequired = syncRequired;
+    }
+
+    /**
+     * Returns the last tx id from this file + 1.
+     * &lt;p&gt;
+     * If there is no transaction in this file, return 0.
+     */
+    public long getNextTxId() {
+        return hdr1.firstId + hdr2.numTx();
+    }
+
+    class MetadataIterator implements Iterator&lt;ByteBuffer&gt; {
+        int nextPos;
+
+        MetadataIterator() {
+            nextPos = hdr2.firstMetadataPointer();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return nextPos &gt; 0;
+        }
+
+        /**
+         * Returns a ByteBuffer with the position set to where the record begins and the limit sets to where it ends
+         * &lt;p&gt;
+         * The structure of the metadata is
+         * 
+         * &lt;pre&gt;
+         *  1 byte type
+         *  3 bytes size -size of data that follows( i.e. without the size itself) = n + 20
+         *  4 bytes serverId
+         *  8 bytes txId
+         *  4 bytes metadata next position (to be ignored, only relevant inside the file)
+         *   n bytes data
+         *  4 bytes crc
+         * &lt;/pre&gt;
+         */
+        @Override
+        public ByteBuffer next() {
+            ByteBuffer buf1 = buf.asReadOnlyBuffer();
+            buf1.position(nextPos);
+            int typesize = buf1.getInt(nextPos);
+            int limit = nextPos + 4 + (typesize &amp; 0xFFFFFF);
+            buf1.limit(limit);
+            nextPos = buf1.getInt(nextPos + METADATA_POS_OFFSET);
+
+            return buf1;
+        }
+    }
+
+    class TxIterator implements Iterator&lt;ByteBuffer&gt; {
+        int nextPos;
+
+        TxIterator() {
+            nextPos = hdr2.endOffset();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return nextPos &gt; 0;
+        }
+
+        /**
+         * Returns a ByteBuffer with the position set to where the record begins and the limit sets to where it ends
+         * &lt;p&gt;
+         * The structure of the metadata is
+         * 
+         * &lt;pre&gt;
+         *  1 byte type
+         *  3 bytes size -size of data that follows( i.e. without the size itself) = n + 20
+         *  4 bytes serverId
+         *  8 bytes txId
+         *  4 bytes metadata next position (to be ignored, only relevant inside the file)
+         *   n bytes data
+         *  4 bytes crc
+         * &lt;/pre&gt;
+         */
+        @Override
+        public ByteBuffer next() {
+            if (nextPos &lt; 0) {
+                throw new NoSuchElementException();
+            }
+            ByteBuffer buf1 = buf.asReadOnlyBuffer();
+            buf1.position(nextPos);
+            int typesize = buf1.getInt(nextPos);
+
+            nextPos += 4 + (typesize &amp; 0xFFFFFF);
+
+            if (nextPos &gt;= buf.limit()) {
+                nextPos = -1;
+            } else {
+                buf1.limit(nextPos);
+            }
+
+            return buf1;
+        }
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="replicationmaster-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ReplicationMaster.java</span></code><a class="headerlink" href="#replicationmaster-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationMaster.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.replication;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.BufferOverflowException;
+import java.nio.ByteBuffer;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import javax.net.ssl.SSLException;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.replication.protobuf.ColumnInfo;
+import org.yamcs.replication.protobuf.Request;
+import org.yamcs.replication.protobuf.StreamInfo;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.ColumnSerializer;
+import org.yamcs.yarch.ColumnSerializerFactory;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import com.google.protobuf.CodedOutputStream;
+import com.google.protobuf.MessageLite;
+import com.google.protobuf.TextFormat;
+
+import io.netty.channel.ChannelHandler;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+
+/**
+ * 
+ * Implements the master part of the replication. At any moment there is one current file where the replication data is
+ * written.
+ * 
+ * @author nm
+ *
+ */
+public class ReplicationMaster extends AbstractYamcsService {
+
+    ConcurrentSkipListMap&lt;Long, ReplFileAccess&gt; replFiles = new ConcurrentSkipListMap&lt;&gt;();
+    volatile ReplicationFile currentFile = null;
+
+    List&lt;ReplFileAccess&gt; toDeleteList = new ArrayList&lt;&gt;();
+    int port;
+    List&lt;String&gt; streamNames;
+    List&lt;StreamToFile&gt; translators = new ArrayList&lt;&gt;();
+    long expiration;
+    Path replicationDir;
+    int pageSize;
+    int maxPages;
+    int maxFileSize;
+    TcpRole tcpRole;
+    List&lt;SlaveServer&gt; slaves;
+    long reconnectionInterval;
+    int instanceId;
+    SslContext sslCtx = null;
+    // files not accessed longer than this will be closed
+    private long fileCloseTime;
+
+    // how often to run the sync on the current file
+    private long fileSyncTime;
+    Pattern filePattern;
+    int maxTupleSize;
+    long timeMsgFreqMillis;
+
+    ScheduledFuture&lt;?&gt; closeUnusedFilesSchedule;
+    ScheduledFuture&lt;?&gt; deleteExpiredFilesSchedule;
+    ScheduledFuture&lt;?&gt; syncCurrentFileSchedule;
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        instanceId = YamcsServer.getServer().getInstance(yamcsInstance).getInstanceId();
+        tcpRole = config.getEnum("tcpRole", TcpRole.class, TcpRole.SERVER);
+        port = config.getInt("port", -1);
+        expiration = (long) (config.getDouble("expirationDays", 7.0) * 24 * 3600 * 1000);
+        streamNames = config.getList("streams");
+        pageSize = config.getInt("pageSize", 500);
+        maxPages = config.getInt("maxPages", 500);
+        maxFileSize = 1024 * config.getInt("maxFileSizeKB", 100 * 1024);
+        this.maxTupleSize = config.getInt("maxTupleSize");
+        this.timeMsgFreqMillis = config.getLong("timeMsgFreqSec") * 1000;
+
+        int hdrSize = ReplicationFile.headerSize(pageSize, maxPages);
+        if (maxFileSize &lt; hdrSize) {
+            throw new InitException(
+                    "maxFileSize has to be higher than header size which for maxPages=" + maxPages + " is " + hdrSize);
+        }
+        this.filePattern = Pattern.compile(Pattern.quote(serviceName) + "_([0-9A-Fa-f]{16})\\.dat");
+
+        var exec = YamcsServer.getServer().getThreadPoolExecutor();
+
+        fileCloseTime = config.getLong("fileCloseTimeSec", 300) * 1000;
+        closeUnusedFilesSchedule = exec.scheduleAtFixedRate(() -&gt; closeUnusedFiles(), fileCloseTime,
+                fileCloseTime, TimeUnit.MILLISECONDS);
+
+        deleteExpiredFilesSchedule = exec.scheduleAtFixedRate(() -&gt; deleteExpiredFiles(), fileCloseTime,
+                fileCloseTime, TimeUnit.MILLISECONDS);
+
+        fileSyncTime = config.getLong("fileSyncTime", 10) * 1000;
+        syncCurrentFileSchedule = exec.scheduleAtFixedRate(() -&gt; syncCurrentFile(), fileSyncTime,
+                fileSyncTime, TimeUnit.MILLISECONDS);
+
+        if (tcpRole == TcpRole.SERVER) {
+            List&lt;ReplicationServer&gt; servers = YamcsServer.getServer().getGlobalServices(ReplicationServer.class);
+            if (servers.isEmpty()) {
+                throw new InitException(
+                        "ReplicationMaster is defined with the role Server; that requires the ReplicationServer global service (yamcs.yaml) to be defined");
+            } else if (servers.size() &gt; 1) {
+                log.warn("There are {} ReplicationServer services defined. Registering to the first one.",
+                        servers.size());
+            }
+            ReplicationServer server = servers.get(0);
+            server.registerMaster(this);
+        } else {
+            reconnectionInterval = 1000 * config.getLong("reconnectionIntervalSec", 30);
+            List&lt;YConfiguration&gt; clist = config.getConfigList("slaves");
+            slaves = new ArrayList&lt;&gt;(clist.size());
+            for (YConfiguration yc : clist) {
+                slaves.add(new SlaveServer(yc.getString("host"), yc.getInt("port"), yc.getString("instance"),
+                        yc.getBoolean("enableTls", false)));
+            }
+            boolean enableTls = slaves.stream().map(s -&gt; s.enableTls).filter(b -&gt; b).findAny().isPresent();
+
+            if (enableTls) {
+                try {
+                    sslCtx = SslContextBuilder.forClient().build();
+                } catch (SSLException e) {
+                    throw new InitException("Failed to initialize the TLS: " + e.toString());
+                }
+            }
+
+        }
+        String dataDir = YarchDatabase.getDataDir();
+        replicationDir = Paths.get(dataDir).resolve(yamcsInstance).resolve("replication");
+        try {
+            Files.createDirectories(replicationDir);
+        } catch (IOException e) {
+            throw new InitException("Cannot create the directory where replication files are stored " + replicationDir
+                    + ": " + e.getMessage());
+        }
+        renameOldReplicationFiles();
+
+        scanFiles();
+        try {
+            initCurrentFile();
+        } catch (IOException e) {
+            throw new InitException("Error opening/creating a replication file: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+
+        Spec slaveSpec = new Spec();
+        slaveSpec.addOption("host", OptionType.STRING);
+        slaveSpec.addOption("port", OptionType.INTEGER);
+        slaveSpec.addOption("instance", OptionType.STRING);
+        slaveSpec.addOption("enableTls", OptionType.BOOLEAN);
+
+        spec.addOption("streams", OptionType.LIST).withElementType(OptionType.STRING).withRequired(true);
+        spec.addOption("tcpRole", OptionType.STRING);
+        spec.addOption("port", OptionType.INTEGER);
+        spec.addOption("expirationDays", OptionType.FLOAT);
+        spec.addOption("pageSize", OptionType.INTEGER);
+        spec.addOption("maxPages", OptionType.INTEGER);
+        spec.addOption("maxFileSizeKB", OptionType.INTEGER);
+        spec.addOption("fileCloseTimeSec", OptionType.INTEGER);
+        spec.addOption("reconnectionIntervalSec", OptionType.INTEGER);
+        spec.addOption("slaves", OptionType.LIST).withElementType(OptionType.MAP).withSpec(slaveSpec);
+        spec.addOption("maxTupleSize", OptionType.INTEGER).withDefault(65536)
+                .withDescription("Maximum size of the serialized tuple");
+        spec.addOption("timeMsgFreqSec", OptionType.INTEGER).withDefault(10)
+                .withDescription("How often (in seconds) to send the time message to the slaves");
+
+        return spec;
+    }
+
+    private void initCurrentFile() throws IOException, InitException {
+        if (replFiles.isEmpty()) {
+            openNewFile(null);
+        } else { // open last file
+            Map.Entry&lt;Long, ReplFileAccess&gt; e = replFiles.lastEntry();
+            long firstTxId = e.getKey();
+            ReplFileAccess rfa = e.getValue();
+            Path path = getPath(firstTxId);
+            if (Files.size(path) &gt; maxFileSize) {
+                // the last file is greater that maxFileSize (probably maxFileSize has been changed)
+                // we have to open it read only to find out last transaction, then open a new file
+                rfa.rf = currentFile = ReplicationFile.openReadOnly(yamcsInstance, path, firstTxId);
+                if (currentFile.numTx() == 0) {
+                    throw new InitException("file " + path
+                            + " has zero transactions inside but is bigger that currently defined maxiFileSize. Maybe maxFileSize is too small? Please consider the header size: "
+                            + ReplicationFile.headerSize(pageSize, maxPages) + " bytes");
+                }
+                openNewFile(currentFile);
+            } else {
+                rfa.rf = currentFile = ReplicationFile.openReadWrite(yamcsInstance, path,
+                        firstTxId, maxFileSize);
+                if (currentFile.isFull()) {
+                    openNewFile(currentFile);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void doStart() {
+        YarchDatabaseInstance db = YarchDatabase.getInstance(yamcsInstance);
+        for (int i = 0; i &lt; streamNames.size(); i++) {
+            String sn = streamNames.get(i);
+            Stream s = db.getStream(sn);
+            if (s == null) {
+                notifyFailed(new ConfigurationException("Cannot find stream '" + sn + "'"));
+                return;
+            }
+            translators.add(new StreamToFile(s, i));
+        }
+        if (tcpRole == TcpRole.CLIENT) {
+            // connect to all slaves
+            for (SlaveServer sa : slaves) {
+                sa.client = new ReplicationClient(yamcsInstance, sa.host, sa.port,
+                        sa.enableTls ? sslCtx : null, reconnectionInterval, maxTupleSize,
+                        () -&gt; {
+                            return new MasterChannelHandler(YamcsServer.getTimeService(yamcsInstance), this, sa);
+                        });
+                sa.client.start();
+            }
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        closeUnusedFilesSchedule.cancel(false);
+        deleteExpiredFilesSchedule.cancel(false);
+        syncCurrentFileSchedule.cancel(false);
+
+        for (StreamToFile stf : translators) {
+            stf.quit();
+        }
+        translators.clear();
+
+        for (ReplFileAccess rf : replFiles.values()) {
+            if (rf.rf != null) {
+                rf.rf.close();
+            }
+        }
+        replFiles.clear();
+
+        if (tcpRole == TcpRole.CLIENT) {
+            for (SlaveServer sa : slaves) {
+                sa.client.stop();
+            }
+            slaves.clear();
+        }
+
+        toDeleteList.clear();
+        currentFile = null;
+        notifyStopped();
+    }
+
+    private synchronized void openNewFile(ReplicationFile rf) {
+        if (rf != currentFile) {// some other thread has already open a new file
+            return;
+        }
+        long firstTxId = 0;
+
+        if (currentFile != null) {
+            firstTxId = currentFile.getNextTxId();
+            currentFile.setSyncRequired(true);
+        }
+
+        try {
+            currentFile = ReplicationFile.newFile(yamcsInstance, getPath(firstTxId), firstTxId, pageSize,
+                    maxPages,
+                    maxFileSize);
+            replFiles.put(firstTxId, new ReplFileAccess(currentFile));
+            // send a StreamInfo for all streams
+            for (StreamToFile stf : translators) {
+                if (currentFile.writeData(getProtoTransaction(stf.getStreamInfo())) == -1) {
+                    throw new IOException(
+                            "Failed to write stream info at the beginning of the replication file. Is the file too small??");
+                }
+            }
+        } catch (IOException | UncheckedIOException e) {
+            log.error("Failed to open a replication file", e);
+            abort(e.getMessage());
+        }
+    }
+
+    private void scanFiles() throws InitException {
+        log.debug("Scanning for replication files in {}", replicationDir);
+
+        try (java.util.stream.Stream&lt;Path&gt; stream = Files.list(replicationDir)) {
+            List&lt;Path&gt; files = stream.collect(Collectors.toList());
+            for (Path file : files) {
+                String name = file.getFileName().toString();
+                Matcher m = filePattern.matcher(name);
+                if (m.matches()) {
+                    long txId = Long.parseLong(m.group(1), 16);
+                    replFiles.put(txId, new ReplFileAccess(file));
+                    log.debug("Found file starting with txId {}", txId);
+                }
+            }
+        } catch (IOException e) {
+            throw new InitException(e);
+        }
+
+    }
+
+    /**
+     * returns the id of the last transaction
+     * &lt;p&gt;
+     * If there is no transaction, returns -1
+     */
+    public long getTxId() {
+        return (currentFile) == null ? -1 : currentFile.getNextTxId() - 1;
+    }
+
+    private void writeToFile(Transaction tx) {
+        ReplicationFile cf = currentFile;
+        try {
+            long txId = cf.writeData(tx);
+            if (txId == -1) {// file full
+                openNewFile(cf);
+                cf = currentFile;
+                txId = cf.writeData(tx);
+                if (txId == -1) {
+                    log.error(
+                            "New file cannot accomodate a single transaction. Please increase the maxFileSize. Consider the header size "
+                                    + ReplicationFile.headerSize(pageSize, maxPages));
+                    abort("maxFileSize too small; cannot accomodate a single transaction");
+                }
+            }
+        } catch (UncheckedIOException e) {
+            log.error("Got exception when writing transaction to file, forcefully opening a new replication file", e);
+            replFiles.remove(cf.getFirstId());
+            openNewFile(cf);
+        }
+    }
+
+    private void abort(String msg) {
+        log.error("Aborting the replication master");
+        for (StreamToFile stf : translators) {
+            stf.quit();
+        }
+
+        notifyFailed(new Exception(msg));
+    }
+
+    private Transaction getProtoTransaction(MessageLite msg) {
+        return new Transaction() {
+            @Override
+            public byte getType() {
+                return Message.STREAM_INFO;
+            }
+
+            @Override
+            public void marshall(ByteBuffer buf) {
+                try {
+                    CodedOutputStream cos = CodedOutputStream.newInstance(buf);
+                    msg.writeTo(cos);
+                    buf.position(buf.position() + cos.getTotalBytesWritten());
+                } catch (CodedOutputStream.OutOfSpaceException e) {
+                    throw new BufferOverflowException();
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }
+
+            @Override
+            public int getInstanceId() {
+                return instanceId;
+            }
+        };
+    }
+
+    public ChannelHandler newChannelHandler(Request req) {
+        return new MasterChannelHandler(YamcsServer.getTimeService(yamcsInstance), this, req);
+    }
+
+    public List&lt;String&gt; getStreamNames() {
+        return streamNames;
+    }
+
+    public boolean isTcpClient() {
+        return tcpRole == TcpRole.CLIENT;
+    }
+
+    public List&lt;SlaveServer&gt; getSlaveServers() {
+        return slaves;
+    }
+
+    class StreamToFile implements StreamSubscriber {
+        TupleDefinition completeTuple = new TupleDefinition();
+        final Stream stream;
+        private volatile ColumnSerializer&lt;?&gt;[] valueSerializers = new ColumnSerializer&lt;?&gt;[10];
+        final int streamId;
+
+        StreamToFile(Stream s, int streamId) {
+            this.stream = s;
+            stream.addSubscriber(this);
+            this.streamId = streamId;
+        }
+
+        @Override
+        public void onTuple(Stream s, Tuple tuple) {
+            ensureIndices(tuple.getDefinition());
+
+            Transaction tx = new Transaction() {
+                @Override
+                public void marshall(ByteBuffer buf) {
+
+                    buf.putInt(streamId);
+                    TupleDefinition tdef = tuple.getDefinition();
+                    for (int i = 0; i &lt; tdef.size(); i++) {
+                        Object v = tuple.getColumn(i);
+                        if (v == null) { // since Yamcs 5.3.1 we allow nulls in the tuple values
+                            continue;
+                        }
+                        ColumnDefinition cd = tdef.getColumn(i);
+                        int cidx = completeTuple.getColumnIndex(cd.getName());
+
+                        ColumnSerializer tcs = valueSerializers[cidx];
+                        int x = (cd.getType().getTypeId() &lt;&lt; 24) | cidx;
+                        buf.putInt(x);
+                        tcs.serialize(buf, v);
+                    }
+                    // add a final -1 eof marker
+                    buf.putInt(-1);
+                }
+
+                @Override
+                public byte getType() {
+                    return Message.DATA;
+                }
+
+                @Override
+                public int getInstanceId() {// in the future we may put this as part of the tuple
+                    return instanceId;
+                }
+            };
+            writeToFile(tx);
+        }
+
+        private synchronized void ensureIndices(TupleDefinition tdef) {
+            boolean addedColumns = false;
+            for (int i = 0; i &lt; tdef.size(); i++) {
+                ColumnDefinition cd = tdef.getColumn(i);
+                int colId = completeTuple.getColumnIndex(cd.getName());
+                if (colId == -1) {
+                    completeTuple.addColumn(cd);
+                    addedColumns = true;
+                }
+            }
+
+            for (int i = tdef.size() - 1; i &gt;= 0; i--) { // we go backwards because columns with higher ids are likely
+                // added at the end
+                ColumnDefinition cd = tdef.getColumn(i);
+                int cidx = completeTuple.getColumnIndex(cd.getName());
+                assert (cidx != -1);
+                if (cidx &gt;= valueSerializers.length) {
+                    valueSerializers = Arrays.copyOf(valueSerializers, cidx + 1);
+                }
+                valueSerializers[cidx] = ColumnSerializerFactory.getColumnSerializerForReplication(cd);
+            }
+
+            if (addedColumns) {
+                StreamInfo strinfo = getStreamInfo();
+                log.debug("Writing stream info transaction {}", TextFormat.shortDebugString(strinfo));
+                Transaction tx = getProtoTransaction(strinfo);
+                ReplicationFile cf = currentFile;
+                long txId = cf.writeData(tx);
+                if (txId == -1) {
+                    // file full - open a new one and don't write the metadata transaction anymore, it will be written
+                    // in the openNewFile for all streams
+                    openNewFile(cf);
+                }
+            }
+        }
+
+        private StreamInfo getStreamInfo() {
+            StreamInfo.Builder sib = StreamInfo.newBuilder();
+            sib.setId(streamId).setName(stream.getName());
+            for (int i = 0; i &lt; completeTuple.size(); i++) {
+                ColumnDefinition cd = completeTuple.getColumn(i);
+                sib.addColumns(ColumnInfo.newBuilder().setId(i).setName(cd.getName())
+                        .setType(cd.getType().toString()).build());
+            }
+            return sib.build();
+        }
+
+        void quit() {
+            stream.removeSubscriber(this);
+        }
+    }
+
+    /**
+     * Get the file where startTxId transaction is or the earliest file available if the transaction is in the past
+     * &lt;p&gt;
+     * Return null if the transaction is in the future. If there is a file which does not contain the startTxId but it's
+     * just the next one to come, then return that file.
+     * 
+     * 
+     * @param startTxId
+     * @return
+     */
+    public ReplicationFile getFile(long startTxId) {
+        Map.Entry&lt;Long, ReplFileAccess&gt; e = replFiles.floorEntry(startTxId);
+        if (e == null) { // transaction is in the past not available
+            e = replFiles.firstEntry();
+        }
+        ReplFileAccess rfa = e.getValue();
+        synchronized (rfa) {
+            if (rfa.rf == null) {
+                long firstTxId = e.getKey();
+                rfa.rf = ReplicationFile.openReadOnly(yamcsInstance, getPath(firstTxId),
+                        firstTxId);
+            }
+            rfa.lastAccess = System.currentTimeMillis();
+        }
+        ReplicationFile rf = rfa.rf;
+        long nextTxId = rf.getNextTxId();
+        if (nextTxId &lt; startTxId) {
+            Long k = replFiles.ceilingKey(nextTxId);
+            if (k != null &amp;&amp; k != nextTxId) {
+                log.error("There is a gap in the replication files, transactions {} to {} are missing", nextTxId,
+                        k - 1);
+                return getFile(k);
+            }
+            return null;
+        }
+
+        return rf;
+    }
+
+    Path getPath(long firstTxId) {
+        return replicationDir.resolve(String.format("%s_%016x.dat", serviceName, firstTxId));
+    }
+
+    /**
+     * closes files not accessed in a while
+     */
+    private void closeUnusedFiles() {
+        long t = System.currentTimeMillis() - fileCloseTime;
+        try {
+            for (ReplFileAccess rfa : replFiles.values()) {
+                synchronized (rfa) {
+                    if (rfa.rf != currentFile &amp;&amp; rfa.rf != null &amp;&amp; rfa.lastAccess &lt; t) {
+                        log.debug("Closing {} because it has not been accessed since {}", rfa.path,
+                                Instant.ofEpochMilli(rfa.lastAccess));
+                        rfa.rf.close();
+                        rfa.rf = null;
+                    } else if (rfa.rf != null &amp;&amp; rfa.rf.isSyncRequired()) {
+                        // the file has just been rotated by the data thread
+                        rfa.rf.sync();
+                        currentFile.setSyncRequired(false);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            log.warn("Caught exception when closing or syncing files", e);
+        }
+
+        try {
+            for (ReplFileAccess rfa : toDeleteList) {
+                synchronized (rfa) {
+                    if (rfa.rf != null &amp;&amp; rfa.lastAccess &lt; t) {
+                        log.debug("Closing and removing {} because it has not been accessed since {} "
+                                + "and it is on the list for deletion.",
+                                rfa.path, Instant.ofEpochMilli(rfa.lastAccess));
+                        rfa.rf.close();
+                        Files.delete(rfa.path);
+                        rfa.rf = null;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            log.warn("Caught exception when looking for files to remove ", e);
+        }
+    }
+
+    private void deleteExpiredFiles() {
+        try (java.util.stream.Stream&lt;Path&gt; stream = Files.list(replicationDir)) {
+            List&lt;Path&gt; files = stream.collect(Collectors.toList());
+            for (Path file : files) {
+                String name = file.getFileName().toString();
+                Matcher m = filePattern.matcher(name);
+                if (m.matches()) {
+                    long txId = Long.parseLong(m.group(1), 16);
+                    if (txId != currentFile.getFirstId()) {// never remove the current file
+                        checkForRemoval(file, txId);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            log.warn("Caught exception when looking for files to remove ", e);
+        }
+    }
+
+    private void syncCurrentFile() {
+        try {
+            log.trace("Syncing current replication file {}", currentFile.path);
+            currentFile.sync();
+        } catch (Exception e) {
+            log.error("Error syncing current replication file", e);
+        }
+    }
+
+    void checkForRemoval(Path file, long firstTxId) throws IOException {
+        long t = System.currentTimeMillis() - expiration;
+        BasicFileAttributes bfa = Files.readAttributes(file, BasicFileAttributes.class);
+        if (bfa.creationTime().toMillis() &gt; t) {
+            return;
+        }
+        ReplFileAccess rfa = replFiles.remove(firstTxId);
+        if (rfa == null) {// probably one that is on the toDeleteList
+            return;
+        }
+        synchronized (rfa) {
+            if (rfa.rf == null) {
+                log.debug("Deleting file {} created {}", file, bfa.creationTime());
+                Files.delete(file);
+            } else {
+                // file is open for replay, put it on the list to be removed when it is closed
+                toDeleteList.add(rfa);
+            }
+        }
+    }
+
+    // this is called at init starting with yamcs 5.4.2 when the replication files have been renamed to contain the
+    // service name.
+    // it renames the old replication files to the new names
+    // to be removed after a while
+    private void renameOldReplicationFiles() throws InitException {
+        try (DirectoryStream&lt;Path&gt; stream = Files.newDirectoryStream(replicationDir)) {
+            for (Path path : stream) {
+                if (!Files.isDirectory(path)) {
+                    String name = path.getFileName().toString();
+                    if (name.matches("RPL_[0-9a-fA-F]{16}\\.dat")) {
+                        Path newPath = replicationDir.resolve(name.replace("RPL_", serviceName + "_"));
+                        log.info("Renaming {} to {}", path, newPath);
+                        Files.move(path, newPath, StandardCopyOption.ATOMIC_MOVE);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new InitException(e);
+        }
+    }
+
+    static class ReplFileAccess {
+        long lastAccess;
+        ReplicationFile rf;
+        Path path;
+
+        public ReplFileAccess(ReplicationFile file) {
+            this.lastAccess = System.currentTimeMillis();
+            this.rf = file;
+        }
+
+        public ReplFileAccess(Path path) {
+            this.lastAccess = -1;
+            this.rf = null;
+            this.path = path;
+        }
+    }
+
+    public static class SlaveServer {
+        String host;
+        int port;
+        ReplicationClient client;
+        String instance;
+        boolean enableTls = false;
+
+        public SlaveServer(String host, int port, String instance, boolean enableTls) {
+            this.host = host;
+            this.port = port;
+            this.instance = instance;
+            this.enableTls = enableTls;
+        }
+
+        public String getHost() {
+            return host;
+        }
+
+        public int getPort() {
+            return port;
+        }
+
+        public String getInstance() {
+            return instance;
+        }
+
+        public ReplicationClient getTcpClient() {
+            return client;
+        }
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="replicationserver-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ReplicationServer.java</span></code><a class="headerlink" href="#replicationserver-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationServer.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.replication;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
+import javax.net.ssl.SSLException;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsException;
+import org.yamcs.replication.ReplicationSlave.SlaveChannelHandler;
+import org.yamcs.replication.protobuf.Request;
+import org.yamcs.replication.protobuf.Response;
+import org.yamcs.replication.protobuf.Wakeup;
+import org.yamcs.utils.DecodingException;
+
+import com.google.common.io.ByteStreams;
+import com.google.protobuf.TextFormat;
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+
+/**
+ * TCP replication server - works both on the master and on the slave side depending on the channel handler
+ * &lt;p&gt;
+ * Has to be defined as a global Yamcs service. The {@link ReplicationMaster} or {@link ReplicationSlave} defined at the
+ * instance level will register to this if the tcpRole is set to "Server".
+ * 
+ */
+public class ReplicationServer extends AbstractYamcsService {
+    int port;
+    static final EventLoopGroup workerGroup = new NioEventLoopGroup();
+    ServerBootstrap serverBootstrap;
+    private Map&lt;String, ReplicationMaster&gt; masters = new HashMap&lt;&gt;();
+    private Map&lt;String, ReplicationSlave&gt; slaves = new HashMap&lt;&gt;();
+    Set&lt;Channel&gt; activeChannels = Collections.newSetFromMap(new ConcurrentHashMap&lt;Channel, Boolean&gt;());
+    SslContext sslCtx;
+    int maxTupleSize;
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("port", OptionType.INTEGER).withRequired(true);
+        spec.addOption("tlsCert", OptionType.ANY);
+        spec.addOption("tlsKey", OptionType.STRING);
+        spec.addOption("maxTupleSize", OptionType.INTEGER).withDefault(131072);
+
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        this.port = config.getInt("port");
+        this.maxTupleSize = config.getInt("maxTupleSize");
+
+        if (config.containsKey("tlsCert")) {
+            List&lt;String&gt; tlsCerts;
+            String tlsKey = config.getString("tlsKey");
+            if (config.isList("tlsCert")) {
+                tlsCerts = config.getList("tlsCert");
+            } else {
+                tlsCerts = Arrays.asList(config.getString("tlsCert"));
+            }
+
+            try {
+                ByteArrayOutputStream buf = new ByteArrayOutputStream();
+                for (String cert : tlsCerts) {
+                    try (InputStream certIn = Files.newInputStream(Paths.get(cert))) {
+                        ByteStreams.copy(certIn, buf);
+                    }
+                }
+                try (InputStream chain = new ByteArrayInputStream(buf.toByteArray());
+                        InputStream key = new FileInputStream(tlsKey)) {
+                    sslCtx = SslContextBuilder.forServer(chain, key).build();
+                }
+            } catch (SSLException e) {
+                throw new InitException("Failed to initialize TLS: " + e.toString());
+            } catch (IOException e) {
+                throw new InitException("Failed to process TLS certificates", e);
+            }
+        }
+    }
+
+    @Override
+    protected void doStart() {
+        serverBootstrap = new ServerBootstrap();
+        serverBootstrap.group(workerGroup)
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new ChannelInitializer&lt;SocketChannel&gt;() {
+                    @Override
+                    public void initChannel(SocketChannel ch) throws Exception {
+                        if (sslCtx != null) {
+                            ch.pipeline().addLast(sslCtx.newHandler(ch.alloc()));
+                        }
+                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(maxTupleSize, 1, 3));
+                        ch.pipeline().addLast(new MyChannelHandler());
+                    }
+                })
+                .option(ChannelOption.SO_BACKLOG, 128)
+                .childOption(ChannelOption.SO_KEEPALIVE, true);
+
+        log.debug("Starting replication server on port {}", port);
+        try {
+            Channel ch = serverBootstrap.bind(port).sync().channel();
+            activeChannels.add(ch);
+            notifyStarted();
+        } catch (InterruptedException e) {
+            notifyFailed(e);
+        }
+    }
+
+    @Override
+    protected void doStop() {
+        for (Channel ch : activeChannels) {
+            ch.close();
+        }
+        notifyStopped();
+    }
+
+    public void registerMaster(ReplicationMaster replicationMaster) {
+        masters.put(replicationMaster.getYamcsInstance(), replicationMaster);
+    }
+
+    public void registerSlave(ReplicationSlave replicationSlave) {
+        slaves.put(replicationSlave.getYamcsInstance(), replicationSlave);
+    }
+
+    public void unregisterSlave(ReplicationSlave replicationSlave) {
+        slaves.remove(replicationSlave.getYamcsInstance());
+    }
+
+    public List&lt;Channel&gt; getActiveChannels(ReplicationMaster replicationMaster) {
+        return activeChannels.stream().filter(ch -&gt; {
+            for (Entry&lt;String, ChannelHandler&gt; entry : ch.pipeline()) {
+                if (entry.getValue() instanceof MasterChannelHandler) {
+                    var handler = (MasterChannelHandler) entry.getValue();
+                    return replicationMaster.equals(handler.replMaster);
+                }
+            }
+            return false;
+        }).collect(Collectors.toList());
+    }
+
+    public List&lt;Channel&gt; getActiveChannels(ReplicationSlave replicationSlave) {
+        return activeChannels.stream().filter(ch -&gt; {
+            for (Entry&lt;String, ChannelHandler&gt; entry : ch.pipeline()) {
+                if (entry.getValue() instanceof SlaveChannelHandler) {
+                    var handler = (SlaveChannelHandler) entry.getValue();
+                    return replicationSlave.equals(handler.replSlave);
+                }
+            }
+            return false;
+        }).collect(Collectors.toList());
+    }
+
+    class MyChannelHandler extends ChannelInboundHandlerAdapter {
+        ChannelHandlerContext channelHandlerContext;
+
+        @Override
+        public void channelRead(ChannelHandlerContext ctx, Object o) throws Exception {
+            ByteBuffer buf = ((ByteBuf) o).nioBuffer();
+            Message msg;
+            try {
+                msg = Message.decode(buf);
+            } catch (DecodingException e) {
+                log.warn("Failed to decode message", e);
+                sendErrorReturn(0, "Failed to decode message: " + e.getMessage());
+                return;
+            } finally {
+                ((ByteBuf) o).release();
+            }
+
+            if (msg.type == Message.WAKEUP) {// this is sent by a master when we are slave.
+                processWakeup((Wakeup) msg.protoMsg);
+            } else if (msg.type == Message.REQUEST) {
+                processRequest((Request) msg.protoMsg);
+            } else {
+                log.warn("Unexpected message type {} received, closing the connection", msg.type);
+                ctx.close();
+            }
+        }
+
+        private void processWakeup(Wakeup wp) { // called when we are slave
+            log.debug("Received wakeup message: {}", TextFormat.shortDebugString(wp));
+
+            verifyAuth(wp.getAuthToken());
+            if (!wp.hasYamcsInstance()) {
+                sendErrorReturn(0, "instance not present in the request");
+                return;
+            }
+            ReplicationSlave slave = slaves.get(wp.getYamcsInstance());
+            if (slave == null) {
+                log.warn("No replication slave registered for instance '{}'", wp.getYamcsInstance());
+                sendErrorReturn(0, "No replication slave registered for instance '" + wp.getYamcsInstance() + "''");
+                return;
+            }
+            ChannelHandler sch;
+            try {
+                sch = slave.newChannelHandler();
+            } catch (YamcsException e) { // this happens if the master connects twice to the same slave
+                log.warn("Got exception when creating a slave handler: " + e);
+                sendErrorReturn(0, e.toString());
+                return;
+            }
+
+            ChannelPipeline pipeline = channelHandlerContext.channel().pipeline();
+            pipeline.remove(this);
+            pipeline.addLast(sch);
+        }
+
+        private void processRequest(Request req) {// called when we are master to initiate a request
+            if (!req.hasYamcsInstance()) {
+                sendErrorReturn(0, "instance not present in the request");
+                return;
+            }
+            ReplicationMaster master = masters.get(req.getYamcsInstance());
+            if (master == null) {
+                log.warn("Received a replication request for non registered master: {}",
+                        TextFormat.shortDebugString(req));
+                sendErrorReturn(req.getRequestSeq(),
+                        "No replication master registered for instance '" + req.getYamcsInstance() + "''");
+                return;
+            }
+            log.debug("Received a replication request: {}, starting a new handler on the master",
+                    TextFormat.shortDebugString(req));
+            ChannelPipeline pipeline = channelHandlerContext.channel().pipeline();
+            pipeline.remove(this);
+            pipeline.addLast(master.newChannelHandler(req));
+        }
+
+        private void verifyAuth(String authToken) {
+            // TODO Auto-generated method stub
+
+        }
+
+        private void sendErrorReturn(int requestSeq, String error) {
+            Response resp = Response.newBuilder().setRequestSeq(requestSeq).setResult(-1).setErrorMsg(error).build();
+            channelHandlerContext.writeAndFlush(Unpooled.wrappedBuffer(Message.get(resp).encode()));
+        }
+
+        @Override
+        public void channelActive(ChannelHandlerContext ctx) throws Exception {
+            log.debug("New connection from {}", ctx.channel().remoteAddress());
+        }
+
+        @Override
+        public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+            this.channelHandlerContext = ctx;
+            activeChannels.add(ctx.channel());
+        }
+
+        @Override
+        public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+            log.debug("Connection {} closed", ctx.channel().remoteAddress());
+            activeChannels.remove(ctx.channel());
+        }
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="replicationslave-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ReplicationSlave.java</span></code><a class="headerlink" href="#replicationslave-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationSlave.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.replication;
+
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import javax.net.ssl.SSLException;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsException;
+import org.yamcs.YamcsServer;
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.replication.Message.TransactionMessage;
+import org.yamcs.replication.protobuf.ColumnInfo;
+import org.yamcs.replication.protobuf.Request;
+import org.yamcs.replication.protobuf.Response;
+import org.yamcs.replication.protobuf.StreamInfo;
+import org.yamcs.replication.protobuf.TimeMessage;
+import org.yamcs.time.SimulationTimeService;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.ColumnSerializer;
+import org.yamcs.yarch.ColumnSerializerFactory;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import com.google.protobuf.TextFormat;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.util.concurrent.ScheduledFuture;
+
+public class ReplicationSlave extends AbstractYamcsService {
+    private TcpRole tcpRole;
+    int port;
+    String host;
+    ReplicationClient tcpClient;
+    long reconnectionInterval;
+    String masterInstance;
+    long lastTxId;
+    SlaveChannelHandler slaveChannelHandler;
+    // remote (master) stream name -&gt; local stream name
+    Map&lt;String, String&gt; streamNames = new HashMap&lt;&gt;();
+    RandomAccessFile lastTxFile;
+
+    Path txtfilePath;
+    int localInstanceId;
+    SslContext sslCtx = null;
+    int maxTupleSize;
+    long timeoutMillis;
+    SimulationTimeService simTimeService = null;
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        YamcsServerInstance ysi =YamcsServer.getServer().getInstance(yamcsInstance); 
+        this.localInstanceId = ysi.getInstanceId();
+        boolean updateSimTime = config.getBoolean("updateSimTime");
+        if (updateSimTime) {
+            TimeService srv = ysi.getTimeService();
+            if (srv instanceof SimulationTimeService) {
+                simTimeService = (SimulationTimeService) srv;
+                simTimeService.setTime0(0);
+            } else {
+                throw new ConfigurationException(
+                        "Cannot use updateSimTime unless the simulated time service is configured");
+            }
+        }
+        List&lt;String&gt; streams = config.getList("streams");
+        for (String s : streams) {
+            String[] a = s.split("\\s*\\-\\&gt;\\s*");
+            if(a.length == 1) {
+                streamNames.put(a[0], a[0]);
+            } else if (a.length == 2) {
+                streamNames.put(a[0], a[1]);
+            } else {
+                throw new ConfigurationException("Invalid stream spec '" + s + "'");
+            }
+        }
+        tcpRole = config.getEnum("tcpRole", TcpRole.class, TcpRole.CLIENT);
+        if (tcpRole == TcpRole.CLIENT) {
+            host = config.getString("masterHost");
+            port = config.getInt("masterPort");
+            reconnectionInterval = 1000 * config.getLong("reconnectionIntervalSec", 30);
+            boolean enableTls = config.getBoolean("enableTls", false);
+
+            if (enableTls) {
+                try {
+                    sslCtx = SslContextBuilder.forClient().build();
+                } catch (SSLException e) {
+                    throw new InitException("Failed to initialize the TLS: " + e.toString());
+                }
+            }
+
+        } else {
+            ReplicationServer server = getReplicationServer();
+            server.registerSlave(this);
+        }
+        masterInstance = config.getString("masterInstance", yamcsInstance);// by default we ask the same instance from
+        String dataDir = YarchDatabase.getDataDir();
+        Path replicationDir = Paths.get(dataDir).resolve(yamcsInstance).resolve("replication");
+        replicationDir.toFile().mkdirs();
+        String lastTxFilename = config.getString("lastTxFile", serviceName + "-lastid.txt");
+        this.maxTupleSize = config.getInt("maxTupleSize");
+        this.timeoutMillis = (long) (config.getDouble("timeoutSec") * 1000);
+
+        txtfilePath = replicationDir.resolve(lastTxFilename);
+        try {
+            lastTxFile = new RandomAccessFile(txtfilePath.toFile(), "rw");
+            String line = lastTxFile.readLine();
+            if (line != null) {
+                lastTxId = Long.parseLong(line);
+            } else {
+                lastTxId = -1;
+            }
+        } catch (IOException e) {
+            throw new InitException(e);
+        } catch (NumberFormatException e) {
+            throw new InitException("Cannot parse number from " + txtfilePath + ": " + e);
+        }
+
+    }
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("streams", OptionType.LIST).withElementType(OptionType.STRING).withRequired(true);
+        spec.addOption("tcpRole", OptionType.STRING);
+        spec.addOption("masterHost", OptionType.STRING);
+        spec.addOption("masterPort", OptionType.INTEGER);
+        spec.addOption("reconnectionIntervalSec", OptionType.INTEGER);
+        spec.addOption("enableTls", OptionType.BOOLEAN);
+        spec.addOption("masterInstance", OptionType.STRING);
+        spec.addOption("lastTxFile", OptionType.STRING);
+        spec.addOption("maxTupleSize", OptionType.INTEGER).withDefault(131072)
+                .withDescription("Maximum size of the serialized tuple");
+        spec.addOption("timeoutSec", OptionType.FLOAT)
+                .withDescription(
+                        "Timeout in seconds. If no message is received in this time, the connection will be closed")
+                .withDefault(30);
+
+        spec.addOption("updateSimTime", OptionType.BOOLEAN).withDefault(false)
+                .withDescription("If true, update the simulation time with the time received from the master");
+        return spec;
+    }
+
+    @Override
+    protected void doStart() {
+        if (tcpRole == TcpRole.CLIENT) {
+            tcpClient = new ReplicationClient(yamcsInstance, host, port, sslCtx, reconnectionInterval, maxTupleSize,
+                    () -&gt; new SlaveChannelHandler(this));
+            tcpClient.start();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        shutdown();
+        notifyStopped();
+    }
+
+    private void failService(String errMsg) {
+        log.warn("Replication failed: {}", errMsg);
+        log.warn("Shutting down the service");
+        shutdown();
+        notifyFailed(new Exception(errMsg));
+    }
+
+    private void shutdown() {
+        log.debug("Shutting down the replication slave");
+        if (tcpClient != null) {
+            tcpClient.stop();
+        }
+        if (tcpRole == TcpRole.SERVER) {
+            try {
+                getReplicationServer().unregisterSlave(this);
+            } catch (InitException e) {
+                // shouldn't happen since we are already started
+                throw new RuntimeException(e);
+            }
+        }
+        if (slaveChannelHandler != null) {
+            slaveChannelHandler.shutdown();
+            slaveChannelHandler = null;
+        }
+
+        try {
+            lastTxFile.close();
+        } catch (IOException e) {
+            log.error("Failed to close the last TX id file");
+            notifyFailed(e);
+        }
+    }
+
+    private void updateLastTxFile() {
+        try {
+            lastTxFile.seek(0);
+            lastTxFile.writeBytes(Long.toString(lastTxId) + "\n");
+        } catch (IOException e) {
+            log.warn("Failed to update the last tx file " + txtfilePath, e);
+        }
+    }
+
+    private ReplicationServer getReplicationServer() throws InitException {
+        List&lt;ReplicationServer&gt; servers = YamcsServer.getServer().getGlobalServices(ReplicationServer.class);
+        if (servers.isEmpty()) {
+            throw new InitException(
+                    "ReplicationSlave is defined with the role Server; that requires the ReplicationServer global service (yamcs.yaml) to be defined");
+        } else if (servers.size() &gt; 1) {
+            log.warn("There are {} ReplicationServer services defined. Registering to the first one.",
+                    servers.size());
+        }
+        return servers.get(0);
+    }
+
+
+    public List&lt;String&gt; getStreamNames() {
+        return streamNames.entrySet().stream().map(e -&gt; {
+            if (e.getKey().equals(e.getValue())) {
+                return e.getKey();
+            } else {
+                return e.getKey() + "-&gt;" + e.getValue();
+            }
+        }).collect(Collectors.toList());
+    }
+
+    public boolean isTcpClient() {
+        return tcpRole == TcpRole.CLIENT;
+    }
+
+    public ReplicationClient getTcpClient() {
+        return tcpClient;
+    }
+
+    public String getMasterHost() {
+        return host;
+    }
+
+    public int getMasterPort() {
+        return port;
+    }
+
+    public String getMasterInstance() {
+        return masterInstance;
+    }
+
+    public long getTxId() {
+        return lastTxId;
+    }
+
+    /**
+     * Called when the tcpRole = Server and a new client connects to {@link ReplicationServer}
+     * 
+     * @throws YamcsException
+     *             if there is already a connection open to this slave
+     */
+    public ChannelHandler newChannelHandler() throws YamcsException {
+        if (slaveChannelHandler != null) {
+            throw new YamcsException("There is already a connection open to this slave");
+        }
+        slaveChannelHandler = new SlaveChannelHandler(this);
+        return slaveChannelHandler;
+    }
+
+    private void processTimeMessage(TimeMessage timeMsg) {
+        if (simTimeService != null) {
+            simTimeService.setSimElapsedTime(timeMsg.getLocalTime(), timeMsg.getMissionTime());
+            if (timeMsg.hasSpeed()) {
+                simTimeService.setSimSpeed(timeMsg.getSpeed());
+            }
+        }
+    }
+
+    public class SlaveChannelHandler extends ChannelInboundHandlerAdapter {
+        ReplicationSlave replSlave;
+        private ChannelHandlerContext channelHandlerContext;
+        Map&lt;Integer, ByteBufToStream&gt; streamWriters = new HashMap&lt;&gt;();
+        long lastMsgReceivedTime;
+        private ScheduledFuture&lt;?&gt; timeoutFuture;
+
+        public SlaveChannelHandler(ReplicationSlave slave) {
+            this.replSlave = slave;
+            this.lastMsgReceivedTime = System.currentTimeMillis();
+        }
+
+        @Override
+        public void channelRead(ChannelHandlerContext ctx, Object o) {
+            ByteBuf nettybuf = (ByteBuf) o;
+            try {
+                doChannelRead(ctx, nettybuf);
+            } finally {
+                nettybuf.release();
+            }
+        }
+
+        private void doChannelRead(ChannelHandlerContext ctx, ByteBuf nettybuf) {
+            ByteBuffer buf = nettybuf.nioBuffer();
+
+            if (state() != State.RUNNING) {
+                return;
+            }
+
+            Message msg;
+            try {
+                msg = Message.decode(buf);
+            } catch (DecodingException e) {
+                log.warn("TX{} Failed to decode message {}; closing connection", lastTxId,
+                        ByteBufUtil.hexDump(nettybuf), e);
+                ctx.close();
+                return;
+            }
+            lastMsgReceivedTime = System.currentTimeMillis();
+            if (msg.type == Message.DATA) {
+                TransactionMessage tmsg = (TransactionMessage) msg;
+
+                if (tmsg.txId &lt;= lastTxId) {
+                    log.warn("Received data from the past txId={}, lastTxId={}", tmsg.txId, lastTxId);
+                } else {
+                    checkMissing(tmsg);
+                }
+
+                int streamId = tmsg.buf.getInt();
+
+                if (tmsg.instanceId == localInstanceId) {
+                    log.trace("Skipping data originating from myself (serverId: {})", tmsg.instanceId);
+                    return;
+                }
+                ByteBufToStream bbs = streamWriters.get(streamId);
+                if (bbs == null) {
+                    log.trace("Skipping data for unknown stream {}", streamId);
+                    return;
+                }
+                if (log.isTraceEnabled()) {
+                    log.trace("TX{} received data for stream {}, length {}", tmsg.txId, bbs.stream.getName(),
+                            tmsg.buf.remaining());
+                }
+
+                bbs.processData(tmsg.txId, tmsg.buf);
+            } else if (msg.type == Message.STREAM_INFO) {
+                TransactionMessage tmsg = (TransactionMessage) msg;
+                if (tmsg.txId &gt; lastTxId) { // we expect to receive previous stream info transactions
+                    checkMissing(tmsg);
+                }
+
+                StreamInfo streamInfo = (StreamInfo) msg.protoMsg;
+                if (!streamInfo.hasName() || !streamInfo.hasId()) {
+                    failService("TX" + tmsg.txId + ": received invalid stream info: " + streamInfo);
+                    return;
+                }
+                log.debug("TX{}: received stream info {}", tmsg.txId, TextFormat.shortDebugString(streamInfo));
+                String remoteStreamName = streamInfo.getName();
+                if (!streamNames.containsKey(remoteStreamName)) {
+                    log.debug("TX{}: Ignoring stream {} because it is not in the list configured", tmsg.txId,
+                            remoteStreamName);
+                    return;
+                }
+                String localStreamName = streamNames.get(remoteStreamName);
+                YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+                Stream stream = ydb.getStream(localStreamName);
+                if (stream == null) {
+                    log.warn("TX{}: Received data for stream {} which does not exist", tmsg.txId, localStreamName);
+                    return;
+                }
+                streamWriters.put(streamInfo.getId(), new ByteBufToStream(stream, streamInfo));
+            } else if (msg.type == Message.RESPONSE) {// this is sent by a master when we are slave.
+                Response resp = (Response) msg.protoMsg;
+                if (resp.getResult() != 0) {
+                    failService("Received negative response: " + resp.getErrorMsg());
+                    return;
+                } else {
+                    log.info("Received response {}", resp);
+                }
+            } else if (msg.type == Message.TIME) {
+                TimeMessage timeMsg = (TimeMessage) msg.protoMsg;
+                processTimeMessage(timeMsg);
+            } else {
+                failService("Unexpected message type " + msg.type + " received from the master");
+                return;
+            }
+        }
+
+
+        private void checkMissing(TransactionMessage tmsg) {
+            if (tmsg.txId != lastTxId + 1) {
+                log.warn("Transactions {} to {} are missing", lastTxId + 1, tmsg.txId - 1);
+            }
+            lastTxId = tmsg.txId;
+        }
+
+        // called when tcpRole=Client and the connection is open
+        @Override
+        public void channelActive(ChannelHandlerContext ctx) throws Exception {
+            super.channelActive(ctx);
+            sendRequest();
+        }
+
+        // called when tcpRole=Server and this handler is added to the pipeline by the ReplicationServer
+        @Override
+        public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+            super.handlerAdded(ctx);
+            if (tcpRole == TcpRole.CLIENT) {
+                return;
+            }
+            this.channelHandlerContext = ctx;
+            sendRequest();
+        }
+
+        private void sendRequest() {
+            Request.Builder reqb = Request.newBuilder().setRequestSeq(1).setYamcsInstance(masterInstance);
+            if (lastTxId &gt;= 0) {
+                reqb.setStartTxId(lastTxId + 1);
+            }
+            Request req = reqb.build();
+            log.debug("Connection {} opened, sending request {}", channelHandlerContext.channel().remoteAddress(),
+                    TextFormat.shortDebugString(req));
+            ByteBuf buf = Unpooled.wrappedBuffer(Message.get(req).encode());
+            channelHandlerContext.writeAndFlush(buf);
+            cancelTimeoutFuture();
+            timeoutFuture = channelHandlerContext.executor().scheduleAtFixedRate(this::checkTimeout, timeoutMillis,
+                    timeoutMillis, TimeUnit.MILLISECONDS);
+        }
+
+        void checkTimeout() {
+            long now = System.currentTimeMillis();
+            if (now - lastMsgReceivedTime &gt; timeoutMillis) {
+                log.warn("No message received in the last {} seconds. Closing the connection",
+                        (now - lastMsgReceivedTime) / 1000);
+                channelHandlerContext.close();
+                cancelTimeoutFuture();
+            }
+        }
+
+        void cancelTimeoutFuture() {
+            ScheduledFuture&lt;?&gt; sf = timeoutFuture;
+            if (sf != null) {
+                sf.cancel(true);
+            }
+        }
+        @Override
+        public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+            this.channelHandlerContext = ctx;
+        }
+
+        public void shutdown() {
+            channelHandlerContext.close();
+            cancelTimeoutFuture();
+        }
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+            log.warn("Caught exception", cause);
+        }
+
+        @Override
+        public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+            log.debug("Connection {} closed", ctx.channel().remoteAddress());
+            super.channelInactive(ctx);
+            cancelTimeoutFuture();
+            slaveChannelHandler = null;
+        }
+
+        class ByteBufToStream {
+            TupleDefinition completeTuple;
+            ColumnSerializer&lt;?&gt;[] serializers;
+            Stream stream;
+
+            public ByteBufToStream(Stream stream, StreamInfo streamInfo) {
+                this.stream = stream;
+
+                completeTuple = new TupleDefinition();
+                serializers = new ColumnSerializer&lt;?&gt;[streamInfo.getColumnsCount()];
+                for (int i = 0; i &lt; serializers.length; i++) {
+                    ColumnInfo cinfo = streamInfo.getColumns(i);
+                    if (cinfo.getId() != i) {
+                        log.warn("Corrupted metadata? c[{}].getId = {} (should be {})", i, cinfo.getId(), i);
+                        return;
+                    }
+                    String cname = cinfo.getName();
+                    String ctype = cinfo.getType();
+                    DataType type = DataType.byName(ctype);
+                    ColumnDefinition cd = new ColumnDefinition(cname, type);
+                    completeTuple.addColumn(cd);
+                    serializers[i] = ColumnSerializerFactory.getColumnSerializerForReplication(cd);
+                }
+            }
+
+            @SuppressWarnings("rawtypes")
+            public void processData(long txId, ByteBuffer niobuf) {
+                TupleDefinition tdef = new TupleDefinition();
+                ArrayList&lt;Object&gt; cols = new ArrayList&lt;&gt;();
+                // deserialize the value
+                try {
+                    while (true) {
+                        int id = niobuf.getInt(); // column index
+                        if (id == -1) {
+                            break;
+                        }
+                        int cidx = id &amp; 0xFFFF;
+                        if (cidx &gt;= completeTuple.size()) {
+                            log.warn(
+                                    "TX{}: when deserializing data for stream {}: reference to unknown column index {}",
+                                    txId, stream.getName(), cidx);
+                            return;
+                        }
+                        int typeId = id &gt;&gt;&gt; 24;
+                        ColumnDefinition cd = completeTuple.getColumn(cidx);
+                        ColumnSerializer cs = serializers[cidx];
+                        if (cd.getType().getTypeId() != typeId) {
+                            log.warn(
+                                    "TX{}: when deserializing data for stream {}: type id for index {} (column {}) is {}; expected {}",
+                                    txId, stream.getName(), cidx, cd.getName(), typeId, cd.getType().getTypeId());
+                            return;
+                        }
+                        Object o = cs.deserialize(niobuf, cd);
+                        tdef.addColumn(cd);
+                        cols.add(o);
+                    }
+                    Tuple t = new Tuple(tdef, cols);
+                    stream.emitTuple(t);
+                    updateLastTxFile();
+
+                } catch (Exception e) {
+                    log.warn("Cannot deserialize data for stream {}", stream.getName(), e);
+                }
+            }
+        }
+    }
+
+}
+</pre></div>
+</div>
+</section>
+<section id="replicationtail-java">
+<h2><code class="docutils literal notranslate"><span class="pre">ReplicationTail.java</span></code><a class="headerlink" href="#replicationtail-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationTail.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.replication;
+
+import java.nio.ByteBuffer;
+
+public class ReplicationTail {
+    ByteBuffer buf;
+   
+    boolean eof;//end of file
+    public long nextTxId;
+    
+    @Override
+    public String toString() {
+        return "ReplicationTail [buf.pos=" + buf.position()+", buf.limit="+buf.limit() + ", eof=" + eof + ", nextTxId=" + nextTxId + "]";
+    }
+}
+</pre></div>
+</div>
+</section>
+<section id="tcprole-java">
+<h2><code class="docutils literal notranslate"><span class="pre">TcpRole.java</span></code><a class="headerlink" href="#tcprole-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/TcpRole.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.replication;
+
+public enum TcpRole {
+    SERVER, CLIENT;
+}
+</pre></div>
+</div>
+</section>
+<section id="transaction-java">
+<h2><code class="docutils literal notranslate"><span class="pre">Transaction.java</span></code><a class="headerlink" href="#transaction-java" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/Transaction.java</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>package org.yamcs.replication;
+
+import java.nio.BufferOverflowException;
+import java.nio.ByteBuffer;
+
+public interface Transaction {
+    
+    static boolean isMetadata(byte type) {
+        return type == Message.STREAM_INFO;
+    }
+    
+    byte getType();
+    void marshall(ByteBuffer buf) throws BufferOverflowException;
+
+    int getInstanceId();
+}
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../pus/index.html" class="btn btn-neutral float-left" title="pus" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../rs/index.html" class="btn btn-neutral float-right" title="rs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

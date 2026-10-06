@@ -1,0 +1,3413 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>inc &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="src" href="../src/index.html" />
+    <link rel="prev" title="fsw" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">apps</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">ds</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">fsw</a></li>
+      <li class="breadcrumb-item active">inc</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/fsw/apps/ds/fsw/inc/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="inc">
+<h1>inc<a class="headerlink" href="#inc" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/ds/fsw/inc/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="ds-events-h">
+<h2><code class="docutils literal notranslate"><span class="pre">ds_events.h</span></code><a class="headerlink" href="#ds-events-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/ds/fsw/inc/ds_events.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CFS Data Storage (DS) Application event id header file
+ */
+#ifndef DS_EVENTS_H
+#define DS_EVENTS_H
+
+/**
+ * \defgroup cfsdsevents CFS Data Store Event IDs
+ * \{
+ */
+
+/**
+ *  \brief DS Initialization Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued if the Data Storage (DS) application successfully
+ *  completes its initialization.
+ */
+#define DS_INIT_EID 1
+
+/**
+ *  \brief DS Initialization Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the application receives an error while
+ *  performing cFE initialization.  The value displayed is the return code
+ *  from the function that failed.
+ */
+#define DS_INIT_ERR_EID 2
+
+/**
+ *  \brief DS App Termination Event ID
+ *
+ *  \par Type: CRITICAL
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the application performs a voluntary
+ *  termination.  The termination may be caused by a cFE command requesting
+ *  the application be terminated - or, the cause may result from the DS
+ *  application having received an error when invoking a cFE or O/S function
+ *  necessary for normal operation.
+ */
+#define DS_EXIT_ERR_EID 3
+
+/**
+ *  \brief DS Critical Data Store Initialization Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  The DS application stores the current values for Destination Filename
+ *  sequence counts in the Critical Data Store (CDS).  This ensures that DS
+ *  will not overwrite old data storage files following a processor reset.
+ *  This event indicates an error at startup as DS is initializing access
+ *  to the Critical Data Store.  Subsequent CDS errors are ignored by DS.
+ */
+#define DS_INIT_CDS_ERR_EID 6
+
+/**
+ *  \brief DS Critical Data Store Table Restore Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  If configured to make DS tables critical, the DS application will try and
+ *  recover the table data in use prior to a processor reset.  These startup
+ *  initialization events indicate that the table data has been restored from
+ *  the Critical Data Store (CDS).
+ */
+#define DS_INIT_TBL_CDS_EID 7
+
+/**
+ *  \brief DS Initialize Table Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  At startup, the DS application must create both a packet filter table and
+ *  a destination file definition table.  After creating the tables, DS must
+ *  then load default table data for each of the files.  If DS is unable to
+ *  create either table then the application will terminate.  If DS is able
+ *  to create both tables and is then unable to load both tables then DS will
+ *  operate in a reduced function mode - thus allowing table load error
+ *  recovery via the cFE Table Services command interface.
+ */
+#define DS_INIT_TBL_ERR_EID 8
+
+/**
+ *  \brief DS Destination Table Validation Results Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event describes the results of the Destination File Table validation
+ *  function.  The cFE Table Services Manager will call this function autonomously
+ *  when the default table is loaded at startup and also whenever a table validate
+ *  command (that targets this table) is processed.
+ */
+#define DS_FIL_TBL_EID 10
+
+/**
+ *  \brief DS Destination Table Validation Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  These are the errors that the DS application might encounter when verifying
+ *  the contents of a Destination File Table.  Note that only the first error
+ *  detected for each table file will result in an event being generated.  The
+ *  remaining entries are still tested to establish the result counters but no
+ *  further error events will be generated during this call to the verify function.
+ */
+#define DS_FIL_TBL_ERR_EID 11
+
+/**
+ *  \brief DS Filter Table Validation Results Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event describes the results of the Packet Filter Table validation
+ *  function.  The cFE Table Services Manager will call this function autonomously
+ *  when the default table is loaded at startup and also whenever a table validate
+ *  command (that targets this table) is processed.
+ */
+#define DS_FLT_TBL_EID 12
+
+/**
+ *  \brief DS Filter Table Validation Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  These are the errors that the DS application might encounter when verifying
+ *  the contents of a Packet Filter Table.  Note that only the first error
+ *  detected for each table file will result in an event being generated.  The
+ *  remaining entries are still tested to establish the result counters but no
+ *  further error events will be generated during this call to the verify function.
+ */
+#define DS_FLT_TBL_ERR_EID 13
+
+/**
+ *  \brief DS File Name Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This error occurs when an attempt to create a destination filename fails.
+ *  The expected cause of this error is for the sum of the lengths of each
+ *  filename element to be invalid, even though each individual element
+ *  length is valid.  Note that each of the individual element strings has
+ *  been previously verified.
+ *
+ *  Note that the filename create error handler will also disable the
+ *  destination to prevent the immediate re-occurrence of the error as more
+ *  packets are written to this destination.
+ */
+#define DS_FILE_NAME_ERR_EID 14
+
+/**
+ *  \brief DS File Create Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This error occurs when an attempt to create a destination file fails.
+ *  The most common cause of this error is insufficient free space available
+ *  on the target file system (disk).  However, it is possible to specify
+ *  a filename that is legal but still invalid (i.e. the path string has
+ *  legal chars but does not exist).
+ *
+ *  Note that the file create error handler will also disable the destination
+ *  to prevent the immediate re-occurrence of the error as more packets are
+ *  written to this destination.
+ */
+#define DS_CREATE_FILE_ERR_EID 15
+
+/**
+ *  \brief DS File Write Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This error occurs when an attempt to write to a destination file fails.
+ *  The most common cause of this error is insufficient free space available
+ *  on the target file system (disk).  Other causes for this error imply
+ *  some sort of operational or file system failure and will require careful
+ *  analysis.
+ *
+ *  Note that the file write error handler will also close the file and
+ *  disable the destination to prevent the immediate re-occurrence of the
+ *  error as more packets are written to this destination.
+ */
+#define DS_WRITE_FILE_ERR_EID 16
+
+/**
+ *  \brief DS Invalid Command Code Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This error occurs when a DS application command is received that has
+ *  an undefined command code (CC).  Ground systems generally prevent
+ *  these errors so the cause is more likely to result from sending "raw"
+ *  ground commands or on-board stored commands.
+ */
+#define DS_CMD_CODE_ERR_EID 21
+
+/**
+ *  \brief DS Housekeeping Request Invalid Length Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a HK request command.
+ *  The cause of the failure is an invalid command packet length.
+ */
+#define DS_HK_REQUEST_ERR_EID 22
+
+/**
+ *  \brief DS No-op Command Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of an application NOOP
+ *  command.  The command is used primarily as an indicator that the DS
+ *  application can receive commands and generate telemetry.
+ */
+#define DS_NOOP_CMD_EID 31
+
+/**
+ *  \brief DS No-op Command Invalid Length Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a NOOP command.
+ *  The cause of the failure is an invalid command packet length.
+ */
+#define DS_NOOP_CMD_ERR_EID 32
+
+/**
+ *  \brief DS Reset Counters Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of a RESET housekeeping
+ *  counters command.  The command is used primarily to clear counters
+ *  that have already been examined.
+ */
+#define DS_RESET_CMD_EID 33
+
+/**
+ *  \brief DS Reset Counters Command Invalid Length Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a RESET command.
+ *  The cause of the failure is an invalid command packet length.
+ */
+#define DS_RESET_CMD_ERR_EID 34
+
+/**
+ *  \brief DS Application Enable/Disable State Command Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of a command to set
+ *  the application enable/disable state for processing data storage
+ *  packets.  The DS application is always enabled to receive and
+ *  process commands.
+ */
+#define DS_ENADIS_CMD_EID 35
+
+/**
+ *  \brief DS Application Enable/Disable State Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to set the
+ *  application enable/disable state.  The cause of the failure may
+ *  be an invalid command packet length or an invalid enable/disable
+ *  state value.
+ */
+#define DS_ENADIS_CMD_ERR_EID 36
+
+/**
+ *  \brief DS Set Filter File Index Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  The Packet Filter Table consists of an array of packet structures,
+ *  with each element in the array representing one packet message ID.
+ *
+ *  Each packet structure contains an array of filter structures, and
+ *  each filter structure contains a destination file selection.  Thus,
+ *  each packet has multiple filters and each filter selects a file.
+ *
+ *  File selections are expressed as an index into the Destination File
+ *  Table.
+ *
+ *  This event signals the successful execution of a command to set the
+ *  destination file index for a single filter entry in the Packet Filter
+ *  Table.
+ */
+#define DS_FILE_CMD_EID 37
+
+/**
+ *  \brief DS Set Filter File Index Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to set the
+ *  Destination File Table index for a Packet Filter Table entry.
+ *  The cause of the failure may be an invalid command packet length,
+ *  an invalid Message ID or an invalid filter parameters index.
+ *
+ *  The failure may also result from not having a Packet Filter Table
+ *  loaded at the time the command was invoked or because the message
+ *  ID was not found in the Packet Filter Table.
+ */
+#define DS_FILE_CMD_ERR_EID 38
+
+/**
+ *  \brief DS Set Filter Type Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  The Packet Filter Table consists of an array of packet structures,
+ *  with each element in the array representing one packet message ID.
+ *
+ *  Each packet structure contains an array of filter structures, and
+ *  each filter structure contains a filter type selection.  Thus, each
+ *  packet has multiple filters and each filter selects a filter type.
+ *
+ *  This event signals the successful execution of a command to set the
+ *  filter type for a single filter entry in the Packet Filter Table.
+ */
+#define DS_FTYPE_CMD_EID 39
+
+/**
+ *  \brief DS Set Filter Type Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to set the
+ *  filter type for a Packet Filter Table entry.  The cause of the
+ *  failure may be an invalid command packet length, an invalid message
+ *  ID, an invalid Filter Parameters index or an invalid filter type.
+ *
+ *  The failure may also result from not having a Packet Filter Table
+ *  loaded at the time the command was invoked or because the Message
+ *  ID was not found in the Packet Filter Table.
+ */
+#define DS_FTYPE_CMD_ERR_EID 40
+
+/**
+ *  \brief DS Set Filter Parameters Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  The Packet Filter Table consists of an array of packet structures,
+ *  with each element in the array representing one packet message ID.
+ *
+ *  Each packet structure contains an array of filter structures, and
+ *  each filter structure contains a set of filter parameters.  Thus,
+ *  each packet has multiple filters and each filter has unique filter
+ *  parameters.
+ *
+ *  This event signals the successful execution of a command to set the
+ *  filter parameters for a single filter entry in the Packet Filter Table.
+ */
+#define DS_PARMS_CMD_EID 41
+
+/**
+ *  \brief DS Set Filter Parameters Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to set the
+ *  filter parameters for a Packet Filter Table entry.  The cause of
+ *  the failure may be an invalid command packet length, an invalid
+ *  message ID, an invalid filter parameters index or an invalid filter
+ *  parameters value (N,X,O).
+ *
+ *  The failure may also result from not having a Packet Filter Table
+ *  loaded at the time the command was invoked or because the Message
+ *  ID was not found in the Packet Filter Table.
+ */
+#define DS_PARMS_CMD_ERR_EID 42
+
+/**
+ *  \brief DS Set Filename Type Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of a command to set the
+ *  filename type for a Destination File Table entry.
+ */
+#define DS_NTYPE_CMD_EID 43
+
+/**
+ *  \brief DS Set Filename Type Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to set the
+ *  filename type for the selected Destination File Table entry.  The
+ *  cause of the failure may be an invalid command packet length, an
+ *  invalid file table index or an invalid filename type.
+ *
+ *  The failure may also result from not having a Destination File Table
+ *  loaded at the time the command was invoked.
+ */
+#define DS_NTYPE_CMD_ERR_EID 44
+
+/**
+ *  \brief DS Set File Enable/Disable State Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of a command to set the
+ *  enable/disable state for a Destination File Table entry.
+ */
+#define DS_STATE_CMD_EID 45
+
+/**
+ *  \brief DS Set File Enable/Disable State Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to set the
+ *  enable/disable state for the selected Destination File Table entry.
+ *  The cause of the failure may be an invalid command packet length,
+ *  an invalid file table index or an invalid state selection.
+ *
+ *  The failure may also result from not having a Destination File Table
+ *  loaded at the time the command was invoked.
+ */
+#define DS_STATE_CMD_ERR_EID 46
+
+/**
+ *  \brief DS Set Filename Path Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of a command to set the
+ *  path portion of the filename for a Destination File Table entry.
+ */
+#define DS_PATH_CMD_EID 47
+
+/**
+ *  \brief DS Set Filename Path Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to set the
+ *  filename path text for a Destination File Table entry.  The cause
+ *  of the failure may be an invalid command packet length, an invalid
+ *  file table index or invalid filename path text.
+ *
+ *  The failure may also result from not having a Destination File Table
+ *  loaded at the time the command was invoked.
+ */
+#define DS_PATH_CMD_ERR_EID 48
+
+/**
+ *  \brief DS Set File Basename Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of a command to set the
+ *  basename portion of the filename for a Destination File Table entry.
+ */
+#define DS_BASE_CMD_EID 49
+
+/**
+ *  \brief DS Set File Basename Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to set the
+ *  base filename text for a Destination File Table entry.  The cause
+ *  of the failure may be an invalid command packet length, an invalid
+ *  file table index or invalid base filename text.
+ *
+ *  The failure may also result from not having a Destination File Table
+ *  loaded at the time the command was invoked.
+ */
+#define DS_BASE_CMD_ERR_EID 50
+
+/**
+ *  \brief DS Set Filename Extension Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of a command to set the
+ *  extension portion of the filename for a Destination File Table entry.
+ */
+#define DS_EXT_CMD_EID 51
+
+/**
+ *  \brief DS Set Filename Extension Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to set the
+ *  filename extension text for a Destination File Table entry.  The
+ *  cause of the failure may be an invalid command packet length, an
+ *  invalid file table index or invalid filename extension text.
+ *
+ *  The failure may also result from not having a Destination File Table
+ *  loaded at the time the command was invoked.
+ */
+#define DS_EXT_CMD_ERR_EID 52
+
+/**
+ *  \brief DS Set Max File Size Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of a command to set the
+ *  file size limit for a Destination File Table entry.
+ */
+#define DS_SIZE_CMD_EID 53
+
+/**
+ *  \brief DS Set Max File Size Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to set the
+ *  file size limit for a Destination File Table entry.  The cause
+ *  of the failure may be an invalid command packet length, an invalid
+ *  file table index or an invalid file size limit.
+ *
+ *  The failure may also result from not having a Destination File Table
+ *  loaded at the time the command was invoked.
+ */
+#define DS_SIZE_CMD_ERR_EID 54
+
+/**
+ *  \brief DS Set Max File Age Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of a command to set the
+ *  file age limit for a Destination File Table entry.
+ */
+#define DS_AGE_CMD_EID 55
+
+/**
+ *  \brief DS Set Max File Age Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to set the
+ *  file age limit for a Destination File Table entry.  The cause
+ *  of the failure may be an invalid command packet length, an invalid
+ *  file table index or an invalid file age limit.
+ *
+ *  The failure may also result from not having a Destination File Table
+ *  loaded at the time the command was invoked.
+ */
+#define DS_AGE_CMD_ERR_EID 56
+
+/**
+ *  \brief DS Set Sequence Count Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of a command to set the
+ *  sequence count for a Destination File Table entry.
+ */
+#define DS_SEQ_CMD_EID 57
+
+/**
+ *  \brief DS Set Sequence Count Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to set the
+ *  sequence count for a Destination File Table entry.  The cause
+ *  of the failure may be an invalid command packet length, an invalid
+ *  file table index or an invalid sequence count.
+ *
+ *  The failure may also result from not having a Destination File Table
+ *  loaded at the time the command was invoked.
+ */
+#define DS_SEQ_CMD_ERR_EID 58
+
+/**
+ *  \brief DS Close Destination File Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of a command to close
+ *  the selected Destination File.
+ *
+ *  This command will succeed if the file table index is valid,
+ *  regardless of whether there was an open file.
+ */
+#define DS_CLOSE_CMD_EID 59
+
+/**
+ *  \brief DS Close Destination File Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to close the
+ *  selected Destination File.  The cause of the failure may be an
+ *  invalid command packet length or an invalid file table index.
+ */
+#define DS_CLOSE_CMD_ERR_EID 60
+
+/**
+ *  \brief DS File Move Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed attempt to move a Data Storage file
+ *  from the temporary working directory it was created in, to the
+ *  directory specified in the file definition table.  The cause of the
+ *  failure may be an invalid combined directory and filename length or
+ *  the system file move function may have returned an error result.
+ */
+#define DS_MOVE_FILE_ERR_EID 61
+
+/**
+ *  \brief DS Get File Info Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of a command to get
+ *  the file info diagnostic packet.
+ *
+ *  This command will succeed even if the selected file does not exist.
+ */
+#define DS_GET_FILE_INFO_CMD_EID 62
+
+/**
+ *  \brief DS Get File Info Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to get the
+ *  file info diagnostic packet.  The cause of the failure is an
+ *  invalid command packet length.
+ */
+#define DS_GET_FILE_INFO_CMD_ERR_EID 63
+
+/**
+ *  \brief DS Add Message ID to Filter Table Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of a command to add
+ *  a new message ID to the Packet Filter Table.
+ *
+ *  The Packet Filter Table must be loaded and have an unused entry
+ *  available for adding the new message ID.  The new message ID must
+ *  not be zero and must not already exist in the table.
+ */
+#define DS_ADD_MID_CMD_EID 64
+
+/**
+ *  \brief DS Add Message ID to Filter Table Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to add a new
+ *  message ID to the Packet Filter Table.  The cause of the failure
+ *  may be an invalid command packet length or an invalid message ID.
+ *
+ *  The failure may also result from not having a Packet Filter Table
+ *  loaded at the time the command was invoked.  The loaded table
+ *  must have an unused entry available for the new message ID and
+ *  must not already contain the new message ID.
+ */
+#define DS_ADD_MID_CMD_ERR_EID 65
+
+/**
+ *  \brief DS Close All Destination Files Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of a command to close
+ *  all open Destination Files.
+ *
+ *  This command will succeed regardless of whether there was an open file.
+ */
+#define DS_CLOSE_ALL_CMD_EID 66
+
+/**
+ *  \brief DS Close All Destination Files Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to close
+ *  all open Destination Files.  The cause of the failure can only
+ *  be an invalid command packet length.
+ */
+#define DS_CLOSE_ALL_CMD_ERR_EID 67
+
+/**
+ *  \brief DS File Create Invalid Name Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event is generated when DS_FileCreateName is invoked with an
+ *  empty path name.
+ */
+#define DS_FILE_CREATE_EMPTY_PATH_ERR_EID 68
+
+/**
+ * \brief DS Filter Table Name Invalid Event ID
+ *
+ * \par Type: ERROR
+ *
+ * \par Cause:
+ *
+ * This event is issued when an invalid filter table name is passed to
+ * the CFE_TBL_GetInfo.
+ */
+#define DS_APPHK_FILTER_TBL_ERR_EID 69
+
+/**
+ * \brief DS Filter Table Name Create Failed Event ID
+ *
+ * \par Type: ERROR
+ *
+ * \par Cause:
+ *
+ * This event is issued when the filter table name is not successfully
+ * created (via snprintf) in the DS_AppSendHkCmd function.
+ */
+#define DS_APPHK_FILTER_TBL_PRINT_ERR_EID 70
+
+/**
+ *  \brief DS Remove Message ID from Filter Table Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *
+ *  This event signals the successful execution of a command to remove
+ *  a message ID from the Packet Filter Table.
+ *
+ *  The Packet Filter Table must be loaded and have a used entry
+ *  for removing the message ID.  The message ID must not be zero
+ *  and must already exist in the table.
+ */
+#define DS_REMOVE_MID_CMD_EID 71
+
+/**
+ *  \brief DS Remove Message ID from Filter Table Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event signals the failed execution of a command to remove a
+ *  message ID from the Packet Filter Table.  The cause of the failure
+ *  may be an invalid command packet length or an invalid message ID.
+ *
+ *  The failure may also result from not having a Packet Filter Table
+ *  loaded at the time the command was invoked.  The loaded table
+ *  must have an entry with the indicated message ID.
+ */
+#define DS_REMOVE_MID_CMD_ERR_EID 72
+
+/**@}*/
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="ds-extern-typedefs-h">
+<h2><code class="docutils literal notranslate"><span class="pre">ds_extern_typedefs.h</span></code><a class="headerlink" href="#ds-extern-typedefs-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/ds/fsw/inc/ds_extern_typedefs.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Declarations and prototypes for ds_extern_typedefs module
+ */
+
+#ifndef DS_EXTERN_TYPEDEFS_H
+#define DS_EXTERN_TYPEDEFS_H
+
+#include &lt;cfe.h&gt;
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* DS common application macro definitions                         */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+#define DS_UNUSED   0 /**&lt; \brief Unused entries in DS tables */
+#define DS_DISABLED 0 /**&lt; \brief Enable/disable state selection */
+#define DS_ENABLED  1 /**&lt; \brief Enable/disable state selection */
+
+#define DS_BY_TIME 2 /**&lt; \brief Action is based on packet timestamp */
+
+#define DS_BY_COUNT     1  /**&lt; \brief Action is based on packet sequence count */
+#define DS_EMPTY_STRING "" /**&lt; \brief Empty string buffer entries in DS tables */
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* DS application table structures                                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/** \brief DS Packet Filter Parameters */
+typedef struct
+{
+    uint8 FileTableIndex; /**&lt; \brief Index into Destination File Table */
+    uint8 FilterType;     /**&lt; \brief Filter type (packet count or time) */
+
+    uint16 Algorithm_N; /**&lt; \brief Algorithm value N (pass this many) */
+    uint16 Algorithm_X; /**&lt; \brief Algorithm value X (out of this many) */
+    uint16 Algorithm_O; /**&lt; \brief Algorithm value O (at this offset) */
+} DS_FilterParms_t;
+
+/** \brief DS Filter Table Packet Entry */
+typedef struct
+{
+    CFE_SB_MsgId_t MessageID; /**&lt; \brief Packet MessageID (may be cmd or tlm) */
+
+    DS_FilterParms_t Filter[DS_FILTERS_PER_PACKET]; /**&lt; \brief One entry for each packet destination */
+} DS_PacketEntry_t;
+
+/** \brief DS Filter Table */
+typedef struct
+{
+    char             Descriptor[DS_DESCRIPTOR_BUFSIZE];  /**&lt; \brief Description such as "Safehold Filter Table" */
+    DS_PacketEntry_t Packet[DS_PACKETS_IN_FILTER_TABLE]; /**&lt; \brief One entry for each filtered packet */
+} DS_FilterTable_t;
+
+/**
+ * \brief DS Destination File Table Entry
+ *
+ * Note that the sum of the string buffer sizes exceeds the max for a qualified filename (OS_MAX_PATH_LEN).
+ * This allows a variable definition of how many characters may be used in the pathname versus the filename.
+ * The qualified filename length will be verified at run-time as each filename is created.
+ */
+typedef struct
+{
+    char Movename[DS_PATHNAME_BUFSIZE]; /**&lt; \brief Move files to this dir after close */
+    char Pathname[DS_PATHNAME_BUFSIZE];   /**&lt; \brief Path portion of filename */
+    char Basename[DS_BASENAME_BUFSIZE];   /**&lt; \brief Base portion of filename */
+    char Extension[DS_EXTENSION_BUFSIZE]; /**&lt; \brief Extension portion of filename */
+
+    uint16 FileNameType; /**&lt; \brief Filename type - count vs time */
+    uint16 EnableState;  /**&lt; \brief File enable/disable state */
+
+    uint32 MaxFileSize; /**&lt; \brief Max file size (bytes) */
+    uint32 MaxFileAge;  /**&lt; \brief Max file age (seconds) */
+
+    uint32 SequenceCount; /**&lt; \brief Sequence count portion of filename */
+} DS_DestFileEntry_t;
+
+/** \brief DS Destination File Table */
+typedef struct
+{
+    char               Descriptor[DS_DESCRIPTOR_BUFSIZE]; /**&lt; \brief Description such as "HK Telemetry File" */
+    DS_DestFileEntry_t File[DS_DEST_FILE_CNT];            /**&lt; \brief One entry for each destination data file */
+} DS_DestFileTable_t;
+
+#endif /* DS_EXTERN_TYPEDEFS_H */
+</pre></div>
+</div>
+</section>
+<section id="ds-msg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">ds_msg.h</span></code><a class="headerlink" href="#ds-msg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/ds/fsw/inc/ds_msg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CFS Data Storage (DS) Message Definitions
+ */
+#ifndef DS_MSG_H
+#define DS_MSG_H
+
+#include &lt;cfe.h&gt;
+#include &lt;ds_platform_cfg.h&gt;
+
+/**
+ * \defgroup cfsdscmdstructs CFS Data Storage Command Structures
+ * \{
+ */
+
+/**
+ *  \brief Send HK Request
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+} DS_SendHkCmd_t;
+
+/**
+ *  \brief No-Operation Command
+ *
+ *  For command details see #DS_NOOP_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+} DS_NoopCmd_t;
+
+/**
+ *  \brief Reset Housekeeping Telemetry Command
+ *
+ *  For command details see #DS_RESET_COUNTERS_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+} DS_ResetCountersCmd_t;
+
+/**
+ *  \brief Payload containing Ena/Dis State
+ *
+ *  Used with #DS_AppStateCmd_t
+ */
+typedef struct
+{
+    uint16 EnableState; /**&lt; \brief Application enable/disable state */
+    uint16 Padding;     /**&lt; \brief Structure Padding on 32-bit boundaries */
+} DS_AppState_Payload_t;
+
+/**
+ *  \brief Set Ena/Dis State For DS Application
+ *
+ *  For command details see #DS_SET_APP_STATE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+
+    DS_AppState_Payload_t Payload;
+} DS_AppStateCmd_t;
+
+/**
+ *  \brief Set File Selection Payload
+ *
+ *  Used with #DS_FilterFileCmd_t
+ */
+typedef struct
+{
+    CFE_SB_MsgId_t MessageID; /**&lt; \brief Message ID of existing entry in Packet Filter Table
+                                   \details DS defines Message ID zero to be unused */
+    uint16 FilterParmsIndex;  /**&lt; \brief Index into Filter Parms Array */
+    uint16 FileTableIndex;    /**&lt; \brief Index into Destination File Table */
+} DS_FilterFile_Payload_t;
+
+/**
+ *  \brief Set File Selection For Packet Filter Table Entry
+ *
+ *  For command details see #DS_SET_FILTER_FILE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+
+    DS_FilterFile_Payload_t Payload;
+} DS_FilterFileCmd_t;
+
+/**
+ *  \brief Set Filter Type Payload
+ *
+ *  Used with #DS_FilterTypeCmd_t
+ */
+typedef struct
+{
+    CFE_SB_MsgId_t MessageID; /**&lt; \brief Message ID of existing entry in Packet Filter Table
+                                   \details DS defines Message ID zero to be unused */
+    uint16 FilterParmsIndex;  /**&lt; \brief Index into Filter Parms Array */
+    uint16 FilterType;        /**&lt; \brief Filter type (packet count or time) */
+} DS_FilterType_Payload_t;
+
+/**
+ *  \brief Set Filter Type For Packet Filter Table Entry
+ *
+ *  For command details see #DS_SET_FILTER_TYPE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+
+    DS_FilterType_Payload_t Payload;
+} DS_FilterTypeCmd_t;
+
+/**
+ *  \brief Set Filter Parameters Payload
+ *
+ *  Used with #DS_FilterParmsCmd_t
+ */
+typedef struct
+{
+    CFE_SB_MsgId_t MessageID; /**&lt; \brief Message ID of existing entry in Packet Filter Table
+                                   \details DS defines Message ID zero to be unused */
+    uint16 FilterParmsIndex;  /**&lt; \brief Index into Filter Parms Array */
+    uint16 Algorithm_N;       /**&lt; \brief Algorithm value N (pass this many) */
+    uint16 Algorithm_X;       /**&lt; \brief Algorithm value X (out of this many) */
+    uint16 Algorithm_O;       /**&lt; \brief Algorithm value O (at this offset) */
+} DS_FilterParms_Payload_t;
+
+/**
+ *  \brief Set Filter Parameters For Packet Filter Table Entry
+ *
+ *  For command details see #DS_SET_FILTER_PARMS_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+
+    DS_FilterParms_Payload_t Payload;
+} DS_FilterParmsCmd_t;
+
+/**
+ *  \brief Set Filename Type Payload
+ *
+ *  Used with #DS_DestTypeCmd_t
+ */
+typedef struct
+{
+    uint16 FileTableIndex; /**&lt; \brief Index into Destination File Table */
+    uint16 FileNameType;   /**&lt; \brief Filename type - count vs time */
+} DS_DestType_Payload_t;
+
+/**
+ *  \brief Set Filename Type For Destination File Table Entry
+ *
+ *  For command details see #DS_SET_DEST_TYPE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+
+    DS_DestType_Payload_t Payload;
+} DS_DestTypeCmd_t;
+
+/**
+ *  \brief Set Ena/Dis State For Destination File Table Entry
+ *  \brief Set Filename Type Payload
+ *
+ *  Used with #DS_DestTypeCmd_t
+ *
+ *  For command details see #DS_SET_DEST_STATE_CC
+ */
+typedef struct
+{
+    uint16 FileTableIndex; /**&lt; \brief Index into Destination File Table */
+    uint16 EnableState;    /**&lt; \brief File enable/disable state */
+} DS_DestState_Payload_t;
+
+/**
+ *  \brief Set Ena/Dis State For Destination File Table Entry
+ *
+ *  For command details see #DS_SET_DEST_STATE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+
+    DS_DestState_Payload_t Payload;
+} DS_DestStateCmd_t;
+
+/**
+ *  \brief Set Path Portion Of Filename For Destination File Payload
+ *
+ *  Used with #DS_DestPathCmd_t
+ */
+typedef struct
+{
+    uint16 FileTableIndex;                /**&lt; \brief Index into Destination File Table */
+    uint16 Padding;                       /**&lt; \brief Structure Padding on 32-bit boundaries */
+    char   Pathname[DS_PATHNAME_BUFSIZE]; /**&lt; \brief Path portion of filename */
+} DS_DestPath_Payload_t;
+
+/**
+ *  \brief Set Path Portion Of Filename For Destination File Table Entry
+ *
+ *  For command details see #DS_SET_DEST_PATH_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+
+    DS_DestPath_Payload_t Payload;
+} DS_DestPathCmd_t;
+
+/**
+ *  \brief Set Base Portion Of Filename For Destination File Payload
+ *
+ *  Used with #DS_DestBaseCmd_t
+ */
+typedef struct
+{
+    uint16 FileTableIndex;                /**&lt; \brief Index into Destination File Table */
+    uint16 Padding;                       /**&lt; \brief Structure Padding on 32-bit boundaries */
+    char   Basename[DS_BASENAME_BUFSIZE]; /**&lt; \brief Base portion of filename */
+} DS_DestBase_Payload_t;
+
+/**
+ *  \brief Set Base Portion Of Filename For Destination File Table Entry
+ *
+ *  For command details see #DS_SET_DEST_BASE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+
+    DS_DestBase_Payload_t Payload;
+} DS_DestBaseCmd_t;
+
+/**
+ *  \brief Set Extension Portion Of Filename For Destination File Payload
+ *
+ *  Used with #DS_DestExtCmd_t
+ */
+typedef struct
+{
+    uint16 FileTableIndex;                  /**&lt; \brief Index into Destination File Table */
+    uint16 Padding;                         /**&lt; \brief Structure Padding on 32-bit boundaries */
+    char   Extension[DS_EXTENSION_BUFSIZE]; /**&lt; \brief Extension portion of filename */
+} DS_DestExt_Payload_t;
+
+/**
+ *  \brief Set Extension Portion Of Filename For Destination File Table Entry
+ *
+ *  For command details see #DS_SET_DEST_EXT_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+
+    DS_DestExt_Payload_t Payload;
+} DS_DestExtCmd_t;
+
+/**
+ *  \brief Set Max File Size For Destination File Table Payload
+ *
+ *  Used with #DS_DestSizeCmd_t
+ *
+ *  For command details see #DS_SET_DEST_SIZE_CC
+ */
+typedef struct
+{
+    uint16 FileTableIndex; /**&lt; \brief Index into Destination File Table */
+    uint16 Padding;        /**&lt; \brief Structure Padding on 32-bit boundaries */
+    uint32 MaxFileSize;    /**&lt; \brief Max file size (bytes) before re-open */
+} DS_DestSize_Payload_t;
+
+/**
+ *  \brief Set Max File Size For Destination File Table Entry
+ *
+ *  For command details see #DS_SET_DEST_SIZE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+
+    DS_DestSize_Payload_t Payload;
+} DS_DestSizeCmd_t;
+
+/**
+ *  \brief Set Max File Age For Destination File Table Payload
+ *
+ *  Used with #DS_DestAgeCmd_t
+ */
+typedef struct
+{
+    uint16 FileTableIndex; /**&lt; \brief Index into Destination File Table */
+    uint16 Padding;        /**&lt; \brief Structure Padding on 32-bit boundaries */
+
+    uint32 MaxFileAge; /**&lt; \brief Max file age (seconds) */
+} DS_DestAge_Payload_t;
+
+/**
+ *  \brief Set Max File Age For Destination File Table Entry
+ *
+ *  For command details see #DS_SET_DEST_AGE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+
+    DS_DestAge_Payload_t Payload;
+} DS_DestAgeCmd_t;
+
+/**
+ *  \brief Set Sequence Portion Of Filename For Destination File Table Payload
+ *
+ *  Used with #DS_DestCountCmd_t
+ */
+typedef struct
+{
+    uint16 FileTableIndex; /**&lt; \brief Index into Destination File Table */
+    uint16 Padding;        /**&lt; \brief Structure Padding on 32-bit boundaries */
+
+    uint32 SequenceCount; /**&lt; \brief Sequence count portion of filename */
+} DS_DestCount_Payload_t;
+
+/**
+ *  \brief Set Sequence Portion Of Filename For Destination File Table Entry
+ *
+ *  For command details see #DS_SET_DEST_COUNT_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+
+    DS_DestCount_Payload_t Payload;
+} DS_DestCountCmd_t;
+
+/**
+ *  \brief Close Destination File Payload
+ *
+ *  Used with #DS_CloseFileCmd_t
+ */
+typedef struct
+{
+    uint16 FileTableIndex; /**&lt; \brief Index into Destination File Table */
+    uint16 Padding;        /**&lt; \brief Structure Padding on 32-bit boundaries */
+} DS_CloseFile_Payload_t;
+
+/**
+ *  \brief Close Destination File
+ *
+ *  For command details see #DS_CLOSE_FILE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+
+    DS_CloseFile_Payload_t Payload;
+} DS_CloseFileCmd_t;
+
+/**
+ *  \brief Close All Destination Files
+ *
+ *  For command details see #DS_CLOSE_ALL_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+} DS_CloseAllCmd_t;
+
+/**
+ *  \brief Get File Info Command
+ *
+ *  For command details see #DS_GET_FILE_INFO_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+} DS_GetFileInfoCmd_t;
+
+/**
+ *  \brief Message ID Payload
+ *
+ *  Used with #DS_AddMidCmd_t, #DS_RemoveMidCmd_t
+ */
+typedef struct
+{
+    CFE_SB_MsgId_t MessageID; /**&lt; \brief Message ID to add to Packet Filter Table */
+} DS_AddRemoveMid_Payload_t;
+
+/**
+ *  \brief Add Message ID To Packet Filter Table
+ *
+ *  For command details see #DS_ADD_MID_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+
+    DS_AddRemoveMid_Payload_t Payload;
+} DS_AddMidCmd_t;
+
+/**
+ *  \brief Remove Message ID from Packet Filter Table
+ *
+ *  For command details see #DS_REMOVE_MID_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**&lt; \brief cFE Software Bus command message header */
+
+    DS_AddRemoveMid_Payload_t Payload;
+} DS_RemoveMidCmd_t;
+
+/**\}*/
+
+/**
+ * \defgroup cfsdstlm CFS Data Storage Telemetry
+ * \{
+ */
+
+typedef struct
+{
+    uint8  CmdAcceptedCounter;                 /**&lt; \brief Count of valid commands received */
+    uint8  CmdRejectedCounter;                 /**&lt; \brief Count of invalid commands received */
+    uint8  DestTblLoadCounter;                 /**&lt; \brief Count of destination file table loads */
+    uint8  DestTblErrCounter;                  /**&lt; \brief Count of failed attempts to get table data pointer */
+    uint8  FilterTblLoadCounter;               /**&lt; \brief Count of packet filter table loads */
+    uint8  FilterTblErrCounter;                /**&lt; \brief Count of failed attempts to get table data pointer */
+    uint8  AppEnableState;                     /**&lt; \brief Application enable/disable state */
+    uint8  Spare8;                             /**&lt; \brief Structure alignment padding */
+    uint16 FileWriteCounter;                   /**&lt; \brief Count of good destination file writes */
+    uint16 FileWriteErrCounter;                /**&lt; \brief Count of bad destination file writes */
+    uint16 FileUpdateCounter;                  /**&lt; \brief Count of good updates to secondary header */
+    uint16 FileUpdateErrCounter;               /**&lt; \brief Count of bad updates to secondary header */
+    uint32 DisabledPktCounter;                 /**&lt; \brief Count of packets discarded (DS was disabled) */
+    uint32 IgnoredPktCounter;                  /**&lt; \brief Count of packets discarded
+                                                *
+                                                * Incoming packets will be discarded when:
+                                                *  - The File and/or Filter Table has failed to load
+                                                *  - A packet (that is not a DS HK or command packet) has been received
+                                                *    that is not listed in the Filter Table
+                                                */
+    uint32 FilteredPktCounter;                 /**&lt; \brief Count of packets discarded (failed filter test) */
+    uint32 PassedPktCounter;                   /**&lt; \brief Count of packets that passed filter test */
+    char   FilterTblFilename[OS_MAX_PATH_LEN]; /**&lt; \brief Name of filter table file */
+} DS_HkTlm_Payload_t;
+
+/**
+ * \brief Application housekeeping packet
+ */
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TelemetryHeader; /**&lt; \brief cFE Software Bus telemetry message header */
+
+    DS_HkTlm_Payload_t Payload;
+} DS_HkPacket_t;
+
+/**
+ * \brief Current state of destination files
+ */
+typedef struct
+{
+    uint32 FileAge;                          /**&lt; \brief Current file age in seconds */
+    uint32 FileSize;                         /**&lt; \brief Current file size in bytes */
+    uint32 FileRate;                         /**&lt; \brief Current file data rate (avg since HK) */
+    uint32 SequenceCount;                    /**&lt; \brief Sequence count portion of filename */
+    uint16 EnableState;                      /**&lt; \brief Current file enable/disable state */
+    uint16 OpenState;                        /**&lt; \brief Current file open/close state */
+    char   FileName[DS_TOTAL_FNAME_BUFSIZE]; /**&lt; \brief Current filename (path+base+seq+ext) */
+} DS_FileInfo_t;
+
+/**
+ * \brief Application file info packet
+ */
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TelemetryHeader; /**&lt; \brief cFE Software Bus telemetry message header */
+
+    DS_FileInfo_t Payload[DS_DEST_FILE_CNT]; /**&lt; \brief Current state of destination files */
+} DS_FileInfoPkt_t;
+
+/**
+ * \brief Single application file info packet
+ */
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TelemetryHeader; /**&lt; \brief cFE Software Bus telemetry message header */
+
+    DS_FileInfo_t Payload; /**&lt; \brief Current state of destination file */
+} DS_FileCompletePkt_t;
+
+/**
+ * \brief Single application file info packet buffer
+ *
+ * This typedef supports CFE_SB_AllocateMessageBuffer use with a DS_FileCompletePkt_t
+ * that compiles with the alignment constraints of a CFE_SB_Buffer_t
+ */
+typedef union
+{
+    CFE_SB_Buffer_t      SBBuf; /**&lt; \brief Message buffer for alignment */
+    DS_FileCompletePkt_t Pkt;   /**&lt; \brief Single application file info packet */
+} DS_FileCompletePktBuf_t;
+
+/**\}*/
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="ds-msgdefs-h">
+<h2><code class="docutils literal notranslate"><span class="pre">ds_msgdefs.h</span></code><a class="headerlink" href="#ds-msgdefs-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/ds/fsw/inc/ds_msgdefs.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   The CFS Data Storage (DS) command codes header file
+ */
+#ifndef DS_MSGDEFS_H
+#define DS_MSGDEFS_H
+
+/**
+ * \defgroup cfsdscmdcodes CFS Data Storage Command Codes
+ * \{
+ */
+
+/**
+ * \brief No-Operation Command
+ *
+ *  \par Description
+ *       This command will increment the command execution counter and send an
+ *       event containing the version number of the application.  The command
+ *       is often used as a general test for application "aliveness".
+ *
+ *  \par Command Structure
+ *       #DS_NoopCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_NOOP_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_NOOP_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_NOOP_CC 0
+
+/**
+ * \brief Reset Housekeeping Telemetry Counters Command
+ *
+ *  \par Description
+ *       This command will set the housekeeping counters to zero
+ *
+ *  \par Command Structure
+ *       #DS_ResetCountersCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will reset to zero
+ *       - The #DS_RESET_CMD_EID debug event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_RESET_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_RESET_COUNTERS_CC 1
+
+/**
+ * \brief Set Enable/Disable State For DS Application
+ *
+ *  \par Description
+ *       This command will modify the Ena/Dis State selection for the
+ *       DS application.  No packets are stored while DS is disabled.
+ *
+ *  \par Command Structure
+ *       #DS_AppStateCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_ENADIS_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Invalid enable/disable state selection
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_ENADIS_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_SET_APP_STATE_CC 2
+
+/**
+ * \brief Set Destination File For Packet Filter Table Entry
+ *
+ *  \par Description
+ *       This command will modify the Destination File selection for the
+ *       indicated entry in the Packet Filter Table.
+ *
+ *  \par Command Structure
+ *       #DS_FilterFileCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_FILE_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Invalid filter table index
+ *       - Invalid filter parameters index
+ *       - Invalid destination file selection
+ *       - Packet filter table is not currently loaded
+ *       - Cannot modify unused packet filter table entry
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_FILE_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_SET_FILTER_FILE_CC 3
+
+/**
+ * \brief Set Filter Type For Packet Filter Table Entry
+ *
+ *  \par Description
+ *       This command will modify the Filter Type selection for the
+ *       indicated entry in the Packet Filter Table.
+ *
+ *  \par Command Structure
+ *       #DS_FilterTypeCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_FTYPE_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Invalid filter table index
+ *       - Invalid filter parameters index
+ *       - Invalid filter type selection
+ *       - Packet filter table is not currently loaded
+ *       - Cannot modify unused packet filter table entry
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_FTYPE_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_SET_FILTER_TYPE_CC 4
+
+/**
+ * \brief Set Algorithm Parameters For Packet Filter Table Entry
+ *
+ *  \par Description
+ *       This command will modify the Algorithm Parameters for the
+ *       indicated entry in the Packet Filter Table.
+ *
+ *  \par Command Structure
+ *       #DS_FilterParmsCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_PARMS_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Invalid filter table index
+ *       - Invalid filter parameters index
+ *       - Algorithm_N value cannot be greater than Algorithm_X
+ *       - Packet filter table is not currently loaded
+ *       - Cannot modify unused packet filter table entry
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_PARMS_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_SET_FILTER_PARMS_CC 5
+
+/**
+ * \brief Set Filename Type For Destination File Table Entry
+ *
+ *  \par Description
+ *       This command will modify the Filename Type selection for the
+ *       indicated entry in the Destination File Table.
+ *
+ *  \par Command Structure
+ *       #DS_DestTypeCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_NTYPE_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Invalid destination file table index
+ *       - Invalid filename type selection
+ *       - Destination file table is not currently loaded
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_NTYPE_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_SET_DEST_TYPE_CC 6
+
+/**
+ * \brief Set Ena/Dis State For Destination File Table Entry
+ *
+ *  \par Description
+ *       This command will modify the Ena/Dis State selection for the
+ *       indicated entry in the Destination File Table.
+ *
+ *  \par Command Structure
+ *       #DS_DestStateCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_STATE_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Invalid destination file table index
+ *       - Invalid destination state selection
+ *       - Destination file table is not currently loaded
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_STATE_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_SET_DEST_STATE_CC 7
+
+/**
+ * \brief Set Pathname For Destination File Table Entry
+ *
+ *  \par Description
+ *       This command will modify the Pathname portion of the filename
+ *       for the indicated entry in the Destination File Table.
+ *
+ *  \par Command Structure
+ *       #DS_DestPathCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_PATH_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Invalid destination file table index
+ *       - Invalid pathname string (empty, no terminator, bad characters)
+ *       - Destination file table is not currently loaded
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_PATH_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_SET_DEST_PATH_CC 8
+
+/**
+ * \brief Set Basename For Destination File Table Entry
+ *
+ *  \par Description
+ *       This command will modify the Basename portion of the filename
+ *       for the indicated entry in the Destination File Table.
+ *
+ *  \par Command Structure
+ *       #DS_DestBaseCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_BASE_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Invalid destination file table index
+ *       - Invalid basename string (no terminator, bad characters)
+ *       - Destination file table is not currently loaded
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_BASE_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_SET_DEST_BASE_CC 9
+
+/**
+ * \brief Set Extension For Destination File Table Entry
+ *
+ *  \par Description
+ *       This command will modify the Extension portion of the filename
+ *       for the indicated entry in the Destination File Table.
+ *
+ *  \par Command Structure
+ *       #DS_DestExtCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_EXT_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Invalid destination file table index
+ *       - Invalid extension string (empty, no terminator, bad characters)
+ *       - Destination file table is not currently loaded
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_EXT_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_SET_DEST_EXT_CC 10
+
+/**
+ * \brief Set Max File Size For Destination File Table Entry
+ *
+ *  \par Description
+ *       This command will modify the max file size selection for the
+ *       indicated entry in the Destination File Table.
+ *
+ *  \par Command Structure
+ *       #DS_DestSizeCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_SIZE_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Invalid destination file table index
+ *       - Invalid max file size selection
+ *       - Destination file table is not currently loaded
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_SIZE_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_SET_DEST_SIZE_CC 11
+
+/**
+ * \brief Set Max File Age For Destination File Table Entry
+ *
+ *  \par Description
+ *       This command will modify the max file age selection for the
+ *       indicated entry in the Destination File Table.
+ *
+ *  \par Command Structure
+ *       #DS_DestAgeCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_AGE_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Invalid destination file table index
+ *       - Invalid max file age selection
+ *       - Destination file table is not currently loaded
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_AGE_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_SET_DEST_AGE_CC 12
+
+/**
+ * \brief Set Sequence Count For Destination File Table Entry
+ *
+ *  \par Description
+ *       This command will modify the sequence count value for the
+ *       indicated entry in the Destination File Table.
+ *
+ *  \par Command Structure
+ *       #DS_DestCountCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_SEQ_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Invalid destination file table index
+ *       - Invalid sequence count value
+ *       - Destination file table is not currently loaded
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_SEQ_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_SET_DEST_COUNT_CC 13
+
+/**
+ * \brief Close Destination File
+ *
+ *  \par Description
+ *       This command will close the indicated Destination File.
+ *
+ *  \par Command Structure
+ *       #DS_CloseFileCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_CLOSE_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Invalid destination file table index
+ *       - Destination file table is not currently loaded
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_CLOSE_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_CLOSE_FILE_CC 14
+
+/**
+ * \brief Get File Info Packet
+ *
+ *  \par Description
+ *       This command will send the DS File Info Packet.
+ *
+ *  \par Command Structure
+ *       #DS_GetFileInfoCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_FileInfoPkt_t packet will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_GET_FILE_INFO_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_GET_FILE_INFO_CC 15
+
+/**
+ * \brief Add Message ID To Packet Filter Table
+ *
+ *  \par Description
+ *       This command will change the Message ID selection for an
+ *       unused Packet Filter Table entry to the indicated value.
+ *
+ *  \par Command Structure
+ *       #DS_AddMidCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_ADD_MID_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Message ID is invalid (can be anything but zero)
+ *       - Packet filter table is not currently loaded
+ *       - Message ID already exists in packet filter table
+ *       - All packet filter table entries are already in use
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_ADD_MID_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_ADD_MID_CC 16
+
+/**
+ * \brief Close All Destination Files
+ *
+ *  \par Description
+ *       This command will close all open Destination Files.
+ *       - NOTE: Using this command may incur a performance hit based upon
+ *               the number and size of the files being closed.
+ *
+ *  \par Command Structure
+ *       #DS_CloseAllCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_CLOSE_ALL_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Destination file table is not currently loaded
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_CLOSE_ALL_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_CLOSE_ALL_CC 17
+
+/**
+ * \brief Remove Message ID from Packet Filter Table
+ *
+ *  \par Description
+ *       This command will change the Message ID selection for a
+ *       used Packet Filter Table entry to unused (0).
+ *
+ *  \par Command Structure
+ *       #DS_RemoveMidCmd_t
+ *
+ *  \par Command Verification
+ *       Evidence of success may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdAcceptedCounter will increment
+ *       - The #DS_REMOVE_MID_CMD_EID informational event message will be sent
+ *
+ *  \par Error Conditions
+ *       This command can fail for the following reasons:
+ *       - Invalid command packet length
+ *       - Message ID is invalid (can be anything but zero)
+ *       - Packet filter table is not currently loaded
+ *       - Message ID does not exist in packet filter table
+ *
+ *       Evidence of failure may be found in the following telemetry:
+ *       - #DS_HkTlm_Payload_t.CmdRejectedCounter will increment
+ *       - The #DS_REMOVE_MID_CMD_ERR_EID error event message will be sent
+ *
+ *  \par Criticality
+ *       None
+ */
+#define DS_REMOVE_MID_CC 18
+
+/**\}*/
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="ds-msgids-h">
+<h2><code class="docutils literal notranslate"><span class="pre">ds_msgids.h</span></code><a class="headerlink" href="#ds-msgids-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/ds/fsw/inc/ds_msgids.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CFS Data Storage (DS) Application Message IDs header file
+ */
+#ifndef DS_MSGIDS_H
+#define DS_MSGIDS_H
+
+/**
+ * \defgroup cfsdscmdmid CFS Data Storage Message IDs
+ * \{
+ */
+
+#define DS_CMD_MID     0x18BB /**&lt; \brief DS Ground Commands Message ID */
+#define DS_SEND_HK_MID 0x18BC /**&lt; \brief DS Send Hk Data Cmd Message ID*/
+
+/**\}*/
+
+/**
+ * \defgroup cfsdstlmmid CFS Data Storage Message IDs
+ * \{
+ */
+
+#define DS_HK_TLM_MID   0x08B8 /**&lt; \brief DS Hk Telemetry Message ID ****/
+#define DS_DIAG_TLM_MID 0x08B9 /**&lt; \brief DS File Info Telemetry Message ID ****/
+#define DS_COMP_TLM_MID 0x08BA /**&lt; \brief DS Completed File Info Telemetry Message ID ****/
+
+/**\}*/
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="ds-perfids-h">
+<h2><code class="docutils literal notranslate"><span class="pre">ds_perfids.h</span></code><a class="headerlink" href="#ds-perfids-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/ds/fsw/inc/ds_perfids.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  Define DS Performance IDs
+ */
+#ifndef DS_PERFIDS_H
+#define DS_PERFIDS_H
+
+/**
+ * \defgroup cfsdsmissioncfg CFS Data Storage Mission Configuration
+ * \{
+ */
+
+#define DS_APPMAIN_PERF_ID 38 /**&lt; \brief Main application performance ID */
+
+/**\}*/
+
+#endif
+</pre></div>
+</div>
+</section>
+<section id="ds-platform-cfg-h">
+<h2><code class="docutils literal notranslate"><span class="pre">ds_platform_cfg.h</span></code><a class="headerlink" href="#ds-platform-cfg-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/ds/fsw/inc/ds_platform_cfg.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CFS Data Storage (DS) Application platform configuration header file
+ */
+#ifndef DS_PLATFORM_CFG_H
+#define DS_PLATFORM_CFG_H
+
+/**
+ * \defgroup cfsdsplatformcfg CFS Data Storage Platform Configuration
+ * \{
+ */
+
+/**
+ *  \brief Destination File Table -- logical table name
+ *
+ *  \par Description:
+ *       This parameter defines the name of the DS Destination File
+ *       Table when referenced via cFE Table Services.  Note that this
+ *       parameter is not a filename, it is the table specific portion
+ *       of the logical name.  The entire logical name for this table
+ *       is "DS.FILE_TBL".
+ *
+ *  \par Limits:
+ *       The string length (including string terminator) cannot exceed
+ *       #CFE_MISSION_TBL_MAX_NAME_LENGTH.  (limit is not verified)
+ */
+#define DS_DESTINATION_TBL_NAME "FILE_TBL"
+
+/**
+ *  \brief Destination File Table -- default table filename
+ *
+ *  \par Description:
+ *       This parameter defines the default filename for the
+ *       Destination File Table.
+ *
+ *  \par Limits:
+ *       The string length (including string terminator) cannot exceed
+ *       #OS_MAX_PATH_LEN.  (limit is not verified)
+ */
+#define DS_DEF_DEST_FILENAME "/cf/ds_file_tbl.tbl"
+
+/**
+ *  \brief Destination File Table -- number of files
+ *
+ *  \par Description:
+ *       This parameter defines the size of the DS Destination File
+ *       Table by setting the number of file entries in the table.  The
+ *       number should be large enough to provide an entry for all the
+ *       destination files defined for the project.  Maintenance will
+ *       be simplified if file index 'n' always describes the same
+ *       file - even if that file is not in use at the present time.
+ *
+ *  \par Limits:
+ *       The number must be greater than zero but there is no upper
+ *       enforced limit for this parameter.
+ */
+#define DS_DEST_FILE_CNT 16
+
+/**
+ *  \brief Destination File Table -- pathname buffer size
+ *
+ *  \par Description:
+ *       This parameter further defines the size of the Destination
+ *       File Table by setting the size of the pathname buffer for
+ *       each file entry.  Note that the buffer must contain both
+ *       the string and the string terminator - so the max string
+ *       length is one less than the buffer size.
+ *
+ *  \par Limits:
+ *       The buffer size must be greater than zero and a multiple
+ *       of four bytes for alignment.  The value cannot exceed the
+ *       maximum filename size allowed by the OS (#OS_MAX_PATH_LEN).
+ */
+#define DS_PATHNAME_BUFSIZE OS_MAX_PATH_LEN
+
+/**
+ *  \brief Destination File Table -- basename buffer size
+ *
+ *  \par Description:
+ *       This parameter further defines the size of the Destination
+ *       File Table by setting the size of the basename buffer for
+ *       each file entry.  Note that the buffer must contain both
+ *       the string and the string terminator - so the max string
+ *       length is one less than the buffer size.
+ *
+ *  \par Limits:
+ *       The buffer size must be greater than zero and a multiple
+ *       of four bytes for alignment.  The value cannot exceed the
+ *       maximum filename size allowed by the OS (#OS_MAX_PATH_LEN).
+ */
+#define DS_BASENAME_BUFSIZE OS_MAX_PATH_LEN
+
+/**
+ *  \brief Destination File Table -- extension buffer size
+ *
+ *  \par Description:
+ *       This parameter further defines the size of the Destination
+ *       File Table by setting the size of the extension buffer for
+ *       each file entry.  Note that the buffer must contain both
+ *       the string and the string terminator - so the max string
+ *       length is one less than the buffer size.
+ *
+ *  \par Limits:
+ *       The buffer size must be greater than zero and a multiple
+ *       of four bytes for alignment.  The value cannot exceed the
+ *       maximum filename size allowed by the OS (#OS_MAX_PATH_LEN).
+ */
+#define DS_EXTENSION_BUFSIZE 8
+
+/**
+ *  \brief Packet Filter Table -- logical table name
+ *
+ *  \par Description:
+ *       This parameter defines the name of the DS Packet Filter Table
+ *       when referenced via cFE Table Services.  Note that this
+ *       parameter is not a filename, it is the table specific portion
+ *       of the logical name.  The entire logical name for this table
+ *       is "DS.FILTER_TBL".
+ *
+ *  \par Limits:
+ *       The string length (including string terminator) cannot exceed
+ *       #CFE_MISSION_TBL_MAX_NAME_LENGTH.  (limit is not verified)
+ */
+#define DS_FILTER_TBL_NAME "FILTER_TBL"
+
+/**
+ *  \brief Packet Filter Table -- default table filename
+ *
+ *  \par Description:
+ *       This parameter defines the default filename for the
+ *       Packet Filter Table.
+ *
+ *  \par Limits:
+ *       The string length (including string terminator) cannot exceed
+ *       #OS_MAX_PATH_LEN.  (limit is not verified)
+ */
+#define DS_DEF_FILTER_FILENAME "/cf/ds_filter_tbl.tbl"
+
+/**
+ *  \brief Packet Filter Table -- number of packets
+ *
+ *  \par Description:
+ *       This parameter defines the size of the DS Packet Filter Table
+ *       by setting the number of packet entries in the table.  The
+ *       number should be large enough to provide an entry for each
+ *       command and telemetry packet subject to data storage.
+ *
+ *  \par Limits:
+ *       The number must be greater than zero but there is no upper
+ *       enforced limit for this parameter.  However, setting the
+ *       size equal to the number of packets that might be subject
+ *       to data storage, rather than the total number of packets
+ *       defined for this project, will reduce the table file size,
+ *       possibly significantly.
+ */
+#define DS_PACKETS_IN_FILTER_TABLE 256
+
+/**
+ *  \brief Packet Filter Table -- filters per packet
+ *
+ *  \par Description:
+ *       This parameter further defines the size of the DS Packet
+ *       Filter Table by setting the number of filters per packet
+ *       entry.  This is the maximum number of destination files
+ *       to which a single packet can be written (at one time).
+ *
+ *  \par Limits:
+ *       The number of filters per packet must be greater than zero
+ *       and not greater than #DS_DEST_FILE_CNT.
+ */
+#define DS_FILTERS_PER_PACKET 4
+
+/**
+ *  \brief Common Table File -- descriptor text buffer size
+ *
+ *  \par Description:
+ *       This parameter defines the size of the Descriptor Text
+ *       fields in both the Destination File Table and the Packet
+ *       Filter Table.  The buffer includes the string terminator.
+ *
+ *  \par Limits:
+ *       The buffer size must be greater than zero and a multiple
+ *       of four bytes for alignment.  There is no upper limit.
+ */
+#define DS_DESCRIPTOR_BUFSIZE 32
+
+/**
+ *  \brief Filename Sequence Count -- number of digits
+ *
+ *  \par Description:
+ *       This parameter defines the number of filename sequence
+ *       count digits used when the filename type has been set to
+ *       "count" rather than "time".  Sequence counts are padded
+ *       with leading zero's to create fixed length strings.
+ *
+ *  \par Limits:
+ *       The number of sequence count digits must be greater than
+ *       zero - even if there is no intention of later setting
+ *       the filename type to "count".  This value should match
+ *       the definition for #DS_MAX_SEQUENCE_COUNT, below.
+ */
+#define DS_SEQUENCE_DIGITS 8
+
+/**
+ *  \brief Filename Sequence Count -- max counter value
+ *
+ *  \par Description:
+ *       This parameter defines the maximum value a file sequence
+ *       count will reach before rollover.
+ *
+ *  \par Limits:
+ *       The value must be greater than zero and should not have
+ *       more digits than the number of sequence count digits
+ *       defined for #DS_SEQUENCE_DIGITS, above.
+ */
+#define DS_MAX_SEQUENCE_COUNT 99999999
+
+/**
+ *  \brief Data Storage File -- total filename size
+ *
+ *  \par Description:
+ *       This parameter defines the maximum size of a filename after
+ *       combining the pathname, basename, sequence and extension.
+ *
+ *  \par Limits:
+ *       The buffer size must be greater than zero and a multiple
+ *       of four bytes for alignment.  The buffer size (including
+ *       string terminator) cannot exceed #OS_MAX_PATH_LEN.
+ */
+#define DS_TOTAL_FNAME_BUFSIZE OS_MAX_PATH_LEN
+
+/**
+ *  \brief Data Storage File -- cFE file header sub-type
+ *
+ *  \par Description:
+ *       This parameter defines a mission-specific value that is used
+ *       to identify a Data Storage file.
+ *
+ *  \par Limits:
+ *       The file header data type for the value is 32 bits unsigned,
+ *       thus the value can be anything from zero to 4,294,967,295.
+ *       (limit is not verified)
+ */
+#define DS_FILE_HDR_SUBTYPE 0x2710
+
+/**
+ *  \brief Data Storage File -- cFE file header description
+ *
+ *  \par Description:
+ *       This parameter defines a mission-specific text string that
+ *       may be used to identify Data Storage files.
+ *
+ *  \par Limits:
+ *       The string length (including string terminator) cannot exceed
+ *       #CFE_FS_HDR_DESC_MAX_LEN.  (limit is not verified)
+ */
+#define DS_FILE_HDR_DESCRIPTION "DS data storage file"
+
+/**
+ *  \brief Data Storage File -- minimum size limit
+ *
+ *  \par Description:
+ *       This parameter defines the lower limit for commands and
+ *       table entries that define the size (in bytes) when a data
+ *       storage file is automatically closed.
+ *
+ *  \par Limits:
+ *       None -- however, the user should be cautioned that a very
+ *       small value will allow a size limit that closes files too
+ *       frequently, while a very large value will effectively
+ *       prevent files from ever being closed due to size.
+ */
+#define DS_FILE_MIN_SIZE_LIMIT 1024
+
+/**
+ *  \brief Data Storage File -- minimum age limit
+ *
+ *  \par Description:
+ *       This parameter defines the lower limit for commands and
+ *       table entries that define the age (in seconds) when a data
+ *       storage file is automatically closed.
+ *
+ *  \par Limits:
+ *       None -- however, the user should be cautioned that a very
+ *       small value will allow an age limit that closes files too
+ *       frequently, while a very large value will effectively
+ *       prevent files from ever being closed due to age.
+ */
+#define DS_FILE_MIN_AGE_LIMIT 60
+
+/**
+ *  \brief Application Pipe Name
+ *
+ *  \par Description:
+ *       This parameter defines a portion of the logical name used
+ *       during the creation of the DS input pipe.  The logical name
+ *       may also be used as an identifier when accessing status for
+ *       the pipe via cFE Software Bus Services.  The entire logical
+ *       name is "DS.DS_CMD_PIPE".
+ *
+ *  \par Limits:
+ *       The string length (including string terminator) cannot
+ *       exceed #OS_MAX_API_NAME.  (limit is not verified)
+ */
+#define DS_APP_PIPE_NAME "DS_CMD_PIPE"
+
+/**
+ *  \brief Application Pipe Depth
+ *
+ *  \par Description:
+ *       This parameter defines the depth of the DS input pipe.  The
+ *       depth should be deep enough to accommodate all of the DS
+ *       command packets and all of the subscribed telemetry packets
+ *       that might be generated by applications with a priority
+ *       higher than the DS application.
+ *
+ *  \par Limits:
+ *	 The value must be greater than zero and cannot exceed the
+ *       definition of #OS_QUEUE_MAX_DEPTH
+ */
+#define DS_APP_PIPE_DEPTH 45
+
+/**
+ *  \brief Make DS Tables Critical
+ *
+ *  \par Description:
+ *       Set this parameter to a value of one to make the DS tables critical,
+ *       otherwise set to zero.
+ *
+ *  \par Limits
+ *       This parameter must be set to zero or one.
+ */
+#define DS_MAKE_TABLES_CRITICAL 0
+
+/**
+ *  \brief Housekeeping Request Frequency
+ *
+ *  \par Description:
+ *       Set this parameter equal to the number of seconds between
+ *       housekeeping request commands.  This number is mission
+ *       specific and must match the frequency used by the source
+ *       of the command - often the scheduler task.  The value is
+ *       used by the DS application to measure file age and also
+ *       as a factor in the calculation of file growth rates.
+ *
+ *  \par Limits
+ *       This parameter must be greater than zero.
+ */
+#define DS_SECS_PER_HK_CYCLE 4
+
+/**
+ *  \brief Default DS Packet Processor State
+ *
+ *  \par Description:
+ *       Set this parameter to a value of one and DS will begin to
+ *       process packets immediately on startup.  Set the value to
+ *       zero and DS will ignore data storage packets until receipt
+ *       of a valid #DS_SET_APP_STATE_CC command to enable.
+ *
+ *  \par Limits
+ *       This parameter must be set to zero or one.
+ */
+#define DS_DEF_ENABLE_STATE 1
+
+/**
+ *  \brief Save DS Packet Processor State in Critical Data Store
+ *
+ *  \par Description:
+ *       Set this parameter to a value of one and DS will restore
+ *       the previous Packet Processor enable/disable state after
+ *       a processor reset.  This setting does not affect the
+ *       Packet Processor enable/disable state set at power-on
+ *       which is controlled by #DS_DEF_ENABLE_STATE.  Set the
+ *       value to zero and DS will set the enable/disable state
+ *       as described for #DS_DEF_ENABLE_STATE following any reset.
+ *
+ *  \par Limits
+ *       This parameter must be set to zero or one.
+ */
+#define DS_CDS_ENABLE_STATE 1
+
+/** \brief Mission specific version number for DS application
+ *
+ *  \par Description:
+ *       An application version number consists of four parts:
+ *       major version number, minor version number, revision
+ *       number and mission specific revision number. The mission
+ *       specific revision number is defined here and the other
+ *       parts are defined in "ds_version.h".
+ *
+ *  \par Limits:
+ *       Must be defined as a numeric value that is greater than
+ *       or equal to zero.
+ */
+#define DS_MISSION_REV 0
+
+/**
+ *  \brief File Header Type Selection
+ *
+ *  \par Description:
+ *       Set this parameter to select the type of file header that
+ *       will be the first record written to each Data Storage File.
+ *
+ *  \par Limits
+ *       This parameter must be set to one of the following:
+ *       0 = none -- set this value to have no file header
+ *       1 = CFE -- set this value to use CFE file headers
+ */
+#define DS_FILE_HEADER_TYPE 1
+
+/**
+ *  \brief Move Files to Downlink Directory After Close Selection
+ *
+ *  \par Description:
+ *       Set this parameter to enable the code and structures to
+ *       automatically move DS files to another directory after
+ *       closing the files.  The intended use for this setting is
+ *       to move files from a working directory into a directory
+ *       from which the files can be downlinked.  Note that even
+ *       after enabling this feature, files will not be moved if
+ *       the move pathname in the Destination File Table is null.
+ *
+ *  \par Limits
+ *       This parameter must be set to one of the following:
+ *       true  = add move pathname field to Destination File Table
+ *       false = do not add move pathname to Destination File Table
+ */
+#define DS_MOVE_FILES true
+
+/**
+ *  \brief Application Per Packet Pipe Limit
+ *
+ *  \par Description:
+ *       This parameter defines the per packet pipe limit.  This is
+ *       the max number of packets with the same Message ID that may
+ *       be in the DS input pipe at any one time.  This value should
+ *       be large enough to accommodate a burst of packets (usually
+ *       event packets) plus a suitable margin.
+ *
+ *  \par Limits:
+ *       The value must be greater than zero and cannot exceed the
+ *       definition of #DS_APP_PIPE_DEPTH.
+ */
+#define DS_PER_PACKET_PIPE_LIMIT 45
+
+/**\}*/
+
+#endif
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="fsw" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../src/index.html" class="btn btn-neutral float-right" title="src" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

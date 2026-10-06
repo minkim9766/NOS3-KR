@@ -1,0 +1,942 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>시뮬레이터 &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8e72191d"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/translations.js?v=afa94a99"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="search.html" />
+    <link rel="next" title="STF - 운영 개념 (Concept of Operations, ConOps)" href="STF_ConOps.html" />
+    <link rel="prev" title="새 구성 요소 생성하기(Generating a New Component)" href="NOS3_Generating_Component.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="project_inventory/index.html">nos3 Upload</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_inventory/index.html#id1">하위 폴더</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_inventory/cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_inventory/components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_inventory/fsw/index.html">fsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/fsw/index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_inventory/gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_inventory/scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project_inventory/sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="project_inventory/sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="project_inventory/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_inventory/index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_inventory/index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_inventory/index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_inventory/index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">시뮬레이터</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/NOS3_Simulators.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>시뮬레이터<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>NOS3 시뮬레이터 코드는 C++와 Boost로 개발되었으며, UART(범용 비동기 송수신기), I2C(Inter-Integrated Circuit), SPI(Serial Peripheral Interface), CAN(Controller Area Network), 그리고 discrete I/O(입출력) 신호/연결/버스와 같은 하드웨어 버스를 시뮬레이션하는 소프트웨어 버스, 노드, 기타 연결을 제공하기 위해 NASA Operational Simulator(NOS) Engine에 의존합니다. NOS Engine은 또한 모든 시뮬레이터(그리고 비행 소프트웨어)에 시간을 배포하는 메커니즘도 제공합니다.</p>
+<blockquote>
+<div><p>💡 <strong>초보자 가이드</strong>
+UART, I2C, SPI, CAN은 모두 전자기기들이 서로 데이터를 주고받는 “통신 규격”의 이름이에요. 예를 들어 UART는 두 개의 선으로 데이터를 순서대로 주고받는 단순한 방식이고, I2C·SPI는 여러 부품이 하나의 버스(선)를 공유하며 통신하는 방식입니다. 실제 위성 부품들이 이런 방식으로 통신하기 때문에, 시뮬레이터도 이 통신 방식들을 흉내 내야 진짜처럼 작동해요.</p>
+</div></blockquote>
+<section id="id2">
+<h2>아키텍처 설계 이유<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<section id="nos-engine">
+<h3>왜 NOS Engine인가?<a class="headerlink" href="#nos-engine" title="Link to this heading"></a></h3>
+<p>NOS Engine은 두 가지 이유로 추상 하드웨어 버스 인터페이스로 선택되었습니다.</p>
+<ol class="arabic simple">
+<li><p>비행 소프트웨어 측면에서, 다양한 공통 하드웨어 버스 유형(UART, SPI, I2C 등)에 대한 API를 갖춘 단일 하드웨어 라이브러리를 작성하면, 실제 하드웨어용과 (NOS3) 시뮬레이션된 하드웨어용을 모두 거의 동일하게 빌드할 수 있습니다.</p></li>
+<li><p>시뮬레이터 측면에서, NOS Engine은 사용하기 쉬운 인터페이스를 제공하며, (향후 기능으로) 하드웨어 결함, 버스 단절/오류 등을 모델링할 수 있는 능력도 제공합니다.</p></li>
+</ol>
+</section>
+<section id="id3">
+<h3>왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>이를 통해 하드웨어 시뮬레이터를 철저하게 XML 기반으로 구동할 수 있습니다. 시뮬레이터 실행 파일이 시뮬레이터 하드웨어 라이브러리의 출처를 알고 있거나(디렉터리를 가리키거나) 찾을 수 있는 한(XML에서 공유 객체 라이브러리 파일을 지정), 시뮬레이터 실행 파일은 매우 작고 확장 가능하게 만들 수 있으며, 필요한 하드웨어 시뮬레이터를 제공하기 위해 플러그인 형태의 공유 객체 라이브러리에 의존할 수 있습니다. 이 플러그인 아키텍처가 제공하는 강력함을 보여주는 예시로는 <code class="docutils literal notranslate"><span class="pre">sim_common</span></code> 서브모듈 저장소에 있는 <code class="docutils literal notranslate"><span class="pre">all_simulators.cpp</span></code> / <code class="docutils literal notranslate"><span class="pre">nos3-all-simulators</span></code>(XML 설정 파일에 있는 모든 활성 하드웨어 모델을 각각 자신만의 스레드에서 실행)와 <code class="docutils literal notranslate"><span class="pre">single_simulator.cpp</span></code> / <code class="docutils literal notranslate"><span class="pre">nos3-single-simulator</span></code>(명령줄에서 이름을 지정하여 XML 파일 내 단일 활성 하드웨어 모델을 실행)를 참고하시기 바랍니다.</p>
+<blockquote>
+<div><p>💡 <strong>초보자 가이드</strong>
+“플러그인(plug-in)” 방식이란, 프로그램 본체를 건드리지 않고도 별도의 부품(라이브러리 파일)을 끼워 넣어 기능을 추가할 수 있게 만든 구조를 말해요. 마치 레고 블록처럼, 새로운 하드웨어 시뮬레이터가 필요하면 새 블록(플러그인)만 만들어 끼우면 되고 기존 코드는 그대로 둘 수 있습니다.</p>
+</div></blockquote>
+</section>
+<section id="data-provider">
+<h3>왜 데이터 제공자(Data Provider)를 쓰는가?<a class="headerlink" href="#data-provider" title="Link to this heading"></a></h3>
+<p>NOS Engine은 하드웨어 모델이 다양한 일반적인 하드웨어 버스 유형에 접근할 수 있는 깔끔한 인터페이스를 제공하고, 플러그인은 하드웨어 모델을 플러그 앤 플레이 방식으로 만드는 동기를 부여합니다.</p>
+<p>하지만 왜 플러그인 형태의 데이터 제공자가 필요할까요?</p>
+<p>그 이유는 하드웨어 모델을 태양 벡터, 태양각, 위치 등과 같은 “실제 값(truth)” 데이터의 출처로부터 분리(decouple)하기 위해서입니다. GPS 하드웨어의 모델은 여러 가지가 있을 수 있지만, 어떤 GPS 하드웨어 모델이든 하드웨어 버스를 통해 전송할 위치 데이터의 출처가 필요합니다(UART를 통한 NMEA 형식이나 어떤 독자적인 바이너리 형식 등으로). 이 데이터의 출처는 파일(NOS3 초기 개발에서 광범위하게 사용됨)일 수도 있고, 42(현재 시뮬레이터에서 “실제 값” 데이터로 광범위하게 사용됨)일 수도 있습니다. 또한 이는 아직 생각조차 하지 못한 미래의 데이터 제공자나 42의 대안으로도 쉽게 확장할 수 있게 해줍니다. 하드웨어 시뮬레이터 개발자인 여러분이 자신의 하드웨어 모델 플러그인과 데이터 제공자 플러그인 사이의 인터페이스에 대해 스스로 합의하기만 한다면, 현재와 미래의 유연성/확장성에는 한계가 없습니다. 그리고 외부 “실제 값” 제공자(예: 42)와의 인터페이스와 달리, 이 (하드웨어 모델과 데이터 제공자 간) 인터페이스는 여러분이 완전히 통제할 수 있습니다.</p>
+</section>
+</section>
+<section id="id4">
+<h2>배경 지식 및 관련 개념<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<section id="abstract-factory-design-pattern">
+<h3>추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)<a class="headerlink" href="#abstract-factory-design-pattern" title="Link to this heading"></a></h3>
+<p>C++는 객체지향 프로그래밍(Object Oriented) 패러다임을 지원하는 프로그래밍 언어이며, 그 패러다임 안에서 가장 강력한 설계 추상화 방법 중 하나가 바로 디자인 패턴(design pattern)입니다. NOS3 시뮬레이터를 유연하고 확장 가능하게 만들기 위해 많이 사용된 특정 디자인 패턴이 바로 추상 팩토리(Abstract Factory) 패턴입니다. 이 디자인 패턴은 여러 곳에서 설명되고 있는데, 비교적 이해하기 쉬운 설명으로는 <a class="reference external" href="http://www.codeproject.com/Articles/751869/Abstract-Factory-Step-by-Step-Implementation-in-Cp">“Abstract Factory Step-by-Step Implementation in C++”</a> 글을 참고할 수 있습니다.</p>
+<blockquote>
+<div><p>💡 <strong>초보자 가이드</strong>
+“팩토리(Factory)” 패턴은 이름 그대로 “공장”처럼 객체를 찍어내는 방식이에요. 코드 어딘가에서 직접 <code class="docutils literal notranslate"><span class="pre">new</span> <span class="pre">FooHardwareModel()</span></code> 같이 객체를 만드는 대신, “이름표”(문자열)만 건네주면 팩토리가 알아서 알맞은 객체를 만들어서 돌려주는 방식입니다. 덕분에 나중에 새로운 하드웨어 모델을 추가해도 기존 코드를 고칠 필요 없이 팩토리에 등록만 하면 됩니다.</p>
+</div></blockquote>
+<p>초기 NOS3 시뮬레이터 코드베이스가 개발된 이후에도 추가적인 시뮬레이터를 플러그인 라이브러리 형태로 쉽게 구성하고 빌드할 수 있게 해주는 것이 바로 이 팩토리 디자인 패턴입니다. 앞서 언급한 글에 나오는 도형(shape)과 도형 팩토리 대신, NOS3 시뮬레이터에서 팩토리를 통해 생성되는 구성 요소는 하드웨어 모델과 데이터 제공자입니다.</p>
+</section>
+<section id="xml">
+<h3>XML 설정<a class="headerlink" href="#xml" title="Link to this heading"></a></h3>
+<p>팩토리 디자인 패턴을 사용하는 것 외에도, 각 개별 시뮬레이터는 생성할 하드웨어 모델을 지정하도록 설정되어야 합니다. 또한 하드웨어 모델은 하드웨어가 어떻게 동작할지 설정하기 위한 매개변수가 필요할 수 있습니다. 또한 하드웨어는 discrete I/O, I2C, UART와 같은 통신을 위한 연결(connection)을 가지고 있으므로, 시뮬레이션에서 하드웨어 모델은 이러한 연결의 소프트웨어 버전을 만들어야 하며, 이 연결들 역시 버스 유형, 버스 이름, 버스 주소와 같은 설정 데이터가 필요할 수 있습니다. 또한 일부 하드웨어 모델(GPS나 자력계 시뮬레이터 등)은 환경 데이터가 필요할 수 있으므로, 하드웨어 모델은 환경 데이터를 제공할 데이터 제공자를 생성해야 합니다. 데이터 제공자는 데이터 제공자의 유형이나 파일명, 혹은 호스트와 포트와 같은 설정 데이터가 필요할 수 있습니다.</p>
+<p>특정 시뮬레이션 실행 파일에 대한 설정은 XML(eXtensible Markup Language) 형식의 파일로 지정되며, 이 파일은 해당 실행 파일 안에서 인스턴스화될 시뮬레이터들의 목록을 제공합니다. 각 시뮬레이터는 하드웨어 모델을 지정하며, 하드웨어 모델은 추가적인 설정 매개변수를 가질 수 있습니다. 하드웨어 모델은 데이터 제공자 설정 매개변수를 갖는 선택적인 데이터 제공자에 의존한다고 지정할 수도 있습니다. 하드웨어 모델은 또한 연결 설정 매개변수를 갖는 하나 이상의 소프트웨어 통신 연결을 지정할 수도 있습니다.</p>
+</section>
+</section>
+<section id="id5">
+<h2>나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<p>다음 섹션들은 자신만의 하드웨어 모델을 구현하는 방법을 설명합니다.</p>
+<section id="configuration-data-property-tree">
+<h3>설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)<a class="headerlink" href="#configuration-data-property-tree" title="Link to this heading"></a></h3>
+<p>프로퍼티 트리(property tree)로 표현되는 XML 파일의 설정 데이터가 필요한 경우, 다음과 같은 코드를 사용해 가져옵니다:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">param</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"simulator.&lt;subname&gt;.&lt;subsubname&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s">"LITERAL"</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>이 코드에 대해 몇 가지 참고 사항이 있습니다. 먼저, <code class="docutils literal notranslate"><span class="pre">config</span></code>는 <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">boost::property_tree::ptree&amp;</span></code> 타입의 변수입니다. 각 하드웨어 모델과 데이터 제공자는 이 타입의 매개변수 하나를 받는 생성자를 반드시 제공해야 하며(아래 참고), 따라서 이 매개변수는 필요한 설정과 초기화를 수행하는 생성자 코드에서 사용할 수 있습니다.</p>
+<p>둘째로, 위 코드가 실행될 때 리터럴 <code class="docutils literal notranslate"><span class="pre">&quot;LITERAL&quot;</span></code>의 데이터 타입이 <code class="docutils literal notranslate"><span class="pre">ptree</span></code>가 매개변수를 반환하려고 시도하는 데이터 타입을 결정합니다(여기서는 리터럴 문자열이므로, 값이 할당되는 변수도 그에 맞게 <code class="docutils literal notranslate"><span class="pre">std::string</span></code>으로 선언됩니다). 또한 검색할 키 이름에서 중첩된 XML 태그 레벨을 나타내기 위해 XML 태그 이름을 마침표로 구분한다는 점에도 유의하세요. 또한 키 이름에는 <code class="docutils literal notranslate"><span class="pre">&quot;nos3-configuration&quot;</span></code>이나 <code class="docutils literal notranslate"><span class="pre">&quot;simulators&quot;</span></code> 접두사를 포함하지 않는다는 점도 유의하세요(이것들은 기본 설정 파일에 나타납니다). 이 접두사들은 메인 프로그램에서 설정 데이터를 읽고 파싱하는 데 사용되는 <code class="docutils literal notranslate"><span class="pre">SimConfig</span></code> 객체에 의해 제거됩니다. 따라서 키 이름은 <code class="docutils literal notranslate"><span class="pre">&quot;common.&quot;</span></code> 또는 <code class="docutils literal notranslate"><span class="pre">&quot;simulator.&quot;</span></code>로 시작해야 합니다. (XML을 표현하는) 프로퍼티 트리에서 해당 키를 찾을 수 없는 경우, <code class="docutils literal notranslate"><span class="pre">&quot;LITERAL&quot;</span></code> 값이 기본값으로 사용됩니다.</p>
+<p>다음은 일반적인 키 목록입니다:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">common.log-config-file</span></code> – ITC Logger 클래스를 사용하는 로깅용 설정 파일의 이름입니다. 보통 이 항목은 직접 손댈 필요가 없습니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">common.nos-connection-string</span></code> – NOS Engine 서버로의 연결 정보</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">common.absolute-start-time</span></code> – J2000 기점(epoch)으로부터 십진수 초 단위로 표현된 시뮬레이션의 절대 시작 시간입니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">common.sim-microseconds-per-tick</span></code> – 매 시간 틱(tick)마다 시뮬레이션이 진행해야 할 마이크로초 수를 나타내는 정수입니다. NOS Engine은 버스 상에서 시간을 틱의 개수로 배포한다는 점에 유의하세요. 따라서 여러분의 하드웨어 모델이나 데이터 제공자가 (시간 마스터가 시간을 구동하는 버스로부터) 시뮬레이션 시간을 나타내는 틱 수를 받는다면, 다음과 같이 이를 NOS3와 동기화된 시뮬레이션 실세계 시간으로 변환할 수 있습니다:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span><span class="w"> </span><span class="n">abs_time</span><span class="w"> </span><span class="o">=</span><span class="n">_absolute_start_time</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="kt">double</span><span class="p">(</span><span class="n">ticks</span><span class="w"> </span><span class="o">*</span><span class="n">_sim_microseconds_per_tick</span><span class="p">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1000000.0</span><span class="p">;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p><code class="docutils literal notranslate"><span class="pre">common.real-microseconds-per-tick</span></code> – 보통 NOS Engine 버스 상에 시뮬레이션된 틱을 보낼 때 얼마나 지연할지를 결정하는 단일 메인 시간 드라이버에서 사용됩니다. 드물지만 하드웨어 시뮬레이터가 실제 시간만큼 지연해야 할 필요가 있을 때 사용될 수도 있습니다(하드웨어 시뮬레이터는 일반적으로 시뮬레이션 시간을 사용해야 합니다).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulator.name</span></code> – 여러분이 시뮬레이터에 붙인 이름입니다. <code class="docutils literal notranslate"><span class="pre">nos3-single-simulator</span></code>를 실행할 때 지정하는 문자열과 일치해야 합니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulator.active</span></code> – 보통 true입니다. false인 경우, 메인 함수에서 <code class="docutils literal notranslate"><span class="pre">SimConfig::run_simulator</span></code> 메소드가 호출될 때 해당 시뮬레이터는 실행되지 않습니다(아래 참고).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulator.hardware-model.type</span></code> – 하드웨어 모델의 이름 문자열입니다. 플러그인 모델을 따르는 모든 하드웨어 모델의 소스 코드에 반드시 있어야 하는 <code class="docutils literal notranslate"><span class="pre">REGISTER_HARDWARE_MODEL</span></code> 호출에 주어진 이름 문자열과 매칭됩니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulator.hardware-model.connections</span></code> – 하드웨어 모델이 가진 연결들을 기술하는 &lt;connection&gt;&lt;/connection&gt; 태그의 목록입니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulator.hardware-model.data-provider</span></code> – (데이터 제공자 팩토리를 사용해 데이터 제공자가 만들어진 경우) 그 데이터 제공자에 대한 정보입니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulator.hardware-model.data-provider.type</span></code> – (데이터 제공자를 사용하는 경우) 데이터 제공자의 이름 문자열입니다. 플러그인 모델을 따르는 모든 데이터 제공자의 소스 코드에 반드시 있어야 하는 <code class="docutils literal notranslate"><span class="pre">REGISTER_DATA_PROVIDER</span></code> 호출에 주어진 이름 문자열과 매칭됩니다.</p></li>
+</ol>
+</section>
+<section id="id6">
+<h3>하드웨어 모델<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>새로운 하드웨어 모델을 만드는 공식은 다음과 같습니다:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Nos3</span></code> 네임스페이스 안에, <code class="docutils literal notranslate"><span class="pre">SimIHardwareModel</span></code>을 public으로 상속받는 클래스(예: <code class="docutils literal notranslate"><span class="pre">FooHardwareModel</span></code>)를 만듭니다.</p></li>
+<li><p>설정 데이터를 담고 있는 <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">boost::property_tree::ptree&amp;</span></code> 매개변수를 받는 생성자를 만듭니다. 이 생성자가 설정 데이터를 가져오고 매개변수를 저장하며, 연결이나 데이터 제공자를 생성하거나, 하드웨어 모델에 필요한 그 밖의 초기화 작업을 수행하도록 합니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">run(void)</span></code> 메소드를 만듭니다. 이 메소드는 하드웨어 모델이 실행 중일 때 수행해야 할 작업들을 처리해야 합니다.</p></li>
+<li><p>하드웨어 모델에 대한 이름 문자열(예: <code class="docutils literal notranslate"><span class="pre">FOOHARDWARE</span></code>)을 만들고, 소스 파일에 다음과 같은 줄을 추가합니다:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">REGISTER_HARDWARE_MODEL</span><span class="p">(</span><span class="n">FooHardwareModel</span><span class="p">,</span><span class="s">"FOOHARDWARE"</span><span class="p">);</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>하드웨어 모델이 데이터 제공자를 사용한다면, 하드웨어 모델은 <code class="docutils literal notranslate"><span class="pre">SimIDataProvider</span> <span class="pre">*</span></code> 타입의 멤버 변수를 가질 수 있으며, 이는 다음과 같은 코드로(멤버 변수 이름이 <code class="docutils literal notranslate"><span class="pre">_sim_data_provider</span></code>라고 가정할 때) 설정 데이터를 기반으로 하드웨어 모델 생성자에서 설정할 수 있습니다:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">dp_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"simulator.hardware-model.data-provider.type"</span><span class="p">,</span><span class="w"> </span><span class="s">"BARPROVIDER"</span><span class="p">);</span>
+<span class="n">_sim_data_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SimDataProviderFactory</span><span class="o">::</span><span class="n">Instance</span><span class="p">().</span><span class="n">Create</span><span class="p">(</span><span class="n">dp_name</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="p">);</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>💡 <strong>초보자 가이드</strong>
+“네임스페이스(namespace)”는 이름 충돌을 막기 위한 일종의 “구역 표시”예요. 예를 들어 다른 라이브러리에도 <code class="docutils literal notranslate"><span class="pre">Foo</span></code>라는 클래스가 있을 수 있는데, <code class="docutils literal notranslate"><span class="pre">Nos3::Foo</span></code>처럼 네임스페이스를 붙이면 서로 구분이 됩니다. 그리고 “상속(inherit)”이란, 기존 클래스(부모, 여기서는 <code class="docutils literal notranslate"><span class="pre">SimIHardwareModel</span></code>)가 가진 기본 기능을 새 클래스가 그대로 물려받아 시작할 수 있게 해주는 개념입니다.</p>
+</div></blockquote>
+<section id="command-connection">
+<h4>명령 연결 (Command Connection)<a class="headerlink" href="#command-connection" title="Link to this heading"></a></h4>
+<p>시뮬레이션 하드웨어 모델의 명령 연결은 하드웨어가 하드웨어 버스에 대해 가지는 일반적인 의미의 연결이 아닙니다. 이는 단지 시뮬레이션 자체를 대역 외(out of band)로 명령하기 위해 사용됩니다. 이러한 명령을 수행하는 한 가지 방법은 NOS3의 일부인 SimTerminal 실행 파일을 사용하는 것입니다. 이 터미널은 시작되면 명령 버스의 한 노드로 등록됩니다. 그런 다음 명령 버스에 있는 다른 어떤 노드로도 메시지를 보내는 데 사용할 수 있습니다. 이 메시지들은 ASCII이거나 16진수 바이트일 수 있습니다.</p>
+<p>기본 <code class="docutils literal notranslate"><span class="pre">SimIHardwareModel</span></code>은 어떤 하드웨어 모델 시뮬레이션이든 명령을 받을 수 있도록 명령 버스에 노드를 생성합니다. 시뮬레이션이 명령 버스에서 수신한 명령에 기반해 동작을 수행하도록 하려면, 하드웨어 모델에서 해야 할 일은 다음이 전부입니다:</p>
+<ol class="arabic simple">
+<li><p>하드웨어 모델 클래스에서 <code class="docutils literal notranslate"><span class="pre">SimIHardwareModel</span></code> 메소드를 오버라이드합니다:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="n">command_callback</span><span class="p">(</span><span class="n">NosEngine</span><span class="o">::</span><span class="n">Common</span><span class="o">::</span><span class="n">Message</span><span class="w"> </span><span class="n">msg</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>명령에 대한 응답으로 하드웨어 모델이 데이터를 주고받는 방식의 예시는 기본 <code class="docutils literal notranslate"><span class="pre">SimIHardwareModel</span></code> 클래스의 <code class="docutils literal notranslate"><span class="pre">command_callback</span></code> 메소드를 참고하세요.</p>
+</section>
+<section id="time-connection">
+<h4>시간 연결 (Time Connection)<a class="headerlink" href="#time-connection" title="Link to this heading"></a></h4>
+<p>하드웨어 시뮬레이터가 실세계 시간 개념을 갖도록 하기 위해, NOS Engine에 시간 클라이언트 노드로 노드를 등록합니다. 시간 클라이언트 노드를 만들고 사용하는 공식은 다음과 같습니다:
+하드웨어 모델 클래스에, 버스와 시간 노드용 멤버 변수를 추가합니다. 예:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">NosEngine</span><span class="o">::</span><span class="n">Client</span><span class="o">::</span><span class="n">Bus</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_time_bus</span><span class="p">;</span>
+<span class="n">NosEngine</span><span class="o">::</span><span class="n">Client</span><span class="o">::</span><span class="n">TimeClient</span><span class="o">*</span><span class="w"> </span><span class="n">_time_node</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>하드웨어 모델 생성자에서:</p>
+<ol class="arabic simple">
+<li><p>기본 <code class="docutils literal notranslate"><span class="pre">SimIHardwareModel</span></code> 클래스에는 연결할 버스를 위한 기존 허브(멤버 변수 <code class="docutils literal notranslate"><span class="pre">_hub</span></code>)가 있습니다. NOS Engine을 위한 연결 문자열은 다음과 같은 호출로 XML 설정 데이터에서 가져올 수 있습니다:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">connection_string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"common.nos-connection-string"</span><span class="p">,</span><span class="w"> </span><span class="s">"tcp://127.0.0.1:12001"</span><span class="p">);</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>XML 설정 파일에 다음과 같은 “time” 유형 연결을 추가합니다:</p></li>
+</ol>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;connection&gt;&lt;type&gt;</span>time<span class="nt">&lt;/type&gt;&lt;bus-name&gt;</span>command<span class="nt">&lt;/bus-name&gt;&lt;node-name&gt;</span>my-time-node<span class="nt">&lt;/node-name&gt;&lt;/connection&gt;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>버스 이름과 노드 이름을 <code class="docutils literal notranslate"><span class="pre">time_bus_name</span></code>, <code class="docutils literal notranslate"><span class="pre">time_node_name</span></code>과 같은 <code class="docutils literal notranslate"><span class="pre">std::string</span></code> 변수로 가져옵니다. 이를 수행하는 방법의 예시는 예제 시뮬레이터를 참고하세요.</p></li>
+<li><p>버스 객체를 생성합니다:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">_time_bus</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="n">new</span><span class="w"> </span><span class="n">NosEngine</span><span class="o">::</span><span class="n">Client</span><span class="o">::</span><span class="n">Bus</span><span class="p">(</span><span class="n">_hub</span><span class="p">,</span><span class="w"> </span><span class="n">connection_string</span><span class="p">,</span><span class="w"> </span><span class="n">time_bus_name</span><span class="p">));</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>버스에 시간 클라이언트 노드를 생성합니다:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">_time_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_time_bus</span><span class="o">-&gt;</span><span class="n">get_or_create_time_client</span><span class="p">(</span><span class="n">time_node_name</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>시간이 필요한 하드웨어 모델 메소드에서:</p>
+<ol class="arabic simple">
+<li><p>경과한 “틱(tick)”의 수를 얻으려면 다음을 호출합니다:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">_time_node</span><span class="o">-&gt;</span><span class="n">get_last_time</span><span class="p">()</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>이를 실세계 시간으로 변환하려면, <code class="docutils literal notranslate"><span class="pre">SimIHardwareModel</span></code>은 (XML 설정 파일의 common 섹션 데이터로부터 설정되는) <code class="docutils literal notranslate"><span class="pre">_absolute_start_time</span></code>과 <code class="docutils literal notranslate"><span class="pre">_sim_microseconds_per_tick</span></code> 멤버 변수를 가지고 있으며, 다음과 같이 실세계 시간을 계산하는 데 사용할 수 있습니다:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">_absolute_start_time</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="kt">double</span><span class="p">(</span><span class="n">_time_node</span><span class="o">-&gt;</span><span class="n">get_last_time</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">_sim_microseconds_per_tick</span><span class="p">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1000000.0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>정리하려면, 하드웨어 모델 소멸자에서 다음을 호출합니다:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">_time_bus</span><span class="p">.</span><span class="n">reset</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+<section id="uart">
+<h4>UART 연결<a class="headerlink" href="#uart" title="Link to this heading"></a></h4>
+<p>UART를 통해 연결되는 하드웨어의 경우, 하드웨어가 UART 버스의 노드를 만들고 사용하는 공식은 다음과 같습니다:
+하드웨어 모델 클래스에, 다음과 같이 UART 연결용 멤버 변수를 추가합니다:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">NosEngine</span><span class="o">::</span><span class="n">Uart</span><span class="o">::</span><span class="n">Uart</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_uart_connection</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>하드웨어 모델 생성자에서:</p>
+<ol class="arabic simple">
+<li><p>기본 <code class="docutils literal notranslate"><span class="pre">SimIHardwareModel</span></code> 클래스에는 연결할 버스를 위한 기존 허브(멤버 변수 <code class="docutils literal notranslate"><span class="pre">_hub</span></code>)가 있습니다. NOS Engine을 위한 연결 문자열은 다음과 같은 호출로 XML 설정 데이터에서 가져올 수 있습니다:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">connection_string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"common.nos-connection-string"</span><span class="p">,</span><span class="w"> </span><span class="s">"tcp://127.0.0.1:12001"</span><span class="p">);</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>XML 설정 파일에 다음과 같은 “usart” 유형 연결을 추가합니다:</p></li>
+</ol>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;connection&gt;&lt;type&gt;</span>usart<span class="nt">&lt;/type&gt;&lt;bus-name&gt;</span>usart_0<span class="nt">&lt;/bus-name&gt;&lt;node-port&gt;</span>99999<span class="nt">&lt;/node-port&gt;&lt;/connection&gt;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>버스 이름과 노드 포트를 <code class="docutils literal notranslate"><span class="pre">bus_name</span></code>, <code class="docutils literal notranslate"><span class="pre">node_port</span></code>와 같은 <code class="docutils literal notranslate"><span class="pre">std::string</span></code> 변수로 가져옵니다. 이를 수행하는 방법의 예시는 예제 시뮬레이터를 참고하세요.</p></li>
+<li><p>UART 연결 객체를 생성합니다:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">_uart_connection</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="n">new</span><span class="w"> </span><span class="n">NosEngine</span><span class="o">::</span><span class="n">Uart</span><span class="o">::</span><span class="n">Uart</span><span class="p">(</span><span class="n">_hub</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"simulator.name"</span><span class="p">,</span><span class="w"> </span><span class="s">"foosim"</span><span class="p">),</span><span class="w"> </span><span class="n">connection_string</span><span class="p">,</span><span class="w"> </span><span class="n">bus_name</span><span class="p">));</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>연결을 열고, 하드웨어 UART가 읽힐 때 실행될 콜백을 설정합니다:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">_uart_connection</span><span class="o">-&gt;</span><span class="n">open</span><span class="p">(</span><span class="n">node_port</span><span class="p">);</span>
+<span class="n">_uart_connection</span><span class="o">-&gt;</span><span class="n">set_read_callback</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">FooHardwareModel</span><span class="o">::</span><span class="n">uart_read_callback</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_1</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">placeholders</span><span class="o">::</span><span class="n">_2</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>콜백을 처리할 하드웨어 모델 메소드를 만듭니다(특정 하드웨어 모델을 위한 대부분의 커스텀 작업이 이루어지는 곳입니다):</p>
+<ol class="arabic simple">
+<li><p>시그니처는 다음과 같아야 합니다:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">FooHardwareModel::uart_read_callback</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>데이터를 반환하려면 UART 메소드를 사용합니다:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">size_t</span><span class="w"> </span><span class="nf">UART::write</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>예시가 필요하면 예제 시뮬레이션 코드를 참고하세요.</p>
+<ol class="arabic simple" start="3">
+<li><p>하드웨어 모델 소멸자에서 다음 호출을 수행합니다:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">_uart_connection</span><span class="o">-&gt;</span><span class="n">close</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="id7">
+<h2>나만의 시뮬레이터 작성하기<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<p>다음 공식은 위의 방법들로 만든 하드웨어 모델(및 선택적으로 데이터 제공자)을 이용해 시뮬레이터를 만드는 방법을 설명합니다:</p>
+<ol class="arabic simple">
+<li><p>표준 설정 파일(표준 설정 파일 이름은 <code class="docutils literal notranslate"><span class="pre">nos3-simulator.xml</span></code>)의 <code class="docutils literal notranslate"><span class="pre">&lt;simulators&gt;&lt;/simulators&gt;</span></code> 태그 안에 다음과 같은 XML을 추가합니다</p></li>
+</ol>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;simulator&gt;</span>
+<span class="w">   </span><span class="nt">&lt;name&gt;</span>foosim<span class="nt">&lt;/name&gt;</span>
+<span class="w">   </span><span class="nt">&lt;active&gt;</span>true<span class="nt">&lt;/active&gt;</span>
+<span class="w">   </span><span class="nt">&lt;library&gt;</span>libexample_sim.so<span class="nt">&lt;/library&gt;</span>
+<span class="w">   </span><span class="nt">&lt;hardware-model&gt;</span>
+<span class="w">      </span><span class="nt">&lt;type&gt;</span>FOOHARDWARE<span class="nt">&lt;/type&gt;</span>
+<span class="w">      </span><span class="nt">&lt;connections&gt;</span>
+<span class="w">         </span><span class="nt">&lt;connection&gt;</span>
+<span class="w">            </span><span class="nt">&lt;connection-param1&gt;</span>cp1<span class="nt">&lt;/connection-param1&gt;</span>
+<span class="w">            </span><span class="cm">&lt;!-- ... --&gt;</span>
+<span class="w">            </span><span class="nt">&lt;connection-paramN&gt;</span>cpN<span class="nt">&lt;/connection-paramN&gt;</span>
+<span class="w">         </span><span class="nt">&lt;/connection&gt;</span>
+<span class="w">      </span><span class="nt">&lt;/connections&gt;</span>
+<span class="w">      </span><span class="nt">&lt;data-provider&gt;</span>
+<span class="w">         </span><span class="nt">&lt;type&gt;</span>FOOPROVIDER<span class="nt">&lt;/type&gt;</span>
+<span class="w">         </span><span class="nt">&lt;provider-param1&gt;</span>fpp1<span class="nt">&lt;/provider-param1&gt;</span>
+<span class="w">         </span><span class="cm">&lt;!-- ... --&gt;</span>
+<span class="w">         </span><span class="nt">&lt;provider-paramN&gt;</span>fppN<span class="nt">&lt;/provider-paramN&gt;</span>
+<span class="w">      </span><span class="nt">&lt;/data-provider&gt;</span>
+<span class="w">      </span><span class="nt">&lt;other-hardware-parameter1&gt;</span>OTHER-FOO<span class="nt">&lt;/other-hardware-parameter1&gt;</span>
+<span class="w">      </span><span class="cm">&lt;!-- ... --&gt;</span>
+<span class="w">      </span><span class="nt">&lt;other-hardware-parameterN&gt;</span>OTHER-FOO<span class="nt">&lt;/other-hardware-parameterN&gt;</span>
+<span class="w">   </span><span class="nt">&lt;/hardware-model&gt;</span>
+<span class="nt">&lt;/simulator&gt;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>XML 커스터마이징하기:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">simulator.name</span></code>은 실행할 때 <code class="docutils literal notranslate"><span class="pre">nos3-single-simulator</span></code>에 전달하는 이름이어야 합니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulator.active</span></code> 태그는 시뮬레이터를 실행하지 않으려는 경우가 아니라면 true여야 합니다(그런 경우는 false).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulator.library</span></code> 태그에는 예제 시뮬레이터 공유 객체 라이브러리 파일의 이름이 들어가야 합니다(보통 <code class="docutils literal notranslate"><span class="pre">lib&lt;project&gt;.so</span></code> 형태이며, 여기서 <code class="docutils literal notranslate"><span class="pre">&lt;project&gt;</span></code>는 <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> 파일에서 프로젝트에 지정한 프로젝트 이름입니다; 아래 참고)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulator.hardware-model.type</span></code>은 위의 <code class="docutils literal notranslate"><span class="pre">REGISTER_HARDWARE_MODEL</span></code> 줄에서 사용한 문자열과 동일해야 합니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulator.hardware-model.data-provider.type</span></code>은 위의 <code class="docutils literal notranslate"><span class="pre">REGISTER_DATA_PROVIDER</span></code> 줄에서 사용한 문자열과 동일해야 합니다.</p></li>
+<li><p>그 밖의 모든 태그는 여러분의 자유입니다… 원하는 이름을 만들고, 위의 정보를 이용해 데이터에 접근하면 됩니다. UART, I2C, 명령 연결(시뮬레이터 터미널로 시뮬레이터를 제어하는 데 사용됨)과 같은 여러 일반적인 연결 유형을 사용하는 예시가 소스 코드에 있다는 점도 참고하세요. 또한 명령 연결은 <code class="docutils literal notranslate"><span class="pre">SimIHardwareModel</span></code> 기본 클래스에서 자동으로 설정된다는 점도 참고하세요. 명령 버스로 들어오는 명령에 시뮬레이터가 반응하도록 하려면, 하드웨어 모델 클래스에서 <code class="docutils literal notranslate"><span class="pre">SimIHardwareModel::command_callback</span></code> 메소드를 오버라이드하기만 하면 됩니다(기본 구현은 아무 것도 하지 않습니다).</p></li>
+</ol>
+</li>
+</ol>
+</section>
+<section id="id8">
+<h2>예제 시뮬레이터<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<p>이 소개 글이 NOS3 시뮬레이터 개발에 사용된 유연하고 확장 가능한 프레임워크를 설명하는 데 도움이 되었기를 바랍니다. 이 소개 글은 NOS3 시뮬레이터 내부에서 사용되는 디자인 패턴을 설명하고, 하드웨어 모델(및 데이터 제공자와 그 밖의 지원 항목들)을 추가하는 방법과, 하드웨어 모델들을 조합해 NOS3 시뮬레이션 환경의 일부가 될 수 있는 독립적인 시뮬레이터로 만드는 방법을 설명하고자 했습니다.</p>
+<p>완전한 예시를 보려면, <code class="docutils literal notranslate"><span class="pre">nos3</span></code> git 저장소의 <code class="docutils literal notranslate"><span class="pre">components/sample/sim/</span></code> 하위 디렉터리에 있는 소스 코드와 <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> 파일을 참고하고, <code class="docutils literal notranslate"><span class="pre">nos3</span></code> git 저장소의 <code class="docutils literal notranslate"><span class="pre">cfg/sims/nos3-simulator.xml</span></code> 설정 파일(이름이 <code class="docutils literal notranslate"><span class="pre">&quot;sample_sim&quot;</span></code>인 시뮬레이터 섹션 참고)을 참고하세요. 또한 새 시뮬레이터의 <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> 파일 시작 부분에 <code class="docutils literal notranslate"><span class="pre">&quot;project(sample_sim)&quot;</span></code>과 같은 프로젝트 이름 줄이 있다면, <code class="docutils literal notranslate"><span class="pre">nos3</span></code> git 저장소의 <code class="docutils literal notranslate"><span class="pre">sims/CMakeLists.txt</span></code> 파일 안 # NOS3 Sim Core 아래에 <code class="docutils literal notranslate"><span class="pre">&quot;add_subdirectory(sample_sim)&quot;</span></code> 줄을 추가하여 새 시뮬레이터가 빌드되도록 할 수 있습니다. 다만 <code class="docutils literal notranslate"><span class="pre">sims/CMakeLists.txt</span></code> 파일은 nos3/sims/ 안에서 부모 폴더가 <code class="docutils literal notranslate"><span class="pre">&quot;&lt;name-of-your-sim&gt;_sim&quot;</span></code> 형태를 따르는, 올바르게 구성되고 이름 붙여진 모든 디렉터리를 찾도록 작성되어 있습니다.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="NOS3_Generating_Component.html" class="btn btn-neutral float-left" title="새 구성 요소 생성하기(Generating a New Component)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="STF_ConOps.html" class="btn btn-neutral float-right" title="STF - 운영 개념 (Concept of Operations, ConOps)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

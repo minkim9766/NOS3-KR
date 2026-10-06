@@ -1,0 +1,2061 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../../../search.html" />
+    <link rel="next" title="unit_test" href="../unit_test/index.html" />
+    <link rel="prev" title="platform_inc" href="../platform_inc/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">apps</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">ci</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">fsw</a></li>
+      <li class="breadcrumb-item active">src</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/project_inventory/fsw/apps/ci/fsw/src/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="src">
+<h1>src<a class="headerlink" href="#src" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/ci/fsw/src/</span></code></p>
+<section id="id1">
+<h2>이 폴더의 파일<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+</section>
+<section id="ci-app-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ci_app.c</span></code><a class="headerlink" href="#ci-app-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/ci/fsw/src/ci_app.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/******************************************************************************/
+/** \file  ci_app.c
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Function Definitions for CI Application
+*
+*   \par
+*     This source code file contains the application layer functions for CI.
+*
+*   \par
+*     This file defines the functions associtated with the application layer of
+*     Command Ingest (CI) application. The application layer is responsible to
+*     interact with the CFE Software bus, send the HK packet, and the OutData
+*     packet. The custom functions are defined in the ci_custom.c file.
+*
+*   \par API Functions Defined:
+*     - CI_AppMain() - Main entry point. Initializes, then calls CI_RcvMsg. 
+*     - CI_AppInit() - Initializes the CI Application
+*     - CI_InitEvent() - Initializes the events
+*     - CI_InitPipe() - Initializes the pipes (Scheduler, command)
+*     - CI_InitData() - Initializes HK and OutData packets.
+*     - CI_RcvMsg() - Pends on SB to perform main funtions.
+*     - CI_ProcessNewCmds() - Call appropriate fnct based on CMD MID.
+*     - CI_ProcessNewAppCmds() - Call appropriate fnct based on CMD Code.
+*     - CI_ReportHousekeeping() - Send to SB the HK packet.
+*     - CI_SendOutData() - Send the OutData packet to the SB.
+*
+*   \par Private Functions Defined:
+*     - None
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*     - All Custom functions are to be defined in ci_custom.c
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*******************************************************************************/
+
+/*
+** Pragmas
+*/
+
+/*
+** Include Files
+*/
+#include &lt;string.h&gt;
+#include "cfe.h"
+#include "ci_app.h"
+
+/*
+** Local Defines
+*/
+
+/*
+** Local Structure Declarations
+*/
+
+/*
+** External Global Variables
+*/
+
+/*
+** Global Variables
+*/
+CI_AppData_t  g_CI_AppData;
+
+/*
+** Local Variables
+*/
+
+/*
+** Local Function Definitions
+*/
+
+
+/*****************************************************************************/
+/** \brief Main Entry Point for CI Application  
+******************************************************************************/
+void CI_AppMain(void)
+{
+    /* Performance Log Entry stamp - #1 */
+    CFE_ES_PerfLogEntry(CI_MAIN_TASK_PERF_ID);
+    
+    /* Perform Application initializations */
+    if (CI_AppInit() != CFE_SUCCESS)
+    {
+        g_CI_AppData.uiRunStatus = CFE_ES_RunStatus_APP_ERROR;
+    }
+
+    /* Application Main Loop. Call CFE_ES_RunLoop() to check for changes in the
+    ** Application's status. If there is a request to kill this Application, 
+    ** it will be passed in through the RunLoop call.  */
+    while (CFE_ES_RunLoop(&amp;g_CI_AppData.uiRunStatus) == true)
+    {
+        /* Performance Log Exit stamp - #1 */
+        CFE_ES_PerfLogExit(CI_MAIN_TASK_PERF_ID);
+        
+        CI_RcvMsg(g_CI_AppData.uiWakeupTimeout); 
+    }
+
+    /* Performance Log Exit stamp - #2 */
+    CFE_ES_PerfLogExit(CI_MAIN_TASK_PERF_ID);
+    
+    /* Exit the application. Will call CI_CleanupCallback */
+    CFE_ES_ExitApp(g_CI_AppData.uiRunStatus);
+} 
+    
+
+/*****************************************************************************/
+/** \brief Initialize The Application
+******************************************************************************/
+int32 CI_AppInit(void)
+{
+    int32  iStatus=CFE_SUCCESS;
+
+    g_CI_AppData.uiRunStatus = CFE_ES_RunStatus_APP_RUN;
+
+    /* Initialize Events */
+    iStatus = CI_InitEvent();
+    if (iStatus != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("CI - Event Init failed. \n");
+        goto CI_AppInit_Exit_Tag;
+    }
+
+    /* Initialize Pipes */
+    iStatus = CI_InitPipe();
+    if (iStatus != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CI_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                         "CI - Pipe Init failed.");
+        goto CI_AppInit_Exit_Tag;
+    }
+
+    /* Initialize Data (never fails) */
+    iStatus = CI_InitData();
+
+    /* Custom Init */
+    iStatus = CI_CustomInit();
+    if (iStatus != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CI_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                         "CI - Custom Init failed.");
+        goto CI_AppInit_Exit_Tag;
+    }
+
+    /* Install the cleanup callback */
+    OS_TaskInstallDeleteHandler((osal_task_entry) &amp;CI_CleanupCallback);
+
+CI_AppInit_Exit_Tag:
+    if (iStatus == CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CI_INIT_INF_EID, CFE_EVS_EventType_INFORMATION,
+                          "Application initialized");
+    }
+    else
+    {
+        iStatus = CI_ERROR;
+        CFE_ES_WriteToSysLog("CI - Application failed to initialize\n");
+    }
+
+    return (iStatus);
+}
+    
+/*****************************************************************************/
+/** \brief Initialize the Event Filter Table.
+******************************************************************************/
+int32 CI_InitEvent(void)
+{
+    int32  iStatus=CFE_SUCCESS;
+    int32  ii = 0;
+
+    /* Create the event table */
+    CFE_PSP_MemSet((void*)g_CI_AppData.EventTbl, 0x00, 
+                   sizeof(g_CI_AppData.EventTbl));
+    
+    for (ii = 0; ii &lt; CI_EVT_CNT; ++ii)
+    {
+        g_CI_AppData.EventTbl[ii].EventID = ii;
+    }
+
+    /* Register the table with CFE */
+    iStatus = CFE_EVS_Register(g_CI_AppData.EventTbl,
+                               CI_EVT_CNT, CFE_EVS_EventFilter_BINARY);
+    if (iStatus != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("CI - Failed to register with EVS (0x%08X)\n", 
+                             iStatus);
+    }
+
+    return (iStatus);
+}
+    
+/*****************************************************************************/
+/** \brief Initialize the Pipes
+******************************************************************************/
+int32 CI_InitPipe(void)
+{
+    int32  iStatus=CFE_SUCCESS;
+
+    /* Init schedule pipe */
+    g_CI_AppData.usSchPipeDepth = CI_SCH_PIPE_DEPTH;
+    CFE_PSP_MemSet((void*)g_CI_AppData.cSchPipeName, '\0', 
+                   sizeof(g_CI_AppData.cSchPipeName));
+    strncpy(g_CI_AppData.cSchPipeName, "CI_SCH_PIPE", OS_MAX_API_NAME-1);
+
+    /* Subscribe to Wakeup messages */
+    iStatus = CFE_SB_CreatePipe(&amp;g_CI_AppData.SchPipeId,
+                                 g_CI_AppData.usSchPipeDepth,
+                                 g_CI_AppData.cSchPipeName);
+    if (iStatus == CFE_SUCCESS)
+    {
+        CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CI_WAKEUP_MID), g_CI_AppData.SchPipeId);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CI_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                         "CI - Failed to create SCH pipe (0x%08X)", 
+                         iStatus);
+        goto CI_InitPipe_Exit_Tag;
+    }
+
+    /* Init command pipe */
+    g_CI_AppData.usCmdPipeDepth = CI_CMD_PIPE_DEPTH ;
+    CFE_PSP_MemSet((void*)g_CI_AppData.cCmdPipeName, '\0', 
+                   sizeof(g_CI_AppData.cCmdPipeName));
+    strncpy(g_CI_AppData.cCmdPipeName, "CI_CMD_PIPE", OS_MAX_API_NAME-1);
+
+    /* Subscribe to command messages */
+    iStatus = CFE_SB_CreatePipe(&amp;g_CI_AppData.CmdPipeId,
+                                 g_CI_AppData.usCmdPipeDepth,
+                                 g_CI_AppData.cCmdPipeName);
+    if (iStatus == CFE_SUCCESS)
+    {
+        CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CI_APP_CMD_MID), g_CI_AppData.CmdPipeId);
+        CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CI_SEND_HK_MID), g_CI_AppData.CmdPipeId);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CI_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                         "CI - Failed to create CMD pipe (0x%08X)", 
+                         iStatus);
+        goto CI_InitPipe_Exit_Tag;
+    }
+
+CI_InitPipe_Exit_Tag:
+    return (iStatus);
+}
+    
+/*****************************************************************************/
+/** \brief Initialize Data
+******************************************************************************/
+int32 CI_InitData(void)
+{
+    int32  iStatus= CI_SUCCESS;
+
+    /* Init CI mutex */
+    OS_MutSemCreate(&amp;g_CI_AppData.ciMutex, "CI Mutex", 0);
+    OS_MutSemTake(g_CI_AppData.ciMutex);
+
+    /* Init output data */
+    CFE_PSP_MemSet((void*)&amp;g_CI_AppData.OutData, 0x00, 
+                   sizeof(g_CI_AppData.OutData));
+    CFE_MSG_Init(CFE_MSG_PTR(g_CI_AppData.OutData.ucTlmHeader),
+                 CFE_SB_ValueToMsgId(CI_OUT_DATA_MID), 
+                 sizeof(g_CI_AppData.OutData));
+
+    /* Init housekeeping packet */
+    CFE_PSP_MemSet((void*)&amp;g_CI_AppData.HkTlm, 0x00, 
+                   sizeof(g_CI_AppData.HkTlm));
+    CFE_MSG_Init(CFE_MSG_PTR(g_CI_AppData.HkTlm.TelemetryHeader),
+                 CFE_SB_ValueToMsgId(CI_HK_TLM_MID), 
+                 sizeof(g_CI_AppData.HkTlm));
+    
+    /* Init wakeup timeout */
+    /* NOTE: Saving timeout locally allows for potential customization.
+     * No default command is provided to change it at run-time as a safety
+     * measure. Custom implementation may choose to add such command in 
+     * CI_CustomAppCmds or CI_CustomGateCmds. */
+    g_CI_AppData.uiWakeupTimeout = CI_WAKEUP_TIMEOUT;
+    
+    OS_MutSemGive(g_CI_AppData.ciMutex);
+
+    return (iStatus);
+}
+    
+
+/*****************************************************************************/
+/** \brief Receive Messages from Software Bus
+******************************************************************************/
+int32 CI_RcvMsg(int32 iBlocking)
+{
+    int32           iStatus=CFE_SUCCESS;
+    CFE_MSG_Message_t * MsgPtr = NULL;
+    CFE_SB_MsgId_t  MsgId;
+             
+    /* Wait for WAKEUP messages from scheduler or use timeout rate */
+    iStatus = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&amp;MsgPtr,  g_CI_AppData.SchPipeId,  iBlocking);
+        
+    /* Performance Log Entry stamp */
+    CFE_ES_PerfLogEntry(CI_MAIN_TASK_PERF_ID); 
+        
+    if (iStatus == CFE_SUCCESS)
+    {
+        CFE_MSG_GetMsgId(MsgPtr, &amp;MsgId);
+        switch (CFE_SB_MsgIdToValue(MsgId))
+        {
+            case CI_WAKEUP_MID:
+                CI_ProcessNewCmds();
+                CI_SendOutData();
+                break;
+            
+            default:
+                CFE_EVS_SendEvent(CI_MSGID_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "CI - Recvd invalid SCH msgId (0x%04x)", 
+                                  CFE_SB_MsgIdToValue(MsgId));
+        }
+    }
+    /* Implementation may set usWakeupTimeout instead of relying on
+     * Scheduler for wakeup message. */
+    else if (iStatus == CFE_SB_TIME_OUT)
+    {
+        CI_ProcessNewCmds();
+        CI_SendOutData();
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CI_PIPE_ERR_EID, CFE_EVS_EventType_ERROR,
+                         "CI: SB pipe read error (0x%08x), app will exit", 
+                         iStatus);
+        g_CI_AppData.uiRunStatus= CFE_ES_RunStatus_APP_ERROR;
+    }
+    
+    return (iStatus);
+}
+
+
+/*****************************************************************************/
+/** \brief Process New Commands
+******************************************************************************/
+void CI_ProcessNewCmds(void)
+{
+    CFE_MSG_Message_t * CmdMsgPtr=NULL;
+    CFE_SB_MsgId_t  CmdMsgId;
+    bool         bGotNewMsg=true;
+
+    while (bGotNewMsg)
+    {
+        if (CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&amp;CmdMsgPtr,  g_CI_AppData.CmdPipeId,  CFE_SB_POLL) == 
+            CFE_SUCCESS)
+        {
+            CFE_MSG_GetMsgId(CmdMsgPtr, &amp;CmdMsgId);
+            switch (CFE_SB_MsgIdToValue(CmdMsgId))
+            {
+                case CI_APP_CMD_MID:
+                    CI_ProcessNewAppCmds(CmdMsgPtr);
+                    break;
+            
+                case CI_SEND_HK_MID:
+                    CI_ReportHousekeeping();
+                    break;
+
+                default:
+                    CI_IncrHkCounter(&amp;g_CI_AppData.HkTlm.usCmdErrCnt);
+                    CFE_EVS_SendEvent(CI_MSGID_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "CI - Recvd invalid CMD msgId (0x%04x)", 
+                                      CFE_SB_MsgIdToValue(CmdMsgId));
+                    break;
+            }
+        }
+        else
+        {
+            bGotNewMsg = false;
+        }
+    }
+}
+    
+
+/*****************************************************************************/
+/** \brief Process New Application Commands
+******************************************************************************/
+void CI_ProcessNewAppCmds(CFE_MSG_Message_t * pCmdMsg)
+{
+    int32 iStatus = CI_SUCCESS;
+    CFE_MSG_FcnCode_t uiCmdCode=0;
+
+    if (pCmdMsg != NULL)
+    {
+        CFE_MSG_GetFcnCode(pCmdMsg, &amp;uiCmdCode);
+        switch (uiCmdCode)
+        {
+            case CI_NOOP_CC:
+                if (CI_VerifyCmdLength(pCmdMsg, sizeof(CI_NoArgCmd_t)))
+                {
+                    CI_IncrHkCounter(&amp;g_CI_AppData.HkTlm.usCmdCnt);
+                    CFE_EVS_SendEvent(CI_CMD_INF_EID,
+                                      CFE_EVS_EventType_INFORMATION,
+                                      "No-op command. Version %d.%d.%d.%d",
+                                      CI_MAJOR_VERSION,
+                                      CI_MINOR_VERSION,
+                                      CI_REVISION,
+                                      CI_MISSION_REV);
+                }
+                break;
+
+            case CI_RESET_CC:
+                if (CI_VerifyCmdLength(pCmdMsg, sizeof(CI_NoArgCmd_t)))
+                {
+                    OS_MutSemTake(g_CI_AppData.ciMutex);
+                    g_CI_AppData.HkTlm.usCmdCnt = 0;
+                    g_CI_AppData.HkTlm.usCmdErrCnt = 0;
+                    OS_MutSemGive(g_CI_AppData.ciMutex);
+                    CFE_EVS_SendEvent(CI_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                      "Recvd RESET cmd (%d)", uiCmdCode);
+                }
+                break;
+                
+            case CI_ENABLE_TO_CC:
+                if (CI_VerifyCmdLength(pCmdMsg, sizeof(CI_EnableTOCmd_t)))
+                {
+                    CI_IncrHkCounter(&amp;g_CI_AppData.HkTlm.usCmdCnt);
+                    CFE_EVS_SendEvent(CI_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                      "Sending Enable TO Cmd (%d)",
+                                      CI_ENABLE_TO_CC);
+
+                    CI_CustomEnableTO(pCmdMsg);
+                }
+                break;
+
+            /* Any other commands are assumed to be custom commands. */
+            default:
+                iStatus = CI_CustomAppCmds(pCmdMsg);
+               
+                if (iStatus != CI_SUCCESS) 
+                {
+                    CI_IncrHkCounter(&amp;g_CI_AppData.HkTlm.usCmdErrCnt);
+                    CFE_EVS_SendEvent(CI_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Recvd invalid app cmd code (%d)", 
+                                      uiCmdCode);
+                }
+                break;
+        }
+    }
+}
+
+
+/*****************************************************************************/
+/** \brief Report Housekeeping Packet
+******************************************************************************/
+void CI_ReportHousekeeping(void)
+{
+    OS_MutSemTake(g_CI_AppData.ciMutex);
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&amp;g_CI_AppData.HkTlm);
+    CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&amp;g_CI_AppData.HkTlm, true);
+    OS_MutSemGive(g_CI_AppData.ciMutex);
+}
+    
+/*****************************************************************************/
+/** \brief Send the OutData Packet
+******************************************************************************/
+void CI_SendOutData(void)
+{
+    OS_MutSemTake(g_CI_AppData.ciMutex);
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&amp;g_CI_AppData.OutData);
+    CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&amp;g_CI_AppData.OutData, true);
+    OS_MutSemGive(g_CI_AppData.ciMutex);
+}
+
+
+/*****************************************************************************/
+/** \brief Perform cleanup on shutdown
+******************************************************************************/
+void CI_CleanupCallback(void)
+{
+    CI_CustomCleanup();
+}
+    
+/*==============================================================================
+** End of file ci_app.c
+**============================================================================*/
+</pre></div>
+</div>
+</section>
+<section id="ci-app-h">
+<h2><code class="docutils literal notranslate"><span class="pre">ci_app.h</span></code><a class="headerlink" href="#ci-app-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/ci/fsw/src/ci_app.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/******************************************************************************/
+/** \file  ci_app.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Header file for CI Application
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*       - Application functions are defined in ci_app.c
+*       - Utilities are defined in ci_utils.c
+*       - Custom functions are defined in ci_custom.c
+*       - SEND_HK is subscribed to the command pipe. The wakeup rate should
+*         generally be set faster than the SEND_HK rate, otherwise HK packets
+*         will be dropped. SEND_HK is required to get housekeeping data.
+*       - The CI_WAKEUP_TIMEOUT value may be used instead of Scheduler 
+*         table for app processing rate.
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*******************************************************************************/
+    
+#ifndef _CI_APP_H_
+#define _CI_APP_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*******************************************************************************
+** Includes
+*******************************************************************************/
+#include &lt;errno.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+
+#include "osconfig.h"
+
+#include "ci_platform_cfg.h"
+#include "ci_mission_cfg.h"
+#include "ci_events.h"
+
+/*******************************************************************************
+** Macro Definitions
+*******************************************************************************/
+/** \name Version numbers */
+/** \{ */
+#define CI_MAJOR_VERSION     1  /**&lt; Major Version Release */
+#define CI_MINOR_VERSION     0  /**&lt; Minor Version Release */
+#define CI_REVISION          0  /**&lt; Revision for bug fixes */
+#define CI_MISSION_REV       0  /**&lt; Revision for mission */
+/** \} */
+
+/** \name Return codes */
+/** \{ */
+#define CI_SUCCESS  0   /**&lt; Success */
+#define CI_ERROR   -1   /**&lt; Error */
+/** \} */
+
+
+/** \name Default Macro definitions if not defined in ci_platform_cfg.h */
+/** \{ */
+#ifndef CI_WAKEUP_TIMEOUT
+#define CI_WAKEUP_TIMEOUT  1000  /**&lt; Timeout for App rate (ms) */
+#endif
+
+#ifndef CI_SCH_PIPE_DEPTH
+#define CI_SCH_PIPE_DEPTH  10   /**&lt; Scheduler Pipe Depth */
+#endif
+#ifndef CI_CMD_PIPE_DEPTH  
+#define CI_CMD_PIPE_DEPTH  10   /**&lt; Command Pipe Depth */
+#endif
+
+#ifndef CI_CUSTOM_TASK_STACK_PTR 
+#define CI_CUSTOM_TASK_STACK_PTR NULL      /**&lt; Custom task stack pointer */ 
+#endif
+#ifndef CI_CUSTOM_TASK_STACK_SIZE 
+#define CI_CUSTOM_TASK_STACK_SIZE 0x4000   /**&lt; Custom task stack size    */
+#endif
+#ifndef CI_CUSTOM_TASK_PRIO 
+#define CI_CUSTOM_TASK_PRIO 118            /**&lt; Custom task priority      */
+#endif
+/** \} */
+
+
+/*******************************************************************************
+** Structure definitions
+*******************************************************************************/
+/** /brief AppData Structure Defenition */
+typedef struct
+{
+    /* CFE Event table */
+    CFE_EVS_BinFilter_t  EventTbl[CI_EVT_CNT];      /**&lt; Event Filter Table. */
+
+    /* CFE scheduling pipe */
+    CFE_SB_PipeId_t  SchPipeId;                     /**&lt; Schedule Pipe ID */
+    uint16           usSchPipeDepth;                /**&lt; Schedule Pipe depth */
+    char             cSchPipeName[OS_MAX_API_NAME]; /**&lt; Schedule Pipe name */
+
+    /* CFE command pipe */
+    CFE_SB_PipeId_t  CmdPipeId;                     /**&lt; Command Pipe ID */   
+    uint16           usCmdPipeDepth;                /**&lt; Command Pipe depth */
+    char             cCmdPipeName[OS_MAX_API_NAME]; /**&lt; Command Pipe name */ 
+    
+    /* Task-related */
+    uint32  uiRunStatus;        /**&lt; Application Run Status */
+   
+    /* Wakeup timeout - may be used to set CI rate without SCH app. */
+    uint32  uiWakeupTimeout;    /**&lt; CI Wakeup Timeout (ms) */
+
+    /* Output data 
+       Data structure defined in $MISSION/apps/inc/{MISSION}_ci_types.h */
+    CI_OutData_t  OutData;  /**&lt; Output Data Packet */
+
+    /* Housekeeping telemetry (Sent on CI_SEND_HK command)
+       Data structure defined in $MISSION/apps/inc/{MISSION}_ci_types.h */
+    CI_HkTlm_t  HkTlm;      /**&lt; Housekeeping Packet */
+
+    /* Mutex to protect telemetry packets (outData, hkTlm). */
+    uint32 ciMutex;         /**&lt; CI AppData Mutex */
+
+} CI_AppData_t;
+
+
+/*******************************************************************************
+** Application Function Declarations
+*******************************************************************************/
+
+/******************************************************************************/
+/** \brief Main Entry Point for CI Application
+*
+*   \par Description/Algorithm
+*       This function is the main entry point of the CI Application. It 
+*       performs the following:
+*       1. Registers the Application with cFE
+*       2. Initializes the application through CI_AppInit
+*       3. Loops over the CI_RcvMsg function to perform main function.
+*       4. Exit application on kill signal or error
+*
+*   \par Assumptions, External Events, and Notes:
+*       - The CI_MAIN_TASK_PERF_ID Entered in CI_RcvMsg
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns None
+*
+*   \see 
+*       #CI_AppInit
+*       #CI_RcvMsg
+*       #CI_CleanupCallback
+*******************************************************************************/
+void  CI_AppMain(void);
+
+/******************************************************************************/
+/** \brief Initialize The Application
+*
+*   \par Description/Algorithm
+*        High level initialization function.  Calls in order:
+*        1. CI_InitEvent
+*        2. CI_InitPipe
+*        3. CI_InitData
+*        4. CI_CustomInit
+*        5. Installs the Cleanup Callback function.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - The CI_CustomInit is defined in ci_custom.c
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns
+*   \retcode #CFE_SUCCESS \retdesc  \copydoc CFE_SUCCESS \endcode
+*   \retcode #CI_ERROR \retdesc Initialization Error \endcode
+*
+*   \see 
+*       #CI_InitEvent
+*       #CI_InitPipe
+*       #CI_InitData
+*       #CI_CustomInit
+*******************************************************************************/
+int32  CI_AppInit(void);
+
+/******************************************************************************/
+/** \brief Initialize the Event Filter Table.
+*
+*   \par Description/Algorithm
+*        1. Set the EventTbl EventIds based on ids defined in ci_events.h
+*        2. Register the events with cFE Table services.
+*
+*   \par Assumptions, External Events, and Notes:
+*        - All Events are intialized as unfiltered.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns
+*   \retcode #CFE_SUCCESS \retdesc \copydoc CFE_SUCCESS \endcode
+*   \retstmt Any of the error codes from #CFE_EVS_Register    \endstmt
+*   \endreturns
+*
+*   \see 
+*       #CI_AppInit
+*******************************************************************************/
+int32  CI_InitEvent(void);
+
+/******************************************************************************/
+/** \brief Initialize the Pipes
+*
+*   \par Description/Algorithm
+*        Initialize the Scheduler and Cmd Pipes. The Scheduler pipe is
+*        subscribed to the WAKEUP, while the Command
+*        pipe is subscribed to the CI_APP_CMD_MID and CI_SEND_HK_MID. 
+*
+*   \par Assumptions, External Events, and Notes:
+*        - No Telemetry pipe is included in the CI application.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns
+*   \retcode #CFE_SUCCESS \retdesc \copydoc CFE_SUCCESS \endcode
+*   \retstmt Any of the error codes from #CFE_SB_CreatePipe    \endstmt
+*   \endreturns
+*
+*   \see 
+*       #CI_AppInit
+*******************************************************************************/
+int32  CI_InitPipe(void);
+
+/******************************************************************************/
+/** \brief Initialize Data
+*
+*   \par Description/Algorithm
+*        Initialize the Housekeeping Packet, the OutData Packet and the CI
+*        Mutex, for memory protection of these packets.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - The CI_WAKEUP_TIMEOUT is copied to AppData here so that it may be
+*         manipulated if desired in custom layer.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns
+*   \retcode #CFE_SUCCESS \retdesc \copydoc CFE_SUCCESS \endcode
+*
+*   \see 
+*       #CI_AppInit
+*******************************************************************************/
+int32  CI_InitData(void);
+
+/******************************************************************************/
+/** \brief Receive Messages from Software Bus
+*
+*   \par Description/Algorithm
+*       Pend on the SchPipe for CI_WAKEUP_MID. On wakeup, call
+*       CI_ProcessNewCmds() and CI_SendOutData(). May also be scheduled at 
+*       fixed rate through wakeup timeout.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - On timeout, process as if a wakeup message is received.
+*       - Quit app on error status.
+*       - SEND_HK is processed in CI_ProcessNewCmds.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*   \param[in] iBlocking blocking timeout (set through CI_WAKEUP_TIMEOUT)
+*
+*   \returns
+*   \retcode #CFE_SUCCESS \retdesc \copydoc CFE_SUCCESS \endcode
+*   \retstmt Any of the error codes from #CFE_SB_ReceiveBuffer \endstmt
+*
+*   \see 
+*       #CI_AppMain
+*       #CI_ProcessNewCmds
+*       #CI_SendOutData
+*******************************************************************************/
+int32  CI_RcvMsg(int32 iBlocking);
+
+/******************************************************************************/
+/** \brief Process New Commands
+*
+*   \par Description/Algorithm
+*       Loop over Cmd Pipe for any new messages. Call CI_ProcessNewAppCmds on
+*       the receipt of the CI_APP_CMD_MID and CI_ReportHousekeeping on receipt
+*       of CI_SEND_HK_MID. Error otherwise. 
+*
+*   \par Assumptions, External Events, and Notes:
+*       - This function is called in response to the CI_WAKEUP_MID.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns None
+*
+*   \see 
+*       #CI_RcvMsg
+*       #CI_ProcessNewAppCmds
+*       #CI_ReportHousekeeping
+*******************************************************************************/
+void  CI_ProcessNewCmds(void);
+
+/******************************************************************************/
+/** \brief Process New Application Commands
+*
+*   \par Description/Algorithm
+*       Process the appropriate response based on the received command code.
+*       Possible command codes include:
+*       1. CI_NOOP_CC - No-operations. Increment cmd counter and return event.
+*       2. CI_RESET_CC - Reset the housekeeping packet.
+*       3. CI_ENABLE_TO_CC - Call the CI_CustomEnableTO function.
+*       4. Other custom commands - Call CI_CustomAppCmds
+*
+*   \par Assumptions, External Events, and Notes:
+*       - The CI_CustomEnableTO function is defined in ci_custom.c
+*       - The command length of each command is verified
+*       - All command message structures are defined in {MISSION}_ci_types.h.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns None
+*
+*   \see 
+*       #CI_ProcessNewCmds
+*       #CI_CustomEnableTO
+*       #CI_CustomAppCmds
+*******************************************************************************/
+void  CI_ProcessNewAppCmds(CFE_MSG_Message_t*);
+
+/******************************************************************************/
+/** \brief Report Housekeeping Packet
+*
+*   \par Description/Algorithm
+*       Send the housekeeping packet to the software bus.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - This function is called in response to the CI_SEND_HK_MID.
+*       - The HK Packet is protected by ciMutex.
+*       - The default Housekeeping packet is defined in ci_hktlm.h.
+*       - Housekeeping packet may be extended in {MISSION}_ci_types.h.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns None
+*
+*   \see 
+*       #CI_RcvMsg
+*******************************************************************************/
+void  CI_ReportHousekeeping(void);
+
+/******************************************************************************/
+/** \brief Send the OutData Packet
+*
+*   \par Description/Algorithm
+*       Send the OutData packet to the software bus.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - This function is called in response to the CI_WAKEUP_MID.
+*       - The OutData Packet is protected by ciMutex.
+*       - The OutData packet is defined in {MISSION}_ci_types.h.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns None
+*
+*   \see 
+*       #CI_RcvMsg
+*******************************************************************************/
+void  CI_SendOutData(void);
+
+/******************************************************************************/
+/** \brief Perform cleanup on shutdown
+*
+*   \par Call the custom cleanup function to close I/O channels, etc. 
+*
+*   \par Assumptions, External Events, and Notes:
+*       - CI_CustomCleanup is defined in ci_custom.c
+*       - This function gets called on CFE_ES_ExitApp from CI_AppMain.
+*
+*   \param None
+*
+*   \returns None
+*
+*   \see 
+*       #CI_AppMain
+*       #CI_AppInit
+*       #CI_CustomCleanup
+*******************************************************************************/
+void  CI_CleanupCallback(void);
+
+
+/*******************************************************************************
+** Utility Function Declarations
+*******************************************************************************/
+
+/******************************************************************************/
+/** \brief Increment a housekeeping packet counter
+*
+*   \par Description/Algorithm
+*       Increments the specified counter. The Incrementation is protected by
+*       the application mutex.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - This function should be used within the custom layer to increment any
+*       counters, as it has memory access protection.
+*       - This assumes that all counters are of type uint16.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*   \param[in] counter The pointer to the counter to increment.
+*
+*   \returns None
+*
+*   \see 
+*       #CI_ProcessNewAppCmds
+*       #CI_CustomAppCmds
+*******************************************************************************/
+void CI_IncrHkCounter(uint16 * counter);
+
+/******************************************************************************/
+/** \brief Verify the command length against expected length
+*
+*   \par Description/Algorithm
+*       Get the message length through the SB API and compare it with the passed
+*       in expected length.  If not equal, issue an error event, increment the
+*       uiCmdErrCnt and return false.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - Call this function for all received commands to verify the length.
+*       - Should also be used in the custom layer.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*   \param[in] pMsg Pointer to the CCSDS message.
+*   \param[in] expectedLen Expected Command message length.
+*
+*   \returns True or False
+*
+*   \see 
+*       #CI_ProcessNewAppCmds
+*       #CI_CustomAppCmds
+*       #CI_CustomGateCmds
+*******************************************************************************/
+bool  CI_VerifyCmdLength(CFE_MSG_Message_t*, uint16);
+
+
+/*******************************************************************************
+** Required Custom Functions
+*******************************************************************************/
+
+/******************************************************************************/
+/** \brief Custom Initialization
+*
+*   \par Description/Algorithm
+*       This function is mainly responsible to initialize the transport
+*       protocol(s) to use and to create the custom child task.  The entry 
+*       function for the child task should be CI_CustomMain.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - Configuration macros defined in ci_platform_cfg.h should be used when
+*       configuring the transport protocol(s).
+*       - A local file descriptor should be defined for each transport protocols
+*       - A local buffer should be allocated to store incomming messages.
+*       - Any access to AppData (HK or OutData) should make use of the ciMutex
+*       for memory protection.
+*       - This function is executed by the application main task through
+*       CI_AppInit 
+*
+*   \param None
+*
+*   \returns 
+*   \retcode #CFE_SUCCESS \retdesc \copydoc CFE_SUCCESS \endcode
+*   \retcode #CI_ERROR \retdesc Initialization Error \endcode
+*
+*   \see 
+*       #CI_AppInit
+*       #CI_CustomMain
+*       #CFE_ES_CreateChildTask
+*******************************************************************************/
+int32 CI_CustomInit(void);
+
+/******************************************************************************/
+/** \brief Custom Child Task Entry Point
+*
+*   \par Description/Algorithm
+*       This function is responsible for receiving all commands over the choosen
+*       transport protocol.  The general pattern to follow is as followed:
+*       1. Check that the local file descriptor has been set correctly
+*       2. Loop as long as no errors are present
+*       3. Pend forever on uplink commands
+*       4. Call any data link I/O services (if applicable) to form full packet
+*       from frames.
+*       5. Call any format conversion protocols (if applicable) to form SPP
+*       (CCSDS) command packets.
+*       6. Get the CCSDS Msg ID of the command message. 
+*       7. Validate the Checksum of the message.
+*       8. If the command is the CI_GATE_CMG_MID, call CI_CustomGateCmds 
+*       9. Pass on any other commands to the Software bus
+*       10. Continue loop (2)
+*
+*   \par Assumptions, External Events, and Notes:
+*       - Configuration macros defined in ci_platform_cfg.h should be used when
+*       configuring the transport protocol(s).
+*       - Any access to AppData (HK or OutData) should make use of the ciMutex
+*       for memory protection.
+*       - This function is executed by the Custom Child Task.
+*
+*   \param None
+*
+*   \returns None 
+*
+*   \see 
+*       #CI_CustomInit
+*       #CI_CustomGateCmds
+*       #CFE_SB_ValidateChecksum
+*       #CFE_SB_GetMsgId
+*       #CFE_SB_TransmitMsg
+*******************************************************************************/
+void  CI_CustomMain(void);
+
+/******************************************************************************/
+/** \brief Process of Gate commands by child task
+*
+*   \par Description/Algorithm
+*       This function is responsible to process any custom gate commands. Make
+*       use of same pattern as in CI_ProcessNewAppCmds, with a switch case on
+*       the received command code of the message.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - This function is called in response to the CI_GATE_CMD_MID, called 
+*       from the CI_CustomMain function.
+*       - Any Gate commands should be executed immidiately.
+*       - Any access to AppData (HK or OutData) should make use of the ciMutex
+*       for memory protection.
+*       - This function is executed by the Custom Child Task.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*   \param[in] cmdMsgPtr The pointer to the (CCSDS) Gate command message.
+*
+*   \returns None 
+*
+*   \see 
+*       #CI_CustomMain
+*       #CI_IncrHkCounter
+*       #CI_VerifyCmdLength
+*       #CFE_SB_GetCmdCode
+*******************************************************************************/
+void  CI_CustomGateCmds(CFE_MSG_Message_t *);
+
+/******************************************************************************/
+/** \brief Process of custom app commands by main task
+*
+*   \par Description/Algorithm
+*       This function is responsible to process any custom app commands. Make
+*       use of same pattern as in CI_ProcessNewAppCmds, with a switch case on
+*       the received command code of the message. This function is called on 
+*       any user defined non-generic commands from CI_ProcessNewAppCmds. Return
+*       CI_ERROR if the command code is not recognized.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - This function is called in response to the CI_APP_CMD_MID, called 
+*       from the CI_ProcessNewAppCmds function, on a custom command code.
+*       - Any access to AppData (HK or OutData) should make use of the ciMutex
+*       for memory protection.
+*       - This function is executed by the application main task.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*   \param[in] pCmdMsg The pointer to the (CCSDS) app command message.
+*
+*   \returns
+*   \retcode #CI_SUCCESS \retdesc Success \endcode
+*   \retcode #CI_ERROR \retdesc Bad Command code \endcode
+*
+*   \see 
+*       #CI_ProcessNewAppCmds
+*       #CI_IncrHkCounter
+*       #CI_VerifyCmdLength
+*       #CFE_SB_GetCmdCode
+*******************************************************************************/
+int32 CI_CustomAppCmds(CFE_MSG_Message_t *pCmdMsg);
+
+/******************************************************************************/
+/** \brief Custom response to the Enable TO command
+*
+*   \par Description/Algorithm
+*       This function performs the response to the CI_ENABLE_TO_CC command code
+*       and is called from the CI_ProcessNewAppCmds function. It must construct
+*       the appropriate enabling message for the TO application, according to
+*       the transport protocol used by TO. Examples:
+*       - For UDP: The input command can be piped through to TO with the
+*       TO_APP_CMD_MID, provided that the message contains the destination IP.
+*       - For RS422: A TO message should be generated with the file descriptor
+*       used by CI if the serial port is to be used as a duplex serial port. 
+*       In all cases, the new message should be generated as followed:
+*       1. Set the Message ID to TO_APP_CMD_MID
+*       2. Set the Command code to TO_ENABLE_OUTPUT_CC
+*       3. Generate a new checksum 
+*
+*   \par Assumptions, External Events, and Notes:
+*       - This function is called in response to the CI_APP_CMD_MID with 
+*       command code CI_ENABLE_TO_CC, called from the CI_ProcessNewAppCmds 
+*       function, on the CI_ENABLE_TO_CC command code.
+*       - Any access to AppData (HK or OutData) should make use of the ciMutex
+*       for memory protection.
+*       - This function is executed by the application main task.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*   \param[in] pCmdMsg The pointer to the (CCSDS) Gate command message.
+*
+*   \returns None 
+*
+*   \see 
+*       #CI_ProcessNewAppCmds
+*       #CFE_MSG_SetMsgId
+*       #CFE_SB_SetCmdCode
+*       #CFE_SB_GenerateChecksum
+*       #CFE_SB_TransmitMsg
+*******************************************************************************/
+void  CI_CustomEnableTO(CFE_MSG_Message_t *pCmdMsg);
+
+/******************************************************************************/
+/** \brief Custom Cleanup 
+*
+*   \par Description/Algorithm
+*       This function will close any transport protocols in response to 
+*       the exiting the application.  
+*
+*   \par Assumptions, External Events, and Notes:
+*       - The custom child task will be exited automatically on termination
+*       of the application.  
+*       - This function is called during the termination process of the 
+*       main task, by the main task.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*   \param[in] cmdMsgPtr The pointer to the (CCSDS) Gate command message.
+*
+*   \returns None 
+*
+*   \see 
+*       #CI_AppMain
+*       #CI_CleanupCallback
+*******************************************************************************/
+void  CI_CustomCleanup(void);
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _CI_APP_H_ */
+
+/*==============================================================================
+** End of file ci_app.h
+**============================================================================*/
+</pre></div>
+</div>
+</section>
+<section id="ci-events-h">
+<h2><code class="docutils literal notranslate"><span class="pre">ci_events.h</span></code><a class="headerlink" href="#ci-events-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/ci/fsw/src/ci_events.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/******************************************************************************/
+/** \file  ci_events.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*  
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief ID Header File for CI Application
+*
+*   \par
+*       This header file contains definitions of the CI Event IDs
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*******************************************************************************/
+    
+#ifndef _CI_EVENTS_H_
+#define _CI_EVENTS_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/** Event IDs */
+typedef enum
+{
+    CI_RESERVED_EID       =   0,
+    CI_INF_EID            =   1,
+    CI_INIT_INF_EID       =   2,
+    CI_CMD_INF_EID        =   3,
+    CI_CUSTOM_INF_EID     =   4,
+    CI_ERR_EID            =   5,
+    CI_INIT_ERR_EID       =   6,
+    CI_CMD_ERR_EID        =   7,
+    CI_PIPE_ERR_EID       =   8,
+    CI_MSGID_ERR_EID      =   9,
+    CI_MSGLEN_ERR_EID     =  10,
+    CI_CUSTOM_ERR_EID     =  11,
+    CI_EVT_CNT
+} CI_Events_t;
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _CI_EVENTS_H_ */
+
+/*==============================================================================
+** End of file ci_events.h
+**============================================================================*/
+    
+</pre></div>
+</div>
+</section>
+<section id="ci-hktlm-h">
+<h2><code class="docutils literal notranslate"><span class="pre">ci_hktlm.h</span></code><a class="headerlink" href="#ci-hktlm-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/ci/fsw/src/ci_hktlm.h</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/******************************************************************************/
+/** \file  ci_hktlm.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Default HK Telemetry
+*
+*   \par
+*       This header contains the definition of the default HK Telemetry.
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*     - Include this file in your MISSION_ci_types.h or define your own.
+*     - If a custom HK tlm is required, make sure to include all parameters
+*       in this default HK packet in your custom implementation.
+*
+*   \par Modification History:
+*     - 2015-10-16 | Guy de Carufel | Code Started
+*******************************************************************************/
+#ifndef _CI_HKTLM_H_
+#define _CI_HKTLM_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "cfe.h"
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t  TelemetryHeader; /**&lt; \brief Telemetry header */
+    uint16  usCmdCnt;           /**&lt; Count of all commands received           */
+    uint16  usCmdErrCnt;        /**&lt; Count of command errors                  */
+} CI_HkTlm_t;
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _CI_HKTLM_H_ */
+
+/*==============================================================================
+** End of file ci_hktlm.h
+**============================================================================*/
+</pre></div>
+</div>
+</section>
+<section id="ci-msgdefs-h">
+<h2><code class="docutils literal notranslate"><span class="pre">ci_msgdefs.h</span></code><a class="headerlink" href="#ci-msgdefs-h" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/ci/fsw/src/ci_msgdefs.h</span></code></p>
+<p>바이너리 파일입니다. 본문은 생략했습니다.</p>
+</section>
+<section id="ci-utils-c">
+<h2><code class="docutils literal notranslate"><span class="pre">ci_utils.c</span></code><a class="headerlink" href="#ci-utils-c" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/apps/ci/fsw/src/ci_utils.c</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/******************************************************************************/
+/** \file  ci_utils.c
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*  
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Function Definitions of utility functions
+*
+*   \par
+*       This file defines utility functions used by other CI functions.
+*
+*   \par API Functions Defined:
+*     - CI_IncrHkCounter() - Increment a HK Counter with memory protection
+*     - CI_VerifyCmdLength() - Verify length of command message
+*
+*   \par Private Functions Defined:
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*******************************************************************************/
+
+/*
+** Include Files
+*/
+#include "ci_app.h"
+
+/*
+** Local Defines
+*/
+
+/*
+** Local Structure Declarations
+*/
+
+
+/*
+** External Global Variables
+*/
+extern CI_AppData_t g_CI_AppData;
+
+/*
+** Global Variables
+*/
+
+/*
+** Local Variables
+*/
+
+/*
+** Local Function Definitions
+*/
+
+
+/******************************************************************************/
+/** \brief Increment a housekeeping packet counter
+*******************************************************************************/
+void CI_IncrHkCounter(uint16 * counter)
+{
+    OS_MutSemTake(g_CI_AppData.ciMutex);
+    *counter = *counter + 1;
+    OS_MutSemGive(g_CI_AppData.ciMutex);
+}
+
+
+/******************************************************************************/
+/** \brief Verify the command length against expected length
+*******************************************************************************/
+bool CI_VerifyCmdLength(CFE_MSG_Message_t * pMsg,
+                           uint16 usExpectedLen)
+{
+    bool bResult=false;
+    size_t usMsgLen=0;
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t usCmdCode = 0;
+
+    if (pMsg != NULL)
+    {
+        CFE_MSG_GetSize(pMsg, &amp;usMsgLen);
+
+        if (usExpectedLen == usMsgLen)
+        {
+            bResult = true;
+        }
+        else
+        {
+            CFE_MSG_GetMsgId(pMsg, &amp;MsgId);
+            CFE_MSG_GetFcnCode(pMsg, &amp;usCmdCode);
+
+            CFE_EVS_SendEvent(CI_MSGLEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "CI: Rcvd invalid msgLen: msgId=0x%04X, "
+                              "cmdCode=%d, msgLen=%ld, expectedLen=%d",
+                              CFE_SB_MsgIdToValue(MsgId), usCmdCode, usMsgLen, usExpectedLen);
+                              
+            CI_IncrHkCounter(&amp;g_CI_AppData.HkTlm.usCmdErrCnt);
+        }
+    }
+
+    return (bResult);
+}
+
+/*==============================================================================
+** End of file ci_utils.c
+**============================================================================*/
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../platform_inc/index.html" class="btn btn-neutral float-left" title="platform_inc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../unit_test/index.html" class="btn btn-neutral float-right" title="unit_test" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

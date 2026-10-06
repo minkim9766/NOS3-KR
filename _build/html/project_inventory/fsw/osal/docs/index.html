@@ -1,0 +1,1488 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>docs &mdash; NOS3  문서</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=8e72191d"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/translations.js?v=afa94a99"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="search" title="검색" href="../../../../search.html" />
+    <link rel="next" title="src" href="src/index.html" />
+    <link rel="prev" title="osal" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            NOS3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Home.html">홈(Home)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Home.html#introduction">소개(Introduction)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#modules">모듈(Modules)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Home.html#faq">자주 묻는 질문(FAQ)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#nos3">NOS3를 왜 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#id1">NOS3는 언제 사용해야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#id2">있는 그대로의 NOS3에서 제 특정 미션으로는 어떻게 넘어가야 하나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#id3">하드웨어가 도착하면 소프트웨어/시뮬레이터에서 하드웨어로는 어떻게 넘어가나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#i-t-nos3">통합 및 테스트(I&amp;T) 단계에서 NOS3는 저에게 무엇을 줄 수 있나요?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Home.html#id4">NOS3에서 새로운 구성 요소는 어떻게 만드나요?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Getting_Started.html">시작하기(Getting Started)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#installation">설치(Installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#running">실행하기(Running)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#igniter">Igniter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#configuration">Configuration 탭</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#master-config">Master Config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#spacecraft-config">Spacecraft Config</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#build">Build 탭</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Getting_Started.html#launch">Launch 탭</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Architecture.html">NOS3 아키텍처(NOS3 Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Architecture.html#id1">기본 프로젝트 구조와 핵심 파일</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Architecture.html#id2">핵심 파일 빠른 안내</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Architecture.html#id3">전체 인벤토리와 파일 본문 자동 생성</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Architecture.html#ai">AI 에이전트 조사 요청 템플릿</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Flight_Software.html">비행 소프트웨어(Flight Software)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#standalone-checkout">독립형 점검(Standalone Checkout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#core-flight-system-cfs">core Flight System (cFS)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#operating-system-abstraction-layer">운영체제 추상화 레이어(Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#platform-support-package">플랫폼 지원 패키지(Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#hardware-library">하드웨어 라이브러리(Hardware Library)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#cfs-cfs-heritage-applications">cFS 유산 애플리케이션(cFS Heritage Applications)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#cfs-cfs-tables">cFS 테이블(cFS Tables)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#ds-ds-tables">DS 테이블(DS Tables)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#sc-rts">SC 상대 시간 시퀀스(RTS) 테이블</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f">F’</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f-prime-nos3">F-Prime을 사용하도록 NOS3 설정하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#noop">샘플 NOOP 명령 보내기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#nos3-f-prime">NOS3에서 F-Prime 구성 요소 만들기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f-prime-nos3-nos3time">F-Prime NOS3 시간 구성 요소(Nos3Time)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f-prime-f-prime-sequencing">F-Prime 시퀀싱(F-Prime Sequencing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Flight_Software.html#f-prime">F-Prime 문서 링크</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Ground_Software.html">지상 시스템(Ground Systems)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#yamcs-yet-another-mission-control-system">YAMCS - Yet Another Mission Control System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#yamcs-studio-yamcs-studio-integration">YAMCS Studio 통합(YAMCS Studio Integration)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#yamcs-openmct">YAMCS와 OpenMCT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#cosmos-4">COSMOS 4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#cosmos-4-cfs-cosmos-4-to-cfs-command-and-telemetry-link-up">COSMOS 4와 cFS의 명령·원격측정 연결(COSMOS 4 to cFS Command and Telemetry Link Up)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#cosmos-5">COSMOS 5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#cosmos-5-cfs-cosmos-5-to-cfs-command-and-telemetry-link-up">COSMOS 5와 cFS의 명령·원격측정 연결(COSMOS 5 to cFS Command and Telemetry Link Up)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#ait">AIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#f-prime-gds">F Prime GDS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#selecting-ground-system">지상 시스템 선택하기(Selecting Ground System)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Ground_Software.html#packet-formatting">패킷 포맷(Packet Formatting)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Components.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components.html#generic-components">일반(제네릭) 구성 요소(Generic Components)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#component-information">구성 요소 정보(Component Information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#component-development">구성 요소 개발(Component Development)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components.html#integrated-algorithms">통합 알고리즘(Integrated Algorithms)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#attitude-determination-and-control-system-adcs">자세 결정 및 제어 시스템(Attitude Determination and Control System, ADCS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#cryptolib">CryptoLib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#onair">OnAir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components.html#synopsis">Synopsis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Generating_Component.html">새 구성 요소 생성하기(Generating a New Component)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Generating_Component.html#step-by-step-guide">단계별 가이드(Step-by-Step Guide)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Generating_Component.html#key-takeaways">핵심 요약(Key Takeaways)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Simulators.html">시뮬레이터</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id2">아키텍처 설계 이유</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#nos-engine">왜 NOS Engine인가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#id3">왜 하드웨어 모델, 플러그인, 추상 팩토리 등을 쓰는가?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#data-provider">왜 데이터 제공자(Data Provider)를 쓰는가?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id4">배경 지식 및 관련 개념</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#abstract-factory-design-pattern">추상 팩토리 디자인 패턴 (Abstract Factory Design Pattern)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#xml">XML 설정</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id5">나만의 하드웨어 모델 구현하기 (데이터 제공자, 연결 포함)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#configuration-data-property-tree">설정 데이터 프로퍼티 트리 (Configuration Data Property Tree)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Simulators.html#id6">하드웨어 모델</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Simulators.html#command-connection">명령 연결 (Command Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Simulators.html#time-connection">시간 연결 (Time Connection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_Simulators.html#uart">UART 연결</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id7">나만의 시뮬레이터 작성하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Simulators.html#id8">예제 시뮬레이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../STF_ConOps.html">STF - 운영 개념 (Concept of Operations, ConOps)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#id1">임무 개요</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#requirements">요구사항 (Requirements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#spacecraft">우주선 (Spacecraft)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#bus">버스 (Bus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#payload">페이로드 (Payload)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#ground-segment">지상 부문 (Ground Segment)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#ground-station">지상국 (Ground Station)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#moc">임무 운영 센터 (MOC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#soc">과학 운영 센터 (SOC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_ConOps.html#operations">운영 (Operations)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#id2">우주선 모드</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#launch-and-commissioning">발사 및 커미셔닝 (Launch and Commissioning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#nominal-operations">정상 운영 (Nominal Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#science-mode">과학 모드 (Science Mode)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_ConOps.html#per-pass-operations">패스별 운영 (Per Pass Operations)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#contingency-operations">비상 대응 운영 (Contingency Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_ConOps.html#end-of-life">임무 종료 (End-of-Life)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../STF_QuickLook.html">STF - 빠른 참조 (Quick Look)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_QuickLook.html#power">전력 (Power)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_QuickLook.html#data">데이터 (Data)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#schedule">스케줄 (Schedule)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#data-storage-ds">데이터 저장 (Data Storage, DS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_QuickLook.html#fault-detection-and-correction-fdc">결함 감지 및 수정 (Fault Detection and Correction, FDC)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#limit-checker-lc">리밋 체커 (Limit Checker, LC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#stored-command-sc">스토어드 커맨드 (Stored Command, SC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_QuickLook.html#standard-operating-procedures">표준 운영 절차 (Standard Operating Procedures)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#pass-logs">패스 로그 (Pass Logs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#standard-pass">표준 패스 (Standard Pass)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_QuickLook.html#patching">패칭 (Patching)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html">STF - 소프트웨어 개발 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id1">필요 자료</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id2">소프트웨어 관리 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#product-development-team">제품 개발 팀 (Product Development Team):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#organization">조직 (Organization):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#roles-responsibilities-authority-and-accountability">역할, 책임, 권한, 그리고 책임 소재 (Roles, Responsibilities, Authority, and Accountability):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id3">소프트웨어 기술적 접근 방식</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#project-life-cycle">프로젝트 생명주기 (Project Life Cycle):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#life-cycle-reviews">생명주기 리뷰 (Life Cycle Reviews):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#software-design">소프트웨어 설계 (Software Design):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#software-workflow">소프트웨어 워크플로우 (Software Workflow):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#software-implementation">소프트웨어 구현 (Software Implementation):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#static-code-analysis">정적 코드 분석 (Static Code Analysis):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#release-plan">릴리스 계획 (Release Plan):</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id4">개발 및 테스트 환경</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#id5">개발 및 테스트 시설과 장비:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#verification-and-validation">검증 및 검증 (Verification and Validation):</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#test-approach">테스트 접근 방식 (Test Approach):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#unit-testing">유닛 테스트 (Unit Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#code-coverage">코드 커버리지 (Code Coverage):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#build-testing">빌드 테스트 (Build Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#system-testing">시스템 테스트 (System Testing):</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_Software_Development_Plan.html#simulator-vs-hardware">시뮬레이터 대 하드웨어 (Simulator vs Hardware):</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../STF_VV_Plan.html">STF - 검증 및 검증(Verification and Validation, V&amp;V) 계획</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id1">1 소개</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id2">1.1 목적과 범위</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id3">1.2 책임과 변경 권한</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id4">2 적용 문서 및 참조 문서</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id5">2.1 적용 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id6">2.2 참조 문서</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id7">2.3 우선순위</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id8">3 시스템 설명</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#flowdown">3.1 시스템 요구사항 전개(Flowdown)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id9">3.2 시스템 아키텍처</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#v-v">4 검증 및 검증(V&amp;V) 프로세스</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id10">4.1 검증 및 검증(V&amp;V) 관리 책임</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id11">4.2 검증 및 검증(V&amp;V) 방법</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#analysis">4.2.1 분석 (Analysis)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#inspection">4.2.2 검사 (Inspection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#demonstration">4.2.3 시연 (Demonstration)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#test">4.2.4 테스트 (Test)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id12">5 검증 및 검증(V&amp;V) 구현</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id13">5.1 시스템 설계와 검증 및 검증(V&amp;V) 흐름</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#test-articles">5.2 테스트 대상물 (Test Articles)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#support-equipment">5.3 지원 장비 (Support Equipment)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#facilities">5.4 시설 (Facilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id14">6 시스템 검증 및 검증(V&amp;V)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../STF_VV_Plan.html#id15">6.1 완전한 시스템 통합</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#id16">6.1.1 개발/엔지니어링 유닛 평가</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#verification">6.1.2 검증(Verification) 활동</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../STF_VV_Plan.html#validation">6.1.3 검증(Validation) 활동</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id25">7 프로그램 검증 및 검증(V&amp;V)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#id26">8 시스템 인증 산출물</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#a">부록 A: 약어 및 축약어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#b">부록 B: 용어 정의</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#c">부록 C: 요구사항 검증 매트릭스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../STF_VV_Plan.html#d-validation">부록 D: 검증(Validation) 매트릭스</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Index_Scenarios.html">NOS3 Scenarios</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Index_Getting_Started_Scenarios.html">Getting Started Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Install.html">시나리오 - 설치(Installation)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Install.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Install.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Install.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Demo.html">시나리오 - 데모(Demonstration)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Demo.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Demo.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Demo.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_cFS.html">시나리오 - cFS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_cFS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_cFS.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_cFS.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_COSMOS.html">시나리오 - COSMOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_COSMOS.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_COSMOS.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_COSMOS.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_SimulatorExpansion.html">시나리오 - 시뮬레이터 확장 (Simulator Expansion)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_SimulatorExpansion.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_SimulatorExpansion.html#prerequisites">사전 준비 사항 (Prerequisites)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_SimulatorExpansion.html#walkthrough">단계별 실습 (Walkthrough)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Run_Checkout_GDB.html">시나리오 - GDB를 이용한 Sample 디버깅</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Run_Checkout_GDB.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Run_Checkout_GDB.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Run_Checkout_GDB.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Creating_Unit_Tests.html">시나리오 - 단위 테스트(Unit Test) 작성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Creating_Unit_Tests.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Creating_Unit_Tests.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Creating_Unit_Tests.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Index_DRM_Scenarios.html">Design Reference Mission Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Commissioning.html">시나리오 - 커미셔닝 (Commissioning)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Commissioning.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Commissioning.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Commissioning.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Nominal_Ops.html">시나리오 - 정상 운영(Nominal Operations)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Nominal_Ops.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Nominal_Ops.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Nominal_Ops.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_ADCS_Walkthrough.html">시나리오 - ADCS 둘러보기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_ADCS_Walkthrough.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_ADCS_Walkthrough.html#id2">사전 요구사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_ADCS_Walkthrough.html#id3">둘러보기</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Fault_Science.html">시나리오 - 과학 관측 모드 중 장치 결함(Device Fault)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Fault_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Fault_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Fault_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Patching.html">시나리오 - 앱 또는 테이블 패치하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Patching.html#id2">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Patching.html#id3">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Patching.html#id4">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Controlling_ADCS_During_Science.html">시나리오 - 과학 관측 모드에서 ADCS 명령하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Controlling_ADCS_During_Science.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Controlling_ADCS_During_Science.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Controlling_ADCS_During_Science.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Encryption.html">시나리오 - 명령 암호화(Command Encryption)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Encryption.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Encryption.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Encryption.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Low_Power.html">시나리오 - 저전력(Low Power)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Low_Power.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Low_Power.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Low_Power.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Rapid_Tumbling.html">시나리오 - 급격한 텀블링(Rapid Tumbling)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Rapid_Tumbling.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Rapid_Tumbling.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Rapid_Tumbling.html#id3">개요</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Flight_Build.html">시나리오 - 비행용(Flight) 빌드</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Flight_Build.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Flight_Build.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Flight_Build.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Random_Errors.html">시나리오 - 무작위 오류가 있는 지상 운영(Ground Operations with Random Errors)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Random_Errors.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Random_Errors.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Random_Errors.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Random_Errors.html#id4">결론</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Index_Cyber_Scenarios.html">Cyber Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_GPS_Spoofing.html">시나리오 - GPS 스푸핑(Spoofing)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_GPS_Spoofing.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_GPS_Spoofing.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_GPS_Spoofing.html#id3">실습 과정</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Index_M2M_Scenarios.html">Moon to Mars Focus Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_RF_Inviews_Delays.html">시나리오 - 무선(R/F) 가시권(Inview)과 지연(Delay)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_RF_Inviews_Delays.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_RF_Inviews_Delays.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_RF_Inviews_Delays.html#id3">실습 과정</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html">시나리오 - 달(Lunar) 궤도 위성군(Constellation) 구성</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Constellation_with_Lunar_Focus.html#id4">배경 지식</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html">시나리오 - 다중 위성(Multiple Spacecraft)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html#id1">학습 목표</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html#id2">사전 준비 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html#id3">실습 과정</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../Scenario_Multiple_Spacecraft.html#id4">배경 지식</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">참고 문서:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Architecture.html">아키텍처(Architecture)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Architecture.html#satellite-s">위성(Satellite(s))</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Architecture.html#nos-engine">미들웨어 - NOS Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Architecture.html#dynamics">동역학(Dynamics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../Architecture.html#directory-layout">디렉토리 구조(Directory Layout)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_42.html">42</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_42.html#id2">42에서 시뮬레이터로 데이터 제공하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_42.html#id3">42 시간 동기화하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_42.html#id4">42에서 사용 가능한 데이터</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html">NOS3를 여러 대의 컴퓨터에서 빌드하고 실행하기(NOS3 Building and Running on Multiple Machines)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm-vm-setup">VM 설정(VM Setup)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#gsw-vm">GSW 컴퓨터/VM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#vm">위성 컴퓨터/VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Build_and_Run_on_Multiple_VMs.html#troubleshooting">문제 해결(Troubleshooting)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html">구성 요소(Components)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#id1">커스터마이징의 기반이 되는 구성 요소</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#how-the-build-finds-components">빌드가 구성 요소를 찾는 방법(How the build finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#launch-how-launch-finds-components">실행(launch)이 구성 요소를 찾는 방법(How launch finds components)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#cosmos-how-cosmos-finds-components">COSMOS가 구성 요소를 찾는 방법(How COSMOS finds components)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#what-to-customize">커스터마이징 대상(What to customize)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#the-virtual-machine">가상 머신(The Virtual Machine)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Components_Repository_Directory_Structure.html#directory-structure">디렉토리 구조(Directory Structure)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html">실행 파일과 창(Executables and Windows)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#window-usage">창 사용법(Window usage)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#cosmos">COSMOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#flight-software">비행 소프트웨어(Flight Software)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#simulators">시뮬레이터(Simulators)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#id1">42</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Executables_and_Windows.html#nos-engine-standalone-server">NOS Engine Standalone Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html">시작하기</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#nos3">NOS3 설치하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#clone">클론(Clone)하기</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#provision">프로비저닝(Provision)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#id2">NOS3 빌드하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#id3">NOS3 실행하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#cosmos">COSMOS 실행하기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_Install_Build_Run_QuickStart.html#reset">리셋(Reset)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_OIPP.html">OIPP</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_OIPP.html#orbit-inview-and-power-planning-tool">궤도, 가시성, 전력 계획 도구 (Orbit, Inview, and Power Planning Tool)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_Workflows.html">워크플로우 &amp; VM 설정</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../NOS3_cFS_Development.html">cFS 비행 소프트웨어 개발</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#cfs-nos3">cFS와 NOS3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#operating-system-abstraction-layer">운영체제 추상화 계층 (Operating System Abstraction Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#platform-support-package">플랫폼 지원 패키지 (Platform Support Package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#hardware-library">하드웨어 라이브러리 (Hardware Library)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#id1">cFS를 NOS3에 연결하기</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#nos3-fsw">NOS3 드라이버와 그 밖의 FSW</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#nos3">NOS3 드라이버 작성하기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#id2">애플리케이션과 하드웨어 라이브러리</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#id3">NOS3 드라이버</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../NOS3_cFS_Development.html#id4">빌드 시스템</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">프로젝트 인벤토리:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">nos3 Upload</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html#id1">하위 폴더</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../cfg/index.html">cfg</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cfg/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cfg/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cfg/index.html#nos3-mission-xml"><code class="docutils literal notranslate"><span class="pre">nos3-mission.xml</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/index.html">components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../components/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../components/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../components/index.html#componentsettings-cmake"><code class="docutils literal notranslate"><span class="pre">ComponentSettings.cmake</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html">fsw</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../index.html#id1">하위 폴더</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../gsw/index.html">gsw</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../gsw/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../gsw/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../gsw/index.html#lpt-ycs"><code class="docutils literal notranslate"><span class="pre">LPT.ycs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../scripts/index.html">scripts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#build-sim-sh"><code class="docutils literal notranslate"><span class="pre">build_sim.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#checkout-sh"><code class="docutils literal notranslate"><span class="pre">checkout.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#ci-launch-sh"><code class="docutils literal notranslate"><span class="pre">ci_launch.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#debug-sh"><code class="docutils literal notranslate"><span class="pre">debug.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#env-sh"><code class="docutils literal notranslate"><span class="pre">env.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#log-sh"><code class="docutils literal notranslate"><span class="pre">log.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#sidecar-sh"><code class="docutils literal notranslate"><span class="pre">sidecar.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#stop-sh"><code class="docutils literal notranslate"><span class="pre">stop.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../scripts/index.html#system-tests-sh"><code class="docutils literal notranslate"><span class="pre">system_tests.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../sims/index.html">sims</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../sims/index.html#id1">하위 폴더</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../sims/index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../sims/index.html#cmakelists-txt"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../sims/index.html#missionsettings-cmake"><code class="docutils literal notranslate"><span class="pre">MissionSettings.cmake</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#id2">이 폴더의 파일</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#makefile"><code class="docutils literal notranslate"><span class="pre">Makefile</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#nasa-png"><code class="docutils literal notranslate"><span class="pre">nasa.png</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#nos3-stop-sh"><code class="docutils literal notranslate"><span class="pre">NOS3-Stop.sh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../index.html#nos3-sh"><code class="docutils literal notranslate"><span class="pre">NOS3.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">NOS3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">nos3 Upload</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">fsw</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">osal</a></li>
+      <li class="breadcrumb-item active">docs</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/project_inventory/fsw/osal/docs/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Generated by tools/generate_nos3_inventory.py; do not edit. -->
+<section id="docs">
+<h1>docs<a class="headerlink" href="#docs" title="Link to this heading"></a></h1>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/docs/</span></code></p>
+<section id="id1">
+<h2>하위 폴더<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src/index.html">src</a></li>
+</ul>
+</div>
+</section>
+<section id="id2">
+<h2>이 폴더의 파일<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+</section>
+<section id="osal-configuration-guide-md">
+<h2><code class="docutils literal notranslate"><span class="pre">OSAL-Configuration-Guide.md</span></code><a class="headerlink" href="#osal-configuration-guide-md" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/docs/OSAL-Configuration-Guide.md</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Introduction
+
+## Scope
+
+The purpose of this document is to provide guidelines and conventions
+for the configuration and deployment of the Operating System Abstraction
+Layer (OSAL) to a desired platform or platforms.
+
+## Background
+
+The goal OS Abstraction Layer is to promote the creation of portable and
+reusable real time embedded system software. Given the necessary OS
+abstraction layer implementations, the same embedded software should
+compile and run on a number of platforms ranging from spacecraft
+computer systems to desktop PCs.
+
+## Applicable Documents
+
+| **Document ID** | **Document Title** |
+| --- | --- |
+| | |
+
+
+## Acronyms
+
+|   **Acronym**  |  **Description** |
+|---|---|
+| OS  | Operating System  |
+|  API | Application Programming Interface  |
+| CM  | Configuration Management  |
+| CPU | Central Processing Unit  |
+|  EEPROM |  Electrically Erasable Programmable Read-Only Memory |
+|  HW, H/W | Hardware  |
+|  RAM |  Random-Access Memory |
+|  SW, S/W | Software |
+|  TBD | To Be Determined |
+
+## Glossary of Terms
+
+The following table defines the terms used throughout this document.
+These terms are identified as proper nouns and are capitalized.
+
+| **Term**    |  **Definition**     |
+|---|---|
+| Application  (APP)   |  A generic term for a computer program in a desktop or embedded system.  An Application is generally not part of the operating system.  |
+|  Application  Programmer's  Interface (API) | A set of routines, protocols, and tools for building software applications  |
+| Board Support  Package (BSP)  | A collection of user-provided facilities that interface an OS and the cFE  with a specific hardware platform. The BSP is responsible for hardware initialization.  |
+| Core Flight  Executive (cFE)  |  A runtime environment and a set of services for hosting FSW Applications  |
+|  Cyclic  Redundancy  Check | A polynomial based method for checking that a data set has remained unchanged from one time period to another.    |
+|  Developer  | Anyone who is coding a software Application. |
+|  Hardware  Platform  | The target hardware that hosts the Operating System and Application. |
+| Interface  Control  Document |  A document that describes the software interface, in detail, to another piece  of software or hardware.  |
+|  I/O Data     | Any data being written to and read from an I/O port. No structure is placed  on the data and no distinction as  to the type of I/O device. I/O data is defined separately  from memory data because it has a separate API and it's an optional interface of the cFE.  |
+| Log   |   A collection of data that an application stores that provides information to diagnose  and debug FSW problems.  |
+|  Memory Data |  Any data being written to and read from memory. No structure is placed  on the data and no distinction as to the type of memory is made.  |
+| MMU   |  Memory Management Unit. A piece of hardware that manages virtual memory systems.  It automatically translates addresses into physical addresses so that an application can  be linked with one set of addresses but actually reside in a different part of memory. |
+| Network | A connection between subsystems used for communication purposes.  |
+| Platform  | See "Hardware Platform" above.   |
+| User  | Anyone who interacts with the Software Application or system in its operational state.  A user can be a developer, a tester, an operator, or a maintainer.
+
+# How to Configure, Build, and Run the OSAL
+
+
+The OSAL distribution includes a complete development environment with
+support for a number of processors and operating systems. The OSAL
+development environment has been designed to isolate the portable OS
+source code from the OSAL applications, configuration parameters, and
+build products. The development environment is an example of how to
+configure and build portable software using the OSAL code, but it is by
+no means a requirement to use the OSAL. The included platforms for the
+OSAL can be used as starting points for other boards and CPUs.
+
+The following sections provide instructions on how to:
+
+-   Setup the build environment
+
+-   Configure the build directory for an OSAL application
+
+-   Configure an OSAL Application
+
+-   Build the OSAL Application
+
+-   Load the OSAL Application on to the target platform
+
+-   Run the OSAL Application on the target platform
+
+In the current OSAL release, the CMake tool is used to generate makefiles
+to perform actual build.  The "cmake" build offers increased features by
+introducing additional scripting and build-time configurability,
+allowing direct inclusion into larger projects with less need to modify
+files to support a specific target or configuration.
+
+## Setup the Build Environment
+
+This section details the steps needed to setup the OSAL source
+distribution and prepare the host development environment to build the
+OSAL.
+
+### Setup the OSAL Source Distribution
+
+Get a copy of the OSAL source distribution directory on your build
+machine. The source distribution has the following directories:
+
+#### OSAL source distribution directories
+
+| **Directory** |  **Description**  |
+|---|---|
+| `osal`                        | The top level OSAL source distribution directory.  |
+| `osal/src`                    | The src directory contains the OSAL source, and make rules. |
+| `osal/src/examples`           | The sample directory contains the sample applications for the osal.  |
+| `osal/src/tests`              | Contains a suite of tests intended to validate the general functionality of OSAL services  |
+| `osal/src/unit-tests`         | Contains a suite of OSAL unit tests intended to validate the OSAL API, checking inputs, return codes, and outputs for each function.  |
+| `osal/src/unit-test-coverage` | Contains a suite of tests intended to execute every possible branch/error handling path in the OSAL implementation.   |
+| `osal/src/bsp`                | The bsp directory contains the platform specific code for the OSAL as well  as code to make the OSAL run on a particular platform. Everything in  this directory is used to adapt the OSAL and Applications to a particular  hardware platform. This directory also contains the startup code for the  example programs. The included platforms are generic enough that they may be  easy to port to other platforms and processor architectures. For example:  The bsp/mcf5235-rtems board support package was ported to an ARM processor  running RTEMS with minimal effort.  |
+| `osal/src/os`                 | The os directory is the heart of the OSAL, containing the implementation of  the OSAL for each supported operating system. There is a sub-directory for  each supported operating system in this directory. The OSAL include files  are also contained in this directory (src/os/inc).  |
+| `osal/src/inc`                | The inc directory contains system wide include files that are used by the  OSAL on all platforms.  |
+| `osal/docs`                   | The docs directory contains the documentation and release notes for the OSAL. |
+
+
+The osal directory can go just about anywhere on a host development
+system.
+
+#### Example directory structure locations
+
+| **Host Operating System**    |  **Example Directory** |  **Notes** |
+|---|---|---|
+|  Windows/vxWorks 6 Development Shell  | C:\\osalproject\\osal  | Building on Windows with the vxWorks 6.x development tools requires using the "vxWorks Development Shell". The system will not build on a standard Cygwin Shell, or a windows DOS prompt.  |
+| Linux | /home/osaluser/osal| |
+
+## Configure the OSAL Parameter File
+
+The file `default_config.cmake` contains all available configuration parameters that
+allow the OSAL build configuration to be tailored for a particular target environment.
+Most parameters set upper bounds on the number of OS objects that can be created, as
+the OSAL keeps track of allocated OS objects using fixed size tables.
+
+If customization is desired, one should not modify the `default_config.cmake` file directly,
+but rather provide alternative values by one of the override methods:
+
+- If configuring OSAL as a standalone build for testing, values for options can be
+  specified as `-D` options on the cmake command.  This is a common method of specifying
+  options in a CMake project; see `man cmake` for more information on the command line options.
+- If integrating OSAL into a larger application build, or if numerous values need to be configured
+  and/or the configuration needs to be version controlled, a separate configuration file can be used.
+  The path to this file is specified via the `OSAL_CONFIGURATION_FILE` option.
+
+When using a configuration file, the contents should be in the form of CMake "set" commands
+for the various options that need to be configured.  It is generally only necessary to specify
+values which need to be changed from the default.  For any value _not_ specified in the configuration
+file, the default value from `default_config.cmake` will be used.
+
+#### OSAL configuration parameters
+
+This is a list of commonly-used tuning parameters, but it is _not_ a complete list.  The specific set of
+configurable options may vary between versions of OSAL.  For a complete list of options supported by this
+version of OSAL, refer to the `default_config.cmake` file in the top level directory.
+
+| **Parameter**  | **Description**  |
+|---|---|
+| `OSAL_CONFIG_MAX_TASKS`  | The maximum number of tasks that can be created in the running OSAL application. |
+| `OSAL_CONFIG_MAX_QUEUES`  | The maximum number of queues that can be created in the running OSAL application. |
+| `OSAL_CONFIG_MAX_COUNT_SEMAPHORES` | The maximum number of counting semaphores that can be created in the running OSAL application.  |
+| `OSAL_CONFIG_MAX_BIN_SEMAPHORES` | The maximum number of binary semaphores that can be created in the running OSAL application.  |
+| `OSAL_CONFIG_MAX_MUTEXES` | The maximum number of mutexes that can be created in the running OSAL application. |
+| `OSAL_CONFIG_MAX_PATH_LEN` | The maximum length for an absolute path length in the OSAL File API.|
+| `OSAL_CONFIG_MAX_FILE_NAME` | The maximum length for an individual file name in the OSAL File API.|
+| `OSAL_CONFIG_MAX_MODULES` | Used for defining the maximum number of loadable modules that OSAL can have loaded simultaneously. |
+| `OSAL_CONFIG_MAX_SYM_LEN` | Used for setting the maximum length of a symbol name in the symbol API.|
+| `OSAL_CONFIG_MAX_TIMERS` | Used for defining the maximum number of timers in the OSAL.|
+| `OSAL_CONFIG_DEBUG_PERMISSIVE_MODE` | For debugging as a normal/non-root user, causes OSAL to ignore/bypass certain errors related to lack of permission. |
+
+All configurable CMake parameters are translated to a generated configuration header file
+called `osconfig.h`, which replaces the directly-managed header file that was found in previous
+OSAL versions.  For compatibility with existing code, the directives provided in the header file
+have an `OS_` prefix to match the preprocessor directives in previous versions.
+
+
+## Setting up the "cmake" build
+
+This section covers how to set up the host machine for building OSAL
+using the cmake build system. Rather than using pre-written makefiles as
+the classic build of previous OSAL versions had, the cmake build generates
+makefiles entirely from instructions specified in files contained with the
+source code itself. This has several advantages:
+
+-   Enhanced script-like capabilities
+
+-   Generally no need to modify files to adapt to a particular target.
+
+-   Easier integration with larger mission projects
+
+Typically, OSAL is not built by itself, but rather as a library to be
+used within a larger application. The OSAL cmake build system allows
+both options; building as a standalone entity for testing purposes, or
+building as a sub-component within a larger project. The same scripts
+are used in both cases, and no modification is required.
+
+### Prerequisites
+
+In order to build OSAL using cmake, the "cmake" package must be
+installed for the host/development machine. On Linux, this is generally
+available via the respective Linux distribution package management
+system, i.e. "yum" on RedHat and derivatives, or "apt-get" on Debian and
+derivatives. For other operating systems, the cmake tool is available in
+source and binary form from &lt;http://cmake.org&gt;. OSAL requires at least
+version 3.5 of the cmake tool.
+
+**RHEL/CentOS users**: For RHEL releases prior to 8.0, a compatible
+cmake version is available via the EPEL repository in a package called
+"cmake3".  If using this package, the `cmake` command in the examples in
+this document should be replaced with `cmake3`.
+
+### Variables that must be specified
+
+The OSAL cmake build is controlled by several user-supplied variables
+when the build is first provisioned:
+
+| **CMake variable**  | **Valid selections**   |  **Notes** |
+|---|---|---|
+| `OSAL_EXT_SOURCE_DIR`  | Any directory name  | Optional.  If specified, indicates an external filesystem directory that contains user-defined OS or BSP implementations |
+| `OSAL_SYSTEM_BSPTYPE`  | Any directory name that exists under `osal/src/bsp` or `${OSAL_EXT_SOURCE_DIR}`  | Selects the BSP to use.  All BSP-specific source files in this directory will be built. An optional, BSP-specific "build-options.cmake" file will also be included which may add necessary compiler options specific to that BSP.  |
+| `OSAL_SYSTEM_OSTYPE`   | Any directory name that exists under `osal/src/os` or `${OSAL_EXT_SOURCE_DIR}`  | Optional.  Selects the OS abstraction to use.  This variable is typically implied by the BSP selection in `OSAL_SYSTEM_BSPTYPE` but may be forced/overridden using this option. |
+| `OSAL_CONFIGURATION_FILE`  |  A file providing compile-time configuration settings  | Optional; also may be a list.  If specified, the file(s) specified will be included prior to configuring/building OSAL.  The files should contain SET directives (in CMake syntax) for compile options listed in `default_config.cmake` for tuning the OSAL build.  This is an alternative to specifying individual options via `-D` CMake parameters when configuring OSAL.  |
+| `ENABLE_UNIT_TESTS`  | TRUE or FALSE  |  Optional; defaults to "FALSE" if not specified. If set to TRUE, the included unit test code will also be built in addition to the runtime library. |
+| `OSAL_USER_C_FLAGS`  | Any valid switches for the compiler in use.  | Optional; the user may specify any arbitrary compiler switches to use.  |
+
+
+It is important to note that the values specified for these variables
+are **automatically cached** by the cmake build system. It is only
+necessary to specify these values when first provisioning/configuring a
+build; these are *not* required when simply building the binaries.
+
+This caching function removes the need for environment variables to be
+set in the development shell. The generated makefiles do not require the
+user to set any environment variables, as all necessary context information
+is automatically stored in the cache when the build is first provisioned.
+
+### Setting up a standalone OSAL build manually
+
+The OSAL may be built standalone in order to evaluate the library for a
+particular target and/or execute the included unit tests.
+
+In the cmake build system, all generated files are placed in a dedicated
+"binary" directory that is separate from the source tree. To provision a
+build, the user must first create the binary directory by issuing the
+"mkdir" command (on Linux), preferably outside the OSAL source tree.
+Then, the "cmake" provisioning tool is invoked to generate the actual
+makefiles, supplying values for the required variables.
+
+The following example will generate a build tree that allows testing
+of the OSAL library on a standard Linux workstation:
+
+```bash
+$ mkdir build
+$ cd build
+$ cmake \
+    -DCMAKE_BUILD_TYPE=debug \
+    -DENABLE_UNIT_TESTS=true \
+    -DOSAL_SYSTEM_BSPTYPE=generic-linux \
+    -DOSAL_CONFIG_DEBUG_PERMISSIVE_MODE=true \
+     /path/to/osal/source
+```
+
+The cmake provisioning tool generates standard makefiles in the build
+directory. To build the OSAL binaries, simply run "make" in the build
+directory.
+
+Note that the OSAL is not typically built as a standalone library; although a standalone
+build can be done for testing and development purposes, it is expected that the OSAL will
+be utilized as a component in a larger application.
+
+### Setting up a standalone OSAL build using the Makefile wrapper
+
+To simplify the process of invoking the cmake tool for typical standalone test/debug builds,
+a sample Makefile wrapper script `Makefile.sample` is provided in the OSAL root directory.
+This is similar to the sample script provided with CFE.  It provides several simple targets
+which in turn invoke CMake with a set of typically-used options.
+
+All makefile operations operate on an output directory referred to by the `O` variable, which
+is set to `build` by default.
+
+| **Makefile Target** | **Task Description** |
+|---------------------|----------------------|
+| `prep`              | Invokes the `cmake` command to set up a new build, or regenerate existing makefiles in the $(O) directory |
+| `all`               | Calls `make all` in the $(O) directory |
+| `install`           | Calls `make install` in the $(O) directory |
+| `clean`             | Calls `make clean` in the $(O) directory |
+| `test`              | Calls `make test` in the $(O) directory |
+| `lcov`              | Invokes the `lcov` and `genhtml` tools to generate a coverage report |
+| `distclean`         | Entirely removes the $(O) directory, bringing back to a fully clean slate |
+
+Variables recognized/used by `Makefile.sample`:
+
+| **Variable**        | **Default Value** | **Description**      |
+|---------------------|-------------------|----------------------|
+| `O`                 | `build`           | Name of the build directory to operate on |
+| `BSPTYPE`           | `generic-linux`   | The name of the target board (BSP) to build OSAL for, also implies OS type |
+| `BUILDTYPE`         | `debug`           | Translated to the `CMAKE_BUILD_TYPE` variable (set to `release` to build with optimization) |
+| `INSTALLPREFIX`     | `build`           | Translated to the `CMAKE_INSTALL_PREFIX` variable |
+| `DESTDIR`           | `$(O)`            | Local destination directory for `install` |
+| `ENABLE_UNIT_TESTS` | false/off         | If set to "true" then all tests will be built in addition to the basic OSAL libraries |
+| `PERMISSIVE_MODE`   | false/off         | Translated to the `OSAL_CONFIG_DEBUG_PERMISSIVE_MODE` variable (see above) |
+
+For more information on the `BUILDTYPE` and `INSTALLPREFIX`, see the CMake documentation:
+
+https://cmake.org/cmake/help/latest/manual/cmake-variables.7.html
+
+
+### Integrating OSAL into a larger build
+
+Modularity is a key feature of the cmake system. As such, the OSAL cmake
+build system can be directly used as a component within a larger
+"mission" build, as long as the same variables are supplied via the
+parent cmake script:
+
+```cmake
+SET(OSAL_SYSTEM_OSTYPE "posix")
+SET(OSAL_SYSTEM_BSPTYPE "generic-linux")
+ADD_SUBDIRECTORY(path/to/osal)
+```
+
+The values for the variables can be obtained by any means, shown here is
+just a simplified example of how it can be done for a known target.
+
+This example assumes the parent application project also uses the CMake build
+system.  This is the preferred method, as any required compiler definitions
+and/or include directories are automatically propagated to any executable
+that links with the OSAL library.  This is done via the TARGET_LINK_LIBRARIES
+command, for example:
+
+```
+ADD_EXECUTABLE(my_program my_program.c)
+TARGET_LINK_LIBRARIES(my_program osal)
+```
+
+This way, the program sources will be built with the public API include directories
+from OSAL, as well as any compile definitions required by the selected OS/BSP.
+
+Otherwise, if the application does not use CMake, OSAL can be built as a standalone library
+and "installed" to a designated directory where the application can use the library.  In
+this type of setup, the developer must manually propagate the include directories (i.e.
+the path to the `src/os/inc` subdirectory) and any necessary compile definitions to the
+parent application.
+
+#### Linking OSAL into another target
+```cmake
+add_executable(my_executable main.c)
+target_link_libraries(my_executable osal)
+```
+
+### Cross compiling with Cmake
+
+To cross compile, cmake uses a separate "toolchain file" that indicates
+the specific compiler to use, and any machine-specific compiler options
+that may be required. Documentation for the toolchain files is available
+on the cmake website at &lt;http://cmake.org&gt;. The toolchain file is
+specified when the build is provisioned. No OSAL build scripts need to
+be modified in order to cross compile or add extra machine-specific
+options.
+
+## Check over or customize the OSAL BSP directory
+
+The glue logic that ties an OSAL application to a specific processor
+board and platform is in the src/bsp directory. This directory contains
+the BSP code, which contains all of the specific rules, glue code, and
+startup code to make an OSAL application run on a particular board with
+a particular OS.
+
+The platforms supported in the OSAL distribution should run out of the
+box. They provide a starting point for a complete port to a new
+processor board.
+
+This section will be expanded in the future to include information
+needed for new OSAL ports.
+
+## Configure one or more OSAL Applications
+
+Once the OSAL is configured and ready to build, an OSAL application can
+be configured in the build directory. Multiple OSAL applications can be
+created in this directory. The application source code can come from the
+src/examples directory, or the applications can be contained completely
+within the build directory. The OSAL source distribution has a set of
+test and example applications in the src/examples and src/tests
+directories and a set of corresponding application directories and
+makefiles in build directory.
+
+### Configure a sample application in the build directory
+
+The following show the files needed for a sample OSAL application in the
+build directory.
+
+
+#### Sample OSAL Applications and the associated files
+
+|  **File**    |  **Description** |
+|---|---|
+| `build/examples/tasking-example` | Directory for the included OSAL example Application.  |
+| `build/examples/tasking-example/Makefile` | Makefile for the example OSAL app. Because the source is in the src/examples/tasking-example directory, there is no need to include it here. The Makefile will find it using the OSAL_SRC environment variable. The source could be copied here in order to customize it.  |
+| `build/examples/new_osal_app`  |  Directory for a new OSAL application. |
+| `build/examples/new_osal_app/Makefile`  |  Makefile for a new OSAL application. |
+| `build/examples/new_osal_app/new_osal_app.c` | Source file for the new OSAL application.  |
+| `build/examples/new_osal_app/new_osal_app.h` | Header file for the new OSAL application.  |
+
+
+The Application Makefiles have a specific format, so it is best to copy
+one of the application Makefiles from the build directory, such as
+build/examples/tasking-example.
+
+### Configure the application's main entry point
+
+The OSAL development environment provides the main entry point/startup
+code for the Application. This code is located in the src/\&lt;bsp\&gt;/src
+directory. The startup code will call the Application's entry point
+which is named: void OS_Application_Startup(void)
+
+## Build the OSAL core and Applications
+
+Once the OSAL Core and Applications are set up in a build directory,
+everything can be compiled. The OSAL Core or any of the Applications can
+be built from individual make files, or they can be built from the
+top-level Makefile in the build directory.
+
+#### Build Commands
+
+|  **Shell command** |  **Description** |
+|---|---|
+| **\$ cd build**   | Change to the build directory.  |
+| **\$ make**   | Build the OSAL Core, and all Applications.  |
+| **\$ make clean**  |  Clean the OSAL Core, and all Applications. |
+
+Once the OSAL Applications are built, they are ready to load and execute
+on the target. The filename of the executable is dependent on the OS it
+is built for.
+
+#### OSAL Application executable name
+
+| **Target Operating System**  | **Application executable name**  | **Notes**  |
+|---|---|---|
+| vxWorks 6.x dynamic link  | example1.elf  | The vxWorks PowerPC platforms use a dynamically loaded object without the kernel.  |
+| Linux  |  example1.bin |   |
+| Rtems/Coldfire  |  example1.nxe |  This is a static linked executable, linked with the RTEMS kernel and BSP. |
+|   RTEMS/SIS  | example1.nxe  |  This is a static linked executable, linked with the RTEMS kernel and BSP. |
+
+## Load and Run the OSAL Applications
+
+Depending on the Target, it is usually straightforward to run an OSAL
+Application on a target platform. On desktop platforms, it is just a
+matter of running the executable program. On vxWorks, the example
+programs are loadable modules.
+
+### Load the OSAL Application Executable on the Target
+
+On desktop targets the cFE Core can be run from the directory where it
+was compiled. On embedded targets, the Application has to be loaded into
+a remote file system, or booted over the network. On the vxWorks PowerPC
+targets, the Application can be loaded into the EEPROM or Flash disk
+after the vxWorks kernel is booted. On RTEMS targets, the Application
+can be loaded using the CEXP dynamic loader or it can be linked in with
+an RTEMS Binary. See the target specific sections for details on each
+platform.
+
+### Setup the Target File Systems
+
+Because the OSAL runs on many different platforms, it must be able to
+deal with different file system types and different paths. The OSAL
+accomplishes this by using a file system abstraction. The abstracted
+OSAL file system is similar to a UNIX file system, where the root
+directory starts with "/" and all disks are mounted on directory trees.
+For example:
+
+-   /ram0/apps/ RAM disk 0, apps subdirectory
+
+-   /ram1/data/ RAM disk 1, data subdirectory
+
+-   /hd0/tables/ Hard Disk 0, tables subdirectory
+
+Using this abstraction, a file "datafile1.dat" on RAM disk 1 might be
+accessed from the OSAL by using the path "/ram1/data/datafile1.dat".
+Using the host vxWorks tools, the path to the same file would be:
+"RAM:0/data/datafile1.dat". If the OSAL is running on a Linux
+development workstation, the file might be located at:
+"/tmp/ramdev1/data/datafile1.dat". The important part is that the OSAL
+Application can access the files using a generic path, allowing the
+software to remain portable.
+
+There are a few ways to map these host file systems to OSAL file
+systems:
+
+-   **Map existing target file systems to an OSAL path**. This is one of
+the most common ways to map the Non-Volatile disk to the OSAL. The OSAL
+relies on the target OS to create/mount a file system and it simply is
+given a mapping to the disk to allow the OSAL to access it.
+
+-   **Create EEPROM/Flash/ATA File systems**. The OSAL has the ability
+on some targets to format or initialize an EEPROM or ATA disk device.
+This is less commonly used.
+
+-   **Create RAM File Systems**. The OSAL can create RAM disks on the
+vxWorks targets. The OSAL will create or re-initialize the RAM disk for
+the vxWorks targets.
+
+#### OSAL File system mapping
+
+In new OSAL versions, no filesystem mappings are assumed or "hard-coded" by
+default.  OSAL no longer requires a Volume Table object to be provided by the
+application to specify the fixed filesystem mappings.
+
+Instead, the application is expected to configure all required file system
+mappings via API calls during its startup.  This may be done any time after calling
+`OS_API_Init()`.
+
+For example, for Core Flight System (cFS) configurations that require persistent
+storage to be provided under a virtual directory called `/cf`, the platform-specific
+CFE PSP layer configures the mapping in an appropriate manner by calling
+the `OS_FileSysAddFixedMap()` API during its OS_Application_Startup() implementation.
+
+The following table shows examples of these file system mappings on
+various hosts. **Note** the change in the way the POSIX ports are
+mapped. Linux will no longer remove or create sub-directories based on
+the volume name. The path mapping for the FS_BASED option is now a
+simple mapping from an OSAL path to a host path. This makes the OSAL
+easier to use on linux platforms:
+
+### Start the OSAL Application on the Target
+
+Starting an OSAL Application is a highly target-dependent activity. The
+following table gives examples of how to start an Application on various
+platforms. For full details see the notes for each section.
+
+#### How to start an OSAL Application on Various Target Systems:
+
+|  **"Target" operating system**   | **How to start the cFE**  |
+|---|---|
+|RTEMS / mcf5235  | Loaded through GDB/BDM using a shell script: "debug.sh" |
+| RTEMS / SIS | Loaded through GDB/SIS simulator: \$ sparc-rtems4.10-gdb tasking-example.n (gdb) target sim  (gdb) load (gdb) run  |
+| vxWorks 6.2 / RAD750  | Started from the vxWorks Target Shell commands: Vx\&gt; ld \&lt; tasking-example.elf Vx\&gt; OS_BSPMain |
+| Linux | Start directly from the linux shell: \$ ./tasking-example.bin  |
+
+
+# Target Specific Instructions
+
+This section provides details on how to load and run each of the
+supported OSAL configurations.
+
+## Generic vxWorks Platform:
+
+The test applications are tested on the Motorola MCP750 running vxWorks 6.9,
+but should work similarly on other platforms/versions.
+
+On this platform, the OSAL Applications are built as dynamic loadable vxWorks
+modules, rather than being linked to the vxWorks kernel/BSP. The OSAL Applications
+are loaded into the compact flash disk on the MCP750, so it can be started from a
+vxWorks shell or startup script after the kernel comes up.
+
+Building for this platform requires use of a CMake toolchain to specify the
+correct cross compiler and configuration to use.  For examples of toolchain
+files including a toolchain file that may be used to build this platform, see
+the NASA cFS software repository.
+
+### How to run the OSAL Applications on the MCP750 or RAD750
+
+1. Load the kernel. The custom vxWorks kernel is loaded into the MCP750
+via TFTP. We use a vxWorks boot image (Rather than the Motorola boot
+monitor/loader ) to boot the MCP750 board, TFTP the "real" kernel to
+RAM, and execute it. This vxWorks boot image also sets the network
+settings for the "real" kernel image. On our OSAL/cFE development
+system, we keep the loadable vxWorks kernel image in a TFTP directory on
+the development workstation. So the vxWorks kernel image goes in
+/tftpboot/cpu1/cfecpu1.st. **( \$ cp
+/opt/workspace/mcp750image/default/vxWorks /tftpboot/cpu1/cfecpu1.st )**
+
+2. Copy the application program file ( or other executable name ) loadable module
+into the non-volatile disk. On the MCP750, this is done simply by FTPing
+the file to the target:
+
+```
+$ ftp 192.168.1.4
+
+
+ftp&gt; username: target
+
+ftp&gt; password: password
+
+ftp&gt; cd "CF:0"
+
+ftp&gt; binary
+
+ftp&gt; put tasking-example.elf
+
+```
+
+3. Load the example Application in the vxWorks shell:
+```
+vx&gt; cd "CF:0"
+
+vx&gt; ld &lt; tasking-example.elf
+```
+
+4. Run the example Application in the vxWorks shell:
+```
+vx&gt; OS_BSPMain
+```
+
+(The entry point for the examples and test programs is always
+OS_BSPMain)
+
+## QEMU + pc686 / RTEMS 4.11 - 5.x:
+
+OSAL supports the RTEMS OS, which can be easily tested without any specific
+hardware using the QEMU hypervisor/virtualization software.  This relies
+on using the "pc-rtems" BSP.
+
+Like VxWorks, this requires use of a cross compile toolchain to build
+applications for this target.  Example toolchains can also be found in the
+NASA cFS project(s).
+
+In particular the OS_SYSTEM_BSPTYPE should be set to "pc-rtems" by the toolchain
+to enable this BSP/OS abstraction layer.
+
+### How to run the OSAL Applications on QEMU with RTEMS 4.11 - 5.x
+
+By default, RTEMS applications are built as a single, monolithic kernel + application
+image.  This simplifies development and testing.  However, even in the default setup,
+applications may still utilize the module load API to extend or replace logic.  However,
+by modifying the BSP and build rules, the kernel can also be built separately, with
+the application also built as a loadable module.
+
+The monolithic image is trivial to boot in the QEMU hypervisor, as follows:
+
+```
+qemu-system-i386 -m 128 -no-reboot -display none -serial stdio \
+     -kernel &lt;image&gt;.exe
+```
+
+Where `&lt;image&gt;.exe` refers to any of the test programs or applications
+that are provided with OSAL.  This command puts the virtual console on
+the same terminal where the QEMU emulator is started.  The program
+should run automatically after the kernel boots.  The system may be
+stopped by issuing the "shutdown" command at the shell, or by pressing
+the CTRL+A followed by CTRL+C which terminates QEMU.
+
+
+## Generic Linux Platform
+
+The OSAL can run on many Linux distributions. Testing is done with currently
+supported Ubuntu LTS versions (up through 20.04 at the time of the current
+release) as well as supported RHEL/CentOS versions (7.x and 8.x series),
+and Linux-based embedded development boards such as the Raspberry Pi and
+BeagleBone series.
+
+The generic-linux BSP should also operate with customized Linux builds
+built from the Yocto/OpenEmbedded development environment, Buildroot, or
+PTXdist.  Any reasonably recent Linux kernel/library version should work,
+however it must have support for native POSIX threads (NPTL) and POSIX
+message queues (mqueue).
+
+
+### How to Run the OSAL on the PC / Linux Platform
+
+1. To run an OSAL Application, simply execute the binary from a shell
+prompt:
+
+```
+build/examples/tasking-example$ ./tasking-example.bin
+```
+
+# OSAL Unit Tests and UT assert
+
+The OSAL distribution includes a suite of black box unit tests, white
+box unit tests (/src/unit-test-coverage), and functional tests
+(/src/tests). Tam Ngo at NASA Johnson Space Flight Center developed the
+suite of black box unit tests located in the /src/unit-tests directory.
+
+Additionally, OSAL provides a framework for testing called "UT assert".
+The test framework actually uses some of the OSAL BSP facilities to
+execute the tests in a platform-independent manner.
+
+Unit tests are built based on the `ENABLE_UNIT_TESTS` CMake configuration
+variable.  When this is set to TRUE, extra test programs are built to
+validate all of OSAL functionality.
+
+The "black box" functional tests under /src/tests and /src/unit-tests
+operate with an unmodified OSAL library, using a real instance of the OSAL
+to run the tests.
+
+The "white box" coverage test under /src/unit-test-coverage does not use
+OSAL, it only uses the BSP for start up and low-level console access,
+combined with UT assert for the basic framework.  In this testing mode,
+each OSAL subsystem is specially compiled with special flags to enable
+profiling (to track line and branch coverage) and linked with _stub_
+implementations of all other dependencies.  This way, test cases can
+trigger error paths from library calls that would otherwise not be possible
+in a black box test environment.
+
+These test programs are executed just as any other application program.
+
+Complete coverage testing is only available for the "shared" layer and
+the "VxWorks" low level implementation layer.  However, because all platforms
+share the same "shared" layer, this coverage test applies to all platforms.
+The low level (OS-specific) implementation layers should be only to translate
+the OSAL calls to the specific C library/OS API provided by that platform,
+while all basic state/table maintenance and error checking is performed at
+the shared layer.
+
+**Note**: The coverage tests are built for the same platform as all other
+applications.  Notably, because the coverage test does not actually use
+the facilities provided by the OS (all OS calls are replaced with stubs),
+the OS-specific coverage test can execute on any platform, it is not limited
+to running on the platform that it is abstracting.  As a result, the VxWorks
+coverage test is typically executed on a Linux host.
+
+## How to Run the OSAL Tests on the PC / Linux Platform
+
+To build and run the OSAL unit tests, first make sure OSAL was initially configured
+with the `ENABLE_UNIT_TESTS` option enabled.  Test programs are simply separate application
+executables that can then be executed as normal.  The test programs are built along with
+the OSAL library as part of a normal `make all` or `make install` command.  During `install`,
+the test programs will be copied to the output location/staging area.
+
+### Option 1: Execute single test directly from a build tree
+
+The tests can be executed directly in-place in the build directory.  This method often useful
+when debugging, as the executable can also be run in a debugger (i.e. gdb) this way.
+
+The following example executes the task subsystem coverage test for the shared layer, but any
+other test can be run in a similar fashion.
+
+|  **Shell command**      |    **Description**|
+|---|---|
+| `$ cd build/unit-test-coverage/shared` | Change to the build directory containing coverage tests |
+| `$ make` | Build the test program(s) if not already done |
+| `$ ./coverage-shared-task-testrunner` | Execute the shared task coverage test application |
+
+
+### Option 2: Execute tests in batch mode using ctest and/or makefile wrapper target
+
+The Makefiles include a "test" wrapper target which in turn invokes the "ctest" program
+that will execute all test programs in a batch mode.
+
+Note that the "ctest" program shows a quiet output by default, indicating only the test name
+and a pass/fail status.  To see a complete log of tests executed, the test program may be run
+directly from the command line (see above).
+
+For example:
+
+`make test`
+
+**Note**: The "test" target may also be invoked in a build subdirectory, to invoke only the tests
+defined/built in (or below) that subdirectory.
+
+### Code Coverage analysis
+
+The top level sample Makefile also include an "lcov" wrapper target which in turn invokes the "lcov" and
+"genhtml" programs to collect branch/path coverage information into an HTML report.
+
+For example:
+
+`make lcov`
+
+**Note**: The "test" target should be executed before running the "lcov" target.
+
+# Revision History
+
+| Revision Number |  Release Date | Changes to Prior Revision  | Approval |
+|---|---|---|---|
+| 1.0  | 10/17/07 | Initial Release.  | A. Cudmore  |
+| 1.1 | 02/13/08 | Updates for RTEMS, Linux, and Cygwin for 2.11 release | A. Cudmore  |
+| 1.2   | 09/05/08 | Updates for OSAL 2.12 release  | A. Cudmore  |
+| 1.3   | 03/10/10 | Updates for OSAL 3.1 release   | A. Cudmore  |
+| 1.4   | 05/25/11 | Updates for OSAL 3.3 release   | A. Cudmore  |
+| 1.5   | 12/13/11 | Updates for OSAL 3.4 release -- added support for sis-rtems  Removed cFE configuration text  | A. Cudmore  |
+| 1.6   | 12/21/12 | Updates for OSAL 4.0 release -- Removed Cygwin and OS X configurations  | A. Cudmore  |
+| 4.1    | 01/17/14  | Updates for OSAL 4.1 release. Sync document version ID to software version. Add information for building and running unit tests.   | A. Cudmore  |
+| 4.2   | 01/31/16 | Moved osconfig.h description into section 2.2.h Consolidated the  \"classic\" build and prerequisites setup into section 2.3. Added new section 2.4 on provisioning a build using cmake. Minor &lt;/br&gt; modifications to subsequent sections only where there was a  difference between cmake and classic builds; i.e. the cmake  build has no \"make config\" or \"make depend\". Updated title  page to replace Code 582 banner with cFS. Added header.  | J.Hickey S.Strege   |
+</pre></div>
+</div>
+</section>
+<section id="osal-detaildesign-doxyfile-in">
+<h2><code class="docutils literal notranslate"><span class="pre">osal-detaildesign.doxyfile.in</span></code><a class="headerlink" href="#osal-detaildesign-doxyfile-in" title="Link to this heading"></a></h2>
+<p><strong>경로:</strong> <code class="docutils literal notranslate"><span class="pre">fsw/osal/docs/osal-detaildesign.doxyfile.in</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>#---------------------------------------------------------------------------
+# Doxygen Configuration options for mission detailed documentation
+#---------------------------------------------------------------------------
+
+# Common files
+@INCLUDE  = @MISSION_BINARY_DIR@/docs/osal-common.doxyfile
+
+# All of the OSAL FSW code relevant for a detail design document is under
+# src/os and src/bsp, everything else is test and examples/support
+# Note this will include ALL OS/BSP layers, it does not currently filter
+# based on which OS/BSP is actually in use.
+INPUT    += @osal_MISSION_DIR@/src/os
+INPUT    += @osal_MISSION_DIR@/src/bsp
+
+# Include ut_assert documentation in detail design document
+INPUT    += @osal_MISSION_DIR@/ut_assert
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="osal" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="src/index.html" class="btn btn-neutral float-right" title="src" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NASA-JSTAR.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
